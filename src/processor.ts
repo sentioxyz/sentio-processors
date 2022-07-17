@@ -3,14 +3,14 @@ import { ERC20Context, ERC20Processor } from './types/erc20_processor'
 import { AnyswapERC20Context, AnyswapERC20Processor } from "./types/anyswaperc20_processor";
 // import { TransferEvent } from './types/ERC20'
 
-const blockProcessor = async function (_, ctx: ERC20Context) {
+const blockProcessor = async function (_: any, ctx: AnyswapERC20Context) {
   const totalSupply = await ctx.contract.totalSupply()
 
-  ctx.meter.Histogram('reward_per_block').record(totalSupply)
+  ctx.meter.Histogram('anyETH_total_supply').record(totalSupply)
 }
 
 AnyswapERC20Processor.bind('0x0615Dbba33Fe61a31c7eD131BDA6655Ed76748B1')
-.startBlock(14201940)
+.startBlock(14215865)
 .onBlock(blockProcessor)
 
 
