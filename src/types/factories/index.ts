@@ -2,4 +2,5 @@
 /* tslint:disable */
 /* eslint-disable */
 export { ERC20__factory } from "./ERC20__factory";
+export { AnyswapERC20__factory } from "./AnyswapERC20__factory";
 export { X2y2__factory } from "./X2y2__factory";
