@@ -1,17 +1,60 @@
 import { ERC20Context, ERC20Processor } from './types/erc20_processor'
 // import { X2y2Context, X2y2Processor } from './types/x2y2_processor'
 import { AnyswapERC20Context, AnyswapERC20Processor } from "./types/anyswaperc20_processor";
+import { AnyswapRouterContext, AnyswapRouterProcessor } from './types/anyswaprouter_processor';
+import { LogAnySwapInEvent, LogAnySwapOut_address_address_address_uint256_uint256_uint256_Event, LogAnySwapOut_address_address_string_uint256_uint256_uint256_Event } from './types/AnyswapRouter';
 // import { TransferEvent } from './types/ERC20'
 
-const blockProcessor = async function (_: any, ctx: AnyswapERC20Context) {
-  const totalSupply = await ctx.contract.totalSupply()
+const startBlock = 14215845 
+
+const anyEthAddress = "0x0615dbba33fe61a31c7ed131bda6655ed76748b1"
+const routerAddress = "0xba8da9dcf11b50b03fd5284f164ef5cdef910705"
+const wethAddress = "0xc02aaa39b223fe8d0a0e5c4f27ead9083c756cc2"
+
+const anyEthTotalSupplyProcessor = async function (_: any, ctx: AnyswapERC20Context) {
+  const totalSupply = Number((await ctx.contract.totalSupply()).toBigInt() / BigInt(10 ** 18))
 
   ctx.meter.Histogram('anyETH_total_supply').record(totalSupply)
 }
 
-AnyswapERC20Processor.bind('0x0615Dbba33Fe61a31c7eD131BDA6655Ed76748B1')
-.startBlock(14215865)
-.onBlock(blockProcessor)
+const wethBalanceProcessor = async function (_: any, ctx: ERC20Context) {
+  const balance = Number((await ctx.contract.balanceOf(anyEthAddress)).toBigInt() / BigInt(10 ** 18))
+  ctx.meter.Histogram('weth_balance').record(balance)
+}
+
+const handleSwapIn = async function (event: LogAnySwapInEvent, ctx: AnyswapRouterContext) {
+  const inAmount = Number(event.args.amount.toBigInt() / BigInt(10 ** 18))
+  ctx.meter.Counter('anyswapInTotal').add(inAmount)
+}
+
+const handleSwapOut1 = async function (event: LogAnySwapOut_address_address_address_uint256_uint256_uint256_Event, ctx: AnyswapRouterContext) {
+  const outAmount = Number(event.args.amount.toBigInt() / BigInt(10 ** 18))
+  ctx.meter.Counter('anyswapOutTotal').add(outAmount)
+}
+
+const handleSwapOut2 = async function (event: LogAnySwapOut_address_address_string_uint256_uint256_uint256_Event, ctx: AnyswapRouterContext) {
+  const outAmount = Number(event.args.amount.toBigInt() / BigInt(10 ** 18))
+  ctx.meter.Counter('anyswapOutTotal').add(outAmount)
+}
+
+const inFilter = AnyswapRouterProcessor.filters.LogAnySwapIn(null, anyEthAddress)
+const outFilter1 = AnyswapRouterProcessor.filters['LogAnySwapOut(address,address,address,uint256,uint256,uint256)'](anyEthAddress)
+const outFilter2 = AnyswapRouterProcessor.filters['LogAnySwapOut(address,address,string,uint256,uint256,uint256)'](anyEthAddress)
+
+
+AnyswapERC20Processor.bind(anyEthAddress)
+.startBlock(startBlock)
+.onBlock(anyEthTotalSupplyProcessor)
+
+ERC20Processor.bind(wethAddress)
+.startBlock(startBlock)
+.onBlock(wethBalanceProcessor)
+
+AnyswapRouterProcessor.bind(routerAddress)
+.startBlock(startBlock)
+.onLogAnySwapIn(handleSwapIn, inFilter)
+.onLogAnySwapOut_address_address_address_uint256_uint256_uint256_(handleSwapOut1,outFilter1)
+.onLogAnySwapOut_address_address_string_uint256_uint256_uint256_(handleSwapOut2, outFilter2)
 
 
 // X2y2Processor.bind('0xB329e39Ebefd16f40d38f07643652cE17Ca5Bac1')
