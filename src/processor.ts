@@ -11,30 +11,38 @@ const anyEthAddress = "0x0615dbba33fe61a31c7ed131bda6655ed76748b1"
 const routerAddress = "0xba8da9dcf11b50b03fd5284f164ef5cdef910705"
 const wethAddress = "0xc02aaa39b223fe8d0a0e5c4f27ead9083c756cc2"
 
+var totalSupply: number
 const anyEthTotalSupplyProcessor = async function (_: any, ctx: AnyswapERC20Context) {
-  const totalSupply = Number((await ctx.contract.totalSupply()).toBigInt() / BigInt(10 ** 18))
+  totalSupply = Number((await ctx.contract.totalSupply()).toBigInt() / BigInt(10 ** 12)) / (10**6)
 
   ctx.meter.Histogram('anyETH_total_supply').record(totalSupply)
 }
 
+//netBalance is weth_balance - anyswap balance
 const wethBalanceProcessor = async function (_: any, ctx: ERC20Context) {
-  const balance = Number((await ctx.contract.balanceOf(anyEthAddress)).toBigInt() / BigInt(10 ** 18))
+  const balance = Number((await ctx.contract.balanceOf(anyEthAddress)).toBigInt() / BigInt(10 ** 12)) / (10**6)
   ctx.meter.Histogram('weth_balance').record(balance)
+  ctx.meter.Histogram('netBalance').record(balance - totalSupply)
 }
 
+// netSwapFlow is defined as all anyswapOut events - anyswapIn events
 const handleSwapIn = async function (event: LogAnySwapInEvent, ctx: AnyswapRouterContext) {
-  const inAmount = Number(event.args.amount.toBigInt() / BigInt(10 ** 18))
+  const inAmount = Number(event.args.amount.toBigInt() / BigInt(10 ** 12)) / (10**6)
   ctx.meter.Counter('anyswapInTotal').add(inAmount)
+  ctx.meter.Counter('netSwapFlow').sub(inAmount)
 }
 
 const handleSwapOut1 = async function (event: LogAnySwapOut_address_address_address_uint256_uint256_uint256_Event, ctx: AnyswapRouterContext) {
-  const outAmount = Number(event.args.amount.toBigInt() / BigInt(10 ** 18))
+  const outAmount = Number(event.args.amount.toBigInt() / BigInt(10 ** 12)) / (10**6)
   ctx.meter.Counter('anyswapOutTotal').add(outAmount)
+  ctx.meter.Counter('netSwapFlow').add(outAmount)
+
 }
 
 const handleSwapOut2 = async function (event: LogAnySwapOut_address_address_string_uint256_uint256_uint256_Event, ctx: AnyswapRouterContext) {
-  const outAmount = Number(event.args.amount.toBigInt() / BigInt(10 ** 18))
+  const outAmount = Number(event.args.amount.toBigInt() / BigInt(10 ** 12)) / (10**6)
   ctx.meter.Counter('anyswapOutTotal').add(outAmount)
+  ctx.meter.Counter('netSwapFlow').add(outAmount)
 }
 
 const inFilter = AnyswapRouterProcessor.filters.LogAnySwapIn(null, anyEthAddress)
