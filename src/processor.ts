@@ -22,9 +22,9 @@ const anyEthTotalSupplyProcessor = async function (_: any, ctx: AnyswapERC20Cont
 }
 
 const anyEthTotalSupplyBscProcessor = async function (_: any, ctx: AnyswapERC20Context) {
-  totalSupply = Number((await ctx.contract.totalSupply()).toBigInt() / BigInt(10 ** 12)) / (10**6)
+  const totalSupplyBSC = Number((await ctx.contract.totalSupply()).toBigInt() / BigInt(10 ** 12)) / (10**6)
   
-  ctx.meter.Histogram('anyETH_bsc_total_supply').record(totalSupply)
+  ctx.meter.Histogram('anyETH_bsc_total_supply').record(totalSupplyBSC)
 }
 
 //netBalance is weth_balance - anyswap balance
