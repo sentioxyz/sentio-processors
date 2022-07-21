@@ -6,20 +6,29 @@ import { LogAnySwapInEvent, LogAnySwapOut_address_address_address_uint256_uint25
 // import { TransferEvent } from './types/ERC20'
 
 const startBlock = 14215845 
+const startBlock_BSC = 13312128 
 
 const anyEthAddress = "0x0615dbba33fe61a31c7ed131bda6655ed76748b1"
 const routerAddress = "0xba8da9dcf11b50b03fd5284f164ef5cdef910705"
 const wethAddress = "0xc02aaa39b223fe8d0a0e5c4f27ead9083c756cc2"
 
+const anyETHAddress_BSC = "0x6f817a0ce8f7640add3bc0c1c2298635043c2423"
+
 var totalSupply: number
 const anyEthTotalSupplyProcessor = async function (_: any, ctx: AnyswapERC20Context) {
   totalSupply = Number((await ctx.contract.totalSupply()).toBigInt() / BigInt(10 ** 12)) / (10**6)
-
+  
   ctx.meter.Histogram('anyETH_total_supply').record(totalSupply)
 }
 
+const anyEthTotalSupplyBscProcessor = async function (_: any, ctx: AnyswapERC20Context) {
+  totalSupply = Number((await ctx.contract.totalSupply()).toBigInt() / BigInt(10 ** 12)) / (10**6)
+  
+  ctx.meter.Histogram('anyETH_bsc_total_supply').record(totalSupply)
+}
+
 //netBalance is weth_balance - anyswap balance
-const wethBalanceProcessor = async function (_: any, ctx: ERC20Context) {
+const wethBalanceProcessor = async function (block: any, ctx: ERC20Context) {
   const balance = Number((await ctx.contract.balanceOf(anyEthAddress)).toBigInt() / BigInt(10 ** 12)) / (10**6)
   ctx.meter.Histogram('weth_balance').record(balance)
   ctx.meter.Histogram('netBalance').record(balance - totalSupply)
@@ -64,6 +73,9 @@ AnyswapRouterProcessor.bind(routerAddress)
 .onLogAnySwapOut_address_address_address_uint256_uint256_uint256_(handleSwapOut1,outFilter1)
 .onLogAnySwapOut_address_address_string_uint256_uint256_uint256_(handleSwapOut2, outFilter2)
 
+ERC20Processor.bind(anyETHAddress_BSC, 56)
+.startBlock(startBlock_BSC)
+.onBlock(anyEthTotalSupplyBscProcessor)
 
 // X2y2Processor.bind('0xB329e39Ebefd16f40d38f07643652cE17Ca5Bac1')
 //     .startBlock(14201940)

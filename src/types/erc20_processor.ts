@@ -8,6 +8,7 @@ import {
   getProvider,
   BaseProcessor,
   ContractWrapper,
+  DummyProvider,
 } from "@sentio/sdk";
 import { PromiseOrValue } from "./common";
 import { ERC20, ERC20__factory } from "./index";
@@ -71,7 +72,7 @@ export class ERC20Processor extends BaseProcessor<ERC20, ERC20ContractWrapper> {
     return this;
   }
 
-  private static templateContract = ERC20__factory.connect("", getProvider(1));
+  private static templateContract = ERC20__factory.connect("", DummyProvider);
 
   static filters = ERC20Processor.templateContract.filters;
 

@@ -8,6 +8,7 @@ import {
   getProvider,
   BaseProcessor,
   ContractWrapper,
+  DummyProvider,
 } from "@sentio/sdk";
 import { PromiseOrValue } from "./common";
 import { X2y2, X2y2__factory } from "./index";
@@ -145,7 +146,7 @@ export class X2y2Processor extends BaseProcessor<X2y2, X2y2ContractWrapper> {
     return this;
   }
 
-  private static templateContract = X2y2__factory.connect("", getProvider(1));
+  private static templateContract = X2y2__factory.connect("", DummyProvider);
 
   static filters = X2y2Processor.templateContract.filters;
 
