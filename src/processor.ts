@@ -7,24 +7,25 @@ import { LogAnySwapInEvent, LogAnySwapOut_address_address_address_uint256_uint25
 
 const startBlock = 14215845 
 const startBlock_BSC = 13312128 
+const startBlock_Ropsten = 12549988
 
+// ETH addresses
 const anyEthAddress = "0x0615dbba33fe61a31c7ed131bda6655ed76748b1"
 const routerAddress = "0xba8da9dcf11b50b03fd5284f164ef5cdef910705"
 const wethAddress = "0xc02aaa39b223fe8d0a0e5c4f27ead9083c756cc2"
 
+// BSC addresses
 const anyETHAddress_BSC = "0x6f817a0ce8f7640add3bc0c1c2298635043c2423"
+
+// Ropsten addresses
+const MTT_address = "0x39e68dd41af6fd870f27a6b77cbcffa64626b0f3"
+const pool_address = "0x6A29C3E7DC05B2888243644DB079ff8Edf890665"
 
 var totalSupply: number
 const anyEthTotalSupplyProcessor = async function (_: any, ctx: AnyswapERC20Context) {
   totalSupply = Number((await ctx.contract.totalSupply()).toBigInt() / BigInt(10 ** 12)) / (10**6)
   
   ctx.meter.Histogram('anyETH_total_supply').record(totalSupply)
-}
-
-const anyEthTotalSupplyBscProcessor = async function (_: any, ctx: AnyswapERC20Context) {
-  const totalSupplyBSC = Number((await ctx.contract.totalSupply()).toBigInt() / BigInt(10 ** 12)) / (10**6)
-  
-  ctx.meter.Histogram('anyETH_bsc_total_supply').record(totalSupplyBSC)
 }
 
 //netBalance is weth_balance - anyswap balance
@@ -54,6 +55,18 @@ const handleSwapOut2 = async function (event: LogAnySwapOut_address_address_stri
   ctx.meter.Counter('netSwapFlow').add(outAmount)
 }
 
+const anyEthTotalSupplyBscProcessor = async function (_: any, ctx: AnyswapERC20Context) {
+  const totalSupplyBSC = Number((await ctx.contract.totalSupply()).toBigInt() / BigInt(10 ** 12)) / (10**6)
+  
+  ctx.meter.Histogram('anyETH_bsc_total_supply').record(totalSupplyBSC)
+}
+
+//netBalance is weth_balance - anyswap balance
+const mttBalanceProcessor = async function (block: any, ctx: ERC20Context) {
+  const balance = Number((await ctx.contract.balanceOf(pool_address)).toBigInt() / BigInt(10 ** 12)) / (10**6)
+  ctx.meter.Histogram('mtt_balance').record(balance)
+}
+
 const inFilter = AnyswapRouterProcessor.filters.LogAnySwapIn(null, anyEthAddress)
 const outFilter1 = AnyswapRouterProcessor.filters['LogAnySwapOut(address,address,address,uint256,uint256,uint256)'](anyEthAddress)
 const outFilter2 = AnyswapRouterProcessor.filters['LogAnySwapOut(address,address,string,uint256,uint256,uint256)'](anyEthAddress)
@@ -73,9 +86,13 @@ AnyswapRouterProcessor.bind(routerAddress)
 .onLogAnySwapOut_address_address_address_uint256_uint256_uint256_(handleSwapOut1,outFilter1)
 .onLogAnySwapOut_address_address_string_uint256_uint256_uint256_(handleSwapOut2, outFilter2)
 
-ERC20Processor.bind(anyETHAddress_BSC, 56)
-.startBlock(startBlock_BSC)
-.onBlock(anyEthTotalSupplyBscProcessor)
+// ERC20Processor.bind(anyETHAddress_BSC, 56)
+// .startBlock(startBlock_BSC)
+// .onBlock(anyEthTotalSupplyBscProcessor)
+
+ERC20Processor.bind(MTT_address, 3)
+.startBlock(startBlock_Ropsten)
+.onBlock(mttBalanceProcessor)
 
 // X2y2Processor.bind('0xB329e39Ebefd16f40d38f07643652cE17Ca5Bac1')
 //     .startBlock(14201940)
