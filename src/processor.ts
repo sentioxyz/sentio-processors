@@ -70,7 +70,7 @@ const anyEthTotalSupplyProcessorBSC = async function (_: any, ctx: Bep20Context)
 
 //netBalance is weth_balance - anyswap balance
 const wethBalanceProcessorBSC = async function (block: any, ctx: Bep20Context) {
-  const balance = Number((await ctx.contract.balanceOf(anyEthAddress)).toBigInt() / BigInt(10 ** 12)) / (10**6)
+  const balance = Number((await ctx.contract.balanceOf(anyETHAddress_BSC)).toBigInt() / BigInt(10 ** 12)) / (10**6)
   ctx.meter.Histogram('weth_bsc_balance').record(balance)
   ctx.meter.Histogram('netBalance_bsc').record(balance - TOTAL_SUPPLY_BSC)
 }

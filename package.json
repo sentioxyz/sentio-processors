@@ -2,22 +2,15 @@
   "name": "@sentio/x2y2",
   "version": "1.0.0",
   "scripts": {
-    "compile": "tsc -p .",
     "start": "processor_server ./dist/lib",
-    "build": "yarn compile && yarn webpack",
-    "gen_abi": "typechain --target node_modules/@sentio/sdk/dist/target-ethers-sentio --out-dir src/types 'abis/*.json'",
-    "upload": "yarn build && sentio_cli upload ./dist/lib.js",
-    "postinstall": "yarn gen_abi"
+    "build": "sentio build",
+    "upload": "sentio upload",
+    "postinstall": "sentio gen"
   },
   "dependencies": {
-    "@sentio/sdk": "^0.0.27",
-    "ethers": "^5.6.9"
+    "@sentio/sdk": "^0.1.4"
   },
   "devDependencies": {
-    "ts-loader": "^9.3.0",
-    "typechain": "^8.1.0",
-    "typescript": "^4.7.2",
-    "webpack": "^5.72.1",
-    "webpack-cli": "^4.9.2"
+    "typescript": "^4.7.2"
   }
 }
