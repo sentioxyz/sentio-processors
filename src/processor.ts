@@ -6,7 +6,22 @@ import { LogAnySwapInEvent, LogAnySwapOut_address_address_address_uint256_uint25
 import { BscAnyswapRouterContext, BscAnyswapRouterProcessor } from './types/bscanyswaprouter_processor';
 import { LogAnySwapInEvent as BscLogAnySwapInEvent, LogAnySwapOutEvent as BscLogAnySwapOutEvent } from './types/BscAnyswapRouter';
 import { Bep20Context, Bep20Processor } from './types/bep20_processor';
-
+//Chain to chainID
+const CHAIN_ID_MAP = new Map<number, String>(
+  [
+    [1, "Ethereum"],
+    [10, "Optimism"],
+    [25, "Cronos"],
+    [56, "BSC"],
+    [66, "OKC"],
+    [128, "Huobi"],
+    [137, "Polygon"],
+    [250, "Fantom"],
+    [321, "KCC"],
+    [42161, "Arbitrum"],
+    [43114, "Avalanche"]
+  ]
+)
 // import { TransferEvent } from './types/ERC20'
 
 const startBlock = 14215845 
@@ -44,12 +59,20 @@ const wethBalanceProcessor = async function (block: any, ctx: ERC20Context) {
 // netSwapFlow is defined as all anyswapOut events - anyswapIn events
 const handleSwapIn = async function (event: LogAnySwapInEvent, ctx: AnyswapRouterContext) {
   const inAmount = Number(event.args.amount.toBigInt() / BigInt(10 ** 12)) / (10**6)
+  const chainID = Number(event.args.fromChainID)
+  const chainName = CHAIN_ID_MAP.get(chainID)
   ctx.meter.Counter('anyswapInTotal').add(inAmount)
+  ctx.meter.Counter('anyswapIn_' + String(chainName)).add(inAmount)
   ctx.meter.Counter('netSwapFlow').sub(inAmount)
 }
 
 const handleSwapOut1 = async function (event: LogAnySwapOut_address_address_address_uint256_uint256_uint256_Event, ctx: AnyswapRouterContext) {
   const outAmount = Number(event.args.amount.toBigInt() / BigInt(10 ** 12)) / (10**6)
+
+  const chainID = Number(event.args.toChainID)
+  const chainName = CHAIN_ID_MAP.get(chainID)
+  ctx.meter.Histogram('anyswapOut_' + String(chainName)).record(outAmount)
+
   ctx.meter.Counter('anyswapOutTotal').add(outAmount)
   ctx.meter.Counter('netSwapFlow').add(outAmount)
 }
@@ -58,6 +81,10 @@ const handleSwapOut2 = async function (event: LogAnySwapOut_address_address_stri
   const outAmount = Number(event.args.amount.toBigInt() / BigInt(10 ** 12)) / (10**6)
   ctx.meter.Counter('anyswapOutTotal').add(outAmount)
   ctx.meter.Counter('netSwapFlow').add(outAmount)
+
+  const chainID = Number(event.args.toChainID)
+  const chainName = CHAIN_ID_MAP.get(chainID)
+  ctx.meter.Histogram('anyswapOut_' + String(chainName)).record(outAmount)
 }
 
 // BSC handlers
@@ -158,3 +185,5 @@ ERC20Processor.bind(MTT_address, 3)
 //   const val = Number(event.args.value.toBigInt()) / Math.pow(10, 18)
 //   ctx.meter.Counter('token').add(val)
 // }
+
+
