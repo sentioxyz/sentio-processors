@@ -42,8 +42,9 @@ const wethAddress_BSC = "0x2170ed0880ac9a755fd29b2688956bd959f933f8"
 const MTT_address = "0x39e68dd41af6fd870f27a6b77cbcffa64626b0f3"
 const pool_address = "0x6A29C3E7DC05B2888243644DB079ff8Edf890665"
 
+var totalSupply: number
 const anyEthTotalSupplyProcessor = async function (_: any, ctx: AnyswapERC20Context) {
-  const totalSupply = Number((await ctx.contract.totalSupply()).toBigInt() / 10n ** 12n) / (10**6)
+  totalSupply = Number((await ctx.contract.totalSupply()).toBigInt() / 10n ** 12n) / (10**6)
 
   ctx.meter.Histogram('anyETH_total_supply').record(totalSupply)
 }
@@ -52,7 +53,7 @@ const anyEthTotalSupplyProcessor = async function (_: any, ctx: AnyswapERC20Cont
 const wethBalanceProcessor = async function (block: any, ctx: ERC20Context) {
   const balance = Number((await ctx.contract.balanceOf(anyEthAddress)).toBigInt() / 10n ** 12n) / (10**6)
   ctx.meter.Histogram('weth_balance').record(balance)
-  // ctx.meter.Histogram('netBalance').record(balance - totalSupply)
+  ctx.meter.Histogram('netBalance').record(balance - totalSupply)
 }
 
 // netSwapFlow is defined as all anyswapOut events - anyswapIn events
@@ -143,18 +144,18 @@ AnyswapRouterProcessor.bind(routerAddress)
 .onLogAnySwapOut_address_address_string_uint256_uint256_uint256_(handleSwapOut2, outFilter2)
 
 // BSC processors
-Bep20Processor.bind(anyETHAddress_BSC, 56)
-.startBlock(startBlock_BSC)
-.onBlock(anyEthTotalSupplyProcessorBSC)
+//Bep20Processor.bind(anyETHAddress_BSC, 56)
+//.startBlock(startBlock_BSC)
+//.onBlock(anyEthTotalSupplyProcessorBSC)
 
-Bep20Processor.bind(wethAddress_BSC, 56)
-.startBlock(startBlock_BSC)
-.onBlock(wethBalanceProcessorBSC)
+//Bep20Processor.bind(wethAddress_BSC, 56)
+//.startBlock(startBlock_BSC)
+//.onBlock(wethBalanceProcessorBSC)
 
-BscAnyswapRouterProcessor.bind(routerAddress_BSC, 56)
-.startBlock(startBlock_BSC)
-.onLogAnySwapIn(handleSwapInBSC, inFilterBSC)
-.onLogAnySwapOut(handleSwapOutBSC, outFilterBSC)
+//BscAnyswapRouterProcessor.bind(routerAddress_BSC, 56)
+//.startBlock(startBlock_BSC)
+//.onLogAnySwapIn(handleSwapInBSC, inFilterBSC)
+//.onLogAnySwapOut(handleSwapOutBSC, outFilterBSC)
 
 
 //Rospten processors
