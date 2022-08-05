@@ -144,18 +144,18 @@ AnyswapRouterProcessor.bind(routerAddress)
 .onLogAnySwapOut_address_address_string_uint256_uint256_uint256_(handleSwapOut2, outFilter2)
 
 // BSC processors
-//Bep20Processor.bind(anyETHAddress_BSC, 56)
-//.startBlock(startBlock_BSC)
-//.onBlock(anyEthTotalSupplyProcessorBSC)
+Bep20Processor.bind(anyETHAddress_BSC, 56)
+.startBlock(startBlock_BSC)
+.onBlock(anyEthTotalSupplyProcessorBSC)
 
-//Bep20Processor.bind(wethAddress_BSC, 56)
-//.startBlock(startBlock_BSC)
-//.onBlock(wethBalanceProcessorBSC)
+Bep20Processor.bind(wethAddress_BSC, 56)
+.startBlock(startBlock_BSC)
+.onBlock(wethBalanceProcessorBSC)
 
-//BscAnyswapRouterProcessor.bind(routerAddress_BSC, 56)
-//.startBlock(startBlock_BSC)
-//.onLogAnySwapIn(handleSwapInBSC, inFilterBSC)
-//.onLogAnySwapOut(handleSwapOutBSC, outFilterBSC)
+BscAnyswapRouterProcessor.bind(routerAddress_BSC, 56)
+.startBlock(startBlock_BSC)
+.onLogAnySwapIn(handleSwapInBSC, inFilterBSC)
+.onLogAnySwapOut(handleSwapOutBSC, outFilterBSC)
 
 
 //Rospten processors
