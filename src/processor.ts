@@ -6,7 +6,12 @@ import { LogAnySwapInEvent, LogAnySwapOut_address_address_address_uint256_uint25
 import { BscAnyswapRouterContext, BscAnyswapRouterProcessor } from './types/bscanyswaprouter_processor';
 import { LogAnySwapInEvent as BscLogAnySwapInEvent, LogAnySwapOutEvent as BscLogAnySwapOutEvent } from './types/BscAnyswapRouter';
 import { Bep20Context, Bep20Processor } from './types/bep20_processor';
-//Chain to chainID
+// import { getChainName } from '@sentio/sdk';
+
+// TODO provide builtin
+const getChainName = function(id: any): string {
+  return String(CHAIN_ID_MAP.get(Number(id)))
+}
 const CHAIN_ID_MAP = new Map<number, String>(
   [
     [1, "Ethereum"],
@@ -22,7 +27,6 @@ const CHAIN_ID_MAP = new Map<number, String>(
     [43114, "Avalanche"]
   ]
 )
-// import { TransferEvent } from './types/ERC20'
 
 const startBlock = 14215845
 const startBlock_BSC = 13312128
@@ -53,25 +57,20 @@ const anyEthTotalSupplyProcessor = async function (_: any, ctx: AnyswapERC20Cont
 const wethBalanceProcessor = async function (block: any, ctx: ERC20Context) {
   const balance = Number((await ctx.contract.balanceOf(anyEthAddress)).toBigInt() / 10n ** 12n) / (10**6)
   ctx.meter.Histogram('weth_balance').record(balance)
-  ctx.meter.Histogram('netBalance').record(balance - totalSupply)
+  ctx.meter.Histogram('netBalance_old').record(balance - totalSupply)
 }
 
 // netSwapFlow is defined as all anyswapOut events - anyswapIn events
 const handleSwapIn = async function (event: LogAnySwapInEvent, ctx: AnyswapRouterContext) {
   const inAmount = Number(event.args.amount.toBigInt() / 10n ** 12n) / (10**6)
-  const chainID = Number(event.args.fromChainID)
-  const chainName = CHAIN_ID_MAP.get(chainID)
-  ctx.meter.Counter('anyswapInTotal').add(inAmount)
-  ctx.meter.Counter('anyswapIn_' + String(chainName)).add(inAmount)
+  ctx.meter.Counter('anyswapIn').add(inAmount, { "from": getChainName(event.args.fromChainID.toString()) })
   ctx.meter.Counter('netSwapFlow').sub(inAmount)
 }
 
 const handleSwapOut1 = async function (event: LogAnySwapOut_address_address_address_uint256_uint256_uint256_Event, ctx: AnyswapRouterContext) {
   const outAmount = Number(event.args.amount.toBigInt() / 10n ** 12n) / (10**6)
 
-  const chainID = Number(event.args.toChainID)
-  const chainName = CHAIN_ID_MAP.get(chainID)
-  ctx.meter.Histogram('anyswapOut_' + String(chainName)).record(outAmount)
+  ctx.meter.Histogram('anyswapOut').record(outAmount, { "to": getChainName(event.args.toChainID.toString()) })
 
   ctx.meter.Counter('anyswapOutTotal').add(outAmount)
   ctx.meter.Counter('netSwapFlow').add(outAmount)
@@ -82,9 +81,7 @@ const handleSwapOut2 = async function (event: LogAnySwapOut_address_address_stri
   ctx.meter.Counter('anyswapOutTotal').add(outAmount)
   ctx.meter.Counter('netSwapFlow').add(outAmount)
 
-  const chainID = Number(event.args.toChainID)
-  const chainName = CHAIN_ID_MAP.get(chainID)
-  ctx.meter.Histogram('anyswapOut_' + String(chainName)).record(outAmount)
+  ctx.meter.Histogram('anyswapOut').record(outAmount, { "to": getChainName(event.args.toChainID.toString()) })
 }
 
 // BSC handlers

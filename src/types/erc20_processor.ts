@@ -8,6 +8,7 @@ import {
   getProvider,
   BaseProcessor,
   ContractWrapper,
+  ContractNamer,
   DummyProvider,
 } from "@sentio/sdk";
 import { PromiseOrValue } from "./common";
@@ -75,12 +76,16 @@ export class ERC20Processor extends BaseProcessor<ERC20, ERC20ContractWrapper> {
   private static templateContract = ERC20__factory.connect("", DummyProvider);
 
   static filters = ERC20Processor.templateContract.filters;
+  static namer = new ContractNamer("ERC20");
 
   static bind(
     address: string,
     network: Networkish = 1,
-    name = "ERC20"
+    name: string = ""
   ): ERC20Processor {
+    if (name === "") {
+      name = ERC20Processor.namer.nextName();
+    }
     return new ERC20Processor(address, name, network);
   }
 }

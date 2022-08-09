@@ -8,6 +8,7 @@ import {
   getProvider,
   BaseProcessor,
   ContractWrapper,
+  ContractNamer,
   DummyProvider,
 } from "@sentio/sdk";
 import { PromiseOrValue } from "./common";
@@ -149,12 +150,16 @@ export class X2y2Processor extends BaseProcessor<X2y2, X2y2ContractWrapper> {
   private static templateContract = X2y2__factory.connect("", DummyProvider);
 
   static filters = X2y2Processor.templateContract.filters;
+  static namer = new ContractNamer("X2y2");
 
   static bind(
     address: string,
     network: Networkish = 1,
-    name = "X2y2"
+    name: string = ""
   ): X2y2Processor {
+    if (name === "") {
+      name = X2y2Processor.namer.nextName();
+    }
     return new X2y2Processor(address, name, network);
   }
 }
