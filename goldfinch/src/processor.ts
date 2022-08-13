@@ -25,14 +25,14 @@ const CHAIN_ID_MAP = new Map<number, String>(
     [43114, "Avalanche"]
   ]
 )
-const startBlock = 13096883 
+const startBlock = 13096883
 
 // ETH addresses
 const seniorPoolAddress = "0x8481a6ebaf5c7dabc3f7e09e44a89531fd31f822"
 
 const seniorPoolHandler = async function(_:any, ctx: SeniorPoolContext) {
-  const totalLoansOutstanding = Number((await ctx.contract.totalLoansOutstanding()).toBigInt() / 10n**6n) 
-  const sharePrice = Number((await ctx.contract.sharePrice()).toBigInt() / 10n**6n) 
+  const totalLoansOutstanding = Number((await ctx.contract.totalLoansOutstanding()).toBigInt() / 10n**6n)
+  const sharePrice = Number((await ctx.contract.sharePrice()).toBigInt() / 10n**6n)
   const assets = Number((await ctx.contract.assets()).toBigInt() / 10n**6n)
 
   ctx.meter.Histogram('goldfinch_totalLoansOutstanding').record(totalLoansOutstanding)
@@ -44,9 +44,13 @@ SeniorPoolProcessor.bind(seniorPoolAddress)
 .startBlock(startBlock)
 .onBlock(seniorPoolHandler)
 
+// console.log("beging loop")
+// console.log(goldfinchPools)
 // batch handle Tranched Pools
-for (let i = 0; i < goldfinchPools.length; i++) {
-  const tranchedPool = goldfinchPools[i];
+for (let i = 0; i < goldfinchPools.data.length; i++) {
+  const tranchedPool = goldfinchPools.data[i];
+
+  // console.log(tranchedPool)
 
   const handler = async function(_:any, ctx: CreditLineContext) {
     const loanBalance = Number((await ctx.contract.balance()).toBigInt() / 10n**6n)
