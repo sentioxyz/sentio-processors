@@ -1,10 +1,15 @@
 import { SeniorPoolContext, SeniorPoolProcessor} from './types/seniorpool_processor'
+import { TranchedPoolContext, TranchedPoolProcessor } from './types/tranchedpool_processor'
+import { CreditLineContext, CreditLineProcessor } from './types/creditline_processor'
+
+import * as goldfinchPools from "./goldfinchPools.json"
 // import { getChainName } from '@sentio/sdk';
 
 // TODO provide builtin
 const getChainName = function(id: any): string {
   return String(CHAIN_ID_MAP.get(Number(id)))
 }
+
 const CHAIN_ID_MAP = new Map<number, String>(
   [
     [1, "Ethereum"],
@@ -26,16 +31,30 @@ const startBlock = 13096883
 const seniorPoolAddress = "0x8481a6ebaf5c7dabc3f7e09e44a89531fd31f822"
 
 const seniorPoolHandler = async function(_:any, ctx: SeniorPoolContext) {
-  const totalLoansOutstanding = await Number(ctx.contract.totalLoansOutstanding()) / 10**6
-  const sharePrice = await Number(ctx.contract.sharePrice()) / 10**6
-  const assets = await Number(ctx.contract.assets()) / 10**6
+  const totalLoansOutstanding = Number((await ctx.contract.totalLoansOutstanding()).toBigInt() / 10n**6n) 
+  const sharePrice = Number((await ctx.contract.sharePrice()).toBigInt() / 10n**6n) 
+  const assets = Number((await ctx.contract.assets()).toBigInt() / 10n**6n)
 
   ctx.meter.Histogram('goldfinch_totalLoansOutstanding').record(totalLoansOutstanding)
   ctx.meter.Histogram('goldfinch_sharePrice').record(sharePrice)
   ctx.meter.Histogram('goldfinch_assets').record(assets)
-
 }
 
 SeniorPoolProcessor.bind(seniorPoolAddress)
 .startBlock(startBlock)
 .onBlock(seniorPoolHandler)
+
+// batch handle Tranched Pools
+for (let i = 0; i < goldfinchPools.length; i++) {
+  const tranchedPool = goldfinchPools[i];
+
+  const handler = async function(_:any, ctx: CreditLineContext) {
+    const loanBalance = Number((await ctx.contract.balance()).toBigInt() / 10n**6n)
+
+    ctx.meter.Histogram('tranchedPool_balance').record(loanBalance, {"idx" : String(i)})
+  }
+
+  CreditLineProcessor.bind(tranchedPool.creditLineAddress)
+  .startBlock(tranchedPool.startBlock)
+  .onBlock(handler)
+}
