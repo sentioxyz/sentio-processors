@@ -59,6 +59,6 @@ for (let i = 0; i < goldfinchPools.data.length; i++) {
   }
 
   CreditLineProcessor.bind(tranchedPool.creditLineAddress)
-  .startBlock(tranchedPool.startBlock)
+  .startBlock(tranchedPool.creditLineStartBlock)
   .onBlock(handler)
 }
