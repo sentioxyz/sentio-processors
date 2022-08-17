@@ -28,13 +28,13 @@ const seniorPoolHandler = async function(_:any, ctx: SeniorPoolContext) {
 SeniorPoolProcessor.bind({address: seniorPoolAddress, startBlock: startBlock})
   .onBlock(seniorPoolHandler)
 
+async function creditlineHandler (_: any, ctx: CreditLineContext) {
+  const loanBalance = Number((await ctx.contract.balance()).toBigInt() / 10n ** 6n)
+  ctx.meter.Histogram('tranchedPool_balance').record(loanBalance)
+}
 
 const creditLineTemplate = new CreditLineProcessorTemplate()
-  .onBlock(async function(_:any, ctx: CreditLineContext) {
-      const loanBalance = Number((await ctx.contract.balance()).toBigInt() / 10n**6n)
-      ctx.meter.Histogram('creditLine_balance').record(loanBalance)
-    }
-  )
+    .onBlock(creditlineHandler)
 
 // add TODO push contract level label
 GoldfinchFactoryProcessor.bind({address: "0xd20508E1E971b80EE172c73517905bfFfcBD87f9", startBlock: 11370655})
@@ -56,15 +56,9 @@ CreditDeskProcessor.bind({address: "0xb2Bea2610FEEfA4868C3e094D2E44b113b6D6138",
 // batch handle Tranched Pools
 for (let i = 0; i < goldfinchPools.data.length; i++) {
   const tranchedPool = goldfinchPools.data[i];
-
-  // console.log(tranchedPool)
-
-  const handler = async function(_:any, ctx: CreditLineContext) {
-    const loanBalance = Number((await ctx.contract.balance()).toBigInt() / 10n**6n)
-
-    ctx.meter.Histogram('tranchedPool_balance').record(loanBalance, {"idx" : String(i)})
+  if (!tranchedPool.auto) {
+    CreditLineProcessor.bind({address: tranchedPool.creditLineAddress, startBlock: tranchedPool.creditLineStartBlock})
+        .onBlock(creditlineHandler)
   }
-
-  CreditLineProcessor.bind({address: tranchedPool.creditLineAddress, startBlock:tranchedPool.creditLineStartBlock })
-    .onBlock(handler)
 }
+
