@@ -1,30 +1,14 @@
 import { SeniorPoolContext, SeniorPoolProcessor} from './types/seniorpool_processor'
-import { TranchedPoolContext, TranchedPoolProcessor } from './types/tranchedpool_processor'
-import { CreditLineContext, CreditLineProcessor } from './types/creditline_processor'
+import {
+  TranchedPoolContext,
+  TranchedPoolProcessor,
+  TranchedPoolProcessorTemplate
+} from './types/tranchedpool_processor'
+import { CreditLineContext, CreditLineProcessor, CreditLineProcessorTemplate } from './types/creditline_processor'
 
 import * as goldfinchPools from "./goldfinchPools.json"
-// import { getChainName } from '@sentio/sdk';
+import { GoldfinchFactoryProcessor } from "./types/goldfinchfactory_processor";
 
-// TODO provide builtin
-const getChainName = function(id: any): string {
-  return String(CHAIN_ID_MAP.get(Number(id)))
-}
-
-const CHAIN_ID_MAP = new Map<number, String>(
-  [
-    [1, "Ethereum"],
-    [10, "Optimism"],
-    [25, "Cronos"],
-    [56, "BSC"],
-    [66, "OKC"],
-    [128, "Huobi"],
-    [137, "Polygon"],
-    [250, "Fantom"],
-    [321, "KCC"],
-    [42161, "Arbitrum"],
-    [43114, "Avalanche"]
-  ]
-)
 const startBlock = 13096883
 
 // ETH addresses
@@ -40,12 +24,27 @@ const seniorPoolHandler = async function(_:any, ctx: SeniorPoolContext) {
   ctx.meter.Histogram('goldfinch_assets').record(assets)
 }
 
-SeniorPoolProcessor.bind(seniorPoolAddress)
-.startBlock(startBlock)
-.onBlock(seniorPoolHandler)
+SeniorPoolProcessor.bind({address: seniorPoolAddress, startBlock: startBlock})
+  .onBlock(seniorPoolHandler)
 
-// console.log("beging loop")
-// console.log(goldfinchPools)
+
+const creditLineTemplate = new CreditLineProcessorTemplate()
+  .onBlock(async function(_:any, ctx: CreditLineContext) {
+      const loanBalance = Number((await ctx.contract.balance()).toBigInt() / 10n**6n)
+      ctx.meter.Histogram('creditLine_balance').record(loanBalance)
+    }
+  )
+
+// add TODO push contract level label
+GoldfinchFactoryProcessor.bind({address: "0xd20508E1E971b80EE172c73517905bfFfcBD87f9", startBlock: 11370655})
+    .onCreditLineCreated(async function (event, ctx) {
+      creditLineTemplate.bind({
+        address: event.args.creditLine,
+        startBlock: (await event.getBlock()).number // TODO add block number to ctx
+      })
+    })
+
+
 // batch handle Tranched Pools
 for (let i = 0; i < goldfinchPools.data.length; i++) {
   const tranchedPool = goldfinchPools.data[i];
@@ -58,7 +57,6 @@ for (let i = 0; i < goldfinchPools.data.length; i++) {
     ctx.meter.Histogram('tranchedPool_balance').record(loanBalance, {"idx" : String(i)})
   }
 
-  CreditLineProcessor.bind(tranchedPool.creditLineAddress)
-  .startBlock(tranchedPool.creditLineStartBlock)
-  .onBlock(handler)
+  CreditLineProcessor.bind({address: tranchedPool.creditLineAddress, startBlock:tranchedPool.creditLineStartBlock })
+    .onBlock(handler)
 }

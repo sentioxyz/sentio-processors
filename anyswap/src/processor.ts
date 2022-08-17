@@ -126,39 +126,32 @@ const outFilter2 = AnyswapRouterProcessor.filters['LogAnySwapOut(address,address
 const inFilterBSC = BscAnyswapRouterProcessor.filters.LogAnySwapIn(null, anyETHAddress_BSC)
 const outFilterBSC = BscAnyswapRouterProcessor.filters.LogAnySwapOut(anyETHAddress_BSC)
 
-AnyswapERC20Processor.bind(anyEthAddress)
-.startBlock(startBlock)
+AnyswapERC20Processor.bind({address: anyEthAddress, startBlock: startBlock})
 .onBlock(anyEthTotalSupplyProcessor)
 
-ERC20Processor.bind(wethAddress)
-.startBlock(startBlock)
+ERC20Processor.bind({address: wethAddress, startBlock: startBlock})
 .onBlock(wethBalanceProcessor)
 
-AnyswapRouterProcessor.bind(routerAddress)
-.startBlock(startBlock)
+AnyswapRouterProcessor.bind({address: routerAddress, startBlock: startBlock})
 .onLogAnySwapIn(handleSwapIn, inFilter)
 .onLogAnySwapOut_address_address_address_uint256_uint256_uint256_(handleSwapOut1,outFilter1)
 .onLogAnySwapOut_address_address_string_uint256_uint256_uint256_(handleSwapOut2, outFilter2)
 
 // BSC processors
-Bep20Processor.bind(anyETHAddress_BSC, 56)
-.startBlock(startBlock_BSC)
+Bep20Processor.bind({address: anyETHAddress_BSC, network: 56, startBlock: startBlock_BSC})
 .onBlock(anyEthTotalSupplyProcessorBSC)
 
-Bep20Processor.bind(wethAddress_BSC, 56)
-.startBlock(startBlock_BSC)
+Bep20Processor.bind({address: wethAddress_BSC, network: 56, startBlock: startBlock_BSC})
 .onBlock(wethBalanceProcessorBSC)
 
-BscAnyswapRouterProcessor.bind(routerAddress_BSC, 56)
-.startBlock(startBlock_BSC)
+BscAnyswapRouterProcessor.bind({address: routerAddress_BSC, network: 56, startBlock: startBlock_BSC})
 .onLogAnySwapIn(handleSwapInBSC, inFilterBSC)
 .onLogAnySwapOut(handleSwapOutBSC, outFilterBSC)
 
 
 //Rospten processors
-ERC20Processor.bind(MTT_address, 3)
-.startBlock(startBlock_Ropsten)
-.onBlock(mttBalanceProcessor)
+ERC20Processor.bind({address: MTT_address, network: 3, startBlock: startBlock_Ropsten})
+  .onBlock(mttBalanceProcessor)
 
 // X2y2Processor.bind('0xB329e39Ebefd16f40d38f07643652cE17Ca5Bac1')
 //     .startBlock(14201940)
