@@ -8,6 +8,7 @@ import { CreditLineContext, CreditLineProcessor, CreditLineProcessorTemplate } f
 
 import * as goldfinchPools from "./goldfinchPools.json"
 import { GoldfinchFactoryProcessor } from "./types/goldfinchfactory_processor";
+import { CreditDeskProcessor } from "./types/creditdesk_processor";
 
 const startBlock = 13096883
 
@@ -37,13 +38,20 @@ const creditLineTemplate = new CreditLineProcessorTemplate()
 
 // add TODO push contract level label
 GoldfinchFactoryProcessor.bind({address: "0xd20508E1E971b80EE172c73517905bfFfcBD87f9", startBlock: 11370655})
-    .onCreditLineCreated(async function (event, ctx) {
-      creditLineTemplate.bind({
-        address: event.args.creditLine,
-        startBlock: (await event.getBlock()).number // TODO add block number to ctx
-      })
+  .onCreditLineCreated(async function (event, ctx) {
+    creditLineTemplate.bind({
+      address: event.args.creditLine,
+      startBlock: ctx.blockNumber
     })
+  })
 
+CreditDeskProcessor.bind({address: "0xb2Bea2610FEEfA4868C3e094D2E44b113b6D6138", startBlock: 11370659})
+  .onCreditLineCreated(async function (event, ctx) {
+    creditLineTemplate.bind({
+      address: event.args.creditLine,
+      startBlock: ctx.blockNumber
+    })
+  })
 
 // batch handle Tranched Pools
 for (let i = 0; i < goldfinchPools.data.length; i++) {
