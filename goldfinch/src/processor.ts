@@ -16,21 +16,29 @@ const startBlock = 13096883
 const seniorPoolAddress = "0x8481a6ebaf5c7dabc3f7e09e44a89531fd31f822"
 
 const seniorPoolHandler = async function(_:any, ctx: SeniorPoolContext) {
-  const totalLoansOutstanding = Number((await ctx.contract.totalLoansOutstanding()).toBigInt() / 10n**6n)
-  const sharePrice = Number((await ctx.contract.sharePrice()).toBigInt() / 10n**6n)
-  const assets = Number((await ctx.contract.assets()).toBigInt() / 10n**6n)
-
-  ctx.meter.Gauge('goldfinch_totalLoansOutstanding').record(totalLoansOutstanding)
-  ctx.meter.Gauge('goldfinch_sharePrice').record(sharePrice)
-  ctx.meter.Gauge('goldfinch_assets').record(assets)
+  const p1 = ctx.contract.totalLoansOutstanding().then(v => {
+    const totalLoansOutstanding = Number(v.toBigInt() / 10n**6n)
+    ctx.meter.Gauge('goldfinch_totalLoansOutstanding').record(totalLoansOutstanding)
+  })
+  const p2 = ctx.contract.sharePrice().then(v => {
+    const sharePrice = Number(v.toBigInt()/ 10n**6n)
+    ctx.meter.Gauge('goldfinch_sharePrice').record(sharePrice)
+  })
+  const p3 = ctx.contract.assets().then(v => {
+    const assets = Number(v.toBigInt() / 10n**6n)
+    ctx.meter.Gauge('goldfinch_assets').record(assets)
+  })
+  return Promise.all([p1, p2, p3])
 }
 
 SeniorPoolProcessor.bind({address: seniorPoolAddress, startBlock: startBlock})
   .onBlock(seniorPoolHandler)
 
 async function creditlineHandler (_: any, ctx: CreditLineContext) {
+  // console.log("start" +  ctx.contract._underlineContract.address)
   const loanBalance = Number((await ctx.contract.balance()).toBigInt() / 10n ** 6n)
   ctx.meter.Gauge('tranchedPool_balance').record(loanBalance)
+  // console.log("end" + ctx.contract._underlineContract.address)
 }
 
 const creditLineTemplate = new CreditLineProcessorTemplate()
