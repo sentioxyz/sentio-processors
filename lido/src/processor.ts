@@ -14,7 +14,7 @@ function balanceHandlerGenerator(vaultName: string, vaultAddress: string) {
   return async function(_:any, ctx: ERC20BalanceContext) {
     const balance = Number((await ctx.contract.balanceOf(vaultAddress)).toBigInt() / 10n**18n)
 
-    ctx.meter.Histogram('lido_'+ vaultName +'_balance').record(balance)
+    ctx.meter.Gauge('lido_'+ vaultName +'_balance').record(balance)
   }
 }
 
@@ -30,9 +30,9 @@ ERC20BalanceProcessor.bind({address: WSTETH_TOKEN_ADDRESS, startBlock: WSTETH_ST
 //   const sharePrice = Number((await ctx.contract.sharePrice()).toBigInt() / 10n**6n)
 //   const assets = Number((await ctx.contract.assets()).toBigInt() / 10n**6n)
 
-//   ctx.meter.Histogram('goldfinch_totalLoansOutstanding').record(totalLoansOutstanding)
-//   ctx.meter.Histogram('goldfinch_sharePrice').record(sharePrice)
-//   ctx.meter.Histogram('goldfinch_assets').record(assets)
+//   ctx.meter.Gauge('goldfinch_totalLoansOutstanding').record(totalLoansOutstanding)
+//   ctx.meter.Gauge('goldfinch_sharePrice').record(sharePrice)
+//   ctx.meter.Gauge('goldfinch_assets').record(assets)
 // }
 
 // SeniorPoolProcessor.bind(seniorPoolAddress)
@@ -49,7 +49,7 @@ ERC20BalanceProcessor.bind({address: WSTETH_TOKEN_ADDRESS, startBlock: WSTETH_ST
 
 //   const handler = async function(_:any, ctx: CreditLineContext) {
 //     const loanBalance = Number((await ctx.contract.balance()).toBigInt() / 10n**6n)
-//     ctx.meter.Histogram('tranchedPool_balance').record(loanBalance, {"idx" : String(i)})
+//     ctx.meter.Gauge('tranchedPool_balance').record(loanBalance, {"idx" : String(i)})
 //     ctx.meter.Counter('tranchedPool_balance_total').add(loanBalance)
 //   }
 

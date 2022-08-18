@@ -20,9 +20,9 @@ const seniorPoolHandler = async function(_:any, ctx: SeniorPoolContext) {
   const sharePrice = Number((await ctx.contract.sharePrice()).toBigInt() / 10n**6n)
   const assets = Number((await ctx.contract.assets()).toBigInt() / 10n**6n)
 
-  ctx.meter.Histogram('goldfinch_totalLoansOutstanding').record(totalLoansOutstanding)
-  ctx.meter.Histogram('goldfinch_sharePrice').record(sharePrice)
-  ctx.meter.Histogram('goldfinch_assets').record(assets)
+  ctx.meter.Gauge('goldfinch_totalLoansOutstanding').record(totalLoansOutstanding)
+  ctx.meter.Gauge('goldfinch_sharePrice').record(sharePrice)
+  ctx.meter.Gauge('goldfinch_assets').record(assets)
 }
 
 SeniorPoolProcessor.bind({address: seniorPoolAddress, startBlock: startBlock})
@@ -30,7 +30,7 @@ SeniorPoolProcessor.bind({address: seniorPoolAddress, startBlock: startBlock})
 
 async function creditlineHandler (_: any, ctx: CreditLineContext) {
   const loanBalance = Number((await ctx.contract.balance()).toBigInt() / 10n ** 6n)
-  ctx.meter.Histogram('tranchedPool_balance').record(loanBalance)
+  ctx.meter.Gauge('tranchedPool_balance').record(loanBalance)
 }
 
 const creditLineTemplate = new CreditLineProcessorTemplate()

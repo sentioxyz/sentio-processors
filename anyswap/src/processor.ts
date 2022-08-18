@@ -50,14 +50,14 @@ var totalSupply: number
 const anyEthTotalSupplyProcessor = async function (_: any, ctx: AnyswapERC20Context) {
   totalSupply = Number((await ctx.contract.totalSupply()).toBigInt() / 10n ** 12n) / (10**6)
 
-  ctx.meter.Histogram('anyETH_total_supply').record(totalSupply)
+  ctx.meter.Gauge('anyETH_total_supply').record(totalSupply)
 }
 
 //netBalance is weth_balance - anyswap balance
 const wethBalanceProcessor = async function (block: any, ctx: ERC20Context) {
   const balance = Number((await ctx.contract.balanceOf(anyEthAddress)).toBigInt() / 10n ** 12n) / (10**6)
-  ctx.meter.Histogram('weth_balance').record(balance)
-  ctx.meter.Histogram('netBalance_old').record(balance - totalSupply)
+  ctx.meter.Gauge('weth_balance').record(balance)
+  ctx.meter.Gauge('netBalance_old').record(balance - totalSupply)
 }
 
 // netSwapFlow is defined as all anyswapOut events - anyswapIn events
@@ -70,7 +70,7 @@ const handleSwapIn = async function (event: LogAnySwapInEvent, ctx: AnyswapRoute
 const handleSwapOut1 = async function (event: LogAnySwapOut_address_address_address_uint256_uint256_uint256_Event, ctx: AnyswapRouterContext) {
   const outAmount = Number(event.args.amount.toBigInt() / 10n ** 12n) / (10**6)
 
-  ctx.meter.Histogram('anyswapOut').record(outAmount, { "to": getChainName(event.args.toChainID.toString()) })
+  ctx.meter.Gauge('anyswapOut').record(outAmount, { "to": getChainName(event.args.toChainID.toString()) })
 
   ctx.meter.Counter('anyswapOutTotal').add(outAmount)
   ctx.meter.Counter('netSwapFlow').add(outAmount)
@@ -81,7 +81,7 @@ const handleSwapOut2 = async function (event: LogAnySwapOut_address_address_stri
   ctx.meter.Counter('anyswapOutTotal').add(outAmount)
   ctx.meter.Counter('netSwapFlow').add(outAmount)
 
-  ctx.meter.Histogram('anyswapOut').record(outAmount, { "to": getChainName(event.args.toChainID.toString()) })
+  ctx.meter.Gauge('anyswapOut').record(outAmount, { "to": getChainName(event.args.toChainID.toString()) })
 }
 
 // BSC handlers
@@ -89,14 +89,14 @@ var TOTAL_SUPPLY_BSC: number
 const anyEthTotalSupplyProcessorBSC = async function (_: any, ctx: Bep20Context) {
   TOTAL_SUPPLY_BSC = Number((await ctx.contract.totalSupply()).toBigInt() / 10n ** 12n) / (10**6)
 
-  ctx.meter.Histogram('anyETH_bsc_total_supply').record(TOTAL_SUPPLY_BSC)
+  ctx.meter.Gauge('anyETH_bsc_total_supply').record(TOTAL_SUPPLY_BSC)
 }
 
 //netBalance is weth_balance - anyswap balance
 const wethBalanceProcessorBSC = async function (block: any, ctx: Bep20Context) {
   const balance = Number((await ctx.contract.balanceOf(anyETHAddress_BSC)).toBigInt() / 10n ** 12n) / (10**6)
-  ctx.meter.Histogram('weth_bsc_balance').record(balance)
-  ctx.meter.Histogram('netBalance_bsc').record(balance - TOTAL_SUPPLY_BSC)
+  ctx.meter.Gauge('weth_bsc_balance').record(balance)
+  ctx.meter.Gauge('netBalance_bsc').record(balance - TOTAL_SUPPLY_BSC)
 }
 
 // netSwapFlow is defined as all anyswapOut events - anyswapIn events
@@ -115,7 +115,7 @@ const handleSwapOutBSC = async function (event: BscLogAnySwapOutEvent, ctx: BscA
 // Rospten handlers
 const mttBalanceProcessor = async function (block: any, ctx: ERC20Context) {
   const balance = Number((await ctx.contract.balanceOf(pool_address)).toBigInt() / 10n ** 12n) / (10**6)
-  ctx.meter.Histogram('mtt_balance').record(balance)
+  ctx.meter.Gauge('mtt_balance').record(balance)
 }
 
 const inFilter = AnyswapRouterProcessor.filters.LogAnySwapIn(null, anyEthAddress)
@@ -159,7 +159,7 @@ ERC20Processor.bind({address: MTT_address, network: 3, startBlock: startBlock_Ro
 //       const phase = (await ctx.contract.currentPhase()).toString()
 //       const reward = await ctx.contract.rewardPerBlockForStaking()
 
-//       ctx.meter.Histogram('reward_per_block').record(reward, { phase })
+//       ctx.meter.Gauge('reward_per_block').record(reward, { phase })
 //     })
 
 // const filter = ERC20Processor.filters.Transfer(
