@@ -126,7 +126,7 @@ const outFilter2 = AnyswapRouterProcessor.filters['LogAnySwapOut(address,address
 const inFilterBSC = BscAnyswapRouterProcessor.filters.LogAnySwapIn(null, anyETHAddress_BSC)
 const outFilterBSC = BscAnyswapRouterProcessor.filters.LogAnySwapOut(anyETHAddress_BSC)
 
-AnyswapERC20Processor.bind({address: anyEthAddress, startBlock: startBlock})
+AnyswapERC20Processor.bind({address: anyEthAddress, startBlock: 14215865})
 .onBlock(anyEthTotalSupplyProcessor)
 
 ERC20Processor.bind({address: wethAddress, startBlock: startBlock})
