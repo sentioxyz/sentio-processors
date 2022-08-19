@@ -46,7 +46,7 @@ const wethAddress_BSC = "0x2170ed0880ac9a755fd29b2688956bd959f933f8"
 const MTT_address = "0x39e68dd41af6fd870f27a6b77cbcffa64626b0f3"
 const pool_address = "0x6A29C3E7DC05B2888243644DB079ff8Edf890665"
 
-var totalSupply: number
+var totalSupply: number = 0
 const anyEthTotalSupplyProcessor = async function (_: any, ctx: AnyswapERC20Context) {
   totalSupply = Number((await ctx.contract.totalSupply()).toBigInt() / 10n ** 12n) / (10**6)
 
@@ -85,7 +85,7 @@ const handleSwapOut2 = async function (event: LogAnySwapOut_address_address_stri
 }
 
 // BSC handlers
-var TOTAL_SUPPLY_BSC: number
+var TOTAL_SUPPLY_BSC: number = 0
 const anyEthTotalSupplyProcessorBSC = async function (_: any, ctx: Bep20Context) {
   TOTAL_SUPPLY_BSC = Number((await ctx.contract.totalSupply()).toBigInt() / 10n ** 12n) / (10**6)
 
