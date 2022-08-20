@@ -35,10 +35,10 @@ SeniorPoolProcessor.bind({address: seniorPoolAddress, startBlock: startBlock})
   .onBlock(seniorPoolHandler)
 
 async function creditlineHandler (_: any, ctx: CreditLineContext) {
-  // console.log("start" +  ctx.contract._underlineContract.address)
+  console.log("start" +  ctx.contract._underlineContract.address)
   const loanBalance = Number((await ctx.contract.balance()).toBigInt() / 10n ** 6n)
   ctx.meter.Gauge('tranchedPool_balance').record(loanBalance)
-  // console.log("end" + ctx.contract._underlineContract.address)
+  console.log("end" + ctx.contract._underlineContract.address)
 }
 
 const creditLineTemplate = new CreditLineProcessorTemplate()
