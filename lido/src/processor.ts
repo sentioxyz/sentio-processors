@@ -18,14 +18,6 @@ function balanceHandlerGenerator(vaultName: string, vaultAddress: string) {
   }
 }
 
-<<<<<<< Updated upstream
-ERC20BalanceProcessor.bind({address: STETH_TOKEN_ADDRESS, startBlock: STETH_START_BLOCK})
-  .onBlock(balanceHandlerGenerator('aave', AAVE_VAULT_ADDRESS))
-
-ERC20BalanceProcessor.bind({address: WSTETH_TOKEN_ADDRESS, startBlock: WSTETH_START_BLOCK})
-  .onBlock(balanceHandlerGenerator('makerA', WSTETH_A_VAULT_ADDRESS))
-  .onBlock(balanceHandlerGenerator('makerB', WSTETH_B_VAULT_ADDRESS))
-=======
 ERC20BalanceProcessor.bind({address: STETH_TOKEN_ADDRESS, startBlock: startBlock})
 .onBlock(balanceHandlerGenerator('aave', AAVE_VAULT_ADDRESS))
 
@@ -34,7 +26,6 @@ ERC20BalanceProcessor.bind({address: WSTETH_TOKEN_ADDRESS, startBlock: startBloc
 
 ERC20BalanceProcessor.bind({address: WSTETH_TOKEN_ADDRESS, startBlock: startBlock})
 .onBlock(balanceHandlerGenerator('makerB', WSTETH_B_VAULT_ADDRESS))
->>>>>>> Stashed changes
 
 // const seniorPoolHandler = async function(_:any, ctx: SeniorPoolContext) {
 //   const totalLoansOutstanding = Number((await ctx.contract.totalLoansOutstanding()).toBigInt() / 10n**6n)
