@@ -1,10 +1,10 @@
 const ethers = require('ethers')
 
 let ABI = [
-    "function balanceOf(address owner) view returns (uint)"
+    "function joinPool(address owner) view returns (uint)"
 ];
 let iface = new ethers.utils.Interface(ABI);
-let data = iface.encodeFunctionData("balanceOf", [ "0x6A29C3E7DC05B2888243644DB079ff8Edf890665"])
+let data = iface.encodeFunctionData("joinPool", [ "0x6A29C3E7DC05B2888243644DB079ff8Edf890665"])
 console.log(data)
 
 
