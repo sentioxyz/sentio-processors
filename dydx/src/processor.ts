@@ -2,6 +2,7 @@ import { DYDX_PERPETUAL_ADDR, DYDX_V2_STARTBLOCK, USDC_ADDR} from './constant'
 import { LogDepositEvent, LogWithdrawalPerformedEvent, LogMintWithdrawalPerformedEvent } from './types/DydxPerpetual'
 import { DydxPerpetualContext, DydxPerpetualProcessor } from './types/dydxperpetual_processor'
 import { ERC20BalanceContext, ERC20BalanceProcessor, getERC20BalanceContract } from './types/erc20balance_processor'
+
 const USDC_DECIMAL = 6
 // another flexible processing example:
 // https://github.com/NethermindEth/Forta-Agents/blob/main/DYDX-Bots/Perpetual-Large-Deposits-Withdrawals/src/agent.ts#L48
