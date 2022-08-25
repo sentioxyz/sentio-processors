@@ -8,5 +8,5 @@ for dir in $BASEDIR/*/; do # list directories in the form "/tmp/dirname/"
   dir=${dir%*/}                           # remove the trailing "/"
   echo "### Upgrading ${dir##*/}"             # print everything after the final "/"
   cd $dir
-  yarn install && yarn upgrade @sentio/processor
+  yarn install && yarn upgrade @sentio/sdk
 done
