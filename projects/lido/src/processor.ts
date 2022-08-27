@@ -7,7 +7,7 @@ import {
   STETH_START_BLOCK,
   WSTETH_START_BLOCK
 } from './constant'
-import { ERC20BalanceContext, ERC20BalanceProcessor } from './types/erc20balance_processor'
+import { ERC20BalanceContext, ERC20BalanceProcessor } from './types/erc20balance'
 const startBlock = 13096883
 
 function balanceHandlerGenerator(vaultName: string, vaultAddress: string) {

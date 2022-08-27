@@ -1,11 +1,11 @@
-import { ERC20Context, ERC20Processor } from './types/erc20_processor'
+import { ERC20Context, ERC20Processor } from './types/erc20'
 // import { X2y2Context, X2y2Processor } from './types/x2y2_processor'
-import { AnyswapERC20Context, AnyswapERC20Processor } from "./types/anyswaperc20_processor";
-import { AnyswapRouterContext, AnyswapRouterProcessor } from './types/anyswaprouter_processor';
-import { LogAnySwapInEvent, LogAnySwapOut_address_address_address_uint256_uint256_uint256_Event, LogAnySwapOut_address_address_string_uint256_uint256_uint256_Event } from './types/AnyswapRouter';
-import { BscAnyswapRouterContext, BscAnyswapRouterProcessor } from './types/bscanyswaprouter_processor';
+import { AnyswapERC20Context, AnyswapERC20Processor } from "./types/anyswaperc20";
+import { AnyswapRouterContext, AnyswapRouterProcessor } from './types/anyswaprouter';
+import { LogAnySwapInEvent, LogAnySwapOut_address_address_address_uint256_uint256_uint256_Event, LogAnySwapOut_address_address_string_uint256_uint256_uint256_Event } from './types/anyswaprouter';
+import { BscAnyswapRouterContext, BscAnyswapRouterProcessor } from './types/bscanyswaprouter';
 import { LogAnySwapInEvent as BscLogAnySwapInEvent, LogAnySwapOutEvent as BscLogAnySwapOutEvent } from './types/BscAnyswapRouter';
-import { Bep20Context, Bep20Processor } from './types/bep20_processor';
+import { Bep20Context, Bep20Processor } from './types/bep20';
 // import { getChainName } from '@sentio/sdk';
 
 // TODO provide builtin

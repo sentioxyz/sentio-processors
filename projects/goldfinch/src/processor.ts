@@ -1,14 +1,9 @@
-import { SeniorPoolContext, SeniorPoolProcessor} from './types/seniorpool_processor'
-import {
-  TranchedPoolContext,
-  TranchedPoolProcessor,
-  TranchedPoolProcessorTemplate
-} from './types/tranchedpool_processor'
-import { CreditLineContext, CreditLineProcessor, CreditLineProcessorTemplate } from './types/creditline_processor'
+import { SeniorPoolContext, SeniorPoolProcessor} from './types/seniorpool'
+import { CreditLineContext, CreditLineProcessor, CreditLineProcessorTemplate } from './types/creditline'
 
 import * as goldfinchPools from "./goldfinchPools.json"
-import { GoldfinchFactoryProcessor } from "./types/goldfinchfactory_processor";
-import { CreditDeskProcessor } from "./types/creditdesk_processor";
+import { GoldfinchFactoryProcessor } from "./types/goldfinchfactory";
+import { CreditDeskProcessor } from "./types/creditdesk";
 
 const startBlock = 13096883
 

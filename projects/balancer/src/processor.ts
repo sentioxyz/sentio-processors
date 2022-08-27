@@ -3,9 +3,9 @@ import {
   BALANCER_VAULT_START_BLOCK,
   WETH9_ADDRESS
 } from './constant'
-import { FlashLoanEvent, InternalBalanceChangedEvent, SwapEvent } from './types/Vault'
-import { VaultProcessor, VaultContext, getVaultContract } from './types/vault_processor'
-import { ERC20BalanceContext, ERC20BalanceProcessor, getERC20BalanceContract } from './types/erc20balance_processor'
+import { FlashLoanEvent, InternalBalanceChangedEvent, SwapEvent } from './types/vault'
+import { VaultProcessor, VaultContext, getVaultContract } from './types/vault'
+import { ERC20BalanceContext, ERC20BalanceProcessor, getERC20BalanceContract } from './types/erc20balance'
 import type {BigNumber} from 'ethers'
 import {BigNumber as BN} from "bignumber.js";
 
