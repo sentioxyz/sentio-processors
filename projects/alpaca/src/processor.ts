@@ -2,7 +2,6 @@ import {VAULTS_THRESHOLD_MAP} from './constant'
 import { WorkEvent } from './types/vault'
 import { VaultProcessor, VaultContext, getVaultContract } from './types/vault'
 import type {BigNumber} from 'ethers'
-import {BigNumber as BN} from "bignumber.js";
 
 export const toBn = (ethersBn: BigNumber | BigInt) => new BN(ethersBn.toString());
 

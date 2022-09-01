@@ -11,7 +11,7 @@ import { LogAnySwapInEvent as BscLogAnySwapInEvent, LogAnySwapOutEvent as BscLog
 import { Bep20Context, Bep20Processor } from './types/bep20';
 
 const startBlock = 14215845
-const startBlock_BSC = 13312128
+const startBlock_BSC = 7910338
 const startBlock_Ropsten = 12549988
 
 // ETH addresses
