@@ -1,4 +1,7 @@
-import { ERC20Context, ERC20Processor } from './types/erc20'
+import { Erc20Context, Erc20Processor } from '@sentio/sdk/builtin/erc20'
+import { getChainName, toBigDecimal } from '@sentio/sdk/utils';
+import { BigDecimal } from '@sentio/sdk';
+
 // import { X2y2Context, X2y2Processor } from './types/x2y2_processor'
 import { AnyswapERC20Context, AnyswapERC20Processor } from "./types/anyswaperc20";
 import { AnyswapRouterContext, AnyswapRouterProcessor } from './types/anyswaprouter';
@@ -6,27 +9,6 @@ import { LogAnySwapInEvent, LogAnySwapOut_address_address_address_uint256_uint25
 import { BscAnyswapRouterContext, BscAnyswapRouterProcessor } from './types/bscanyswaprouter';
 import { LogAnySwapInEvent as BscLogAnySwapInEvent, LogAnySwapOutEvent as BscLogAnySwapOutEvent } from './types/BscAnyswapRouter';
 import { Bep20Context, Bep20Processor } from './types/bep20';
-// import { getChainName } from '@sentio/sdk';
-
-// TODO provide builtin
-const getChainName = function(id: any): string {
-  return String(CHAIN_ID_MAP.get(Number(id)))
-}
-const CHAIN_ID_MAP = new Map<number, String>(
-  [
-    [1, "Ethereum"],
-    [10, "Optimism"],
-    [25, "Cronos"],
-    [56, "BSC"],
-    [66, "OKC"],
-    [128, "Huobi"],
-    [137, "Polygon"],
-    [250, "Fantom"],
-    [321, "KCC"],
-    [42161, "Arbitrum"],
-    [43114, "Avalanche"]
-  ]
-)
 
 const startBlock = 14215845
 const startBlock_BSC = 13312128
@@ -54,7 +36,7 @@ const anyEthTotalSupplyProcessor = async function (_: any, ctx: AnyswapERC20Cont
 }
 
 //netBalance is weth_balance - anyswap balance
-const wethBalanceProcessor = async function (block: any, ctx: ERC20Context) {
+const wethBalanceProcessor = async function (block: any, ctx: Erc20Context) {
   const balance = Number((await ctx.contract.balanceOf(anyEthAddress)).toBigInt() / 10n ** 12n) / (10**6)
   ctx.meter.Gauge('weth_balance').record(balance)
   ctx.meter.Gauge('netBalance_old').record(balance - totalSupply)
@@ -62,14 +44,13 @@ const wethBalanceProcessor = async function (block: any, ctx: ERC20Context) {
 
 // netSwapFlow is defined as all anyswapOut events - anyswapIn events
 const handleSwapIn = async function (event: LogAnySwapInEvent, ctx: AnyswapRouterContext) {
-  const inAmount = Number(event.args.amount.toBigInt() / 10n ** 12n) / (10**6)
+  const inAmount = toBigDecimal(event.args.amount).div(10**18)
   ctx.meter.Counter('anyswapIn').add(inAmount, { "from": getChainName(event.args.fromChainID.toString()) })
   ctx.meter.Counter('netSwapFlow').sub(inAmount)
 }
 
 const handleSwapOut1 = async function (event: LogAnySwapOut_address_address_address_uint256_uint256_uint256_Event, ctx: AnyswapRouterContext) {
-  const outAmount = Number(event.args.amount.toBigInt() / 10n ** 12n) / (10**6)
-
+  const outAmount = toBigDecimal(event.args.amount).div(10**18)
   ctx.meter.Gauge('anyswapOut').record(outAmount, { "to": getChainName(event.args.toChainID.toString()) })
 
   ctx.meter.Counter('anyswapOutTotal').add(outAmount)
@@ -77,7 +58,7 @@ const handleSwapOut1 = async function (event: LogAnySwapOut_address_address_addr
 }
 
 const handleSwapOut2 = async function (event: LogAnySwapOut_address_address_string_uint256_uint256_uint256_Event, ctx: AnyswapRouterContext) {
-  const outAmount = Number(event.args.amount.toBigInt() / 10n ** 12n) / (10**6)
+  const outAmount = toBigDecimal(event.args.amount).div(10**18)
   ctx.meter.Counter('anyswapOutTotal').add(outAmount)
   ctx.meter.Counter('netSwapFlow').add(outAmount)
 
@@ -101,20 +82,22 @@ const wethBalanceProcessorBSC = async function (block: any, ctx: Bep20Context) {
 
 // netSwapFlow is defined as all anyswapOut events - anyswapIn events
 const handleSwapInBSC = async function (event: BscLogAnySwapInEvent, ctx: BscAnyswapRouterContext) {
-  const inAmount = Number(event.args.amount.toBigInt() / 10n ** 12n) / (10**6)
+  const inAmount = toBigDecimal(event.args.amount).div(10**18)
+
   ctx.meter.Counter('anyswapInTotal_bsc').add(inAmount)
   ctx.meter.Counter('netSwapFlow_bsc').sub(inAmount)
 }
 
 const handleSwapOutBSC = async function (event: BscLogAnySwapOutEvent, ctx: BscAnyswapRouterContext) {
-  const outAmount = Number(event.args.amount.toBigInt() / 10n ** 12n) / (10**6)
+  const outAmount = toBigDecimal(event.args.amount).div(10**18)
+
   ctx.meter.Counter('anyswapOutTotal_bsc').add(outAmount)
   ctx.meter.Counter('netSwapFlow_bsc').add(outAmount)
 }
 
 // Rospten handlers
-const mttBalanceProcessor = async function (block: any, ctx: ERC20Context) {
-  const balance = Number((await ctx.contract.balanceOf(pool_address)).toBigInt() / 10n ** 12n) / (10**6)
+const mttBalanceProcessor = async function (block: any, ctx: Erc20Context) {
+  const balance = toBigDecimal((await ctx.contract.balanceOf(pool_address))).div(10**18)
   ctx.meter.Gauge('mtt_balance').record(balance)
 }
 
@@ -129,7 +112,7 @@ const outFilterBSC = BscAnyswapRouterProcessor.filters.LogAnySwapOut(anyETHAddre
 AnyswapERC20Processor.bind({address: anyEthAddress, startBlock: 14215865})
 .onBlock(anyEthTotalSupplyProcessor)
 
-ERC20Processor.bind({address: wethAddress, startBlock: startBlock})
+Erc20Processor.bind({address: wethAddress, startBlock: startBlock})
 .onBlock(wethBalanceProcessor)
 
 AnyswapRouterProcessor.bind({address: routerAddress, startBlock: startBlock})
@@ -150,7 +133,7 @@ BscAnyswapRouterProcessor.bind({address: routerAddress_BSC, network: 56, startBl
 
 
 //Rospten processors
-ERC20Processor.bind({address: MTT_address, network: 3, startBlock: startBlock_Ropsten})
+Erc20Processor.bind({address: MTT_address, network: 3, startBlock: startBlock_Ropsten})
   .onBlock(mttBalanceProcessor)
 
 // X2y2Processor.bind('0xB329e39Ebefd16f40d38f07643652cE17Ca5Bac1')
