@@ -90,10 +90,16 @@ VaultProcessor.bind({address: BALANCER_VAULT_ADDRESS, startBlock: BALANCER_VAULT
 .onSwap(swapHandler)
 .onInternalBalanceChanged(internalBalanceProcessor)
 
-ERC20BalanceProcessor.bind({address: WETH9_ADDRESS, startBlock: BALANCER_VAULT_START_BLOCK})
-.onBlock(balanceProcessor)
-
-VaultProcessor.bind({address: BALANCER_VAULT_ADDRESS, startBlock: BALANCER_VAULT_START_BLOCK, network: 42161})
+VaultProcessor.bind({address: BALANCER_VAULT_ADDRESS, network: 42161})
     .onFlashLoan(flashLoanHandler, ethFlashLoanFilter)
     .onSwap(swapHandler)
     .onInternalBalanceChanged(internalBalanceProcessor)
+
+VaultProcessor.bind({address: BALANCER_VAULT_ADDRESS, network: 137})
+    .onFlashLoan(flashLoanHandler, ethFlashLoanFilter)
+    .onSwap(swapHandler)
+    .onInternalBalanceChanged(internalBalanceProcessor)
+
+// TODO: add more networks. I did not add before balanceProcessor requires passing in a different WETH address.
+ERC20BalanceProcessor.bind({address: WETH9_ADDRESS, startBlock: BALANCER_VAULT_START_BLOCK})
+    .onBlock(balanceProcessor)
