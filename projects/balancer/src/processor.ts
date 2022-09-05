@@ -14,16 +14,18 @@ export const toBn = (ethersBn: BigNumber | BigInt) => new BN(ethersBn.toString()
 // helper functions to handle decimals
 const DECIMAL_MAP = new Map<string, number>()
 
-const getDecimal = async function(tokenAddress: string):Promise<number> {
-  if (DECIMAL_MAP.has(tokenAddress)) {
-    return DECIMAL_MAP.get(tokenAddress)!
+const getDecimal = async function(tokenAddress: string, chainId: string):Promise<number> {
+  const key = chainId + tokenAddress
+  if (DECIMAL_MAP.has(key)) {
+    return DECIMAL_MAP.get(key)!
   }
-  const decimal = await getERC20BalanceContract(tokenAddress).decimals()
-  DECIMAL_MAP.set(tokenAddress, decimal)
+  const contract = getERC20BalanceContract(tokenAddress, Number.parseInt(chainId))
+  const decimal = await contract.decimals()
+  DECIMAL_MAP.set(key, decimal)
   return decimal
 }
-const getNormalizedAmount = async function(tokenAddress: string, amount: BigNumber) {
-  const decimal = await getDecimal(tokenAddress)
+const getNormalizedAmount = async function(tokenAddress: string, amount: BigNumber, chainId: string) {
+  const decimal = await getDecimal(tokenAddress, chainId)
   // TODO: toNumber() can overflow
   return toBn(amount).div(toBn(10n ** BigInt(decimal))).toNumber()
 }
@@ -39,7 +41,7 @@ const getNormalizedAmount = async function(tokenAddress: string, amount: BigNumb
 
 const flashLoanHandler = async function(event: FlashLoanEvent, ctx: VaultContext) {
   const token = event.args.token
-  const loanAmount = await getNormalizedAmount(token, event.args.amount)
+  const loanAmount = await getNormalizedAmount(token, event.args.amount, ctx.chainId)
   ctx.meter.Gauge('weth_flashloan_amount').record(loanAmount)
 }
 
@@ -48,12 +50,12 @@ const swapHandler = async function(event: SwapEvent, ctx: VaultContext) {
   const poolId = event.args.poolId
   const tokenIn = event.args.tokenIn
   const tokenOut = event.args.tokenOut
-  const amountIn = await getNormalizedAmount(tokenIn, event.args.amountIn)
-  const amountOut = await getNormalizedAmount(tokenOut, event.args.amountOut)
+  const amountIn = await getNormalizedAmount(tokenIn, event.args.amountIn, ctx.chainId)
+  const amountOut = await getNormalizedAmount(tokenOut, event.args.amountOut, ctx.chainId)
   ctx.meter.Gauge('swap_amountIn').record(amountIn, {"poolId": poolId, "tokenIn": tokenIn, "tokenOut": tokenOut})
   ctx.meter.Gauge('swap_amountOut').record(amountOut, {"poolId": poolId, "tokenIn": tokenIn, "tokenOut": tokenOut})
-  const previousTokenIn = await getNormalizedAmount(tokenIn, await getERC20BalanceContract(tokenIn).balanceOf(BALANCER_VAULT_ADDRESS, {blockTag: event.blockNumber - 1}))
-  const previousTokenOut = await getNormalizedAmount(tokenOut, await getERC20BalanceContract(tokenOut).balanceOf(BALANCER_VAULT_ADDRESS, {blockTag: event.blockNumber - 1}))
+  const previousTokenIn = await getNormalizedAmount(tokenIn, await getERC20BalanceContract(tokenIn, ctx.chainId).balanceOf(BALANCER_VAULT_ADDRESS, {blockTag: event.blockNumber - 1}), ctx.chainId)
+  const previousTokenOut = await getNormalizedAmount(tokenOut, await getERC20BalanceContract(tokenOut, ctx.chainId).balanceOf(BALANCER_VAULT_ADDRESS, {blockTag: event.blockNumber - 1}), ctx.chainId)
   // don't record if previous balance is too small
   if (previousTokenIn > 1) {
     ctx.meter.Gauge('swap_amountIn_ratio').record(amountIn / (previousTokenIn))
@@ -65,9 +67,9 @@ const swapHandler = async function(event: SwapEvent, ctx: VaultContext) {
 
 const internalBalanceProcessor = async function(event: InternalBalanceChangedEvent, ctx: VaultContext) {
   const token = event.args.token
-  const delta = await getNormalizedAmount(token, event.args.delta)
+  const delta = await getNormalizedAmount(token, event.args.delta, ctx.chainId)
   ctx.meter.Gauge('internal_balance_delta').record(delta, {"token": token})
-  const previousBalance = await getNormalizedAmount(token, await getERC20BalanceContract(token).balanceOf(BALANCER_VAULT_ADDRESS, {blockTag: event.blockNumber - 1}))
+  const previousBalance = await getNormalizedAmount(token, await getERC20BalanceContract(token, Number.parseInt(ctx.chainId)).balanceOf(BALANCER_VAULT_ADDRESS, {blockTag: event.blockNumber - 1}), ctx.chainId)
   if (previousBalance > 1) {
     ctx.meter.Gauge('internal_balance_delta_ratio').record(delta / (previousBalance))
   }
@@ -75,7 +77,7 @@ const internalBalanceProcessor = async function(event: InternalBalanceChangedEve
 
 
 const balanceProcessor = async function (block: any, ctx: ERC20BalanceContext) {
-  const balance = await getNormalizedAmount(WETH9_ADDRESS, await ctx.contract.balanceOf(BALANCER_VAULT_ADDRESS))
+  const balance = await getNormalizedAmount(WETH9_ADDRESS, await ctx.contract.balanceOf(BALANCER_VAULT_ADDRESS), ctx.chainId)
   ctx.meter.Gauge('weth_balance').record(balance)
 }
 
@@ -89,3 +91,7 @@ VaultProcessor.bind({address: BALANCER_VAULT_ADDRESS, startBlock: BALANCER_VAULT
 ERC20BalanceProcessor.bind({address: WETH9_ADDRESS, startBlock: BALANCER_VAULT_START_BLOCK})
 .onBlock(balanceProcessor)
 
+VaultProcessor.bind({address: BALANCER_VAULT_ADDRESS, startBlock: BALANCER_VAULT_START_BLOCK, network: 42161})
+    .onFlashLoan(flashLoanHandler, ethFlashLoanFilter)
+    .onSwap(swapHandler)
+    .onInternalBalanceChanged(internalBalanceProcessor)
