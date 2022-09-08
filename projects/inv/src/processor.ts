@@ -7,7 +7,7 @@ const latestAnswerProcessor = async function (_:any, ctx: InvFeedContext) {
   ctx.meter.Gauge('Inv_latestAnswer').record(latestAnswer)
 }
 
-InvFeedProcessor.bind({address: INV_ADDRESS, startBlock: 12415560})
+InvFeedProcessor.bind({address: INV_ADDRESS, startBlock: 12415660})
 .onBlock(latestAnswerProcessor)
 
 
