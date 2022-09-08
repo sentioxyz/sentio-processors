@@ -5,9 +5,7 @@ export const LOOPRING_WALLET_FACTORY3 = "0x262f27480cCb98FA0B91D7A9f11bB82e3547a
 export const LOOPRING_WALLET_FACTORY4 = "0x262f27480cCb98FA0B91D7A9f11bB82e3547ada1".toLowerCase()
 export const LOOPRING_WALLET_FACTORY5 = "0x57E037F4d2c8BEa011Ad8a9A5AF4AaEEd508650f".toLowerCase()
 
-
-export const EVENT1 = "event WalletCreated(indexed address wallet, indexed address owner)"
-
+export const EVENT1 = "event WalletCreated(address indexed wallet, address indexed owner)"
 
 //0x60488568340cbdf60d672f6b1b896cde221bdcd9062bdd6a95cfded547013d13 topic
 export const EVENT = "event WalletCreated(address wallet, string ensLabel, address owner, bool blankUsed)"
