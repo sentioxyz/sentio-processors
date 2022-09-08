@@ -1,5 +1,5 @@
-import { Erc20Context, Erc20Processor } from '@sentio/sdk/builtin/erc20'
-import { getChainName, toBigDecimal } from '@sentio/sdk/utils';
+import { Erc20Context, Erc20Processor } from '@sentio/sdk/lib/builtin/erc20'
+import { getChainName, toBigDecimal } from '@sentio/sdk/lib/utils';
 import { BigDecimal } from '@sentio/sdk';
 
 // import { X2y2Context, X2y2Processor } from './types/x2y2_processor'

@@ -4,6 +4,7 @@ import {LOOPRING_WALLET_MODULE,
   LOOPRING_WALLET_FACTORY3,
   LOOPRING_WALLET_FACTORY4,
   LOOPRING_WALLET_FACTORY5,
+  EVENT1,
   EVENT,
   EVENT2
 } from "./constant"
@@ -16,7 +17,7 @@ const walletCounter = async function(event: any, ctx: Context<BaseContract, Boun
   ctx.meter.Counter("wallet_count").add(1)
 }
 
-GenericProcessor.bind(EVENT2, {address: LOOPRING_WALLET_MODULE}).onAllEvents(walletCounter)
+GenericProcessor.bind(EVENT1, {address: LOOPRING_WALLET_MODULE}).onAllEvents(walletCounter)
 GenericProcessor.bind(EVENT, {address: LOOPRING_WALLET_FACTORY1}).onAllEvents(walletCounter)
 GenericProcessor.bind(EVENT, {address: LOOPRING_WALLET_FACTORY2}).onAllEvents(walletCounter)
 GenericProcessor.bind(EVENT, {address: LOOPRING_WALLET_FACTORY3}).onAllEvents(walletCounter)
