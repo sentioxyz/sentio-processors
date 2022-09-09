@@ -37,7 +37,12 @@ const getTokenInfo = async function(tokenAddress: string, chainId: number):Promi
   }
   const contract = getERC20BalanceContract(tokenAddress, chainId)
   const decimal = await contract.decimals({blockTag: recent_block})
-  const symbol = await contract.symbol({blockTag: recent_block})
+  let symbol = ""
+  try {
+    symbol = await contract.symbol({blockTag: recent_block})
+  } catch (e) {
+    console.log(e)
+  }
 
   const result = new TokenInfo(symbol, decimal)
   TOKEN_MAP.set(tokenAddress, result)
