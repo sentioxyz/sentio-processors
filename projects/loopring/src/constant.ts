@@ -5,6 +5,11 @@ export const LOOPRING_WALLET_FACTORY3 = "0x262f27480cCb98FA0B91D7A9f11bB82e3547a
 export const LOOPRING_WALLET_FACTORY4 = "0x9fAD9FFceA95c345D41055a63bD099E1a0576109".toLowerCase()
 export const LOOPRING_WALLET_FACTORY5 = "0x57E037F4d2c8BEa011Ad8a9A5AF4AaEEd508650f".toLowerCase()
 
+//loopring exchange address
+export const LOOPRING_EXCHANGE = "0x0baba1ad5be3a5c0a66e7ac838a129bf948f1ea4".toLowerCase()
+
+export const EVENT_DEPOSITREQUESTED = "event DepositRequested(address from, address to, address token, uint16 tokenId, uint96 amount)"
+
 export const EVENT1 = "event WalletCreated(address indexed wallet, address indexed owner)"
 
 //0x60488568340cbdf60d672f6b1b896cde221bdcd9062bdd6a95cfded547013d13 topic
@@ -12,3 +17,5 @@ export const EVENT = "event WalletCreated(address wallet, string ensLabel, addre
 
 //5b03bfed1c14a02bdeceb5fa582eb1a5765fc0bc64ca0e6af4c20afc9487f081 topic
 export const EVENT2 = "event WalletCreated(address wallet, address owner)"
+
+
