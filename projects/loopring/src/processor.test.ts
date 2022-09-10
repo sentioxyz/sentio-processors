@@ -3,13 +3,11 @@ import { Log } from '@ethersproject/abstract-provider'
 
 
 describe('Test Processor', () => {
-  const service = new TestProcessorServer()
+  const service = new TestProcessorServer(()=>require('./processor'),  {
+    1: "https://eth-mainnet.alchemyapi.io/v2/Gk024pFA-64RaEPIawL40n__1esXJFb2",
+  })
 
   beforeAll(async () => {
-    service.setup({
-      1: "https://eth-mainnet.alchemyapi.io/v2/Gk024pFA-64RaEPIawL40n__1esXJFb2",
-    })
-    require('./processor')
     await service.start()
   })
 
