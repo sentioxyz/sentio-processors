@@ -15,7 +15,10 @@ import { ExchangeV3Context, ExchangeV3Processor, ForcedWithdrawalRequestedEvent,
 import { DepositRequestedEvent } from "./types/exchangev3"
 import type {BaseContract} from 'ethers'
 import {getERC20BalanceContract} from './types/internal/erc20balance_processor'
+import {getERC20ByteContract} from './types/internal/erc20byte_processor'
 import type { BigDecimal } from "@sentio/sdk"
+import ethers from 'ethers'
+
 // helper functions to handle decimals
 class TokenInfo {
   symbol: string
@@ -36,12 +39,13 @@ const getTokenInfo = async function(tokenAddress: string, chainId: number):Promi
     return TOKEN_MAP.get(key)!
   }
   const contract = getERC20BalanceContract(tokenAddress, chainId)
+  const contractByte = getERC20ByteContract(tokenAddress, chainId)
   const decimal = await contract.decimals({blockTag: recent_block})
-  let symbol = ""
+  let symbol = "UNKNOWN"
   try {
     symbol = await contract.symbol({blockTag: recent_block})
   } catch (e) {
-    console.log(e)
+    symbol = ethers.utils.parseBytes32String(await contractByte.symbol({blockTag: recent_block}))
   }
 
   const result = new TokenInfo(symbol, decimal)
