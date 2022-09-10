@@ -17,7 +17,7 @@ import type {BaseContract} from 'ethers'
 import {getERC20BalanceContract} from './types/internal/erc20balance_processor'
 import {getERC20ByteContract} from './types/internal/erc20byte_processor'
 import type { BigDecimal } from "@sentio/sdk"
-import ethers from 'ethers'
+import {utils} from 'ethers'
 
 // helper functions to handle decimals
 class TokenInfo {
@@ -45,7 +45,7 @@ const getTokenInfo = async function(tokenAddress: string, chainId: number):Promi
   try {
     symbol = await contract.symbol({blockTag: recent_block})
   } catch (e) {
-    symbol = ethers.utils.parseBytes32String(await contractByte.symbol({blockTag: recent_block}))
+    symbol = utils.parseBytes32String(await contractByte.symbol({blockTag: recent_block}))
   }
 
   const result = new TokenInfo(symbol, decimal)
