@@ -1,15 +1,13 @@
 import { TestProcessorServer } from '@sentio/sdk/lib/test'
 
 describe('Test Processor', () => {
-  const service = new TestProcessorServer()
+  const service = new TestProcessorServer(()=> require('./processor'), {
+    1: "https://eth-mainnet.alchemyapi.io/v2/Gk024pFA-64RaEPIawL40n__1esXJFb2",
+    137: "https://polygon-mainnet.g.alchemy.com/v2/PUmsfnPGKTkniNFyFEdSCYWynusFCVGt",
+    42161: "https://arb-mainnet.g.alchemy.com/v2/o-n6wzGm51SAbuAupiq43Y1U6g6CKfxa"
+  })
 
   beforeAll(async () => {
-    service.setup({
-      1: "https://eth-mainnet.alchemyapi.io/v2/Gk024pFA-64RaEPIawL40n__1esXJFb2",
-      137: "https://polygon-mainnet.g.alchemy.com/v2/PUmsfnPGKTkniNFyFEdSCYWynusFCVGt",
-      42161: "https://arb-mainnet.g.alchemy.com/v2/o-n6wzGm51SAbuAupiq43Y1U6g6CKfxa"
-    })
-    require('./processor')
     await service.start()
   })
 
