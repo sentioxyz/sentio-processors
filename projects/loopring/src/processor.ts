@@ -77,6 +77,7 @@ const depositGauge = async function(event: DepositRequestedEvent, ctx: ExchangeV
   // const amount = Number(event.args.amount.toBigInt())
 
   ctx.meter.Gauge("deposit").record(amount, {tokenId: tokenInfo.symbol})
+  ctx.meter.Gauge("deposit_count").record(1)
   // ctx.meter.Gauge("deposit").record(amount, {tokenId: tokenId})
 }
 
@@ -93,16 +94,17 @@ const withdrawGauge = async function(event: WithdrawalCompletedEvent, ctx: Excha
   // const amount = Number(event.args.amount.toBigInt())
 
   ctx.meter.Gauge("withdraw").record(amount, {token: tokenInfo.symbol})
+  ctx.meter.Gauge("withdraw_count").record(1)
   // ctx.meter.Gauge("withdraw").record(amount, {token: token})
 
 }
 
-// GenericProcessor.bind(EVENT1, {address: LOOPRING_WALLET_MODULE}).onAllEvents(walletCounter)
-// GenericProcessor.bind(EVENT, {address: LOOPRING_WALLET_FACTORY1}).onAllEvents(walletCounter)
-// GenericProcessor.bind(EVENT, {address: LOOPRING_WALLET_FACTORY2}).onAllEvents(walletCounter)
-// GenericProcessor.bind(EVENT, {address: LOOPRING_WALLET_FACTORY3}).onAllEvents(walletCounter)
-// GenericProcessor.bind(EVENT, {address: LOOPRING_WALLET_FACTORY4}).onAllEvents(walletCounter)
-// GenericProcessor.bind(EVENT2, {address: LOOPRING_WALLET_FACTORY5}).onAllEvents(walletCounter)
+GenericProcessor.bind(EVENT1, {address: LOOPRING_WALLET_MODULE}).onAllEvents(walletCounter)
+GenericProcessor.bind(EVENT, {address: LOOPRING_WALLET_FACTORY1}).onAllEvents(walletCounter)
+GenericProcessor.bind(EVENT, {address: LOOPRING_WALLET_FACTORY2}).onAllEvents(walletCounter)
+GenericProcessor.bind(EVENT, {address: LOOPRING_WALLET_FACTORY3}).onAllEvents(walletCounter)
+GenericProcessor.bind(EVENT, {address: LOOPRING_WALLET_FACTORY4}).onAllEvents(walletCounter)
+GenericProcessor.bind(EVENT2, {address: LOOPRING_WALLET_FACTORY5}).onAllEvents(walletCounter)
 
 ExchangeV3Processor.bind({address: LOOPRING_EXCHANGE})
 .onDepositRequested(depositGauge)
