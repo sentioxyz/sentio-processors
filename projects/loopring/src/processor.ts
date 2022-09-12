@@ -11,12 +11,14 @@ import {LOOPRING_WALLET_MODULE,
 } from "./constant"
 import type {Context, ContractView, BoundContractView} from "@sentio/sdk"
 import {GenericProcessor} from "@sentio/sdk"
-import { ExchangeV3Context, ExchangeV3Processor, ForcedWithdrawalRequestedEvent, WithdrawalCompletedEvent } from "./types/exchangev3"
+import { ExchangeV3Context, ExchangeV3Processor, WithdrawalCompletedEvent } from "./types/exchangev3"
 import { DepositRequestedEvent } from "./types/exchangev3"
 import type {BaseContract} from 'ethers'
 import {getERC20BalanceContract} from './types/internal/erc20balance_processor'
 import {getERC20ByteContract} from './types/internal/erc20byte_processor'
-import type { BigDecimal } from "@sentio/sdk"
+import { BigDecimal } from "@sentio/sdk"
+import { toBigDecimal } from "@sentio/sdk/lib/utils"
+import type { BigNumber} from 'ethers'
 import {utils} from 'ethers'
 
 // helper functions to handle decimals
@@ -52,10 +54,9 @@ const getTokenInfo = async function(tokenAddress: string, chainId: number):Promi
   TOKEN_MAP.set(tokenAddress, result)
   return result
 }
-const getNormalizedAmount = async function(tokenAddress: string, amount: BigDecimal, chainId: number) {
-  const token = await getTokenInfo(tokenAddress, chainId)
-  // TODO: toNumber() can overflow
-  return amount.div(10 ** token.decimal).toNumber()
+const scaleDown = async function(amount: BigNumber, decimal:number) {
+  const divider = (new BigDecimal(10)).pow(decimal)
+  return toBigDecimal(amount).div(divider)
 }
 
 
@@ -71,7 +72,7 @@ const depositGauge = async function(event: DepositRequestedEvent, ctx: ExchangeV
   } else {
     tokenInfo = new TokenInfo("ETH", 18)
   }
-  const amount = Number(event.args.amount.toBigInt()) / 10 ** tokenInfo.decimal
+  const amount = await scaleDown(event.args.amount, tokenInfo.decimal)
 
   // const tokenId = event.args.tokenId.toString()
   // const amount = Number(event.args.amount.toBigInt())
@@ -90,7 +91,7 @@ const withdrawGauge = async function(event: WithdrawalCompletedEvent, ctx: Excha
   } else {
     tokenInfo = new TokenInfo("ETH", 18)
   }
-  const amount = Number(event.args.amount.toBigInt()) / 10 ** tokenInfo.decimal
+  const amount = await scaleDown(event.args.amount, tokenInfo.decimal)
   // const amount = Number(event.args.amount.toBigInt())
 
   ctx.meter.Gauge("withdraw").record(amount, {token: tokenInfo.symbol})

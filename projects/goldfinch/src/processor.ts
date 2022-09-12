@@ -1,11 +1,16 @@
-import { SeniorPoolContext, SeniorPoolProcessor} from './types/seniorpool'
+import { DepositMadeEvent, WithdrawalMadeEvent, SeniorPoolContext, SeniorPoolProcessor} from './types/seniorpool'
+import { DepositMadeEvent as TranchedDepositMadeEvent, WithdrawalMadeEvent as TranchedWithdrawalMadeEvent } from './types/tranchedpool';
 import { CreditLineContext, CreditLineProcessor, CreditLineProcessorTemplate } from './types/creditline'
 
 import * as goldfinchPools from "./goldfinchPools.json"
 import { GoldfinchFactoryProcessor } from "./types/goldfinchfactory";
 import { CreditDeskProcessor } from "./types/creditdesk";
+import { TranchedPoolContext, TranchedPoolProcessor } from './types/tranchedpool';
+import { toBigDecimal } from "@sentio/sdk/lib/utils"
+import { BigDecimal } from '@sentio/sdk';
 
 const startBlock = 13096883
+const decimal = 6
 
 // ETH addresses
 const seniorPoolAddress = "0x8481a6ebaf5c7dabc3f7e09e44a89531fd31f822"
@@ -26,8 +31,30 @@ const seniorPoolHandler = async function(_:any, ctx: SeniorPoolContext) {
   return Promise.all([p1, p2, p3])
 }
 
+const tranchedDepositEventHandler = async function(event: TranchedDepositMadeEvent, ctx: TranchedPoolContext) {
+  const amount = toBigDecimal(event.args.amount).div(BigDecimal(10).pow(decimal))
+  ctx.meter.Gauge('deposit_made').record(amount)
+}
+
+const seniorDepositEventHandler = async function(event: DepositMadeEvent, ctx: SeniorPoolContext) {
+  const amount = toBigDecimal(event.args.amount).div(BigDecimal(10).pow(decimal))
+  ctx.meter.Gauge('deposit_made').record(amount)
+}
+
+const tranchedWithdrawEventHandler = async function(event: TranchedWithdrawalMadeEvent, ctx: TranchedPoolContext) {
+  const amount = toBigDecimal(event.args.interestWithdrawn.add(event.args.principalWithdrawn)).div(BigDecimal(10).pow(decimal))
+  ctx.meter.Gauge('deposit_made').record(amount)
+}
+
+const seniorWithdrawEventHandler = async function(event: WithdrawalMadeEvent, ctx: SeniorPoolContext) {
+  const amount = toBigDecimal(event.args.userAmount.add(event.args.reserveAmount)).div(BigDecimal(10).pow(decimal))
+  ctx.meter.Gauge('deposit_made').record(amount)
+}
+
 SeniorPoolProcessor.bind({address: seniorPoolAddress, startBlock: startBlock})
   .onBlock(seniorPoolHandler)
+  .onDepositMade(seniorDepositEventHandler)
+  .onWithdrawalMade(seniorWithdrawEventHandler)
 
 async function creditlineHandler (_: any, ctx: CreditLineContext) {
   // console.log("start" +  ctx.contract._underlineContract.address)
@@ -62,6 +89,9 @@ for (let i = 0; i < goldfinchPools.data.length; i++) {
   if (!tranchedPool.auto) {
     CreditLineProcessor.bind({address: tranchedPool.creditLineAddress, startBlock: tranchedPool.creditLineStartBlock})
         .onBlock(creditlineHandler)
+    TranchedPoolProcessor.bind({address: tranchedPool.poolAddress, startBlock: tranchedPool.poolStartBlock})
+    .onDepositMade(tranchedDepositEventHandler)
+    .onWithdrawalMade(tranchedWithdrawEventHandler)
   }
 }
 
