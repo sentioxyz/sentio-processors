@@ -1,4 +1,4 @@
-import { Erc20Context, Erc20Processor } from '@sentio/sdk/lib/builtin/erc20'
+import { ERC20Context, ERC20Processor } from '@sentio/sdk/lib/builtin/erc20'
 import { getChainName, toBigDecimal } from '@sentio/sdk/lib/utils';
 import { BigDecimal } from '@sentio/sdk';
 
@@ -36,7 +36,7 @@ const anyEthTotalSupplyProcessor = async function (_: any, ctx: AnyswapERC20Cont
 }
 
 //netBalance is weth_balance - anyswap balance
-const wethBalanceProcessor = async function (block: any, ctx: Erc20Context) {
+const wethBalanceProcessor = async function (block: any, ctx: ERC20Context) {
   const balance = Number((await ctx.contract.balanceOf(anyEthAddress)).toBigInt() / 10n ** 12n) / (10**6)
   ctx.meter.Gauge('weth_balance').record(balance)
   ctx.meter.Gauge('netBalance_old').record(balance - totalSupply)
@@ -96,7 +96,7 @@ const handleSwapOutBSC = async function (event: BscLogAnySwapOutEvent, ctx: BscA
 }
 
 // Rospten handlers
-const mttBalanceProcessor = async function (block: any, ctx: Erc20Context) {
+const mttBalanceProcessor = async function (block: any, ctx: ERC20Context) {
   const balance = toBigDecimal((await ctx.contract.balanceOf(pool_address))).div(10**18)
   ctx.meter.Gauge('mtt_balance').record(balance)
 }
@@ -112,7 +112,7 @@ const outFilterBSC = BscAnyswapRouterProcessor.filters.LogAnySwapOut(anyETHAddre
 AnyswapERC20Processor.bind({address: anyEthAddress, startBlock: 14215865})
 .onBlock(anyEthTotalSupplyProcessor)
 
-Erc20Processor.bind({address: wethAddress, startBlock: startBlock})
+ERC20Processor.bind({address: wethAddress, startBlock: startBlock})
 .onBlock(wethBalanceProcessor)
 
 AnyswapRouterProcessor.bind({address: routerAddress, startBlock: startBlock})
@@ -133,7 +133,7 @@ BscAnyswapRouterProcessor.bind({address: routerAddress_BSC, network: 56, startBl
 
 
 //Rospten processors
-Erc20Processor.bind({address: MTT_address, network: 3, startBlock: startBlock_Ropsten})
+ERC20Processor.bind({address: MTT_address, network: 3, startBlock: startBlock_Ropsten})
   .onBlock(mttBalanceProcessor)
 
 // X2y2Processor.bind('0xB329e39Ebefd16f40d38f07643652cE17Ca5Bac1')

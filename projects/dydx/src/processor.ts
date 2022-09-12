@@ -1,7 +1,7 @@
 import { DYDX_PERPETUAL_ADDR, DYDX_V2_STARTBLOCK, USDC_ADDR} from './constant'
 import { LogDepositEvent, LogWithdrawalPerformedEvent, LogMintWithdrawalPerformedEvent } from './types/dydxperpetual'
 import { DydxPerpetualContext, DydxPerpetualProcessor } from './types/dydxperpetual'
-import { ERC20BalanceContext, ERC20BalanceProcessor, getERC20BalanceContract } from './types/erc20balance'
+import { ERC20Context, ERC20Processor, getERC20Contract } from '@sentio/sdk/lib/builtin/erc20'
 import {BigNumber} from 'ethers'
 import { hexDataSlice, solidityKeccak256 } from "ethers/lib/utils";
 
@@ -10,12 +10,12 @@ const USDC_DECIMAL = 6
 const TOKEN_ADDRESS_MAP = new Map<BigNumber, string>()
 // another flexible processing example:
 // https://github.com/NethermindEth/Forta-Agents/blob/main/DYDX-Bots/Perpetual-Large-Deposits-Withdrawals/src/agent.ts#L48
-const logDepositEventHandler =async (event:LogDepositEvent, ctx: DydxPerpetualContext) => {
+const logDepositEventHandler = async (event:LogDepositEvent, ctx: DydxPerpetualContext) => {
   // deducted 10^6 from this tx and log amount
   //https://etherscan.io/tx/0xae3f3d6aaf8a63c5dab6780a811f1e6b514e193381ea6d2c1b2f245821358d5a
   const amount = Number(event.args.quantizedAmount.toBigInt()) / 10 ** USDC_DECIMAL
   ctx.meter.Gauge('deposit').record(amount)
-  const lastBalance = Number(await getERC20BalanceContract(USDC_ADDR).balanceOf(DYDX_PERPETUAL_ADDR, {blockTag: ctx.blockNumber.toNumber() - 1})) / 10**USDC_DECIMAL
+  const lastBalance = Number(await getERC20Contract(USDC_ADDR).balanceOf(DYDX_PERPETUAL_ADDR, {blockTag: ctx.blockNumber.toNumber() - 1})) / 10**USDC_DECIMAL
   ctx.meter.Gauge('deposit_ratio').record(amount / lastBalance )
 }
 
@@ -28,7 +28,7 @@ const logWithdrawalPerformedEventHandler =async (event:LogWithdrawalPerformedEve
   
   ctx.meter.Gauge('withdrawl').record(amount)
   
-  const lastBalance = Number(await getERC20BalanceContract(USDC_ADDR).balanceOf(DYDX_PERPETUAL_ADDR, {blockTag: ctx.blockNumber.toNumber() - 1})) / 10**USDC_DECIMAL
+  const lastBalance = Number(await getERC20Contract(USDC_ADDR).balanceOf(DYDX_PERPETUAL_ADDR, {blockTag: ctx.blockNumber.toNumber() - 1})) / 10**USDC_DECIMAL
   ctx.meter.Gauge('withdraw_ratio').record(amount / lastBalance )
 }
 
@@ -38,14 +38,14 @@ const logWithdrawalPerformedEventHandler2 =async (event:LogWithdrawalPerformedEv
   const asset_address = await extractTokenAddress(assetType, ctx, ctx.blockNumber.toNumber())
   ctx.meter.Gauge('withdrawl').record(amount, {"token": asset_address})
 
-  const lastBalance = Number(await getERC20BalanceContract(asset_address).balanceOf(DYDX_PERPETUAL_ADDR, {blockTag: ctx.blockNumber.toNumber() - 1})) / 10**USDC_DECIMAL
+  const lastBalance = Number(await getERC20Contract(asset_address).balanceOf(DYDX_PERPETUAL_ADDR, {blockTag: ctx.blockNumber.toNumber() - 1})) / 10**USDC_DECIMAL
   ctx.meter.Gauge('withdraw_ratio').record(amount / lastBalance, {"token": asset_address})
 }
 
 const logMintWithdrawalPerformedEventHandler =async (event:LogMintWithdrawalPerformedEvent, ctx: DydxPerpetualContext) => {
   const amount = Number(event.args.quantizedAmount.toBigInt() )/ 10 ** USDC_DECIMAL
   ctx.meter.Gauge('mintWithdrawl').record(amount)
-  const lastBalance = Number(await getERC20BalanceContract(USDC_ADDR).balanceOf(DYDX_PERPETUAL_ADDR, {blockTag: ctx.blockNumber.toNumber() - 1})) / 10**USDC_DECIMAL
+  const lastBalance = Number(await getERC20Contract(USDC_ADDR).balanceOf(DYDX_PERPETUAL_ADDR, {blockTag: ctx.blockNumber.toNumber() - 1})) / 10**USDC_DECIMAL
   ctx.meter.Gauge('mintWithdrawl_ratio').record(amount / lastBalance )
 }
 
@@ -56,7 +56,7 @@ const logMintWithdrawalPerformedEventHandler2 =async (event:LogMintWithdrawalPer
   const assetType = event.args.assetType
   const asset_address = await extractTokenAddress(assetType, ctx, ctx.blockNumber.toNumber())
   ctx.meter.Gauge('mintWithdrawl').record(amount, {"token": asset_address})
-  const lastBalance = Number(await getERC20BalanceContract(asset_address).balanceOf(DYDX_PERPETUAL_ADDR, {blockTag: ctx.blockNumber.toNumber() - 1})) / 10**USDC_DECIMAL
+  const lastBalance = Number(await getERC20Contract(asset_address).balanceOf(DYDX_PERPETUAL_ADDR, {blockTag: ctx.blockNumber.toNumber() - 1})) / 10**USDC_DECIMAL
   ctx.meter.Gauge('mintWithdrawl_ratio').record(amount / lastBalance, {"token": asset_address})
   
 }
@@ -103,12 +103,12 @@ const extractTokenAddress = async (assetType: BigNumber, context: DydxPerpetualC
 };
 
 // USDC uses 6 for decimal
-const balanceProcessor = async function (block: any, ctx: ERC20BalanceContext) {
+const balanceProcessor = async function (block: any, ctx: ERC20Context) {
   const balance = Number((await ctx.contract.balanceOf(DYDX_PERPETUAL_ADDR)).toBigInt() ) / 10 ** 6
   ctx.meter.Gauge('usdc_balance').record(balance)
 }
 
-ERC20BalanceProcessor.bind({address: USDC_ADDR, startBlock: DYDX_V2_STARTBLOCK})
+ERC20Processor.bind({address: USDC_ADDR, startBlock: DYDX_V2_STARTBLOCK})
 .onBlock(balanceProcessor)
 
 //TODO: change starting block
