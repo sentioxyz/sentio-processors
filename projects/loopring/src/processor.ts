@@ -35,16 +35,20 @@ async function depositGauge(event: DepositRequestedEvent, ctx: ExchangeV3Context
   const tokenInfo = await getTokenInfo(event.args.token)
   const amount = await scaleDown(event.args.amount, tokenInfo.decimal)
 
-  ctx.meter.Gauge("deposit").record(amount, {tokenId: tokenInfo.symbol})
-  ctx.meter.Gauge("deposit_count").record(1)
+  if (!tokenInfo.symbol.startsWith("LP-")) {
+    ctx.meter.Gauge("deposit").record(amount, {tokenId: tokenInfo.symbol})
+    ctx.meter.Gauge("deposit_count").record(1)
+  }
 }
 
 async function withdrawGauge(event: WithdrawalCompletedEvent, ctx: ExchangeV3Context) {
   const tokenInfo = await getTokenInfo(event.args.token)
   const amount = await scaleDown(event.args.amount, tokenInfo.decimal)
 
-  ctx.meter.Gauge("withdraw").record(amount, {token: tokenInfo.symbol})
-  ctx.meter.Gauge("withdraw_count").record(1)
+  if (!tokenInfo.symbol.startsWith("LP-")) {
+    ctx.meter.Gauge("withdraw").record(amount, {token: tokenInfo.symbol})
+    ctx.meter.Gauge("withdraw_count").record(1)
+  }
 }
 
 const scaleDown = async function (amount: BigNumber, decimal: number) {
