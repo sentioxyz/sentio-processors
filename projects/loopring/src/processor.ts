@@ -24,8 +24,13 @@ GenericProcessor.bind(EVENT, {address: LOOPRING_WALLET_FACTORY4}).onAllEvents(wa
 GenericProcessor.bind(EVENT2, {address: LOOPRING_WALLET_FACTORY5}).onAllEvents(walletCounter)
 
 ExchangeV3Processor.bind({address: LOOPRING_EXCHANGE})
-    .onDepositRequested(depositGauge)
-    .onWithdrawalCompleted(withdrawGauge)
+    .onEventDepositRequested(depositGauge)
+    .onEventWithdrawalCompleted(withdrawGauge)
+    .onCallSubmitBlocks((call, ctx) => {
+      for (const block of call.args.blocks) {
+        // TODO
+      }
+    })
 
 async function walletCounter(event: any, ctx: Context<BaseContract, BoundContractView<BaseContract, ContractView<BaseContract>>>) {
   ctx.meter.Counter("wallet_count").add(1)

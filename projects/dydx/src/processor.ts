@@ -113,6 +113,6 @@ ERC20Processor.bind({address: USDC_ADDR, startBlock: DYDX_V2_STARTBLOCK})
 
 //TODO: change starting block
 DydxPerpetualProcessor.bind({address: DYDX_PERPETUAL_ADDR, startBlock: 13424545})
-.onLogDeposit(logDepositEventHandler)
-.onLogMintWithdrawalPerformed(logMintWithdrawalPerformedEventHandler2)
-.onLogWithdrawalPerformed(logWithdrawalPerformedEventHandler2)
+.onEventLogDeposit(logDepositEventHandler)
+.onEventLogMintWithdrawalPerformed(logMintWithdrawalPerformedEventHandler2)
+.onEventLogWithdrawalPerformed(logWithdrawalPerformedEventHandler2)

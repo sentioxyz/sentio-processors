@@ -4,7 +4,7 @@ set -e
 
 BASEDIR="$(cd "$(dirname "${BASH_SOURCE[0]}")" && pwd)"
 
-yarn install && yarn upgrade @sentio/sdk
+#yarn install && yarn upgrade @sentio/sdk
 
 for dir in $BASEDIR/projects/*/; do # list directories in the form "/tmp/dirname/"
   dir=${dir%*/}                           # remove the trailing "/"

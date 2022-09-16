@@ -310,7 +310,7 @@ const creditLineTemplate = new CreditLineProcessorTemplate()
 
 // add TODO push contract level label
 GoldfinchFactoryProcessor.bind({address: "0xd20508E1E971b80EE172c73517905bfFfcBD87f9", startBlock: 11370655})
-  .onCreditLineCreated(async function (event, ctx) {
+  .onEventCreditLineCreated(async function (event, ctx) {
     creditLineTemplate.bind({
       address: event.args.creditLine,
       startBlock: ctx.blockNumber
@@ -318,23 +318,23 @@ GoldfinchFactoryProcessor.bind({address: "0xd20508E1E971b80EE172c73517905bfFfcBD
   })
 
 CreditDeskProcessor.bind({address: "0xb2Bea2610FEEfA4868C3e094D2E44b113b6D6138", startBlock: 11370659})
-  .onCreditLineCreated(async function (event, ctx) {
+  .onEventCreditLineCreated(async function (event, ctx) {
     creditLineTemplate.bind({
       address: event.args.creditLine,
       startBlock: ctx.blockNumber
     })
-  }).onDrawdownMade(drawDownMadeHandler)
+  }).onEventDrawdownMade(drawDownMadeHandler)
 
 //senior pool processor
 SeniorPoolProcessor.bind({address: seniorPoolAddress, startBlock: startBlock})
   .onBlock(seniorPoolHandler)
-  .onDepositMade(seniorDepositEventHandler)
-  .onWithdrawalMade(seniorWithdrawEventHandler)
-  .onReserveFundsCollected(seniorFundsCollectedEventHandler)
-  .onInvestmentMadeInSenior(investmentMadeInSeniorEventHandler)
-  .onInvestmentMadeInJunior(investmentMadeInJuniorEventHandler)
-  .onInterestCollected(interestCollectedEventHandler)
-  .onPrincipalCollected(principalCollectedEventHandler)
+  .onEventDepositMade(seniorDepositEventHandler)
+  .onEventWithdrawalMade(seniorWithdrawEventHandler)
+  .onEventReserveFundsCollected(seniorFundsCollectedEventHandler)
+  .onEventInvestmentMadeInSenior(investmentMadeInSeniorEventHandler)
+  .onEventInvestmentMadeInJunior(investmentMadeInJuniorEventHandler)
+  .onEventInterestCollected(interestCollectedEventHandler)
+  .onEventPrincipalCollected(principalCollectedEventHandler)
 
 // batch handle Tranched Pools
 for (let i = 0; i < goldfinchPools.data.length; i++) {
@@ -344,10 +344,10 @@ for (let i = 0; i < goldfinchPools.data.length; i++) {
         .onBlock(creditlineHandler)
   }
   TranchedPoolProcessor.bind({address: tranchedPool.poolAddress, startBlock: tranchedPool.poolStartBlock})
-  .onDepositMade(tranchedDepositEventHandler)
-  .onWithdrawalMade(tranchedWithdrawEventHandler)
-  .onReserveFundsCollected(tranchedFundsCollectedEventHandler)
-  .onPaymentApplied(PaymentAppliedEventHandler)
-  .onDrawdownMade(TranchedDrawDownMadeHandler)
+  .onEventDepositMade(tranchedDepositEventHandler)
+  .onEventWithdrawalMade(tranchedWithdrawEventHandler)
+  .onEventReserveFundsCollected(tranchedFundsCollectedEventHandler)
+  .onEventPaymentApplied(PaymentAppliedEventHandler)
+  .onEventDrawdownMade(TranchedDrawDownMadeHandler)
 }
 

@@ -9,6 +9,6 @@ const workHandler = async function(event: WorkEvent, ctx: VaultContext) {
 }
 
 for(let address of VAULTS_THRESHOLD_MAP.keys()) {
-  VaultProcessor.bind({address: address, network: 56}).onWork(workHandler)
+  VaultProcessor.bind({address: address, network: 56}).onEventWork(workHandler)
 }
 

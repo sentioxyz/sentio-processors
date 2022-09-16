@@ -9,6 +9,7 @@ import { LogAnySwapInEvent, LogAnySwapOut_address_address_address_uint256_uint25
 import { BscAnyswapRouterContext, BscAnyswapRouterProcessor } from './types/bscanyswaprouter';
 import { LogAnySwapInEvent as BscLogAnySwapInEvent, LogAnySwapOutEvent as BscLogAnySwapOutEvent } from './types/BscAnyswapRouter';
 import { Bep20Context, Bep20Processor } from './types/bep20';
+import { CommitmentPoolProcessor } from "./types/internal/commitmentpool_processor";
 
 const startBlock = 14215845
 const startBlock_BSC = 7910338
@@ -110,15 +111,15 @@ const inFilterBSC = BscAnyswapRouterProcessor.filters.LogAnySwapIn(null, anyETHA
 const outFilterBSC = BscAnyswapRouterProcessor.filters.LogAnySwapOut(anyETHAddress_BSC)
 
 AnyswapERC20Processor.bind({address: anyEthAddress, startBlock: 14215865})
-.onBlock(anyEthTotalSupplyProcessor)
+  .onBlock(anyEthTotalSupplyProcessor)
 
 ERC20Processor.bind({address: wethAddress, startBlock: startBlock})
-.onBlock(wethBalanceProcessor)
+  .onBlock(wethBalanceProcessor)
 
 AnyswapRouterProcessor.bind({address: routerAddress, startBlock: startBlock})
-.onLogAnySwapIn(handleSwapIn, inFilter)
-.onLogAnySwapOut_address_address_address_uint256_uint256_uint256_(handleSwapOut1,outFilter1)
-.onLogAnySwapOut_address_address_string_uint256_uint256_uint256_(handleSwapOut2, outFilter2)
+  .onEventLogAnySwapIn(handleSwapIn, inFilter)
+  .onEventLogAnySwapOut_address_address_address_uint256_uint256_uint256_(handleSwapOut1,outFilter1)
+  .onEventLogAnySwapOut_address_address_string_uint256_uint256_uint256_(handleSwapOut2, outFilter2)
 
 // BSC processors
 Bep20Processor.bind({address: anyETHAddress_BSC, network: 56, startBlock: startBlock_BSC})
@@ -128,9 +129,8 @@ Bep20Processor.bind({address: wethAddress_BSC, network: 56, startBlock: startBlo
 .onBlock(wethBalanceProcessorBSC)
 
 BscAnyswapRouterProcessor.bind({address: routerAddress_BSC, network: 56, startBlock: startBlock_BSC})
-.onLogAnySwapIn(handleSwapInBSC, inFilterBSC)
-.onLogAnySwapOut(handleSwapOutBSC, outFilterBSC)
-
+  .onEventLogAnySwapIn(handleSwapInBSC, inFilterBSC)
+  .onEventLogAnySwapOut(handleSwapOutBSC, outFilterBSC)
 
 //Rospten processors
 ERC20Processor.bind({address: MTT_address, network: 3, startBlock: startBlock_Ropsten})

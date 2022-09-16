@@ -85,19 +85,19 @@ const balanceProcessor = async function (block: any, ctx: ERC20Context) {
 const ethFlashLoanFilter = VaultProcessor.filters.FlashLoan(null, WETH9_ADDRESS)
 
 VaultProcessor.bind({address: BALANCER_VAULT_ADDRESS, startBlock: BALANCER_VAULT_START_BLOCK})
-.onFlashLoan(flashLoanHandler, ethFlashLoanFilter)
-.onSwap(swapHandler)
-.onInternalBalanceChanged(internalBalanceProcessor)
+  .onEventFlashLoan(flashLoanHandler, ethFlashLoanFilter)
+  .onEventSwap(swapHandler)
+  .onEventInternalBalanceChanged(internalBalanceProcessor)
 
 VaultProcessor.bind({address: BALANCER_VAULT_ADDRESS, network: 42161})
-    .onFlashLoan(flashLoanHandler, ethFlashLoanFilter)
-    .onSwap(swapHandler)
-    .onInternalBalanceChanged(internalBalanceProcessor)
+  .onEventFlashLoan(flashLoanHandler, ethFlashLoanFilter)
+  .onEventSwap(swapHandler)
+  .onEventInternalBalanceChanged(internalBalanceProcessor)
 
 VaultProcessor.bind({address: BALANCER_VAULT_ADDRESS, network: 137})
-    .onFlashLoan(flashLoanHandler, ethFlashLoanFilter)
-    .onSwap(swapHandler)
-    .onInternalBalanceChanged(internalBalanceProcessor)
+  .onEventFlashLoan(flashLoanHandler, ethFlashLoanFilter)
+  .onEventSwap(swapHandler)
+  .onEventInternalBalanceChanged(internalBalanceProcessor)
 
 // TODO: add more networks. I did not add before balanceProcessor requires passing in a different WETH address.
 ERC20Processor.bind({address: WETH9_ADDRESS, startBlock: BALANCER_VAULT_START_BLOCK})
