@@ -46,6 +46,8 @@ const inFilter = AnyswapRouterProcessor.filters.LogAnySwapIn(null, anyEthAddress
 const outFilter1 = AnyswapRouterProcessor.filters['LogAnySwapOut(address,address,address,uint256,uint256,uint256)'](anyEthAddress)
 const outFilter2 = AnyswapRouterProcessor.filters['LogAnySwapOut(address,address,string,uint256,uint256,uint256)'](anyEthAddress)
 
+//startBlock is optional, you can specify a start block or leave it blank and Sentio will
+//automatically detect and use the creation block of the contract
 AnyswapERC20Processor.bind({address: anyEthAddress, startBlock: 14215865})
   .onBlock(anyEthTotalSupplyProcessor)
 

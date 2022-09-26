@@ -34,11 +34,8 @@ const blockHandler = async function(_:any, ctx: StakedTokenV1Context) {
   } else {
     cbEth_usdc_price = 0
   }
-
   ctx.meter.Gauge("cbETH_price").record(cbEth_usdc_price, {token: tokenInfo.symbol})
   ctx.meter.Gauge("tvl").record(totalSupply.multipliedBy(cbEth_usdc_price), {token: tokenInfo.symbol})
- 
-
 }
 
 const mintEventHandler = async function(event: MintEvent, ctx: StakedTokenV1Context) {
