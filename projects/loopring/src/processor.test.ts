@@ -4,7 +4,7 @@ import { Log } from '@ethersproject/abstract-provider'
 
 describe('Test Processor', () => {
   const service = new TestProcessorServer(()=>require('./processor'),  {
-    1: "https://eth-mainnet.alchemyapi.io/v2/Gk024pFA-64RaEPIawL40n__1esXJFb2",
+    1: "https://eth-mainnet.g.alchemy.com/v2/SAow9F_73wmx_Uj5yEcI_au8y9GXYYd5",
   })
 
   beforeAll(async () => {
