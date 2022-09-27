@@ -1,37 +1,43 @@
-import {SwapEvent, UniswapContext, UniswapProcessor} from './types/uniswap'
+import {SwapEvent, UniswapContext, UniswapProcessor, UniswapProcessorTemplate} from './types/uniswap'
 import {PoolCreatedEvent, UniswapFactoryContext, UniswapFactoryProcessor} from "./types/uniswapfactory";
 
 
-const TokenUSDC = '0xA0b86991c6218b36c1d19D4a2e9Eb0cE3606eB48'
-const TokenDAI = '0x6B175474E89094C44Da98b954EedeAC495271d0F'
-const TokenWatching = [TokenUSDC, TokenDAI]
+const TokenWatching = new Map([
+    ['0xA0b86991c6218b36c1d19D4a2e9Eb0cE3606eB48', 'USDC'],
+    ['0x6B175474E89094C44Da98b954EedeAC495271d0F', 'DAI']
+])
+
+function buildPoolName(token0: string, token1: string, fee: number): string {
+    return TokenWatching.get(token0) + "_" + TokenWatching.get(token1) + "_" + fee;
+}
 
 function checkTokensWatching(token0: string, token1: string): boolean {
-    return TokenWatching.indexOf(token0) >= 0 && TokenWatching.indexOf(token1) >= 0
+    return TokenWatching.get(token0) !== undefined && TokenWatching.get(token1) != undefined
 }
+
+const poolTemplate = new UniswapProcessorTemplate()
+    .onEventSwap(
+        async function (event: SwapEvent, ctx: UniswapContext) {
+            const poolName = buildPoolName(
+                await ctx.contract.token0(),
+                await ctx.contract.token1(),
+                await ctx.contract.fee())
+            const name = poolName + "_amount0"
+            ctx.meter.Gauge(name).record(Math.abs(Number(event.args.amount0.toBigInt())))
+        }
+    )
 
 UniswapFactoryProcessor.bind({address: '0x1F98431c8aD98523631AE4a59f267346ea31F984'})
     .onEventPoolCreated(
         async function (event: PoolCreatedEvent, ctx: UniswapFactoryContext) {
             ctx.meter.Counter('pool_num').add(1)
 
-            if (!checkTokensWatching(event.args.token0, event.args.token1)) {
-                return;
+            if (checkTokensWatching(event.args.token0, event.args.token1)) {
+                ctx.meter.Counter('watching_pool_num').add(1)
+                poolTemplate.bind({address: event.args.pool, startBlock: ctx.blockNumber})
             }
-
-            ctx.meter.Counter('watching_pool_num').add(1)
-
-            const namePrefix = event.args.pool;
-            UniswapProcessor.bind({address: event.args.pool})
-                .onEventSwap(
-                    async function (event: SwapEvent, ctx: UniswapContext) {
-                        const name = namePrefix + "_amount0"
-                        ctx.meter.Gauge(name).record(Math.abs(Number(event.args.amount0.toBigInt())))
-                    }
-                )
         }
     )
-
 
 UniswapProcessor.bind({address: '0x5777d92f208679db4b9778590fa3cab3ac9e2168'})
     .onEventSwap(
