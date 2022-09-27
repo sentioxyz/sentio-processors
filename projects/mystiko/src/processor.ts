@@ -9,7 +9,7 @@ const mttBalanceProcessor = async function (block: any, ctx: ERC20Context) {
 }
 
 const commitmentQueued = async function (event: CommitmentQueuedEvent, ctx: CommitmentPoolContext) {
-  const rollUpFee = event.args.rollupFee
+  const rollUpFee = event.args.rollupFee.div(10**18)
   ctx.meter.Gauge('rollup_fee').record(rollUpFee)
 
 }
