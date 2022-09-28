@@ -1,0 +1,24 @@
+export const POOL_ADDR = "b01b315e32d1d9b5ce93e296d483e1f0aad39e75"
+export const GF_CONFIG_ADDR = "0xaa425f8bfe82cd18f634e2fe91e5ddeefd98fda1"
+/* 
+distinct contract address from MigratedTranchedPool:
+
+select distinct "contract_address" as contract
+From goldfinch."MigratedTranchedPool_evt_DepositMade"
+
+\xefeb69edf6b6999b0e3f2fa856a2acf3bdea4ab5
+\x418749e294cabce5a714efccc22a8aade6f9db57
+\xc9bdd0d3b80cc6efe79a82d850f44ec9b55387ae
+\xd09a57127bc40d680be7cb061c2a6629fe71abef
+\xf74ea34ac88862b7ff419e60e476be2651433e68
+\x00c27fc71b159a346e179b4a1608a0865e8a7470
+\x1d596d28a7923a22aa013b0e7082bba23daa656b
+\xe32c22e4d95cae1fb805c60c9e0026ed57971bcf
+\x759f097f3153f5d62ff1c2d82ba78b6350f223e3
+\x89d7c618a4eef3065da8ad684859a547548e6169
+\xc13465ce9ae3aa184eb536f04fdc3f54d2def277
+\xaa2ccc5547f64c5dffd0a624eb4af2543a67ba65
+\xd43a4f3041069c6178b99d55295b00d0db955bb5
+\xe6c30756136e07eb5268c3232efbfbe645c1ba5a
+\xb26b42dd5771689d0a7faeea32825ff9710b9c11
+*/

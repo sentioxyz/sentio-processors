@@ -17,6 +17,7 @@ const mUsdBalanceProcessor = async function (block: any, ctx: ERC20Context) {
 const commitmentQueuedMtt = async function (event: CommitmentQueuedEvent, ctx: CommitmentPoolContext) {
   const rollUpFee = toBigDecimal(event.args.rollupFee).div(BigDecimal(10).pow(18))
   ctx.meter.Gauge('rollup_fee_mtt').record(rollUpFee)
+  ctx.meter.Counter('debug_counter').add(1)
 }
 
 const commitmentQueuedMusd = async function (event: CommitmentQueuedEvent, ctx: CommitmentPoolContext) {
