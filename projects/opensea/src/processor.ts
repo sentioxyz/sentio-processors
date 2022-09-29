@@ -8,7 +8,7 @@ import {
 } from './types/seaport'
 import { SEAPORT_ADDR } from './constant'
 
-const orderFulfilled = function(event: OrderFulfilledEvent, ctx: SeaportContext) {
+const orderFulfilled = async function(event: OrderFulfilledEvent, ctx: SeaportContext) {
   const amount = event.args.offer
   for (var i = 0; i < amount.length; i++) {
     var item = amount[i];
