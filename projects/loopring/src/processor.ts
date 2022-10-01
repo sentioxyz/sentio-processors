@@ -27,6 +27,8 @@ ExchangeV3Processor.bind({address: LOOPRING_EXCHANGE})
     .onEventDepositRequested(depositGauge)
     .onEventWithdrawalCompleted(withdrawGauge)
     .onCallSubmitBlocks((call, ctx) => {
+      ctx.meter.Counter("submit_block").add(1)
+      
       for (const block of call.args.blocks) {
         // TODO
       }

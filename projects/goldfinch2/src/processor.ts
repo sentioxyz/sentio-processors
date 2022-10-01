@@ -436,21 +436,21 @@ const creditLineTemplate = new CreditLineProcessorTemplate()
     .onBlock(creditlineHandler)
 
 // add TODO push contract level label
-GoldfinchFactoryProcessor.bind({address: "0xd20508E1E971b80EE172c73517905bfFfcBD87f9", startBlock: 11370655})
-  .onEventCreditLineCreated(async function (event, ctx) {
-    creditLineTemplate.bind({
-      address: event.args.creditLine,
-      startBlock: ctx.blockNumber
-    })
-  })
-
-CreditDeskProcessor.bind({address: "0xb2Bea2610FEEfA4868C3e094D2E44b113b6D6138", startBlock: 11370659})
-  .onEventCreditLineCreated(async function (event, ctx) {
-    creditLineTemplate.bind({
-      address: event.args.creditLine,
-      startBlock: ctx.blockNumber
-    })
-  }).onEventDrawdownMade(drawDownMadeHandler)
+// GoldfinchFactoryProcessor.bind({address: "0xd20508E1E971b80EE172c73517905bfFfcBD87f9", startBlock: 11370655})
+//   .onEventCreditLineCreated(async function (event, ctx) {
+//     creditLineTemplate.bind({
+//       address: event.args.creditLine,
+//       startBlock: ctx.blockNumber
+//     })
+//   })
+//
+// CreditDeskProcessor.bind({address: "0xb2Bea2610FEEfA4868C3e094D2E44b113b6D6138", startBlock: 11370659})
+//   .onEventCreditLineCreated(async function (event, ctx) {
+//     creditLineTemplate.bind({
+//       address: event.args.creditLine,
+//       startBlock: ctx.blockNumber
+//     })
+//   }).onEventDrawdownMade(drawDownMadeHandler)
 
 // additional events for V2 request
 const trancheLockedEventHandler = async function(event:TrancheLockedEvent, ctx: TranchedPoolContext) {
@@ -483,10 +483,10 @@ const trancheLockedEventHandler = async function(event:TrancheLockedEvent, ctx: 
 for (let i = 0; i < 7; i++) {
 
   const tranchedPool = goldfinchPools.data[i];
-  if (!tranchedPool.auto) {
+  // if (!tranchedPool.auto) {
     CreditLineProcessor.bind({address: tranchedPool.creditLineAddress, startBlock: tranchedPool.creditLineStartBlock})
         .onBlock(creditlineHandler)
-  }
+  // }
   // TODO commented to test V2 stuff only
   // TranchedPoolProcessor.bind({address: tranchedPool.poolAddress, startBlock: tranchedPool.poolStartBlock})
   // .onEventDepositMade(tranchedDepositEventHandler)
@@ -495,10 +495,10 @@ for (let i = 0; i < 7; i++) {
   // .onEventPaymentApplied(PaymentAppliedEventHandler)
   // .onEventDrawdownMade(tranchedDrawDownMadeHandler)
   // .onEventTrancheLocked(trancheLockedEventHandler)
-
-  TranchedPoolProcessor.bind({address: tranchedPool.poolAddress, startBlock: tranchedPool.poolStartBlock})
-  .onBlock(tranchedPoolHandler)
-  .onEventPaymentApplied(PaymentAppliedEventHandler)
-  .onEventTrancheLocked(trancheLockedEventHandler)
+  //
+  // TranchedPoolProcessor.bind({address: tranchedPool.poolAddress, startBlock: tranchedPool.poolStartBlock})
+  // .onBlock(tranchedPoolHandler)
+  // .onEventPaymentApplied(PaymentAppliedEventHandler)
+  // .onEventTrancheLocked(trancheLockedEventHandler)
 }
 
