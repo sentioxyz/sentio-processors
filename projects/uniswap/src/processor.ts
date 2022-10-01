@@ -7,10 +7,6 @@ const TokenWatching = new Map([
     ['0x6B175474E89094C44Da98b954EedeAC495271d0F', 'DAI']
 ])
 
-function buildPoolName(token0: string, token1: string, fee: number): string {
-    return TokenWatching.get(token0) + "_" + TokenWatching.get(token1) + "_" + fee;
-}
-
 function checkTokensWatching(token0: string, token1: string): boolean {
     return TokenWatching.get(token0) !== undefined && TokenWatching.get(token1) != undefined
 }
@@ -18,12 +14,14 @@ function checkTokensWatching(token0: string, token1: string): boolean {
 const poolTemplate = new UniswapProcessorTemplate()
     .onEventSwap(
         async function (event: SwapEvent, ctx: UniswapContext) {
-            const poolName = buildPoolName(
-                await ctx.contract.token0(),
-                await ctx.contract.token1(),
-                await ctx.contract.fee())
-            const name = poolName + "_amount0"
-            ctx.meter.Gauge(name).record(Math.abs(Number(event.args.amount0.toBigInt())))
+            ctx.meter.Gauge("swap_amount0").record(
+                Math.abs(Number(event.args.amount0.toBigInt())),
+                {
+                    from: TokenWatching.get(await ctx.contract.token0()) || "",
+                    to: TokenWatching.get(await ctx.contract.token1()) || "",
+                    fee: (await ctx.contract.fee()) + ""
+                }
+            )
         }
     )
 
