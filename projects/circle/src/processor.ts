@@ -1,13 +1,14 @@
 import {
   EUROC_PROXY,
-  USDC_PROXY
+  USDC_PROXY,
+  USDC_PROXY_POLYGON
 } from "./constant"
 import { MintEvent, BurnEvent } from "./types/fiattokenv2"
 import { FiatTokenV2Context, FiatTokenV2Processor } from "./types/fiattokenv2"
-import type { BigNumber } from "ethers"
+import { UChildAdministrableERC20Processor, UChildAdministrableERC20Context } from "./types/uchildadministrableerc20"
 import { getERC20TokenInfo, NATIVE_ETH, toBigDecimal, TokenInfo } from "@sentio/sdk/lib/utils"
 import { BigDecimal } from "@sentio/sdk"
-
+import type { BigNumber } from "ethers"
 const DECIMAL = 6
 function scaleDown(amount: BigNumber, decimal: number) {
   return toBigDecimal(amount).div(BigDecimal(10).pow(decimal))
@@ -34,6 +35,11 @@ const burnEventHandler = async function(event: BurnEvent, ctx: FiatTokenV2Contex
   ctx.meter.Counter("burn_acc").add(amount, {labels: tokenInfo.symbol})
 }
 
+const totalSupplyHandlerPolygon = async function(_:any, ctx: UChildAdministrableERC20Context) {
+  const totalSupply = scaleDown(await ctx.contract.totalSupply(), DECIMAL)
+  ctx.meter.Gauge("total_supply_polygon").record(totalSupply)
+}
+
 FiatTokenV2Processor.bind({address: USDC_PROXY})
 .onBlock(totalSupplyHandler)
 .onEventMint(mintEventHandler)
@@ -43,3 +49,6 @@ FiatTokenV2Processor.bind({address: EUROC_PROXY})
 .onBlock(totalSupplyHandler)
 .onEventMint(mintEventHandler)
 .onEventBurn(burnEventHandler)
+
+UChildAdministrableERC20Processor.bind({address: USDC_PROXY_POLYGON, network: 137})
+.onBlock(totalSupplyHandlerPolygon)
