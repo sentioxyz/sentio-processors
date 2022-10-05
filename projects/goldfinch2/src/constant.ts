@@ -1,6 +1,7 @@
 export const POOL_ADDR = "b01b315e32d1d9b5ce93e296d483e1f0aad39e75"
 export const GF_CONFIG_ADDR = "0xaa425f8bfe82cd18f634e2fe91e5ddeefd98fda1"
 export const INTEREST_FROM_SENIOR_TO_JUNIOR = 0.2
+export const USDC_ETH_ORACLE = "0x986b5E1e1755e3C2440e960477f25201B0a8bbD4"
 /* 
 distinct contract address from MigratedTranchedPool:
 

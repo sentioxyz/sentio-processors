@@ -38,7 +38,7 @@ TODO: known discrepancies from dune implenetation:
 4) TranchedPool table is empty on dune
 */
 interface PoolItem {
-  auto: boolean;
+  auto?: boolean;
   name: string;
   poolAddress: string;
   creditLineAddress: string;
@@ -47,23 +47,33 @@ interface PoolItem {
   status: string;
 }
 
-const startBlock = 13096883
+// making sure GFconfig is deployed
+const startBlock = 13941061
 const decimal = 6
 
-const SAMPLE_RATE = 1000
+const SAMPLE_RATE = 10
 const SAMPLE_START = 15000000
 
 const POOL_ADDRESS_LOOKUP = new Map<string, PoolItem>()
 const CREDIT_ADDRESS_LOOKUP = new Map<string, PoolItem>()
 
-// for (let i = 0; i < goldfinchPools.data.length; i++) {
+function getNameByAddress(address: string) {
+  //since it is not possible for creditline and pool address to be the same
+  // we can simply look up both tables and return any possible match
+  if (POOL_ADDRESS_LOOKUP.get(address) !== undefined) {
+    return POOL_ADDRESS_LOOKUP.get(address)!.name
+  } else  if (CREDIT_ADDRESS_LOOKUP.get(address) !== undefined) {
+    return CREDIT_ADDRESS_LOOKUP.get(address)!.name
+  } else {
+    return ""
+  }
+}
 
-//   const tranchedPool = goldfinchPools.data[i];
-//   POOL_ADDRESS_LOOKUP.set(tranchedPool.poolAddress, tranchedPool)
-//   CREDIT_ADDRESS_LOOKUP.set(tranchedPool.creditLineAddress, tranchedPool)
-// }
-
-const a =  POOL_ADDRESS_LOOKUP.get("dfsdf")
+for (let i = 0; i < goldfinchPools.data.length; i++) {
+  const tranchedPool = goldfinchPools.data[i];
+  POOL_ADDRESS_LOOKUP.set(tranchedPool.poolAddress, tranchedPool)
+  CREDIT_ADDRESS_LOOKUP.set(tranchedPool.creditLineAddress, tranchedPool)
+}
 
 function scaleDown(amount: BigNumber, decimal: number) {
   return toBigDecimal(amount).div(BigDecimal(10).pow(decimal))
@@ -297,17 +307,18 @@ const PaymentAppliedEventHandler = async function(event: PaymentAppliedEvent, ct
   //interest - reserve: https://dune.com/queries/15148/30399
   const interestAmount = toBigDecimal(event.args.interestAmount.sub(event.args.reserveAmount)).div(BigDecimal(10).pow(decimal))
   const principalAmount = toBigDecimal(event.args.principalAmount).div(BigDecimal(10).pow(decimal))
+  const poolName = getNameByAddress(event.address)
   // used in V2 for the following request:
   //   total interest paid
   // Loop through all PaymentApplied events
   //   total principal paid
   // Loop through all PaymentApplied events (and look at the principal paid back)
-  ctx.meter.Gauge('interest').record(interestAmount)
-  ctx.meter.Counter('interest_acc').add(interestAmount)
-  ctx.meter.Gauge('principle').record(principalAmount)
-  ctx.meter.Counter('principle_acc').add(principalAmount)
-  ctx.meter.Gauge("payment_applied").record(1)
-  ctx.meter.Counter("payment_applied_count").add(1)
+  ctx.meter.Gauge('interest').record(interestAmount, {"pool": poolName})
+  ctx.meter.Counter('interest_acc').add(interestAmount, {"pool": poolName})
+  ctx.meter.Gauge('principal').record(principalAmount, {"pool": poolName})
+  ctx.meter.Counter('principal').add(principalAmount, {"pool": poolName})
+  ctx.meter.Gauge("payment_applied").record(1, {"pool": poolName})
+  ctx.meter.Counter("payment_applied_count").add(1, {"pool": poolName})
 
   //determine if payment is late, used in V2
   const paymentTime = BN.from((await ctx.contract.provider.getBlock(event.blockNumber)).timestamp)
@@ -323,16 +334,19 @@ const PaymentAppliedEventHandler = async function(event: PaymentAppliedEvent, ct
   // const isPaymentWithinGracePeriod = await getCreditLineContract(event.address).withinPrincipalGracePeriod({blockTag: event.blockNumber - 1})
 
   if (isLate) {
-    ctx.meter.Gauge("payment_late").record(1)
-    ctx.meter.Counter("payment_late_count").add(1)
+    ctx.meter.Gauge("payment_late").record(1, {"pool": poolName})
+    ctx.meter.Counter("payment_late_count").add(1, {"pool": poolName})
   } else {
-    ctx.meter.Gauge("payment_late").record(0)
+    ctx.meter.Gauge("payment_late").record(0, {"pool": poolName})
+    ctx.meter.Counter("payment_late_count").add(0, {"pool": poolName})
+
   }
   if (isLateForGracePeriod) {
-    ctx.meter.Gauge("payment_late_grace_period").record(1)
-    ctx.meter.Counter("payment_late_grace_period_count").add(1)
+    ctx.meter.Gauge("payment_late_grace_period").record(1, {"pool": poolName})
+    ctx.meter.Counter("payment_late_grace_period_count").add(1, {"pool": poolName})
   } else {
-    ctx.meter.Gauge("payment_late_grace_period").record(0)
+    ctx.meter.Gauge("payment_late_grace_period").record(0, {"pool": poolName})
+    ctx.meter.Counter("payment_late_grace_period_count").add(0, {"pool": poolName})
   }
 }
 
@@ -378,20 +392,22 @@ const tranchedFundsCollectedEventHandler = async function(event: TranchedReserve
 }
 
 async function creditlineHandler (block: Block, ctx: CreditLineContext) {
+  const poolName = getNameByAddress(ctx.address)
+  const ts = new BigDecimal(block.timestamp)
+
   // console.log("start" +  ctx.contract._underlineContract.address)
   const loanBalance = scaleDown(await ctx.contract.balance(), 6)
-  ctx.meter.Gauge('tranchedPool_balance').record(loanBalance)
+  ctx.meter.Gauge('tranchedPool_balance').record(loanBalance, {"pool": poolName})
 
   // if (!shouldSample(block.number)) {
   //   return
   // }
-
   // added in V2 for
   //   next payment due	
   //   CreditLine.nextDueTime
 
   const nextDueTime = toBigDecimal(await ctx.contract.nextDueTime())
-  ctx.meter.Gauge('tranchedPool_nextdue').record(nextDueTime)
+  ctx.meter.Gauge('tranchedPool_nextdue').record(nextDueTime.multipliedBy(1000), {"pool": poolName})
 
    // V2 request:
   //   Full repayment schedule by month (ie. Expected amount of cash to be paid back in Jan, Feb, March, April, etc. for every month from now until loan maturity)
@@ -399,6 +415,7 @@ async function creditlineHandler (block: Block, ctx: CreditLineContext) {
   const interestApr = scaleDown(await ctx.contract.interestApr(), 18)
   const termEnd = toBigDecimal(await ctx.contract.termEndTime())
   const paymentPeriod = toBigDecimal(await ctx.contract.paymentPeriodInDays())
+  const graceLateness = toBigDecimal((await getGoldfinchConfigContract(GF_CONFIG_ADDR).getNumber(5, {blockTag: block.number})) as BigNumber)
 
   if (!paymentPeriod.eq(0) && !termEnd.eq(0) && !nextDueTime.eq(0)) {
     //TODO: need to take the ceil of numOfTerms
@@ -412,22 +429,27 @@ async function creditlineHandler (block: Block, ctx: CreditLineContext) {
     .multipliedBy(termInterest.plus(1).pow(numOfTerms))
     .dividedBy(termInterest.plus(1).pow(numOfTerms).minus(1))
 
-    ctx.meter.Gauge('tranchedPool_next_payment').record(termPayment)
+    ctx.meter.Gauge('tranchedPool_next_payment').record(termPayment, {"pool": poolName})
     var paymentDate = nextDueTime
     while (paymentDate.lte(termEnd)) {
       const unixTime = paymentDate.toNumber()
-      const humanReadableDate = new Date(unixTime * 1000).toDateString()
-      ctx.meter.Gauge('tranchedPool_payment_schedule').record(termPayment, {'date': humanReadableDate})
+      const humanReadableDate = new Date(unixTime * 1000).toISOString().split('T')[0]
+      ctx.meter.Gauge('tranchedPool_payment_schedule').record(termPayment, {'date': humanReadableDate, 'name': poolName})
       paymentDate = paymentDate.plus(paymentPeriod.multipliedBy(SECONDS_PER_DAY))
     }
-
+    if (ts.gt(nextDueTime.plus(graceLateness.multipliedBy(SECONDS_PER_DAY)))) {
+      ctx.meter.Gauge('is_late').record(1, {"pool": poolName})
+    } else {
+      ctx.meter.Gauge('is_late').record(0, {"pool": poolName})
+    }
   } else {
-    ctx.meter.Gauge('tranchedPool_next_payment').record(0)
+    ctx.meter.Gauge('tranchedPool_next_payment').record(0, {"pool": poolName})
   }
 
 
 }
 async function tranchedPoolHandler(block: Block, ctx: TranchedPoolContext) {
+  const poolName = getNameByAddress(ctx.address)
   // if (!shouldSample(block.number)) {
   //   return
   // }
@@ -452,13 +474,13 @@ async function tranchedPoolHandler(block: Block, ctx: TranchedPoolContext) {
 
     const interestApr = scaleDown(await getCreditLineContract(creditLine).interestApr(), 18)
 
-    ctx.meter.Gauge('senior_apr').record(interestApr.multipliedBy(0.7))
+    ctx.meter.Gauge('senior_apr').record(interestApr.multipliedBy(0.7), {"pool": poolName})
     // junior apr = apr * (1 - senior_portion + 0.2 * senior_portion) / ( 1 - senior_portion )= apr * (1 - 0.8 * senior_portion) / (1 - senior_portion)
     const juniorApr = interestApr.multipliedBy((new BigDecimal(1)).minus(seniorPortion.multipliedBy(0.8))).div((new BigDecimal(1)).minus(seniorPortion))
-    ctx.meter.Gauge('junior_apr').record(juniorApr)
+    ctx.meter.Gauge('junior_apr').record(juniorApr, {"pool": poolName})
   } else {
-    ctx.meter.Gauge('senior_apr').record(0)
-    ctx.meter.Gauge('junior_apr').record(0)
+    ctx.meter.Gauge('senior_apr').record(0, {"pool": poolName})
+    ctx.meter.Gauge('junior_apr').record(0, {"pool": poolName})
   }
  }
 
@@ -466,31 +488,32 @@ const creditLineTemplate = new CreditLineProcessorTemplate()
     .onBlock(creditlineHandler)
 
 // add TODO push contract level label
-GoldfinchFactoryProcessor.bind({address: "0xd20508E1E971b80EE172c73517905bfFfcBD87f9", startBlock: 11370655})
-  .onEventCreditLineCreated(async function (event, ctx) {
-    creditLineTemplate.bind({
-      address: event.args.creditLine,
-      startBlock: ctx.blockNumber
-    })
-  })
-CreditDeskProcessor.bind({address: "0xb2Bea2610FEEfA4868C3e094D2E44b113b6D6138", startBlock: 11370659})
-  .onEventCreditLineCreated(async function (event, ctx) {
-    creditLineTemplate.bind({
-      address: event.args.creditLine,
-      startBlock: ctx.blockNumber
-    })
-  }).onEventDrawdownMade(drawDownMadeHandler)
+// GoldfinchFactoryProcessor.bind({address: "0xd20508E1E971b80EE172c73517905bfFfcBD87f9", startBlock: 11370655})
+//   .onEventCreditLineCreated(async function (event, ctx) {
+//     creditLineTemplate.bind({
+//       address: event.args.creditLine,
+//       startBlock: ctx.blockNumber
+//     })
+//   })
+// CreditDeskProcessor.bind({address: "0xb2Bea2610FEEfA4868C3e094D2E44b113b6D6138", startBlock: 11370659})
+//   .onEventCreditLineCreated(async function (event, ctx) {
+//     creditLineTemplate.bind({
+//       address: event.args.creditLine,
+//       startBlock: ctx.blockNumber
+//     })
+//   }).onEventDrawdownMade(drawDownMadeHandler)
 
 // additional events for V2 request
 const trancheLockedEventHandler = async function(event:TrancheLockedEvent, ctx: TranchedPoolContext) {
   const trancheId = event.args.trancheId
+  const poolName = getNameByAddress(event.address)
   if (trancheId.eq(1)) {
     // for V2 request:
     //     next payment due	
     // CreditLine.nextDueTime
-    const ts = BN.from((await ctx.contract.provider.getBlock(event.blockNumber)).timestamp)
+    const ts = BN.from((await ctx.contract.provider.getBlock(event.blockNumber)).timestamp * 1000)
     // TODO: temp workaround, use counter so we can preserve the value for bar gauge
-    ctx.meter.Counter("pool_funded").add(ts)
+    ctx.meter.Counter("pool_funded").add(ts, {"pool": poolName})
   }
 }
 
@@ -509,13 +532,15 @@ const trancheLockedEventHandler = async function(event:TrancheLockedEvent, ctx: 
 // batch handle Tranched Pools
 // for (let i = 0; i < goldfinchPools.data.length; i++) {
 // TODO: only testing out newer pools
+// older pools, such as 0x1d596d28a7923a22aa013b0e7082bba23daa656b will cause error 
+// because it's lacking totalJuniorDeposits in the ABI
 for (let i = 0; i < 7; i++) {
 
   const tranchedPool = goldfinchPools.data[i];
-  if (!tranchedPool.auto) {
+  // if (!tranchedPool.auto) {
     CreditLineProcessor.bind({address: tranchedPool.creditLineAddress, startBlock: tranchedPool.creditLineStartBlock})
         .onBlock(creditlineHandler)
-  }
+  // }
   // TODO commented to test V2 stuff only
   // TranchedPoolProcessor.bind({address: tranchedPool.poolAddress, startBlock: tranchedPool.poolStartBlock})
   // .onEventDepositMade(tranchedDepositEventHandler)
@@ -525,9 +550,9 @@ for (let i = 0; i < 7; i++) {
   // .onEventDrawdownMade(tranchedDrawDownMadeHandler)
   // .onEventTrancheLocked(trancheLockedEventHandler)
   //
-  // TranchedPoolProcessor.bind({address: tranchedPool.poolAddress, startBlock: tranchedPool.poolStartBlock})
-  // .onBlock(tranchedPoolHandler)
-  // .onEventPaymentApplied(PaymentAppliedEventHandler)
-  // .onEventTrancheLocked(trancheLockedEventHandler)
+  TranchedPoolProcessor.bind({address: tranchedPool.poolAddress, startBlock: tranchedPool.poolStartBlock})
+  .onBlock(tranchedPoolHandler)
+  .onEventPaymentApplied(PaymentAppliedEventHandler)
+  .onEventTrancheLocked(trancheLockedEventHandler)
 }
 
