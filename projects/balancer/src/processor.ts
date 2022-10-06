@@ -7,7 +7,8 @@ import { FlashLoanEvent, InternalBalanceChangedEvent, SwapEvent } from './types/
 import { VaultProcessor, VaultContext } from './types/vault'
 import { ERC20Context, ERC20Processor, getERC20Contract } from '@sentio/sdk/lib/builtin/erc20'
 
-import { getER20NormalizedAmount } from '@sentio/sdk/lib/utils'
+import { token } from '@sentio/sdk/lib/utils'
+const getER20NormalizedAmount = token.getER20NormalizedAmount
 
 // export const toBn = (ethersBn: BigNumber | BigInt) => new BN(ethersBn.toString());
 //

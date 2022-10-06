@@ -12,7 +12,7 @@ import {
 } from "./constant"
 
 import { Context, ContractView, BoundContractView, GenericProcessor, BigDecimal } from "@sentio/sdk"
-import { getERC20TokenInfo, NATIVE_ETH, toBigDecimal, TokenInfo } from "@sentio/sdk/lib/utils"
+import { token, conversion  } from "@sentio/sdk/lib/utils"
 import { ExchangeV3Context, ExchangeV3Processor, WithdrawalCompletedEvent, DepositRequestedEvent } from "./types/exchangev3"
 import type { BaseContract, BigNumber } from 'ethers'
 
@@ -60,13 +60,13 @@ async function withdrawGauge(event: WithdrawalCompletedEvent, ctx: ExchangeV3Con
 
 const scaleDown = async function (amount: BigNumber, decimal: number) {
   const divider = (new BigDecimal(10)).pow(decimal)
-  return toBigDecimal(amount).div(divider)
+  return conversion.toBigDecimal(amount).div(divider)
 }
 
-async function getTokenInfo(address: string): Promise<TokenInfo> {
+async function getTokenInfo(address: string): Promise<token.TokenInfo> {
   if (address !== "0x0000000000000000000000000000000000000000") {
-    return await getERC20TokenInfo(address)
+    return await token.getERC20TokenInfo(address)
   } else {
-    return NATIVE_ETH
+    return token.NATIVE_ETH
   }
 }

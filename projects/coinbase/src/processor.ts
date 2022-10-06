@@ -6,16 +6,16 @@ import { MintEvent, BurnEvent } from "./types/stakedtokenv1"
 import { StakedTokenV1Context, StakedTokenV1Processor } from "./types/stakedtokenv1"
 import { getEACAggregatorProxyContract } from "./types/eacaggregatorproxy"
 import type { BigNumber } from "ethers"
-import { getERC20TokenInfo, NATIVE_ETH, toBigDecimal, TokenInfo } from "@sentio/sdk/lib/utils"
+import { token, conversion } from "@sentio/sdk/lib/utils"
 import { BigDecimal } from "@sentio/sdk"
 
 function scaleDown(amount: BigNumber, decimal: number) {
-  return toBigDecimal(amount).div(BigDecimal(10).pow(decimal))
+  return conversion.toBigDecimal(amount).div(BigDecimal(10).pow(decimal))
 }
 
 
 const blockHandler = async function(_:any, ctx: StakedTokenV1Context) {
-  const tokenInfo = await getERC20TokenInfo(ctx.contract.rawContract.address)
+  const tokenInfo = await token.getERC20TokenInfo(ctx.contract.rawContract.address)
   const totalSupply = scaleDown(await ctx.contract.totalSupply(), tokenInfo.decimal)
   const exchangeRate = scaleDown(await ctx.contract.exchangeRate(), tokenInfo.decimal)
   ctx.meter.Gauge("total_supply").record(totalSupply, {token: tokenInfo.symbol})
@@ -24,7 +24,7 @@ const blockHandler = async function(_:any, ctx: StakedTokenV1Context) {
   const latestAnswer = await getEACAggregatorProxyContract(USDC_ETH_ORACLE).latestAnswer({blockTag: ctx.blockNumber.toNumber()})
   // the oracle actually returns USDC/ETH price with 18 decimal
   // so to get ETH/USDC price, just do 1e18.div(result)
-  const eth_usdc_price = BigDecimal(10).pow(18).div(toBigDecimal(latestAnswer))
+  const eth_usdc_price = BigDecimal(10).pow(18).div(conversion.toBigDecimal(latestAnswer))
 
 
   // divide exchange rate between ETH/cbETH to get cbETH price
@@ -39,14 +39,14 @@ const blockHandler = async function(_:any, ctx: StakedTokenV1Context) {
 }
 
 const mintEventHandler = async function(event: MintEvent, ctx: StakedTokenV1Context) {
-  const tokenInfo = await getERC20TokenInfo(ctx.contract.rawContract.address)
+  const tokenInfo = await token.getERC20TokenInfo(ctx.contract.rawContract.address)
   const amount = scaleDown(event.args.amount, tokenInfo.decimal)
   ctx.meter.Gauge("mint").record(amount, {token: tokenInfo.symbol})
   ctx.meter.Counter("mint_acc").add(amount, {token: tokenInfo.symbol})
 }
 
 const burnEventHandler = async function(event: BurnEvent, ctx: StakedTokenV1Context) {
-  const tokenInfo = await getERC20TokenInfo(ctx.contract.rawContract.address)
+  const tokenInfo = await token.getERC20TokenInfo(ctx.contract.rawContract.address)
   const amount = scaleDown(event.args.amount, tokenInfo.decimal)
   ctx.meter.Gauge("burn").record(amount, {token: tokenInfo.symbol})
   ctx.meter.Counter("burn_acc").add(amount, {token: tokenInfo.symbol})

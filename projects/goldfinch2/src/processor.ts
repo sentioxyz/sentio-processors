@@ -22,7 +22,8 @@ import * as goldfinchPools from "./goldfinchPools.json"
 import { GoldfinchFactoryProcessor } from "./types/goldfinchfactory";
 import { CreditDeskContext, CreditDeskProcessor, DrawdownMadeEvent } from "./types/creditdesk";
 import { TranchedPoolContext, TranchedPoolProcessor } from './types/tranchedpool';
-import { toBigDecimal } from "@sentio/sdk/lib/utils"
+import { conversion } from "@sentio/sdk/lib/utils"
+const toBigDecimal = conversion.toBigDecimal
 import { BigDecimal } from '@sentio/sdk'
 import type { BigNumber } from 'ethers'
 import type { Block } from '@ethersproject/providers'
