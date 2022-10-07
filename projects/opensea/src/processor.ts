@@ -22,7 +22,7 @@ const orderFulfilled = async function(event: OrderFulfilledEvent, ctx: SeaportCo
 
   for (var i = 0; i < amount.length; i++) {
     var item = amount[i];
-    // TODO only process native ETH now
+    // native eth
     if (item.itemType == 0) {
       ctx.meter.Counter("eth_volume_cume").add(scaleDown(item.amount, 18))
       ctx.meter.Counter("eth_volume").add(scaleDown(item.amount, 18)) 
