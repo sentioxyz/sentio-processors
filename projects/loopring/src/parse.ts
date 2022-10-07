@@ -41,6 +41,7 @@ function parseSingleTx(txData: Bitstream, ctx: ExchangeV3Context) {
     assert(false, "unknown transaction type: " + txType);
   }
 
+
   // request.type = adjustTxType(txType, request);
   // console.log("request.type:", request.type);
   // request.txData = txData.getData();
