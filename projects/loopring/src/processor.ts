@@ -15,6 +15,7 @@ import { Context, ContractView, BoundContractView, GenericProcessor, BigDecimal 
 import { token, conversion  } from "@sentio/sdk/lib/utils"
 import { ExchangeV3Context, ExchangeV3Processor, WithdrawalCompletedEvent, DepositRequestedEvent } from "./types/exchangev3"
 import type { BaseContract, BigNumber } from 'ethers'
+import { processBlockStruct } from "./parse";
 
 GenericProcessor.bind(EVENT1, {address: LOOPRING_WALLET_MODULE}).onAllEvents(walletCounter)
 GenericProcessor.bind(EVENT, {address: LOOPRING_WALLET_FACTORY1}).onAllEvents(walletCounter)
@@ -30,7 +31,7 @@ ExchangeV3Processor.bind({address: LOOPRING_EXCHANGE})
       ctx.meter.Counter("submit_block").add(1)
       
       for (const block of call.args.blocks) {
-        // TODO
+        processBlockStruct(block, call.transactionHash, ctx)
       }
     })
 
