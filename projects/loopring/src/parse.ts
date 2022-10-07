@@ -13,22 +13,50 @@ import { NftMintProcessor } from "@sentio/loopring-protocols/src/request_process
 import { NftDataProcessor } from "@sentio/loopring-protocols/src/request_processors/nft_data_processor";
 import { getTxData, ThinBlock } from "@sentio/loopring-protocols/src/parse";
 import assert from "assert";
-
+import { AddressZero } from "@ethersproject/constants"
 function parseSingleTx(txData: Bitstream, ctx: ExchangeV3Context) {
   const txType = txData.extractUint8(0);
 
+  // SELECT CASE (t.transaction).txType
+  //               WHEN 1 THEN ((t.transaction).deposit).toAccount
+  //               WHEN 3 THEN ((t.transaction).transfer).toAccount
+  //               WHEN 5 THEN ((t.transaction).account_update).ownerAccount
+  //               ELSE '0'
+  //           END as id,
+  //           CASE (t.transaction).txType
+  //               WHEN 1 THEN ((t.transaction).deposit).toAddress
+  //               WHEN 3 THEN ((t.transaction).transfer).toAddress
+  //               WHEN 5 THEN ((t.transaction).account_update).ownerAddress
+  //               ELSE '\x0000000000000000000000000000000000000000'::bytea
+  //           END as address
+  // 1,3,5 corresponds to DEPOSIT, TRANSFER and ACCOUNT_UPDATE
   if (txType === TransactionType.NOOP) {
     // Do nothing
   } else if (txType === TransactionType.DEPOSIT) {
     const request = DepositProcessor.extractData(txData);
+    var account = request.toAccountID
+    var address = request.to
+    if (account !== undefined && address !== undefined && account! !== 0 && address !== AddressZero) {
+      ctx.meter.Counter("L2_accounts").add(1, {type: "DEPOSIT"})
+    }
   } else if (txType === TransactionType.SPOT_TRADE) {
     const request = SpotTradeProcessor.extractData(txData);
   } else if (txType === TransactionType.TRANSFER) {
     const request = TransferProcessor.extractData(txData);
+    var account = request.accountToID
+    var address = request.to
+    if (account !== undefined && address !== undefined && account! !== 0 && address !== AddressZero) {
+      ctx.meter.Counter("L1_txs").add(1, {type: "TRANSFER"})
+    }
   } else if (txType === TransactionType.WITHDRAWAL) {
     const request = WithdrawalProcessor.extractData(txData);
   } else if (txType === TransactionType.ACCOUNT_UPDATE) {
     const request = AccountUpdateProcessor.extractData(txData);
+    var account = request.accountID
+    var address = request.owner
+    if (account !== undefined && address !== undefined && account! !== 0 && address !== AddressZero) {
+      ctx.meter.Counter("L1_txs").add(1, {type: "ACCOUNT_UPDATE"})
+    }
   } else if (txType === TransactionType.AMM_UPDATE) {
     const request = AmmUpdateProcessor.extractData(txData);
   } else if (txType === TransactionType.SIGNATURE_VERIFICATION) {
