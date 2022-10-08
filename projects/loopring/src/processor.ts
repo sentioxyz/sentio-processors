@@ -27,9 +27,15 @@ GenericProcessor.bind(EVENT2, {address: LOOPRING_WALLET_FACTORY5}).onAllEvents(w
 ExchangeV3Processor.bind({address: LOOPRING_EXCHANGE})
     .onEventDepositRequested(depositGauge)
     .onEventWithdrawalCompleted(withdrawGauge)
-    .onCallSubmitBlocks((call, ctx) => {
+    .onCallSubmitBlocks(async (call, ctx) => {
       ctx.meter.Counter("submit_block").add(1)
-      
+      const tx = await ctx.contract.provider.getTransaction(call.transactionHash)
+      const gas = tx.gasLimit
+      const gasPrice = tx.gasPrice
+      if (gasPrice !== undefined) {
+        const gasUsed = conversion.toBigDecimal(gas).multipliedBy(token.scaleDown(gasPrice!, 18))
+        ctx.meter.Counter("eth_spent_on_gas").add(gasUsed)
+      }
       for (const block of call.args.blocks) {
         processBlockStruct(block, call.transactionHash, ctx)
       }

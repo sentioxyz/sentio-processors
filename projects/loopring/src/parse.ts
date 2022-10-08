@@ -18,6 +18,10 @@ import { AddressZero } from "@ethersproject/constants"
 const ACCOUNT_SET = new Set<number>()
 function parseSingleTx(txData: Bitstream, ctx: ExchangeV3Context) {
   const txType = txData.extractUint8(0);
+  if (ACCOUNT_SET.size == 0) {
+    ctx.meter.Counter("set_zero_occur").add(1)
+  }
+  ctx.meter.Counter("total_tx_processed").add(1)
 
   // SELECT CASE (t.transaction).txType
   //               WHEN 1 THEN ((t.transaction).deposit).toAccount
@@ -84,6 +88,7 @@ function parseSingleTx(txData: Bitstream, ctx: ExchangeV3Context) {
   } else if (txType === TransactionType.SIGNATURE_VERIFICATION) {
     const request = SignatureVerificationProcessor.extractData(txData);
   } else if (txType === TransactionType.NFT_MINT) {
+    ctx.meter.Counter("unique_nft_minted").add(1)
     const request = NftMintProcessor.extractData(txData);
   } else if (txType === TransactionType.NFT_DATA) {
     const request = NftDataProcessor.extractData(txData);
