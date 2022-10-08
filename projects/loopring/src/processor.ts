@@ -13,7 +13,13 @@ import {
 
 import { Context, ContractView, BoundContractView, GenericProcessor, BigDecimal } from "@sentio/sdk"
 import { token, conversion  } from "@sentio/sdk/lib/utils"
-import { ExchangeV3Context, ExchangeV3Processor, WithdrawalCompletedEvent, DepositRequestedEvent } from "./types/exchangev3"
+import {
+  ExchangeV3Context,
+  ExchangeV3Processor,
+  WithdrawalCompletedEvent,
+  DepositRequestedEvent,
+  SubmitBlocksCallTrace
+} from "./types/exchangev3"
 import type { BaseContract, BigNumber } from 'ethers'
 import { processBlockStruct } from "./parse";
 
@@ -24,11 +30,12 @@ GenericProcessor.bind(EVENT, {address: LOOPRING_WALLET_FACTORY3}).onAllEvents(wa
 GenericProcessor.bind(EVENT, {address: LOOPRING_WALLET_FACTORY4}).onAllEvents(walletCounter)
 GenericProcessor.bind(EVENT2, {address: LOOPRING_WALLET_FACTORY5}).onAllEvents(walletCounter)
 
-ExchangeV3Processor.bind({address: LOOPRING_EXCHANGE})
+ExchangeV3Processor.bind({address: LOOPRING_EXCHANGE, startBlock: 12104430})
     .onEventDepositRequested(depositGauge)
     .onEventWithdrawalCompleted(withdrawGauge)
-    .onCallSubmitBlocks(async (call, ctx) => {
+    .onCallSubmitBlocks(async (call: SubmitBlocksCallTrace, ctx: ExchangeV3Context) => {
       ctx.meter.Counter("submit_block").add(1)
+      // console.log(ctx.contract.provider)
       const tx = await ctx.contract.provider.getTransaction(call.transactionHash)
       const gas = tx.gasLimit
       const gasPrice = tx.gasPrice
