@@ -1,4 +1,4 @@
-import { TestProcessorServer } from '@sentio/sdk/lib/test'
+import { TestProcessorServer } from '@sentio/sdk/lib/testing'
 import { mockTransferLog } from '@sentio/sdk/lib/builtin/erc20/test-utils'
 import { BigNumber } from 'ethers'
 import { firstCounterValue } from '@sentio/sdk/lib/test/metric-utils'
