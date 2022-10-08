@@ -14,6 +14,8 @@ import { NftDataProcessor } from "@sentio/loopring-protocols/src/request_process
 import { getTxData, ThinBlock } from "@sentio/loopring-protocols/src/parse";
 import assert from "assert";
 import { AddressZero } from "@ethersproject/constants"
+
+const ACCOUNT_SET = new Set<number>()
 function parseSingleTx(txData: Bitstream, ctx: ExchangeV3Context) {
   const txType = txData.extractUint8(0);
 
@@ -37,7 +39,14 @@ function parseSingleTx(txData: Bitstream, ctx: ExchangeV3Context) {
     var account = request.toAccountID
     var address = request.to
     if (account !== undefined && address !== undefined && account! !== 0 && address !== AddressZero) {
-      ctx.meter.Counter("L2_accounts").add(1, {type: "DEPOSIT"})
+      if (!ACCOUNT_SET.has(account)) {
+       ctx.meter.Counter("L2_accounts").add(1, {type: "DEPOSIT"})
+       ctx.meter.Gauge("set_size").record(ACCOUNT_SET.size)
+       ACCOUNT_SET.add(account)
+
+      } else {
+        ctx.meter.Gauge("set_size").record(ACCOUNT_SET.size)
+      }
     }
   } else if (txType === TransactionType.SPOT_TRADE) {
     const request = SpotTradeProcessor.extractData(txData);
@@ -46,7 +55,14 @@ function parseSingleTx(txData: Bitstream, ctx: ExchangeV3Context) {
     var account = request.accountToID
     var address = request.to
     if (account !== undefined && address !== undefined && account! !== 0 && address !== AddressZero) {
-      ctx.meter.Counter("L1_txs").add(1, {type: "TRANSFER"})
+      if (!ACCOUNT_SET.has(account)) {
+        ctx.meter.Counter("L2_accounts").add(1, {type: "TRANSFER"})
+        ctx.meter.Gauge("set_size").record(ACCOUNT_SET.size)
+        ACCOUNT_SET.add(account)
+
+      } else {
+        ctx.meter.Gauge("set_size").record(ACCOUNT_SET.size)
+      }
     }
   } else if (txType === TransactionType.WITHDRAWAL) {
     const request = WithdrawalProcessor.extractData(txData);
@@ -55,7 +71,13 @@ function parseSingleTx(txData: Bitstream, ctx: ExchangeV3Context) {
     var account = request.accountID
     var address = request.owner
     if (account !== undefined && address !== undefined && account! !== 0 && address !== AddressZero) {
-      ctx.meter.Counter("L1_txs").add(1, {type: "ACCOUNT_UPDATE"})
+      if (!ACCOUNT_SET.has(account)) {
+        ctx.meter.Counter("L2_accounts").add(1, {type: "ACCOUNT_UPDATE"})
+        ctx.meter.Gauge("set_size").record(ACCOUNT_SET.size)
+        ACCOUNT_SET.add(account)
+      } else {
+        ctx.meter.Gauge("set_size").record(ACCOUNT_SET.size)
+      }
     }
   } else if (txType === TransactionType.AMM_UPDATE) {
     const request = AmmUpdateProcessor.extractData(txData);
