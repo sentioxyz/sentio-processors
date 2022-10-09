@@ -11,7 +11,7 @@ import {
   EVENT2
 } from "./constant"
 
-import { Context, ContractView, BoundContractView, GenericProcessor, BigDecimal } from "@sentio/sdk"
+import { Context, ContractView, BoundContractView, GenericProcessor, BigDecimal, TraceBinding } from "@sentio/sdk"
 import { token, conversion  } from "@sentio/sdk/lib/utils"
 import {
   ExchangeV3Context,
@@ -22,6 +22,7 @@ import {
 } from "./types/exchangev3"
 import type { BaseContract, BigNumber } from 'ethers'
 import { processBlockStruct } from "./parse";
+import { toBigDecimal } from "@sentio/sdk/lib/utils/conversion"
 
 GenericProcessor.bind(EVENT1, {address: LOOPRING_WALLET_MODULE}).onAllEvents(walletCounter)
 GenericProcessor.bind(EVENT, {address: LOOPRING_WALLET_FACTORY1}).onAllEvents(walletCounter)
@@ -30,18 +31,23 @@ GenericProcessor.bind(EVENT, {address: LOOPRING_WALLET_FACTORY3}).onAllEvents(wa
 GenericProcessor.bind(EVENT, {address: LOOPRING_WALLET_FACTORY4}).onAllEvents(walletCounter)
 GenericProcessor.bind(EVENT2, {address: LOOPRING_WALLET_FACTORY5}).onAllEvents(walletCounter)
 
-ExchangeV3Processor.bind({address: LOOPRING_EXCHANGE, startBlock: 12104430})
+ExchangeV3Processor.bind({address: LOOPRING_EXCHANGE})
     .onEventDepositRequested(depositGauge)
     .onEventWithdrawalCompleted(withdrawGauge)
     .onCallSubmitBlocks(async (call: SubmitBlocksCallTrace, ctx: ExchangeV3Context) => {
+      if (call.error) {
+        return
+      }
       ctx.meter.Counter("submit_block").add(1)
       // console.log(ctx.contract.provider)
       const tx = await ctx.contract.provider.getTransaction(call.transactionHash)
-      const gas = tx.gasLimit
       const gasPrice = tx.gasPrice
+      // const gasUsed = call.result.gasUsed
+      const receipt = await ctx.contract.provider.getTransactionReceipt(call.transactionHash)
+      const gasUsed = receipt.gasUsed
       if (gasPrice !== undefined) {
-        const gasUsed = conversion.toBigDecimal(gas).multipliedBy(token.scaleDown(gasPrice!, 18))
-        ctx.meter.Counter("eth_spent_on_gas").add(gasUsed)
+        const gasSpent = toBigDecimal(gasUsed).multipliedBy(token.scaleDown(gasPrice!, 18))
+        ctx.meter.Counter("eth_spent_on_gas").add(gasSpent)
       }
       for (const block of call.args.blocks) {
         processBlockStruct(block, call.transactionHash, ctx)

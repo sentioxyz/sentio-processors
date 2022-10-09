@@ -21,7 +21,8 @@ function parseSingleTx(txData: Bitstream, ctx: ExchangeV3Context) {
   if (ACCOUNT_SET.size == 0) {
     ctx.meter.Counter("set_zero_occur").add(1)
   }
-  ctx.meter.Counter("total_tx_processed").add(1)
+  ctx.meter.Gauge("tx_processed").record(1, {txType: txType.toString()})
+  ctx.meter.Counter("tx_processed_counter").add(1, {txType: txType.toString()})
 
   // SELECT CASE (t.transaction).txType
   //               WHEN 1 THEN ((t.transaction).deposit).toAccount
@@ -134,6 +135,10 @@ function processBlock(block: ThinBlock, ctx: ExchangeV3Context) {
 
   let data = new Bitstream(block.data);
   let offset = 0;
+
+  const blockSize = block.blockSize
+  ctx.meter.Gauge("block_sizes").record(1, {blocksize: blockSize.toString()})
+  ctx.meter.Counter("block_sizes_counter").add(1, {blocksize: blockSize.toString()})
 
   // General data
   offset += 20 + 32 + 32 + 4;
