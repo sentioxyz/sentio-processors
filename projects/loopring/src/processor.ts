@@ -11,7 +11,7 @@ import {
   EVENT2
 } from "./constant"
 
-import { Context, ContractView, BoundContractView, GenericProcessor, BigDecimal, TraceBinding } from "@sentio/sdk"
+import { Context, ContractView, BoundContractView, GenericProcessor, BigDecimal } from "@sentio/sdk"
 import { token, conversion  } from "@sentio/sdk/lib/utils"
 import {
   ExchangeV3Context,
