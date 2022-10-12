@@ -1,0 +1,1 @@
+export const CAPE_NEW = "0xAc42e297B896dB2CD0c2C1b47e348b7f489E70f1".toLowerCase()
