@@ -11,7 +11,7 @@ import {
   EVENT2
 } from "./constant"
 
-import { Context, ContractView, BoundContractView, GenericProcessor, BigDecimal } from "@sentio/sdk"
+import { ContractContext, ContractView, BoundContractView, GenericProcessor, BigDecimal } from "@sentio/sdk"
 import { token, conversion  } from "@sentio/sdk/lib/utils"
 import {
   ExchangeV3Context,
@@ -54,7 +54,7 @@ ExchangeV3Processor.bind({address: LOOPRING_EXCHANGE})
       }
     })
 
-async function walletCounter(event: any, ctx: Context<BaseContract, BoundContractView<BaseContract, ContractView<BaseContract>>>) {
+async function walletCounter(event: any, ctx: ContractContext<BaseContract, BoundContractView<BaseContract, ContractView<BaseContract>>>) {
   ctx.meter.Counter("wallet_count").add(1)
 }
 
