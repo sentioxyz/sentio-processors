@@ -42,12 +42,16 @@ ExchangeV3Processor.bind({address: LOOPRING_EXCHANGE})
       // console.log(ctx.contract.provider)
       const tx = await ctx.contract.provider.getTransaction(call.transactionHash)
       const gasPrice = tx.gasPrice
-      // const gasUsed = call.result.gasUsed
+      const gasUsedFromCall = call.result.gasUsed
       const receipt = await ctx.contract.provider.getTransactionReceipt(call.transactionHash)
       const gasUsed = receipt.gasUsed
       if (gasPrice !== undefined) {
         const gasSpent = toBigDecimal(gasUsed).multipliedBy(token.scaleDown(gasPrice!, 18))
+        const gasSpent2 = new BigDecimal(gasUsedFromCall).multipliedBy(token.scaleDown(gasPrice!, 18))
+
         ctx.meter.Counter("eth_spent_on_gas").add(gasSpent)
+        ctx.meter.Counter("eth_spent_on_gas2").add(gasSpent2)
+
       }
       for (const block of call.args.blocks) {
         processBlockStruct(block, call.transactionHash, ctx)
