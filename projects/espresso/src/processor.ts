@@ -39,13 +39,13 @@ const handleBlockCommittedEvent = async (event: BlockCommittedEvent, ctx: CapeCo
           gaugeAndCounter("Burn", ctx)
           break;
         default:
-          ctx.meter.Gauge("illegal_note_type").record(1);
+          gaugeAndCounter("Empty", ctx)
           break;
       }
     }
-  }
-  else {
-        gaugeAndCounter("Empty", ctx)
+    else {
+      gaugeAndCounter("Empty", ctx)
+    }
   }
 }
 
