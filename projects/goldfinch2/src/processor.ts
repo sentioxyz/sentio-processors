@@ -117,18 +117,22 @@ const PaymentAppliedEventHandler = async function(event: PaymentAppliedEvent, ct
 
   // const isPaymentLate = await getCreditLineContract(event.address).isLate({blockTag: event.blockNumber - 1})
   // const isPaymentWithinGracePeriod = await getCreditLineContract(event.address).withinPrincipalGracePeriod({blockTag: event.blockNumber - 1})
+  // using payment applied value to encode status
+  // 1: on-time
+  // 2: late
+  // 3: late for grace period
   if (isLateForGracePeriod) {
-    paymentAppliedGauge.record(ctx, 1, {"pool": poolName, "status": "late for grace", "time": humanReadableDate})
-    ctx.meter.Gauge("payment_late_grace").record(1, {"pool": poolName, "time": humanReadableDate})
+    paymentAppliedGauge.record(ctx, 3, {"pool": poolName, "status": "late for grace", "date": humanReadableDate})
+    ctx.meter.Gauge("payment_late_grace").record(1, {"pool": poolName, "date": humanReadableDate})
     ctx.meter.Counter("payment_late_grace_period_count").add(1, {"pool": poolName})
     ctx.meter.Counter("payment_late_count").add(0, {"pool": poolName})
   } else if (isLate) {
-    paymentAppliedGauge.record(ctx, 1, {"pool": poolName, "status": "late", "time": humanReadableDate})
-    ctx.meter.Gauge("payment_late").record(1, {"pool": poolName, "time": humanReadableDate})
+    paymentAppliedGauge.record(ctx, 2, {"pool": poolName, "status": "late", "date": humanReadableDate})
+    ctx.meter.Gauge("payment_late").record(1, {"pool": poolName, "date": humanReadableDate})
     ctx.meter.Counter("payment_late_grace_period_count").add(0, {"pool": poolName})
     ctx.meter.Counter("payment_late_count").add(1, {"pool": poolName})
   } else {
-    paymentAppliedGauge.record(ctx, 1, {"pool": poolName, "status": "on-time", "time": humanReadableDate})
+    paymentAppliedGauge.record(ctx, 1, {"pool": poolName, "status": "on-time", "date": humanReadableDate})
     ctx.meter.Counter("payment_late_grace_period_count").add(0, {"pool": poolName})
     ctx.meter.Counter("payment_late_count").add(0, {"pool": poolName})
   }
@@ -227,13 +231,16 @@ async function tranchedPoolHandler(block: Block, ctx: TranchedPoolContext) {
     return
   }
   pool = pool!
-  if (pool.version == 2) 
+  if (pool.version > 0) 
   {
     const creditLine = await ctx.contract.creditLine()
-    const juniorBalance = await ctx.contract.totalJuniorDeposits()
-    const totalDeployed = await ctx.contract.totalDeployed()
+    // const juniorBalance = await ctx.contract.totalJuniorDeposits()
+    // const totalDeployed = await ctx.contract.totalDeployed()
+    const juniorBalance = (await ctx.contract.getTranche(2))[1]
+    const seniorBalance = (await ctx.contract.getTranche(1))[1]
+    const totalDeployed = juniorBalance.add(seniorBalance)
     if (!totalDeployed.eq(0)) {
-      const seniorBalance = totalDeployed.sub(juniorBalance)
+      // const seniorBalance = totalDeployed.sub(juniorBalance)
       const seniorPortion = toBigDecimal(seniorBalance).div(toBigDecimal(totalDeployed))
 
       const interestApr = scaleDown(await getCreditLineContract(creditLine).interestApr(), 18)
