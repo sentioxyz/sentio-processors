@@ -14,13 +14,11 @@ import { NftDataProcessor } from "@sentio/loopring-protocols/src/request_process
 import { getTxData, ThinBlock } from "@sentio/loopring-protocols/src/parse";
 import assert from "assert";
 import { AddressZero } from "@ethersproject/constants"
+import { AccountEventTracker} from "@sentio/sdk";
 
-const ACCOUNT_SET = new Set<number>()
+const accountTracker = AccountEventTracker.register("wallets")
 function parseSingleTx(txData: Bitstream, ctx: ExchangeV3Context) {
   const txType = txData.extractUint8(0);
-  if (ACCOUNT_SET.size == 0) {
-    ctx.meter.Counter("set_zero_occur").add(1)
-  }
   ctx.meter.Gauge("tx_processed").record(1, {txType: txType.toString()})
   ctx.meter.Counter("tx_processed_counter").add(1, {txType: txType.toString()})
 
@@ -44,14 +42,7 @@ function parseSingleTx(txData: Bitstream, ctx: ExchangeV3Context) {
     var account = request.toAccountID
     var address = request.to
     if (account !== undefined && address !== undefined && account! !== 0 && address !== AddressZero) {
-      if (!ACCOUNT_SET.has(account)) {
-       ctx.meter.Counter("L2_accounts").add(1, {type: "DEPOSIT"})
-       ctx.meter.Gauge("set_size").record(ACCOUNT_SET.size)
-       ACCOUNT_SET.add(account)
-
-      } else {
-        ctx.meter.Gauge("set_size").record(ACCOUNT_SET.size)
-      }
+      accountTracker.trackEvent(ctx, { distinctId: account.toString(16) })
     }
   } else if (txType === TransactionType.SPOT_TRADE) {
     const request = SpotTradeProcessor.extractData(txData);
@@ -60,14 +51,7 @@ function parseSingleTx(txData: Bitstream, ctx: ExchangeV3Context) {
     var account = request.accountToID
     var address = request.to
     if (account !== undefined && address !== undefined && account! !== 0 && address !== AddressZero) {
-      if (!ACCOUNT_SET.has(account)) {
-        ctx.meter.Counter("L2_accounts").add(1, {type: "TRANSFER"})
-        ctx.meter.Gauge("set_size").record(ACCOUNT_SET.size)
-        ACCOUNT_SET.add(account)
-
-      } else {
-        ctx.meter.Gauge("set_size").record(ACCOUNT_SET.size)
-      }
+      accountTracker.trackEvent(ctx, { distinctId: account.toString(16) })
     }
   } else if (txType === TransactionType.WITHDRAWAL) {
     const request = WithdrawalProcessor.extractData(txData);
@@ -76,13 +60,7 @@ function parseSingleTx(txData: Bitstream, ctx: ExchangeV3Context) {
     var account = request.accountID
     var address = request.owner
     if (account !== undefined && address !== undefined && account! !== 0 && address !== AddressZero) {
-      if (!ACCOUNT_SET.has(account)) {
-        ctx.meter.Counter("L2_accounts").add(1, {type: "ACCOUNT_UPDATE"})
-        ctx.meter.Gauge("set_size").record(ACCOUNT_SET.size)
-        ACCOUNT_SET.add(account)
-      } else {
-        ctx.meter.Gauge("set_size").record(ACCOUNT_SET.size)
-      }
+      accountTracker.trackEvent(ctx, { distinctId: account.toString(16) })
     }
   } else if (txType === TransactionType.AMM_UPDATE) {
     const request = AmmUpdateProcessor.extractData(txData);
