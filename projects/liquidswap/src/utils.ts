@@ -6,6 +6,7 @@ import CoinGecko from 'coingecko-api'
 import csvjson from './csvjson.json'
 import { string } from "@sentio/sdk/src/builtin/aptos/0x1";
 import Coin = coin.Coin;
+import { aptos } from "@sentio/sdk";
 
 const CoinGeckoClient = new CoinGecko();
 
@@ -16,7 +17,7 @@ const coinInfos = new Map<string, ExtendedCoinInfo>()
 // 0xf22bede237a07e121b56d91a491eb7bcdfd1f5907926a9e58338f964a01b17fa
 // const whitelisted = new Set(["APT", "USDC", "USDT", "WETH" ]) // "DOGE", "UNI", "SHIBA"
 
-const WHITELISTED_TOKENS: Record<string, any> = {
+export const WHITELISTED_TOKENS: Record<string, any> = {
   "0x1::aptos_coin::AptosCoin": { coingeckoId: "aptos", decimals: 8, bridge: "none" },
   "0x5e156f1207d0ebfa19a9eeff00d62a282278fb8719f4fab3a586a0a2c0fffbea::coin::T": { coingeckoId: "usd-coin", decimals: 6, bridge: "wormhole" }, // usdc on eth via wormhole
   "0xa2eda21a58856fda86451436513b867c97eecb4ba099da5775520e0f7492e852::coin::T": { coingeckoId: "tether", decimals: 6,  bridge: "wormhole" }, // via wormhole
@@ -66,19 +67,45 @@ export async function getCoinInfo(type: string): Promise<ExtendedCoinInfo> {
   }
   let extInfo = coinInfos.get(type)
   if (!extInfo) {
-    const parts = type.split("::")
-    const account = parts[0]
-    while (!extInfo)
-      try {
-        const resource = await client.getAccountResource(account, `0x1::coin::CoinInfo<${type}>`)
-        extInfo = {...resource.data as CoinInfo<any>, type, bridge: WHITELISTED_TOKENS[type].bridge }
-      } catch (e) {
-        console.log("rpc error get coin info", type, e)
-        await delay(1000)
-      }
+    const info = await requestCoinInfo(type)
+    extInfo = { ...info, type, bridge: WHITELISTED_TOKENS[type].bridge  }
+    // const parts = type.split("::")
+    // const account = parts[0]
+    // while (!extInfo)
+    //   try {
+    //     const resource = await client.getAccountResource(account, `0x1::coin::CoinInfo<${type}>`)
+    //     extInfo = {...resource.data as CoinInfo<any>, type, bridge: WHITELISTED_TOKENS[type].bridge }
+    //   } catch (e) {
+    //     console.log("rpc error get coin info", type, e)
+    //     await delay(1000)
+    //   }
   }
   coinInfos.set(type, extInfo)
   return extInfo
+}
+
+export async function requestCoinInfo(type: string, version?: bigint): Promise<CoinInfo<any>> {
+  const parts = type.split("::")
+  const account = parts[0]
+  while (true) {
+    try {
+      const resource = await client.getAccountResource(account, `0x1::coin::CoinInfo<${type}>`, { ledgerVersion: version})
+      if (resource) {
+        const info = await aptos.TYPE_REGISTRY.decodeResource<CoinInfo<any>>(resource)
+        if (info) {
+          return info.data_typed
+        }
+      }
+      // return resource.data
+      // extInfo = {...resource.data as CoinInfo<any>, type, bridge: WHITELISTED_TOKENS[type].bridge }
+    } catch (e) {
+      if (e.status === 404) {
+        throw Error("coin info not existed at version " + version)
+      }
+      console.log("rpc error get coin info", type, e)
+      await delay(1000)
+    }
+  }
 }
 
 export function scaleDown(n: bigint, decimal: number) {

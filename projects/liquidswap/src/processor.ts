@@ -1,7 +1,16 @@
 import { liquidity_pool } from './types/aptos/liquidswap'
 import { AccountEventTracker, aptos, Counter, Gauge } from "@sentio/sdk";
-import { caculateValueInUsd, delay, getCoinInfo, getPrice, scaleDown, whiteListed } from "./utils";
-import { coin, timestamp } from "@sentio/sdk/lib/builtin/aptos/0x1";
+import {
+  caculateValueInUsd,
+  delay,
+  getCoinInfo,
+  getPrice,
+  requestCoinInfo,
+  scaleDown,
+  whiteListed,
+  WHITELISTED_TOKENS
+} from "./utils";
+import { aggregator, coin, optional_aggregator, timestamp } from "@sentio/sdk/lib/builtin/aptos/0x1";
 import { getRpcClient } from "@sentio/sdk/lib/aptos";
 import { AptosClient } from "aptos-sdk";
 
@@ -13,8 +22,12 @@ import * as fs from "fs";
 import * as os from "os";
 import * as path from "path";
 import { TypedMoveResource } from "@sentio/sdk/lib/aptos/types";
+import CoinInfo = coin.CoinInfo;
 
 const commonOptions = { sparse:  true }
+const totalValue = new Gauge("total_value", commonOptions)
+const totalAmount = new Gauge("total_amount", commonOptions)
+
 const valueByPool = new Gauge("value_by_pool", commonOptions)
 const valueByCoin = new Gauge("value_by_coin", commonOptions)
 const amountCounter = new Gauge("amount", commonOptions)
@@ -24,19 +37,20 @@ const priceGauge = new Gauge("price", commonOptions)
 
 // const eventCounter = new Counter("num_event", commonOptions)
 
-// const accountTracker = AccountEventTracker.register("trading")
+const accountTracker = AccountEventTracker.register()
 
 const POOL_TYPE = "0x190d44266241744264b964a37b8f09863167a12d3e70cda39376cfb4e3561e12::liquidity_pool::LiquidityPool"
 
 const ALL_POOLS = new Set<string>()
 let poolVersion = Long.ZERO
 
-const tmpFile = path.resolve(os.tmpdir(), "sets")
+const tmpFile = path.resolve(os.tmpdir(), "sentio", "cache", "sets")
 
 interface SavedPools {
   version: string
   pools: string[]
 }
+
 function savePool(version: Long, types: string[]) {
   poolVersion = version
   const value = types.join(", ")
@@ -44,6 +58,7 @@ function savePool(version: Long, types: string[]) {
     ALL_POOLS.add(value)
     const data: SavedPools  = { version: poolVersion.toString(), pools: Array.from(ALL_POOLS)}
     const json = JSON.stringify(data)
+    fs.mkdirSync(path.resolve(tmpFile, ".."), { recursive: true})
     fs.writeFileSync(tmpFile , json)
   }
 }
@@ -68,7 +83,7 @@ function readPool(version: Long) {
   console.log(json)
 }
 
-liquidity_pool.bind({startVersion: 13000000})
+liquidity_pool.bind({startVersion: 299999})
   .onEventPoolCreatedEvent(async (evt, ctx) => {
     ctx.meter.Counter("num_pools").add(1)
 
@@ -80,10 +95,14 @@ liquidity_pool.bind({startVersion: 13000000})
   })
   .onEventLiquidityAddedEvent(async (evt, ctx) => {
     ctx.meter.Counter("event_liquidity_add").add(1)
+    accountTracker.trackEvent(ctx, { distinctId: ctx.transaction.sender })
+
     await syncPools(ctx)
   })
   .onEventLiquidityRemovedEvent(async (evt, ctx) => {
     ctx.meter.Counter("event_liquidity_removed").add(1)
+    accountTracker.trackEvent(ctx, { distinctId: ctx.transaction.sender })
+
     await syncPools(ctx)
   })
   .onEventSwapEvent(async (evt, ctx) => {
@@ -96,6 +115,7 @@ liquidity_pool.bind({startVersion: 13000000})
     ctx.meter.Counter("event_swap_by_bridge").add(1, { bridge: coinXInfo.bridge })
     ctx.meter.Counter("event_swap_by_bridge").add(1, { bridge: coinYInfo.bridge })
 
+    accountTracker.trackEvent(ctx, { distinctId: ctx.transaction.sender })
     await syncPools(ctx)
   })
   .onEventFlashloanEvent(async (evt, ctx) => {
@@ -108,6 +128,7 @@ liquidity_pool.bind({startVersion: 13000000})
     ctx.meter.Counter("event_flashloan_by_bridge").add(1, { bridge: coinXInfo.bridge })
     ctx.meter.Counter("event_flashloan_by_bridge").add(1, { bridge: coinYInfo.bridge })
 
+    accountTracker.trackEvent(ctx, { distinctId: ctx.transaction.sender })
     await syncPools(ctx)
   })
 
@@ -221,17 +242,18 @@ async function syncPools(ctx: aptos.AptosContext) {
     }
     pools = aptos.TYPE_REGISTRY.filterAndDecodeResources<liquidity_pool.LiquidityPool<any, any, any>>("0x190d44266241744264b964a37b8f09863167a12d3e70cda39376cfb4e3561e12::liquidity_pool::LiquidityPool", resources)
   } else {
-    for (const p of Array.from(ALL_POOLS)) {
+    await Promise.all(Array.from(ALL_POOLS).map(async p =>  {
       const coinx = p.split(", ")[0]
       const coiny = p.split(", ")[1]
       const whitelistx = whiteListed(coinx)
       const whitelisty = whiteListed(coiny)
       if (!whitelistx && !whitelisty) {
-        continue
+        return []
       }
       let resources = undefined
       while (!resources) {
         try {
+          console.log("rpc call", `${POOL_TYPE}<${p}>`)
           resources = await client.getAccountResource('0x5a97986a9d031c4567e15b797be516910cfcb4156312482efc6a19c0a30c948',
               `${POOL_TYPE}<${p}>`,
               {ledgerVersion: version})
@@ -244,7 +266,8 @@ async function syncPools(ctx: aptos.AptosContext) {
           await delay(1000)
         }
       }
-    }
+      return resources
+    }))
   }
 
   const volumeByCoin = new Map<string, BigDecimal>()
@@ -309,5 +332,32 @@ async function syncPools(ctx: aptos.AptosContext) {
     // const price = await getPrice(coinInfo, timestamp)
     // priceGauge.record(ctx, price, { coin: coinInfo.symbol })
     valueByCoin.record(ctx, v, { coin: coinInfo.symbol, bridge: coinInfo.bridge })
+  }
+
+  for (const [k, v] of Object.entries(WHITELISTED_TOKENS)) {
+    const extedCoinInfo = await getCoinInfo(k)
+
+    const price = await getPrice(extedCoinInfo, timestamp)
+
+    let coinInfo: CoinInfo<any> | undefined
+    try {
+      coinInfo = await requestCoinInfo(k, version)
+    } catch (e) {
+      continue
+    }
+
+    const aggOption = (coinInfo.supply.vec as optional_aggregator.OptionalAggregator[])[0]
+    let amount
+    if (aggOption.integer.vec.length) {
+      const intValue = (aggOption.integer.vec[0] as optional_aggregator.Integer)
+      amount = intValue.value
+    } else {
+      const agg = (aggOption.aggregator.vec[0] as aggregator.Aggregator)
+      const aggString = await client.getTableItem(agg.handle, { key: agg.key, key_type: "address", value_type: "u128" } , { ledgerVersion: version })
+      amount = BigInt(aggString)
+    }
+
+    totalAmount.record(ctx, scaleDown(amount, extedCoinInfo.decimals), { coin: extedCoinInfo.symbol, bridge: extedCoinInfo.bridge })
+    totalValue.record(ctx, scaleDown(amount, extedCoinInfo.decimals).multipliedBy(price), { coin: extedCoinInfo.symbol, bridge: extedCoinInfo.bridge })
   }
 }
