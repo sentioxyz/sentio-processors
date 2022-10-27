@@ -1,12 +1,18 @@
 import { liquidity_pool } from './types/aptos/liquidswap'
 import { AccountEventTracker, aptos, Counter, Gauge } from "@sentio/sdk";
-import { caculateValueInUsd, delay, getCoinInfo, scaleDown, whiteListed } from "./utils";
-import { coin } from "@sentio/sdk/lib/builtin/aptos/0x1";
+import { caculateValueInUsd, delay, getCoinInfo, getPrice, scaleDown, whiteListed } from "./utils";
+import { coin, timestamp } from "@sentio/sdk/lib/builtin/aptos/0x1";
 import { getRpcClient } from "@sentio/sdk/lib/aptos";
 import { AptosClient } from "aptos-sdk";
 
 import * as crypto from "crypto"
 import { BigDecimal } from "@sentio/sdk/lib/core/big-decimal";
+
+import Long from 'Long'
+import * as fs from "fs";
+import * as os from "os";
+import * as path from "path";
+import { TypedMoveResource } from "@sentio/sdk/lib/aptos/types";
 
 const commonOptions = { sparse:  true }
 const valueByPool = new Gauge("value_by_pool", commonOptions)
@@ -14,14 +20,62 @@ const valueByCoin = new Gauge("value_by_coin", commonOptions)
 const amountCounter = new Gauge("amount", commonOptions)
 const volumeGauge = new Gauge("vol", commonOptions)
 const volumeByBridge = new Gauge("vol_by_bridge", commonOptions)
+const priceGauge = new Gauge("price", commonOptions)
 
 // const eventCounter = new Counter("num_event", commonOptions)
 
 // const accountTracker = AccountEventTracker.register("trading")
 
-liquidity_pool.bind({startVersion: 29999})
+const POOL_TYPE = "0x190d44266241744264b964a37b8f09863167a12d3e70cda39376cfb4e3561e12::liquidity_pool::LiquidityPool"
+
+const ALL_POOLS = new Set<string>()
+let poolVersion = Long.ZERO
+
+const tmpFile = path.resolve(os.tmpdir(), "sets")
+
+interface SavedPools {
+  version: string
+  pools: string[]
+}
+function savePool(version: Long, types: string[]) {
+  poolVersion = version
+  const value = types.join(", ")
+  if (!ALL_POOLS.has(value)) {
+    ALL_POOLS.add(value)
+    const data: SavedPools  = { version: poolVersion.toString(), pools: Array.from(ALL_POOLS)}
+    const json = JSON.stringify(data)
+    fs.writeFileSync(tmpFile , json)
+  }
+}
+
+function readPool(version: Long) {
+  if (ALL_POOLS.size !== 0) {
+    return
+  }
+  if (!fs.existsSync(tmpFile)) {
+    return
+  }
+  const json: SavedPools = JSON.parse(fs.readFileSync(tmpFile, "utf-8"))
+  const poolVersion = Long.fromString(json.version)
+  if (version.lte(poolVersion)) {
+    return
+  }
+  console.log("loading pools", json.pools.length)
+
+  for (const x of json.pools) {
+    ALL_POOLS.add(x)
+  }
+  console.log(json)
+}
+
+liquidity_pool.bind({startVersion: 13000000})
   .onEventPoolCreatedEvent(async (evt, ctx) => {
     ctx.meter.Counter("num_pools").add(1)
+
+    readPool(ctx.version)
+
+    savePool(ctx.version, evt.type_arguments)
+
     await syncPools(ctx)
   })
   .onEventLiquidityAddedEvent(async (evt, ctx) => {
@@ -141,6 +195,8 @@ async function getPoolName(coins: [string, string, string]): Promise<string> {
 const recorded = new Set<bigint>()
 
 async function syncPools(ctx: aptos.AptosContext) {
+  // readPool(ctx.version)
+
   const version = BigInt(ctx.version.toString())
   const bucket = version / 100000n;
   if (recorded.has(bucket)) {
@@ -151,22 +207,52 @@ async function syncPools(ctx: aptos.AptosContext) {
   // const client = getRpcClient(aptos.AptosNetwork.MAIN_NET)
   // const client = new AptosClient("https://mainnet.aptoslabs.com/")
   const client = new AptosClient("https://aptos-mainnet.nodereal.io/v1/0c58c879d41e4eab8fd2fc0406848c2b")
-  //
-  let resources = undefined
-  while (!resources) {
-    try {
-      resources = await client.getAccountResources('0x5a97986a9d031c4567e15b797be516910cfcb4156312482efc6a19c0a30c948', {ledgerVersion: version})
-    } catch (e) {
-      console.log("rpc error, retrying", e)
-      await delay(1000)
+  let pools: TypedMoveResource<liquidity_pool.LiquidityPool<any, any, any>>[] = []
+
+  if (version <= 13100000n) {
+    let resources = undefined
+    while (!resources) {
+      try {
+        resources = await client.getAccountResources('0x5a97986a9d031c4567e15b797be516910cfcb4156312482efc6a19c0a30c948', {ledgerVersion: version})
+      } catch (e) {
+        console.log("rpc error, retrying", e)
+        await delay(1000)
+      }
+    }
+    pools = aptos.TYPE_REGISTRY.filterAndDecodeResources<liquidity_pool.LiquidityPool<any, any, any>>("0x190d44266241744264b964a37b8f09863167a12d3e70cda39376cfb4e3561e12::liquidity_pool::LiquidityPool", resources)
+  } else {
+    for (const p of Array.from(ALL_POOLS)) {
+      const coinx = p.split(", ")[0]
+      const coiny = p.split(", ")[1]
+      const whitelistx = whiteListed(coinx)
+      const whitelisty = whiteListed(coiny)
+      if (!whitelistx && !whitelisty) {
+        continue
+      }
+      let resources = undefined
+      while (!resources) {
+        try {
+          resources = await client.getAccountResource('0x5a97986a9d031c4567e15b797be516910cfcb4156312482efc6a19c0a30c948',
+              `${POOL_TYPE}<${p}>`,
+              {ledgerVersion: version})
+          const decoded = aptos.TYPE_REGISTRY.decodeResource<liquidity_pool.LiquidityPool<any, any, any>>(resources)
+          if (decoded) {
+            pools.push(decoded)
+          }
+        } catch (e) {
+          console.log("rpc error, retrying", e)
+          await delay(1000)
+        }
+      }
     }
   }
 
-  const pools = aptos.TYPE_REGISTRY.filterAndDecodeResources<liquidity_pool.LiquidityPool<any, any, any>>("0x190d44266241744264b964a37b8f09863167a12d3e70cda39376cfb4e3561e12::liquidity_pool::LiquidityPool", resources)
   const volumeByCoin = new Map<string, BigDecimal>()
+  const timestamp = ctx.transaction.timestamp
 
   console.log("num of pools: ", pools.length)
   for (const pool of pools) {
+    savePool(ctx.version, pool.type_arguments)
     const coinx = pool.type_arguments[0]
     const coiny = pool.type_arguments[1]
     const whitelistx = whiteListed(coinx)
@@ -177,7 +263,6 @@ async function syncPools(ctx: aptos.AptosContext) {
 
     const coinXInfo = await getCoinInfo(coinx)
     const coinYInfo = await getCoinInfo(coiny)
-    const timestamp = ctx.transaction.timestamp
 
     const coinx_amount = pool.data_typed.coin_x_reserve.value
     const coiny_amount = pool.data_typed.coin_y_reserve.value
@@ -221,7 +306,8 @@ async function syncPools(ctx: aptos.AptosContext) {
 
   for (const [k, v] of volumeByCoin) {
     const coinInfo = await getCoinInfo(k)
-
+    // const price = await getPrice(coinInfo, timestamp)
+    // priceGauge.record(ctx, price, { coin: coinInfo.symbol })
     valueByCoin.record(ctx, v, { coin: coinInfo.symbol, bridge: coinInfo.bridge })
   }
 }
