@@ -1,8 +1,12 @@
-import { CapeContext, CapeProcessor, AssetSponsoredEvent, BlockCommittedEvent, FaucetInitializedEvent, Erc20TokensDepositedEvent} from './types/cape'
+import { CapeContext, CapeProcessor, AssetSponsoredEvent, BlockCommittedEvent, FaucetInitializedEvent, Erc20TokensDepositedEvent, DepositErc20CallTrace} from './types/cape'
 import { CAPE_NEW, CAPE_OLD } from './constant'
 import  {
   utils
 } from "ethers"
+import { AccountEventTracker} from "@sentio/sdk";
+import type {Trace} from "@sentio/sdk";
+
+const senderTracker = AccountEventTracker.register("senders", {distinctByDays: [1,7,12,30]})
 
 const gaugeAndCounter = (name: string, ctx: CapeContext) => {
   ctx.meter.Gauge(name).record(1)
@@ -15,6 +19,11 @@ const handleAssetSponsored = async (event: any, ctx: CapeContext) => {
 
 const handleErc20TokensDeposited = async (event: any, ctx: CapeContext) => {
   gaugeAndCounter("Wrap", ctx)
+}
+
+const handleCall = async (trace: Trace, ctx: CapeContext) => {
+  const sender = trace.action.from
+  senderTracker.trackEvent(ctx, {distinctId: sender})
 }
 
 const handleBlockCommittedEvent = async (event: BlockCommittedEvent, ctx: CapeContext) => {
@@ -49,12 +58,25 @@ const handleBlockCommittedEvent = async (event: BlockCommittedEvent, ctx: CapeCo
   }
 }
 
+
+
 CapeProcessor.bind({address: CAPE_NEW, network: 5})
 .onEventAssetSponsored(handleAssetSponsored)
 .onEventBlockCommitted(handleBlockCommittedEvent)
 .onEventErc20TokensDeposited(handleErc20TokensDeposited)
+.onCallDepositErc20(handleCall)
+.onCallFaucetSetupForTestnet(handleCall)
+.onCallSponsorCapeAsset(handleCall)
+.onCallSubmitCapeBlock(handleCall)
+.onCallSubmitCapeBlockWithMemos(handleCall)
+
 
 CapeProcessor.bind({address: CAPE_OLD, network: 5})
 .onEventAssetSponsored(handleAssetSponsored)
 .onEventBlockCommitted(handleBlockCommittedEvent)
 .onEventErc20TokensDeposited(handleErc20TokensDeposited)
+.onCallDepositErc20(handleCall)
+.onCallFaucetSetupForTestnet(handleCall)
+.onCallSponsorCapeAsset(handleCall)
+.onCallSubmitCapeBlock(handleCall)
+.onCallSubmitCapeBlockWithMemos(handleCall)
