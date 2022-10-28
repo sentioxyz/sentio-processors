@@ -112,7 +112,6 @@ liquidity_pool.bind({startVersion: 299999})
 
     const coinXInfo = await getCoinInfo(evt.type_arguments[0])
     const coinYInfo = await getCoinInfo(evt.type_arguments[1])
-    ctx.meter.Counter("event_swap_total").add(1)
     ctx.meter.Counter("event_swap_by_bridge").add(1, { bridge: coinXInfo.bridge })
     ctx.meter.Counter("event_swap_by_bridge").add(1, { bridge: coinYInfo.bridge })
 
@@ -125,7 +124,6 @@ liquidity_pool.bind({startVersion: 299999})
 
     const coinXInfo = await getCoinInfo(evt.type_arguments[0])
     const coinYInfo = await getCoinInfo(evt.type_arguments[1])
-    ctx.meter.Counter("event_flashloan").add(1)
     ctx.meter.Counter("event_flashloan_by_bridge").add(1, { bridge: coinXInfo.bridge })
     ctx.meter.Counter("event_flashloan_by_bridge").add(1, { bridge: coinYInfo.bridge })
 
@@ -164,21 +162,21 @@ async function recordTradingVolume(ctx: aptos.AptosContext, coinx: string, coiny
   if (whitelistx) {
     const value = await caculateValueInUsd(coinx_amount, coinXInfo, timestamp)
     // volumeByPool.record(ctx, value, {coin: coinXInfo.symbol, pool: poolName})
-    volume.record(ctx, value, {coin: coinXInfo.symbol, bridge: coinXInfo.bridge})
+    volume.record(ctx, value, {coin: coinXInfo.symbol, bridge: coinXInfo.bridge, type: coinXInfo.type})
     // if (coinXInfo.bridge)
 
     if (!whitelisty) {
-      volume.record(ctx, value, {coin: coinYInfo.symbol, bridge: coinYInfo.bridge})
+      volume.record(ctx, value, {coin: coinYInfo.symbol, bridge: coinYInfo.bridge, type: coinYInfo.type})
       // volumeByPool.record(ctx, value, {coin: coinYInfo.symbol, pool: poolName})
     }
   }
   if (whitelisty) {
     const value = await caculateValueInUsd(coiny_amount, coinYInfo, timestamp)
     // volumeByPool.record(ctx, value, {coin: coinYInfo.symbol, pool: poolName})
-    volume.record(ctx, value, {coin: coinYInfo.symbol, bridge: coinYInfo.bridge})
+    volume.record(ctx, value, {coin: coinYInfo.symbol, bridge: coinYInfo.bridge, type: coinYInfo.type})
 
     if (!whitelistx) {
-      volume.record(ctx, value, {coin: coinXInfo.symbol, bridge: coinXInfo.bridge})
+      volume.record(ctx, value, {coin: coinXInfo.symbol, bridge: coinXInfo.bridge, type: coinXInfo.type})
       // volumeByPool.record(ctx, value, {coin: coinXInfo.symbol, pool: poolName})
     }
   }
@@ -327,7 +325,7 @@ async function syncPools(ctx: aptos.AptosContext) {
       volumeByCoin.set(coinYInfo.type, coinYTotal)
 
       if (!whitelistx) {
-        tvlByPool.record(ctx, value, { pool: poolName})
+        tvlByPool.record(ctx, value, { pool: poolName })
       }
     }
   }
@@ -336,7 +334,7 @@ async function syncPools(ctx: aptos.AptosContext) {
     const coinInfo = await getCoinInfo(k)
     // const price = await getPrice(coinInfo, timestamp)
     // priceGauge.record(ctx, price, { coin: coinInfo.symbol })
-    tvl.record(ctx, v, { coin: coinInfo.symbol, bridge: coinInfo.bridge })
+    tvl.record(ctx, v, { coin: coinInfo.symbol, bridge: coinInfo.bridge, type: coinInfo.type })
   }
 
   for (const [k, v] of Object.entries(WHITELISTED_TOKENS)) {
@@ -363,6 +361,6 @@ async function syncPools(ctx: aptos.AptosContext) {
     }
 
     // totalAmount.record(ctx, scaleDown(amount, extedCoinInfo.decimals), { coin: extedCoinInfo.symbol, bridge: extedCoinInfo.bridge })
-    totalValue.record(ctx, scaleDown(amount, extedCoinInfo.decimals).multipliedBy(price), { coin: extedCoinInfo.symbol, bridge: extedCoinInfo.bridge })
+    totalValue.record(ctx, scaleDown(amount, extedCoinInfo.decimals).multipliedBy(price), { coin: extedCoinInfo.symbol, bridge: extedCoinInfo.bridge, type: extedCoinInfo.type })
   }
 }
