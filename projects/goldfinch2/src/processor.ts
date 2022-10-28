@@ -239,6 +239,8 @@ async function tranchedPoolHandler(block: Block, ctx: TranchedPoolContext) {
     const juniorBalance = (await ctx.contract.getTranche(2))[1]
     const seniorBalance = (await ctx.contract.getTranche(1))[1]
     const totalDeployed = juniorBalance.add(seniorBalance)
+    ctx.meter.Gauge('senior_tranche_balance').record(scaleDown(seniorBalance, 6), {"pool": poolName})
+    ctx.meter.Gauge('junior_tranche_balance').record(scaleDown(juniorBalance, 6), {"pool": poolName})
     if (!totalDeployed.eq(0)) {
       // const seniorBalance = totalDeployed.sub(juniorBalance)
       const seniorPortion = toBigDecimal(seniorBalance).div(toBigDecimal(totalDeployed))
@@ -273,7 +275,7 @@ const trancheLockedEventHandler = async function(event:TrancheLockedEvent, ctx: 
 
 // batch handle Tranched Pools
 // for (let i = 0; i < goldfinchPools.data.length; i++) {
-// TODO: only testing out newer pools
+// TODO: only testing out newer poolsf
 // older pools, such as 0x1d596d28a7923a22aa013b0e7082bba23daa656b will cause error 
 // because it's lacking totalJuniorDeposits in the ABI
 for (let i = 0; i < 12; i++) {
