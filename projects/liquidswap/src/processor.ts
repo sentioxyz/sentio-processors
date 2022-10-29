@@ -8,10 +8,9 @@ import {
   requestCoinInfo,
   scaleDown,
   whiteListed,
-  WHITELISTED_TOKENS
+  CORE_TOKENS, getRandomInt
 } from "./utils";
 import { aggregator, coin, optional_aggregator, timestamp } from "@sentio/sdk/lib/builtin/aptos/0x1";
-import { getRpcClient } from "@sentio/sdk/lib/aptos";
 import { AptosClient } from "aptos-sdk";
 
 import * as crypto from "crypto"
@@ -28,7 +27,7 @@ const commonOptions = { sparse:  true }
 const totalValue = new Gauge("total_value", commonOptions)
 // const totalAmount = new Gauge("total_amount", commonOptions)
 
-const tvlByPool = new Gauge("tvl_by_pool", commonOptions)
+const tvlAll = new Gauge("tvl_all", commonOptions)
 const tvl = new Gauge("tvl", commonOptions)
 // const amountCounter = new Gauge("amount", commonOptions)
 // const volumeByPool = new Gauge("vol_by_pool", commonOptions)
@@ -39,58 +38,58 @@ const volume = new Gauge("vol", commonOptions)
 
 const accountTracker = AccountEventTracker.register("users")
 
-const POOL_TYPE = "0x190d44266241744264b964a37b8f09863167a12d3e70cda39376cfb4e3561e12::liquidity_pool::LiquidityPool"
+// const POOL_TYPE = "0x190d44266241744264b964a37b8f09863167a12d3e70cda39376cfb4e3561e12::liquidity_pool::LiquidityPool"
+//
+// const ALL_POOLS = new Set<string>()
+// let poolVersion = Long.ZERO
 
-const ALL_POOLS = new Set<string>()
-let poolVersion = Long.ZERO
+// const tmpFile = path.resolve(os.tmpdir(), "sentio", "cache", "sets")
 
-const tmpFile = path.resolve(os.tmpdir(), "sentio", "cache", "sets")
-
-interface SavedPools {
-  version: string
-  pools: string[]
-}
-
-function savePool(version: Long, types: string[]) {
-  poolVersion = version
-  const value = types.join(", ")
-  if (!ALL_POOLS.has(value)) {
-    ALL_POOLS.add(value)
-    const data: SavedPools  = { version: poolVersion.toString(), pools: Array.from(ALL_POOLS)}
-    const json = JSON.stringify(data)
-    fs.mkdirSync(path.resolve(tmpFile, ".."), { recursive: true})
-    fs.writeFileSync(tmpFile , json)
-  }
-}
-
-function readPool(version: Long) {
-  if (ALL_POOLS.size !== 0) {
-    return
-  }
-  if (!fs.existsSync(tmpFile)) {
-    return
-  }
-  const json: SavedPools = JSON.parse(fs.readFileSync(tmpFile, "utf-8"))
-  const poolVersion = Long.fromString(json.version)
-  if (version.lte(poolVersion)) {
-    return
-  }
-  console.log("loading pools", json.pools.length)
-
-  for (const x of json.pools) {
-    ALL_POOLS.add(x)
-  }
-  console.log(json)
-}
+// interface SavedPools {
+//   version: string
+//   pools: string[]
+// }
+//
+// function savePool(version: Long, types: string[]) {
+//   poolVersion = version
+//   const value = types.join(", ")
+//   if (!ALL_POOLS.has(value)) {
+//     ALL_POOLS.add(value)
+//     const data: SavedPools  = { version: poolVersion.toString(), pools: Array.from(ALL_POOLS)}
+//     const json = JSON.stringify(data)
+//     fs.mkdirSync(path.resolve(tmpFile, ".."), { recursive: true})
+//     fs.writeFileSync(tmpFile , json)
+//   }
+// }
+//
+// function readPool(version: Long) {
+//   if (ALL_POOLS.size !== 0) {
+//     return
+//   }
+//   if (!fs.existsSync(tmpFile)) {
+//     return
+//   }
+//   const json: SavedPools = JSON.parse(fs.readFileSync(tmpFile, "utf-8"))
+//   const poolVersion = Long.fromString(json.version)
+//   if (version.lte(poolVersion)) {
+//     return
+//   }
+//   console.log("loading pools", json.pools.length)
+//
+//   for (const x of json.pools) {
+//     ALL_POOLS.add(x)
+//   }
+//   console.log(json)
+// }
 
 liquidity_pool.bind({startVersion: 299999})
   .onEventPoolCreatedEvent(async (evt, ctx) => {
     ctx.meter.Counter("num_pools").add(1)
     accountTracker.trackEvent(ctx, { distinctId: ctx.transaction.sender })
 
-    readPool(ctx.version)
-
-    savePool(ctx.version, evt.type_arguments)
+    // readPool(ctx.version)
+    //
+    // savePool(ctx.version, evt.type_arguments)
 
     await syncPools(ctx)
   })
@@ -162,21 +161,21 @@ async function recordTradingVolume(ctx: aptos.AptosContext, coinx: string, coiny
   if (whitelistx) {
     const value = await caculateValueInUsd(coinx_amount, coinXInfo, timestamp)
     // volumeByPool.record(ctx, value, {coin: coinXInfo.symbol, pool: poolName})
-    volume.record(ctx, value, {coin: coinXInfo.symbol, bridge: coinXInfo.bridge, type: coinXInfo.type})
+    volume.record(ctx, value, {coin: coinXInfo.symbol, bridge: coinXInfo.bridge, type: coinXInfo.token_type.type})
     // if (coinXInfo.bridge)
 
     if (!whitelisty) {
-      volume.record(ctx, value, {coin: coinYInfo.symbol, bridge: coinYInfo.bridge, type: coinYInfo.type})
+      volume.record(ctx, value, {coin: coinYInfo.symbol, bridge: coinYInfo.bridge, type: coinYInfo.token_type.type})
       // volumeByPool.record(ctx, value, {coin: coinYInfo.symbol, pool: poolName})
     }
   }
   if (whitelisty) {
     const value = await caculateValueInUsd(coiny_amount, coinYInfo, timestamp)
     // volumeByPool.record(ctx, value, {coin: coinYInfo.symbol, pool: poolName})
-    volume.record(ctx, value, {coin: coinYInfo.symbol, bridge: coinYInfo.bridge, type: coinYInfo.type})
+    volume.record(ctx, value, {coin: coinYInfo.symbol, bridge: coinYInfo.bridge, type: coinYInfo.token_type.type})
 
     if (!whitelistx) {
-      volume.record(ctx, value, {coin: coinXInfo.symbol, bridge: coinXInfo.bridge, type: coinXInfo.type})
+      volume.record(ctx, value, {coin: coinXInfo.symbol, bridge: coinXInfo.bridge, type: coinXInfo.token_type.type})
       // volumeByPool.record(ctx, value, {coin: coinXInfo.symbol, pool: poolName})
     }
   }
@@ -217,8 +216,6 @@ async function getPoolName(coins: [string, string, string]): Promise<string> {
 const recorded = new Set<bigint>()
 
 async function syncPools(ctx: aptos.AptosContext) {
-  // readPool(ctx.version)
-
   const version = BigInt(ctx.version.toString())
   const bucket = version / 100000n;
   if (recorded.has(bucket)) {
@@ -228,13 +225,20 @@ async function syncPools(ctx: aptos.AptosContext) {
 
   // const client = getRpcClient(aptos.AptosNetwork.MAIN_NET)
   // const client = new AptosClient("https://mainnet.aptoslabs.com/")
-  const client = new AptosClient("https://aptos-mainnet.nodereal.io/v1/0c58c879d41e4eab8fd2fc0406848c2b")
+
+  const normalClient = new AptosClient("https://aptos-mainnet.nodereal.io/v1/0c58c879d41e4eab8fd2fc0406848c2b")
+  const patchClient = new AptosClient("https://aptos-mainnet.pontem.network/v1")
+
   let pools: TypedMoveResource<liquidity_pool.LiquidityPool<any, any, any>>[] = []
 
-  if (version <= 13100000n) {
+  // if (version <= 13100000n) {
     let resources = undefined
     while (!resources) {
       try {
+        let client = normalClient
+        if (version > 13100000n) {
+          client = patchClient
+        }
         resources = await client.getAccountResources('0x5a97986a9d031c4567e15b797be516910cfcb4156312482efc6a19c0a30c948', {ledgerVersion: version})
       } catch (e) {
         console.log("rpc error, retrying", e)
@@ -242,41 +246,43 @@ async function syncPools(ctx: aptos.AptosContext) {
       }
     }
     pools = aptos.TYPE_REGISTRY.filterAndDecodeResources<liquidity_pool.LiquidityPool<any, any, any>>("0x190d44266241744264b964a37b8f09863167a12d3e70cda39376cfb4e3561e12::liquidity_pool::LiquidityPool", resources)
-  } else {
-    await Promise.all(Array.from(ALL_POOLS).map(async p =>  {
-      const coinx = p.split(", ")[0]
-      const coiny = p.split(", ")[1]
-      const whitelistx = whiteListed(coinx)
-      const whitelisty = whiteListed(coiny)
-      if (!whitelistx && !whitelisty) {
-        return []
-      }
-      let resources = undefined
-      while (!resources) {
-        try {
-          console.log("rpc call", `${POOL_TYPE}<${p}>`)
-          resources = await client.getAccountResource('0x5a97986a9d031c4567e15b797be516910cfcb4156312482efc6a19c0a30c948',
-              `${POOL_TYPE}<${p}>`,
-              {ledgerVersion: version})
-          const decoded = aptos.TYPE_REGISTRY.decodeResource<liquidity_pool.LiquidityPool<any, any, any>>(resources)
-          if (decoded) {
-            pools.push(decoded)
-          }
-        } catch (e) {
-          console.log("rpc error, retrying", e)
-          await delay(1000)
-        }
-      }
-      return resources
-    }))
-  }
+  // } else {
+  //   await Promise.all(Array.from(ALL_POOLS).map(async p =>  {
+  //     const coinx = p.split(", ")[0]
+  //     const coiny = p.split(", ")[1]
+  //     const whitelistx = whiteListed(coinx)
+  //     const whitelisty = whiteListed(coiny)
+  //     if (!whitelistx && !whitelisty) {
+  //       return []
+  //     }
+  //     let resources = undefined
+  //     while (!resources) {
+  //       try {
+  //         console.log("rpc call", `${POOL_TYPE}<${p}>`)
+  //         resources = await client.getAccountResource('0x5a97986a9d031c4567e15b797be516910cfcb4156312482efc6a19c0a30c948',
+  //             `${POOL_TYPE}<${p}>`,
+  //             {ledgerVersion: version})
+  //         const decoded = aptos.TYPE_REGISTRY.decodeResource<liquidity_pool.LiquidityPool<any, any, any>>(resources)
+  //         if (decoded) {
+  //           pools.push(decoded)
+  //         }
+  //       } catch (e) {
+  //         console.log("rpc error, retrying", e)
+  //         await delay(1000)
+  //       }
+  //     }
+  //     return resources
+  //   }))
+  // }
 
   const volumeByCoin = new Map<string, BigDecimal>()
   const timestamp = ctx.transaction.timestamp
 
-  console.log("num of pools: ", pools.length)
+  console.log("num of pools: ", pools.length, ctx.version.toString())
+
+  let tvlAllValue = BigDecimal(0)
   for (const pool of pools) {
-    savePool(ctx.version, pool.type_arguments)
+    // savePool(ctx.version, pool.type_arguments)
     const coinx = pool.type_arguments[0]
     const coiny = pool.type_arguments[1]
     const whitelistx = whiteListed(coinx)
@@ -293,60 +299,65 @@ async function syncPools(ctx: aptos.AptosContext) {
 
     const poolName = await getPoolName(pool.type_arguments as [string,string,string])
 
-    // amountCounter.record(ctx, scaleDown(coinx_amount, coinXInfo.decimals), {coin: coinXInfo.symbol, pool: poolName})
-    // amountCounter.record(ctx, scaleDown(coiny_amount, coinYInfo.decimals), {coin: coinYInfo.symbol, pool: poolName})
-
     if (whitelistx) {
       const value = await caculateValueInUsd(coinx_amount, coinXInfo, timestamp)
-      tvlByPool.record(ctx, value, { pool: poolName})
+      tvlAllValue = tvlAllValue.plus(value)
+      // tvlTotal.record(ctx, value, { pool: poolName, type: coinXInfo.token_type.type })
 
-      let coinXTotal = volumeByCoin.get(coinXInfo.type)
+      let coinXTotal = volumeByCoin.get(coinXInfo.token_type.type)
       if (!coinXTotal) {
         coinXTotal = value
       } else {
         coinXTotal = coinXTotal.plus(value)
       }
-      volumeByCoin.set(coinXInfo.type, coinXTotal)
+      volumeByCoin.set(coinXInfo.token_type.type, coinXTotal)
 
       if (!whitelisty) {
-        tvlByPool.record(ctx, value, { pool: poolName})
+        tvlAllValue = tvlAllValue.plus(value)
+        // tvlTotal.record(ctx, value, { pool: poolName, type: coinYInfo.token_type.type})
       }
     }
     if (whitelisty) {
       const value = await caculateValueInUsd(coiny_amount, coinYInfo, timestamp)
-      tvlByPool.record(ctx, value, { pool: poolName})
+      tvlAllValue = tvlAllValue.plus(value)
+      // tvlTotal.record(ctx, value, { pool: poolName, type: coinYInfo.token_type.type })
 
-      let coinYTotal = volumeByCoin.get(coinYInfo.type)
+      let coinYTotal = volumeByCoin.get(coinYInfo.token_type.type)
       if (!coinYTotal) {
         coinYTotal = value
       } else {
         coinYTotal = coinYTotal.plus(value)
       }
-      volumeByCoin.set(coinYInfo.type, coinYTotal)
+      volumeByCoin.set(coinYInfo.token_type.type, coinYTotal)
 
       if (!whitelistx) {
-        tvlByPool.record(ctx, value, { pool: poolName })
+        tvlAllValue = tvlAllValue.plus(value)
+        // tvlTotal.record(ctx, value, { pool: poolName, type: coinXInfo.token_type.type })
       }
     }
   }
+  tvlAll.record(ctx, tvlAllValue)
 
   for (const [k, v] of volumeByCoin) {
-    const coinInfo = await getCoinInfo(k)
+    const coinInfo = CORE_TOKENS.get(k)
+    if (!coinInfo) {
+      throw Error("unexpected coin " + k)
+    }
     // const price = await getPrice(coinInfo, timestamp)
     // priceGauge.record(ctx, price, { coin: coinInfo.symbol })
-    tvl.record(ctx, v, { coin: coinInfo.symbol, bridge: coinInfo.bridge, type: coinInfo.type })
+    if (v.isGreaterThan(0)) {
+      tvl.record(ctx, v, {coin: coinInfo.symbol, bridge: coinInfo.bridge, type: coinInfo.token_type.type})
+    }
   }
 
-  for (const [k, v] of Object.entries(WHITELISTED_TOKENS)) {
-    const extedCoinInfo = await getCoinInfo(k)
-
-    const price = await getPrice(extedCoinInfo, timestamp)
+  const allPromises = Array.from(CORE_TOKENS.entries()).map(async ([k,v]) => {
+    const price = await getPrice(v.token_type.type, timestamp)
 
     let coinInfo: CoinInfo<any> | undefined
     try {
       coinInfo = await requestCoinInfo(k, version)
     } catch (e) {
-      continue
+      return
     }
 
     const aggOption = (coinInfo.supply.vec as optional_aggregator.OptionalAggregator[])[0]
@@ -356,11 +367,30 @@ async function syncPools(ctx: aptos.AptosContext) {
       amount = intValue.value
     } else {
       const agg = (aggOption.aggregator.vec[0] as aggregator.Aggregator)
-      const aggString = await client.getTableItem(agg.handle, { key: agg.key, key_type: "address", value_type: "u128" } , { ledgerVersion: version })
+      let aggString: any
+      while (!aggString) {
+        try {
+          aggString = await normalClient.getTableItem(agg.handle, {
+            key: agg.key,
+            key_type: "address",
+            value_type: "u128"
+          }, {ledgerVersion: version})
+        } catch (e) {
+          if (e.status === 429) {
+            await delay(1000 + getRandomInt(1000))
+          }
+          throw e
+        }
+      }
       amount = BigInt(aggString)
     }
 
     // totalAmount.record(ctx, scaleDown(amount, extedCoinInfo.decimals), { coin: extedCoinInfo.symbol, bridge: extedCoinInfo.bridge })
-    totalValue.record(ctx, scaleDown(amount, extedCoinInfo.decimals).multipliedBy(price), { coin: extedCoinInfo.symbol, bridge: extedCoinInfo.bridge, type: extedCoinInfo.type })
-  }
+    const value = scaleDown(amount, v.decimals).multipliedBy(price)
+    if (value.isGreaterThan(0)) {
+      totalValue.record(ctx, value, {coin: v.symbol, bridge: v.bridge, type: v.token_type.type})
+    }
+  })
+
+  await Promise.all(allPromises)
 }
