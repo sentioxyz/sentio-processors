@@ -103,8 +103,9 @@ export async function requestCoinInfo(type: string, version?: bigint): Promise<C
       if (e.status === 429) {
         // console.log("rpc error get coin info", type, e)
         await delay(1000 + getRandomInt(1000))
+      } else {
+        throw e
       }
-      throw e
     }
   }
 }
@@ -120,10 +121,6 @@ export async function getPrice(coinType: string, timestamp: string) {
   if (!whiteListed(coinType)) {
     return 0
   }
-  // const symbol = coin.symbol
-  // if (symbol === 'T') {
-  //   console.error(symbol, JSON.stringify(coin), timestamp)
-  // }
 
   const id = CORE_TOKENS.get(coinType)?.coingecko_id
   if (!id) {
@@ -135,37 +132,39 @@ export async function getPrice(coinType: string, timestamp: string) {
 
   const cacheKey = id + dateStr
   let price = priceCache.get(cacheKey)
-  if (!price) {
-    while(true) {
-      const res = await CoinGeckoClient.coins.fetchHistory(id, {
+  if (price) {
+    return price
+  }
+  let res
+  while(true) {
+    try {
+      res = await CoinGeckoClient.coins.fetchHistory(id, {
         date: dateStr,
         localization: false
       })
-      if (!res.success) {
-        await delay(1000)
-        continue
-      }
-      if (!res.data || !res.data.market_data || !res.data.market_data.current_price || !res.data.market_data.current_price.usd) {
-        console.error("no price data for ", coinType, id, dateStr)
-        // if (symbol === "LFC") {
-        //   price = 0.02864
-        // } else {
-          // const lastPrice =
-          // if (lastPrice) {
-          //   return
-          // }
-        price = lastPriceCache.get(id) || 0
-
-        // }
-      } else {
-        price = res.data.market_data.current_price.usd
-      }
-      break
+    } catch (e) {
+      await delay(1000)
+      continue
     }
-    priceCache.set(cacheKey, price)
-    lastPriceCache.set(id, price)
+
+    if (!res.success) {
+      await delay(1000)
+      continue
+    }
+    break
+  }
+  if (!res.data || !res.data.market_data || !res.data.market_data.current_price || !res.data.market_data.current_price.usd) {
+    console.error("no price data for ", coinType, id, dateStr)
+    price = lastPriceCache.get(id) || 0
+    if (!price) {
+      console.error("can't even found last price", id, dateStr)
+    }
+  } else {
+    price = res.data.market_data.current_price.usd
   }
 
+  priceCache.set(cacheKey, price)
+  lastPriceCache.set(id, price)
   return price
 }
 

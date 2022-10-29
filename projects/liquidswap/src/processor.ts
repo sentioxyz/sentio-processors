@@ -378,8 +378,9 @@ async function syncPools(ctx: aptos.AptosContext) {
         } catch (e) {
           if (e.status === 429) {
             await delay(1000 + getRandomInt(1000))
+          } else {
+            throw e
           }
-          throw e
         }
       }
       amount = BigInt(aggString)
