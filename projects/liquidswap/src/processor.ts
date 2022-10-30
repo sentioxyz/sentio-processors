@@ -86,48 +86,55 @@ liquidity_pool.bind({startVersion: 299999})
   .onEventPoolCreatedEvent(async (evt, ctx) => {
     ctx.meter.Counter("num_pools").add(1)
     accountTracker.trackEvent(ctx, { distinctId: ctx.transaction.sender })
+    ctx.logger.info("PoolCreated", { user: ctx.transaction.sender })
 
     // readPool(ctx.version)
     //
     // savePool(ctx.version, evt.type_arguments)
 
-    await syncPools(ctx)
+    // await syncPools(ctx)
   })
   .onEventLiquidityAddedEvent(async (evt, ctx) => {
-    ctx.meter.Counter("event_liquidity_add").add(1)
+    // ctx.meter.Counter("event_liquidity_add").add(1)
     accountTracker.trackEvent(ctx, { distinctId: ctx.transaction.sender })
+    ctx.logger.info("LiquidityAdded", { user: ctx.transaction.sender })
 
-    await syncPools(ctx)
+    // await syncPools(ctx)
   })
   .onEventLiquidityRemovedEvent(async (evt, ctx) => {
-    ctx.meter.Counter("event_liquidity_removed").add(1)
+    // ctx.meter.Counter("event_liquidity_removed").add(1)
     accountTracker.trackEvent(ctx, { distinctId: ctx.transaction.sender })
+    ctx.logger.info("LiquidityRemoved", { user: ctx.transaction.sender })
 
-    await syncPools(ctx)
+    // await syncPools(ctx)
   })
   .onEventSwapEvent(async (evt, ctx) => {
-    const pool = await getPoolName(evt.type_arguments)
-    await recordTradingVolume(ctx, evt.type_arguments[0], evt.type_arguments[1], evt.data_typed.x_in, evt.data_typed.y_in, pool)
-
-    const coinXInfo = await getCoinInfo(evt.type_arguments[0])
-    const coinYInfo = await getCoinInfo(evt.type_arguments[1])
-    ctx.meter.Counter("event_swap_by_bridge").add(1, { bridge: coinXInfo.bridge })
-    ctx.meter.Counter("event_swap_by_bridge").add(1, { bridge: coinYInfo.bridge })
+    // const pool = await getPoolName(evt.type_arguments)
+    // await recordTradingVolume(ctx, evt.type_arguments[0], evt.type_arguments[1], evt.data_typed.x_in, evt.data_typed.y_in, pool)
+    //
+    // const coinXInfo = await getCoinInfo(evt.type_arguments[0])
+    // const coinYInfo = await getCoinInfo(evt.type_arguments[1])
+    // ctx.meter.Counter("event_swap_by_bridge").add(1, { bridge: coinXInfo.bridge })
+    // ctx.meter.Counter("event_swap_by_bridge").add(1, { bridge: coinYInfo.bridge })
 
     accountTracker.trackEvent(ctx, { distinctId: ctx.transaction.sender })
-    await syncPools(ctx)
+    ctx.logger.info("Swap", { user: ctx.transaction.sender })
+
+    // await syncPools(ctx)
   })
   .onEventFlashloanEvent(async (evt, ctx) => {
-    const pool = await getPoolName(evt.type_arguments)
-    await recordTradingVolume(ctx, evt.type_arguments[0], evt.type_arguments[1], evt.data_typed.x_in, evt.data_typed.y_in, pool)
-
-    const coinXInfo = await getCoinInfo(evt.type_arguments[0])
-    const coinYInfo = await getCoinInfo(evt.type_arguments[1])
-    ctx.meter.Counter("event_flashloan_by_bridge").add(1, { bridge: coinXInfo.bridge })
-    ctx.meter.Counter("event_flashloan_by_bridge").add(1, { bridge: coinYInfo.bridge })
+    // const pool = await getPoolName(evt.type_arguments)
+    // await recordTradingVolume(ctx, evt.type_arguments[0], evt.type_arguments[1], evt.data_typed.x_in, evt.data_typed.y_in, pool)
+    //
+    // const coinXInfo = await getCoinInfo(evt.type_arguments[0])
+    // const coinYInfo = await getCoinInfo(evt.type_arguments[1])
+    // ctx.meter.Counter("event_flashloan_by_bridge").add(1, { bridge: coinXInfo.bridge })
+    // ctx.meter.Counter("event_flashloan_by_bridge").add(1, { bridge: coinYInfo.bridge })
 
     accountTracker.trackEvent(ctx, { distinctId: ctx.transaction.sender })
-    await syncPools(ctx)
+    ctx.logger.info("Flashloan", { user: ctx.transaction.sender })
+
+    // await syncPools(ctx)
   })
 
 // async function addForVolume(ctx: aptos.AptosContext, type: string, amount: bigint, timestamp: string, pool: string, valueOverride?: BigDecimal): Promise<BigDecimal> {
