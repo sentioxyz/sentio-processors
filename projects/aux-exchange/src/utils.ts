@@ -47,13 +47,12 @@ for (const info of DEFAULT_MAINNET_LIST) {
     if (info.symbol.startsWith("USD")) {
       info.coingecko_id = "usd-coin"
     }
-    // TODO add moji
   }
 
-  // if (!info.coingecko_id) {
-  //   console.warn("no coingecko_id found for", info)
-  //   continue
-  // }
+  if (!info.coingecko_id) {
+    console.warn("no coingecko_id found for", info)
+    continue
+  }
   CORE_TOKENS.set(info.token_type.type, { ...info, bridge })
 }
 
@@ -120,18 +119,11 @@ const lastPriceCache = new Map<string, number>()
 
 export async function getPrice(coinType: string, timestamp: string) {
   if (!whiteListed(coinType)) {
-    return 0.0
+    return 0
   }
 
   const id = CORE_TOKENS.get(coinType)?.coingecko_id
   if (!id) {
-    if (coinType === '0x881ac202b1f1e6ad4efcff7a1d0579411533f2502417a19211cfc49751ddb5f4::coin::MOJO') {
-      return 0.01618810
-    }
-    if (coinType === '0x5c738a5dfa343bee927c39ebe85b0ceb95fdb5ee5b323c95559614f5a77c47cf::Aptoge::Aptoge') {
-      return 0.271427
-    }
-
     throw Error("can't find coin id" + coinType)
   }
 
