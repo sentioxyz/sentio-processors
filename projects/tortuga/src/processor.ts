@@ -3,28 +3,42 @@ import { AccountEventTracker, Counter } from "@sentio/sdk";
 import { amm } from './types/aptos/auxexchange'
 import { liquidity_pool } from "./types/aptos/liquidswap";
 import { stake_router } from "./types/aptos/tortuga";
+import { toBigDecimal } from "@sentio/sdk/lib/utils/conversion";
 
 const commonOptions = { sparse:  false }
-const liquidityAdd = new Counter("event_liquidity_add", commonOptions)
-const liquidityRemoved = new Counter("event_liquidity_remove", commonOptions)
-const swap = new Counter("event_swap", commonOptions)
-const stake = new Counter("event_stake", commonOptions)
-const unstake = new Counter("event_unstake", commonOptions)
-const claim = new Counter("event_claim", commonOptions)
+
+const liquidityAdd = new Counter("liquidity_add_num", commonOptions)
+const liquidityRemoved = new Counter("liquidity_remove_num", commonOptions)
+const swap = new Counter("swap_num", commonOptions)
+
+const stake = new Counter("stake_num", commonOptions)
+const stakeAmount = new Counter("stake_amount", commonOptions)
+const unstake = new Counter("unstake_num", commonOptions)
+const unstakeAmount = new Counter("unstake_amount", commonOptions)
+const claim = new Counter("claim_num", commonOptions)
+const claimAmount = new Counter("claim_amount", commonOptions)
 
 const accountTracker = AccountEventTracker.register("users")
+
+const APT = '0x1::aptos_coin::AptosCoin'
+const tAPT = '0x84d7aeef42d38a5ffc3ccef853e1b82e4958659d16a7de736a29c55fbbeb0114::staked_aptos_coin::StakedAptosCoin'
 
 stake_router.bind()
   .onEventStakeEvent((evt, ctx) => {
     accountTracker.trackEvent(ctx, { distinctId: ctx.transaction.sender})
+    stakeAmount.add(ctx, scaleDown(APT, evt.data_typed.amount), { coin: "apt"})
+    stakeAmount.add(ctx, scaleDown(tAPT, evt.data_typed.t_apt_coins), { coin: "tapt"})
     stake.add(ctx, 1)
   })
   .onEventUnstakeEvent((evt, ctx) => {
     accountTracker.trackEvent(ctx, { distinctId: ctx.transaction.sender})
+    unstakeAmount.add(ctx, scaleDown(APT, evt.data_typed.amount), { coin: "apt"})
+    unstakeAmount.add(ctx, scaleDown(tAPT, evt.data_typed.t_apt_coins), { coin: "tapt"})
     unstake.add(ctx, 1)
   })
   .onEventClaimEvent((evt, ctx) => {
     accountTracker.trackEvent(ctx, { distinctId: ctx.transaction.sender})
+    claimAmount.add(ctx, scaleDown(tAPT, evt.data_typed.amount), { coin: "apt"})
     claim.add(ctx, 1)
   })
 
@@ -69,9 +83,15 @@ liquidity_pool.bind({startVersion: 299999})
   })
 
 function isAptTAptPair(coinx: string, coiny: string): boolean {
-  if (coinx === '0x84d7aeef42d38a5ffc3ccef853e1b82e4958659d16a7de736a29c55fbbeb0114::staked_aptos_coin::StakedAptosCoin' && coiny === '0x1::aptos_coin::AptosCoin') {
+  if (coinx === tAPT && coiny === APT) {
     return true
   }
-  return coiny === '0x84d7aeef42d38a5ffc3ccef853e1b82e4958659d16a7de736a29c55fbbeb0114::staked_aptos_coin::StakedAptosCoin' && coinx === '0x1::aptos_coin::AptosCoin';
+  return coiny === tAPT && coinx === APT;
 }
 
+function scaleDown(coin: string, amount: bigint) {
+  if (coin === tAPT || coin === APT) {
+    return toBigDecimal(amount).div(8)
+  }
+  throw Error("wrong coin")
+}
