@@ -28,11 +28,14 @@ const totalValue = new Gauge("total_value", commonOptions)
 // const totalAmount = new Gauge("total_amount", commonOptions)
 
 const tvlAll = new Gauge("tvl_all", commonOptions)
+const tvlByPool = new Gauge("tvl_by_pool", commonOptions)
 const tvl = new Gauge("tvl", commonOptions)
 // const amountCounter = new Gauge("amount", commonOptions)
 // const volumeByPool = new Gauge("vol_by_pool", commonOptions)
 const volume = new Gauge("vol", commonOptions)
 // const priceGauge = new Gauge("price", commonOptions)
+const fee = new Gauge("fee", commonOptions)
+const feeAcc = new Counter("fee_acc", commonOptions)
 
 // const eventCounter = new Counter("num_event", commonOptions)
 
@@ -89,7 +92,7 @@ liquidity_pool.bind({startVersion: 299999})
     lpTracker.trackEvent(ctx, { distinctId: ctx.transaction.sender })
     // ctx.logger.info("PoolCreated", { user: ctx.transaction.sender })
 
-    ctx.logger.info(`ff`, {user: "-", value: 0.0001})
+    ctx.logger.info("", {user: "-", value: 0.0001})
 
     // readPool(ctx.version)
     //
@@ -111,7 +114,8 @@ liquidity_pool.bind({startVersion: 299999})
     const value = await recordTradingVolume(ctx,
         evt.type_arguments[0], evt.type_arguments[1],
         evt.data_typed.x_in + evt.data_typed.x_out,
-        evt.data_typed.y_in + evt.data_typed.y_out)
+        evt.data_typed.y_in + evt.data_typed.y_out,
+        getCurve(evt.type_arguments[2]))
 
     const coinXInfo = await getCoinInfo(evt.type_arguments[0])
     const coinYInfo = await getCoinInfo(evt.type_arguments[1])
@@ -132,19 +136,10 @@ liquidity_pool.bind({startVersion: 299999})
     ctx.meter.Counter("event_flashloan_by_bridge").add(1, { bridge: coinYInfo.bridge })
 
     accountTracker.trackEvent(ctx, { distinctId: ctx.transaction.sender })
-
     await syncPools(ctx)
   })
-//
-// function isMojitoOrAptoge(coinType: string) {
-//   return coinType === "0x5c738a5dfa343bee927c39ebe85b0ceb95fdb5ee5b323c95559614f5a77c47cf::Aptoge::Aptoge" ||
-//       coinType === "0x881ac202b1f1e6ad4efcff7a1d0579411533f2502417a19211cfc49751ddb5f4::coin::MOJO"
-// }
 
-async function recordTradingVolume(ctx: aptos.AptosContext, coinx: string, coiny: string, coinx_amount: bigint, coiny_amount: bigint): Promise<BigDecimal> {
-  // const coinx = pool.type_arguments[0]
-  // const coiny = pool.type_arguments[1]
-
+async function recordTradingVolume(ctx: aptos.AptosContext, coinx: string, coiny: string, coinXAmount: bigint, coinYAmount: bigint, curve?: string): Promise<BigDecimal> {
   const whitelistx = whiteListed(coinx)
   const whitelisty = whiteListed(coiny)
   const coinXInfo = await getCoinInfo(coinx)
@@ -156,24 +151,28 @@ async function recordTradingVolume(ctx: aptos.AptosContext, coinx: string, coiny
     return result
   }
 
+  const pair = await getPair(coinx, coiny)
+
+  const baseLabels: Record<string, string> = { pair }
+  if (curve) {
+    baseLabels.curve = curve
+  }
+
   if (whitelistx) {
-    const value = await caculateValueInUsd(coinx_amount, coinXInfo, timestamp)
+    const value = await caculateValueInUsd(coinXAmount, coinXInfo, timestamp)
     result = value
 
-    volume.record(ctx, value, {coin: coinXInfo.symbol, bridge: coinXInfo.bridge, type: coinXInfo.token_type.type})
-    // if (!whitelisty) {
-    //   volume.record(ctx, value, {coin: coinYInfo.symbol, bridge: coinYInfo.bridge, type: coinYInfo.token_type.type})
-    // }
+    volume.record(ctx, value, { ...baseLabels, coin: coinXInfo.symbol, bridge: coinXInfo.bridge, type: coinXInfo.token_type.type})
   }
   if (whitelisty) {
-    const value = await caculateValueInUsd(coiny_amount, coinYInfo, timestamp)
+    const value = await caculateValueInUsd(coinYAmount, coinYInfo, timestamp)
     result = value
 
-    volume.record(ctx, value, {coin: coinYInfo.symbol, bridge: coinYInfo.bridge, type: coinYInfo.token_type.type})
-    // if (!whitelistx) {
-    //   volume.record(ctx, value, {coin: coinXInfo.symbol, bridge: coinXInfo.bridge, type: coinXInfo.token_type.type})
-    // }
+    volume.record(ctx, value, { ...baseLabels, coin: coinYInfo.symbol, bridge: coinYInfo.bridge, type: coinYInfo.token_type.type})
   }
+
+  fee.record(ctx, result.multipliedBy(0.0025), baseLabels)
+  feeAcc.add(ctx, result.multipliedBy(0.0025), baseLabels)
 
   return result
 }
@@ -195,18 +194,21 @@ async function recordTradingVolume(ctx: aptos.AptosContext, coinx: string, coiny
 // }
 
 // TODO pool name should consider not just use symbol name
-async function getPair(coins: [string, string, string]): Promise<string> {
-  let coinx = await getCoinInfo(coins[0])
-  let coiny = await getCoinInfo(coins[1])
-
-  if (coinx.symbol.localeCompare(coiny.symbol) > 0) {
-    const tmp = coinx
-    coinx = coiny
-    coiny = tmp
+async function getPair(coinx: string, coiny: string): Promise<string> {
+  const coinXInfo = await getCoinInfo(coinx)
+  const coinYInfo = await getCoinInfo(coiny)
+  if (coinXInfo.symbol.localeCompare(coinYInfo.symbol) > 0) {
+    return `${coinYInfo.symbol}-${coinXInfo.symbol}`
   }
+  return `${coinXInfo.symbol}-${coinYInfo.symbol}`
+}
 
-  return `${coinx.symbol}-${coiny.symbol}}`
-   // return [coinx, coiny, pool]
+function getCurve(type: string) {
+  if (type.includes("0x190d44266241744264b964a37b8f09863167a12d3e70cda39376cfb4e3561e12::curves::Stable")) {
+    return "Stable"
+  } else {
+    return "Uncorrelated"
+  }
 }
 
 const recorded = new Set<bigint>()
@@ -218,16 +220,13 @@ async function syncPools(ctx: aptos.AptosContext) {
     return
   }
 
+  // folowing line is hack to run once every 100000 version
   const version = BigInt(ctx.version.toString())
   const bucket = version / 100000n;
   if (recorded.has(bucket)) {
     return
   }
-
   recorded.add(bucket)
-
-  // const client = getRpcClient(aptos.AptosNetwork.MAIN_NET)
-  // const client = new AptosClient("https://mainnet.aptoslabs.com/")
 
   const normalClient = new AptosClient("https://aptos-mainnet.nodereal.io/v1/0c58c879d41e4eab8fd2fc0406848c2b")
   const patchClient = new AptosClient("https://aptos-mainnet.pontem.network/v1")
@@ -294,15 +293,19 @@ async function syncPools(ctx: aptos.AptosContext) {
       continue
     }
 
+    const pair = await getPair(coinx, coiny)
+    const curve = getCurve(pool.type_arguments[2])
+
     const coinXInfo = await getCoinInfo(coinx)
     const coinYInfo = await getCoinInfo(coiny)
 
     const coinx_amount = pool.data_typed.coin_x_reserve.value
     const coiny_amount = pool.data_typed.coin_y_reserve.value
 
+    let poolValue = BigDecimal(0)
     if (whitelistx) {
       const value = await caculateValueInUsd(coinx_amount, coinXInfo, timestamp)
-      tvlAllValue = tvlAllValue.plus(value)
+      poolValue = poolValue.plus(value)
       // tvlTotal.record(ctx, value, { pool: poolName, type: coinXInfo.token_type.type })
 
       let coinXTotal = volumeByCoin.get(coinXInfo.token_type.type)
@@ -314,13 +317,13 @@ async function syncPools(ctx: aptos.AptosContext) {
       volumeByCoin.set(coinXInfo.token_type.type, coinXTotal)
 
       if (!whitelisty) {
-        tvlAllValue = tvlAllValue.plus(value)
+        poolValue = poolValue.plus(value)
         // tvlTotal.record(ctx, value, { pool: poolName, type: coinYInfo.token_type.type})
       }
     }
     if (whitelisty) {
       const value = await caculateValueInUsd(coiny_amount, coinYInfo, timestamp)
-      tvlAllValue = tvlAllValue.plus(value)
+      poolValue = poolValue.plus(value)
       // tvlTotal.record(ctx, value, { pool: poolName, type: coinYInfo.token_type.type })
 
       let coinYTotal = volumeByCoin.get(coinYInfo.token_type.type)
@@ -332,11 +335,15 @@ async function syncPools(ctx: aptos.AptosContext) {
       volumeByCoin.set(coinYInfo.token_type.type, coinYTotal)
 
       if (!whitelistx) {
-        tvlAllValue = tvlAllValue.plus(value)
-        // tvlTotal.record(ctx, value, { pool: poolName, type: coinXInfo.token_type.type })
+        poolValue = poolValue.plus(value)
       }
     }
+    if (poolValue.isGreaterThan(0)) {
+      tvlByPool.record(ctx, poolValue, {pair, curve})
+    }
+    tvlAllValue = tvlAllValue.plus(poolValue)
   }
+
   tvlAll.record(ctx, tvlAllValue)
 
   for (const [k, v] of volumeByCoin) {

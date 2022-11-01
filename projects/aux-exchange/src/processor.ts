@@ -127,7 +127,7 @@ async function recordTradingVolume(ctx: aptos.AptosContext, coinx: string, coiny
   const coinYInfo = await getCoinInfo(coiny)
 
   let result = BigDecimal(0)
-  const pair = await getPoolName([coinx, coiny])
+  const pair = await getPair(coinx, coiny)
 
   if (whitelistx) {
     const value = await caculateValueInUsd(coinx_amount, coinXInfo, timestamp)
@@ -167,10 +167,13 @@ async function recordTradingVolume(ctx: aptos.AptosContext, coinx: string, coiny
 //   amountCounter.sub(ctx, scaleDown(amount, coin.decimals), { coin: coin.symbol, pool: pool })
 // }
 
-async function getPoolName(coins: [string, string]): Promise<string> {
-  const coinx = await getCoinInfo(coins[0])
-  const coiny = await getCoinInfo(coins[1])
-  return `${coinx.symbol}-${coiny.symbol}`
+async function getPair(coinx: string, coiny: string): Promise<string> {
+  const coinXInfo = await getCoinInfo(coinx)
+  const coinYInfo = await getCoinInfo(coiny)
+  if (coinXInfo.symbol.localeCompare(coinYInfo.symbol) > 0) {
+    return `${coinYInfo.symbol}-${coinXInfo.symbol}`
+  }
+  return `${coinXInfo.symbol}-${coinYInfo.symbol}`
 }
 
 const recorded = new Set<bigint>()
