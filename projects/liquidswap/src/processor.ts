@@ -89,7 +89,6 @@ liquidity_pool.bind({startVersion: 299999})
     lpTracker.trackEvent(ctx, { distinctId: ctx.transaction.sender })
     // ctx.logger.info("PoolCreated", { user: ctx.transaction.sender })
 
-    // @ts-ignore
     ctx.logger.info(`ff`, {user: "-", value: 0.0001})
 
     // readPool(ctx.version)
@@ -101,26 +100,24 @@ liquidity_pool.bind({startVersion: 299999})
   .onEventLiquidityAddedEvent(async (evt, ctx) => {
     ctx.meter.Counter("event_liquidity_add").add(1)
     lpTracker.trackEvent(ctx, { distinctId: ctx.transaction.sender })
-    // ctx.logger.info("LiquidityAdded", { user: ctx.transaction.sender })
-
     await syncPools(ctx)
   })
   .onEventLiquidityRemovedEvent(async (evt, ctx) => {
     ctx.meter.Counter("event_liquidity_removed").add(1)
     accountTracker.trackEvent(ctx, { distinctId: ctx.transaction.sender })
-    // ctx.logger.info("LiquidityRemoved", { user: ctx.transaction.sender })
-
     await syncPools(ctx)
   })
   .onEventSwapEvent(async (evt, ctx) => {
-    const value = await recordTradingVolume(ctx, evt.type_arguments[0], evt.type_arguments[1], evt.data_typed.x_in, evt.data_typed.y_in)
+    const value = await recordTradingVolume(ctx,
+        evt.type_arguments[0], evt.type_arguments[1],
+        evt.data_typed.x_in + evt.data_typed.x_out,
+        evt.data_typed.y_in + evt.data_typed.y_out)
+
     const coinXInfo = await getCoinInfo(evt.type_arguments[0])
     const coinYInfo = await getCoinInfo(evt.type_arguments[1])
 
-    // if (value.isGreaterThan(0)) {
-    // @ts-ignore
     ctx.logger.info(`${ctx.transaction.sender} Swap ${coinXInfo.symbol} for ${coinYInfo.symbol}`, {user: ctx.transaction.sender, value: value.toNumber()})
-    // }
+
     ctx.meter.Counter("event_swap_by_bridge").add(1, { bridge: coinXInfo.bridge })
     ctx.meter.Counter("event_swap_by_bridge").add(1, { bridge: coinYInfo.bridge })
 
@@ -135,7 +132,6 @@ liquidity_pool.bind({startVersion: 299999})
     ctx.meter.Counter("event_flashloan_by_bridge").add(1, { bridge: coinYInfo.bridge })
 
     accountTracker.trackEvent(ctx, { distinctId: ctx.transaction.sender })
-    // ctx.logger.info("Flashloan", { user: ctx.transaction.sender, value: value.toString() })
 
     await syncPools(ctx)
   })
@@ -199,17 +195,17 @@ async function recordTradingVolume(ctx: aptos.AptosContext, coinx: string, coiny
 // }
 
 // TODO pool name should consider not just use symbol name
-async function getPoolName(coins: [string, string, string]): Promise<string> {
-  const coinx = await getCoinInfo(coins[0])
-  const coiny = await getCoinInfo(coins[1])
-  // if (!coinx || !coiny) {
-  //   return undefined
-  // }
-  const token = coins[2].includes("curves::Stable") ? "S" : "U"
-  // const xfullname = coins[0].split("::").slice(1).join("::")
-  // const yfullname = coins[1].split("::").slice(1).join("::")
-  const id = crypto.createHash("md5").update(coins.join()).digest("hex")
-  return `${coinx.symbol}-${coiny.symbol}-${token}-${id.slice(0, 6)}`
+async function getPair(coins: [string, string, string]): Promise<string> {
+  let coinx = await getCoinInfo(coins[0])
+  let coiny = await getCoinInfo(coins[1])
+
+  if (coinx.symbol.localeCompare(coiny.symbol) > 0) {
+    const tmp = coinx
+    coinx = coiny
+    coiny = tmp
+  }
+
+  return `${coinx.symbol}-${coiny.symbol}}`
    // return [coinx, coiny, pool]
 }
 
