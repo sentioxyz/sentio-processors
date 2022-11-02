@@ -15,8 +15,9 @@ import { AptosClient } from "aptos-sdk";
 
 import { BigDecimal } from "@sentio/sdk/lib/core/big-decimal";
 
-import { TypedMoveResource } from "@sentio/sdk/lib/aptos/types";
+import { TypedEntryFunctionPayload, TypedMoveResource } from "@sentio/sdk/lib/aptos/types";
 import CoinInfo = coin.CoinInfo;
+import { TransactionPayload_EntryFunctionPayload } from "aptos-sdk/src/generated";
 
 const commonOptions = { sparse:  true }
 const totalValue = new Gauge("total_value", commonOptions)
