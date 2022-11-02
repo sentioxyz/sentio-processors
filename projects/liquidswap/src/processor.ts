@@ -10,16 +10,11 @@ import {
   whiteListed,
   CORE_TOKENS, getRandomInt
 } from "./utils";
-import { aggregator, coin, optional_aggregator, timestamp } from "@sentio/sdk/lib/builtin/aptos/0x1";
+import { aggregator, coin, optional_aggregator } from "@sentio/sdk/lib/builtin/aptos/0x1";
 import { AptosClient } from "aptos-sdk";
 
-import * as crypto from "crypto"
 import { BigDecimal } from "@sentio/sdk/lib/core/big-decimal";
 
-import Long from 'Long'
-import * as fs from "fs";
-import * as os from "os";
-import * as path from "path";
 import { TypedMoveResource } from "@sentio/sdk/lib/aptos/types";
 import CoinInfo = coin.CoinInfo;
 
@@ -36,6 +31,9 @@ const volume = new Gauge("vol", commonOptions)
 // const priceGauge = new Gauge("price", commonOptions)
 const fee = new Gauge("fee", commonOptions)
 const feeAcc = new Counter("fee_acc", commonOptions)
+
+const inputUsd = [100, 1000, 10000, 100000]
+const priceImpact = new Gauge('price_impact', commonOptions)
 
 // const eventCounter = new Counter("num_event", commonOptions)
 
@@ -231,7 +229,7 @@ async function syncPools(ctx: aptos.AptosContext) {
   const normalClient = new AptosClient("https://aptos-mainnet.nodereal.io/v1/0c58c879d41e4eab8fd2fc0406848c2b")
   const patchClient = new AptosClient("https://aptos-mainnet.pontem.network/v1")
 
-  let pools: TypedMoveResource<liquidity_pool.LiquidityPool<any, any, any>>[] = []
+  let pools: TypedMoveResource<liquidity_pool.LiquidityPool<any, any, any>>[]
 
   // if (version <= 13100000n) {
     let resources = undefined
@@ -340,6 +338,38 @@ async function syncPools(ctx: aptos.AptosContext) {
     }
     if (poolValue.isGreaterThan(0)) {
       tvlByPool.record(ctx, poolValue, {pair, curve})
+
+      if (curve == "Uncorrelated") {
+        const priceX = await getPrice(coinXInfo.token_type.type, timestamp)
+        const priceY = await getPrice(coinYInfo.token_type.type, timestamp)
+        if (priceX != 0 && priceY != 0) {
+          const nX = BigDecimal(pool.data_typed.coin_x_reserve.value.toString())
+          const nY = BigDecimal(pool.data_typed.coin_y_reserve.value.toString())
+          const fee = BigDecimal(pool.data_typed.fee.toString()).multipliedBy(1e-4)
+          const feeFactor = fee.div(BigDecimal(1).minus(fee))
+
+          for (const k of inputUsd) {
+            // impactX = fee / (1 - fee) + inX / nX
+            const inX = BigDecimal(k).div(priceX)
+            const impactX = feeFactor.plus(inX.div(nX))
+            priceImpact.record(ctx, impactX, {
+              pair, curve,
+              fee: fee.toString(),
+              inputUsd: k.toString(),
+              direction: 'X to Y'
+            })
+
+            const inY = BigDecimal(k).div(priceY)
+            const impactY = feeFactor.plus(inY.div(nY))
+            priceImpact.record(ctx, impactY, {
+              pair, curve,
+              fee: fee.toString(),
+              inputUsd: k.toString(),
+              direction: 'Y to X'
+            })
+          }
+        }
+      }
     }
     tvlAllValue = tvlAllValue.plus(poolValue)
   }
