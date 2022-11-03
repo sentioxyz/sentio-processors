@@ -18,28 +18,26 @@ import { BigDecimal } from "@sentio/sdk/lib/core/big-decimal";
 import { TypedEntryFunctionPayload, TypedMoveResource } from "@sentio/sdk/lib/aptos/types";
 import CoinInfo = coin.CoinInfo;
 import { TransactionPayload_EntryFunctionPayload } from "aptos-sdk/src/generated";
+import { amm } from "./types/aptos/auxexchange";
 
 const commonOptions = { sparse:  true }
 const totalValue = new Gauge("total_value", commonOptions)
-// const totalAmount = new Gauge("total_amount", commonOptions)
-
 const tvlAll = new Gauge("tvl_all", commonOptions)
 const tvlByPool = new Gauge("tvl_by_pool", commonOptions)
 const tvl = new Gauge("tvl", commonOptions)
-// const amountCounter = new Gauge("amount", commonOptions)
-// const volumeByPool = new Gauge("vol_by_pool", commonOptions)
 const volume = new Gauge("vol", commonOptions)
-// const priceGauge = new Gauge("price", commonOptions)
-const fee = new Gauge("fee", commonOptions)
-const feeAcc = new Counter("fee_acc", commonOptions)
 
 const inputUsd = [100, 1000, 10000, 100000]
 const priceImpact = new Gauge('price_impact', commonOptions)
 
-// const eventCounter = new Counter("num_event", commonOptions)
-
 const accountTracker = AccountEventTracker.register("users")
 const lpTracker = AccountEventTracker.register("lp")
+
+
+const auxVolume = new Gauge("aux_vol", commonOptions)
+const auxTvlByPool = new Gauge("aux_tvl_by_pool", commonOptions)
+// const auxTvlAll = new Gauge("aux_tvl_all", commonOptions)
+
 
 // const POOL_TYPE = "0x190d44266241744264b964a37b8f09863167a12d3e70cda39376cfb4e3561e12::liquidity_pool::LiquidityPool"
 //
@@ -97,20 +95,20 @@ liquidity_pool.bind({startVersion: 299999})
     //
     // savePool(ctx.version, evt.type_arguments)
 
-    await syncPools(ctx)
+    await syncLiquidSwapPools(ctx)
   })
   .onEventLiquidityAddedEvent(async (evt, ctx) => {
     ctx.meter.Counter("event_liquidity_add").add(1)
     lpTracker.trackEvent(ctx, { distinctId: ctx.transaction.sender })
-    await syncPools(ctx)
+    await syncLiquidSwapPools(ctx)
   })
   .onEventLiquidityRemovedEvent(async (evt, ctx) => {
     ctx.meter.Counter("event_liquidity_removed").add(1)
     accountTracker.trackEvent(ctx, { distinctId: ctx.transaction.sender })
-    await syncPools(ctx)
+    await syncLiquidSwapPools(ctx)
   })
   .onEventSwapEvent(async (evt, ctx) => {
-    const value = await recordTradingVolume(ctx,
+    const value = await recordTradingVolume(ctx, volume,
         evt.type_arguments[0], evt.type_arguments[1],
         evt.data_typed.x_in + evt.data_typed.x_out,
         evt.data_typed.y_in + evt.data_typed.y_out,
@@ -126,7 +124,7 @@ liquidity_pool.bind({startVersion: 299999})
 
     accountTracker.trackEvent(ctx, { distinctId: ctx.transaction.sender })
 
-    await syncPools(ctx)
+    await syncLiquidSwapPools(ctx)
   })
   .onEventFlashloanEvent(async (evt, ctx) => {
     const coinXInfo = await getCoinInfo(evt.type_arguments[0])
@@ -135,10 +133,37 @@ liquidity_pool.bind({startVersion: 299999})
     ctx.meter.Counter("event_flashloan_by_bridge").add(1, { bridge: coinYInfo.bridge })
 
     accountTracker.trackEvent(ctx, { distinctId: ctx.transaction.sender })
-    await syncPools(ctx)
+    await syncLiquidSwapPools(ctx)
   })
 
-async function recordTradingVolume(ctx: aptos.AptosContext, coinx: string, coiny: string, coinXAmount: bigint, coinYAmount: bigint, curve?: string): Promise<BigDecimal> {
+amm.bind({startVersion: 299999})
+    .onEntryCreatePool(async (evt, ctx) => {
+      ctx.meter.Counter("aux_num_pools").add(1)
+      await syncAuxPools(ctx)
+    })
+    .onEventAddLiquidityEvent(async (evt, ctx) => {
+      ctx.meter.Counter("aux_event_liquidity_add").add(1)
+      // ctx.logger.info("LiquidityAdded", { user: ctx.transaction.sender })
+      await syncAuxPools(ctx)
+    })
+    .onEventRemoveLiquidityEvent(async (evt, ctx) => {
+      ctx.meter.Counter("aux_event_liquidity_removed").add(1)
+      accountTracker.trackEvent(ctx, { distinctId: ctx.transaction.sender })
+      // ctx.logger.info("LiquidityRemoved", { user: ctx.transaction.sender })
+      await syncAuxPools(ctx)
+    })
+    .onEventSwapEvent(async (evt, ctx) => {
+      const value = await recordTradingVolume(ctx, auxVolume, evt.data_typed.in_coin_type, evt.data_typed.out_coin_type, evt.data_typed.in_au, evt.data_typed.out_au)
+      const coinXInfo = await getCoinInfo(evt.data_typed.in_coin_type)
+      const coinYInfo = await getCoinInfo(evt.data_typed.out_coin_type)
+      ctx.meter.Counter("aux_event_swap_by_bridge").add(1, { bridge: coinXInfo.bridge })
+      ctx.meter.Counter("aux_event_swap_by_bridge").add(1, { bridge: coinYInfo.bridge })
+
+      await syncAuxPools(ctx)
+    })
+
+
+async function recordTradingVolume(ctx: aptos.AptosContext, volume: Gauge, coinx: string, coiny: string, coinXAmount: bigint, coinYAmount: bigint, curve?: string): Promise<BigDecimal> {
   const whitelistx = whiteListed(coinx)
   const whitelisty = whiteListed(coiny)
   const coinXInfo = await getCoinInfo(coinx)
@@ -170,8 +195,8 @@ async function recordTradingVolume(ctx: aptos.AptosContext, coinx: string, coiny
     volume.record(ctx, value, { ...baseLabels, coin: coinYInfo.symbol, bridge: coinYInfo.bridge, type: coinYInfo.token_type.type})
   }
 
-  fee.record(ctx, result.multipliedBy(0.0025), baseLabels)
-  feeAcc.add(ctx, result.multipliedBy(0.0025), baseLabels)
+  // fee.record(ctx, result.multipliedBy(0.0025), baseLabels)
+  // feeAcc.add(ctx, result.multipliedBy(0.0025), baseLabels)
 
   return result
 }
@@ -211,10 +236,11 @@ function getCurve(type: string) {
 }
 
 const recorded = new Set<bigint>()
+const auxRecorded = new Set<bigint>()
 
 const SKIP_POOL = false
 
-async function syncPools(ctx: aptos.AptosContext) {
+async function syncLiquidSwapPools(ctx: aptos.AptosContext) {
   if (SKIP_POOL) {
     return
   }
@@ -433,4 +459,110 @@ async function syncPools(ctx: aptos.AptosContext) {
   })
 
   await Promise.all(allPromises)
+}
+
+async function syncAuxPools(ctx: aptos.AptosContext) {
+  if (SKIP_POOL) {
+    return
+  }
+
+  // folowing line is hack to run once every 100000 version
+  const version = BigInt(ctx.version.toString())
+  const bucket = version / 100000n;
+  if (auxRecorded.has(bucket)) {
+    return
+  }
+  auxRecorded.add(bucket)
+
+  const normalClient = new AptosClient("https://aptos-mainnet.nodereal.io/v1/0c58c879d41e4eab8fd2fc0406848c2b")
+
+  let pools: TypedMoveResource<amm.Pool<any, any>>[]
+
+  // if (version <= 13100000n) {
+  let resources = undefined
+  while (!resources) {
+    try {
+      resources = await normalClient.getAccountResources('0xbd35135844473187163ca197ca93b2ab014370587bb0ed3befff9e902d6bb541', {ledgerVersion: version})
+    } catch (e) {
+      console.log("rpc error, retrying", e)
+      await delay(1000)
+    }
+  }
+  pools = aptos.TYPE_REGISTRY.filterAndDecodeResources<amm.Pool<any, any>>("0xbd35135844473187163ca197ca93b2ab014370587bb0ed3befff9e902d6bb541::amm::Pool", resources)
+
+  const volumeByCoin = new Map<string, BigDecimal>()
+  const timestamp = ctx.transaction.timestamp
+
+  console.log("num of pools: ", pools.length, ctx.version.toString())
+
+  let tvlAllValue = BigDecimal(0)
+  for (const pool of pools) {
+    // savePool(ctx.version, pool.type_arguments)
+    const coinx = pool.type_arguments[0]
+    const coiny = pool.type_arguments[1]
+    const whitelistx = whiteListed(coinx)
+    const whitelisty = whiteListed(coiny)
+    if (!whitelistx && !whitelisty) {
+      continue
+    }
+
+    const pair = await getPair(coinx, coiny)
+    // const curve = getCurve(pool.type_arguments[2])
+
+    const coinXInfo = await getCoinInfo(coinx)
+    const coinYInfo = await getCoinInfo(coiny)
+
+    const coinx_amount = pool.data_typed.x_reserve.value
+    const coiny_amount = pool.data_typed.y_reserve.value
+
+    let poolValue = BigDecimal(0)
+    if (whitelistx) {
+      const value = await caculateValueInUsd(coinx_amount, coinXInfo, timestamp)
+      poolValue = poolValue.plus(value)
+
+      let coinXTotal = volumeByCoin.get(coinXInfo.token_type.type)
+      if (!coinXTotal) {
+        coinXTotal = value
+      } else {
+        coinXTotal = coinXTotal.plus(value)
+      }
+      volumeByCoin.set(coinXInfo.token_type.type, coinXTotal)
+
+      if (!whitelisty) {
+        poolValue = poolValue.plus(value)
+      }
+    }
+    if (whitelisty) {
+      const value = await caculateValueInUsd(coiny_amount, coinYInfo, timestamp)
+      poolValue = poolValue.plus(value)
+
+      let coinYTotal = volumeByCoin.get(coinYInfo.token_type.type)
+      if (!coinYTotal) {
+        coinYTotal = value
+      } else {
+        coinYTotal = coinYTotal.plus(value)
+      }
+      volumeByCoin.set(coinYInfo.token_type.type, coinYTotal)
+
+      if (!whitelistx) {
+        poolValue = poolValue.plus(value)
+      }
+    }
+    if (poolValue.isGreaterThan(0)) {
+      auxTvlByPool.record(ctx, poolValue, {pair})
+    }
+    tvlAllValue = tvlAllValue.plus(poolValue)
+  }
+
+  // for (const [k, v] of volumeByCoin) {
+  //   const coinInfo = CORE_TOKENS.get(k)
+  //   if (!coinInfo) {
+  //     throw Error("unexpected coin " + k)
+  //   }
+  //   // const price = await getPrice(coinInfo, timestamp)
+  //   // priceGauge.record(ctx, price, { coin: coinInfo.symbol })
+  //   if (v.isGreaterThan(0)) {
+  //     tvl.record(ctx, v, {coin: coinInfo.symbol, bridge: coinInfo.bridge, type: coinInfo.token_type.type})
+  //   }
+  // }
 }
