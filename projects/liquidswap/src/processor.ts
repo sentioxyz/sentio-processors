@@ -344,9 +344,9 @@ async function syncPools(ctx: aptos.AptosContext) {
         const priceX = await getPrice(coinXInfo.token_type.type, timestamp)
         const priceY = await getPrice(coinYInfo.token_type.type, timestamp)
         if (priceX != 0 && priceY != 0) {
-          const nX = BigDecimal(pool.data_typed.coin_x_reserve.value.toString())
-          const nY = BigDecimal(pool.data_typed.coin_y_reserve.value.toString())
-          const fee = BigDecimal(pool.data_typed.fee.toString()).multipliedBy(1e-4)
+          const nX = scaleDown(coinx_amount, coinXInfo.decimals)
+          const nY = scaleDown(coiny_amount, coinYInfo.decimals)
+          const fee = scaleDown(pool.data_typed.fee, 4)
           const feeFactor = fee.div(BigDecimal(1).minus(fee))
 
           for (const k of inputUsd) {
