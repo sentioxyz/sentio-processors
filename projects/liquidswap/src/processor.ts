@@ -36,6 +36,8 @@ const lpTracker = AccountEventTracker.register("lp")
 
 const auxVolume = new Gauge("aux_vol", commonOptions)
 const auxTvlByPool = new Gauge("aux_tvl_by_pool", commonOptions)
+const aux_tvl = new Gauge("aux_tvl", commonOptions)
+
 // const auxTvlAll = new Gauge("aux_tvl_all", commonOptions)
 
 
@@ -554,15 +556,15 @@ async function syncAuxPools(ctx: aptos.AptosContext) {
     tvlAllValue = tvlAllValue.plus(poolValue)
   }
 
-  // for (const [k, v] of volumeByCoin) {
-  //   const coinInfo = CORE_TOKENS.get(k)
-  //   if (!coinInfo) {
-  //     throw Error("unexpected coin " + k)
-  //   }
-  //   // const price = await getPrice(coinInfo, timestamp)
-  //   // priceGauge.record(ctx, price, { coin: coinInfo.symbol })
-  //   if (v.isGreaterThan(0)) {
-  //     tvl.record(ctx, v, {coin: coinInfo.symbol, bridge: coinInfo.bridge, type: coinInfo.token_type.type})
-  //   }
-  // }
+  for (const [k, v] of volumeByCoin) {
+    const coinInfo = CORE_TOKENS.get(k)
+    if (!coinInfo) {
+      throw Error("unexpected coin " + k)
+    }
+    // const price = await getPrice(coinInfo, timestamp)
+    // priceGauge.record(ctx, price, { coin: coinInfo.symbol })
+    if (v.isGreaterThan(0)) {
+      aux_tvl.record(ctx, v, {coin: coinInfo.symbol, bridge: coinInfo.bridge, type: coinInfo.token_type.type})
+    }
+  }
 }
