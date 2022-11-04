@@ -2,12 +2,11 @@ import { AptosClient, CoinClient, TokenClient } from 'aptos-sdk'
 import { coin } from "@sentio/sdk/lib/builtin/aptos/0x1";
 import CoinInfo = coin.CoinInfo;
 import { BigDecimal } from "@sentio/sdk/lib/core/big-decimal";
-import CoinGecko from 'coingecko-api'
 import { string } from "@sentio/sdk/src/builtin/aptos/0x1";
 import { aptos } from "@sentio/sdk";
 import { DEFAULT_MAINNET_LIST, RawCoinInfo } from "@manahippo/coin-list/dist/list";
 
-const CoinGeckoClient = new CoinGecko();
+import fetch from 'node-fetch';
 
 const client = new AptosClient("https://aptos-mainnet.nodereal.io/v1/0c58c879d41e4eab8fd2fc0406848c2b/")
 
@@ -143,32 +142,37 @@ export async function getPrice(coinType: string, timestamp: string) {
   if (price) {
     return price
   }
-  let res
+  let res: any
   while(true) {
     try {
-      res = await CoinGeckoClient.coins.fetchHistory(id, {
-        date: dateStr,
-        localization: false
-      })
+      // res = await CoinGeckoClient.coins.fetchHistory(id, {
+      //   date: dateStr,
+      //   localization: false
+      // })
+
+      const requestUrl = `https://pro-api.coingecko.com/api/v3/coins/${id}/history?date=${dateStr}&localization=false&x_cg_pro_api_key=CG-NayGdpa2CqG1jp5CLtcA4kVp`
+      const response = await fetch(requestUrl)
+
+      res = await response.json()
     } catch (e) {
       await delay(1000)
       continue
     }
 
-    if (!res.success) {
-      await delay(1000)
-      continue
-    }
+    // if (!res.success) {
+    //   await delay(1000)
+    //   continue
+    // }
     break
   }
-  if (!res.data || !res.data.market_data || !res.data.market_data.current_price || !res.data.market_data.current_price.usd) {
+  if (!res || !res.market_data || !res.market_data.current_price || !res.market_data.current_price.usd) {
     console.error("no price data for ", coinType, id, dateStr)
     price = lastPriceCache.get(id) || 0
     if (!price) {
       console.error("can't even found last price", id, dateStr)
     }
   } else {
-    price = res.data.market_data.current_price.usd
+    price = res.market_data.current_price.usd as number
   }
 
   priceCache.set(cacheKey, price)
