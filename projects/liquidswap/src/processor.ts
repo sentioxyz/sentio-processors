@@ -11,13 +11,15 @@ import {
   CORE_TOKENS, getRandomInt
 } from "./utils";
 import { aggregator, coin, optional_aggregator } from "@sentio/sdk/lib/builtin/aptos/0x1";
+import { AptosAccountProcessor, MoveResourcesWithVersionPayload } from "@sentio/sdk/lib/aptos/aptos-processor";
+
 import { AptosClient } from "aptos-sdk";
 
 import { BigDecimal } from "@sentio/sdk/lib/core/big-decimal";
 
 import { TypedEntryFunctionPayload, TypedMoveResource } from "@sentio/sdk/lib/aptos/types";
 import CoinInfo = coin.CoinInfo;
-import { TransactionPayload_EntryFunctionPayload } from "aptos-sdk/src/generated";
+import { MoveResource, TransactionPayload_EntryFunctionPayload } from "aptos-sdk/src/generated";
 import { amm } from "./types/aptos/auxexchange";
 
 const commonOptions = { sparse:  true }
@@ -85,6 +87,8 @@ const aux_tvl = new Gauge("aux_tvl", commonOptions)
 //   console.log(json)
 // }
 
+
+
 liquidity_pool.bind({startVersion: 299999})
   .onEventPoolCreatedEvent(async (evt, ctx) => {
     ctx.meter.Counter("num_pools").add(1)
@@ -97,17 +101,17 @@ liquidity_pool.bind({startVersion: 299999})
     //
     // savePool(ctx.version, evt.type_arguments)
 
-    await syncLiquidSwapPools(ctx)
+    // await syncLiquidSwapPools(ctx)
   })
   .onEventLiquidityAddedEvent(async (evt, ctx) => {
     ctx.meter.Counter("event_liquidity_add").add(1)
     lpTracker.trackEvent(ctx, { distinctId: ctx.transaction.sender })
-    await syncLiquidSwapPools(ctx)
+    // await syncLiquidSwapPools(ctx)
   })
   .onEventLiquidityRemovedEvent(async (evt, ctx) => {
     ctx.meter.Counter("event_liquidity_removed").add(1)
     accountTracker.trackEvent(ctx, { distinctId: ctx.transaction.sender })
-    await syncLiquidSwapPools(ctx)
+    // await syncLiquidSwapPools(ctx)
   })
   .onEventSwapEvent(async (evt, ctx) => {
     const value = await recordTradingVolume(ctx, volume,
@@ -126,7 +130,7 @@ liquidity_pool.bind({startVersion: 299999})
 
     accountTracker.trackEvent(ctx, { distinctId: ctx.transaction.sender })
 
-    await syncLiquidSwapPools(ctx)
+    // await syncLiquidSwapPools(ctx)
   })
   .onEventFlashloanEvent(async (evt, ctx) => {
     const coinXInfo = await getCoinInfo(evt.type_arguments[0])
@@ -135,8 +139,11 @@ liquidity_pool.bind({startVersion: 299999})
     ctx.meter.Counter("event_flashloan_by_bridge").add(1, { bridge: coinYInfo.bridge })
 
     accountTracker.trackEvent(ctx, { distinctId: ctx.transaction.sender })
-    await syncLiquidSwapPools(ctx)
+    // await syncLiquidSwapPools(ctx)
   })
+
+AptosAccountProcessor.bind({address: '0xbd35135844473187163ca197ca93b2ab014370587bb0ed3befff9e902d6bb541', startVersion: 299999})
+    .onVersionInterval(syncLiquidSwapPools)
 
 amm.bind({startVersion: 299999})
     .onEntryCreatePool(async (evt, ctx) => {
@@ -242,39 +249,39 @@ const auxRecorded = new Set<bigint>()
 
 const SKIP_POOL = false
 
-async function syncLiquidSwapPools(ctx: aptos.AptosContext) {
+async function syncLiquidSwapPools(resources: MoveResource[], ctx: aptos.AptosContext) {
   if (SKIP_POOL) {
     return
   }
 
-  // folowing line is hack to run once every 100000 version
-  const version = BigInt(ctx.version.toString())
-  const bucket = version / 100000n;
-  if (recorded.has(bucket)) {
-    return
-  }
-  recorded.add(bucket)
+  // // folowing line is hack to run once every 100000 version
+  // const version = BigInt(ctx.version.toString())
+  // const bucket = version / 100000n;
+  // if (recorded.has(bucket)) {
+  //   return
+  // }
+  // recorded.add(bucket)
 
   const normalClient = new AptosClient("https://aptos-mainnet.nodereal.io/v1/0c58c879d41e4eab8fd2fc0406848c2b")
-  const patchClient = new AptosClient("https://aptos-mainnet.pontem.network/v1")
+  // const patchClient = new AptosClient("https://aptos-mainnet.pontem.network/v1")
 
   let pools: TypedMoveResource<liquidity_pool.LiquidityPool<any, any, any>>[]
 
   // if (version <= 13100000n) {
-    let resources = undefined
-    while (!resources) {
-      try {
-        let client = normalClient
-        if (version > 13100000n) {
-          client = patchClient
-        }
-        resources = await client.getAccountResources('0x5a97986a9d031c4567e15b797be516910cfcb4156312482efc6a19c0a30c948', {ledgerVersion: version})
-      } catch (e) {
-        console.log("rpc error, retrying", e)
-        await delay(1000)
-      }
-    }
-    pools = aptos.TYPE_REGISTRY.filterAndDecodeResources<liquidity_pool.LiquidityPool<any, any, any>>("0x190d44266241744264b964a37b8f09863167a12d3e70cda39376cfb4e3561e12::liquidity_pool::LiquidityPool", resources)
+  //   let resources = undefined
+  //   while (!resources) {
+  //     try {
+  //       let client = normalClient
+  //       if (version > 13100000n) {
+  //         client = patchClient
+  //       }
+  //       resources = await client.getAccountResources('0x5a97986a9d031c4567e15b797be516910cfcb4156312482efc6a19c0a30c948', {ledgerVersion: version})
+  //     } catch (e) {
+  //       console.log("rpc error, retrying", e)
+  //       await delay(1000)
+  //     }
+  //   }
+  pools = aptos.TYPE_REGISTRY.filterAndDecodeResources<liquidity_pool.LiquidityPool<any, any, any>>("0x190d44266241744264b964a37b8f09863167a12d3e70cda39376cfb4e3561e12::liquidity_pool::LiquidityPool", resources)
   // } else {
   //   await Promise.all(Array.from(ALL_POOLS).map(async p =>  {
   //     const coinx = p.split(", ")[0]
@@ -422,7 +429,7 @@ async function syncLiquidSwapPools(ctx: aptos.AptosContext) {
 
     let coinInfo: CoinInfo<any> | undefined
     try {
-      coinInfo = await requestCoinInfo(k, version)
+      coinInfo = await requestCoinInfo(k, ctx.version)
     } catch (e) {
       return
     }
@@ -441,7 +448,7 @@ async function syncLiquidSwapPools(ctx: aptos.AptosContext) {
             key: agg.key,
             key_type: "address",
             value_type: "u128"
-          }, {ledgerVersion: version})
+          }, {ledgerVersion: ctx.version})
         } catch (e) {
           if (e.status === 429) {
             await delay(1000 + getRandomInt(1000))
