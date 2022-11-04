@@ -117,7 +117,7 @@ export function scaleDown(n: bigint, decimal: number) {
 const priceCache = new Map<string, number>()
 const lastPriceCache = new Map<string, number>()
 
-export async function getPrice(coinType: string, timestamp: string) {
+export async function getPrice(coinType: string, timestamp: number) {
   if (!whiteListed(coinType)) {
     return 0.0
   }
@@ -134,7 +134,7 @@ export async function getPrice(coinType: string, timestamp: string) {
     throw Error("can't find coin id" + coinType)
   }
 
-  const date = new Date(parseInt(timestamp) / 1000)
+  const date = new Date(timestamp / 1000)
   const dateStr =  [date.getUTCDate(), date.getUTCMonth()+1, date.getUTCFullYear()].join("-")
 
   const cacheKey = id + dateStr
@@ -180,7 +180,11 @@ export async function getPrice(coinType: string, timestamp: string) {
   return price
 }
 
-export async function caculateValueInUsd(n: bigint, coinInfo: SimpleCoinInfo, timestamp: string) {
+export async function caculateValueInUsd(n: bigint, coinInfo: SimpleCoinInfo, timestamp: number | string) {
+  if (typeof timestamp === 'string') {
+    timestamp = parseInt(timestamp)
+  }
+
   const price = await getPrice(coinInfo.token_type.type, timestamp)
   const amount = await scaleDown(n, coinInfo.decimals)
   return amount.multipliedBy(price)

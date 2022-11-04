@@ -21,6 +21,7 @@ import { TypedEntryFunctionPayload, TypedMoveResource } from "@sentio/sdk/lib/ap
 import CoinInfo = coin.CoinInfo;
 import { MoveResource, TransactionPayload_EntryFunctionPayload } from "aptos-sdk/src/generated";
 import { amm } from "./types/aptos/auxexchange";
+import { AptosResourceContext } from "@sentio/sdk/lib/aptos/context";
 
 const commonOptions = { sparse:  true }
 const totalValue = new Gauge("total_value", commonOptions)
@@ -249,7 +250,7 @@ const auxRecorded = new Set<bigint>()
 
 const SKIP_POOL = false
 
-async function syncLiquidSwapPools(resources: MoveResource[], ctx: aptos.AptosContext) {
+async function syncLiquidSwapPools(resources: MoveResource[], ctx: AptosResourceContext) {
   if (SKIP_POOL) {
     return
   }
@@ -312,7 +313,7 @@ async function syncLiquidSwapPools(resources: MoveResource[], ctx: aptos.AptosCo
   // }
 
   const volumeByCoin = new Map<string, BigDecimal>()
-  const timestamp = ctx.transaction.timestamp
+  const timestamp = ctx.timestampInMicros
 
   console.log("num of pools: ", pools.length, ctx.version.toString())
 
