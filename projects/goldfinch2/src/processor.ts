@@ -6,6 +6,7 @@ import { DepositMadeEvent as TranchedDepositMadeEvent,
   TrancheLockedEvent,
   getTranchedPoolContract
 } from './types/tranchedpool';
+import { InvestmentMadeInSeniorEvent, SeniorPoolContext, SeniorPoolProcessor } from './types/seniorpool';
 import { CreditLineContext, CreditLineProcessor, CreditLineProcessorTemplate, getCreditLineContract } from './types/creditline'
 import { getGoldfinchConfigContract } from './types/goldfinchconfig';
 import * as goldfinchPools from "./goldfinchPools.json"
@@ -17,7 +18,7 @@ import type { BigNumber } from 'ethers'
 import type { Block } from '@ethersproject/providers'
 import  { BigNumber as BN } from 'ethers'
 
-import { GF_CONFIG_ADDR, INTEREST_FROM_SENIOR_TO_JUNIOR } from './constant'
+import { GF_CONFIG_ADDR, INTEREST_FROM_SENIOR_TO_JUNIOR, SENIOR_POOL_ADDR, GF_CONFIG_NEW_DEPLOY_BLOCK, GF_CONFIG_ADDR_OLD } from './constant'
 import { DAYS_PER_YEAR, isPaymentLate, isPaymentLateForGracePeriod, SECONDS_PER_DAY } from './helpers';
 
 interface PoolItem {
@@ -137,6 +138,30 @@ const PaymentAppliedEventHandler = async function(event: PaymentAppliedEvent, ct
     ctx.meter.Counter("payment_late_count").add(0, {"pool": poolName})
   }
 
+}
+
+async function InvestmentMadeInSenior (event: InvestmentMadeInSeniorEvent, ctx: SeniorPoolContext) {
+  const poolAddress = event.args.tranchedPool.toLowerCase()
+  const poolName = getNameByAddress(poolAddress)
+  const poolInfo = getPoolByAddress(poolAddress)
+  const ts = BN.from((await ctx.contract.provider.getBlock(event.blockNumber)).timestamp)
+  
+  if (poolInfo !== undefined) {
+    ctx.meter.Counter("pool_funded2").add(ts, {"pool": poolName, "addr": poolAddress})
+  } else {
+    ctx.meter.Counter("pool_funded2").add(ts, {"pool": poolName, "addr": poolAddress})
+  }
+  
+  var gfConfigAddress
+  if (event.blockNumber > GF_CONFIG_NEW_DEPLOY_BLOCK) {
+    gfConfigAddress = GF_CONFIG_ADDR
+  } else {
+    gfConfigAddress = GF_CONFIG_ADDR_OLD
+  }
+
+  const leverageRatio = toBigDecimal((await getGoldfinchConfigContract(gfConfigAddress).getNumber(9, {blockTag: event.blockNumber})) as BigNumber).div(BigDecimal(10).pow(18))
+
+  ctx.meter.Counter('leverage_ratio2').add(leverageRatio, {pool: poolName})
 }
 
 async function creditlineHandler (block: Block, ctx: CreditLineContext) {
@@ -291,3 +316,5 @@ for (let i = 0; i < 12; i++) {
   .onEventTrancheLocked(trancheLockedEventHandler)
 }
 
+SeniorPoolProcessor.bind({address: SENIOR_POOL_ADDR})
+.onEventInvestmentMadeInSenior(InvestmentMadeInSenior)
