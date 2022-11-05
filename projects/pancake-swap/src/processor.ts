@@ -1,10 +1,10 @@
-import { amm } from './types/aptos/auxexchange'
+import { swap } from './types/aptos/pancake-swap'
 import { AccountEventTracker, aptos, Gauge } from "@sentio/sdk";
 import { AptosClient } from "aptos-sdk";
 
-import { TypedMoveResource } from "@sentio/sdk/lib/aptos/types";
-
 import { AptosDex, getCoinInfo, delay } from "@sentio-processor/common/dist/aptos"
+
+import { TypedMoveResource } from "@sentio/sdk/lib/aptos/types";
 import { AptosResourceContext } from "@sentio/sdk/lib/aptos/context";
 
 const commonOptions = { sparse:  true }
@@ -15,30 +15,33 @@ const volume = new Gauge("vol", commonOptions)
 
 const accountTracker = AccountEventTracker.register("users")
 
-amm.bind({startVersion: 299999})
-  .onEntryCreatePool(async (evt, ctx) => {
+swap.bind({startVersion: 6329998})
+  .onEventPairCreatedEvent(async (evt, ctx) => {
     ctx.meter.Counter("num_pools").add(1)
     accountTracker.trackEvent(ctx, { distinctId: ctx.transaction.sender })
-    // ctx.logger.info("PoolCreated", { user: ctx.transaction.sender })
     await syncPools(ctx)
   })
   .onEventAddLiquidityEvent(async (evt, ctx) => {
     ctx.meter.Counter("event_liquidity_add").add(1)
     accountTracker.trackEvent(ctx, { distinctId: ctx.transaction.sender })
-    // ctx.logger.info("LiquidityAdded", { user: ctx.transaction.sender })
     await syncPools(ctx)
   })
   .onEventRemoveLiquidityEvent(async (evt, ctx) => {
     ctx.meter.Counter("event_liquidity_removed").add(1)
     accountTracker.trackEvent(ctx, { distinctId: ctx.transaction.sender })
-    // ctx.logger.info("LiquidityRemoved", { user: ctx.transaction.sender })
     await syncPools(ctx)
   })
   .onEventSwapEvent(async (evt, ctx) => {
-    const value = await auxExchange.recordTradingVolume(ctx, evt.data_typed.in_coin_type, evt.data_typed.out_coin_type, evt.data_typed.in_au, evt.data_typed.out_au)
-    //
-    const coinXInfo = await getCoinInfo(evt.data_typed.in_coin_type)
-    const coinYInfo = await getCoinInfo(evt.data_typed.out_coin_type)
+    const value = await PANCAKE_SWAP_APTOS.recordTradingVolume(ctx,
+              evt.type_arguments[0], evt.type_arguments[1],
+  evt.data_typed.amount_x_in + evt.data_typed.amount_x_out,
+  evt.data_typed.amount_y_in + evt.data_typed.amount_y_out)
+
+    // console.log(JSON.stringify(ctx.transaction))
+    // console.log(JSON.stringify(evt))
+
+    const coinXInfo = await getCoinInfo(evt.type_arguments[0])
+    const coinYInfo = await getCoinInfo(evt.type_arguments[1])
     ctx.meter.Counter("event_swap_by_bridge").add(1, { bridge: coinXInfo.bridge })
     ctx.meter.Counter("event_swap_by_bridge").add(1, { bridge: coinYInfo.bridge })
 
@@ -58,37 +61,38 @@ async function syncPools(ctx: aptos.AptosContext) {
 
   const normalClient = new AptosClient("https://aptos-mainnet.nodereal.io/v1/0c58c879d41e4eab8fd2fc0406848c2b")
 
-  let pools: TypedMoveResource<amm.Pool<any, any>>[] = []
+  let pools: TypedMoveResource<swap.TokenPairReserve<any, any>>[] = []
 
   let resources = undefined
   while (!resources) {
     try {
-      resources = await normalClient.getAccountResources(amm.DEFAULT_OPTIONS.address, {ledgerVersion: version})
+      resources = await normalClient.getAccountResources(swap.DEFAULT_OPTIONS.address, {ledgerVersion: version})
     } catch (e) {
       console.log("rpc error, retrying", e)
       await delay(1000)
     }
   }
-  pools = aptos.TYPE_REGISTRY.filterAndDecodeResources<amm.Pool<any, any>>(amm.Pool.TYPE_QNAME, resources)
+  pools = aptos.TYPE_REGISTRY.filterAndDecodeResources(swap.TokenPairReserve.TYPE_QNAME, resources)
 
   // @ts-ignore
   ctx.timestampInMicros = parseInt(ctx.transaction.timestamp)
   // @ts-ignore
-  await auxExchange.syncPools(ctx, pools)
+  await PANCAKE_SWAP_APTOS.syncPools(ctx, pools)
 }
 
-const auxExchange = new AptosDex(volume, tvlAll, tvl, tvlByPool, {
-  getXReserve(pool: amm.Pool<any, any>): bigint {
-    return pool.x_reserve.value;
+const PANCAKE_SWAP_APTOS = new AptosDex(volume, tvlAll, tvl, tvlByPool,{
+  getXReserve(pool: swap.TokenPairReserve<any, any>): bigint {
+    return pool.reserve_x;
   },
-  getXType(pool: TypedMoveResource<amm.Pool<any, any>>): string {
+  getXType(pool: TypedMoveResource<swap.TokenPairReserve<any, any>>): string {
     return pool.type_arguments[0];
   },
-  getYReserve(pool: amm.Pool<any, any>): bigint {
-    return pool.y_reserve.value;
+  getYReserve(pool: swap.TokenPairReserve<any, any>): bigint {
+    return pool.reserve_y;
   },
-  getYType(pool: TypedMoveResource<amm.Pool<any, any>>): string {
+  getYType(pool: TypedMoveResource<swap.TokenPairReserve<any, any>>): string {
     return pool.type_arguments[1];
   },
-  poolTypeName: amm.Pool.TYPE_QNAME
-})
+  poolTypeName: swap.TokenPairReserve.TYPE_QNAME
+  },
+)

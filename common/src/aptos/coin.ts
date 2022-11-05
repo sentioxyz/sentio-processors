@@ -1,20 +1,11 @@
-import { AptosClient, CoinClient, TokenClient } from 'aptos-sdk'
+import fetch from 'node-fetch';
+import { DEFAULT_MAINNET_LIST, RawCoinInfo } from "@manahippo/coin-list/dist/list";
+import { AptosClient } from "aptos-sdk";
+import { aptos, BigDecimal } from "@sentio/sdk";
 import { coin } from "@sentio/sdk/lib/builtin/aptos/0x1";
 import CoinInfo = coin.CoinInfo;
-import { BigDecimal } from "@sentio/sdk/lib/core/big-decimal";
-import CoinGecko from 'coingecko-api'
-import { string } from "@sentio/sdk/src/builtin/aptos/0x1";
-import { aptos } from "@sentio/sdk";
-import { DEFAULT_MAINNET_LIST, RawCoinInfo } from "@manahippo/coin-list/dist/list";
-
-const CoinGeckoClient = new CoinGecko();
 
 const client = new AptosClient("https://aptos-mainnet.nodereal.io/v1/0c58c879d41e4eab8fd2fc0406848c2b/")
-
-// const allCoinInfos = new Map<string, SimpleCoinInfo>()
-
-// 0xf22bede237a07e121b56d91a491eb7bcdfd1f5907926a9e58338f964a01b17fa
-// const whitelisted = new Set(["APT", "USDC", "USDT", "WETH" ]) // "DOGE", "UNI", "SHIBA"
 
 interface BaseCoinInfoWithBridge extends RawCoinInfo {
   bridge: string
@@ -47,19 +38,10 @@ for (const info of DEFAULT_MAINNET_LIST) {
     if (info.symbol.startsWith("USD")) {
       info.coingecko_id = "usd-coin"
     }
-  }
-
-  if (!info.coingecko_id) {
-    console.warn("no coingecko_id found for", info)
-    continue
+    // TODO add moji
   }
   CORE_TOKENS.set(info.token_type.type, { ...info, bridge })
 }
-
-// const WHITELISTED_SET = new Set<string>()
-// for (const [k, v] of Object.entries(WHITELISTED_TOKENS)) {
-//   WHITELISTED_SET.add(k)
-// }
 
 export function whiteListed(type: string): boolean {
   return CORE_TOKENS.has(type)
@@ -117,17 +99,24 @@ export function scaleDown(n: bigint, decimal: number) {
 const priceCache = new Map<string, number>()
 const lastPriceCache = new Map<string, number>()
 
-export async function getPrice(coinType: string, timestamp: string) {
+export async function getPrice(coinType: string, timestamp: number) {
   if (!whiteListed(coinType)) {
-    return 0
+    return 0.0
   }
 
   const id = CORE_TOKENS.get(coinType)?.coingecko_id
   if (!id) {
+    if (coinType === '0x881ac202b1f1e6ad4efcff7a1d0579411533f2502417a19211cfc49751ddb5f4::coin::MOJO') {
+      return 0.01618810
+    }
+    if (coinType === '0x5c738a5dfa343bee927c39ebe85b0ceb95fdb5ee5b323c95559614f5a77c47cf::Aptoge::Aptoge') {
+      return 0.271427
+    }
+
     throw Error("can't find coin id" + coinType)
   }
 
-  const date = new Date(parseInt(timestamp) / 1000)
+  const date = new Date(timestamp / 1000)
   const dateStr =  [date.getUTCDate(), date.getUTCMonth()+1, date.getUTCFullYear()].join("-")
 
   const cacheKey = id + dateStr
@@ -135,32 +124,27 @@ export async function getPrice(coinType: string, timestamp: string) {
   if (price) {
     return price
   }
-  let res
+  let res: any
   while(true) {
     try {
-      res = await CoinGeckoClient.coins.fetchHistory(id, {
-        date: dateStr,
-        localization: false
-      })
-    } catch (e) {
-      await delay(1000)
-      continue
-    }
+      const requestUrl = `https://pro-api.coingecko.com/api/v3/coins/${id}/history?date=${dateStr}&localization=false&x_cg_pro_api_key=CG-NayGdpa2CqG1jp5CLtcA4kVp`
+      const response = await fetch(requestUrl)
 
-    if (!res.success) {
+      res = await response.json()
+    } catch (e) {
       await delay(1000)
       continue
     }
     break
   }
-  if (!res.data || !res.data.market_data || !res.data.market_data.current_price || !res.data.market_data.current_price.usd) {
+  if (!res || !res.market_data || !res.market_data.current_price || !res.market_data.current_price.usd) {
     console.error("no price data for ", coinType, id, dateStr)
     price = lastPriceCache.get(id) || 0
     if (!price) {
       console.error("can't even found last price", id, dateStr)
     }
   } else {
-    price = res.data.market_data.current_price.usd
+    price = res.market_data.current_price.usd as number
   }
 
   priceCache.set(cacheKey, price)
@@ -168,7 +152,10 @@ export async function getPrice(coinType: string, timestamp: string) {
   return price
 }
 
-export async function caculateValueInUsd(n: bigint, coinInfo: SimpleCoinInfo, timestamp: string) {
+export async function caculateValueInUsd(n: bigint, coinInfo: SimpleCoinInfo, timestamp: number | string) {
+  if (typeof timestamp === 'string') {
+    timestamp = parseInt(timestamp)
+  }
   const price = await getPrice(coinInfo.token_type.type, timestamp)
   const amount = await scaleDown(n, coinInfo.decimals)
   return amount.multipliedBy(price)
