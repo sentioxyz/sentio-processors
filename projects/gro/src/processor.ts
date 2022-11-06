@@ -42,15 +42,18 @@ const metapoolHandler = async function(block: Block, ctx: MetapoolContext) {
 }
 
 const stableConvexXPoolHandler = async function(block: Block, ctx: StableConvexXPoolContext) {
-  const totalAssets = await ctx.contract.estimatedTotalAssets()
+  const totalAssets = scaleDown(await ctx.contract.estimatedTotalAssets(), UST_DECIMAL)
   const vaultAddr = await ctx.contract.vault()
-  const performance = await getGroVaultContract(vaultAddr).strategies(ctx.address)
-  const totalDebt = performance[5]
+  const performance = await getGroVaultContract(vaultAddr).strategies(ctx.address, {blockTag: block.number})
+  const totalDebt = scaleDown(performance[5], UST_DECIMAL)
   ctx.meter.Gauge('total_debt').record(totalDebt)
   ctx.meter.Gauge('total_assets').record(totalAssets)
-  if (!totalDebt.eq(0)) {
-    const assetRatio = totalAssets.div(totalDebt)
-    ctx.meter.Gauge('asset_ratio').record(assetRatio)
+  // only calc gain when debt is greater than a certain number to avoid huge gain when a pool is drawn
+  if (totalDebt.gte(1000)) {
+    const lossAndGain = totalAssets.div(totalDebt).minus(1)
+    ctx.meter.Gauge('gain').record(lossAndGain)
+  } else {
+    ctx.meter.Gauge('gain').record(0)
   }
 }
 
