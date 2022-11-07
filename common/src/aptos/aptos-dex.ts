@@ -7,8 +7,9 @@ import { AptosResourceContext } from "@sentio/sdk/lib/aptos/context";
 export interface PoolAdaptor<T> {
   getXReserve(pool: T): bigint
   getYReserve(pool: T): bigint
-  getXType(pool: TypedMoveResource<T>): string
-  getYType(pool: TypedMoveResource<T>): string
+  getCurve(pool: TypedMoveResource<T>): string | undefined
+  // getXType(pool: TypedMoveResource<T>): string
+  // getYType(pool: TypedMoveResource<T>): string
 
   poolTypeName: string
 }
@@ -64,8 +65,10 @@ export class AptosDex<T> {
   }
 
   async syncPools(
+      resources: TypedMoveResource<T>[],
       ctx: AptosResourceContext,
-      resources: TypedMoveResource<T>[]) {
+      poolsHandler?: (pools: TypedMoveResource<T>[]) => Promise<void> | void
+    ) {
     let pools: TypedMoveResource<T>[] =
         aptos.TYPE_REGISTRY.filterAndDecodeResources(this.poolAdaptor.poolTypeName, resources)
 
@@ -77,8 +80,8 @@ export class AptosDex<T> {
     let tvlAllValue = BigDecimal(0)
     for (const pool of pools) {
       // savePool(ctx.version, pool.type_arguments)
-      const coinx = this.poolAdaptor.getXType(pool)
-      const coiny = this.poolAdaptor.getYType(pool)
+      const coinx = pool.type_arguments[0]
+      const coiny = pool.type_arguments[1]
       const whitelistx = whiteListed(coinx)
       const whitelisty = whiteListed(coiny)
       if (!whitelistx && !whitelisty) {
@@ -138,6 +141,10 @@ export class AptosDex<T> {
       tvlAllValue = tvlAllValue.plus(poolValue)
     }
     this.tvlAll.record(ctx, tvlAllValue)
+
+    if (poolsHandler) {
+      poolsHandler(pools)
+    }
 
     for (const [k, v] of volumeByCoin) {
       const coinInfo = CORE_TOKENS.get(k)
