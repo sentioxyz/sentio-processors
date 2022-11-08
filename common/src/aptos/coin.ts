@@ -47,7 +47,7 @@ export function whiteListed(type: string): boolean {
   return CORE_TOKENS.has(type)
 }
 
-export async function getCoinInfo(type: string): Promise<SimpleCoinInfo> {
+export function getCoinInfo(type: string): SimpleCoinInfo {
   const r = CORE_TOKENS.get(type)
   if (!r) {
     return {
@@ -152,7 +152,7 @@ export async function getPrice(coinType: string, timestamp: number) {
   return price
 }
 
-export async function caculateValueInUsd(n: bigint, coinInfo: SimpleCoinInfo, timestamp: number | string) {
+export async function calculateValueInUsd(n: bigint, coinInfo: SimpleCoinInfo, timestamp: number | string) {
   if (typeof timestamp === 'string') {
     timestamp = parseInt(timestamp)
   }
