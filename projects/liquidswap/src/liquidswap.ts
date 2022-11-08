@@ -93,7 +93,7 @@ liquidity_pool.bind({startVersion: 2311592})
       lpTracker.trackEvent(ctx, { distinctId: ctx.transaction.sender })
       // ctx.logger.info("PoolCreated", { user: ctx.transaction.sender })
 
-      ctx.logger.info("", {user: "-", value: 0.0001})
+//      ctx.logger.info("", {user: "-", value: 0.0001})
     })
     .onEventLiquidityAddedEvent(async (evt, ctx) => {
       ctx.meter.Counter("event_liquidity_add").add(1)
@@ -113,7 +113,7 @@ liquidity_pool.bind({startVersion: 2311592})
       const coinXInfo = await getCoinInfo(evt.type_arguments[0])
       const coinYInfo = await getCoinInfo(evt.type_arguments[1])
 
-      ctx.logger.info(`${ctx.transaction.sender} Swap ${coinXInfo.symbol} for ${coinYInfo.symbol}`, {user: ctx.transaction.sender, value: value.toNumber()})
+   //   ctx.logger.info(`${ctx.transaction.sender} Swap ${coinXInfo.symbol} for ${coinYInfo.symbol}`, {user: ctx.transaction.sender, value: value.toNumber()})
 
       ctx.meter.Counter("event_swap_by_bridge").add(1, { bridge: coinXInfo.bridge })
       ctx.meter.Counter("event_swap_by_bridge").add(1, { bridge: coinYInfo.bridge })
