@@ -1,9 +1,8 @@
-import { AptosClient, CoinClient, TokenClient } from 'aptos-sdk'
+import { AptosClient } from 'aptos-sdk'
 import { coin } from "@sentio/sdk/lib/builtin/aptos/0x1";
 import CoinInfo = coin.CoinInfo;
 import { BigDecimal } from "@sentio/sdk/lib/core/big-decimal";
 import CoinGecko from 'coingecko-api'
-import { string } from "@sentio/sdk/src/builtin/aptos/0x1";
 import { aptos } from "@sentio/sdk";
 import { DEFAULT_MAINNET_LIST, RawCoinInfo } from "@manahippo/coin-list/dist/list";
 
@@ -66,7 +65,7 @@ export function whiteListed(type: string): boolean {
   return CORE_TOKENS.has(type)
 }
 
-export async function getCoinInfo(type: string): Promise<SimpleCoinInfo> {
+export function getCoinInfo(type: string): SimpleCoinInfo {
   const r = CORE_TOKENS.get(type)
   if (!r) {
     return {

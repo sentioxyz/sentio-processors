@@ -24,11 +24,13 @@ const totalValue = new Gauge("total_value", commonOptions)
 
 const tvlAll = new Gauge("tvl_all", commonOptions)
 const tvlByPool = new Gauge("tvl_by_pool", commonOptions)
+const tvlByPoolNew = new Gauge("tvl_by_pool_new", commonOptions)
 const tvl = new Gauge("tvl", commonOptions)
 // const amountCounter = new Gauge("amount", commonOptions)
 // const volumeByPool = new Gauge("vol_by_pool", commonOptions)
 const volume = new Gauge("vol", commonOptions)
-// const priceGauge = new Gauge("price", commonOptions)
+const priceGauge = new Gauge("price", commonOptions)
+const priceGaugeNew = new Gauge("price_new", commonOptions)
 const fee = new Gauge("fee", commonOptions)
 const feeAcc = new Counter("fee_acc", commonOptions)
 
@@ -115,8 +117,8 @@ liquidity_pool.bind({startVersion: 299999})
         evt.data_typed.y_in + evt.data_typed.y_out,
         getCurve(evt.type_arguments[2]))
 
-    const coinXInfo = await getCoinInfo(evt.type_arguments[0])
-    const coinYInfo = await getCoinInfo(evt.type_arguments[1])
+    const coinXInfo = getCoinInfo(evt.type_arguments[0])
+    const coinYInfo = getCoinInfo(evt.type_arguments[1])
 
     ctx.logger.info(`${ctx.transaction.sender} Swap ${coinXInfo.symbol} for ${coinYInfo.symbol}`, {user: ctx.transaction.sender, value: value.toNumber()})
 
@@ -128,8 +130,8 @@ liquidity_pool.bind({startVersion: 299999})
     await syncPools(ctx)
   })
   .onEventFlashloanEvent(async (evt, ctx) => {
-    const coinXInfo = await getCoinInfo(evt.type_arguments[0])
-    const coinYInfo = await getCoinInfo(evt.type_arguments[1])
+    const coinXInfo = getCoinInfo(evt.type_arguments[0])
+    const coinYInfo = getCoinInfo(evt.type_arguments[1])
     ctx.meter.Counter("event_flashloan_by_bridge").add(1, { bridge: coinXInfo.bridge })
     ctx.meter.Counter("event_flashloan_by_bridge").add(1, { bridge: coinYInfo.bridge })
 
@@ -140,8 +142,8 @@ liquidity_pool.bind({startVersion: 299999})
 async function recordTradingVolume(ctx: aptos.AptosContext, coinx: string, coiny: string, coinXAmount: bigint, coinYAmount: bigint, curve?: string): Promise<BigDecimal> {
   const whitelistx = whiteListed(coinx)
   const whitelisty = whiteListed(coiny)
-  const coinXInfo = await getCoinInfo(coinx)
-  const coinYInfo = await getCoinInfo(coiny)
+  const coinXInfo = getCoinInfo(coinx)
+  const coinYInfo = getCoinInfo(coiny)
   const timestamp = ctx.transaction.timestamp
   let result = BigDecimal(0.0)
 
@@ -149,7 +151,7 @@ async function recordTradingVolume(ctx: aptos.AptosContext, coinx: string, coiny
     return result
   }
 
-  const pair = await getPair(coinx, coiny)
+  const pair = getPair(coinx, coiny)
 
   const baseLabels: Record<string, string> = { pair }
   if (curve) {
@@ -192,9 +194,9 @@ async function recordTradingVolume(ctx: aptos.AptosContext, coinx: string, coiny
 // }
 
 // TODO pool name should consider not just use symbol name
-async function getPair(coinx: string, coiny: string): Promise<string> {
-  const coinXInfo = await getCoinInfo(coinx)
-  const coinYInfo = await getCoinInfo(coiny)
+function getPair(coinx: string, coiny: string): string {
+  const coinXInfo = getCoinInfo(coinx)
+  const coinYInfo = getCoinInfo(coiny)
   if (coinXInfo.symbol.localeCompare(coinYInfo.symbol) > 0) {
     return `${coinYInfo.symbol}-${coinXInfo.symbol}`
   }
@@ -212,6 +214,64 @@ function getCurve(type: string) {
 const recorded = new Set<bigint>()
 
 const SKIP_POOL = false
+
+const minLocked = 1e4
+let priceInUsd: Map<string, BigDecimal> = new Map<string, BigDecimal>()
+
+function calcPrice(coin: string, pools: TypedMoveResource<liquidity_pool.LiquidityPool<any, any, any>>[]) {
+  const coinInfo = getCoinInfo(coin)
+  if (coinInfo.symbol == 'USDC') {
+    return BigDecimal(1)
+  }
+  let maxLocked = BigDecimal(0)
+  let maxFrom = ""
+  let res = undefined
+  for (const pool of pools) {
+    const curve = getCurve(pool.type_arguments[2])
+    if (curve == 'Stable') {
+      continue
+    }
+
+    if (pool.type_arguments[0] == coin) {
+      const coinAmount = scaleDown(pool.data_typed.coin_x_reserve.value, coinInfo.decimals)
+      const pairedCoinInfo = getCoinInfo(pool.type_arguments[1])
+      const pairedCoinPriceInUsd = priceInUsd.get(pool.type_arguments[1])
+      const pairedCoinAmount = scaleDown(pool.data_typed.coin_y_reserve.value, pairedCoinInfo.decimals)
+      if (!pairedCoinPriceInUsd) {
+        continue
+      }
+
+      const locked = pairedCoinAmount.multipliedBy(pairedCoinPriceInUsd)
+      if (locked.gt(maxLocked) && locked.gt(minLocked)) {
+        maxLocked = locked
+        maxFrom = getPair(pool.type_arguments[0], pool.type_arguments[1])
+        res = pairedCoinAmount.multipliedBy(pairedCoinPriceInUsd).div(coinAmount)
+      }
+
+    } else if (pool.type_arguments[1] == coin) {
+      const coinAmount = scaleDown(pool.data_typed.coin_y_reserve.value, coinInfo.decimals)
+      const pairedCoinInfo = getCoinInfo(pool.type_arguments[0])
+      const pairedCoinPriceInUsd = priceInUsd.get(pool.type_arguments[0])
+      const pairedCoinAmount = scaleDown(pool.data_typed.coin_x_reserve.value, pairedCoinInfo.decimals)
+      if (!pairedCoinPriceInUsd) {
+        continue
+      }
+
+      const locked = pairedCoinAmount.multipliedBy(pairedCoinPriceInUsd)
+      if (locked.gt(maxLocked) && locked.gt(minLocked)) {
+        maxLocked = locked
+        maxFrom = getPair(pool.type_arguments[0], pool.type_arguments[1])
+        res = pairedCoinAmount.multipliedBy(pairedCoinPriceInUsd).div(coinAmount)
+      }
+    }
+  }
+  if (res) {
+    console.log(`got price of coin[${coinInfo.symbol}] at [${res}] from pair[${maxFrom}]`)
+  } else {
+    console.log(`failed to get price of coin[${coinInfo.symbol}]`)
+  }
+  return res
+}
 
 async function syncPools(ctx: aptos.AptosContext) {
   if (SKIP_POOL) {
@@ -280,30 +340,80 @@ async function syncPools(ctx: aptos.AptosContext) {
 
   console.log("num of pools: ", pools.length, ctx.version.toString())
 
+  function debug(coin: string) {
+    const coinInfo = getCoinInfo(coin)
+    if (!["WETH", "zWETH", "APT", "tAPT"].includes(coinInfo.symbol)) {
+      return
+    }
+    console.log("!!! debug", coinInfo.symbol, ", version:", ctx.version.toString())
+    for (const pool of pools) {
+      if (pool.type_arguments[0] == coin || pool.type_arguments[1] == coin) {
+        const coinXInfo = getCoinInfo(pool.type_arguments[0])
+        const coinYInfo = getCoinInfo(pool.type_arguments[1])
+        console.log(`pool[${getPair(pool.type_arguments[0], pool.type_arguments[1])}] value: ${
+          scaleDown(pool.data_typed.coin_x_reserve.value, coinXInfo.decimals)}, ${
+          scaleDown(pool.data_typed.coin_y_reserve.value, coinYInfo.decimals)
+        }`)
+      }
+    }
+  }
+
   let tvlAllValue = BigDecimal(0)
+  const updated = new Set<string>()
   for (const pool of pools) {
     // savePool(ctx.version, pool.type_arguments)
     const coinx = pool.type_arguments[0]
     const coiny = pool.type_arguments[1]
     const whitelistx = whiteListed(coinx)
     const whitelisty = whiteListed(coiny)
+    const coinXInfo = getCoinInfo(coinx)
+    const coinYInfo = getCoinInfo(coiny)
+    let priceX = BigDecimal(0)
+    let priceY = BigDecimal(0)
+    if (whitelistx && !updated.has(coinx)) {
+      updated.add(coinx)
+      priceX = calcPrice(coinx, pools)?? BigDecimal(0)
+      if (priceX.eq(BigDecimal(0))) {
+        debug(coinx)
+      } else {
+        priceInUsd.set(coinx, priceX)
+        priceGaugeNew.record(ctx, priceX, {coin: coinXInfo.symbol})
+      }
+    }
+    if (whitelisty && !updated.has(coiny)) {
+      updated.add(coiny)
+      priceY = calcPrice(coiny, pools)?? BigDecimal(0)
+      if (priceY.eq(BigDecimal(0))) {
+        debug(coiny)
+      } else {
+        priceInUsd.set(coiny, priceY)
+        priceGaugeNew.record(ctx, priceY, {coin: coinYInfo.symbol})
+      }
+    }
+    if (priceX.eq(BigDecimal(0))) {
+      priceX = priceInUsd.get(coinx)?? BigDecimal(0)
+    }
+    if (priceY.eq(BigDecimal(0))) {
+      priceY = priceInUsd.get(coiny)?? BigDecimal(0)
+    }
+
     if (!whitelistx && !whitelisty) {
       continue
     }
 
-    const pair = await getPair(coinx, coiny)
+    const pair = getPair(coinx, coiny)
     const curve = getCurve(pool.type_arguments[2])
-
-    const coinXInfo = await getCoinInfo(coinx)
-    const coinYInfo = await getCoinInfo(coiny)
 
     const coinx_amount = pool.data_typed.coin_x_reserve.value
     const coiny_amount = pool.data_typed.coin_y_reserve.value
 
     let poolValue = BigDecimal(0)
+    let poolValueNew = BigDecimal(0)
     if (whitelistx) {
       const value = await caculateValueInUsd(coinx_amount, coinXInfo, timestamp)
       poolValue = poolValue.plus(value)
+      const valueNew = scaleDown(coinx_amount, coinXInfo.decimals).multipliedBy(priceX)
+      poolValueNew = poolValueNew.plus(valueNew)
       // tvlTotal.record(ctx, value, { pool: poolName, type: coinXInfo.token_type.type })
 
       let coinXTotal = volumeByCoin.get(coinXInfo.token_type.type)
@@ -316,12 +426,15 @@ async function syncPools(ctx: aptos.AptosContext) {
 
       if (!whitelisty) {
         poolValue = poolValue.plus(value)
+        poolValueNew = poolValueNew.plus(valueNew)
         // tvlTotal.record(ctx, value, { pool: poolName, type: coinYInfo.token_type.type})
       }
     }
     if (whitelisty) {
       const value = await caculateValueInUsd(coiny_amount, coinYInfo, timestamp)
       poolValue = poolValue.plus(value)
+      const valueNew = scaleDown(coiny_amount, coinYInfo.decimals).multipliedBy(priceY)
+      poolValueNew = poolValueNew.plus(valueNew)
       // tvlTotal.record(ctx, value, { pool: poolName, type: coinYInfo.token_type.type })
 
       let coinYTotal = volumeByCoin.get(coinYInfo.token_type.type)
@@ -334,10 +447,12 @@ async function syncPools(ctx: aptos.AptosContext) {
 
       if (!whitelistx) {
         poolValue = poolValue.plus(value)
+        poolValueNew = poolValueNew.plus(valueNew)
       }
     }
     if (poolValue.isGreaterThan(0)) {
       tvlByPool.record(ctx, poolValue, {pair, curve})
+      tvlByPoolNew.record(ctx, poolValueNew, {pair, curve})
 
       if (curve == "Uncorrelated") {
         const priceX = await getPrice(coinXInfo.token_type.type, timestamp)
@@ -381,8 +496,8 @@ async function syncPools(ctx: aptos.AptosContext) {
     if (!coinInfo) {
       throw Error("unexpected coin " + k)
     }
-    // const price = await getPrice(coinInfo, timestamp)
-    // priceGauge.record(ctx, price, { coin: coinInfo.symbol })
+    const price = await getPrice(coinInfo.token_type.type, timestamp)
+    priceGauge.record(ctx, price, { coin: coinInfo.symbol })
     if (v.isGreaterThan(0)) {
       tvl.record(ctx, v, {coin: coinInfo.symbol, bridge: coinInfo.bridge, type: coinInfo.token_type.type})
     }
