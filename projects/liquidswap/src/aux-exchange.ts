@@ -1,8 +1,7 @@
-import { AptosDex } from "@sentio-processor/common/dist/aptos";
+import { AptosDex, getCoinInfo } from "@sentio-processor/common/dist/aptos";
 import { amm } from "./types/aptos/auxexchange";
 import { aptos } from "@sentio/sdk";
 import { auxTvl, auxTvlAll, auxTvlByPool, auxVolume } from "./metrics";
-import { getCoinInfo } from "./utils";
 
 const AUX_EXCHANGE = new AptosDex<amm.Pool<any, any>>(auxVolume, auxTvlAll, auxTvl, auxTvlByPool, {
   getXReserve: pool => pool.x_reserve.value,
@@ -12,8 +11,7 @@ const AUX_EXCHANGE = new AptosDex<amm.Pool<any, any>>(auxVolume, auxTvlAll, auxT
 })
 
 aptos.AptosAccountProcessor.bind({address: amm.DEFAULT_OPTIONS.address, startVersion: 2331560})
-    .onVersionInterval(AUX_EXCHANGE.syncPools)
-
+    .onVersionInterval((rs,ctx) => AUX_EXCHANGE.syncPools(rs, ctx) )
 
 amm.bind({startVersion: 2331560})
     .onEntryCreatePool(async (evt, ctx) => {

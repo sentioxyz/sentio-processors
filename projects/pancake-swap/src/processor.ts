@@ -49,5 +49,5 @@ const PANCAKE_SWAP_APTOS = new AptosDex<swap.TokenPairReserve<any, any>>(volume,
   },
 )
 
-aptos.AptosAccountProcessor.bind({address: swap.DEFAULT_OPTIONS.address, startVersion: 2918290})
-    .onVersionInterval(PANCAKE_SWAP_APTOS.syncPools)
+aptos.AptosAccountProcessor.bind({address: swap.DEFAULT_OPTIONS.address, startVersion: 12918290})
+    .onVersionInterval((rs, ctx) => PANCAKE_SWAP_APTOS.syncPools(rs, ctx))
