@@ -5,6 +5,7 @@ import { liquidity_pool } from "./types/aptos/liquidswap";
 import { stake_router } from "./types/aptos/tortuga";
 import { toBigDecimal } from "@sentio/sdk/lib/utils/conversion";
 import { BigDecimal } from "@sentio/sdk/lib/core/big-decimal";
+import {Exporter} from "@sentio/sdk/lib/core/exporter";
 
 const commonOptions = { sparse:  false }
 
@@ -23,6 +24,7 @@ const vol = new Gauge("vol", commonOptions)
 const tvl = new Counter("tvl", commonOptions)
 
 const accountTracker = AccountEventTracker.register("users")
+const exporter = Exporter.register("tortuga", "test_channel")
 
 const APT = '0x1::aptos_coin::AptosCoin'
 const tAPT = '0x84d7aeef42d38a5ffc3ccef853e1b82e4958659d16a7de736a29c55fbbeb0114::staked_aptos_coin::StakedAptosCoin'
@@ -75,6 +77,7 @@ amm.bind({startVersion: 299999})
 
       vol.record(ctx, scaleDown(evt.data_typed.in_au), { coin: getSymbol(evt.data_typed.in_coin_type), protocol: "aux"})
       vol.record(ctx, scaleDown(evt.data_typed.out_au), { coin: getSymbol(evt.data_typed.out_coin_type), protocol: "aux"})
+      exporter.emit(ctx, {evt})
     }
   })
 
