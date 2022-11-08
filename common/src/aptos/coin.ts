@@ -127,7 +127,7 @@ export async function getPrice(coinType: string, timestamp: number) {
   let res: any
   while(true) {
     try {
-      const requestUrl = `https://pro-api.coingecko.com/api/v3/coins/${id}/history?date=${dateStr}&localization=false&x_cg_pro_api_key=CG-NayGdpa2CqG1jp5CLtcA4kVp`
+      const requestUrl = `http://coingecko-proxy-server.chain-sync:8647/api/v3/coins/${id}/history?date=${dateStr}&localization=false&x_cg_pro_api_key=CG-NayGdpa2CqG1jp5CLtcA4kVp`
       const response = await fetch(requestUrl)
 
       res = await response.json()

@@ -46,4 +46,4 @@ const auxExchange = new AptosDex<amm.Pool<any, any>>(volume, tvlAll, tvl, tvlByP
 })
 
 aptos.AptosAccountProcessor.bind({address: amm.DEFAULT_OPTIONS.address, startVersion: 2331560})
-    .onVersionInterval(auxExchange.syncPools)
+    .onVersionInterval((rs, ctx) => auxExchange.syncPools(rs, ctx))

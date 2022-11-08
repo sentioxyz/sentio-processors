@@ -3,6 +3,7 @@ import { BigDecimal } from "@sentio/sdk/lib/core/big-decimal";
 import { caculateValueInUsd, CORE_TOKENS, delay, getCoinInfo, whiteListed } from "./coin"
 import { TypedMoveResource } from "@sentio/sdk/lib/aptos/types";
 import { AptosResourceContext } from "@sentio/sdk/lib/aptos/context";
+import { MoveResource } from "aptos-sdk/src/generated";
 
 export interface PoolAdaptor<T> {
   getXReserve(pool: T): bigint
@@ -65,7 +66,7 @@ export class AptosDex<T> {
   }
 
   async syncPools(
-      resources: TypedMoveResource<T>[],
+      resources: MoveResource[],
       ctx: AptosResourceContext,
       poolsHandler?: (pools: TypedMoveResource<T>[]) => Promise<void> | void
     ) {
@@ -89,6 +90,11 @@ export class AptosDex<T> {
       }
 
       const pair = await getPair(coinx, coiny)
+      const baseLabels: Record<string, string> = { pair }
+      const curve = this.poolAdaptor.getCurve(pool)
+      if (curve) {
+        baseLabels.curve = curve
+      }
 
       const coinXInfo = await getCoinInfo(coinx)
       const coinYInfo = await getCoinInfo(coiny)
@@ -136,7 +142,7 @@ export class AptosDex<T> {
       }
 
       if (poolValue.isGreaterThan(0)) {
-        this.tvlByPool.record(ctx, poolValue, { pair })
+        this.tvlByPool.record(ctx, poolValue, baseLabels)
       }
       tvlAllValue = tvlAllValue.plus(poolValue)
     }
