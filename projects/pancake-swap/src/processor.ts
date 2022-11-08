@@ -11,7 +11,7 @@ const volume = new Gauge("vol", commonOptions)
 
 const accountTracker = AccountEventTracker.register("users")
 
-swap.bind({startVersion: 2918290})
+swap.bind({startVersion: 10463608})
   .onEventPairCreatedEvent(async (evt, ctx) => {
     ctx.meter.Counter("num_pools").add(1)
     accountTracker.trackEvent(ctx, { distinctId: ctx.transaction.sender })
@@ -49,5 +49,5 @@ const PANCAKE_SWAP_APTOS = new AptosDex<swap.TokenPairReserve<any, any>>(volume,
   },
 )
 
-aptos.AptosAccountProcessor.bind({address: swap.DEFAULT_OPTIONS.address, startVersion: 12918290})
+aptos.AptosAccountProcessor.bind({address: swap.DEFAULT_OPTIONS.address, startVersion: 10463608})
     .onVersionInterval((rs, ctx) => PANCAKE_SWAP_APTOS.syncPools(rs, ctx))
