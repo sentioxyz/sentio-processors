@@ -1,6 +1,6 @@
 import { liquidity_pool } from './types/aptos/liquidswap'
 
-import { AccountEventTracker, aptos, Counter, Gauge } from "@sentio/sdk";
+import { aptos } from "@sentio/sdk";
 
 import {
   caculateValueInUsd,
@@ -28,7 +28,8 @@ import {
   volume
 } from "./metrics";
 import { AptosResourceContext } from "@sentio/sdk/lib/aptos/context";
-import { client, delay, getRandomInt, requestCoinInfo } from "./utils";
+import { delay, getRandomInt } from "./utils";
+import { AptosClient } from "aptos-sdk";
 
 
 
@@ -87,7 +88,7 @@ const liquidSwap = new AptosDex<liquidity_pool.LiquidityPool<any, any, any>>(vol
   poolTypeName: liquidity_pool.LiquidityPool.TYPE_QNAME
 })
 
-liquidity_pool.bind({startVersion: 2311592})
+liquidity_pool.bind()
     .onEventPoolCreatedEvent(async (evt, ctx) => {
       ctx.meter.Counter("num_pools").add(1)
       lpTracker.trackEvent(ctx, { distinctId: ctx.transaction.sender })
@@ -264,54 +265,55 @@ async function syncLiquidSwapPools(resources: MoveResource[], ctx: AptosResource
       tvl.record(ctx, v, {coin: coinInfo.symbol, bridge: coinInfo.bridge, type: coinInfo.token_type.type})
     }
   }
-
-
-  const allPromises = Array.from(CORE_TOKENS.entries()).map(async ([k,v]) => {
-    const price = await getPrice(v.token_type.type, timestamp)
-
-    let coinInfo: coin.CoinInfo<any> | undefined
-    try {
-      coinInfo = await requestCoinInfo(k, ctx.version)
-    } catch (e) {
-      return
-    }
-
-    const aggOption = (coinInfo.supply.vec as optional_aggregator.OptionalAggregator[])[0]
-    let amount
-    if (aggOption.integer.vec.length) {
-      const intValue = (aggOption.integer.vec[0] as optional_aggregator.Integer)
-      amount = intValue.value
-    } else {
-      const agg = (aggOption.aggregator.vec[0] as aggregator.Aggregator)
-      let aggString: any
-      while (!aggString) {
-        try {
-          aggString = await client.getTableItem(agg.handle, {
-            key: agg.key,
-            key_type: "address",
-            value_type: "u128"
-          }, {ledgerVersion: ctx.version})
-        } catch (e) {
-          if (e.status === 429) {
-            await delay(1000 + getRandomInt(1000))
-          } else {
-            throw e
-          }
-        }
-      }
-      amount = BigInt(aggString)
-    }
-
-    // totalAmount.record(ctx, scaleDown(amount, extedCoinInfo.decimals), { coin: extedCoinInfo.symbol, bridge: extedCoinInfo.bridge })
-    const value = scaleDown(amount, v.decimals).multipliedBy(price)
-    if (value.isGreaterThan(0)) {
-      totalValue.record(ctx, value, {coin: v.symbol, bridge: v.bridge, type: v.token_type.type})
-    }
-  })
-
-  await Promise.all(allPromises)
 }
 
-
-aptos.AptosAccountProcessor.bind({address: '0x5a97986a9d031c4567e15b797be516910cfcb4156312482efc6a19c0a30c948', startVersion: 2311592})
+aptos.AptosAccountProcessor.bind({address: '0x5a97986a9d031c4567e15b797be516910cfcb4156312482efc6a19c0a30c948'})
     .onVersionInterval(async (resources, ctx) => syncLiquidSwapPools(resources, ctx))
+
+// const client = new AptosClient("http://coingecko-proxy-server.chain-sync:8646")
+
+// coin.loadTypes(aptos.TYPE_REGISTRY)
+// for (const token of CORE_TOKENS.values()) {
+//   const coinInfoType = `0x1::coin::CoinInfo<${token.token_type.type}>`
+//     // const price = await getPrice(v.token_type.type, timestamp)
+//   aptos.AptosAccountProcessor.bind({address: token.token_type.account_address})
+//     .onVersionInterval(async (resources, ctx) => {
+//       const coinInfoRes = aptos.TYPE_REGISTRY.filterAndDecodeResources<coin.CoinInfo<any>>(coin.CoinInfo.TYPE_QNAME, resources)
+//       if (coinInfoRes.length === 0) {
+//         return
+//       }
+//       const coinInfo = coinInfoRes[0].data_typed
+//
+//       const aggOption = (coinInfo.supply.vec as optional_aggregator.OptionalAggregator[])[0]
+//       let amount
+//       if (aggOption.integer.vec.length) {
+//         const intValue = (aggOption.integer.vec[0] as optional_aggregator.Integer)
+//         amount = intValue.value
+//       } else {
+//         const agg = (aggOption.aggregator.vec[0] as aggregator.Aggregator)
+//         let aggString: any
+//         while (!aggString) {
+//           try {
+//             aggString = await client.getTableItem(agg.handle, {
+//               key: agg.key,
+//               key_type: "address",
+//               value_type: "u128"
+//             }, {ledgerVersion: ctx.version})
+//           } catch (e) {
+//             if (e.status === 429) {
+//               await delay(1000 + getRandomInt(1000))
+//             } else {
+//               throw e
+//             }
+//           }
+//         }
+//         amount = BigInt(aggString)
+//       }
+//
+//       const price = await getPrice(token.token_type.type, ctx.timestampInMicros)
+//       const value = scaleDown(amount, coinInfo.decimals).multipliedBy(price)
+//       if (value.isGreaterThan(0)) {
+//         totalValue.record(ctx, value, {coin: token.symbol, bridge: token.bridge, type: token.token_type.type})
+//       }
+//     }, 100000, coinInfoType)
+// }
