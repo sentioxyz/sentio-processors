@@ -117,6 +117,10 @@ export async function getPrice(coinType: string, timestamp: number) {
   }
 
   const date = new Date(timestamp / 1000)
+  return getPriceByDate(coinType, id, date)
+}
+
+export async function getPriceByDate(coinType: string, id: string, date: Date): Promise<number> {
   const dateStr =  [date.getUTCDate(), date.getUTCMonth()+1, date.getUTCFullYear()].join("-")
 
   const cacheKey = id + dateStr
@@ -141,7 +145,10 @@ export async function getPrice(coinType: string, timestamp: number) {
     console.error("no price data for ", coinType, id, dateStr)
     price = lastPriceCache.get(id) || 0
     if (!price) {
-      console.error("can't even found last price", id, dateStr)
+      const previousDate = new Date()
+      previousDate.setDate(date.getDate() - 1);
+      price = await getPriceByDate(coinType, id, previousDate)
+      // console.error("can't even found last price", id, dateStr)
     }
   } else {
     price = res.market_data.current_price.usd as number
