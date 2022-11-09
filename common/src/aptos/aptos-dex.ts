@@ -1,6 +1,6 @@
 import { aptos, Gauge } from "@sentio/sdk";
 import { BigDecimal } from "@sentio/sdk/lib/core/big-decimal";
-import { caculateValueInUsd, CORE_TOKENS, delay, getCoinInfo, whiteListed } from "./coin"
+import { calculateValueInUsd, CORE_TOKENS, delay, getCoinInfo, whiteListed } from "./coin"
 import { TypedMoveResource } from "@sentio/sdk/lib/aptos/types";
 import { AptosResourceContext } from "@sentio/sdk/lib/aptos/context";
 import { MoveResource } from "aptos-sdk/src/generated";
@@ -50,13 +50,13 @@ export class AptosDex<T> {
     }
 
     if (whitelistx) {
-      const value = await caculateValueInUsd(coinXAmount, coinXInfo, timestamp)
+      const value = await calculateValueInUsd(coinXAmount, coinXInfo, timestamp)
       result = value
 
       this.volume.record(ctx, value, { ...baseLabels, coin: coinXInfo.symbol, bridge: coinXInfo.bridge, type: coinXInfo.token_type.type})
     }
     if (whitelisty) {
-      const value = await caculateValueInUsd(coinYAmount, coinYInfo, timestamp)
+      const value = await calculateValueInUsd(coinYAmount, coinYInfo, timestamp)
       result = value
 
       this.volume.record(ctx, value, { ...baseLabels, coin: coinYInfo.symbol, bridge: coinYInfo.bridge, type: coinYInfo.token_type.type})
@@ -105,7 +105,7 @@ export class AptosDex<T> {
       let poolValue = BigDecimal(0)
 
       if (whitelistx) {
-        const value = await caculateValueInUsd(coinx_amount, coinXInfo, timestamp)
+        const value = await calculateValueInUsd(coinx_amount, coinXInfo, timestamp)
         poolValue = poolValue.plus(value)
         // tvlTotal.record(ctx, value, { pool: poolName, type: coinXInfo.token_type.type })
 
@@ -123,7 +123,7 @@ export class AptosDex<T> {
         }
       }
       if (whitelisty) {
-        const value = await caculateValueInUsd(coiny_amount, coinYInfo, timestamp)
+        const value = await calculateValueInUsd(coiny_amount, coinYInfo, timestamp)
         poolValue = poolValue.plus(value)
         // tvlTotal.record(ctx, value, { pool: poolName, type: coinYInfo.token_type.type })
 
