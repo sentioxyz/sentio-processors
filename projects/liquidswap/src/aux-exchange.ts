@@ -10,10 +10,10 @@ const AUX_EXCHANGE = new AptosDex<amm.Pool<any, any>>(auxVolume, auxTvlAll, auxT
   poolTypeName: amm.Pool.TYPE_QNAME
 })
 
-aptos.AptosAccountProcessor.bind({address: amm.DEFAULT_OPTIONS.address, startVersion: 2331560})
+aptos.AptosAccountProcessor.bind({address: amm.DEFAULT_OPTIONS.address})
     .onVersionInterval((rs,ctx) => AUX_EXCHANGE.syncPools(rs, ctx) )
 
-amm.bind({startVersion: 2331560})
+amm.bind()
     .onEntryCreatePool(async (evt, ctx) => {
       ctx.meter.Counter("num_pools").add(1)
     })

@@ -3,7 +3,7 @@ import { AptosDex, getCoinInfo } from "@sentio-processor/common/dist/aptos";
 import { aptos } from "@sentio/sdk";
 import { pancakeTvl, pancakeTvlAll, pancakeTvlByPool, pancakeVolume } from "./metrics";
 
-swap.bind({startVersion: 10463608})
+swap.bind()
     .onEventPairCreatedEvent(async (evt, ctx) => {
       ctx.meter.Counter("num_pools").add(1)
     })
@@ -33,5 +33,5 @@ const PANCAKE_SWAP_APTOS = new AptosDex<swap.TokenPairReserve<any, any>>(pancake
   poolTypeName: swap.TokenPairReserve.TYPE_QNAME
 })
 
-aptos.AptosAccountProcessor.bind({address: swap.DEFAULT_OPTIONS.address, startVersion: 10463608})
+aptos.AptosAccountProcessor.bind({address: swap.DEFAULT_OPTIONS.address })
     .onVersionInterval((rs, ctx) => PANCAKE_SWAP_APTOS.syncPools(rs, ctx))
