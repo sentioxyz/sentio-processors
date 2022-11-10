@@ -192,7 +192,7 @@ async function syncLiquidSwapPools(resources: MoveResource[], ctx: AptosResource
                 updated.add(coinx)
                 priceX = calcPrice(coinx, pools) ?? BigDecimal(0)
                 if (priceX.eq(BigDecimal(0))) {
-                    debugCoin(coinx)
+//                    debugCoin(coinx)
                     priceX = priceInUsd.get(coinx) ?? BigDecimal(0)
                 } else {
                     priceInUsd.set(coinx, priceX)
@@ -207,7 +207,7 @@ async function syncLiquidSwapPools(resources: MoveResource[], ctx: AptosResource
                 updated.add(coiny)
                 priceY = calcPrice(coiny, pools) ?? BigDecimal(0)
                 if (priceY.eq(BigDecimal(0))) {
-                    debugCoin(coiny)
+ //                   debugCoin(coiny)
                     priceY = priceInUsd.get(coiny) ?? BigDecimal(0)
                 } else {
                     priceInUsd.set(coiny, priceY)
