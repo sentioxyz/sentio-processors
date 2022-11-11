@@ -8,6 +8,9 @@ import { TransactionPayload_EntryFunctionPayload } from "aptos-sdk/src/generated
 import { router, swap } from "./types/aptos/pancake-swap";
 import { token, token_transfers } from "@sentio/sdk/lib/builtin/aptos/0x3";
 import { getChainQueryClient } from "@sentio/sdk/lib/aptos/utils";
+import * as soffle3 from "./types/aptos/soffle3";
+import * as topaz from "./types/aptos/topaz";
+import * as bluemoves from "./types/aptos/bluemoves";
 
 const txnCounter = new Counter("txn_counter")
 
@@ -77,6 +80,25 @@ router.bind()
     txnCounter.add(ctx, 1, { kind: "swap", protocol: "pancake"})
   })
 
-//
+// nft
+for (const m of [soffle3.Aggregator, soffle3.token_coin_swap, soffle3.FixedPriceMarket, soffle3.FixedPriceMarketScript]) {
+  m.bind()
+    .onTransaction((tx, ctx) => {
+      txnCounter.add(ctx, 1, { kind: "nft", protocol: "souffl3"})
+    })
+}
 
-// 0x3fa2556c9466c9013d982967788dd1c20daff3e36703b492c5ac391cd842becf
+for (const m of [topaz.fees, topaz.inbox, topaz.events, topaz.bid_any, topaz.marketplace, topaz.marketplace_v2,
+    topaz.collection_marketplace, topaz.token_coin_swap]) {
+  m.bind()
+    .onTransaction((tx, ctx) => {
+      txnCounter.add(ctx, 1, { kind: "nft", protocol: "topaz"})
+    })
+}
+
+for (const m of [bluemoves.marketplaceV2, bluemoves.offer_lib]) {
+  m.bind()
+    .onTransaction((tx, ctx) => {
+      txnCounter.add(ctx, 1, { kind: "nft", protocol: "bluemoves"})
+    })
+}
