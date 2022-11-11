@@ -4,7 +4,7 @@ import { ERC20Processor } from '@sentio/sdk/lib/builtin/erc20'
 import { getGroVaultContract } from './types/grovault'
 import { MetapoolProcessor, MetapoolContext } from './types/metapool'
 import { StableConvexXPoolProcessor, StableConvexXPoolContext } from './types/stableconvexxpool'
-import { UST_3CRV_POOL, UST_STRATEGY, GRO_VAULT } from './constant'
+import { UST_3CRV_POOL, UST_STRATEGY, GRO_VAULT, CRV3_POOL } from './constant'
 import type { Block } from '@ethersproject/providers'
 import { scaleDown } from '@sentio/sdk/lib/utils/token'
 
@@ -41,6 +41,22 @@ const metapoolHandler = async function(block: Block, ctx: MetapoolContext) {
   ctx.meter.Gauge('CRV_amount').record(crv3Amoumt)
 }
 
+const crv3poolHandler = async function(block: Block, ctx: MetapoolContext) {
+  const oneUsdt = 10n ** BigInt(USDT_DECIMAL)
+  const priceInDAI = scaleDown((await ctx.contract.get_dy_underlying(2, 0, oneUsdt)), DAI_DECIMAL)
+  const priceInUSDC = scaleDown((await ctx.contract.get_dy_underlying(2, 1, oneUsdt)), USDC_DECIMAL)
+
+  const daiAmount = scaleDown(await ctx.contract.balances(0), DAI_DECIMAL)
+  const usdcAmount = scaleDown(await ctx.contract.balances(1), USDC_DECIMAL)
+  const usdtAmount = scaleDown(await ctx.contract.balances(2), USDT_DECIMAL)
+
+  ctx.meter.Gauge('crv3_usdt_to_dai').record(priceInDAI)
+  ctx.meter.Gauge('crv3_usdt_to_usdc').record(priceInUSDC)
+  ctx.meter.Gauge('crv3_dai_amount').record(daiAmount)
+  ctx.meter.Gauge('crv3_usdc_amount').record(usdcAmount)
+  ctx.meter.Gauge('crv3_usdt_amount').record(usdtAmount)
+}
+
 const stableConvexXPoolHandler = async function(block: Block, ctx: StableConvexXPoolContext) {
   const totalAssets = scaleDown(await ctx.contract.estimatedTotalAssets(), UST_DECIMAL)
   const vaultAddr = await ctx.contract.vault()
@@ -59,6 +75,9 @@ const stableConvexXPoolHandler = async function(block: Block, ctx: StableConvexX
 
 MetapoolProcessor.bind({address: UST_3CRV_POOL, startBlock: 14415127})
 .onBlock(metapoolHandler)
+
+MetapoolProcessor.bind({address: CRV3_POOL, startBlock: 14915127})
+.onBlock(crv3poolHandler)
 
 StableConvexXPoolProcessor.bind({address: UST_STRATEGY})
 .onBlock(stableConvexXPoolHandler)
