@@ -5,7 +5,7 @@ import { CORE_TOKENS, getPrice, scaleDown } from "@sentio-processor/common/dist/
 import { delay, getRandomInt } from "./utils";
 import { totalValue } from "./metrics";
 
-const client = new AptosClient("http://coingecko-proxy-server.chain-sync:8646")
+const client = new AptosClient("http://aptos-proxy.chain-sync:8646")
 
 coin.loadTypes(aptos.TYPE_REGISTRY)
 for (const token of CORE_TOKENS.values()) {
