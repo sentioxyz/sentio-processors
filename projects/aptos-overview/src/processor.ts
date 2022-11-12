@@ -34,7 +34,7 @@ for (const x of DEFAULT_MAINNET_LIST) {
 
 managed_coin.bind()
   .onEntryRegister((call, ctx) => {
-    txnCounter.add(ctx, 1, { kind: "register"})
+    txnCounter.add(ctx, 1, { kind: "account_creation"})
   })
 
 coin.bind()
@@ -84,6 +84,7 @@ for (const m of [soffle3.Aggregator, soffle3.token_coin_swap, soffle3.FixedPrice
     .onTransaction((tx, ctx) => {
       txnCounter.add(ctx, 1, { kind: "nft", protocol: "souffl3"})
     })
+  break
 }
 
 for (const m of [topaz.fees, topaz.inbox, topaz.events, topaz.bid_any, topaz.marketplace, topaz.marketplace_v2,
@@ -92,6 +93,7 @@ for (const m of [topaz.fees, topaz.inbox, topaz.events, topaz.bid_any, topaz.mar
     .onTransaction((tx, ctx) => {
       txnCounter.add(ctx, 1, { kind: "nft", protocol: "topaz"})
     })
+  break
 }
 
 for (const m of [bluemoves.marketplaceV2, bluemoves.offer_lib]) {
@@ -99,9 +101,19 @@ for (const m of [bluemoves.marketplaceV2, bluemoves.offer_lib]) {
     .onTransaction((tx, ctx) => {
       txnCounter.add(ctx, 1, { kind: "nft", protocol: "bluemoves"})
     })
+  break
 }
 
+
 const dailyTxn = new Gauge("txn");
+const accumTxn = new Counter("accum_txn");
+const dailyAverageTps = new Gauge("average_tps");
+
+const dau = new Gauge("dau");
+
+const dailyGas = new Gauge("gas")
+const accumGas = new Counter("accum_gas")
+
 const queryClient = getChainQueryClient()
 
 aptos.AptosAccountProcessor.bind({address: "0x1"})
@@ -113,12 +125,25 @@ async function sync(ctx: AptosResourceContext) {
     num_failed_txns: number;
     num_successful_txns: number;
     num_total_txns: number;
+    num_user_txns: number;
+    average_tps: number;
+    estimated_num_unique_users: number;
+    total_gas_price: number;
   }
-  const sql = `SELECT  COUNT_IF(success=false) AS num_failed_txns,
-                     COUNT_IF(success=true) AS num_successful_txns,
-                     COUNT(*) AS num_total_txns 
-              FROM txns WHERE TIMESTAMP between ${(ctx.timestampInMicros - 86400000000).toString()}
-             AND ${ctx.timestampInMicros.toString()}`
+  let timestamp = ctx.timestampInMicros
+  const date = new Date(timestamp / 1000)
+  date.setUTCHours(23,59,59,999)
+  timestamp = date.getTime() * 1000
+
+  let sql = `SELECT COUNT_IF(success=false) AS num_failed_txns,
+               COUNT_IF(success=true) AS num_successful_txns,
+               COUNT_IF(type='user_transaction') AS num_user_txns,
+               COUNT(*) AS num_total_txns,
+               COUNT(*)/86400 AS average_tps,
+               APPROX_COUNT_DISTINCT(sender) AS estimated_num_unique_users,
+               SUM(gas_used) / POW(10, 5) AS total_gas_price
+               FROM txns WHERE TIMESTAMP between ${(timestamp - 86400000000).toString()}
+               AND ${timestamp.toString()}`
   // console.log(sql)
   let ret = await queryClient.aptosSQLQuery({
     sql: sql,
@@ -131,5 +156,13 @@ async function sync(ctx: AptosResourceContext) {
     dailyTxn.record(ctx, obj.num_failed_txns, { kind: "failed"})
     dailyTxn.record(ctx, obj.num_successful_txns, { kind: "successful"})
     dailyTxn.record(ctx, obj.num_total_txns, { kind: "total"})
+    dailyTxn.record(ctx, obj.num_user_txns, { kind: "user"})
+    accumTxn.add(ctx, obj.num_failed_txns, { kind: "failed"})
+    accumTxn.add(ctx, obj.num_successful_txns, { kind: "successful"})
+    accumTxn.add(ctx, obj.num_total_txns, { kind: "total"})
+    dailyAverageTps.record(ctx, obj.average_tps)
+    dau.record(ctx, obj.estimated_num_unique_users)
+    dailyGas.record(ctx, obj.total_gas_price)
+    accumGas.add(ctx, obj.total_gas_price)
   }
 }
