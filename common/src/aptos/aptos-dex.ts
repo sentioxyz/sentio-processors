@@ -1,6 +1,6 @@
 import { aptos, Gauge } from "@sentio/sdk";
 import { BigDecimal } from "@sentio/sdk/lib/core/big-decimal";
-import { calculateValueInUsd, CORE_TOKENS, delay, getCoinInfo, whiteListed } from "./coin"
+import { calculateValueInUsd, CORE_TOKENS, getCoinInfo, whiteListed } from "./coin"
 import { TypedMoveResource } from "@sentio/sdk/lib/aptos/types";
 import { AptosResourceContext } from "@sentio/sdk/lib/aptos/context";
 import { MoveResource } from "aptos-sdk/src/generated";
@@ -8,10 +8,7 @@ import { MoveResource } from "aptos-sdk/src/generated";
 export interface PoolAdaptor<T> {
   getXReserve(pool: T): bigint
   getYReserve(pool: T): bigint
-  getCurve(pool: TypedMoveResource<T>): string | undefined
-  // getXType(pool: TypedMoveResource<T>): string
-  // getYType(pool: TypedMoveResource<T>): string
-
+  getExtraPoolTags(pool: TypedMoveResource<T>): any
   poolTypeName: string
 }
 
@@ -90,11 +87,8 @@ export class AptosDex<T> {
       }
 
       const pair = await getPair(coinx, coiny)
-      const baseLabels: Record<string, string> = { pair }
-      const curve = this.poolAdaptor.getCurve(pool)
-      if (curve) {
-        baseLabels.curve = curve
-      }
+      const extraLabels = this.poolAdaptor.getExtraPoolTags(pool)
+      const baseLabels: Record<string, string> = { ...extraLabels,  pair }
 
       const coinXInfo = await getCoinInfo(coinx)
       const coinYInfo = await getCoinInfo(coiny)

@@ -4,6 +4,7 @@ import { AptosClient } from "aptos-sdk";
 import { aptos, BigDecimal } from "@sentio/sdk";
 import { coin } from "@sentio/sdk/lib/builtin/aptos/0x1";
 import CoinInfo = coin.CoinInfo;
+import { getRandomInt } from "../utils";
 
 const client = new AptosClient("https://aptos-mainnet.nodereal.io/v1/0c58c879d41e4eab8fd2fc0406848c2b/")
 
@@ -58,10 +59,6 @@ export function getCoinInfo(type: string): SimpleCoinInfo {
     }
   }
   return r
-}
-
-export function getRandomInt(max: number) {
-  return Math.floor(Math.random() * max);
 }
 
 export async function requestCoinInfo(type: string, version?: bigint): Promise<CoinInfo<any>> {

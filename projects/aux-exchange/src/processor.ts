@@ -41,7 +41,7 @@ amm.bind({startVersion: 2331560})
 const auxExchange = new AptosDex<amm.Pool<any, any>>(volume, tvlAll, tvl, tvlByPool, {
   getXReserve: pool => pool.x_reserve.value,
   getYReserve: pool => pool.y_reserve.value,
-  getCurve: _ => undefined,
+  getExtraPoolTags: _ => {},
   poolTypeName: amm.Pool.TYPE_QNAME
 })
 

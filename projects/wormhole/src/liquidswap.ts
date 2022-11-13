@@ -3,23 +3,21 @@ import { liquidity_pool } from "./types/aptos/liquidswap"
 import { aptos } from "@sentio/sdk"
 
 import {
-    AptosDex,
     calculateValueInUsd,
     CORE_TOKENS,
     getCoinInfo,
     getPrice,
     scaleDown,
     whiteListed
-} from "@sentio-processor/common/dist/aptos"
+} from "@sentio-processor/common/dist/aptos/coin"
 
 import { BigDecimal } from "@sentio/sdk/lib/core/big-decimal"
 
 import { TypedMoveResource } from "@sentio/sdk/lib/aptos/types"
 import { MoveResource } from "aptos-sdk/src/generated"
+import { AptosDex } from "@sentio-processor/common/dist/aptos"
 import {
-    accountTracker,
     inputUsd,
-    lpTracker,
     priceGauge,
     priceGaugeNew,
     priceImpact,
@@ -30,29 +28,25 @@ import {
     volume
 } from "./metrics"
 import { AptosResourceContext } from "@sentio/sdk/lib/aptos/context"
+import { isWormhole } from "./utils";
 
 
 const liquidSwap = new AptosDex<liquidity_pool.LiquidityPool<any, any, any>>(volume, tvlAll, tvl, tvlByPool, {
     getXReserve: pool => pool.coin_x_reserve.value,
     getYReserve: pool => pool.coin_y_reserve.value,
-    getExtraPoolTags: pool => { return { curve: pool.type_arguments[2] } },
+    getExtraPoolTags: pool => { return { curve: getCurve(pool.type_arguments[2]), wormhole: isWormhole(pool.type_arguments[0], pool.type_arguments[1]) } },
     poolTypeName: liquidity_pool.LiquidityPool.TYPE_QNAME
 })
 
 liquidity_pool.bind()
     .onEventPoolCreatedEvent(async (evt, ctx) => {
-        ctx.meter.Counter("num_pools").add(1)
-        lpTracker.trackEvent(ctx, {distinctId: ctx.transaction.sender})
-
-        // ctx.logger.info("", {user: "-", value: 0.0001})
+        ctx.meter.Counter("num_pools").add(1, { wormhole: isWormhole(evt.type_arguments[0], evt.type_arguments[1]) } )
     })
     .onEventLiquidityAddedEvent(async (evt, ctx) => {
-        ctx.meter.Counter("event_liquidity_add").add(1)
-        lpTracker.trackEvent(ctx, {distinctId: ctx.transaction.sender})
+        ctx.meter.Counter("event_liquidity_add").add(1, { wormhole: isWormhole(evt.type_arguments[0], evt.type_arguments[1]) })
     })
     .onEventLiquidityRemovedEvent(async (evt, ctx) => {
-        ctx.meter.Counter("event_liquidity_removed").add(1)
-        accountTracker.trackEvent(ctx, {distinctId: ctx.transaction.sender})
+        ctx.meter.Counter("event_liquidity_removed").add(1, { wormhole: isWormhole(evt.type_arguments[0], evt.type_arguments[1]) })
     })
     .onEventSwapEvent(async (evt, ctx) => {
         const value = await liquidSwap.recordTradingVolume(ctx,
@@ -67,17 +61,12 @@ liquidity_pool.bind()
 
         ctx.meter.Counter("event_swap_by_bridge").add(1, {bridge: coinXInfo.bridge})
         ctx.meter.Counter("event_swap_by_bridge").add(1, {bridge: coinYInfo.bridge})
-
-        accountTracker.trackEvent(ctx, {distinctId: ctx.transaction.sender})
-
     })
     .onEventFlashloanEvent(async (evt, ctx) => {
         const coinXInfo = getCoinInfo(evt.type_arguments[0])
         const coinYInfo = getCoinInfo(evt.type_arguments[1])
         ctx.meter.Counter("event_flashloan_by_bridge").add(1, {bridge: coinXInfo.bridge})
         ctx.meter.Counter("event_flashloan_by_bridge").add(1, {bridge: coinYInfo.bridge})
-
-        accountTracker.trackEvent(ctx, {distinctId: ctx.transaction.sender})
     })
 
 // TODO pool name should consider not just use symbol name

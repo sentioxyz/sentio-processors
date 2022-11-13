@@ -84,7 +84,6 @@ for (const m of [soffle3.Aggregator, soffle3.token_coin_swap, soffle3.FixedPrice
     .onTransaction((tx, ctx) => {
       txnCounter.add(ctx, 1, { kind: "nft", protocol: "souffl3"})
     })
-  break
 }
 
 for (const m of [topaz.fees, topaz.inbox, topaz.events, topaz.bid_any, topaz.marketplace, topaz.marketplace_v2,
@@ -93,7 +92,6 @@ for (const m of [topaz.fees, topaz.inbox, topaz.events, topaz.bid_any, topaz.mar
     .onTransaction((tx, ctx) => {
       txnCounter.add(ctx, 1, { kind: "nft", protocol: "topaz"})
     })
-  break
 }
 
 for (const m of [bluemoves.marketplaceV2, bluemoves.offer_lib]) {
@@ -101,7 +99,6 @@ for (const m of [bluemoves.marketplaceV2, bluemoves.offer_lib]) {
     .onTransaction((tx, ctx) => {
       txnCounter.add(ctx, 1, { kind: "nft", protocol: "bluemoves"})
     })
-  break
 }
 
 

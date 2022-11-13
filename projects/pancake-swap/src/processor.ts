@@ -44,7 +44,7 @@ swap.bind({startVersion: 10463608})
 const PANCAKE_SWAP_APTOS = new AptosDex<swap.TokenPairReserve<any, any>>(volume, tvlAll, tvl, tvlByPool,{
   getXReserve: pool => pool.reserve_x,
   getYReserve: pool => pool.reserve_y,
-  getCurve: _ => undefined,
+  getExtraPoolTags: _ => {},
   poolTypeName: swap.TokenPairReserve.TYPE_QNAME
   },
 )

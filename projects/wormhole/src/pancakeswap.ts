@@ -2,16 +2,17 @@ import { swap } from "./types/aptos/pancake-swap";
 import { AptosDex, getCoinInfo } from "@sentio-processor/common/dist/aptos";
 import { aptos } from "@sentio/sdk";
 import { pancakeTvl, pancakeTvlAll, pancakeTvlByPool, pancakeVolume } from "./metrics";
+import { isWormhole } from "./utils";
 
 swap.bind()
     .onEventPairCreatedEvent(async (evt, ctx) => {
-      ctx.meter.Counter("num_pools").add(1)
+      ctx.meter.Counter("num_pools").add(1, { wormhole: isWormhole(evt.data_typed.token_x, evt.data_typed.token_y) })
     })
     .onEventAddLiquidityEvent(async (evt, ctx) => {
-      ctx.meter.Counter("event_liquidity_add").add(1)
+      ctx.meter.Counter("event_liquidity_add").add(1, { wormhole: isWormhole(evt.type_arguments[0], evt.type_arguments[1]) })
     })
     .onEventRemoveLiquidityEvent(async (evt, ctx) => {
-      ctx.meter.Counter("event_liquidity_removed").add(1)
+      ctx.meter.Counter("event_liquidity_removed").add(1, { wormhole: isWormhole(evt.type_arguments[0], evt.type_arguments[1]) })
     })
     .onEventSwapEvent(async (evt, ctx) => {
       const value = await PANCAKE_SWAP_APTOS.recordTradingVolume(ctx,
