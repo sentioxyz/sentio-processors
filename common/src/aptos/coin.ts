@@ -61,34 +61,6 @@ export function getCoinInfo(type: string): SimpleCoinInfo {
   return r
 }
 
-export async function requestCoinInfo(type: string, version?: bigint): Promise<CoinInfo<any>> {
-  const parts = type.split("::")
-  const account = parts[0]
-  while (true) {
-    try {
-      const resource = await client.getAccountResource(account, `0x1::coin::CoinInfo<${type}>`, { ledgerVersion: version})
-      if (resource) {
-        const info = await aptos.TYPE_REGISTRY.decodeResource<CoinInfo<any>>(resource)
-        if (info) {
-          return info.data_typed
-        }
-      }
-      // return resource.data
-      // extInfo = {...resource.data as CoinInfo<any>, type, bridge: WHITELISTED_TOKENS[type].bridge }
-    } catch (e) {
-      if (e.status === 404) {
-        throw Error("coin info not existed at version " + version)
-      }
-      if (e.status === 429) {
-        // console.log("rpc error get coin info", type, e)
-        await delay(1000 + getRandomInt(1000))
-      } else {
-        throw e
-      }
-    }
-  }
-}
-
 export function scaleDown(n: bigint, decimal: number) {
   return new BigDecimal(n.toString()).div(new BigDecimal(10).pow(decimal))
 }
