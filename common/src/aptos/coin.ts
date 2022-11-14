@@ -8,11 +8,11 @@ import { getRandomInt } from "../utils";
 
 const client = new AptosClient("https://aptos-mainnet.nodereal.io/v1/0c58c879d41e4eab8fd2fc0406848c2b/")
 
-interface BaseCoinInfoWithBridge extends RawCoinInfo {
+export interface BaseCoinInfoWithBridge extends RawCoinInfo {
   bridge: string
 }
 
-interface SimpleCoinInfo {
+export interface SimpleCoinInfo {
   token_type: {  type: string }
   symbol: string
   decimals: number

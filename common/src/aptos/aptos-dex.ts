@@ -27,7 +27,7 @@ export class AptosDex<T> {
     this.poolAdaptor = poolAdaptor
   }
 
-  async recordTradingVolume(ctx: aptos.AptosContext, coinx: string, coiny: string, coinXAmount: bigint, coinYAmount: bigint, curve?: string): Promise<BigDecimal> {
+  async recordTradingVolume(ctx: aptos.AptosContext, coinx: string, coiny: string, coinXAmount: bigint, coinYAmount: bigint, extraLabels?: any): Promise<BigDecimal> {
     const whitelistx = whiteListed(coinx)
     const whitelisty = whiteListed(coiny)
     const coinXInfo = await getCoinInfo(coinx)
@@ -41,10 +41,7 @@ export class AptosDex<T> {
 
     const pair = await getPair(coinx, coiny)
 
-    const baseLabels: Record<string, string> = { pair }
-    if (curve) {
-      baseLabels.curve = curve
-    }
+    let baseLabels: Record<string, string> = extraLabels ? { ...extraLabels, pair } : { pair }
 
     if (whitelistx) {
       const value = await calculateValueInUsd(coinXAmount, coinXInfo, timestamp)
@@ -160,12 +157,12 @@ export class AptosDex<T> {
   }
 }
 
-async function getPair(coinx: string, coiny: string): Promise<string> {
+export async function getPair(coinx: string, coiny: string): Promise<string> {
   const coinXInfo = await getCoinInfo(coinx)
   const coinYInfo = await getCoinInfo(coiny)
-  if (coinXInfo.symbol.localeCompare(coinYInfo.symbol) > 0) {
-    return `${coinYInfo.symbol}-${coinXInfo.symbol}`
-  }
+  // if (coinXInfo.symbol.localeCompare(coinYInfo.symbol) > 0) {
+  //   return `${coinYInfo.symbol}-${coinXInfo.symbol}`
+  // }
   return `${coinXInfo.symbol}-${coinYInfo.symbol}`
 }
 

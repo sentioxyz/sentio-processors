@@ -168,6 +168,7 @@ async function syncLiquidSwapPools(resources: MoveResource[], ctx: AptosResource
 
         const coinx_amount = pool.data_typed.coin_x_reserve.value
         const coiny_amount = pool.data_typed.coin_y_reserve.value
+        const wormhole = isWormhole(pool.type_arguments[0], pool.type_arguments[1])
 
         let poolValue = BigDecimal(0)
         let poolValueNew = BigDecimal(0)
@@ -213,8 +214,8 @@ async function syncLiquidSwapPools(resources: MoveResource[], ctx: AptosResource
             }
         }
         if (poolValue.isGreaterThan(0)) {
-            tvlByPool.record(ctx, poolValue, {pair, curve})
-            tvlByPoolNew.record(ctx, poolValueNew, {pair, curve})
+            tvlByPool.record(ctx, poolValue, {pair, curve, wormhole})
+            tvlByPoolNew.record(ctx, poolValueNew, {pair, curve, wormhole})
 
             if (curve == "Uncorrelated") {
                 const priceX = await getPrice(coinXInfo.token_type.type, timestamp)
@@ -230,16 +231,17 @@ async function syncLiquidSwapPools(resources: MoveResource[], ctx: AptosResource
                         const inX = BigDecimal(k).div(priceX)
                         const impactX = feeFactor.plus(inX.div(nX))
                         priceImpact.record(ctx, impactX, {
-                            pair, curve,
+                            pair, curve, wormhole,
                             fee: fee.toString(),
                             inputUsd: k.toString(),
-                            direction: "X to Y"
+                            direction: "X to Y",
+
                         })
 
                         const inY = BigDecimal(k).div(priceY)
                         const impactY = feeFactor.plus(inY.div(nY))
                         priceImpact.record(ctx, impactY, {
-                            pair, curve,
+                            pair, curve, wormhole,
                             fee: fee.toString(),
                             inputUsd: k.toString(),
                             direction: "Y to X"
