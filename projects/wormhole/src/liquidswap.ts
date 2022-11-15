@@ -49,6 +49,9 @@ liquidity_pool.bind()
         ctx.meter.Counter("event_liquidity_removed").add(1, { wormhole: isWormhole(evt.type_arguments[0], evt.type_arguments[1]) })
     })
     .onEventSwapEvent(async (evt, ctx) => {
+        if (!isWormhole(evt.type_arguments[0], evt.type_arguments[1])) {
+            return
+        }
         const value = await liquidSwap.recordTradingVolume(ctx,
             evt.type_arguments[0], evt.type_arguments[1],
             evt.data_typed.x_in + evt.data_typed.x_out,
@@ -63,6 +66,9 @@ liquidity_pool.bind()
         ctx.meter.Counter("event_swap_by_bridge").add(1, {bridge: coinYInfo.bridge})
     })
     .onEventFlashloanEvent(async (evt, ctx) => {
+        if (!isWormhole(evt.type_arguments[0], evt.type_arguments[1])) {
+            return
+        }
         const coinXInfo = getCoinInfo(evt.type_arguments[0])
         const coinYInfo = getCoinInfo(evt.type_arguments[1])
         ctx.meter.Counter("event_flashloan_by_bridge").add(1, {bridge: coinXInfo.bridge})
@@ -122,6 +128,10 @@ async function syncLiquidSwapPools(resources: MoveResource[], ctx: AptosResource
         // savePool(ctx.version, pool.type_arguments)
         const coinx = pool.type_arguments[0]
         const coiny = pool.type_arguments[1]
+        if (!isWormhole(coinx, coiny)) {
+            continue
+        }
+
         const whitelistx = whiteListed(coinx)
         const whitelisty = whiteListed(coiny)
         const coinXInfo = getCoinInfo(coinx)

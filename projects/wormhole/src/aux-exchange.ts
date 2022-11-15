@@ -26,6 +26,9 @@ amm.bind()
       ctx.meter.Counter("event_liquidity_removed").add(1, { wormhole: isWormhole(evt.data_typed.x_coin_type, evt.data_typed.y_coin_type) })
     })
     .onEventSwapEvent(async (evt, ctx) => {
+      if (!isWormhole(evt.data_typed.in_coin_type, evt.data_typed.out_coin_type)) {
+        return
+      }
       const value = await AUX_EXCHANGE.recordTradingVolume(ctx, evt.data_typed.in_coin_type, evt.data_typed.out_coin_type, evt.data_typed.in_au, evt.data_typed.out_au)
       const coinXInfo = await getCoinInfo(evt.data_typed.in_coin_type)
       const coinYInfo = await getCoinInfo(evt.data_typed.out_coin_type)
