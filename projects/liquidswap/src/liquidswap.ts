@@ -59,7 +59,7 @@ liquidity_pool.bind()
             evt.type_arguments[0], evt.type_arguments[1],
             evt.data_typed.x_in + evt.data_typed.x_out,
             evt.data_typed.y_in + evt.data_typed.y_out,
-            getCurve(evt.type_arguments[2]))
+            { curve: getCurve(evt.type_arguments[2]) })
 
         const coinXInfo = getCoinInfo(evt.type_arguments[0])
         const coinYInfo = getCoinInfo(evt.type_arguments[1])

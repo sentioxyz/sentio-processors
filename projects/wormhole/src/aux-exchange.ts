@@ -16,13 +16,22 @@ aptos.AptosAccountProcessor.bind({address: amm.DEFAULT_OPTIONS.address})
 
 amm.bind()
     .onEntryCreatePool(async (evt, ctx) => {
+      if (!isWormhole(evt.type_arguments[0], evt.type_arguments[1])) {
+        return
+      }
       ctx.meter.Counter("num_pools").add(1, { wormhole: isWormhole(evt.type_arguments[0], evt.type_arguments[1]) })
     })
     .onEventAddLiquidityEvent(async (evt, ctx) => {
+      if (!isWormhole(evt.data_typed.x_coin_type, evt.data_typed.y_coin_type)) {
+        return
+      }
       ctx.meter.Counter("event_liquidity_add").add(1, { wormhole: isWormhole(evt.data_typed.x_coin_type, evt.data_typed.y_coin_type) })
       // ctx.logger.info("LiquidityAdded", { user: ctx.transaction.sender })
     })
     .onEventRemoveLiquidityEvent(async (evt, ctx) => {
+      if (!isWormhole(evt.data_typed.x_coin_type, evt.data_typed.y_coin_type)) {
+        return
+      }
       ctx.meter.Counter("event_liquidity_removed").add(1, { wormhole: isWormhole(evt.data_typed.x_coin_type, evt.data_typed.y_coin_type) })
     })
     .onEventSwapEvent(async (evt, ctx) => {

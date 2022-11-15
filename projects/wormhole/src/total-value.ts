@@ -9,6 +9,10 @@ const client = new AptosClient("http://aptos-proxy-server.chain-sync:8646")
 
 coin.loadTypes(aptos.TYPE_REGISTRY)
 for (const token of CORE_TOKENS.values()) {
+  if (token.bridge !== "Wormhole") {
+    continue
+  }
+
   const coinInfoType = `0x1::coin::CoinInfo<${token.token_type.type}>`
     // const price = await getPrice(v.token_type.type, timestamp)
   aptos.AptosAccountProcessor.bind({address: token.token_type.account_address})

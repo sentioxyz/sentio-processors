@@ -17,10 +17,11 @@ import { TypedMoveResource } from "@sentio/sdk/lib/aptos/types"
 import { MoveResource } from "aptos-sdk/src/generated"
 import { AptosDex } from "@sentio-processor/common/dist/aptos"
 import {
+    inputUsd,
     // inputUsd,
     // priceGauge,
     // priceGaugeNew,
-    // priceImpact,
+    priceImpact,
     tvl,
     tvlAll,
     tvlByPool,
@@ -40,12 +41,21 @@ const liquidSwap = new AptosDex<liquidity_pool.LiquidityPool<any, any, any>>(vol
 
 liquidity_pool.bind()
     .onEventPoolCreatedEvent(async (evt, ctx) => {
+        if (!isWormhole(evt.type_arguments[0], evt.type_arguments[1])) {
+            return
+        }
         ctx.meter.Counter("num_pools").add(1, { wormhole: isWormhole(evt.type_arguments[0], evt.type_arguments[1]) } )
     })
     .onEventLiquidityAddedEvent(async (evt, ctx) => {
+        if (!isWormhole(evt.type_arguments[0], evt.type_arguments[1])) {
+            return
+        }
         ctx.meter.Counter("event_liquidity_add").add(1, { wormhole: isWormhole(evt.type_arguments[0], evt.type_arguments[1]) })
     })
     .onEventLiquidityRemovedEvent(async (evt, ctx) => {
+        if (!isWormhole(evt.type_arguments[0], evt.type_arguments[1])) {
+            return
+        }
         ctx.meter.Counter("event_liquidity_removed").add(1, { wormhole: isWormhole(evt.type_arguments[0], evt.type_arguments[1]) })
     })
     .onEventSwapEvent(async (evt, ctx) => {
@@ -56,7 +66,7 @@ liquidity_pool.bind()
             evt.type_arguments[0], evt.type_arguments[1],
             evt.data_typed.x_in + evt.data_typed.x_out,
             evt.data_typed.y_in + evt.data_typed.y_out,
-            getCurve(evt.type_arguments[2]))
+            { curve: getCurve(evt.type_arguments[2]) })
 
         const coinXInfo = getCoinInfo(evt.type_arguments[0])
         const coinYInfo = getCoinInfo(evt.type_arguments[1])
@@ -223,9 +233,41 @@ async function syncLiquidSwapPools(resources: MoveResource[], ctx: AptosResource
                 poolValueNew = poolValueNew.plus(valueNew)
             }
         }
-        if (poolValue.isGreaterThan(0)) {
+        if (poolValue.isGreaterThan(100)) {
             tvlByPool.record(ctx, poolValue, {pair, curve, wormhole})
             // tvlByPoolNew.record(ctx, poolValueNew, {pair, curve, wormhole})
+
+            if (curve == "Uncorrelated") {
+                const priceX = await getPrice(coinXInfo.token_type.type, timestamp)
+                const priceY = await getPrice(coinYInfo.token_type.type, timestamp)
+                if (priceX != 0 && priceY != 0) {
+                    const nX = scaleDown(coinx_amount, coinXInfo.decimals)
+                    const nY = scaleDown(coiny_amount, coinYInfo.decimals)
+                    const fee = scaleDown(pool.data_typed.fee, 4)
+                    const feeFactor = fee.div(BigDecimal(1).minus(fee))
+
+                    for (const k of inputUsd) {
+                        // impactX = fee / (1 - fee) + inX / nX
+                        const inX = BigDecimal(k).div(priceX)
+                        const impactX = feeFactor.plus(inX.div(nX))
+                        priceImpact.record(ctx, impactX, {
+                            pair, curve,
+                            fee: fee.toString(),
+                            inputUsd: k.toString(),
+                            direction: "X to Y"
+                        })
+
+                        const inY = BigDecimal(k).div(priceY)
+                        const impactY = feeFactor.plus(inY.div(nY))
+                        priceImpact.record(ctx, impactY, {
+                            pair, curve,
+                            fee: fee.toString(),
+                            inputUsd: k.toString(),
+                            direction: "Y to X"
+                        })
+                    }
+                }
+            }
         }
         tvlAllValue = tvlAllValue.plus(poolValue)
     }
