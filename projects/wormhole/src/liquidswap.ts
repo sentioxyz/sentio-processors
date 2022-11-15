@@ -17,14 +17,14 @@ import { TypedMoveResource } from "@sentio/sdk/lib/aptos/types"
 import { MoveResource } from "aptos-sdk/src/generated"
 import { AptosDex } from "@sentio-processor/common/dist/aptos"
 import {
-    inputUsd,
-    priceGauge,
-    priceGaugeNew,
-    priceImpact,
+    // inputUsd,
+    // priceGauge,
+    // priceGaugeNew,
+    // priceImpact,
     tvl,
     tvlAll,
     tvlByPool,
-    tvlByPoolNew,
+    // tvlByPoolNew,
     volume
 } from "./metrics"
 import { AptosResourceContext } from "@sentio/sdk/lib/aptos/context"
@@ -141,7 +141,7 @@ async function syncLiquidSwapPools(resources: MoveResource[], ctx: AptosResource
             } else {
                 priceX = priceInUsd.get(coinx) ?? BigDecimal(0)
             }
-            priceGaugeNew.record(ctx, priceX, {coin: coinXInfo.symbol})
+            // priceGaugeNew.record(ctx, priceX, {coin: coinXInfo.symbol})
         }
         if (whitelisty) {
             if (!updated.has(coiny)) {
@@ -156,7 +156,7 @@ async function syncLiquidSwapPools(resources: MoveResource[], ctx: AptosResource
             } else {
                 priceY = priceInUsd.get(coiny) ?? BigDecimal(0)
             }
-            priceGaugeNew.record(ctx, priceY, {coin: coinYInfo.symbol})
+            // priceGaugeNew.record(ctx, priceY, {coin: coinYInfo.symbol})
         }
 
         if (!whitelistx && !whitelisty) {
@@ -215,40 +215,7 @@ async function syncLiquidSwapPools(resources: MoveResource[], ctx: AptosResource
         }
         if (poolValue.isGreaterThan(0)) {
             tvlByPool.record(ctx, poolValue, {pair, curve, wormhole})
-            tvlByPoolNew.record(ctx, poolValueNew, {pair, curve, wormhole})
-
-            if (curve == "Uncorrelated") {
-                const priceX = await getPrice(coinXInfo.token_type.type, timestamp)
-                const priceY = await getPrice(coinYInfo.token_type.type, timestamp)
-                if (priceX != 0 && priceY != 0) {
-                    const nX = scaleDown(coinx_amount, coinXInfo.decimals)
-                    const nY = scaleDown(coiny_amount, coinYInfo.decimals)
-                    const fee = scaleDown(pool.data_typed.fee, 4)
-                    const feeFactor = fee.div(BigDecimal(1).minus(fee))
-
-                    for (const k of inputUsd) {
-                        // impactX = fee / (1 - fee) + inX / nX
-                        const inX = BigDecimal(k).div(priceX)
-                        const impactX = feeFactor.plus(inX.div(nX))
-                        priceImpact.record(ctx, impactX, {
-                            pair, curve, wormhole,
-                            fee: fee.toString(),
-                            inputUsd: k.toString(),
-                            direction: "X to Y",
-
-                        })
-
-                        const inY = BigDecimal(k).div(priceY)
-                        const impactY = feeFactor.plus(inY.div(nY))
-                        priceImpact.record(ctx, impactY, {
-                            pair, curve, wormhole,
-                            fee: fee.toString(),
-                            inputUsd: k.toString(),
-                            direction: "Y to X"
-                        })
-                    }
-                }
-            }
+            // tvlByPoolNew.record(ctx, poolValueNew, {pair, curve, wormhole})
         }
         tvlAllValue = tvlAllValue.plus(poolValue)
     }
@@ -260,8 +227,8 @@ async function syncLiquidSwapPools(resources: MoveResource[], ctx: AptosResource
         if (!coinInfo) {
             throw Error("unexpected coin " + k)
         }
-        const price = await getPrice(coinInfo.token_type.type, timestamp)
-        priceGauge.record(ctx, price, {coin: coinInfo.symbol})
+        // const price = await getPrice(coinInfo.token_type.type, timestamp)
+        // priceGauge.record(ctx, price, {coin: coinInfo.symbol})
         if (v.isGreaterThan(0)) {
             tvl.record(ctx, v, {coin: coinInfo.symbol, bridge: coinInfo.bridge, type: coinInfo.token_type.type})
         }

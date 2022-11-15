@@ -4,15 +4,15 @@ export const commonOptions = { sparse:  true }
 export const totalValue = new Gauge("total_value", commonOptions)
 export const tvlAll = new Gauge("tvl_all", commonOptions)
 export const tvlByPool = new Gauge("tvl_by_pool", commonOptions)
-export const tvlByPoolNew = new Gauge("tvl_by_pool_new", commonOptions)
+// export const tvlByPoolNew = new Gauge("tvl_by_pool_new", commonOptions)
 export const tvl = new Gauge("tvl", commonOptions)
 export const volume = new Gauge("vol", commonOptions)
 
-export const inputUsd = [100, 1000, 10000, 100000]
-export const priceImpact = new Gauge("price_impact", commonOptions)
-
-export const priceGauge = new Gauge("price", commonOptions)
-export const priceGaugeNew = new Gauge("price_new", commonOptions)
+// export const inputUsd = [100, 1000, 10000, 100000]
+// export const priceImpact = new Gauge("price_impact", commonOptions)
+//
+// export const priceGauge = new Gauge("price", commonOptions)
+// export const priceGaugeNew = new Gauge("price_new", commonOptions)
 
 // export const accountTracker = AccountEventTracker.register("users")
 // export const lpTracker = AccountEventTracker.register("lp")
