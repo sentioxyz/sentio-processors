@@ -68,20 +68,24 @@ export async function getPrice(coinType: string, timestamp: number) {
   }
   const date = new Date(timestamp / 1000)
   let price : any
-  try {
-    const response = await priceClient.getPrice({
-      timestamp: date,
-      coinId: {
-        address: {
-          chain: "aptos_mainnet",
-          address: coinType,
+  while (true) {
+    try {
+      const response = await priceClient.getPrice({
+        timestamp: date,
+        coinId: {
+          address: {
+            chain: "aptos_mainnet",
+            address: coinType,
+          }
         }
-      }
-    })
-    price = response.price
-  } catch (e) {
-    console.log("error getting price", e, timestamp, coinType)
-    price = 0
+      })
+      price = response.price
+    } catch (e) {
+      console.log("error getting price", e, timestamp, coinType)
+      await  delay(1000)
+      continue
+    }
+    break
   }
 
   return price
