@@ -1,6 +1,6 @@
 import { liquidity_pool } from "./types/aptos/liquidswap"
 
-import { aptos } from "@sentio/sdk"
+import { aptos, Counter, Gauge } from "@sentio/sdk"
 
 import {
     AptosDex,
@@ -17,7 +17,7 @@ import { BigDecimal } from "@sentio/sdk/lib/core/big-decimal"
 import { TypedMoveResource } from "@sentio/sdk/lib/aptos/types"
 import { MoveResource } from "aptos-sdk/src/generated"
 import {
-    accountTracker,
+    accountTracker, commonOptions,
     inputUsd,
     lpTracker,
     priceGauge,
@@ -31,6 +31,7 @@ import {
 } from "./metrics"
 import { AptosResourceContext } from "@sentio/sdk/lib/aptos/context"
 
+export const vol_by_account = new Counter("vol_by_account", commonOptions)
 
 const liquidSwap = new AptosDex<liquidity_pool.LiquidityPool<any, any, any>>(volume, tvlAll, tvl, tvlByPool, {
     getXReserve: pool => pool.coin_x_reserve.value,
@@ -60,6 +61,9 @@ liquidity_pool.bind()
             evt.data_typed.x_in + evt.data_typed.x_out,
             evt.data_typed.y_in + evt.data_typed.y_out,
             { curve: getCurve(evt.type_arguments[2]) })
+        // if (value.isGreaterThan(100)) {
+        //     vol_by_account.add(ctx, value, { account: ctx.transaction.sender})
+        // }
 
         const coinXInfo = getCoinInfo(evt.type_arguments[0])
         const coinYInfo = getCoinInfo(evt.type_arguments[1])

@@ -1,14 +1,8 @@
-import fetch from 'node-fetch';
 import { DEFAULT_MAINNET_LIST, RawCoinInfo } from "@manahippo/coin-list/dist/list";
-import { AptosClient } from "aptos-sdk";
-import { aptos, BigDecimal } from "@sentio/sdk";
-import { coin } from "@sentio/sdk/lib/builtin/aptos/0x1";
+import { BigDecimal } from "@sentio/sdk";
 import { getPriceClient } from '@sentio/sdk/lib/utils/price'
-import CoinInfo = coin.CoinInfo;
-import { getRandomInt } from "../utils";
 
-const client = new AptosClient("https://aptos-mainnet.nodereal.io/v1/0c58c879d41e4eab8fd2fc0406848c2b/")
-const priceClient = getPriceClient("http://test-web-server:10010")
+const priceClient = getPriceClient("http://test-web-server.test:10010")
 
 export interface BaseCoinInfoWithBridge extends RawCoinInfo {
   bridge: string

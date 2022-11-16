@@ -160,9 +160,9 @@ export class AptosDex<T> {
 export async function getPair(coinx: string, coiny: string): Promise<string> {
   const coinXInfo = await getCoinInfo(coinx)
   const coinYInfo = await getCoinInfo(coiny)
-  // if (coinXInfo.symbol.localeCompare(coinYInfo.symbol) > 0) {
-  //   return `${coinYInfo.symbol}-${coinXInfo.symbol}`
-  // }
+  if (coinXInfo.symbol.localeCompare(coinYInfo.symbol) > 0) {
+    return `${coinYInfo.symbol}-${coinXInfo.symbol}`
+  }
   return `${coinXInfo.symbol}-${coinYInfo.symbol}`
 }
 
