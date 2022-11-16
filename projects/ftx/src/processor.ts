@@ -32,6 +32,17 @@ coin.bind()
       ctx.meter.Counter("total_transfer").add(1, {symbol: "tAPT"})
     }
   })
+  .onEventDepositEvent((evt, ctx) => {
+    if (evt.guid.account_address === FTX_ADDRESS) {{
+      ctx.meter.Counter("in_tx_amount_cume").add(scaleDown(evt.data_typed.amount, APT_DECIMAL), { from: ctx.transaction.sender })
+    }}
+  })
+  .onEventWithdrawEvent((evt, ctx) => {
+    if (evt.guid.account_address === FTX_ADDRESS) {{
+      ctx.meter.Counter("out_tx_amount_cume").add(scaleDown(evt.data_typed.amount, APT_DECIMAL), { from: ctx.transaction.sender })
+    }}
+  })
+
 
 aptos_account.bind()
     .onEntryTransfer((call, ctx) => {
