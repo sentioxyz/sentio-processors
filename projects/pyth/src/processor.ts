@@ -5,16 +5,31 @@ import { PRICE_MAP } from "./pyth";
 import { BigDecimal } from "@sentio/sdk/lib/core/big-decimal";
 import { console_v1 } from "./types/aptos/pyth2";
 
+import LRU from 'lru-cache'
+
 const commonOptions = { sparse: true }
 const priceGauage = new Gauge("price", commonOptions)
 const priceEMAGauage = new Gauge("price_ema", commonOptions)
 
 const updates = new Counter("update")
-const messages = new Counter("update_price_feeds_with_funder")
+const updateWithFunder = new Counter("update_price_feeds_with_funder")
+const message = new Counter("message")
 const messages2 = new Counter("mint_with_pyth_and_price")
+
+const cache = new LRU<bigint, any>({
+  maxSize: 5000,
+  sizeCalculation: (value, key) => {
+    return 1
+  },
+})
 
 event.bind()
   .onEventPriceFeedUpdate((evt, ctx) => {
+    if (!cache.has(ctx.version)) {
+      message.add(ctx, 1)
+      cache.set(ctx.version, {})
+    }
+
     const priceId = evt.data_typed.price_feed.price_identifier.bytes
     const symbol = PRICE_MAP.get(priceId) || "not listed"
     const labels = { priceId, symbol }
@@ -26,7 +41,7 @@ event.bind()
 
 pyth.bind()
   .onEntryUpdatePriceFeedsWithFunder((call, ctx) => {
-    messages.add(ctx, 1)
+    updateWithFunder.add(ctx, 1)
   })
 
 console_v1.bind().onEntryMintWithPythAndPrice((evt, ctx) => {
