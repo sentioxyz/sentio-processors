@@ -61,12 +61,19 @@ export function scaleDown(n: bigint, decimal: number) {
   return new BigDecimal(n.toString()).div(new BigDecimal(10).pow(decimal))
 }
 
+let priceMap = new Map<string, number>();
 
 export async function getPrice(coinType: string, timestamp: number) {
   if (!whiteListed(coinType)) {
     return 0.0
   }
   const date = new Date(timestamp / 1000)
+  const dateStr = [date.getUTCDate(), date.getUTCMonth()+1, date.getUTCFullYear()].join("-")
+  const key = `${coinType}-${dateStr}`
+  if (priceMap.has(key)) {
+    return priceMap.get(key)!
+  }
+
   let price : any
   while (true) {
     try {
@@ -87,7 +94,7 @@ export async function getPrice(coinType: string, timestamp: number) {
     }
     break
   }
-
+  priceMap.set(key, price)
   return price
 }
 
