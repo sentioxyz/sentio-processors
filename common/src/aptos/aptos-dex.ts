@@ -1,9 +1,9 @@
-import { aptos, Gauge } from "@sentio/sdk";
+import { aptos, Counter, Gauge } from "@sentio/sdk";
 import { BigDecimal } from "@sentio/sdk/lib/core/big-decimal";
 import { calculateValueInUsd, CORE_TOKENS, getCoinInfo, whiteListed } from "./coin"
-import { TypedMoveResource } from "@sentio/sdk/lib/aptos/types";
 import { AptosResourceContext } from "@sentio/sdk/lib/aptos/context";
 import { MoveResource } from "aptos-sdk/src/generated";
+import { TypedMoveResource } from "@sentio/sdk/lib/aptos";
 
 export interface PoolAdaptor<T> {
   getXReserve(pool: T): bigint

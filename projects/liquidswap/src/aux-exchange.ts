@@ -26,6 +26,9 @@ amm.bind()
     })
     .onEventSwapEvent(async (evt, ctx) => {
       const value = await AUX_EXCHANGE.recordTradingVolume(ctx, evt.data_typed.in_coin_type, evt.data_typed.out_coin_type, evt.data_typed.in_au, evt.data_typed.out_au)
+      // if (value.isGreaterThan(100)) {
+      //   vol_by_account.add(ctx, value, { account: ctx.transaction.sender})
+      // }
       const coinXInfo = await getCoinInfo(evt.data_typed.in_coin_type)
       const coinYInfo = await getCoinInfo(evt.data_typed.out_coin_type)
       ctx.meter.Counter("event_swap_by_bridge").add(1, { bridge: coinXInfo.bridge })

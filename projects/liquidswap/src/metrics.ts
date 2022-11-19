@@ -1,4 +1,4 @@
-import { AccountEventTracker, Gauge } from "@sentio/sdk";
+import { AccountEventTracker, Counter, Gauge } from "@sentio/sdk";
 
 export const commonOptions = { sparse:  true }
 export const totalValue = new Gauge("total_value", commonOptions)
@@ -26,3 +26,6 @@ export const pancakeTvlAll = new Gauge("pancake_tvl_all", commonOptions)
 export const pancakeVolume = new Gauge("pancake_vol", commonOptions)
 export const pancakeTvlByPool = new Gauge("pancake_tvl_by_pool", commonOptions)
 export const pancakeTvl = new Gauge("pancake_tvl", commonOptions)
+
+
+export const vol_by_account = new Counter("vol_by_account", commonOptions)

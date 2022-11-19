@@ -31,8 +31,6 @@ import {
 } from "./metrics"
 import { AptosResourceContext } from "@sentio/sdk/lib/aptos/context"
 
-export const vol_by_account = new Counter("vol_by_account", commonOptions)
-
 const liquidSwap = new AptosDex<liquidity_pool.LiquidityPool<any, any, any>>(volume, tvlAll, tvl, tvlByPool, {
     getXReserve: pool => pool.coin_x_reserve.value,
     getYReserve: pool => pool.coin_y_reserve.value,

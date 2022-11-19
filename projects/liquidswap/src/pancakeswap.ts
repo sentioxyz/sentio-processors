@@ -1,7 +1,7 @@
 import { swap } from "./types/aptos/pancake-swap";
 import { AptosDex, getCoinInfo } from "@sentio-processor/common/dist/aptos";
 import { aptos } from "@sentio/sdk";
-import { pancakeTvl, pancakeTvlAll, pancakeTvlByPool, pancakeVolume } from "./metrics";
+import { pancakeTvl, pancakeTvlAll, pancakeTvlByPool, pancakeVolume, vol_by_account } from "./metrics";
 
 swap.bind()
     .onEventPairCreatedEvent(async (evt, ctx) => {
@@ -18,7 +18,9 @@ swap.bind()
           evt.type_arguments[0], evt.type_arguments[1],
           evt.data_typed.amount_x_in + evt.data_typed.amount_x_out,
           evt.data_typed.amount_y_in + evt.data_typed.amount_y_out)
-
+      // if (value.isGreaterThan(100)) {
+      //   vol_by_account.add(ctx, value, { account: ctx.transaction.sender})
+      // }
       const coinXInfo = await getCoinInfo(evt.type_arguments[0])
       const coinYInfo = await getCoinInfo(evt.type_arguments[1])
       ctx.meter.Counter("event_swap_by_bridge").add(1, { bridge: coinXInfo.bridge })

@@ -7,7 +7,7 @@ import { amm } from "./types/aptos/auxexchange";
 import { TransactionPayload_EntryFunctionPayload } from "aptos-sdk/src/generated";
 import { router, swap } from "./types/aptos/pancake-swap";
 import { token, token_transfers } from "@sentio/sdk/lib/builtin/aptos/0x3";
-import { getChainQueryClient } from "@sentio/sdk/lib/aptos/utils";
+import { getChainQueryClient } from "@sentio/sdk/lib/aptos/api";
 import * as soffle3 from "./types/aptos/soffle3";
 import * as topaz from "./types/aptos/topaz";
 import * as bluemoves from "./types/aptos/bluemoves";

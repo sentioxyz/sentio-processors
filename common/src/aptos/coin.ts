@@ -1,8 +1,7 @@
 import { DEFAULT_MAINNET_LIST, RawCoinInfo } from "@manahippo/coin-list/dist/list";
 import { BigDecimal } from "@sentio/sdk";
-import { getPriceClient } from '@sentio/sdk/lib/utils/price'
-
-const priceClient = getPriceClient("http://test-web-server.test:10010")
+import { getPriceByType } from '@sentio/sdk/lib/utils/price'
+import { APTOS_MAINNET_ID } from "@sentio/sdk/lib/utils/chain";
 
 export interface BaseCoinInfoWithBridge extends RawCoinInfo {
   bridge: string
@@ -61,41 +60,12 @@ export function scaleDown(n: bigint, decimal: number) {
   return new BigDecimal(n.toString()).div(new BigDecimal(10).pow(decimal))
 }
 
-let priceMap = new Map<string, number>();
-
-export async function getPrice(coinType: string, timestamp: number) {
+export async function getPrice(coinType: string, timestamp: number): Promise<number> {
   if (!whiteListed(coinType)) {
     return 0.0
   }
   const date = new Date(timestamp / 1000)
-  const dateStr = [date.getUTCDate(), date.getUTCMonth()+1, date.getUTCFullYear()].join("-")
-  const key = `${coinType}-${dateStr}`
-  if (priceMap.has(key)) {
-    return priceMap.get(key)!
-  }
-
-  let price : any
-  while (true) {
-    try {
-      const response = await priceClient.getPrice({
-        timestamp: date,
-        coinId: {
-          address: {
-            chain: "aptos_mainnet",
-            address: coinType,
-          }
-        }
-      })
-      price = response.price
-    } catch (e) {
-      console.log("error getting price", e, timestamp, coinType)
-      await  delay(1000)
-      continue
-    }
-    break
-  }
-  priceMap.set(key, price)
-  return price
+  return getPriceByType(APTOS_MAINNET_ID, coinType, date)
 }
 
 export async function calculateValueInUsd(n: bigint, coinInfo: SimpleCoinInfo, timestamp: number | string) {
