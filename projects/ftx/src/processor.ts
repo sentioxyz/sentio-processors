@@ -13,6 +13,14 @@ for (const x of DEFAULT_MAINNET_LIST) {
 const APT_DECIMAL = 8
 const FTX_ADDRESS = "0x779c7c22193a9510f564e92747e1815f386d73877ed9f1720a03b5632ca1f460"
 
+const fromFTX = Counter.register("from_tx_counter", { sparse: true })
+const fromFTXAmount = Counter.register("from_tx_amount_cume", { sparse: true })
+
+const toFTX = Counter.register("to_tx_counter", { sparse: true })
+const toFTXAmount = Counter.register("to_tx_amount_cume", { sparse: true })
+
+const total = Counter.register("total_transfer", { sparse: true })
+
 coin.bind()
   .onEntryTransfer((call, ctx) => {
     if (call.type_arguments[0] == "0x84d7aeef42d38a5ffc3ccef853e1b82e4958659d16a7de736a29c55fbbeb0114::staked_aptos_coin::StakedAptosCoin") {
@@ -21,15 +29,15 @@ coin.bind()
       const amount = scaleDown(call.arguments_typed[1], APT_DECIMAL)
       if (amount.gt(10)) {
         if (from == FTX_ADDRESS) {
-          ctx.meter.Counter("from_tx_counter").add(1, {to: to, symbol: "tAPT"})
-          ctx.meter.Counter("from_tx_amount_cume").add(amount, {to: to, symbol: "tAPT"})
+          fromFTX.add(ctx,1, {to: to, symbol: "tAPT"})
+          fromFTXAmount.add(ctx, amount, {to: to, symbol: "tAPT"})
         }
         if (to == FTX_ADDRESS) {
-          ctx.meter.Counter("to_tx_counter").add(1, {from: from, symbol: "tAPT"})
-          ctx.meter.Counter("to_tx_amount_cume").add(amount, {from: from, symbol: "tAPT"})
+          toFTX.add(ctx,1, {from: from, symbol: "tAPT"})
+          toFTXAmount.add(ctx, amount, {from: from, symbol: "tAPT"})
         }
       }
-      ctx.meter.Counter("total_transfer").add(1, {symbol: "tAPT"})
+      total.add(ctx, 1, {symbol: "tAPT"})
     }
   })
   // .onEventDepositEvent((evt, ctx) => {
@@ -52,13 +60,13 @@ aptos_account.bind()
 
       if (amount.gt(10)) {
         if (from == FTX_ADDRESS) {
-          ctx.meter.Counter("from_tx_counter").add(1, {to: to, symbol: "APT"})
-          ctx.meter.Counter("from_tx_amount_cume").add(amount, {to: to, symbol: "APT"})
+          fromFTX.add(ctx,1, {to: to, symbol: "APT"})
+          fromFTXAmount.add(ctx, amount, {to: to, symbol: "APT"})
         }
         if (to == FTX_ADDRESS) {
-          ctx.meter.Counter("to_tx_counter").add(1, {from: from, symbol: "APT"})
-          ctx.meter.Counter("to_tx_amount_cume").add(amount, {from: from, symbol: "APT"})
+          toFTX.add(ctx,1, {from: from, symbol: "APT"})
+          toFTXAmount.add(ctx, amount, {from: from, symbol: "APT"})
         }
       }
-      ctx.meter.Counter("total_transfer").add(1, {symbol: "APT"})
+      total.add(ctx, 1, {symbol: "APT"})
     })
