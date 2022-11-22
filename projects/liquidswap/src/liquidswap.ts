@@ -6,7 +6,7 @@ import {
     AptosDex,
     calculateValueInUsd,
     CORE_TOKENS,
-    getCoinInfo,
+    getCoinInfo, getPairValue,
     getPrice,
     scaleDown,
     whiteListed
@@ -18,7 +18,7 @@ import { TypedMoveResource } from "@sentio/sdk/lib/aptos"
 import { MoveResource } from "aptos-sdk/src/generated"
 import {
     accountTracker, commonOptions,
-    inputUsd,
+    inputUsd, liquidity_by_account,
     lpTracker,
     priceGauge,
     priceGaugeNew,
@@ -42,12 +42,18 @@ liquidity_pool.bind()
     .onEventPoolCreatedEvent(async (evt, ctx) => {
         ctx.meter.Counter("num_pools").add(1)
         lpTracker.trackEvent(ctx, {distinctId: ctx.transaction.sender})
-
         // ctx.logger.info("", {user: "-", value: 0.0001})
     })
     .onEventLiquidityAddedEvent(async (evt, ctx) => {
         ctx.meter.Counter("event_liquidity_add").add(1)
         lpTracker.trackEvent(ctx, {distinctId: ctx.transaction.sender})
+
+        if (recordAccount) {
+            const value = await getPairValue(ctx, evt.type_arguments[0], evt.type_arguments[1], evt.data_typed.added_x_val, evt.data_typed.added_y_val)
+            if (value.isGreaterThan(10)) {
+                liquidity_by_account.add(ctx, value, { account: ctx.transaction.sender})
+            }
+        }
     })
     .onEventLiquidityRemovedEvent(async (evt, ctx) => {
         ctx.meter.Counter("event_liquidity_removed").add(1)

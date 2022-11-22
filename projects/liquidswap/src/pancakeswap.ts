@@ -1,7 +1,15 @@
 import { swap } from "./types/aptos/pancake-swap";
-import { AptosDex, getCoinInfo } from "@sentio-processor/common/dist/aptos";
+import { AptosDex, getCoinInfo, getPairValue } from "@sentio-processor/common/dist/aptos";
 import { aptos } from "@sentio/sdk";
-import { pancakeTvl, pancakeTvlAll, pancakeTvlByPool, pancakeVolume, recordAccount, vol_by_account } from "./metrics";
+import {
+  liquidity_by_account,
+  pancakeTvl,
+  pancakeTvlAll,
+  pancakeTvlByPool,
+  pancakeVolume,
+  recordAccount,
+  vol_by_account
+} from "./metrics";
 
 swap.bind()
     .onEventPairCreatedEvent(async (evt, ctx) => {
@@ -9,6 +17,12 @@ swap.bind()
     })
     .onEventAddLiquidityEvent(async (evt, ctx) => {
       ctx.meter.Counter("event_liquidity_add").add(1)
+      if (recordAccount) {
+        const value = await getPairValue(ctx, evt.type_arguments[0], evt.type_arguments[1], evt.data_typed.amount_x, evt.data_typed.amount_y)
+        if (value.isGreaterThan(10)) {
+          liquidity_by_account.add(ctx, value, { account: ctx.transaction.sender})
+        }
+      }
     })
     .onEventRemoveLiquidityEvent(async (evt, ctx) => {
       ctx.meter.Counter("event_liquidity_removed").add(1)

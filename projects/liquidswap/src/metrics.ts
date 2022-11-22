@@ -28,5 +28,6 @@ export const pancakeTvlByPool = Gauge.register("pancake_tvl_by_pool", commonOpti
 export const pancakeTvl = Gauge.register("pancake_tvl", commonOptions)
 
 
-export const recordAccount = true
+export const recordAccount = false
 export const vol_by_account = Counter.register("vol_by_account", commonOptions)
+export const liquidity_by_account = Counter.register("liquidity_by_account", commonOptions)
