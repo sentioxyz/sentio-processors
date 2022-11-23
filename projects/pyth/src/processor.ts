@@ -8,13 +8,13 @@ import { console_v1 } from "./types/aptos/pyth2";
 import LRU from 'lru-cache'
 
 const commonOptions = { sparse: true }
-const priceGauage = new Gauge("price", commonOptions)
-const priceEMAGauage = new Gauge("price_ema", commonOptions)
+const priceGauage = Gauge.register("price", commonOptions)
+const priceEMAGauage = Gauge.register("price_ema", commonOptions)
 
-const updates = new Counter("update")
-const updateWithFunder = new Counter("update_price_feeds_with_funder")
-const message = new Counter("message")
-const messages2 = new Counter("mint_with_pyth_and_price")
+const updates = Counter.register("update")
+const updateWithFunder = Counter.register("update_price_feeds_with_funder")
+const message = Counter.register("message")
+const messages2 = Counter.register("mint_with_pyth_and_price")
 
 const cache = new LRU<bigint, any>({
   maxSize: 5000,

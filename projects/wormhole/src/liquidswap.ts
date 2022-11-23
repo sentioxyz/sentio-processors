@@ -13,7 +13,7 @@ import {
 
 import { BigDecimal } from "@sentio/sdk/lib/core/big-decimal"
 
-import { TypedMoveResource } from "@sentio/sdk/lib/aptos/types"
+import { TypedMoveResource } from "@sentio/sdk/lib/aptos"
 import { MoveResource } from "aptos-sdk/src/generated"
 import { AptosDex } from "@sentio-processor/common/dist/aptos"
 import {

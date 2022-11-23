@@ -1411,10 +1411,10 @@
     webpack "^5.72.1"
     webpack-cli "^4.9.2"
 
-"@sentio/sdk@^1.29.1":
-  version "1.30.0"
-  resolved "https://registry.yarnpkg.com/@sentio/sdk/-/sdk-1.30.0.tgz#9c56d42571fb75480fd6d98c52f22d31dfe38c86"
-  integrity sha512-VXyRreWNgch4p8P2h07vlj6WShK504AwwOp93pgSejGa0VYMx/FhoCCtOeCONnNxo6t1myRP26cxRpjJEN6Eew==
+"@sentio/sdk@^1.30.2":
+  version "1.30.2"
+  resolved "https://registry.yarnpkg.com/@sentio/sdk/-/sdk-1.30.2.tgz#1480e99bb05caaefd6af2c3731bf290fec38392c"
+  integrity sha512-TM5nrLjlv2uvKUCrawOxmTn24PCl7vQTNBvyTb3BurzxHaxQ0a2VAX+/+DZNRsVi8djr9MJM0/hEbL4dOqxkFg==
   dependencies:
     "@ethersproject/providers" "~5.7.0"
     "@project-serum/anchor" "^0.25.0"
@@ -1437,6 +1437,8 @@
     google-protobuf "^3.15.8"
     js-yaml "^4.1.0"
     nice-grpc "^2.0.0"
+    nice-grpc-client-middleware-retry "^2.0.1"
+    nice-grpc-error-details "^0.1.4"
     node-fetch "2"
     p-queue "^6.6.2"
     ts-loader "^9.3.0"
@@ -6331,12 +6333,28 @@ next-tick@^1.1.0:
   resolved "https://registry.yarnpkg.com/next-tick/-/next-tick-1.1.0.tgz#1836ee30ad56d67ef281b22bd199f709449b35eb"
   integrity sha512-CXdUiJembsNjuToQvxayPZF9Vqht7hewsvy2sOWafLvi2awflj9mOC6bHIg50orX8IJvWKY9wYQ/zB2kogPslQ==
 
+nice-grpc-client-middleware-retry@^2.0.1:
+  version "2.0.1"
+  resolved "https://registry.yarnpkg.com/nice-grpc-client-middleware-retry/-/nice-grpc-client-middleware-retry-2.0.1.tgz#2b70d606baa6360acf8e216348ee761be20b34b2"
+  integrity sha512-U3oWOkSXw2VnBRUOduMYq6pwJ358HjbbhEzupOypIY9UhCHfyT7CxFs49Fd7v0zdV+EsxxowlkheM1v30vmTxw==
+  dependencies:
+    abort-controller-x "^0.4.0"
+    nice-grpc-common "^2.0.0"
+
 nice-grpc-common@^2.0.0:
   version "2.0.0"
   resolved "https://registry.yarnpkg.com/nice-grpc-common/-/nice-grpc-common-2.0.0.tgz#36c9b9cdc38d3b4aa8ad7abf120fd4737eff70ea"
   integrity sha512-8h/QraeDmScnbKLd5ImS+e7uUDxumvByBo6ILj1jLHjKlIa74WKHNSn54u7RmnJ5tFAYE70iTm8VWyvbTv82yg==
   dependencies:
     ts-error "^1.0.6"
+
+nice-grpc-error-details@^0.1.4:
+  version "0.1.4"
+  resolved "https://registry.yarnpkg.com/nice-grpc-error-details/-/nice-grpc-error-details-0.1.4.tgz#1f57c7be8a6f2ea2867492eeb578b84ee11154b3"
+  integrity sha512-zgP/pAwabqF1bZePgU4VJRZ2CTa3RmNH67bNFfHBT0bhfMO28C1RSOApf/8xrib7bhINf7YCm8ntTjmYnP83rQ==
+  dependencies:
+    nice-grpc-common "^2.0.0"
+    protobufjs "^7.1.2"
 
 nice-grpc@^2.0.0:
   version "2.0.1"
@@ -6720,7 +6738,7 @@ prompts@^2.0.1:
     kleur "^3.0.3"
     sisteransi "^1.0.5"
 
-protobufjs@^7.0.0:
+protobufjs@^7.0.0, protobufjs@^7.1.2:
   version "7.1.2"
   resolved "https://registry.yarnpkg.com/protobufjs/-/protobufjs-7.1.2.tgz#a0cf6aeaf82f5625bffcf5a38b7cd2a7de05890c"
   integrity sha512-4ZPTPkXCdel3+L81yw3dG6+Kq3umdWKh7Dc7GW/CpNk4SX3hK58iPCWeCyhVTDrbkNeKrYNZ7EojM5WDaEWTLQ==
