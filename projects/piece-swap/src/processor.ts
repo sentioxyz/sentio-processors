@@ -2,6 +2,7 @@ import { piece_swap, piece_swap_script } from './types/aptos/piece-swap'
 import { AccountEventTracker, aptos, Gauge } from "@sentio/sdk";
 
 import { AptosDex, getCoinInfo } from "@sentio-processor/common/dist/aptos"
+import { type_info } from "@sentio/sdk/lib/builtin/aptos/0x1";
 
 const commonOptions = { sparse:  true }
 const tvlAll = Gauge.register("tvl_all", commonOptions)
@@ -40,6 +41,23 @@ piece_swap_script.bind()
     accountTracker.trackEvent(ctx, { distinctId: ctx.transaction.sender })
   })
 
+
+piece_swap.bind()
+  .onEventSwapEvent(async (evt, ctx) => {
+    const coinX = extractTypeName(evt.data_typed.x)
+    const coinY = extractTypeName(evt.data_typed.y)
+    const value = await pieceSwap.recordTradingVolume(ctx, coinX, coinY,
+        evt.data_typed.x_in,
+        evt.data_typed.y_out)
+
+    const coinXInfo = await getCoinInfo(coinX)
+    const coinYInfo = await getCoinInfo(coinY)
+    ctx.meter.Counter("event_swap_by_bridge").add(1, { bridge: coinXInfo.bridge })
+    ctx.meter.Counter("event_swap_by_bridge").add(1, { bridge: coinYInfo.bridge })
+
+    accountTracker.trackEvent(ctx, { distinctId: ctx.transaction.sender })
+  })
+
 const pieceSwap = new AptosDex<piece_swap.PieceSwapPoolInfo<any, any>>(volume, tvlAll, tvl, tvlByPool, {
   getXReserve: pool => pool.reserve_x.value,
   getYReserve: pool => pool.reserve_y.value,
@@ -50,3 +68,25 @@ const pieceSwap = new AptosDex<piece_swap.PieceSwapPoolInfo<any, any>>(volume, t
 // amm.loadTypes(aptos.TYPE_REGISTRY)
 aptos.AptosAccountProcessor.bind({address: piece_swap.DEFAULT_OPTIONS.address, startVersion: 26000000})
     .onVersionInterval((rs, ctx) => pieceSwap.syncPools(rs, ctx))
+
+
+function extractTypeName(typeInfo: type_info.TypeInfo) {
+  var rawName = hex_to_ascii(typeInfo.struct_name)
+  if (rawName.startsWith("Coin<")) {
+    return rawName.substring(5, rawName.length - 1)
+  } else {
+    return rawName
+  }
+}
+
+function hex_to_ascii(str1: String) {
+  var hex  = str1.toString();
+  if (hex.startsWith("0x")) {
+    hex = hex.substring(2)
+  }
+  var str = '';
+  for (var n = 0; n < hex.length; n += 2) {
+    str += String.fromCharCode(parseInt(hex.substr(n, 2), 16));
+  }
+  return str;
+}
