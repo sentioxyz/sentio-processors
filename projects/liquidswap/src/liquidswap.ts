@@ -1,4 +1,4 @@
-import { liquidity_pool } from "./types/aptos/liquidswap"
+import { liquidity_pool, loadAllTypes } from "./types/aptos/liquidswap"
 
 import { aptos, Counter, Gauge } from "@sentio/sdk"
 
@@ -14,7 +14,7 @@ import {
 
 import { BigDecimal } from "@sentio/sdk/lib/core/big-decimal"
 
-import { TypedMoveResource } from "@sentio/sdk/lib/aptos"
+import { TYPE_REGISTRY, TypedMoveResource } from "@sentio/sdk/lib/aptos"
 import { MoveResource } from "aptos-sdk/src/generated"
 import {
     accountTracker, commonOptions,
@@ -57,7 +57,7 @@ liquidity_pool.bind()
     })
     .onEventLiquidityRemovedEvent(async (evt, ctx) => {
         ctx.meter.Counter("event_liquidity_removed").add(1)
-        accountTracker.trackEvent(ctx, {distinctId: ctx.transaction.sender})
+        lpTracker.trackEvent(ctx, {distinctId: ctx.transaction.sender})
     })
     .onEventSwapEvent(async (evt, ctx) => {
         const value = await liquidSwap.recordTradingVolume(ctx,
@@ -77,7 +77,6 @@ liquidity_pool.bind()
         ctx.meter.Counter("event_swap_by_bridge").add(1, {bridge: coinYInfo.bridge})
 
         accountTracker.trackEvent(ctx, {distinctId: ctx.transaction.sender})
-
     })
     .onEventFlashloanEvent(async (evt, ctx) => {
         const coinXInfo = getCoinInfo(evt.type_arguments[0])
@@ -343,5 +342,6 @@ function calcPrice(coin: string, pools: TypedMoveResource<liquidity_pool.Liquidi
     return res
 }
 
+loadAllTypes(TYPE_REGISTRY)
 aptos.AptosAccountProcessor.bind({address: "0x5a97986a9d031c4567e15b797be516910cfcb4156312482efc6a19c0a30c948"})
     .onVersionInterval(async (resources, ctx) => syncLiquidSwapPools(resources, ctx))

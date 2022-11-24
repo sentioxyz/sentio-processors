@@ -14,7 +14,7 @@ import { swap } from "./types/aptos/pancake-swap";
 import { BigDecimal } from "@sentio/sdk/lib/core/big-decimal";
 import { MoveResource } from "aptos-sdk/src/generated";
 import { AptosResourceContext } from "@sentio/sdk/lib/aptos/context";
-import { TypedMoveResource } from "@sentio/sdk/lib/aptos/types";
+import { TypedMoveResource } from "@sentio/sdk/lib/aptos";
 
 const commonOptions = { sparse:  true }
 const totalValue = new Gauge("total_value", commonOptions)
