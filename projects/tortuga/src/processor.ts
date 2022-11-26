@@ -15,6 +15,8 @@ const swap = new Counter("swap_num", commonOptions)
 
 const stake = new Counter("stake_num", commonOptions)
 const stakeAmount = new Counter("stake_amount", commonOptions)
+const lastStakeAmount = new Gauge("last_stake_amount", commonOptions)
+
 const unstake = new Counter("unstake_num", commonOptions)
 const unstakeAmount = new Counter("unstake_amount", commonOptions)
 const claim = new Counter("claim_num", commonOptions)
@@ -34,6 +36,8 @@ stake_router.bind()
     accountTracker.trackEvent(ctx, { distinctId: ctx.transaction.sender})
     stakeAmount.add(ctx, scaleDown(evt.data_typed.amount), { coin: "APT"})
     stakeAmount.add(ctx, scaleDown(evt.data_typed.t_apt_coins), { coin: "tAPT"})
+    lastStakeAmount.record(ctx, scaleDown(evt.data_typed.amount), { coin: "APT"})
+    lastStakeAmount.record(ctx, scaleDown(evt.data_typed.t_apt_coins), { coin: "tAPT"})
     stake.add(ctx, 1)
   })
   .onEventUnstakeEvent((evt, ctx) => {
