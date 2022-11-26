@@ -28,18 +28,18 @@ piece_swap_script.bind()
     accountTracker.trackEvent(ctx, { distinctId: ctx.transaction.sender })
     // ctx.logger.info("LiquidityRemoved", { user: ctx.transaction.sender })
   })
-  .onEntrySwapScript(async (evt, ctx) => {
-    const value = await pieceSwap.recordTradingVolume(ctx, evt.type_arguments[0], evt.type_arguments[1],
-        evt.arguments_typed[0] + evt.arguments_typed[1],
-        evt.arguments_typed[2] + evt.arguments_typed[3])
-
-    const coinXInfo = await getCoinInfo(evt.type_arguments[0])
-    const coinYInfo = await getCoinInfo(evt.type_arguments[1])
-    ctx.meter.Counter("event_swap_by_bridge").add(1, { bridge: coinXInfo.bridge })
-    ctx.meter.Counter("event_swap_by_bridge").add(1, { bridge: coinYInfo.bridge })
-
-    accountTracker.trackEvent(ctx, { distinctId: ctx.transaction.sender })
-  })
+  // .onEntrySwapScript(async (evt, ctx) => {
+  //   const value = await pieceSwap.recordTradingVolume(ctx, evt.type_arguments[0], evt.type_arguments[1],
+  //       evt.arguments_typed[0] + evt.arguments_typed[1],
+  //       evt.arguments_typed[2] + evt.arguments_typed[3])
+  //
+  //   const coinXInfo = await getCoinInfo(evt.type_arguments[0])
+  //   const coinYInfo = await getCoinInfo(evt.type_arguments[1])
+  //   ctx.meter.Counter("event_swap_by_bridge").add(1, { bridge: coinXInfo.bridge })
+  //   ctx.meter.Counter("event_swap_by_bridge").add(1, { bridge: coinYInfo.bridge })
+  //
+  //   accountTracker.trackEvent(ctx, { distinctId: ctx.transaction.sender })
+  // })
 
 
 piece_swap.bind()
@@ -49,6 +49,8 @@ piece_swap.bind()
     const value = await pieceSwap.recordTradingVolume(ctx, coinX, coinY,
         evt.data_typed.x_in,
         evt.data_typed.y_out)
+
+    console.log(coinX, coinY, evt.data_typed.x_in, evt.data_typed.y_out)
 
     const coinXInfo = await getCoinInfo(coinX)
     const coinYInfo = await getCoinInfo(coinY)
@@ -71,12 +73,12 @@ aptos.AptosAccountProcessor.bind({address: piece_swap.DEFAULT_OPTIONS.address, s
 
 
 function extractTypeName(typeInfo: type_info.TypeInfo) {
-  var rawName = hex_to_ascii(typeInfo.struct_name)
-  if (rawName.startsWith("Coin<")) {
-    return rawName.substring(5, rawName.length - 1)
-  } else {
-    return rawName
-  }
+  return [typeInfo.account_address, hex_to_ascii(typeInfo.module_name), hex_to_ascii(typeInfo.struct_name)].join("::")
+  // if (rawName.startsWith("Coin<")) {
+  //   return rawName.substring(5, rawName.length - 1)
+  // } else {
+  //   return rawName
+  // }
 }
 
 function hex_to_ascii(str1: String) {
