@@ -5,10 +5,17 @@ import { AptosDex, getCoinInfo } from "@sentio-processor/common/dist/aptos"
 import { type_info } from "@sentio/sdk/lib/builtin/aptos/0x1";
 
 const commonOptions = { sparse:  true }
+export const volOptions = {
+  sparse: true,
+  aggregationConfig: {
+    intervalInMinutes: [60],
+  }
+}
+
 const tvlAll = Gauge.register("tvl_all", commonOptions)
 const tvl = Gauge.register("tvl", commonOptions)
 const tvlByPool = Gauge.register("tvl_by_pool", commonOptions)
-const volume = Gauge.register("vol", commonOptions)
+const volume = Gauge.register("vol", volOptions)
 
 const accountTracker = AccountEventTracker.register("users")
 

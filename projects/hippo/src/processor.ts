@@ -2,35 +2,24 @@ import { AccountEventTracker, aptos, Counter, Gauge } from "@sentio/sdk";
 
 import { aggregator } from './types/aptos/aggregator'
 import { type_info } from "@sentio/sdk/lib/builtin/aptos/0x1"
-import { amm } from './types/aptos/auxexchange'
-import { liquidity_pool } from "./types/aptos/liquidswap";
-import { stake_router } from "./types/aptos/tortuga";
-import { toBigDecimal } from "@sentio/sdk/lib/utils/conversion";
-import { BigDecimal } from "@sentio/sdk/lib/core/big-decimal";
-import { Exporter } from "@sentio/sdk/lib/core/exporter";
 import { getPrice, getCoinInfo, whiteListed } from "@sentio-processor/common/dist/aptos/coin"
 import { scaleDown } from "@sentio-processor/common/dist/aptos/coin";
-// import { TypeInfo } from "@manahippo/coin-list/dist/src/stdlib/type_info";
 
 const commonOptions = { sparse:  false }
+export const volOptions = {
+  sparse: true,
+  aggregationConfig: {
+    intervalInMinutes: [60],
+    // discardOrigin: false
+  }
+}
 
-const liquidityAdd = new Counter("liquidity_add_num", commonOptions)
-const liquidityRemoved = new Counter("liquidity_remove_num", commonOptions)
-const swap = new Counter("swap_num", commonOptions)
-
-const stake = new Counter("stake_num", commonOptions)
-const stakeAmount = new Counter("stake_amount", commonOptions)
-const unstake = new Counter("unstake_num", commonOptions)
-const unstakeAmount = new Counter("unstake_amount", commonOptions)
-const claim = new Counter("claim_num", commonOptions)
-const claimAmount = new Counter("claim_amount", commonOptions)
-
-const vol = new Gauge("vol", commonOptions)
+const vol = Gauge.register("vol", volOptions)
 const totalTx = new Counter("tx", commonOptions)
-const tvl = new Counter("tvl", commonOptions)
+// const tvl = new Counter("tvl", commonOptions)
 
 const accountTracker = AccountEventTracker.register("users")
-const exporter = Exporter.register("tortuga", "test_channel")
+// const exporter = Exporter.register("tortuga", "test_channel")
 
 aggregator.bind({address: "0x89576037b3cc0b89645ea393a47787bb348272c76d6941c574b053672b848039"})
 .onEventSwapStepEvent( async (evt, ctx) => {
@@ -103,7 +92,6 @@ function getDex(dex: number) {
   } else {
     return 'UNKNOWN'
   }
-
 }
 
 const DEX_MAP = new Map<number, string>([

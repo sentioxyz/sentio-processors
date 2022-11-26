@@ -17,12 +17,12 @@ import { AptosResourceContext } from "@sentio/sdk/lib/aptos/context";
 import { TypedMoveResource } from "@sentio/sdk/lib/aptos";
 
 const commonOptions = { sparse:  true }
-const totalValue = new Gauge("total_value", commonOptions)
+const totalValue = Gauge.register("total_value", commonOptions)
 const accountTracker = AccountEventTracker.register("users")
 const lpTracker = AccountEventTracker.register("lp")
 
-export const tvlByPool = new Gauge("tvl_by_pool", commonOptions)
-export const volume = new Gauge("vol", commonOptions)
+export const tvlByPool = Gauge.register("tvl_by_pool", commonOptions)
+export const volume = Gauge.register("vol", commonOptions)
 
 // function isUSDC(info: SimpleCoinInfo): boolean {
 //   return info.symbol.toLowerCase().includes("usdc");

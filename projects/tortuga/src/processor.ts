@@ -20,8 +20,8 @@ const unstakeAmount = new Counter("unstake_amount", commonOptions)
 const claim = new Counter("claim_num", commonOptions)
 const claimAmount = new Counter("claim_amount", commonOptions)
 
-const vol = new Gauge("vol", commonOptions)
-const tvl = new Counter("tvl", commonOptions)
+const vol = Gauge.register("vol", commonOptions)
+const tvl = Counter.register("tvl", commonOptions)
 
 const accountTracker = AccountEventTracker.register("users")
 
