@@ -300,7 +300,8 @@ const AUX_EXCHANGE = new USDCDex<amm.Pool<any, any>>({
 })
 
 aptos.AptosAccountProcessor.bind({address: amm.DEFAULT_OPTIONS.address})
-    .onTimeInterval((rs,ctx) => AUX_EXCHANGE.syncPools(rs, ctx) )
+    .onTimeInterval((rs,ctx) => AUX_EXCHANGE.syncPools(rs, ctx),
+        60 * 24)
 
 const PANCAKE_SWAP_APTOS = new USDCDex<swap.TokenPairReserve<any, any>>({
   getXReserve: pool => pool.reserve_x,
@@ -318,7 +319,8 @@ function getCurve(type: string) {
 }
 
 aptos.AptosAccountProcessor.bind({address: swap.DEFAULT_OPTIONS.address })
-    .onTimeInterval((rs, ctx) => PANCAKE_SWAP_APTOS.syncPools(rs, ctx))
+    .onTimeInterval((rs, ctx) => PANCAKE_SWAP_APTOS.syncPools(rs, ctx),
+        60 * 24)
 
 const LIQUID_SWAP = new USDCDex<liquidity_pool.LiquidityPool<any, any, any>>({
   getXReserve: pool => pool.coin_x_reserve.value,
@@ -328,4 +330,5 @@ const LIQUID_SWAP = new USDCDex<liquidity_pool.LiquidityPool<any, any, any>>({
 })
 
 aptos.AptosAccountProcessor.bind({address: "0x5a97986a9d031c4567e15b797be516910cfcb4156312482efc6a19c0a30c948"})
-    .onTimeInterval(async (resources, ctx) => LIQUID_SWAP.syncPools(resources, ctx))
+    .onTimeInterval(async (resources, ctx) => LIQUID_SWAP.syncPools(resources, ctx),
+        60 * 24)
