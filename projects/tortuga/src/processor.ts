@@ -36,8 +36,10 @@ stake_router.bind()
     accountTracker.trackEvent(ctx, { distinctId: ctx.transaction.sender})
     stakeAmount.add(ctx, scaleDown(evt.data_typed.amount), { coin: "APT"})
     stakeAmount.add(ctx, scaleDown(evt.data_typed.t_apt_coins), { coin: "tAPT"})
-    lastStakeAmount.record(ctx, scaleDown(evt.data_typed.amount), { coin: "APT"})
-    lastStakeAmount.record(ctx, scaleDown(evt.data_typed.t_apt_coins), { coin: "tAPT"})
+    if (evt.data_typed.amount > 0n) {
+      lastStakeAmount.record(ctx, scaleDown(evt.data_typed.amount), {coin: "APT"})
+      lastStakeAmount.record(ctx, scaleDown(evt.data_typed.t_apt_coins), { coin: "tAPT"})
+    }
     stake.add(ctx, 1)
   })
   .onEventUnstakeEvent((evt, ctx) => {

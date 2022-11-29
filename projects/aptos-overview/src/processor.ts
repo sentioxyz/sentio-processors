@@ -2,7 +2,7 @@ import { AccountEventTracker, aptos, Counter, Gauge } from "@sentio/sdk";
 import { aptos_coin, coin, managed_coin, resource_account, aptos_account } from "@sentio/sdk/lib/builtin/aptos/0x1";
 
 import { DEFAULT_MAINNET_LIST, RawCoinInfo } from "@manahippo/coin-list/dist/list";
-import { liquidity_pool, scripts } from "./types/aptos/liquidswap";
+import * as liquidswap from "./types/aptos/liquidswap";
 import { amm } from "./types/aptos/auxexchange";
 import { TransactionPayload_EntryFunctionPayload } from "aptos-sdk/src/generated";
 import { router, swap } from "./types/aptos/pancake-swap";
@@ -63,11 +63,15 @@ aptos_account.bind()
 //   })
 
 // swaps
-scripts.bind()
-  .onTransaction((tx, ctx) => {
-    txnCounter.add(ctx, 1, { kind: "swap", protocol: "liquidswap"})
-  })
+for (const s of [liquidswap.scripts_v3, liquidswap.scripts_v2, liquidswap.scripts,
+  liquidswap.liquidity_pool, liquidswap.dao_storage, liquidswap.global_config, liquidswap.lp_account]) {
+  s.bind()
+    .onTransaction((tx, ctx) => {
+      txnCounter.add(ctx, 1, { kind: "swap", protocol: "liquidswap"})
+    })
+}
 
+// for (const s of []) {}
 amm.bind()
   .onTransaction((tx, ctx) => {
     txnCounter.add(ctx, 1, { kind: "swap", protocol: "aux"})
