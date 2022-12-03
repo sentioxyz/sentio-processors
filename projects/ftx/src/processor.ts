@@ -11,7 +11,13 @@ for (const x of DEFAULT_MAINNET_LIST) {
 }
 
 const APT_DECIMAL = 8
-const FTX_ADDRESS = "0x779c7c22193a9510f564e92747e1815f386d73877ed9f1720a03b5632ca1f460"
+
+const WATCHES = new Map<string, string>([
+  ["0x779c7c22193a9510f564e92747e1815f386d73877ed9f1720a03b5632ca1f460", "ftx"],
+  ["0xae1a6f3d3daccaf77b55044cea133379934bba04a11b9d0bbd643eae5e6e9c70", "binance"],
+  ["0xb0446c653452eae6d11467e7f4fcfe2175227ca22b2c7b3a802b9a64ddd250ee", "trading"],
+  ["0xa881b11f0182881eb249f5185db7487b4f41b113efba42714652463c1567eaf7", "hot_wallet"]]
+)
 
 const fromFTX = Counter.register("from_tx_counter", { sparse: true })
 const fromFTXAmount = Counter.register("from_tx_amount_cume", { sparse: true })
@@ -28,13 +34,15 @@ coin.bind()
       const to = call.arguments_typed[0]
       const amount = scaleDown(call.arguments_typed[1], APT_DECIMAL)
       if (amount.gt(10)) {
-        if (from == FTX_ADDRESS) {
-          fromFTX.add(ctx,1, {to: to, symbol: "tAPT"})
-          fromFTXAmount.add(ctx, amount, {to: to, symbol: "tAPT"})
+        const fromLabel = WATCHES.get(from)
+        const toLabel = WATCHES.get(to)
+        if (fromLabel) {
+          fromFTX.add(ctx,1, {to: to, symbol: "tAPT", account: fromLabel})
+          fromFTXAmount.add(ctx, amount, {to: to, symbol: "tAPT", account: fromLabel})
         }
-        if (to == FTX_ADDRESS) {
-          toFTX.add(ctx,1, {from: from, symbol: "tAPT"})
-          toFTXAmount.add(ctx, amount, {from: from, symbol: "tAPT"})
+        if (toLabel) {
+          toFTX.add(ctx,1, {from: from, symbol: "tAPT", account: toLabel})
+          toFTXAmount.add(ctx, amount, {from: from, symbol: "tAPT", account: toLabel})
         }
       }
       total.add(ctx, 1, {symbol: "tAPT"})
@@ -59,13 +67,16 @@ aptos_account.bind()
       const amount = scaleDown(call.arguments_typed[1], APT_DECIMAL)
 
       if (amount.gt(10)) {
-        if (from == FTX_ADDRESS) {
-          fromFTX.add(ctx,1, {to: to, symbol: "APT"})
-          fromFTXAmount.add(ctx, amount, {to: to, symbol: "APT"})
+        const fromLabel = WATCHES.get(from)
+        const toLabel = WATCHES.get(to)
+
+        if (fromLabel) {
+          fromFTX.add(ctx,1, {to: to, symbol: "APT", account: fromLabel})
+          fromFTXAmount.add(ctx, amount, {to: to, symbol: "APT", account: fromLabel})
         }
-        if (to == FTX_ADDRESS) {
-          toFTX.add(ctx,1, {from: from, symbol: "APT"})
-          toFTXAmount.add(ctx, amount, {from: from, symbol: "APT"})
+        if (toLabel) {
+          toFTX.add(ctx,1, {from: from, symbol: "APT", account: toLabel})
+          toFTXAmount.add(ctx, amount, {from: from, symbol: "APT", account: toLabel})
         }
       }
       total.add(ctx, 1, {symbol: "APT"})

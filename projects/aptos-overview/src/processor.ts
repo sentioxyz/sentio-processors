@@ -119,7 +119,7 @@ const queryClient = getChainQueryClient()
 
 aptos.AptosAccountProcessor.bind({address: "0x1"})
     .onTimeInterval(async (resources, ctx) => sync(ctx),
-        24 * 60)
+       24*60)
 
 async function sync(ctx: AptosResourceContext) {
   interface myRow {
