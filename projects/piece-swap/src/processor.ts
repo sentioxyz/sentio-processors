@@ -3,6 +3,7 @@ import { AccountEventTracker, aptos, Gauge } from "@sentio/sdk";
 
 import { AptosDex, getCoinInfo } from "@sentio-processor/common/dist/aptos"
 import { type_info } from "@sentio/sdk/lib/builtin/aptos/0x1";
+require("./hippo")
 
 const commonOptions = { sparse:  true }
 export const volOptions = {
