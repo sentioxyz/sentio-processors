@@ -15,11 +15,8 @@ export const volOptions = {
 }
 
 const vol = Gauge.register("vol_hippo", volOptions)
-const totalTx = new Counter("tx_hippo", commonOptions)
-// const tvl = new Counter("tvl", commonOptions)
 
 const accountTracker = AccountEventTracker.register("users_hippo")
-// const exporter = Exporter.register("tortuga", "test_channel")
 
 aggregator.bind({address: "0x89576037b3cc0b89645ea393a47787bb348272c76d6941c574b053672b848039"})
 .onEventSwapStepEvent( async (evt, ctx) => {
@@ -27,25 +24,26 @@ aggregator.bind({address: "0x89576037b3cc0b89645ea393a47787bb348272c76d6941c574b
   const inputAmount = evt.data_typed.input_amount
   const outputAmount = evt.data_typed.output_amount
   const dexType = evt.data_typed.dex_type
-  const xType = extractTypeName(evt.data_typed.x_type_info)
-  const yType = extractTypeName(evt.data_typed.y_type_info)
+  if (dexType == 12) {
 
-  const coinXInfo = getCoinInfo(xType)
-  const coinYInfo = getCoinInfo(yType)
-  const poolType = evt.data_typed.pool_type
-  const priceX =  await getPrice(xType, Number(timestamp))
-  const priceY =  await getPrice(yType, Number(timestamp))
-  const pair = constructPair(xType, yType)
-  const volume = scaleDown(inputAmount, coinXInfo.decimals).multipliedBy(priceX)
-  const symbolX = coinXInfo.symbol
-  const symbolY = coinYInfo.symbol
-  const displayPair = constructDisplay(symbolX, symbolY)
+    const xType = extractTypeName(evt.data_typed.x_type_info)
+    const yType = extractTypeName(evt.data_typed.y_type_info)
 
+    const coinXInfo = getCoinInfo(xType)
+    const coinYInfo = getCoinInfo(yType)
+    const poolType = evt.data_typed.pool_type
+    const priceX =  await getPrice(xType, Number(timestamp))
+    const priceY =  await getPrice(yType, Number(timestamp))
+    const pair = constructPair(xType, yType)
+    const volume = scaleDown(inputAmount, coinXInfo.decimals).multipliedBy(priceX)
+    const symbolX = coinXInfo.symbol
+    const symbolY = coinYInfo.symbol
+    const displayPair = constructDisplay(symbolX, symbolY)
 
-  accountTracker.trackEvent(ctx, { distinctId: ctx.transaction.sender})
-  totalTx.add(ctx, 1)
-  if (whiteListed(xType)) {
-    vol.record(ctx, volume, {dex: getDex(dexType), poolType: poolType.toString(), xType: xType, yType: yType, symbolX: symbolX, symbolY: symbolY, pair: displayPair})
+    accountTracker.trackEvent(ctx, { distinctId: ctx.transaction.sender})
+    if (whiteListed(xType)) {
+        vol.record(ctx, volume, {dex: getDex(dexType)})
+    }
   }
 })
 
