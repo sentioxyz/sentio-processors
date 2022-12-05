@@ -4,7 +4,7 @@ import { aggregator } from './types/aptos/aggregator'
 import { type_info } from "@sentio/sdk/lib/builtin/aptos/0x1"
 import { getPrice, getCoinInfo, whiteListed } from "@sentio-processor/common/dist/aptos/coin"
 import { scaleDown } from "@sentio-processor/common/dist/aptos/coin";
-
+import { getPair } from "@sentio-processor/common/dist/aptos";
 const commonOptions = { sparse:  false }
 export const volOptions = {
   sparse: true,
@@ -33,16 +33,18 @@ aggregator.bind({address: "0x89576037b3cc0b89645ea393a47787bb348272c76d6941c574b
     const coinYInfo = getCoinInfo(yType)
     const poolType = evt.data_typed.pool_type
     const priceX =  await getPrice(xType, Number(timestamp))
-    const priceY =  await getPrice(yType, Number(timestamp))
-    const pair = constructPair(xType, yType)
     const volume = scaleDown(inputAmount, coinXInfo.decimals).multipliedBy(priceX)
     const symbolX = coinXInfo.symbol
     const symbolY = coinYInfo.symbol
-    const displayPair = constructDisplay(symbolX, symbolY)
+    const displayPair = await getPair(symbolX, symbolY)
 
     accountTracker.trackEvent(ctx, { distinctId: ctx.transaction.sender})
     if (whiteListed(xType)) {
-        vol.record(ctx, volume, {dex: getDex(dexType)})
+        vol.record(ctx, volume, {dex: getDex(dexType), pair: displayPair, bridge: coinXInfo.bridge})
+    }
+
+    if (whiteListed(yType)) {
+        vol.record(ctx, volume, {dex: getDex(dexType), pair: displayPair, bridge: coinYInfo.bridge})
     }
   }
 })
@@ -56,13 +58,22 @@ function extractTypeName(typeInfo: type_info.TypeInfo) {
   }
 }
 
-function constructPair(xType: String, yType: String) {
-  if (xType > yType) {
-    return xType + "-" + yType
-  } else {
-    return yType + "-" + xType
-  }
-}
+// function constructPair(xType: String, yType: String) {
+//   if (xType > yType) {
+//     return xType + "-" + yType
+//   } else {
+//     return yType + "-" + xType
+//   }
+// }
+
+// export async function getPair(coinx: string, coiny: string): Promise<string> {
+//     const coinXInfo = await getCoinInfo(coinx)
+//     const coinYInfo = await getCoinInfo(coiny)
+//     if (coinXInfo.symbol.localeCompare(coinYInfo.symbol) > 0) {
+//       return `${coinYInfo.symbol}-${coinXInfo.symbol}`
+//     }
+//     return `${coinXInfo.symbol}-${coinYInfo.symbol}`
+//   }
 
 function constructDisplay(symbolX: String, symbolY: String) {
   if (symbolX > symbolY) {
