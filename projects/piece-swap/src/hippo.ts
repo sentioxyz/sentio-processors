@@ -36,7 +36,10 @@ aggregator.bind({address: "0x89576037b3cc0b89645ea393a47787bb348272c76d6941c574b
     const volume = scaleDown(inputAmount, coinXInfo.decimals).multipliedBy(priceX)
     const symbolX = coinXInfo.symbol
     const symbolY = coinYInfo.symbol
-    const displayPair = await getPair(symbolX, symbolY)
+    if (!whiteListed(xType) || !whiteListed(yType)) {
+        return
+    }
+    const displayPair = await getPair(xType, yType)
 
     accountTracker.trackEvent(ctx, { distinctId: ctx.transaction.sender})
     if (whiteListed(xType)) {
