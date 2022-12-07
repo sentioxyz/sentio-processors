@@ -50,4 +50,4 @@ const PANCAKE_SWAP_APTOS = new AptosDex<swap.TokenPairReserve<any, any>>(pancake
 
 aptos.AptosAccountProcessor.bind({address: swap.DEFAULT_OPTIONS.address })
     .onTimeInterval((rs, ctx) =>
-        PANCAKE_SWAP_APTOS.syncPools(rs, ctx), 60 * 12)
+        PANCAKE_SWAP_APTOS.syncPools(rs, ctx), 60, 12 * 60)

@@ -347,4 +347,4 @@ function calcPrice(coin: string, pools: TypedMoveResource<liquidity_pool.Liquidi
 loadAllTypes(TYPE_REGISTRY)
 aptos.AptosAccountProcessor.bind({address: "0x5a97986a9d031c4567e15b797be516910cfcb4156312482efc6a19c0a30c948"})
     .onTimeInterval(async (resources, ctx) =>
-        syncLiquidSwapPools(resources, ctx), 60 * 12)
+        syncLiquidSwapPools(resources, ctx), 60, 12 * 60)

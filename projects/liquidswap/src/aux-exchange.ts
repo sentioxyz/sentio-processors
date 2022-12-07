@@ -20,7 +20,7 @@ const AUX_EXCHANGE = new AptosDex<amm.Pool<any, any>>(auxVolume, auxTvlAll, auxT
 
 aptos.AptosAccountProcessor.bind({address: amm.DEFAULT_OPTIONS.address})
     .onTimeInterval((rs,ctx) =>
-        AUX_EXCHANGE.syncPools(rs, ctx), 60 * 12)
+        AUX_EXCHANGE.syncPools(rs, ctx), 60, 12 * 60)
 
 amm.bind()
     .onEntryCreatePool(async (evt, ctx) => {
