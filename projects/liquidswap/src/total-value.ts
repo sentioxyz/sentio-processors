@@ -12,7 +12,7 @@ for (const token of CORE_TOKENS.values()) {
   const coinInfoType = `0x1::coin::CoinInfo<${token.token_type.type}>`
     // const price = await getPrice(v.token_type.type, timestamp)
   aptos.AptosAccountProcessor.bind({address: token.token_type.account_address})
-    .onVersionInterval(async (resources, ctx) => {
+    .onTimeInterval(async (resources, ctx) => {
       const coinInfoRes = aptos.TYPE_REGISTRY.filterAndDecodeResources<coin.CoinInfo<any>>(coin.CoinInfo.TYPE_QNAME, resources)
       if (coinInfoRes.length === 0) {
         return
@@ -50,5 +50,5 @@ for (const token of CORE_TOKENS.values()) {
       if (value.isGreaterThan(0)) {
         totalValue.record(ctx, value, {coin: token.symbol, bridge: token.bridge, type: token.token_type.type})
       }
-    }, 100000, coinInfoType)
+    }, 60 * 12, coinInfoType)
 }

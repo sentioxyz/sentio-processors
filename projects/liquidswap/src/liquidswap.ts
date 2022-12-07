@@ -288,6 +288,7 @@ const minLocked = 1e4
 let priceInUsd: Map<string, BigDecimal> = new Map<string, BigDecimal>()
 
 function calcPrice(coin: string, pools: TypedMoveResource<liquidity_pool.LiquidityPool<any, any, any>>[]) {
+    /*
     const coinInfo = getCoinInfo(coin)
     if (coinInfo.symbol == "USDC") {
         return BigDecimal(1)
@@ -339,9 +340,11 @@ function calcPrice(coin: string, pools: TypedMoveResource<liquidity_pool.Liquidi
     } else {
         console.log(`failed to get price of coin[${coinInfo.symbol}]`)
     }
-    return res
+    return res*/
+    return BigDecimal(0)
 }
 
 loadAllTypes(TYPE_REGISTRY)
 aptos.AptosAccountProcessor.bind({address: "0x5a97986a9d031c4567e15b797be516910cfcb4156312482efc6a19c0a30c948"})
-    .onVersionInterval(async (resources, ctx) => syncLiquidSwapPools(resources, ctx))
+    .onTimeInterval(async (resources, ctx) =>
+        syncLiquidSwapPools(resources, ctx), 60 * 12)
