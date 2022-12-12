@@ -41,7 +41,7 @@ amm.bind()
     })
     .onEventSwapEvent(async (evt, ctx) => {
       const value = await AUX_EXCHANGE.recordTradingVolume(ctx, evt.data_typed.in_coin_type, evt.data_typed.out_coin_type, evt.data_typed.in_au, evt.data_typed.out_au)
-      if (recordAccount && value.isGreaterThan(100)) {
+      if (recordAccount && value.isGreaterThan(10)) {
         vol_by_account.add(ctx, value, { account: ctx.transaction.sender})
       }
       const coinXInfo = await getCoinInfo(evt.data_typed.in_coin_type)

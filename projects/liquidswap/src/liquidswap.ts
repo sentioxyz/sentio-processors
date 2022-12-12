@@ -65,7 +65,7 @@ liquidity_pool.bind()
             evt.data_typed.x_in + evt.data_typed.x_out,
             evt.data_typed.y_in + evt.data_typed.y_out,
             { curve: getCurve(evt.type_arguments[2]) })
-        if (recordAccount && value.isGreaterThan(100)) {
+        if (recordAccount && value.isGreaterThan(10)) {
             vol_by_account.add(ctx, value, { account: ctx.transaction.sender})
         }
 

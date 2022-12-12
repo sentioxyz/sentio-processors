@@ -82,11 +82,6 @@ aptos.AptosAccountProcessor.bind({address: piece_swap.DEFAULT_OPTIONS.address, s
 
 function extractTypeName(typeInfo: type_info.TypeInfo) {
   return [typeInfo.account_address, hex_to_ascii(typeInfo.module_name), hex_to_ascii(typeInfo.struct_name)].join("::")
-  // if (rawName.startsWith("Coin<")) {
-  //   return rawName.substring(5, rawName.length - 1)
-  // } else {
-  //   return rawName
-  // }
 }
 
 function hex_to_ascii(str1: String) {

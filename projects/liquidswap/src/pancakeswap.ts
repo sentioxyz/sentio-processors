@@ -32,7 +32,7 @@ swap.bind()
           evt.type_arguments[0], evt.type_arguments[1],
           evt.data_typed.amount_x_in + evt.data_typed.amount_x_out,
           evt.data_typed.amount_y_in + evt.data_typed.amount_y_out)
-      if (recordAccount && value.isGreaterThan(100)) {
+      if (recordAccount && value.isGreaterThan(10)) {
         vol_by_account.add(ctx, value, { account: ctx.transaction.sender})
       }
       const coinXInfo = await getCoinInfo(evt.type_arguments[0])
