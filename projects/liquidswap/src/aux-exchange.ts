@@ -7,6 +7,7 @@ import {
   auxTvlByPool,
   auxVolume,
   liquidity_by_account,
+  net_liquidity_by_account,
   recordAccount,
   vol_by_account
 } from "./metrics";
@@ -31,6 +32,11 @@ amm.bind()
         const value = await getPairValue(ctx, evt.data_typed.x_coin_type, evt.data_typed.y_coin_type, evt.data_typed.x_added_au, evt.data_typed.y_added_au)
         if (value.isGreaterThan(10)) {
           liquidity_by_account.add(ctx, value, { account: ctx.transaction.sender})
+          net_liquidity_by_account.add(ctx, value, { account: ctx.transaction.sender})
+
+        } else {
+          liquidity_by_account.add(ctx, value, { account: "Others" })
+          net_liquidity_by_account.add(ctx, value, { account: ctx.transaction.sender})
         }
       }
       ctx.meter.Counter("event_liquidity_add").add(1)
@@ -38,6 +44,14 @@ amm.bind()
     })
     .onEventRemoveLiquidityEvent(async (evt, ctx) => {
       ctx.meter.Counter("event_liquidity_removed").add(1)
+      if (recordAccount) {
+        const value = await getPairValue(ctx, evt.data_typed.x_coin_type, evt.data_typed.y_coin_type, evt.data_typed.x_added_au, evt.data_typed.y_added_au)
+        if (value.isGreaterThan(10)) {
+            net_liquidity_by_account.sub(ctx, value, { account: ctx.transaction.sender})
+        } else {
+            net_liquidity_by_account.sub(ctx, value, { account: "Others" })
+        }
+    }
     })
     .onEventSwapEvent(async (evt, ctx) => {
       const value = await AUX_EXCHANGE.recordTradingVolume(ctx, evt.data_typed.in_coin_type, evt.data_typed.out_coin_type, evt.data_typed.in_au, evt.data_typed.out_au)

@@ -18,7 +18,7 @@ import { TYPE_REGISTRY, TypedMoveResource } from "@sentio/sdk/lib/aptos"
 import { MoveResource } from "aptos-sdk/src/generated"
 import {
     accountTracker, commonOptions,
-    inputUsd, liquidity_by_account,
+    inputUsd, liquidity_by_account, net_liquidity_by_account,
     lpTracker,
     priceGauge,
     priceGaugeNew,
@@ -52,12 +52,27 @@ liquidity_pool.bind()
             const value = await getPairValue(ctx, evt.type_arguments[0], evt.type_arguments[1], evt.data_typed.added_x_val, evt.data_typed.added_y_val)
             if (value.isGreaterThan(10)) {
                 liquidity_by_account.add(ctx, value, { account: ctx.transaction.sender})
+                net_liquidity_by_account.add(ctx, value, { account: ctx.transaction.sender})
+
+            } else {
+                liquidity_by_account.add(ctx, value, { account: "Others"})
+                net_liquidity_by_account.add(ctx, value, { account: ctx.transaction.sender})
             }
         }
     })
     .onEventLiquidityRemovedEvent(async (evt, ctx) => {
         ctx.meter.Counter("event_liquidity_removed").add(1)
         lpTracker.trackEvent(ctx, {distinctId: ctx.transaction.sender})
+        if (recordAccount) {
+            const value = await getPairValue(ctx, evt.type_arguments[0], evt.type_arguments[1], evt.data_typed.added_x_val, evt.data_typed.added_y_val)
+            if (value.isGreaterThan(10)) {
+                net_liquidity_by_account.sub(ctx, value, { account: ctx.transaction.sender})
+
+            } else {
+                net_liquidity_by_account.sub(ctx, value, { account: "Others" })
+
+            }
+        }
     })
     .onEventSwapEvent(async (evt, ctx) => {
         const value = await liquidSwap.recordTradingVolume(ctx,
