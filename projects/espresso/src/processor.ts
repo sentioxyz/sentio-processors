@@ -1,5 +1,5 @@
 import { CapeContext, CapeProcessor, AssetSponsoredEvent, BlockCommittedEvent, FaucetInitializedEvent, Erc20TokensDepositedEvent, DepositErc20CallTrace} from './types/cape'
-import { CAPE_NEW, CAPE_OLD } from './constant'
+import { CAPE_ARB_GOERLI, CAPE_NEW, CAPE_OLD } from './constant'
 import  {
   utils
 } from "ethers"
@@ -72,6 +72,16 @@ CapeProcessor.bind({address: CAPE_NEW, network: 5})
 
 
 CapeProcessor.bind({address: CAPE_OLD, network: 5})
+.onEventAssetSponsored(handleAssetSponsored)
+.onEventBlockCommitted(handleBlockCommittedEvent)
+.onEventErc20TokensDeposited(handleErc20TokensDeposited)
+.onCallDepositErc20(handleCall)
+.onCallFaucetSetupForTestnet(handleCall)
+.onCallSponsorCapeAsset(handleCall)
+.onCallSubmitCapeBlock(handleCall)
+.onCallSubmitCapeBlockWithMemos(handleCall)
+
+CapeProcessor.bind({address: CAPE_ARB_GOERLI, network: 421613})
 .onEventAssetSponsored(handleAssetSponsored)
 .onEventBlockCommitted(handleBlockCommittedEvent)
 .onEventErc20TokensDeposited(handleErc20TokensDeposited)

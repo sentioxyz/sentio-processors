@@ -1,4 +1,4 @@
-import { AptosDex, getCoinInfo, getPairValue } from "@sentio-processor/common/dist/aptos";
+import { AptosDex, getCoinInfo, getPair, getPairValue } from "@sentio-processor/common/dist/aptos";
 import { amm } from "./types/aptos/auxexchange";
 import { aptos } from "@sentio/sdk";
 import {
@@ -30,6 +30,9 @@ amm.bind()
     .onEventAddLiquidityEvent(async (evt, ctx) => {
       if (recordAccount) {
         const value = await getPairValue(ctx, evt.data_typed.x_coin_type, evt.data_typed.y_coin_type, evt.data_typed.x_added_au, evt.data_typed.y_added_au)
+        const pair = await getPair(evt.data_typed.x_coin_type, evt.data_typed.y_coin_type)
+        ctx.meter.Counter("token_amount_by_pool").add(evt.data_typed.x_added_au, {"pair": pair, "coin": evt.data_typed.x_coin_type})
+        ctx.meter.Counter("token_amount_by_pool").add(evt.data_typed.x_added_au, {"pair": pair, "coin": evt.data_typed.y_coin_type})
         if (value.isGreaterThan(10)) {
           liquidity_by_account.add(ctx, value, { account: ctx.transaction.sender})
           net_liquidity_by_account.add(ctx, value, { account: ctx.transaction.sender})
@@ -43,9 +46,12 @@ amm.bind()
       // ctx.logger.info("LiquidityAdded", { user: ctx.transaction.sender })
     })
     .onEventRemoveLiquidityEvent(async (evt, ctx) => {
+      const pair = await getPair(evt.data_typed.x_coin_type, evt.data_typed.y_coin_type)
       ctx.meter.Counter("event_liquidity_removed").add(1)
+      ctx.meter.Counter("token_amount_by_pool").sub(evt.data_typed.x_removed_au, {"pair": pair, "coin": evt.data_typed.x_coin_type})
+      ctx.meter.Counter("token_amount_by_pool").sub(evt.data_typed.x_removed_au, {"pair": pair, "coin": evt.data_typed.y_coin_type})
       if (recordAccount) {
-        const value = await getPairValue(ctx, evt.data_typed.x_coin_type, evt.data_typed.y_coin_type, evt.data_typed.x_added_au, evt.data_typed.y_added_au)
+        const value = await getPairValue(ctx, evt.data_typed.x_coin_type, evt.data_typed.y_coin_type, evt.data_typed.x_removed_au, evt.data_typed.y_removed_au)
         if (value.isGreaterThan(10)) {
             net_liquidity_by_account.sub(ctx, value, { account: ctx.transaction.sender})
         } else {

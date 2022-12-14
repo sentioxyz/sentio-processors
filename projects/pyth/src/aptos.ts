@@ -48,7 +48,7 @@ console_v1.bind().onEntryMintWithPythAndPrice((evt, ctx) => {
   messages2.add(ctx, 1)
 })
 
-function getPrice(p: price.Price) {
+export function getPrice(p: price.Price) {
   let expo = toBigDecimal(p.expo.magnitude)
   if (p.expo.negative) {
     expo = expo.negated()
