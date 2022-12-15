@@ -110,8 +110,8 @@ ERC20Processor.bind({address: wethAddress, startBlock: startBlock})
 
 AnyswapRouterProcessor.bind({address: routerAddress, startBlock: startBlock})
   .onEventLogAnySwapIn(handleSwapIn, inFilter)
-  .onEventLogAnySwapOut_address_address_address_uint256_uint256_uint256_(handleSwapOut1,outFilter1)
-  .onEventLogAnySwapOut_address_address_string_uint256_uint256_uint256_(handleSwapOut2, outFilter2)
+  .onEventLogAnySwapOut_address_address_address_uint256_uint256_uint256(handleSwapOut1,outFilter1)
+  .onEventLogAnySwapOut_address_address_string_uint256_uint256_uint256(handleSwapOut2, outFilter2)
 
 // BSC processors
 // Bep20Processor.bind({address: anyETHAddress_BSC, network: 56, startBlock: startBlock_BSC})

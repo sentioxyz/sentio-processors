@@ -41,6 +41,10 @@ amm.bind()
           liquidity_by_account.add(ctx, value, { account: "Others" })
           net_liquidity_by_account.add(ctx, value, { account: ctx.transaction.sender})
         }
+        const coinXInfo = getCoinInfo(evt.data_typed.x_coin_type)
+        const coinYInfo = getCoinInfo(evt.data_typed.y_coin_type)
+        ctx.logger.info("add liquidity for " + pair, { symbol: coinXInfo.symbol, user: ctx.transaction.sender, value: value, amount: evt.data_typed.x_added_au, pair: pair, coin: evt.data.x_coin_type })
+        ctx.logger.info("add liquidity for " + pair, { symbol: coinYInfo.symbol, user: ctx.transaction.sender, value: value, amount: evt.data_typed.y_added_au, pair: pair, coin: evt.data.y_coin_type })
       }
       ctx.meter.Counter("event_liquidity_add").add(1)
       // ctx.logger.info("LiquidityAdded", { user: ctx.transaction.sender })
@@ -48,8 +52,12 @@ amm.bind()
     .onEventRemoveLiquidityEvent(async (evt, ctx) => {
       const pair = await getPair(evt.data_typed.x_coin_type, evt.data_typed.y_coin_type)
       ctx.meter.Counter("event_liquidity_removed").add(1)
+
       ctx.meter.Counter("token_amount_by_pool").sub(evt.data_typed.x_removed_au, {"pair": pair, "coin": evt.data_typed.x_coin_type})
       ctx.meter.Counter("token_amount_by_pool").sub(evt.data_typed.x_removed_au, {"pair": pair, "coin": evt.data_typed.y_coin_type})
+
+
+
       if (recordAccount) {
         const value = await getPairValue(ctx, evt.data_typed.x_coin_type, evt.data_typed.y_coin_type, evt.data_typed.x_removed_au, evt.data_typed.y_removed_au)
         if (value.isGreaterThan(10)) {

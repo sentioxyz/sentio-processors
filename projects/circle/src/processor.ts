@@ -1,2 +1,2 @@
-// require("./ethereum")
+require("./ethereum")
 require("./aptos")

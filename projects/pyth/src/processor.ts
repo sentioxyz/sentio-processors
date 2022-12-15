@@ -1,2 +1,2 @@
-// require('./aptos')
+require('./aptos')
 require('./evm')
