@@ -5,29 +5,44 @@ import  {
 } from "ethers"
 import { AccountEventTracker} from "@sentio/sdk";
 import type {Trace} from "@sentio/sdk";
+import { Log } from '@ethersproject/abstract-provider';
 
-const senderTracker = AccountEventTracker.register("senders", {distinctByDays: [1,7,12,30]})
+const senderTracker4 = AccountEventTracker.register("senders4", {distinctByDays: [1,7,12,30]})
+const tokenTracker = AccountEventTracker.register("unique_tokens", {distinctByDays: [1,7,12,30]})
 
 const gaugeAndCounter = (name: string, ctx: CapeContext) => {
   ctx.meter.Gauge(name).record(1)
   ctx.meter.Counter(name + "_counter").add(1)
 }
 
-const handleAssetSponsored = async (event: any, ctx: CapeContext) => {
+const handleAssetSponsored = async (event: AssetSponsoredEvent, ctx: CapeContext) => {
   gaugeAndCounter("Sponsor", ctx)
+  const hash = event.transactionHash
+  const tx = await ctx.contract.provider.getTransaction(hash)
+  const from = tx.from
+  const token = event.args.erc20Address
+  tokenTracker.trackEvent(ctx, {distinctId: token})
+  senderTracker4.trackEvent(ctx, {distinctId: from})
 }
 
-const handleErc20TokensDeposited = async (event: any, ctx: CapeContext) => {
+const handleErc20TokensDeposited = async (event: Erc20TokensDepositedEvent, ctx: CapeContext) => {
   gaugeAndCounter("Wrap", ctx)
+  const hash = event.transactionHash
+  const tx = await ctx.contract.provider.getTransaction(hash)
+  const from = tx.from
+  senderTracker4.trackEvent(ctx, {distinctId: from})
 }
 
-const handleCall = async (trace: Trace, ctx: CapeContext) => {
-  const sender = trace.action.from
-  senderTracker.trackEvent(ctx, {distinctId: sender})
-}
+// const handleAllEvent = async (event: Log, ctx: CapeContext) => {
+//   const hash = event.transactionHash
+//   const tx = await ctx.contract.provider.getTransaction(hash)
+//   const from = tx.from
+//   senderTracker3.trackEvent(ctx, {distinctId: from})
+// }
 
 const handleBlockCommittedEvent = async (event: BlockCommittedEvent, ctx: CapeContext) => {
   ctx.meter.Counter("total_block_commit").add(1)
+  
   const note_types_uint = utils.defaultAbiCoder.decode(["uint8[]"], event.args.noteTypes)
   if (note_types_uint.length > 1) {
     ctx.meter.Counter("note_type_unit_gt_one").add(1)
@@ -64,29 +79,30 @@ CapeProcessor.bind({address: CAPE_NEW, network: 5})
 .onEventAssetSponsored(handleAssetSponsored)
 .onEventBlockCommitted(handleBlockCommittedEvent)
 .onEventErc20TokensDeposited(handleErc20TokensDeposited)
-.onCallDepositErc20(handleCall)
-.onCallFaucetSetupForTestnet(handleCall)
-.onCallSponsorCapeAsset(handleCall)
-.onCallSubmitCapeBlock(handleCall)
-.onCallSubmitCapeBlockWithMemos(handleCall)
+// .onCallDepositErc20(handleCall)
+// .onCallFaucetSetupForTestnet(handleCall)
+// .onCallSponsorCapeAsset(handleCall)
+// .onCallSubmitCapeBlock(handleCall)
+// .onCallSubmitCapeBlockWithMemos(handleCall)
 
 
 CapeProcessor.bind({address: CAPE_OLD, network: 5})
 .onEventAssetSponsored(handleAssetSponsored)
 .onEventBlockCommitted(handleBlockCommittedEvent)
 .onEventErc20TokensDeposited(handleErc20TokensDeposited)
-.onCallDepositErc20(handleCall)
-.onCallFaucetSetupForTestnet(handleCall)
-.onCallSponsorCapeAsset(handleCall)
-.onCallSubmitCapeBlock(handleCall)
-.onCallSubmitCapeBlockWithMemos(handleCall)
+// .onCallDepositErc20(handleCall)
+// .onCallFaucetSetupForTestnet(handleCall)
+// .onCallSponsorCapeAsset(handleCall)
+// .onCallSubmitCapeBlock(handleCall)
+// .onCallSubmitCapeBlockWithMemos(handleCall)
 
 CapeProcessor.bind({address: CAPE_ARB_GOERLI, network: 421613})
 .onEventAssetSponsored(handleAssetSponsored)
 .onEventBlockCommitted(handleBlockCommittedEvent)
 .onEventErc20TokensDeposited(handleErc20TokensDeposited)
-.onCallDepositErc20(handleCall)
-.onCallFaucetSetupForTestnet(handleCall)
-.onCallSponsorCapeAsset(handleCall)
-.onCallSubmitCapeBlock(handleCall)
-.onCallSubmitCapeBlockWithMemos(handleCall)
+// .onCallDepositErc20(handleCall)
+// .onCallFaucetSetupForTestnet(handleCall)
+// .onCallSponsorCapeAsset(handleCall)
+// .onCallSubmitCapeBlock(handleCall)
+// .onCallSubmitCapeBlockWithMemos(handleCall)
+// .onAllEvents(handleAllEvent)
