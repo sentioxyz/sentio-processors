@@ -67,10 +67,8 @@ liquidity_pool.bind()
             const value = await getPairValue(ctx, evt.type_arguments[0], evt.type_arguments[1], evt.data_typed.returned_x_val, evt.data_typed.returned_y_val)
             if (value.isGreaterThan(10)) {
                 net_liquidity_by_account.sub(ctx, value, { account: ctx.transaction.sender})
-
             } else {
                 net_liquidity_by_account.sub(ctx, value, { account: "Others" })
-
             }
         }
     })

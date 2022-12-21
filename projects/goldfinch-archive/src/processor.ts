@@ -1,15 +1,15 @@
-import { DepositMadeEvent, 
-  WithdrawalMadeEvent, 
-  SeniorPoolContext, 
-  SeniorPoolProcessor, 
-  ReserveFundsCollectedEvent, 
+import { DepositMadeEvent,
+  WithdrawalMadeEvent,
+  SeniorPoolContext,
+  SeniorPoolProcessor,
+  ReserveFundsCollectedEvent,
   InvestmentMadeInSeniorEvent,
   InvestmentMadeInJuniorEvent,
   InterestCollectedEvent,
   PrincipalCollectedEvent
 } from './types/seniorpool'
-import { DepositMadeEvent as TranchedDepositMadeEvent, 
-  WithdrawalMadeEvent as TranchedWithdrawalMadeEvent, 
+import { DepositMadeEvent as TranchedDepositMadeEvent,
+  WithdrawalMadeEvent as TranchedWithdrawalMadeEvent,
   ReserveFundsCollectedEvent as TranchedReserveFundsCollectedEvent,
   PaymentAppliedEvent,
   DrawdownMadeEvent as TranchedDrawdownMadeEvent
@@ -124,6 +124,7 @@ const tranchedWithdrawEventHandler = async function(event: TranchedWithdrawalMad
 
 //SeniorPool_evt_WithdrawalMade
 const seniorWithdrawEventHandler = async function(event: WithdrawalMadeEvent, ctx: SeniorPoolContext) {
+  event.address
   const amount = toBigDecimal(event.args.userAmount.add(event.args.reserveAmount)).div(BigDecimal(10).pow(decimal))
   ctx.meter.Gauge('withdraw').record(amount)
   ctx.meter.Counter('withdraw_acc').add(amount)
@@ -164,7 +165,7 @@ const TranchedDrawDownMadeHandler = async function(event: TranchedDrawdownMadeEv
   , 'allocation' AS type
   , amount
   FROM goldfinch."SeniorPool_evt_InvestmentMadeInSenior"
-  
+
   UNION ALL SELECT
    "evt_block_time" AS ts
   , "tranchedPool" AS user

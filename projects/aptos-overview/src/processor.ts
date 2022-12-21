@@ -119,7 +119,7 @@ const queryClient = getChainQueryClient()
 
 aptos.AptosAccountProcessor.bind({address: "0x1"})
     .onTimeInterval(async (resources, ctx) => sync(ctx),
-       24*60)
+       1*60)
 
 async function sync(ctx: AptosResourceContext) {
   interface myRow {
@@ -133,8 +133,10 @@ async function sync(ctx: AptosResourceContext) {
   }
   let timestamp = ctx.timestampInMicros
   const date = new Date(timestamp / 1000)
-  date.setUTCHours(23,59,59,999)
-  timestamp = date.getTime() * 1000
+  const lastDay = new Date(date)
+  // lastDay.setDate(lastDay.getDate() - 1)
+  lastDay.setUTCHours(0,0,0,0)
+  // timestamp = date.getTime() * 1000
 
   let sql = `SELECT COUNT_IF(success=false) AS num_failed_txns,
                COUNT_IF(success=true) AS num_successful_txns,
@@ -143,10 +145,11 @@ async function sync(ctx: AptosResourceContext) {
                COUNT(*)/86400 AS average_tps,
                APPROX_COUNT_DISTINCT(sender) AS estimated_num_unique_users,
                SUM(gas_used) / POW(10, 5) AS total_gas_price
-               FROM txns WHERE TIMESTAMP between ${(timestamp - 86400000000).toString()}
-               AND ${timestamp.toString()}`
+               FROM txns WHERE TIMESTAMP between ${(lastDay.getTime() * 1000).toString()}
+               AND ${(date.getTime() * 1000).toString()}`
   // console.log(sql)
-  let ret = await queryClient.aptosSQLQuery({
+  let ret = await queryClient.aptosSQLQuery(
+      {
     sql: sql,
     network: "aptos_mainnet",
     arbitraryRange: true,

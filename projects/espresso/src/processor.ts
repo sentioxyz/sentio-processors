@@ -9,6 +9,7 @@ import { Log } from '@ethersproject/abstract-provider';
 
 const senderTracker4 = AccountEventTracker.register("senders4", {distinctByDays: [1,7,12,30]})
 const tokenTracker = AccountEventTracker.register("unique_tokens", {distinctByDays: [1,7,12,30]})
+// const senderTracker = AccountEventTracker.register("senders", {distinctByDays: [1,7,12,30]})
 
 const gaugeAndCounter = (name: string, ctx: CapeContext) => {
   ctx.meter.Gauge(name).record(1)
@@ -40,9 +41,10 @@ const handleErc20TokensDeposited = async (event: Erc20TokensDepositedEvent, ctx:
 //   senderTracker3.trackEvent(ctx, {distinctId: from})
 // }
 
+
 const handleBlockCommittedEvent = async (event: BlockCommittedEvent, ctx: CapeContext) => {
   ctx.meter.Counter("total_block_commit").add(1)
-  
+
   const note_types_uint = utils.defaultAbiCoder.decode(["uint8[]"], event.args.noteTypes)
   if (note_types_uint.length > 1) {
     ctx.meter.Counter("note_type_unit_gt_one").add(1)
