@@ -50,5 +50,5 @@ for (const token of CORE_TOKENS.values()) {
       if (value.isGreaterThan(0)) {
         totalValue.record(ctx, value, {coin: token.symbol, bridge: token.bridge, type: token.token_type.type})
       }
-    }, 100000, coinInfoType)
+    }, 100000, 100000, coinInfoType)
 }

@@ -23,10 +23,6 @@ const CHAIN_ADDRESS_MAP = new Map<number, string>([
     [321, "0xE0d0e68297772Dd5a1f1D99897c581E2082dbA5B"] //KCC
 ])
 
-const PYTH_ETH = "0x4305FB66699C3B2702D4d05CF36551390A4c69C6"
-const PYTH_OP = "0xff1a0f4744e8582df1ae09d5611b887b6a12925c"
-const PYTH_BSC = "0x4D7E825f80bDf85e913E0DD2A2D54927e9dE1594"
-
 async function priceFeedUpdate(evt: PriceFeedUpdateEvent, ctx: PythEVMContext) {
     const price = evt.args.price
     const priceId = evt.args.id
