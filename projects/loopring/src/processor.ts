@@ -23,6 +23,7 @@ import {
 import type { BaseContract, BigNumber } from 'ethers'
 import { processBlockStruct } from "./parse";
 import { toBigDecimal } from "@sentio/sdk/lib/utils/conversion"
+import {deposit, withdraw} from "./metrics";
 
 GenericProcessor.bind(EVENT1, {address: LOOPRING_WALLET_MODULE}).onAllEvents(walletCounter)
 GenericProcessor.bind(EVENT, {address: LOOPRING_WALLET_FACTORY1}).onAllEvents(walletCounter)
@@ -67,8 +68,7 @@ async function depositGauge(event: DepositRequestedEvent, ctx: ExchangeV3Context
   const amount = await scaleDown(event.args.amount, tokenInfo.decimal)
 
   if (!tokenInfo.symbol.startsWith("LP-")) {
-    ctx.meter.Gauge("deposit").record(amount, {tokenId: tokenInfo.symbol})
-    ctx.meter.Gauge("deposit_count").record(1)
+    deposit.record(ctx, amount, {tokenId: tokenInfo.symbol, address: event.args.token})
   }
 }
 
@@ -77,8 +77,7 @@ async function withdrawGauge(event: WithdrawalCompletedEvent, ctx: ExchangeV3Con
   const amount = await scaleDown(event.args.amount, tokenInfo.decimal)
 
   if (!tokenInfo.symbol.startsWith("LP-")) {
-    ctx.meter.Gauge("withdraw").record(amount, {token: tokenInfo.symbol})
-    ctx.meter.Gauge("withdraw_count").record(1)
+    withdraw.record(ctx, amount, {token: tokenInfo.symbol, address: event.args.token})
   }
 }
 
