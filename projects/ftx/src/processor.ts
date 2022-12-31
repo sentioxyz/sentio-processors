@@ -1,5 +1,5 @@
-import { AccountEventTracker, aptos, Counter, Gauge } from "@sentio/sdk";
-import { aptos_coin, coin, managed_coin, resource_account, aptos_account } from "@sentio/sdk/lib/builtin/aptos/0x1";
+import { AccountEventTracker,  Counter, Gauge } from "@sentio/sdk";
+import { aptos_coin, coin, managed_coin, resource_account, aptos_account } from "@sentio/sdk-aptos/lib/builtin/0x1";
 
 import { DEFAULT_MAINNET_LIST, RawCoinInfo } from "@manahippo/coin-list/dist/list";
 import { scaleDown } from "@sentio-processor/common/dist/aptos/coin";

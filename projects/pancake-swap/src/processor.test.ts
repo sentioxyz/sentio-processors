@@ -26,7 +26,6 @@ describe('Test Processor', () => {
               // events: [ ]
             })),
           },
-          handlerId: 0,
           handlerIds: [0],
           handlerType: HandlerType.APT_EVENT
         }

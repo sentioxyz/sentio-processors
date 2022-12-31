@@ -1,17 +1,17 @@
-import { AccountEventTracker, aptos, Counter, Gauge } from "@sentio/sdk";
-import { aptos_coin, coin, managed_coin, resource_account, aptos_account } from "@sentio/sdk/lib/builtin/aptos/0x1";
+import { AccountEventTracker, Counter, Gauge } from "@sentio/sdk";
+import { aptos_coin, coin, managed_coin, resource_account, aptos_account } from "@sentio/sdk-aptos/lib/builtin/0x1";
 
 import { DEFAULT_MAINNET_LIST, RawCoinInfo } from "@manahippo/coin-list/dist/list";
 import * as liquidswap from "./types/aptos/liquidswap";
 import { amm } from "./types/aptos/auxexchange";
 import { TransactionPayload_EntryFunctionPayload } from "aptos-sdk/src/generated";
 import { router, swap } from "./types/aptos/pancake-swap";
-import { token, token_transfers } from "@sentio/sdk/lib/builtin/aptos/0x3";
-import { getChainQueryClient } from "@sentio/sdk/lib/aptos/api";
+// import { token, token_transfers } from "@sentio/sdk/lib/builtin/aptos/0x3";
+import { getChainQueryClient } from "@sentio/sdk-aptos/lib/api";
 import * as soffle3 from "./types/aptos/soffle3";
 import * as topaz from "./types/aptos/topaz";
 import * as bluemoves from "./types/aptos/bluemoves";
-import { AptosResourceContext } from "@sentio/sdk/lib/aptos";
+import { AptosResourceContext, AptosAccountProcessor } from "@sentio/sdk-aptos";
 
 const txnCounter = new Counter("txn_counter")
 
@@ -117,7 +117,7 @@ const accumGas = new Counter("accum_gas")
 
 const queryClient = getChainQueryClient()
 
-aptos.AptosAccountProcessor.bind({address: "0x1"})
+AptosAccountProcessor.bind({address: "0x1"})
     .onTimeInterval(async (resources, ctx) => sync(ctx),
        1*60)
 

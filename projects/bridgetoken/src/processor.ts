@@ -5,7 +5,7 @@ import {
   getPrice,
   scaleDown
 } from "@sentio-processor/common/dist/aptos";
-import { AccountEventTracker, aptos, Counter, Gauge } from "@sentio/sdk";
+import { AccountEventTracker, Counter, Gauge } from "@sentio/sdk";
 import {
   aggregator,
   coin,
@@ -13,13 +13,13 @@ import {
   managed_coin,
   optional_aggregator,
   type_info
-} from "@sentio/sdk/lib/builtin/aptos/0x1";
+} from "@sentio/sdk-aptos/lib/builtin/0x1";
 import { delay, getRandomInt } from "@sentio-processor/common/dist";
 import type { Transaction_UserTransaction, TransactionPayload_EntryFunctionPayload } from 'aptos-sdk/src/generated'
 import { getPriceByType } from "@sentio/sdk/lib/utils/price";
-import { APTOS_MAINNET_ID } from "@sentio/sdk/lib/utils/chain";
+import { CHAIN_IDS } from "@sentio/sdk";
 import { AptosClient } from "aptos-sdk";
-import { TYPE_REGISTRY } from "@sentio/sdk/lib/aptos";
+import { TYPE_REGISTRY } from "@sentio/sdk-aptos";
 
 const accounts = Counter.register("account", { sparse: false })
 const accountBalance = Gauge.register("account_balance", { sparse: true })
@@ -38,7 +38,7 @@ for (const token of CORE_TOKENS.values()) {
 
   BRIDGE_TOKENS.set(token.token_type.type, token)
 
-  getPriceByType(APTOS_MAINNET_ID, token.token_type.type, date).then((price) => {
+  getPriceByType(CHAIN_IDS.APTOS_MAINNET, token.token_type.type, date).then((price) => {
     PRICES.set(token.token_type.type, price)
     console.log("price", token.token_type.type, price)
   })

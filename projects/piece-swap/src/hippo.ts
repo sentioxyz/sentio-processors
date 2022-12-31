@@ -1,7 +1,8 @@
-import { AccountEventTracker, aptos, Counter, Gauge } from "@sentio/sdk";
+import { AccountEventTracker, Counter, Gauge } from "@sentio/sdk";
 
 import { aggregator } from './types/aptos/aggregator'
-import { type_info } from "@sentio/sdk/lib/builtin/aptos/0x1"
+import { type_info } from "@sentio/sdk-aptos/lib/builtin/0x1"
+
 import { getPrice, getCoinInfo, whiteListed } from "@sentio-processor/common/dist/aptos/coin"
 import { scaleDown } from "@sentio-processor/common/dist/aptos/coin";
 import { getPair } from "@sentio-processor/common/dist/aptos";

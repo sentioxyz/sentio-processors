@@ -1,6 +1,6 @@
 import { AptosClient } from "aptos-sdk";
-import { aggregator, coin, optional_aggregator } from "@sentio/sdk/lib/builtin/aptos/0x1";
-import { AccountEventTracker, aptos, Gauge } from "@sentio/sdk";
+import { aggregator, coin, optional_aggregator } from "@sentio/sdk-aptos/lib/builtin/0x1";
+import { AccountEventTracker,  Gauge } from "@sentio/sdk";
 import {
   CORE_TOKENS,
   getCoinInfo, getPair,
@@ -13,8 +13,7 @@ import { liquidity_pool } from "./types/aptos/liquidswap";
 import { swap } from "./types/aptos/pancake-swap";
 import { BigDecimal } from "@sentio/sdk/lib/core/big-decimal";
 import { MoveResource } from "aptos-sdk/src/generated";
-import { AptosResourceContext } from "@sentio/sdk/lib/aptos/context";
-import { TypedMoveResource } from "@sentio/sdk/lib/aptos";
+import { AptosResourceContext, TypedMoveResource, TYPE_REGISTRY, AptosAccountProcessor, AptosContext } from "@sentio/sdk-aptos";
 
 const commonOptions = { sparse:  true }
 const totalValue = Gauge.register("total_value", commonOptions)
@@ -42,7 +41,7 @@ function isUSDCPair(typeX: string, typeY: string) {
 
 const client = new AptosClient("http://aptos-proxy-server.chain-sync:8646")
 
-coin.loadTypes(aptos.TYPE_REGISTRY)
+coin.loadTypes(TYPE_REGISTRY)
 for (const token of CORE_TOKENS.values()) {
   if (!isUSDCType(token.token_type.type)) {
     continue
@@ -50,9 +49,9 @@ for (const token of CORE_TOKENS.values()) {
 
   const coinInfoType = `0x1::coin::CoinInfo<${token.token_type.type}>`
   // const price = await getPrice(v.token_type.type, timestamp)
-  aptos.AptosAccountProcessor.bind({address: token.token_type.account_address})
+  AptosAccountProcessor.bind({address: token.token_type.account_address})
     .onVersionInterval(async (resources, ctx) => {
-      const coinInfoRes = aptos.TYPE_REGISTRY.filterAndDecodeResources<coin.CoinInfo<any>>(coin.CoinInfo.TYPE_QNAME, resources)
+      const coinInfoRes = TYPE_REGISTRY.filterAndDecodeResources<coin.CoinInfo<any>>(coin.CoinInfo.TYPE_QNAME, resources)
       if (coinInfoRes.length === 0) {
         return
       }
@@ -229,7 +228,7 @@ export class USDCDex<T> {
     this.poolAdaptor = poolAdaptor
   }
 
-  async recordTradingVolume(ctx: aptos.AptosContext, coinx: string, coiny: string, coinXAmount: bigint, coinYAmount: bigint, extraLabels?: any): Promise<void> {
+  async recordTradingVolume(ctx: AptosContext, coinx: string, coiny: string, coinXAmount: bigint, coinYAmount: bigint, extraLabels?: any): Promise<void> {
     if (!isUSDCPair(coinx, coiny)) {
       return
     }
@@ -255,7 +254,7 @@ export class USDCDex<T> {
       ctx: AptosResourceContext
   ) {
     let pools: TypedMoveResource<T>[] =
-        aptos.TYPE_REGISTRY.filterAndDecodeResources(this.poolAdaptor.poolTypeName, resources)
+        TYPE_REGISTRY.filterAndDecodeResources(this.poolAdaptor.poolTypeName, resources)
 
     console.log("num of pools: ", pools.length, ctx.version.toString())
 
@@ -299,7 +298,7 @@ const AUX_EXCHANGE = new USDCDex<amm.Pool<any, any>>({
   poolTypeName: amm.Pool.TYPE_QNAME
 })
 
-aptos.AptosAccountProcessor.bind({address: amm.DEFAULT_OPTIONS.address})
+AptosAccountProcessor.bind({address: amm.DEFAULT_OPTIONS.address})
     .onTimeInterval((rs,ctx) => AUX_EXCHANGE.syncPools(rs, ctx),
         60 * 24, 60 * 24)
 
@@ -318,7 +317,7 @@ function getCurve(type: string) {
   }
 }
 
-aptos.AptosAccountProcessor.bind({address: swap.DEFAULT_OPTIONS.address })
+AptosAccountProcessor.bind({address: swap.DEFAULT_OPTIONS.address })
     .onTimeInterval((rs, ctx) => PANCAKE_SWAP_APTOS.syncPools(rs, ctx),
         60 * 24, 60 * 24)
 
@@ -329,6 +328,6 @@ const LIQUID_SWAP = new USDCDex<liquidity_pool.LiquidityPool<any, any, any>>({
   poolTypeName: liquidity_pool.LiquidityPool.TYPE_QNAME
 })
 
-aptos.AptosAccountProcessor.bind({address: "0x5a97986a9d031c4567e15b797be516910cfcb4156312482efc6a19c0a30c948"})
+AptosAccountProcessor.bind({address: "0x5a97986a9d031c4567e15b797be516910cfcb4156312482efc6a19c0a30c948"})
     .onTimeInterval(async (resources, ctx) => LIQUID_SWAP.syncPools(resources, ctx),
         60 * 24, 60 * 24)

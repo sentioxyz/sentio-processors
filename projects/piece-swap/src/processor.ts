@@ -1,8 +1,11 @@
 import { piece_swap, piece_swap_script } from './types/aptos/piece-swap'
-import { AccountEventTracker, aptos, Gauge } from "@sentio/sdk";
+import { AccountEventTracker, Gauge } from "@sentio/sdk";
 
 import { AptosDex, getCoinInfo } from "@sentio-processor/common/dist/aptos"
-import { type_info } from "@sentio/sdk/lib/builtin/aptos/0x1";
+import { type_info } from "@sentio/sdk-aptos/lib/builtin/0x1";
+import { AptosAccountProcessor } from "@sentio/sdk-aptos";
+
+
 require("./hippo")
 
 const commonOptions = { sparse:  true }
@@ -76,7 +79,7 @@ const pieceSwap = new AptosDex<piece_swap.PieceSwapPoolInfo<any, any>>(volume, t
 })
 
 // amm.loadTypes(aptos.TYPE_REGISTRY)
-aptos.AptosAccountProcessor.bind({address: piece_swap.DEFAULT_OPTIONS.address, startVersion: 26000000})
+AptosAccountProcessor.bind({address: piece_swap.DEFAULT_OPTIONS.address, startVersion: 26000000})
     .onVersionInterval((rs, ctx) => pieceSwap.syncPools(rs, ctx))
 
 

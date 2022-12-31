@@ -1,6 +1,7 @@
 import { liquidity_pool, loadAllTypes } from "./types/aptos/liquidswap"
 
-import { aptos, Counter, Gauge } from "@sentio/sdk"
+import {  Counter, Gauge } from "@sentio/sdk"
+import { TYPE_REGISTRY, AptosAccountProcessor,TypedMoveResource, AptosResourceContext } from "@sentio/sdk-aptos";
 
 import {
     AptosDex,
@@ -14,7 +15,6 @@ import {
 
 import { BigDecimal } from "@sentio/sdk/lib/core/big-decimal"
 
-import { TYPE_REGISTRY, TypedMoveResource } from "@sentio/sdk/lib/aptos"
 import { MoveResource } from "aptos-sdk/src/generated"
 import {
     accountTracker, commonOptions,
@@ -29,7 +29,6 @@ import {
     tvlByPoolNew, vol_by_account,
     volume
 } from "./metrics"
-import { AptosResourceContext } from "@sentio/sdk/lib/aptos/context"
 
 const liquidSwap = new AptosDex<liquidity_pool.LiquidityPool<any, any, any>>(volume, tvlAll, tvl, tvlByPool, {
     getXReserve: pool => pool.coin_x_reserve.value,
@@ -122,7 +121,7 @@ function getCurve(type: string) {
 async function syncLiquidSwapPools(resources: MoveResource[], ctx: AptosResourceContext) {
 
     let pools: TypedMoveResource<liquidity_pool.LiquidityPool<any, any, any>>[]
-    pools = aptos.TYPE_REGISTRY.filterAndDecodeResources<liquidity_pool.LiquidityPool<any, any, any>>("0x190d44266241744264b964a37b8f09863167a12d3e70cda39376cfb4e3561e12::liquidity_pool::LiquidityPool", resources)
+    pools = TYPE_REGISTRY.filterAndDecodeResources<liquidity_pool.LiquidityPool<any, any, any>>("0x190d44266241744264b964a37b8f09863167a12d3e70cda39376cfb4e3561e12::liquidity_pool::LiquidityPool", resources)
 
     const volumeByCoin = new Map<string, BigDecimal>()
     const timestamp = ctx.timestampInMicros
@@ -358,6 +357,6 @@ function calcPrice(coin: string, pools: TypedMoveResource<liquidity_pool.Liquidi
 }
 
 loadAllTypes(TYPE_REGISTRY)
-aptos.AptosAccountProcessor.bind({address: "0x5a97986a9d031c4567e15b797be516910cfcb4156312482efc6a19c0a30c948"})
+AptosAccountProcessor.bind({address: "0x5a97986a9d031c4567e15b797be516910cfcb4156312482efc6a19c0a30c948"})
     .onTimeInterval(async (resources, ctx) =>
         syncLiquidSwapPools(resources, ctx), 60, 12 * 60)

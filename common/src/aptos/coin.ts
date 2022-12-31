@@ -1,7 +1,7 @@
 import { DEFAULT_MAINNET_LIST, RawCoinInfo } from "@manahippo/coin-list/dist/list";
 import { BigDecimal } from "@sentio/sdk";
 import { getPriceByType } from '@sentio/sdk/lib/utils/price'
-import { APTOS_MAINNET_ID } from "@sentio/sdk/lib/utils/chain";
+import { CHAIN_IDS } from "@sentio/sdk";
 
 export interface BaseCoinInfoWithBridge extends RawCoinInfo {
   bridge: string
@@ -65,7 +65,7 @@ export async function getPrice(coinType: string, timestamp: number): Promise<num
     return 0.0
   }
   const date = new Date(timestamp / 1000)
-  return getPriceByType(APTOS_MAINNET_ID, coinType, date)
+  return getPriceByType(CHAIN_IDS.APTOS_MAINNET, coinType, date)
 }
 
 export async function calculateValueInUsd(n: bigint, coinInfo: SimpleCoinInfo, timestamp: number | string) {

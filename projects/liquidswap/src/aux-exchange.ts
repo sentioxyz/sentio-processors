@@ -1,6 +1,5 @@
 import { AptosDex, getCoinInfo, getPair, getPairValue } from "@sentio-processor/common/dist/aptos";
 import { amm } from "./types/aptos/auxexchange";
-import { aptos } from "@sentio/sdk";
 import {
   auxTvl,
   auxTvlAll,
@@ -11,6 +10,7 @@ import {
   recordAccount,
   vol_by_account
 } from "./metrics";
+import { TYPE_REGISTRY, AptosAccountProcessor,TypedMoveResource, AptosResourceContext } from "@sentio/sdk-aptos";
 
 const AUX_EXCHANGE = new AptosDex<amm.Pool<any, any>>(auxVolume, auxTvlAll, auxTvl, auxTvlByPool, {
   getXReserve: pool => pool.x_reserve.value,
@@ -19,7 +19,7 @@ const AUX_EXCHANGE = new AptosDex<amm.Pool<any, any>>(auxVolume, auxTvlAll, auxT
   poolTypeName: amm.Pool.TYPE_QNAME
 })
 
-aptos.AptosAccountProcessor.bind({address: amm.DEFAULT_OPTIONS.address})
+AptosAccountProcessor.bind({address: amm.DEFAULT_OPTIONS.address})
     .onTimeInterval((rs,ctx) =>
         AUX_EXCHANGE.syncPools(rs, ctx), 60, 12 * 60)
 
@@ -43,8 +43,8 @@ amm.bind()
         }
         const coinXInfo = getCoinInfo(evt.data_typed.x_coin_type)
         const coinYInfo = getCoinInfo(evt.data_typed.y_coin_type)
-        ctx.logger.info("add liquidity for " + pair, { symbol: coinXInfo.symbol, user: ctx.transaction.sender, value: value, amount: evt.data_typed.x_added_au, pair: pair, coin: evt.data.x_coin_type })
-        ctx.logger.info("add liquidity for " + pair, { symbol: coinYInfo.symbol, user: ctx.transaction.sender, value: value, amount: evt.data_typed.y_added_au, pair: pair, coin: evt.data.y_coin_type })
+        ctx.logger.info("add liquidity for " + pair, { symbol: coinXInfo.symbol, user: ctx.transaction.sender, value: value, amount: evt.data_typed.x_added_au, pair: pair, coin: evt.data_typed.x_coin_type })
+        ctx.logger.info("add liquidity for " + pair, { symbol: coinYInfo.symbol, user: ctx.transaction.sender, value: value, amount: evt.data_typed.y_added_au, pair: pair, coin: evt.data_typed.y_coin_type })
       }
       ctx.meter.Counter("event_liquidity_add").add(1)
       // ctx.logger.info("LiquidityAdded", { user: ctx.transaction.sender })

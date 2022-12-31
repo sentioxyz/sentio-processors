@@ -1,9 +1,8 @@
-import { aptos, Counter, Gauge } from "@sentio/sdk";
+import {  Counter, Gauge } from "@sentio/sdk";
 import { BigDecimal } from "@sentio/sdk/lib/core/big-decimal";
 import { calculateValueInUsd, CORE_TOKENS, getCoinInfo, whiteListed } from "./coin"
-import { AptosResourceContext } from "@sentio/sdk/lib/aptos/context";
+import { AptosResourceContext, TypedMoveResource, TYPE_REGISTRY, AptosContext } from "@sentio/sdk-aptos";
 import { MoveResource } from "aptos-sdk/src/generated";
-import { TypedMoveResource } from "@sentio/sdk/lib/aptos";
 
 export interface PoolAdaptor<T> {
   getXReserve(pool: T): bigint
@@ -27,7 +26,7 @@ export class AptosDex<T> {
     this.poolAdaptor = poolAdaptor
   }
 
-  async recordTradingVolume(ctx: aptos.AptosContext, coinx: string, coiny: string, coinXAmount: bigint, coinYAmount: bigint, extraLabels?: any): Promise<BigDecimal> {
+  async recordTradingVolume(ctx: AptosContext, coinx: string, coiny: string, coinXAmount: bigint, coinYAmount: bigint, extraLabels?: any): Promise<BigDecimal> {
     const whitelistx = whiteListed(coinx)
     const whitelisty = whiteListed(coiny)
     const coinXInfo = await getCoinInfo(coinx)
@@ -65,7 +64,7 @@ export class AptosDex<T> {
       poolsHandler?: (pools: TypedMoveResource<T>[]) => Promise<void> | void
     ) {
     let pools: TypedMoveResource<T>[] =
-        aptos.TYPE_REGISTRY.filterAndDecodeResources(this.poolAdaptor.poolTypeName, resources)
+        TYPE_REGISTRY.filterAndDecodeResources(this.poolAdaptor.poolTypeName, resources)
 
     const volumeByCoin = new Map<string, BigDecimal>()
     const timestamp = ctx.timestampInMicros
@@ -166,7 +165,7 @@ export async function getPair(coinx: string, coiny: string): Promise<string> {
   return `${coinXInfo.symbol}-${coinYInfo.symbol}`
 }
 
-export async function getPairValue(ctx: aptos.AptosContext, coinx: string, coiny: string, coinXAmount: bigint, coinYAmount: bigint): Promise<BigDecimal> {
+export async function getPairValue(ctx: AptosContext, coinx: string, coiny: string, coinXAmount: bigint, coinYAmount: bigint): Promise<BigDecimal> {
   const whitelistx = whiteListed(coinx)
   const whitelisty = whiteListed(coiny)
   const coinXInfo = await getCoinInfo(coinx)

@@ -1,19 +1,19 @@
 import { AptosClient } from "aptos-sdk";
-import { aggregator, coin, optional_aggregator } from "@sentio/sdk/lib/builtin/aptos/0x1";
-import { aptos } from "@sentio/sdk";
+import { aggregator, coin, optional_aggregator } from "@sentio/sdk-aptos/lib/builtin/0x1";
 import { CORE_TOKENS, getPrice, scaleDown } from "@sentio-processor/common/dist/aptos";
 import { delay, getRandomInt } from "@sentio-processor/common/dist";
 import { totalValue } from "./metrics";
+import { AptosAccountProcessor, TYPE_REGISTRY } from "@sentio/sdk-aptos";
 
 const client = new AptosClient("http://aptos-proxy-server.chain-sync:8646")
 
-coin.loadTypes(aptos.TYPE_REGISTRY)
+coin.loadTypes(TYPE_REGISTRY)
 for (const token of CORE_TOKENS.values()) {
   const coinInfoType = `0x1::coin::CoinInfo<${token.token_type.type}>`
     // const price = await getPrice(v.token_type.type, timestamp)
-  aptos.AptosAccountProcessor.bind({address: token.token_type.account_address})
+  AptosAccountProcessor.bind({address: token.token_type.account_address})
     .onTimeInterval(async (resources, ctx) => {
-      const coinInfoRes = aptos.TYPE_REGISTRY.filterAndDecodeResources<coin.CoinInfo<any>>(coin.CoinInfo.TYPE_QNAME, resources)
+      const coinInfoRes = TYPE_REGISTRY.filterAndDecodeResources<coin.CoinInfo<any>>(coin.CoinInfo.TYPE_QNAME, resources)
       if (coinInfoRes.length === 0) {
         return
       }
