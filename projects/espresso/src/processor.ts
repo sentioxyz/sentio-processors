@@ -3,7 +3,7 @@ import { CAPE_ARB_GOERLI, CAPE_NEW, CAPE_OLD } from './constant'
 import  {
   utils
 } from "ethers"
-import { AccountEventTracker} from "@sentio/sdk";
+import {AccountEventTracker, Gauge, MetricOptions} from "@sentio/sdk";
 import type {Trace} from "@sentio/sdk";
 import { Log } from '@ethersproject/abstract-provider';
 
@@ -11,8 +11,34 @@ const senderTracker4 = AccountEventTracker.register("senders4", {distinctByDays:
 const tokenTracker = AccountEventTracker.register("unique_tokens", {distinctByDays: [1,7,12,30]})
 // const senderTracker = AccountEventTracker.register("senders", {distinctByDays: [1,7,12,30]})
 
+export const gaugeOptions: MetricOptions = {
+  sparse: true,
+  aggregationConfig: {
+    intervalInMinutes: [60],
+  }
+}
+
+export const sponsor = Gauge.register("Sponsor", gaugeOptions)
+export const wrap = Gauge.register("Wrap", gaugeOptions)
+export const transfer = Gauge.register("Transfer", gaugeOptions)
+export const mint = Gauge.register("Mint", gaugeOptions)
+export const freeze = Gauge.register("Freeze", gaugeOptions)
+export const burn = Gauge.register("Burn", gaugeOptions)
+export const empty = Gauge.register("Empty", gaugeOptions)
+
+
+const gaugesMap = new Map<string, Gauge>([
+  ['Sponsor',sponsor],
+    ['Wrap',wrap],
+    ['Transfer',transfer],
+    ['Mint',mint],
+    ['Freeze',freeze],
+    ['Burn',burn],
+    ['Empty',empty]
+]);
+
 const gaugeAndCounter = (name: string, ctx: CapeContext) => {
-  ctx.meter.Gauge(name).record(1)
+  gaugesMap.get(name)?.record(ctx,1)
   ctx.meter.Counter(name + "_counter").add(1)
 }
 
