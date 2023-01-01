@@ -15,11 +15,12 @@ import { getTxData, ThinBlock } from "@sentio/loopring-protocols/src/parse";
 import assert from "assert";
 import { AddressZero } from "@ethersproject/constants"
 import { AccountEventTracker} from "@sentio/sdk";
+import {block_sizes, tx_processed} from "./metrics";
 
 const accountTracker = AccountEventTracker.register("wallets")
 function parseSingleTx(txData: Bitstream, ctx: ExchangeV3Context) {
   const txType = txData.extractUint8(0);
-  ctx.meter.Gauge("tx_processed").record(1, {txType: txType.toString()})
+  tx_processed.record(ctx,1, {txType: txType.toString()})
   ctx.meter.Counter("tx_processed_counter").add(1, {txType: txType.toString()})
 
   // SELECT CASE (t.transaction).txType
@@ -115,7 +116,7 @@ function processBlock(block: ThinBlock, ctx: ExchangeV3Context) {
   let offset = 0;
 
   const blockSize = block.blockSize
-  ctx.meter.Gauge("block_sizes").record(1, {blocksize: blockSize.toString()})
+  block_sizes.record(ctx, 1, {blocksize: blockSize.toString()})
   ctx.meter.Counter("block_sizes_counter").add(1, {blocksize: blockSize.toString()})
 
   // General data
