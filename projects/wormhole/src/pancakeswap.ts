@@ -1,8 +1,8 @@
 import { swap } from "./types/aptos/pancake-swap";
 import { AptosDex, getCoinInfo } from "@sentio-processor/common/dist/aptos";
-import { aptos } from "@sentio/sdk";
 import { pancakeTvl, pancakeTvlAll, pancakeTvlByPool, pancakeVolume } from "./metrics";
 import { isWormhole } from "./utils";
+import { AptosAccountProcessor } from "@sentio/sdk-aptos";
 
 swap.bind()
     .onEventPairCreatedEvent(async (evt, ctx) => {
@@ -45,5 +45,5 @@ const PANCAKE_SWAP_APTOS = new AptosDex<swap.TokenPairReserve<any, any>>(pancake
   poolTypeName: swap.TokenPairReserve.TYPE_QNAME
 })
 
-aptos.AptosAccountProcessor.bind({address: swap.DEFAULT_OPTIONS.address })
+AptosAccountProcessor.bind({address: swap.DEFAULT_OPTIONS.address })
     .onVersionInterval((rs, ctx) => PANCAKE_SWAP_APTOS.syncPools(rs, ctx))

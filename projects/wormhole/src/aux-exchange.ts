@@ -1,8 +1,8 @@
 import { AptosDex, getCoinInfo } from "@sentio-processor/common/dist/aptos";
 import { amm } from "./types/aptos/auxexchange";
-import { aptos } from "@sentio/sdk";
 import { auxTvl, auxTvlAll, auxTvlByPool, auxVolume } from "./metrics";
 import { isWormhole } from "./utils";
+import { AptosAccountProcessor } from "@sentio/sdk-aptos";
 
 const AUX_EXCHANGE = new AptosDex<amm.Pool<any, any>>(auxVolume, auxTvlAll, auxTvl, auxTvlByPool, {
   getXReserve: pool => pool.x_reserve.value,
@@ -11,7 +11,7 @@ const AUX_EXCHANGE = new AptosDex<amm.Pool<any, any>>(auxVolume, auxTvlAll, auxT
   poolTypeName: amm.Pool.TYPE_QNAME
 })
 
-aptos.AptosAccountProcessor.bind({address: amm.DEFAULT_OPTIONS.address})
+AptosAccountProcessor.bind({address: amm.DEFAULT_OPTIONS.address})
     .onVersionInterval((rs,ctx) => AUX_EXCHANGE.syncPools(rs, ctx) )
 
 amm.bind()

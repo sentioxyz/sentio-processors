@@ -21,7 +21,7 @@ const blockHandler = async function(_:any, ctx: StakedTokenV1Context) {
   ctx.meter.Gauge("total_supply").record(totalSupply, {token: tokenInfo.symbol})
   ctx.meter.Gauge("exchange_rate").record(exchangeRate, {token: tokenInfo.symbol})
 
-  const latestAnswer = await getEACAggregatorProxyContract(USDC_ETH_ORACLE).latestAnswer({blockTag: ctx.blockNumber.toNumber()})
+  const latestAnswer = await getEACAggregatorProxyContract(USDC_ETH_ORACLE).latestAnswer({blockTag: Number(ctx.blockNumber)})
   // the oracle actually returns USDC/ETH price with 18 decimal
   // so to get ETH/USDC price, just do 1e18.div(result)
   const eth_usdc_price = BigDecimal(10).pow(18).div(conversion.toBigDecimal(latestAnswer))
