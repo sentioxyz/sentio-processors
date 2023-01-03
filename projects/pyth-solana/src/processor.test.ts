@@ -1,6 +1,7 @@
 import { TestProcessorServer } from '@sentio/sdk/lib/testing'
 import { BorshInstructionCoder, Idl } from "@project-serum/anchor";
 import { pyth_oracle_idl } from "./types/solana/pyth_oracle";
+import bs58 from "bs58";
 
 describe('Test Processor', () => {
   const service = new TestProcessorServer(() => require('./processor'))
@@ -10,13 +11,19 @@ describe('Test Processor', () => {
   })
 
   test('has valid config', async () => {
-    const instructionCoder = new BorshInstructionCoder(pyth_oracle_idl as Idl)
+    // const instructionCoder = new BorshInstructionCoder(pyth_oracle_idl as Idl)
 
+    const tt = bs58.decode("6mJFQCt94hG4CKNYKgVcwfDH6kX6Cb1uK8MxXBk9iAFmcdgsTYryFV")
+    const instructionCoder = new BorshInstructionCoder(pyth_oracle_idl as Idl)
+    const decodedIns = instructionCoder.decode("6mJFQCt94hG4CKNYKgVcwfDH6kX6Cb1uK8MxXBk9iAFmcdgsTYryFV", "base58")
+
+    // https://explorer.solana.com/tx/65CGX2dDXpsrvJZPc243yC9P666Eqh755d4KtgYAqeqfjPfpQrhj7J75mEt2Laefq68CrUvthk4nmYDHcDPLRn3H
+    // https://github.com/pyth-network/pyth-sdk-rs/blob/main/pyth-sdk-solana/src/state.rs#L127
     const res = await service.testInstructions([
-      {"instructionData":"6mJFQCt94hG4CKNYKgVcwrYpr9dz1Zcz6GGJkYBWJV7mowKX8VKJmu",
-        "slot":170104286n,
+      {"instructionData":"6mJFQCt94hG4CKNYKgVcwfDH6kX6Cb1uK8MxXBk9iAFmcdgsTYryFV",
+        "slot":167963569n,
         "programAccountId":"FsJ3A3u2vn5cTVofAjvy6y5kwABJAqYWpe4975bi2epH",
-        "accounts":["HfeFy4G9r77iyeXdbfNJjYw4z3NPEKDL6YQh3JzJ9s9f","ETp9eKXVv1dWwHSpsXRUuXHmw24PwRkttCGVgpZEY9zF","SysvarC1ock11111111111111111111111111111111"]}
+        "accounts":["JTmFx5zX9mM94itfk2nQcJnQQDPjcv4UPD7SYj6xDCV","7Dn52EY5EGE8Nvvw98KVMGPWTiTGn3PF4y24TVLyXdT9", "SysvarC1ock11111111111111111111111111111111"]}
     ])
     console.log(res)
   })
