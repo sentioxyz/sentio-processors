@@ -1,27 +1,29 @@
 {
-  "version": "2.13.1",
+  "version": "2.20.0",
   "name": "pyth_oracle",
   "instructions": [
     {
       "name": "initMapping",
-      "discriminator": [
-        2,
-        0,
-        0,
-        0,
-        0,
-        0,
-        0,
-        0
-      ],
+      "discriminant": {
+        "value": [
+          2,
+          0,
+          0,
+          0,
+          0,
+          0,
+          0,
+          0
+        ]
+      },
       "accounts": [
         {
-          "name": "funding_account",
+          "name": "fundingAccount",
           "isMut": true,
           "isSigner": true
         },
         {
-          "name": "fresh_mapping_account",
+          "name": "freshMappingAccount",
           "isMut": true,
           "isSigner": true
         }
@@ -30,29 +32,31 @@
     },
     {
       "name": "addMapping",
-      "discriminator": [
-        2,
-        0,
-        0,
-        0,
-        1,
-        0,
-        0,
-        0
-      ],
+      "discriminant": {
+        "value": [
+          2,
+          0,
+          0,
+          0,
+          1,
+          0,
+          0,
+          0
+        ]
+      },
       "accounts": [
         {
-          "name": "funding_account",
+          "name": "fundingAccount",
           "isMut": true,
           "isSigner": true
         },
         {
-          "name": "cur_mapping",
+          "name": "curMapping",
           "isMut": true,
           "isSigner": true
         },
         {
-          "name": "next_mapping",
+          "name": "nextMapping",
           "isMut": true,
           "isSigner": true
         }
@@ -61,29 +65,31 @@
     },
     {
       "name": "addProduct",
-      "discriminator": [
-        2,
-        0,
-        0,
-        0,
-        2,
-        0,
-        0,
-        0
-      ],
+      "discriminant": {
+        "value": [
+          2,
+          0,
+          0,
+          0,
+          2,
+          0,
+          0,
+          0
+        ]
+      },
       "accounts": [
         {
-          "name": "funding_account",
+          "name": "fundingAccount",
           "isMut": true,
           "isSigner": true
         },
         {
-          "name": "tail_mapping_account",
+          "name": "tailMappingAccount",
           "isMut": true,
           "isSigner": true
         },
         {
-          "name": "new_product_account",
+          "name": "productAccount",
           "isMut": true,
           "isSigner": true
         }
@@ -92,386 +98,539 @@
     },
     {
       "name": "updProduct",
-      "discriminator": [
-        2,
-        0,
-        0,
-        0,
-        3,
-        0,
-        0,
-        0
-      ],
+      "discriminant": {
+        "value": [
+          2,
+          0,
+          0,
+          0,
+          3,
+          0,
+          0,
+          0
+        ]
+      },
       "accounts": [
         {
-          "name": "funding_account",
+          "name": "fundingAccount",
           "isMut": true,
           "isSigner": true
         },
         {
-          "name": "product_account",
+          "name": "productAccount",
           "isMut": true,
           "isSigner": true
         }
       ],
-      "args": [
-        {
-          "name": "new_data",
-          "type": {
-            "array": ["u8", 464]
-          }
-        }
-      ]
+      "args": []
     },
     {
       "name": "addPrice",
-      "discriminator": [
-        2,
-        0,
-        0,
-        0,
-        4,
-        0,
-        0,
-        0
-      ],
+      "discriminant": {
+        "value": [
+          2,
+          0,
+          0,
+          0,
+          4,
+          0,
+          0,
+          0
+        ]
+      },
       "accounts": [
         {
-          "name": "funding_account",
+          "name": "fundingAccount",
           "isMut": true,
           "isSigner": true
         },
         {
-          "name": "product_account",
+          "name": "productAccount",
           "isMut": true,
           "isSigner": true
         },
         {
-          "name": "price_account",
+          "name": "priceAccount",
           "isMut": true,
           "isSigner": true
         }
       ],
       "args": [
         {
-          "name": "expo_",
+          "name": "expo",
           "type": "i32"
         },
         {
-          "name": "ptype_",
+          "name": "pType",
           "type": "u32"
         }
       ]
     },
     {
       "name": "addPublisher",
-      "discriminator": [
-        2,
-        0,
-        0,
-        0,
-        5,
-        0,
-        0,
-        0
-      ],
+      "discriminant": {
+        "value": [
+          2,
+          0,
+          0,
+          0,
+          5,
+          0,
+          0,
+          0
+        ]
+      },
       "accounts": [
         {
-          "name": "funding_account",
+          "name": "fundingAccount",
           "isMut": true,
           "isSigner": true
         },
         {
-          "name": "price_account",
+          "name": "priceAccount",
           "isMut": true,
           "isSigner": true
         }
       ],
       "args": [
         {
-          "name": "pub_",
+          "name": "pub",
           "type": "publicKey"
         }
       ]
     },
     {
       "name": "delPublisher",
-      "discriminator": [
-        2,
-        0,
-        0,
-        0,
-        6,
-        0,
-        0,
-        0
-      ],
+      "discriminant": {
+        "value": [
+          2,
+          0,
+          0,
+          0,
+          6,
+          0,
+          0,
+          0
+        ]
+      },
       "accounts": [
         {
-          "name": "funding_account",
+          "name": "fundingAccount",
           "isMut": true,
           "isSigner": true
         },
         {
-          "name": "price_account",
+          "name": "priceAccount",
           "isMut": true,
           "isSigner": true
         }
       ],
       "args": [
         {
-          "name": "pub_",
+          "name": "pub",
           "type": "publicKey"
         }
       ]
     },
     {
       "name": "updPrice",
-      "discriminator": [
-        2,
-        0,
-        0,
-        0,
-        7,
-        0,
-        0,
-        0
-      ],
+      "discriminant": {
+        "value": [
+          2,
+          0,
+          0,
+          0,
+          7,
+          0,
+          0,
+          0
+        ]
+      },
       "accounts": [
         {
-          "name": "funding_account",
+          "name": "fundingAccount",
           "isMut": true,
           "isSigner": true
         },
         {
-          "name": "price_account",
+          "name": "priceAccount",
           "isMut": true,
           "isSigner": false
         },
         {
-          "name": "clock_account",
+          "name": "clock",
           "isMut": false,
           "isSigner": false
         }
       ],
       "args": [
         {
-          "name": "status_",
+          "name": "status",
           "type": "u32"
         },
         {
-          "name": "unused_",
+          "name": "unused",
           "type": "u32"
         },
         {
-          "name": "price_",
+          "name": "price",
           "type": "i64"
         },
         {
-          "name": "conf_",
+          "name": "conf",
           "type": "u64"
         },
         {
-          "name": "pub_slot_",
+          "name": "pubSlot",
           "type": "u64"
         }
       ]
     },
     {
       "name": "aggPrice",
-      "discriminator": [
-        2,
-        0,
-        0,
-        0,
-        8,
-        0,
-        0,
-        0
-      ],
+      "discriminant": {
+        "value": [
+          2,
+          0,
+          0,
+          0,
+          8,
+          0,
+          0,
+          0
+        ]
+      },
       "accounts": [
         {
-          "name": "funding_account",
+          "name": "fundingAccount",
           "isMut": true,
           "isSigner": true
         },
         {
-          "name": "price_account",
+          "name": "priceAccount",
           "isMut": true,
           "isSigner": false
         },
         {
-          "name": "clock_account",
+          "name": "clock",
           "isMut": false,
           "isSigner": false
         }
       ],
       "args": [
         {
-          "name": "status_",
+          "name": "status",
           "type": "u32"
         },
         {
-          "name": "unused_",
+          "name": "unused",
           "type": "u32"
         },
         {
-          "name": "price_",
+          "name": "price",
           "type": "i64"
         },
         {
-          "name": "conf_",
+          "name": "conf",
           "type": "u64"
         },
         {
-          "name": "pub_slot_",
+          "name": "pubSlot",
           "type": "u64"
         }
       ]
     },
     {
       "name": "initPrice",
-      "discriminator": [
-        2,
-        0,
-        0,
-        0,
-        9,
-        0,
-        0,
-        0
-      ],
+      "discriminant": {
+        "value": [
+          2,
+          0,
+          0,
+          0,
+          9,
+          0,
+          0,
+          0
+        ]
+      },
       "accounts": [
         {
-          "name": "funding_account",
+          "name": "fundingAccount",
           "isMut": true,
           "isSigner": true
         },
         {
-          "name": "price_account",
+          "name": "priceAccount",
           "isMut": true,
           "isSigner": true
         }
       ],
       "args": [
         {
-          "name": "expo_",
+          "name": "expo",
           "type": "i32"
         },
         {
-          "name": "ptype_",
+          "name": "pType",
           "type": "u32"
         }
       ]
     },
     {
       "name": "setMinPub",
-      "discriminator": [
-        2,
-        0,
-        0,
-        0,
-        12,
-        0,
-        0,
-        0
-      ],
+      "discriminant": {
+        "value": [
+          2,
+          0,
+          0,
+          0,
+          12,
+          0,
+          0,
+          0
+        ]
+      },
       "accounts": [
         {
-          "name": "funding_account",
+          "name": "fundingAccount",
           "isMut": true,
           "isSigner": true
         },
         {
-          "name": "price_account",
+          "name": "priceAccount",
           "isMut": true,
           "isSigner": true
         }
       ],
       "args": [
         {
-          "name": "min_pub_",
+          "name": "minPub",
           "type": "u8"
+        },
+        {
+          "name": "unused",
+          "type": {
+            "array": [
+              "u8",
+              3
+            ]
+          }
         }
       ]
     },
     {
       "name": "updPriceNoFailOnError",
-      "discriminator": [
-        2,
-        0,
-        0,
-        0,
-        13,
-        0,
-        0,
-        0
-      ],
+      "discriminant": {
+        "value": [
+          2,
+          0,
+          0,
+          0,
+          13,
+          0,
+          0,
+          0
+        ]
+      },
       "accounts": [
         {
-          "name": "funding_account",
+          "name": "fundingAccount",
           "isMut": true,
           "isSigner": true
         },
         {
-          "name": "price_account",
+          "name": "priceAccount",
           "isMut": true,
           "isSigner": false
         },
         {
-          "name": "clock_account",
+          "name": "clock",
           "isMut": false,
           "isSigner": false
         }
       ],
       "args": [
         {
-          "name": "status_",
+          "name": "status",
           "type": "u32"
         },
         {
-          "name": "unused_",
+          "name": "unused",
           "type": "u32"
         },
         {
-          "name": "price_",
+          "name": "price",
           "type": "i64"
         },
         {
-          "name": "conf_",
+          "name": "conf",
           "type": "u64"
         },
         {
-          "name": "pub_slot_",
+          "name": "pubSlot",
           "type": "u64"
         }
       ]
     },
     {
       "name": "resizeAccount",
-      "discriminator": [
-        2,
-        0,
-        0,
-        0,
-        14,
-        0,
-        0,
-        0
-      ],
+      "discriminant": {
+        "value": [
+          2,
+          0,
+          0,
+          0,
+          14,
+          0,
+          0,
+          0
+        ]
+      },
       "accounts": [
         {
-          "name": "funding_account",
+          "name": "fundingAccount",
           "isMut": true,
           "isSigner": true
         },
         {
-          "name": "price_account",
+          "name": "priceAccount",
           "isMut": true,
           "isSigner": true
         }
       ],
       "args": []
+    },
+    {
+      "name": "delPrice",
+      "discriminant": {
+        "value": [
+          2,
+          0,
+          0,
+          0,
+          15,
+          0,
+          0,
+          0
+        ]
+      },
+      "accounts": [
+        {
+          "name": "fundingAccount",
+          "isMut": true,
+          "isSigner": true
+        },
+        {
+          "name": "productAccount",
+          "isMut": true,
+          "isSigner": true
+        },
+        {
+          "name": "priceAccount",
+          "isMut": true,
+          "isSigner": true
+        }
+      ],
+      "args": []
+    },
+    {
+      "name": "delProduct",
+      "discriminant": {
+        "value": [
+          2,
+          0,
+          0,
+          0,
+          16,
+          0,
+          0,
+          0
+        ]
+      },
+      "accounts": [
+        {
+          "name": "fundingAccount",
+          "isMut": true,
+          "isSigner": true
+        },
+        {
+          "name": "mappingAccount",
+          "isMut": true,
+          "isSigner": true
+        },
+        {
+          "name": "productAccount",
+          "isMut": true,
+          "isSigner": true
+        }
+      ],
+      "args": []
+    },
+    {
+      "name": "updPermissions",
+      "discriminant": {
+        "value": [
+          2,
+          0,
+          0,
+          0,
+          17,
+          0,
+          0,
+          0
+        ]
+      },
+      "accounts": [
+        {
+          "name": "upgradeAuthority",
+          "isMut": true,
+          "isSigner": true
+        },
+        {
+          "name": "programAccount",
+          "isMut": false,
+          "isSigner": false
+        },
+        {
+          "name": "programDataAccount",
+          "isMut": false,
+          "isSigner": false
+        },
+        {
+          "name": "permissionsAccount",
+          "isMut": true,
+          "isSigner": false,
+          "pda": {
+            "seeds": [
+              {
+                "kind": "const",
+                "type": "string",
+                "value": "permissions"
+              }
+            ]
+          }
+        },
+        {
+          "name": "systemProgram",
+          "isMut": false,
+          "isSigner": false
+        }
+      ],
+      "args": [
+        {
+          "name": "masterAuthority",
+          "type": "publicKey"
+        },
+        {
+          "name": "dataCurationAuthority",
+          "type": "publicKey"
+        },
+        {
+          "name": "securityAuthority",
+          "type": "publicKey"
+        }
+      ]
     }
   ]
 }

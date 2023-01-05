@@ -20,10 +20,12 @@ describe('Test Processor', () => {
       bindings: [
         {
           data: {
-            raw: new TextEncoder().encode(JSON.stringify({
-              ...testData3,
-              events: [testData3.events[0]]
-            })),
+            aptEvent: {
+              transaction: {
+                ...testData3,
+                events: [testData3.events[0]]
+              }
+            },
           },
           handlerIds: [0],
           handlerType: HandlerType.APT_EVENT
