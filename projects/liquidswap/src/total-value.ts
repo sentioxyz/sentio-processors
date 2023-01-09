@@ -5,7 +5,7 @@ import { delay, getRandomInt } from "@sentio-processor/common/dist";
 import { totalValue } from "./metrics";
 import { AptosAccountProcessor, TYPE_REGISTRY } from "@sentio/sdk-aptos";
 
-const client = new AptosClient("http://aptos-proxy-server.chain-sync:8646")
+const client = new AptosClient("http://aptos-mainnet-proxy-v2.chain-sync:8645")
 
 coin.loadTypes(TYPE_REGISTRY)
 for (const token of CORE_TOKENS.values()) {
