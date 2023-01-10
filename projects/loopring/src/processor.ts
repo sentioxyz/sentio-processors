@@ -1,18 +1,19 @@
 import {
-  LOOPRING_WALLET_MODULE,
-  LOOPRING_WALLET_FACTORY1,
-  LOOPRING_WALLET_FACTORY2,
-  LOOPRING_WALLET_FACTORY3,
-  LOOPRING_WALLET_FACTORY4,
-  LOOPRING_WALLET_FACTORY5,
-  LOOPRING_EXCHANGE,
-  EVENT1,
-  EVENT,
-  EVENT2
+    LOOPRING_WALLET_MODULE,
+    LOOPRING_WALLET_FACTORY1,
+    LOOPRING_WALLET_FACTORY2,
+    LOOPRING_WALLET_FACTORY3,
+    LOOPRING_WALLET_FACTORY4,
+    LOOPRING_WALLET_FACTORY5,
+    LOOPRING_EXCHANGE,
+    EVENT1,
+    EVENT,
+    EVENT2, TOKEN_ARRAY
 } from "./constant"
-
+import { ERC20Context, ERC20Processor, getERC20Contract } from '@sentio/sdk/lib/builtin/erc20'
 import { ContractContext, ContractView, BoundContractView, GenericProcessor, BigDecimal } from "@sentio/sdk"
 import { token, conversion  } from "@sentio/sdk/lib/utils"
+import {getPriceByType} from "@sentio/sdk/lib/utils/price"
 import {
   ExchangeV3Context,
   ExchangeV3Processor,
@@ -32,7 +33,51 @@ GenericProcessor.bind(EVENT, {address: LOOPRING_WALLET_FACTORY3}).onAllEvents(wa
 GenericProcessor.bind(EVENT, {address: LOOPRING_WALLET_FACTORY4}).onAllEvents(walletCounter)
 GenericProcessor.bind(EVENT2, {address: LOOPRING_WALLET_FACTORY5}).onAllEvents(walletCounter)
 
+async function getTokenDetails(ctx: ExchangeV3Context, address: string): Promise<[token.TokenInfo, BigNumber]> {
+  const tokenInfo = await getTokenInfo(address)
+  let amount: any
+  if (tokenInfo.symbol === "ETH") {
+    try {
+      amount = await ctx.contract.provider.getBalance("0x674bdf20a0f284d710bc40872100128e2d66bd3f")
+    } catch (e) {
+      console.log(e)
+      amount = 0
+    }
+  } else {
+    try {
+      amount = await getERC20Contract(address).balanceOf("0x674bdf20a0f284d710bc40872100128e2d66bd3f",
+          {blockTag: Number(ctx.blockNumber)})
+    } catch (e) {
+      console.log("error", e)
+      amount = 0
+    }
+  }
+  return [tokenInfo, amount]
+}
+
+const tvl = async function (_: any, ctx: ExchangeV3Context) {
+  console.log("new round of tvl")
+  for (let i = 0; i < TOKEN_ARRAY.length; i++) {
+    const [tokenInfo, amount] = await getTokenDetails(ctx, TOKEN_ARRAY[i])
+    const scaledAmount = await scaleDown(amount, tokenInfo.decimal)
+    let price : any
+    try {
+      price = await getPriceByType("ethereum_mainnet", TOKEN_ARRAY[i], ctx.timestamp)
+    } catch (e) {
+      console.log(e)
+      continue
+    }
+    console.log("price", price, "scaledAmount", scaledAmount.toNumber(),
+        "scaledAmount", amount.toString(), "tokenInfo", tokenInfo.symbol,
+        "block", Number(ctx.blockNumber), "timestamp", ctx.timestamp, "address", TOKEN_ARRAY[i])
+    ctx.meter.Gauge("tvl").record(scaledAmount.multipliedBy(price),
+        {token: tokenInfo.symbol, address: TOKEN_ARRAY[i]})
+    ctx.meter.Counter("tvl_count").add(1)
+  }
+}
+
 ExchangeV3Processor.bind({address: LOOPRING_EXCHANGE})
+    .onTimeInterval(tvl, 60, 24 * 60 * 30)
     .onEventDepositRequested(depositGauge)
     .onEventWithdrawalCompleted(withdrawGauge)
     .onCallSubmitBlocks(async (call: SubmitBlocksCallTrace, ctx: ExchangeV3Context) => {
