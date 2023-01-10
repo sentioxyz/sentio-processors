@@ -25,6 +25,8 @@ import type { BaseContract, BigNumber } from 'ethers'
 import { processBlockStruct } from "./parse";
 import { toBigDecimal } from "@sentio/sdk/lib/utils/conversion"
 import {deposit, withdraw} from "./metrics";
+import { RichClientError } from "nice-grpc-error-details";
+import { Status } from "nice-grpc-common";
 
 GenericProcessor.bind(EVENT1, {address: LOOPRING_WALLET_MODULE}).onAllEvents(walletCounter)
 GenericProcessor.bind(EVENT, {address: LOOPRING_WALLET_FACTORY1}).onAllEvents(walletCounter)
@@ -63,9 +65,11 @@ const tvl = async function (_: any, ctx: ExchangeV3Context) {
     let price : any
     try {
       price = await getPriceByType("ethereum_mainnet", TOKEN_ARRAY[i], ctx.timestamp)
-    } catch (e) {
-      console.log(e)
-      continue
+    } catch (error) {
+      if (error instanceof RichClientError && error.code === Status.NOT_FOUND) {
+       continue
+      }
+      throw error
     }
     console.log("price", price, "scaledAmount", scaledAmount.toNumber(),
         "scaledAmount", amount.toString(), "tokenInfo", tokenInfo.symbol,

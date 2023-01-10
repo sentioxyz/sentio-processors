@@ -2,6 +2,8 @@ import { DEFAULT_MAINNET_LIST, RawCoinInfo } from "@manahippo/coin-list/dist/lis
 import { BigDecimal } from "@sentio/sdk";
 import { getPriceByType } from '@sentio/sdk/lib/utils/price'
 import { CHAIN_IDS } from "@sentio/sdk";
+import {RichClientError} from 'nice-grpc-error-details';
+import {Status} from 'nice-grpc-common';
 
 export interface BaseCoinInfoWithBridge extends RawCoinInfo {
   bridge: string
@@ -65,7 +67,14 @@ export async function getPrice(coinType: string, timestamp: number): Promise<num
     return 0.0
   }
   const date = new Date(timestamp / 1000)
-  return getPriceByType(CHAIN_IDS.APTOS_MAINNET, coinType, date)
+  try {
+    return getPriceByType(CHAIN_IDS.APTOS_MAINNET, coinType, date)
+  } catch (error) {
+    if (error instanceof RichClientError && error.code === Status.NOT_FOUND) {
+      return 0
+    }
+    throw error
+  }
 }
 
 export async function calculateValueInUsd(n: bigint, coinInfo: SimpleCoinInfo, timestamp: number | string) {
