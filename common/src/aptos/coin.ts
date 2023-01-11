@@ -3,7 +3,7 @@ import { BigDecimal } from "@sentio/sdk";
 import { getPriceByType } from '@sentio/sdk/lib/utils/price'
 import { CHAIN_IDS } from "@sentio/sdk";
 import {RichClientError} from 'nice-grpc-error-details';
-import {Status} from 'nice-grpc-common';
+import {Status, ClientError} from 'nice-grpc-common';
 
 export interface BaseCoinInfoWithBridge extends RawCoinInfo {
   bridge: string
@@ -68,11 +68,12 @@ export async function getPrice(coinType: string, timestamp: number): Promise<num
   }
   const date = new Date(timestamp / 1000)
   try {
-    return getPriceByType(CHAIN_IDS.APTOS_MAINNET, coinType, date)
+    return await getPriceByType(CHAIN_IDS.APTOS_MAINNET, coinType, date)
   } catch (error) {
-    if (error instanceof RichClientError && error.code === Status.NOT_FOUND) {
+    if (error instanceof ClientError && error.code === Status.NOT_FOUND) {
       return 0
     }
+    console.log(JSON.stringify(error))
     throw error
   }
 }

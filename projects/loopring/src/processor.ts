@@ -26,7 +26,7 @@ import { processBlockStruct } from "./parse";
 import { toBigDecimal } from "@sentio/sdk/lib/utils/conversion"
 import {deposit, withdraw} from "./metrics";
 import { RichClientError } from "nice-grpc-error-details";
-import { Status } from "nice-grpc-common";
+import { Status, ClientError } from "nice-grpc-common";
 
 GenericProcessor.bind(EVENT1, {address: LOOPRING_WALLET_MODULE}).onAllEvents(walletCounter)
 GenericProcessor.bind(EVENT, {address: LOOPRING_WALLET_FACTORY1}).onAllEvents(walletCounter)
@@ -66,7 +66,7 @@ const tvl = async function (_: any, ctx: ExchangeV3Context) {
     try {
       price = await getPriceByType("ethereum_mainnet", TOKEN_ARRAY[i], ctx.timestamp)
     } catch (error) {
-      if (error instanceof RichClientError && error.code === Status.NOT_FOUND) {
+      if (error instanceof ClientError && error.code === Status.NOT_FOUND) {
        continue
       }
       throw error
