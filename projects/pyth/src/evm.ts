@@ -23,11 +23,28 @@ const CHAIN_ADDRESS_MAP = new Map<number, string>([
     [321, "0xE0d0e68297772Dd5a1f1D99897c581E2082dbA5B"] //KCC
 ])
 
+const CHAIN_NATIVE_MAP = new Map<string, string>([
+    ["0x4305FB66699C3B2702D4d05CF36551390A4c69C6".toLowerCase(), "Crypto.ETH/USD"], //ETH
+    ["0xff1a0f4744e8582df1ae09d5611b887b6a12925c".toLowerCase(), "Crypto.OP/USD"], //Optimism
+    ["0x4D7E825f80bDf85e913E0DD2A2D54927e9dE1594".toLowerCase(), "Crypto.BNB/USD"], //BSC
+    ["0xff1a0f4744e8582DF1aE09D5611b887B6a12925C".toLowerCase(), "Crypto.FTM/USD"], //Fantom
+    ["0xF89C7b475821EC3fDC2dC8099032c05c6c0c9AB9".toLowerCase(), "Crypto.AURORA/USD"], //Aurora
+    ["0xE0d0e68297772Dd5a1f1D99897c581E2082dbA5B".toLowerCase(), "Crypto.KCS/USD"] //KCC
+])
+
 async function priceFeedUpdate(evt: PriceFeedUpdateEvent, ctx: PythEVMContext) {
     const price = evt.args.price
     const priceId = evt.args.id
+    const address = ctx.address.toLowerCase()
     const symbol = PRICE_MAP.get(priceId) || "not listed"
-    const labels = { priceId, symbol }
+    const nativeSymbol = CHAIN_NATIVE_MAP.get(address) || "not found"
+    var isNative
+    if (nativeSymbol == symbol) {
+        isNative = "true"
+    } else {
+        isNative = "false"
+    }
+    const labels = { priceId, symbol, isNative }
     const pythContract = getPythEVMContract(ctx.address, ctx.chainId)
     const priceUnsafeStruct = await pythContract.getPriceUnsafe(priceId, {blockTag: evt.blockNumber})
     const priceUnsafe = scaleDown(priceUnsafeStruct.price, -priceUnsafeStruct.expo)
@@ -53,11 +70,21 @@ async function updatePriceFeedsIfNecessary(call: UpdatePriceFeedsIfNecessaryCall
 }
 
 CHAIN_ADDRESS_MAP.forEach((addr, chainId) => {
-    PythEVMProcessor.bind({address: addr, network: chainId})
-    .onEventPriceFeedUpdate(priceFeedUpdate)
-    .onCallUpdatePriceFeeds(updatePriceFeeds)
-    .onCallUpdatePriceFeedsIfNecessary(updatePriceFeedsIfNecessary)
-    .onEventBatchPriceFeedUpdate(batchPriceUpdate)
+    // TODO: change this to 
+    if (addr == "0xff1a0f4744e8582df1ae09d5611b887b6a12925c") {
+        PythEVMProcessor.bind({address: addr, network: chainId, startBlock: 45722027})
+        .onEventPriceFeedUpdate(priceFeedUpdate)
+        .onCallUpdatePriceFeeds(updatePriceFeeds)
+        .onCallUpdatePriceFeedsIfNecessary(updatePriceFeedsIfNecessary)
+        .onEventBatchPriceFeedUpdate(batchPriceUpdate)
+    } else {
+        PythEVMProcessor.bind({address: addr, network: chainId})
+        .onEventPriceFeedUpdate(priceFeedUpdate)
+        .onCallUpdatePriceFeeds(updatePriceFeeds)
+        .onCallUpdatePriceFeedsIfNecessary(updatePriceFeedsIfNecessary)
+        .onEventBatchPriceFeedUpdate(batchPriceUpdate) 
+    }
+
 })
 
 // PythEVMProcessor.bind({address: PYTH_ETH})
