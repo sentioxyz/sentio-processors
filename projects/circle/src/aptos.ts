@@ -13,7 +13,14 @@ import { liquidity_pool } from "./types/aptos/liquidswap";
 import { swap } from "./types/aptos/pancake-swap";
 import { BigDecimal } from "@sentio/sdk/lib/core/big-decimal";
 import { MoveResource } from "aptos-sdk/src/generated";
-import { AptosResourceContext, TypedMoveResource, TYPE_REGISTRY, AptosAccountProcessor, AptosContext } from "@sentio/sdk-aptos";
+import {
+  AptosResourceContext,
+  TypedMoveResource,
+  TYPE_REGISTRY,
+  AptosAccountProcessor,
+  AptosContext,
+  getAptosClient
+} from "@sentio/sdk-aptos";
 
 const commonOptions = { sparse:  true }
 const totalValue = Gauge.register("total_value", commonOptions)
@@ -39,7 +46,7 @@ function isUSDCPair(typeX: string, typeY: string) {
   return isUSDCType(typeX) || isUSDCType(typeY)
 }
 
-const client = new AptosClient("http://aptos-proxy-server.chain-sync:8646")
+const client = getAptosClient()!
 
 coin.loadTypes(TYPE_REGISTRY)
 for (const token of CORE_TOKENS.values()) {

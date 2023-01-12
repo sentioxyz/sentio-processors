@@ -19,7 +19,7 @@ import type { Transaction_UserTransaction, TransactionPayload_EntryFunctionPaylo
 import { getPriceByType } from "@sentio/sdk/lib/utils/price";
 import { CHAIN_IDS } from "@sentio/sdk";
 import { AptosClient } from "aptos-sdk";
-import { TYPE_REGISTRY } from "@sentio/sdk-aptos";
+import { TYPE_REGISTRY, getAptosClient } from "@sentio/sdk-aptos";
 
 const accounts = Counter.register("account", { sparse: false })
 const accountBalance = Gauge.register("account_balance", { sparse: true })
@@ -44,7 +44,7 @@ for (const token of CORE_TOKENS.values()) {
   })
 }
 
-const client = new AptosClient("http://aptos-mainnet-node-http.nodes:8080")
+const client = getAptosClient()!
 
 //
 // coin.bind().onEventDepositEvent(async (evt, ctx) => {

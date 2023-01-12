@@ -3,9 +3,9 @@ import { aggregator, coin, optional_aggregator } from "@sentio/sdk-aptos/lib/bui
 import { CORE_TOKENS, getPrice, scaleDown } from "@sentio-processor/common/dist/aptos";
 import { delay, getRandomInt } from "@sentio-processor/common/dist";
 import { totalValue } from "./metrics";
-import { AptosAccountProcessor, TYPE_REGISTRY } from "@sentio/sdk-aptos";
+import { AptosAccountProcessor, TYPE_REGISTRY, getAptosClient } from "@sentio/sdk-aptos";
 
-const client = new AptosClient("http://aptos-mainnet-proxy-v2.chain-sync:8645")
+const client = getAptosClient()!
 
 coin.loadTypes(TYPE_REGISTRY)
 for (const token of CORE_TOKENS.values()) {
