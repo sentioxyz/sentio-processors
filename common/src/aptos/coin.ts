@@ -1,4 +1,4 @@
-import { DEFAULT_MAINNET_LIST, RawCoinInfo } from "@manahippo/coin-list/dist/list";
+import { DEFAULT_MAINNET_LIST, RawCoinInfo } from "@manahippo/coin-list";
 import { BigDecimal } from "@sentio/sdk";
 import { getPriceByType } from '@sentio/sdk/lib/utils/price'
 import { CHAIN_IDS } from "@sentio/sdk";

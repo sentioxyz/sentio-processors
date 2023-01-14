@@ -1,11 +1,10 @@
-import { AccountEventTracker, aptos, Counter, Gauge } from "@sentio/sdk";
+import { AccountEventTracker, Counter, Gauge } from "@sentio/sdk";
 
 import { amm } from './types/aptos/auxexchange'
 import { liquidity_pool } from "./types/aptos/liquidswap";
 import { stake_router } from "./types/aptos/tortuga";
 import { toBigDecimal } from "@sentio/sdk/lib/utils/conversion";
 import { BigDecimal } from "@sentio/sdk/lib/core/big-decimal";
-import {Exporter} from "@sentio/sdk/lib/core/exporter";
 
 const commonOptions = { sparse:  false }
 
@@ -34,18 +33,26 @@ const tAPT = '0x84d7aeef42d38a5ffc3ccef853e1b82e4958659d16a7de736a29c55fbbeb0114
 stake_router.bind()
   .onEventStakeEvent((evt, ctx) => {
     accountTracker.trackEvent(ctx, { distinctId: ctx.transaction.sender})
-    stakeAmount.add(ctx, scaleDown(evt.data_typed.amount), { coin: "APT"})
+    const amount = scaleDown(evt.data_typed.amount)
+    stakeAmount.add(ctx, amount, { coin: "APT"})
     stakeAmount.add(ctx, scaleDown(evt.data_typed.t_apt_coins), { coin: "tAPT"})
     if (evt.data_typed.amount > 0n) {
-      lastStakeAmount.record(ctx, scaleDown(evt.data_typed.amount), {coin: "APT"})
+      lastStakeAmount.record(ctx, amount, {coin: "APT"})
       lastStakeAmount.record(ctx, scaleDown(evt.data_typed.t_apt_coins), { coin: "tAPT"})
+    }
+    if (amount.gt(1000)) {
+      ctx.logger.info("stake " + amount + " APT", {amount: amount, whale: amount.gt(1000)})
     }
     stake.add(ctx, 1)
   })
   .onEventUnstakeEvent((evt, ctx) => {
     accountTracker.trackEvent(ctx, { distinctId: ctx.transaction.sender})
-    unstakeAmount.add(ctx, scaleDown(evt.data_typed.amount), { coin: "APT"})
+    const amount = scaleDown(evt.data_typed.amount)
+    unstakeAmount.add(ctx, amount, { coin: "APT"})
     unstakeAmount.add(ctx, scaleDown(evt.data_typed.t_apt_coins), { coin: "tAPT"})
+    if (amount.gt(1000) ) {
+      ctx.logger.info("unstake apt " + amount + "APT", {amount: amount, whale: amount.gt(1000)})
+    }
     unstake.add(ctx, 1)
   })
   .onEventClaimEvent((evt, ctx) => {
