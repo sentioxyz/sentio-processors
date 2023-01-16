@@ -16,6 +16,10 @@ const updateWithFunder = Counter.register("update_price_feeds_with_funder")
 const message = Counter.register("message")
 const messages2 = Counter.register("mint_with_pyth_and_price")
 
+// more migration
+const evmPriceGauage = Gauge.register("evm_price_unsafe", commonOptions)
+const price_update_occur = Gauge.register("price_update_occur", commonOptions)
+
 const cache = new LRU<bigint, any>({
   maxSize: 5000,
   sizeCalculation: (value, key) => {
@@ -32,11 +36,23 @@ event.bind()
 
     const priceId = evt.data_typed.price_feed.price_identifier.bytes
     const symbol = PRICE_MAP.get(priceId) || "not listed"
-    const labels = { priceId, symbol }
+    var isNative
+    
+    if (priceId == "0x03ae4db29ed4ae33d323568895aa00337e658e348b37509f5372ae51f0af00d5") {
+      isNative = "true"
+    } else {
+      isNative = "false"
+    }
+    const labels = { priceId, symbol, isNative }
 
     priceGauage.record(ctx, getPrice(evt.data_typed.price_feed.price), labels)
+    // migration
+    evmPriceGauage.record(ctx, getPrice(evt.data_typed.price_feed.price), labels)
     priceEMAGauage.record(ctx,  getPrice(evt.data_typed.price_feed.ema_price), labels)
     updates.add(ctx, 1, labels)
+    //migration
+    price_update_occur.record(ctx, 1, labels)
+    ctx.meter.Counter("price_update_counter").add(1, labels)
   })
 
 pyth.bind()
