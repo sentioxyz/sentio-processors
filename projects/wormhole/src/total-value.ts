@@ -19,6 +19,10 @@ for (const token of CORE_TOKENS.values()) {
       }
       const coinInfo = coinInfoRes[0].data_typed
 
+      if (coinInfo.supply.vec.length === 0) {
+        return
+      }
+
       const aggOption = (coinInfo.supply.vec as optional_aggregator.OptionalAggregator[])[0]
       let amount
       if (aggOption.integer.vec.length) {

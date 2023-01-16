@@ -6,22 +6,22 @@ import { AptosAccountProcessor } from "@sentio/sdk-aptos";
 
 swap.bind()
     .onEventPairCreatedEvent(async (evt, ctx) => {
-      if (!isWormhole(evt.data_typed.token_x, evt.data_typed.token_y)) {
-        return
-      }
-      ctx.meter.Counter("num_pools").add(1, { wormhole: isWormhole(evt.data_typed.token_x, evt.data_typed.token_y) })
+      const coinXInfo = await getCoinInfo(evt.data_typed.token_x)
+      const coinYInfo = await getCoinInfo(evt.data_typed.token_y)
+      ctx.meter.Counter("num_pools").add(1, { bridge: coinXInfo.bridge })
+      ctx.meter.Counter("num_pools").add(1, { bridge: coinYInfo.bridge })
     })
     .onEventAddLiquidityEvent(async (evt, ctx) => {
-      if (!isWormhole(evt.type_arguments[0], evt.type_arguments[1])) {
-        return
-      }
-      ctx.meter.Counter("event_liquidity_add").add(1, { wormhole: isWormhole(evt.type_arguments[0], evt.type_arguments[1]) })
+      const coinXInfo = await getCoinInfo(evt.type_arguments[0])
+      const coinYInfo = await getCoinInfo(evt.type_arguments[1])
+      ctx.meter.Counter("event_liquidity_add").add(1, { bridge: coinXInfo.bridge })
+      ctx.meter.Counter("event_liquidity_add").add(1, { bridge: coinYInfo.bridge })
     })
     .onEventRemoveLiquidityEvent(async (evt, ctx) => {
-      if (!isWormhole(evt.type_arguments[0], evt.type_arguments[1])) {
-        return
-      }
-      ctx.meter.Counter("event_liquidity_removed").add(1, { wormhole: isWormhole(evt.type_arguments[0], evt.type_arguments[1]) })
+      const coinXInfo = await getCoinInfo(evt.type_arguments[0])
+      const coinYInfo = await getCoinInfo(evt.type_arguments[1])
+      ctx.meter.Counter("event_liquidity_removed").add(1, { bridge: coinXInfo.bridge })
+      ctx.meter.Counter("event_liquidity_removed").add(1, { bridge: coinYInfo.bridge })
     })
     .onEventSwapEvent(async (evt, ctx) => {
       if (!isWormhole(evt.type_arguments[0], evt.type_arguments[1])) {

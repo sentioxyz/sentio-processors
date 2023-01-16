@@ -39,27 +39,24 @@ const liquidSwap = new AptosDex<liquidity_pool.LiquidityPool<any, any, any>>(vol
 
 liquidity_pool.bind()
     .onEventPoolCreatedEvent(async (evt, ctx) => {
-        if (!isWormhole(evt.type_arguments[0], evt.type_arguments[1])) {
-            return
-        }
-        ctx.meter.Counter("num_pools").add(1, { wormhole: isWormhole(evt.type_arguments[0], evt.type_arguments[1]) } )
+        const coinXInfo = await getCoinInfo(evt.type_arguments[0])
+        const coinYInfo = await getCoinInfo(evt.type_arguments[1])
+        ctx.meter.Counter("num_pools").add(1, { bridge: coinXInfo.bridge })
+        ctx.meter.Counter("num_pools").add(1, { bridge: coinYInfo.bridge })
     })
     .onEventLiquidityAddedEvent(async (evt, ctx) => {
-        if (!isWormhole(evt.type_arguments[0], evt.type_arguments[1])) {
-            return
-        }
-        ctx.meter.Counter("event_liquidity_add").add(1, { wormhole: isWormhole(evt.type_arguments[0], evt.type_arguments[1]) })
+        const coinXInfo = await getCoinInfo(evt.type_arguments[0])
+        const coinYInfo = await getCoinInfo(evt.type_arguments[1])
+        ctx.meter.Counter("event_liquidity_add").add(1, { bridge: coinXInfo.bridge })
+        ctx.meter.Counter("event_liquidity_add").add(1, { bridge: coinYInfo.bridge })
     })
     .onEventLiquidityRemovedEvent(async (evt, ctx) => {
-        if (!isWormhole(evt.type_arguments[0], evt.type_arguments[1])) {
-            return
-        }
-        ctx.meter.Counter("event_liquidity_removed").add(1, { wormhole: isWormhole(evt.type_arguments[0], evt.type_arguments[1]) })
+        const coinXInfo = await getCoinInfo(evt.type_arguments[0])
+        const coinYInfo = await getCoinInfo(evt.type_arguments[1])
+        ctx.meter.Counter("event_liquidity_removed").add(1, { bridge: coinXInfo.bridge })
+        ctx.meter.Counter("event_liquidity_removed").add(1, { bridge: coinYInfo.bridge })
     })
     .onEventSwapEvent(async (evt, ctx) => {
-        if (!isWormhole(evt.type_arguments[0], evt.type_arguments[1])) {
-            return
-        }
         const value = await liquidSwap.recordTradingVolume(ctx,
             evt.type_arguments[0], evt.type_arguments[1],
             evt.data_typed.x_in + evt.data_typed.x_out,
@@ -74,9 +71,6 @@ liquidity_pool.bind()
         ctx.meter.Counter("event_swap_by_bridge").add(1, {bridge: coinYInfo.bridge})
     })
     .onEventFlashloanEvent(async (evt, ctx) => {
-        if (!isWormhole(evt.type_arguments[0], evt.type_arguments[1])) {
-            return
-        }
         const coinXInfo = getCoinInfo(evt.type_arguments[0])
         const coinYInfo = getCoinInfo(evt.type_arguments[1])
         ctx.meter.Counter("event_flashloan_by_bridge").add(1, {bridge: coinXInfo.bridge})
@@ -252,7 +246,8 @@ async function syncLiquidSwapPools(resources: MoveResource[], ctx: AptosResource
                             pair, curve,
                             fee: fee.toString(),
                             inputUsd: k.toString(),
-                            direction: "X to Y"
+                            direction: "X to Y",
+                            wormhole
                         })
 
                         const inY = BigDecimal(k).div(priceY)
@@ -261,7 +256,8 @@ async function syncLiquidSwapPools(resources: MoveResource[], ctx: AptosResource
                             pair, curve,
                             fee: fee.toString(),
                             inputUsd: k.toString(),
-                            direction: "Y to X"
+                            direction: "Y to X",
+                            wormhole
                         })
                     }
                 }
