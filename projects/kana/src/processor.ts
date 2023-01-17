@@ -1,4 +1,5 @@
 import { kana_aggregatorv1 } from './types/aptos/KanalabsV0'
+import { KanalabsAggregatorV1 } from './types/aptos/KanalabsAggregatorV1'
 import { getPrice, getCoinInfo, whiteListed, scaleDown } from "@sentio-processor/common/dist/aptos/coin"
 import { AccountEventTracker, Counter, Gauge } from "@sentio/sdk";
 import { type_info } from "@sentio/sdk-aptos/lib/builtin/0x1"
@@ -14,9 +15,10 @@ export const volOptions = {
 
 const accountTracker = AccountEventTracker.register("users")
 const totalTx = new Counter("tx", commonOptions)
+const volCounter = new Counter("vol_counter", commonOptions)
 const vol = Gauge.register("vol", volOptions)
 
-
+// here starts the previous contract
 kana_aggregatorv1.bind()
   .onEventSwapStepEvent(async (event, ctx) => {
     ctx.meter.Counter('swap_step_event_emit').add(1)
@@ -43,6 +45,39 @@ kana_aggregatorv1.bind()
     totalTx.add(ctx, 1)
     if (whiteListed(xType)) {
       vol.record(ctx, volume, { dex: getDex(dexType), poolType: poolType.toString(), xType: xType, yType: yType, symbolX: symbolX, symbolY: symbolY, pair: displayPair })
+      volCounter.add(ctx, volume, { dex: getDex(dexType), poolType: poolType.toString(), xType: xType, yType: yType, symbolX: symbolX, symbolY: symbolY, pair: displayPair })
+    }
+
+  })
+
+// here starts the new contract
+KanalabsAggregatorV1.bind()
+  .onEventSwapStepEvent(async (event, ctx) => {
+    ctx.meter.Counter('swap_step_event_emit').add(1)
+    const dexType = event.data_typed.dex_type
+    const poolType = event.data_typed.pool_type
+    const inputAmount = event.data_typed.input_amount
+    const outputAmount = event.data_typed.output_amount
+    const xType = extractTypeName(event.data_typed.x_type_info)
+    const yType = extractTypeName(event.data_typed.y_type_info)
+
+    const timestamp = event.data_typed.time_stamp
+
+    const coinXInfo = getCoinInfo(xType)
+    const coinYInfo = getCoinInfo(yType)
+    const symbolX = coinXInfo.symbol
+    const symbolY = coinYInfo.symbol
+    const priceX = await getPrice(xType, Number(timestamp))
+    const priceY = await getPrice(yType, Number(timestamp))
+    const pair = constructPair(xType, yType)
+    const volume = scaleDown(inputAmount, coinXInfo.decimals).multipliedBy(priceX)
+    const displayPair = constructDisplay(symbolX, symbolY)
+
+    accountTracker.trackEvent(ctx, { distinctId: ctx.transaction.sender })
+    totalTx.add(ctx, 1)
+    if (whiteListed(xType)) {
+      vol.record(ctx, volume, { dex: getDex(dexType), poolType: poolType.toString(), xType: xType, yType: yType, symbolX: symbolX, symbolY: symbolY, pair: displayPair })
+      volCounter.add(ctx, volume, { dex: getDex(dexType), poolType: poolType.toString(), xType: xType, yType: yType, symbolX: symbolX, symbolY: symbolY, pair: displayPair })
     }
 
   })
@@ -104,3 +139,5 @@ const DEX_MAP = new Map<number, string>([
   [8, 'Orbic']
 ])
 
+kana_aggregatorv1.bind(), KanalabsAggregatorV1.bind()
+  .onEntryAdvancedRoute{ }
