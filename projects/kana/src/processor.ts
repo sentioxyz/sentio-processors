@@ -1,10 +1,10 @@
 import { kana_aggregatorv1 } from './types/aptos/KanalabsV0'
 import { KanalabsAggregatorV1 } from './types/aptos/KanalabsAggregatorV1'
 import { getPrice, getCoinInfo, whiteListed, scaleDown } from "@sentio-processor/common/dist/aptos/coin"
-import { AccountEventTracker, Counter, Gauge } from "@sentio/sdk";
+import { AccountEventTracker, Counter, Gauge } from "@sentio/sdk"
 import { type_info } from "@sentio/sdk-aptos/lib/builtin/0x1"
 
-const commonOptions = { sparse: false }
+const commonOptions = { sparse: true }
 export const volOptions = {
   sparse: true,
   aggregationConfig: {
@@ -16,7 +16,7 @@ export const volOptions = {
 const accountTracker = AccountEventTracker.register("users")
 const totalTx = new Counter("tx", commonOptions)
 const volCounter = new Counter("vol_counter", commonOptions)
-const vol = Gauge.register("vol", volOptions)
+const vol = Gauge.register("vol", commonOptions)
 
 // here starts the previous contract
 kana_aggregatorv1.bind()
@@ -112,11 +112,11 @@ function hex_to_ascii(str1: String) {
   if (hex.startsWith("0x")) {
     hex = hex.substring(2)
   }
-  var str = '';
+  var str = ''
   for (var n = 0; n < hex.length; n += 2) {
-    str += String.fromCharCode(parseInt(hex.substr(n, 2), 16));
+    str += String.fromCharCode(parseInt(hex.substr(n, 2), 16))
   }
-  return str;
+  return str
 }
 
 
@@ -138,6 +138,3 @@ const DEX_MAP = new Map<number, string>([
   [7, 'Aux'],
   [8, 'Orbic']
 ])
-
-kana_aggregatorv1.bind(), KanalabsAggregatorV1.bind()
-  .onEntryAdvancedRoute{ }
