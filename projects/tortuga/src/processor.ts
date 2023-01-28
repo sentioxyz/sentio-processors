@@ -45,9 +45,9 @@ stake_router.bind()
       lastStakeAmount.record(ctx, amount, {coin: "APT"})
       lastStakeAmount.record(ctx, scaleDown(evt.data_typed.t_apt_coins), { coin: "tAPT"})
     }
-    if (amount.gt(1000)) {
-      ctx.logger.info("stake " + amount + " APT", {amount: amount})
-    }
+    // if (amount.gt(1000)) {
+    ctx.logger.info("stake " + amount + " APT", { type: "stake", amount: amount.toNumber()})
+    // }
     stake.add(ctx, 1)
   })
   .onEventUnstakeEvent((evt, ctx) => {
@@ -55,9 +55,9 @@ stake_router.bind()
     const amount = scaleDown(evt.data_typed.amount)
     unstakeAmount.add(ctx, amount, { coin: "APT"})
     unstakeAmount.add(ctx, scaleDown(evt.data_typed.t_apt_coins), { coin: "tAPT"})
-    if (amount.gt(1000) ) {
-      ctx.logger.info("unstake apt " + amount + "APT", {amount: amount})
-    }
+    // if (amount.gt(1000) ) {
+    ctx.logger.info("unstake apt " + amount + "APT", { type: "unstake", amount: amount.toNumber()})
+    // }
     unstake.add(ctx, 1)
   })
   .onEventClaimEvent((evt, ctx) => {
@@ -105,6 +105,14 @@ liquidity_pool.bind({startVersion: 299999})
       liquidityAdd.add(ctx, 1, { protocol: "liquidswap"})
       tvl.add(ctx, scaleDown(evt.data_typed.added_x_val), { coin: getSymbol(evt.type_arguments[0]), protocol: "liquidswap"} )
       tvl.add(ctx, scaleDown(evt.data_typed.added_y_val), { coin: getSymbol(evt.type_arguments[1]), protocol: "liquidswap"} )
+
+      // ctx.logger.info("liquidswap add", {
+      //   x_out: scaleDown(evt.data_typed.added_x_val).toNumber(),
+      //   y_out: scaleDown(evt.data_typed.added_y_val).toNumber(),
+      //   coinx: getSymbol(evt.type_arguments[0]),
+      //   coiny: getSymbol(evt.type_arguments[1]),
+      //   user: ctx.transaction.sender
+      // })
     }
   })
   .onEventLiquidityRemovedEvent(async (evt, ctx) => {
@@ -113,6 +121,14 @@ liquidity_pool.bind({startVersion: 299999})
       liquidityRemoved.add(ctx, 1, { protocol: "liquidswap"})
       tvl.sub(ctx, scaleDown(evt.data_typed.returned_x_val), { coin: getSymbol(evt.type_arguments[0]), protocol: "liquidswap"} )
       tvl.sub(ctx, scaleDown(evt.data_typed.returned_y_val), { coin: getSymbol(evt.type_arguments[1]), protocol: "liquidswap"} )
+      //
+      // ctx.logger.info("liquidswap remove", {
+      //   x_out: scaleDown(evt.data_typed.returned_x_val).toNumber(),
+      //   y_out: scaleDown(evt.data_typed.returned_y_val).toNumber(),
+      //   coinx: getSymbol(evt.type_arguments[0]),
+      //   coiny: getSymbol(evt.type_arguments[1]),
+      //   user: ctx.transaction.sender
+      // })
     }
   })
   .onEventSwapEvent(async (evt, ctx) => {
@@ -124,11 +140,45 @@ liquidity_pool.bind({startVersion: 299999})
       tvl.sub(ctx, scaleDown(evt.data_typed.x_out), { coin: getSymbol(evt.type_arguments[0]), protocol: "liquidswap"} )
       tvl.add(ctx, scaleDown(evt.data_typed.y_in), { coin: getSymbol(evt.type_arguments[1]), protocol: "liquidswap"} )
       tvl.sub(ctx, scaleDown(evt.data_typed.y_out), { coin: getSymbol(evt.type_arguments[1]), protocol: "liquidswap"} )
+      //
+      // ctx.logger.info("liquidswap swap", {
+      //   x_in: scaleDown(evt.data_typed.x_in).toNumber(),
+      //   x_out: scaleDown(evt.data_typed.x_out).toNumber(),
+      //   y_in: scaleDown(evt.data_typed.y_in).toNumber(),
+      //   y_out: scaleDown(evt.data_typed.y_out).toNumber(),
+      //   coinx: getSymbol(evt.type_arguments[0]),
+      //   coiny: getSymbol(evt.type_arguments[1]),
+      //   user: ctx.transaction.sender
+      // })
 
       vol.record(ctx, scaleDown(evt.data_typed.x_in + evt.data_typed.x_out), { coin: getSymbol(evt.type_arguments[0]), protocol: "liquidswap"})
       vol.record(ctx, scaleDown(evt.data_typed.y_in + evt.data_typed.y_out), { coin: getSymbol(evt.type_arguments[1]), protocol: "liquidswap"})
     }
   })
+    .onEventFlashloanEvent(async (evt, ctx) => {
+      if (isAptTAptPair(evt.type_arguments[0], evt.type_arguments[1])) {
+        accountTracker.trackEvent(ctx, { distinctId: ctx.transaction.sender})
+        swap.add(ctx,1, { protocol: "liquidswap"})
+
+        tvl.add(ctx, scaleDown(evt.data_typed.x_in), { coin: getSymbol(evt.type_arguments[0]), protocol: "liquidswap"} )
+        tvl.sub(ctx, scaleDown(evt.data_typed.x_out), { coin: getSymbol(evt.type_arguments[0]), protocol: "liquidswap"} )
+        tvl.add(ctx, scaleDown(evt.data_typed.y_in), { coin: getSymbol(evt.type_arguments[1]), protocol: "liquidswap"} )
+        tvl.sub(ctx, scaleDown(evt.data_typed.y_out), { coin: getSymbol(evt.type_arguments[1]), protocol: "liquidswap"} )
+
+        ctx.logger.info("liquidswap flashloan", {
+          x_in: scaleDown(evt.data_typed.x_in).toNumber(),
+          x_out: scaleDown(evt.data_typed.x_out).toNumber(),
+          y_in: scaleDown(evt.data_typed.y_in).toNumber(),
+          y_out: scaleDown(evt.data_typed.y_out).toNumber(),
+          coinx: getSymbol(evt.type_arguments[0]),
+          coiny: getSymbol(evt.type_arguments[1]),
+          user: ctx.transaction.sender
+        })
+
+        vol.record(ctx, scaleDown(evt.data_typed.x_in + evt.data_typed.x_out), { coin: getSymbol(evt.type_arguments[0]), protocol: "liquidswap"})
+        vol.record(ctx, scaleDown(evt.data_typed.y_in + evt.data_typed.y_out), { coin: getSymbol(evt.type_arguments[1]), protocol: "liquidswap"})
+      }
+    })
 
 AptosAccountProcessor.bind({address: "0x84d7aeef42d38a5ffc3ccef853e1b82e4958659d16a7de736a29c55fbbeb0114"})
     .onTimeInterval(async (resources, ctx) => {
