@@ -92,12 +92,74 @@ async function buildPoolInfo(token0Promise: Promise<string>, token1Promise: Prom
   }
 }
 
+async function getValue(ctx: UniswapContext, address: string): Promise<[token.TokenInfo, BigNumber]> {
+  const tokenInfo = await getTokenInfo(address)
+  let amount: any
+  if (tokenInfo.symbol === "ETH") {
+    try {
+      amount = await ctx.contract.provider.getBalance(ctx.address)
+    } catch (e) {
+      console.log(e)
+      amount = 0
+    }
+  } else {
+    try {
+      amount = await getERC20Contract(address).balanceOf(ctx.address,
+          {blockTag: Number(ctx.blockNumber)})
+    } catch (e) {
+      console.log("error", e)
+      amount = 0
+    }
+  }
+  amount = scaleDown(amount, tokenInfo.decimal)
+  return [tokenInfo, amount]
+}
+
+async function getTVL(ctx: UniswapContext, token :string): Promise<[token.TokenInfo, Number]> {
+  const [tokenInfo, amount] = await getValue(ctx, token)
+  let price : any
+  try {
+    price = await getPriceByType("1", token, ctx.timestamp)
+  } catch (error) {
+    if (error instanceof ClientError && error.code === Status.NOT_FOUND) {
+      price = 0
+      return [tokenInfo, 0]
+    }
+    throw error
+  }
+    return [tokenInfo, Number(amount) * price]
+}
+
+const poolName = function(token0 :string, token1:string, fee: string) {
+  const feeNum = Number(fee) / 10000
+  return token0 + "/" + token1 + "-" + feeNum.toFixed(2) + "%"
+}
+
+const priceCalc = async function (_: any, ctx: UniswapContext) {
+  const localAddress = ctx.address
+  //console.log("poolInfoMap for " + localAddress + " is " + poolInfoMap.has(localAddress))
+  let infoPromise = poolInfoMap.get(localAddress)
+  if (!infoPromise) {
+    infoPromise = buildPoolInfo(ctx.contract.token0(), ctx.contract.token1(), ctx.contract.fee())
+    poolInfoMap.set(localAddress, infoPromise)
+    console.log("set poolInfoMap for " + localAddress)
+  }
+  const info = await infoPromise
+
+  const [token0, tvl0] = await getTVL(ctx, info.token0)
+  const [token1, tvl1] = await getTVL(ctx, info.token1)
+  ctx.meter.Gauge("tvl").record(tvl0.toFixed(2), {token: info.token0,
+    poolName: poolName(token0.symbol, token1.symbol, info.fee)})
+  ctx.meter.Gauge("tvl").record(tvl1.toFixed(2), {token: info.token1,
+    poolName: poolName(token0.symbol, token1.symbol, info.fee)})
+}
+
 for (let i = 0; i < poolWatching.length; i++) {
   let address = poolWatching[i]
   UniswapProcessor.bind({address: address}).onEventSwap(
       async function (event: SwapEvent, ctx: UniswapContext) {
         const localAddress = ctx.address
-        console.log("poolInfoMap for " + localAddress + " is " + poolInfoMap.has(localAddress))
+        //console.log("poolInfoMap for " + localAddress + " is " + poolInfoMap.has(localAddress))
         let infoPromise = poolInfoMap.get(localAddress)
         if (!infoPromise) {
           infoPromise = buildPoolInfo(ctx.contract.token0(), ctx.contract.token1(), ctx.contract.fee())
@@ -115,13 +177,11 @@ for (let i = 0; i < poolWatching.length; i++) {
         vol.record(ctx,
             token0Amount.abs(),
             {
-              from: token0.toString(),
-              to: token1.toString(),
-              fee: fee.toString(),
+              poolName: poolName(token0Info.symbol, token1Info.symbol, fee),
             }
         )
       }
-  )
+  ).onTimeInterval(priceCalc, 60, 24 * 60 * 30)
 }
 
 async function getTokenDetails(ctx: UniswapContext, address: string, amount: BigNumber):
