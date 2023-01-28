@@ -165,7 +165,7 @@ liquidity_pool.bind({startVersion: 299999})
         tvl.add(ctx, scaleDown(evt.data_typed.y_in), { coin: getSymbol(evt.type_arguments[1]), protocol: "liquidswap"} )
         tvl.sub(ctx, scaleDown(evt.data_typed.y_out), { coin: getSymbol(evt.type_arguments[1]), protocol: "liquidswap"} )
 
-        ctx.logger.info("liquidswap flashloan", {
+        ctx.logger.info("liquidswap flashloan for " + scaleDown(evt.data_typed.x_in).toString(), {
           x_in: scaleDown(evt.data_typed.x_in).toNumber(),
           x_out: scaleDown(evt.data_typed.x_out).toNumber(),
           y_in: scaleDown(evt.data_typed.y_in).toNumber(),
