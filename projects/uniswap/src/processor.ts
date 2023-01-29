@@ -1,13 +1,19 @@
-import { SwapEvent, UniswapContext, UniswapProcessor, UniswapProcessorTemplate } from './types/uniswap'
+import {
+  BurnEvent,
+  MintEvent,
+  SwapEvent,
+  UniswapContext,
+  UniswapProcessor,
+  UniswapProcessorTemplate
+} from './types/uniswap'
 import { PoolCreatedEvent, UniswapFactoryContext, UniswapFactoryProcessor } from "./types/uniswapfactory";
-import { token, conversion } from "@sentio/sdk/lib/utils"
+import { token, conversion} from "@sentio/sdk/lib/utils"
 import type { BaseContract, BigNumber } from 'ethers'
 import { ERC20Context, ERC20Processor, getERC20Contract } from '@sentio/sdk/lib/builtin/erc20'
-import { scaleDown } from "@sentio-processor/common/dist/aptos";
 import { getPriceByType } from "@sentio/sdk/lib/utils/price"
 import { RichClientError } from "nice-grpc-error-details";
 import { Status, ClientError } from "nice-grpc-common";
-import { Gauge, MetricOptions } from "@sentio/sdk";
+import {BigDecimal, Gauge, MetricOptions} from "@sentio/sdk";
 
 
 const poolWatching = [
@@ -74,8 +80,10 @@ export const gaugeOptions: MetricOptions = {
 }
 
 interface poolInfo {
-  token0: string
-  token1: string
+  token0: token.TokenInfo
+  token1: token.TokenInfo
+  token0Address: string
+  token1Address: string
   fee: string
 }
 
@@ -84,18 +92,26 @@ let poolInfoMap = new Map<string, Promise<poolInfo>>()
 
 export const vol = Gauge.register("vol", gaugeOptions)
 
-async function buildPoolInfo(token0Promise: Promise<string>, token1Promise: Promise<string>, feePromise: Promise<number>): Promise<poolInfo> {
+async function buildPoolInfo(token0Promise: Promise<string>,
+                             token1Promise: Promise<string>,
+                             feePromise: Promise<number>): Promise<poolInfo> {
+  const address0 = await token0Promise
+  const address1 = await token1Promise
+  const tokenInfo0 = await getTokenInfo(address0)
+  const tokenInfo1 = await getTokenInfo(address1)
   return {
-    token0: await token0Promise,
-    token1: await token1Promise,
+    token0: tokenInfo0,
+    token1: tokenInfo1,
+    token0Address: address0,
+    token1Address: address1,
     fee: (await feePromise).toString(),
   }
 }
 
-async function getValue(ctx: UniswapContext, address: string): Promise<[token.TokenInfo, BigNumber]> {
-  const tokenInfo = await getTokenInfo(address)
+async function getValue(ctx: UniswapContext, address: string, info: token.TokenInfo):
+    Promise<BigDecimal> {
   let amount: any
-  if (tokenInfo.symbol === "ETH") {
+  if (info.symbol === "ETH") {
     try {
       amount = await ctx.contract.provider.getBalance(ctx.address)
     } catch (e) {
@@ -111,23 +127,21 @@ async function getValue(ctx: UniswapContext, address: string): Promise<[token.To
       amount = 0
     }
   }
-  amount = scaleDown(amount, tokenInfo.decimal)
-  return [tokenInfo, amount]
+  return token.scaleDown(amount, info.decimal)
 }
 
-async function getTVL(ctx: UniswapContext, token :string): Promise<[token.TokenInfo, Number]> {
-  const [tokenInfo, amount] = await getValue(ctx, token)
+async function getTVL(ctx: UniswapContext, info: token.TokenInfo, token :string): Promise<BigDecimal> {
+  const amount = await getValue(ctx, token, info)
   let price : any
   try {
     price = await getPriceByType("1", token, ctx.timestamp)
   } catch (error) {
     if (error instanceof ClientError && error.code === Status.NOT_FOUND) {
-      price = 0
-      return [tokenInfo, 0]
+      return BigDecimal(0)
     }
     throw error
   }
-    return [tokenInfo, Number(amount) * price]
+  return amount.multipliedBy(price)
 }
 
 const poolName = function(token0 :string, token1:string, fee: string) {
@@ -135,71 +149,99 @@ const poolName = function(token0 :string, token1:string, fee: string) {
   return token0 + "/" + token1 + "-" + feeNum.toFixed(2) + "%"
 }
 
-const priceCalc = async function (_: any, ctx: UniswapContext) {
-  const localAddress = ctx.address
-  //console.log("poolInfoMap for " + localAddress + " is " + poolInfoMap.has(localAddress))
-  let infoPromise = poolInfoMap.get(localAddress)
+const getOrCreatePool = async function (ctx: UniswapContext) :Promise<poolInfo> {
+  let infoPromise = poolInfoMap.get(ctx.address)
   if (!infoPromise) {
     infoPromise = buildPoolInfo(ctx.contract.token0(), ctx.contract.token1(), ctx.contract.fee())
-    poolInfoMap.set(localAddress, infoPromise)
-    console.log("set poolInfoMap for " + localAddress)
+    poolInfoMap.set(ctx.address, infoPromise)
+    console.log("set poolInfoMap for " + ctx.address)
   }
-  const info = await infoPromise
-
-  const [token0, tvl0] = await getTVL(ctx, info.token0)
-  const [token1, tvl1] = await getTVL(ctx, info.token1)
-  ctx.meter.Gauge("tvl").record(tvl0.toFixed(2), {token: info.token0,
-    poolName: poolName(token0.symbol, token1.symbol, info.fee)})
-  ctx.meter.Gauge("tvl").record(tvl1.toFixed(2), {token: info.token1,
-    poolName: poolName(token0.symbol, token1.symbol, info.fee)})
+  return await infoPromise
 }
 
-for (let i = 0; i < poolWatching.length; i++) {
-  let address = poolWatching[i]
-  UniswapProcessor.bind({address: address}).onEventSwap(
-      async function (event: SwapEvent, ctx: UniswapContext) {
-        const localAddress = ctx.address
-        //console.log("poolInfoMap for " + localAddress + " is " + poolInfoMap.has(localAddress))
-        let infoPromise = poolInfoMap.get(localAddress)
-        if (!infoPromise) {
-          infoPromise = buildPoolInfo(ctx.contract.token0(), ctx.contract.token1(), ctx.contract.fee())
-          poolInfoMap.set(localAddress, infoPromise)
-          console.log("set poolInfoMap for " + localAddress)
-        }
-        const info = await infoPromise
-        const token0 = info.token0
-        const token1 = info.token1
-        const fee = info.fee
-
-        let [token0Info, token0Amount] = await getTokenDetails(ctx, token0.toString(), event.args.amount0)
-        let [token1Info, token1Amount] = await getTokenDetails(ctx, token1.toString(), event.args.amount1)
-
-        vol.record(ctx,
-            token0Amount.abs(),
-            {
-              poolName: poolName(token0Info.symbol, token1Info.symbol, fee),
-            }
-        )
-      }
-  ).onTimeInterval(priceCalc, 60, 24 * 60 * 30)
+const priceCalc = async function (_: any, ctx: UniswapContext) {
+  const info = await getOrCreatePool(ctx)
+  const tvl0 = await getTVL(ctx, info.token0, info.token0Address)
+  const tvl1 = await getTVL(ctx, info.token1, info.token1Address)
+  let pool = poolName(info.token0.symbol, info.token1.symbol, info.fee)
+  ctx.meter.Gauge("tvl").record(tvl0.toFixed(2), {token: info.token0Address,
+    poolName: pool})
+  ctx.meter.Gauge("tvl").record(tvl1.toFixed(2), {token: info.token1Address,
+    poolName: pool})
 }
 
-async function getTokenDetails(ctx: UniswapContext, address: string, amount: BigNumber):
-    Promise<[token.TokenInfo, BigNumber]> {
-  const tokenInfo = await getTokenInfo(address)
-  let scaledAmount = scaleDown(amount.toBigInt(), tokenInfo.decimal)
+async function getTokenDetails(ctx: UniswapContext, info: token.TokenInfo, address :string, amount: BigNumber):
+    Promise<[BigDecimal, BigDecimal]> {
+  let scaledAmount = token.scaleDown(amount, info.decimal)
   let price: any
   try {
     price = await getPriceByType("1", address, ctx.timestamp)
   } catch (error) {
     if (error instanceof ClientError && error.code === Status.NOT_FOUND) {
-      price = 0
-      return [tokenInfo, price]
+      return [scaledAmount, BigDecimal(0)]
     }
     throw error
   }
-  price = scaledAmount.multipliedBy(price)
-  return [tokenInfo, price]
+  return [scaledAmount, scaledAmount.multipliedBy(price)]
 }
 
+
+for (let i = 0; i < poolWatching.length; i++) {
+  let address = poolWatching[i]
+  UniswapProcessor.bind({address: address}).onEventSwap(
+      async function (event: SwapEvent, ctx: UniswapContext) {
+        let info = await getOrCreatePool(ctx)
+        let [token0Amount, token0Price] = await getTokenDetails(ctx, info.token0, info.token0Address, event.args.amount0)
+        let [token1Amount, token1Price] = await getTokenDetails(ctx, info.token1, info.token1Address, event.args.amount1)
+        let name = poolName(info.token0.symbol, info.token1.symbol, info.fee)
+        vol.record(ctx,
+            token0Price.abs(),
+            {
+              poolName: name,
+              type: "swap",
+            }
+        )
+        ctx.meter.Counter("total_tokens").add(token0Amount.toFixed(2),
+            {token: info.token0.symbol, poolName: name})
+        ctx.meter.Counter("total_tokens").add(token1Amount.toFixed(2),
+            {token: info.token1.symbol, poolName: name})
+      }).onTimeInterval(priceCalc, 60, 24 * 60 * 30)
+  .onEventBurn(async function (event: BurnEvent, ctx: UniswapContext) {
+    let info = await getOrCreatePool(ctx)
+    let [token0Amount, token0Price] = await getTokenDetails(ctx, info.token0, info.token0Address, event.args.amount0)
+    let [token1Amount, token1Price] = await getTokenDetails(ctx, info.token1, info.token1Address, event.args.amount1)
+    let name = poolName(info.token0.symbol, info.token1.symbol, info.fee)
+    let total = token0Price.abs().plus(token1Price.abs())
+    vol.record(ctx,
+        total,
+        {
+          poolName: name,
+          type: "burn",
+        }
+    )
+    ctx.meter.Counter("total_tokens").add(token0Amount.toFixed(2),
+        {token: info.token0.symbol, poolName: name})
+    ctx.meter.Counter("total_tokens").add(token1Amount.toFixed(2),
+        {token: info.token1.symbol, poolName: name})
+  })
+  .onEventMint(async function (event: MintEvent, ctx: UniswapContext) {
+    let info = await getOrCreatePool(ctx)
+    let [token0Amount, token0Price] = await getTokenDetails(ctx, info.token0, info.token0Address, event.args.amount0)
+    let [token1Amount, token1Price] = await getTokenDetails(ctx, info.token1, info.token1Address, event.args.amount1)
+    let name = poolName(info.token0.symbol, info.token1.symbol, info.fee)
+    let total = token0Price.abs().plus(token1Price.abs())
+    vol.record(ctx,
+        total,
+        {
+          poolName: name,
+          type: "mint",
+        }
+    )
+    ctx.meter.Counter("total_tokens").add(token0Amount.toFixed(2),
+        {token: info.token0.symbol, poolName: name})
+    ctx.meter.Counter("total_tokens").add(token1Amount.toFixed(2),
+        {token: info.token1.symbol, poolName: name})
+  })
+
+}
 
