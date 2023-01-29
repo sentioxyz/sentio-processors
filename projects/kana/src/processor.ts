@@ -41,7 +41,7 @@ kana_aggregatorv1.bind()
     const volume = scaleDown(inputAmount, coinXInfo.decimals).multipliedBy(priceX)
     const displayPair = constructDisplay(symbolX, symbolY)
 
-    accountTracker.trackEvent(ctx, { distinctId: ctx.transaction.sender })
+    accountTracker.trackEvent(ctx, { distinctId: ctx.transaction.sender, address: '0x62fdfe47c9c37227be1f885e79be827be292fe1833ac63a2fe2c2c16c55ecb12', contract: 'kana_aggregatorv1' })
     totalTx.add(ctx, 1)
     if (whiteListed(xType)) {
       vol.record(ctx, volume, { dex: getDex(dexType), poolType: poolType.toString(), xType: xType, yType: yType, symbolX: symbolX, symbolY: symbolY, pair: displayPair })
@@ -73,7 +73,7 @@ KanalabsAggregatorV1.bind()
     const volume = scaleDown(inputAmount, coinXInfo.decimals).multipliedBy(priceX)
     const displayPair = constructDisplay(symbolX, symbolY)
 
-    accountTracker.trackEvent(ctx, { distinctId: ctx.transaction.sender })
+    accountTracker.trackEvent(ctx, { distinctId: ctx.transaction.sender, address: '0xcdca128119681f791ddc2283e8c7b364ae22d416c5be95b0faf6aa1818c7afd6', contract: 'KanalabsAggregatorV1' })
     totalTx.add(ctx, 1)
     if (whiteListed(xType)) {
       vol.record(ctx, volume, { dex: getDex(dexType), poolType: poolType.toString(), xType: xType, yType: yType, symbolX: symbolX, symbolY: symbolY, pair: displayPair })
