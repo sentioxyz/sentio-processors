@@ -219,9 +219,9 @@ for (let i = 0; i < poolWatching.length; i++) {
           type: "burn",
         }
     )
-    ctx.meter.Counter("total_tokens").add(token0Amount.toFixed(2),
+    ctx.meter.Counter("total_tokens").sub(token0Amount.toFixed(2),
         {token: info.token0.symbol, poolName: name})
-    ctx.meter.Counter("total_tokens").add(token1Amount.toFixed(2),
+    ctx.meter.Counter("total_tokens").sub(token1Amount.toFixed(2),
         {token: info.token1.symbol, poolName: name})
   })
   .onEventMint(async function (event: MintEvent, ctx: UniswapContext) {
