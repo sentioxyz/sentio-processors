@@ -11,7 +11,7 @@ import {
 
 import { BigDecimal } from "@sentio/sdk/lib/core/big-decimal"
 
-import { AptosAccountProcessor, TYPE_REGISTRY, TypedMoveResource } from "@sentio/sdk-aptos"
+import { AptosAccountProcessor, defaultMoveCoder, TypedMoveResource } from "@sentio/sdk-aptos"
 import { MoveResource } from "aptos-sdk/src/generated"
 import { AptosDex } from "@sentio-processor/common/dist/aptos"
 import {
@@ -99,7 +99,7 @@ function getCurve(type: string) {
 async function syncLiquidSwapPools(resources: MoveResource[], ctx: AptosResourceContext) {
 
     let pools: TypedMoveResource<liquidity_pool.LiquidityPool<any, any, any>>[]
-    pools = TYPE_REGISTRY.filterAndDecodeResources<liquidity_pool.LiquidityPool<any, any, any>>("0x190d44266241744264b964a37b8f09863167a12d3e70cda39376cfb4e3561e12::liquidity_pool::LiquidityPool", resources)
+    pools = defaultMoveCoder().filterAndDecodeResources<liquidity_pool.LiquidityPool<any, any, any>>("0x190d44266241744264b964a37b8f09863167a12d3e70cda39376cfb4e3561e12::liquidity_pool::LiquidityPool", resources)
 
     const volumeByCoin = new Map<string, BigDecimal>()
     const timestamp = ctx.timestampInMicros

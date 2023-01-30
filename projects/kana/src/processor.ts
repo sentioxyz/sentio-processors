@@ -14,8 +14,8 @@ export const volOptions = {
 }
 
 const accountTracker = AccountEventTracker.register("users")
-const totalTx = new Counter("tx", commonOptions)
-const volCounter = new Counter("vol_counter", commonOptions)
+const totalTx = Counter.register("tx", commonOptions)
+const volCounter = Counter.register("vol_counter", commonOptions)
 const vol = Gauge.register("vol", commonOptions)
 
 // here starts the previous contract

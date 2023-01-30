@@ -10,7 +10,7 @@ import {
   recordAccount,
   vol_by_account
 } from "./metrics";
-import { TYPE_REGISTRY, AptosAccountProcessor,TypedMoveResource, AptosResourceContext } from "@sentio/sdk-aptos";
+import { AptosAccountProcessor,TypedMoveResource, AptosResourceContext } from "@sentio/sdk-aptos";
 
 const AUX_EXCHANGE = new AptosDex<amm.Pool<any, any>>(auxVolume, auxTvlAll, auxTvl, auxTvlByPool, {
   getXReserve: pool => pool.x_reserve.value,

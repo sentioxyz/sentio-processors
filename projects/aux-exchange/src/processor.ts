@@ -2,7 +2,7 @@ import { amm } from './types/aptos/auxexchange'
 import { AccountEventTracker, Gauge } from "@sentio/sdk";
 
 import { AptosDex, getCoinInfo } from "@sentio-processor/common/dist/aptos"
-import { AptosAccountProcessor, TYPE_REGISTRY } from "@sentio/sdk-aptos"
+import { AptosAccountProcessor } from "@sentio/sdk-aptos"
 
 const commonOptions = { sparse:  true }
 export const volOptions = {
@@ -53,6 +53,5 @@ const auxExchange = new AptosDex<amm.Pool<any, any>>(volume, tvlAll, tvl, tvlByP
   poolTypeName: amm.Pool.TYPE_QNAME
 })
 
-amm.loadTypes(TYPE_REGISTRY)
 AptosAccountProcessor.bind({address: amm.DEFAULT_OPTIONS.address, startVersion: 2331560})
     .onVersionInterval((rs, ctx) => auxExchange.syncPools(rs, ctx))

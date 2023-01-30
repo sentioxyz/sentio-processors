@@ -3,17 +3,17 @@ import { aggregator, coin, optional_aggregator } from "@sentio/sdk-aptos/lib/bui
 import { CORE_TOKENS, getPrice, scaleDown } from "@sentio-processor/common/dist/aptos";
 import { delay, getRandomInt } from "@sentio-processor/common/dist";
 import { totalValue } from "./metrics";
-import { AptosAccountProcessor, TYPE_REGISTRY, getAptosClient } from "@sentio/sdk-aptos";
+import { AptosAccountProcessor, defaultMoveCoder, getAptosClient } from "@sentio/sdk-aptos";
 
 const client = getAptosClient()!
 
-coin.loadTypes(TYPE_REGISTRY)
+coin.loadTypes(defaultMoveCoder())
 for (const token of CORE_TOKENS.values()) {
   const coinInfoType = `0x1::coin::CoinInfo<${token.token_type.type}>`
     // const price = await getPrice(v.token_type.type, timestamp)
   AptosAccountProcessor.bind({address: token.token_type.account_address})
     .onTimeInterval(async (resources, ctx) => {
-      const coinInfoRes = TYPE_REGISTRY.filterAndDecodeResources<coin.CoinInfo<any>>(coin.CoinInfo.TYPE_QNAME, resources)
+      const coinInfoRes = defaultMoveCoder().filterAndDecodeResources<coin.CoinInfo<any>>(coin.CoinInfo.TYPE_QNAME, resources)
       if (coinInfoRes.length === 0) {
         return
       }
