@@ -146,7 +146,7 @@ async function getTVL(ctx: UniswapContext, info: token.TokenInfo, token :string)
 
 const poolName = function(token0 :string, token1:string, fee: string) {
   const feeNum = Number(fee) / 10000
-  return token0 + "/" + token1 + "-" + feeNum.toFixed(2) + "%"
+  return token0 + "/" + token1 + "-" + feeNum + "%"
 }
 
 const getOrCreatePool = async function (ctx: UniswapContext) :Promise<poolInfo> {
@@ -164,9 +164,9 @@ const priceCalc = async function (_: any, ctx: UniswapContext) {
   const tvl0 = await getTVL(ctx, info.token0, info.token0Address)
   const tvl1 = await getTVL(ctx, info.token1, info.token1Address)
   let pool = poolName(info.token0.symbol, info.token1.symbol, info.fee)
-  ctx.meter.Gauge("tvl").record(tvl0.toFixed(2), {token: info.token0Address,
+  ctx.meter.Gauge("tvl").record(tvl0, {token: info.token0Address,
     poolName: pool})
-  ctx.meter.Gauge("tvl").record(tvl1.toFixed(2), {token: info.token1Address,
+  ctx.meter.Gauge("tvl").record(tvl1, {token: info.token1Address,
     poolName: pool})
 }
 
@@ -201,11 +201,11 @@ for (let i = 0; i < poolWatching.length; i++) {
               type: "swap",
             }
         )
-        ctx.meter.Counter("total_tokens").add(token0Amount.toFixed(2),
+        ctx.meter.Counter("total_tokens").add(token0Amount,
             {token: info.token0.symbol, poolName: name})
-        ctx.meter.Counter("total_tokens").add(token1Amount.toFixed(2),
+        ctx.meter.Counter("total_tokens").add(token1Amount,
             {token: info.token1.symbol, poolName: name})
-        ctx.logger.info("swap: " + token0Amount.toFixed(2) + " " + info.token0.symbol + " " + token0Price.toFixed(2) + " " + token1Amount.toFixed(2) + " " + info.token1.symbol + " " + token1Price.toFixed(2))
+        ctx.logger.info("swap: " + token0Amount + " " + info.token0.symbol + " " + token0Price + " " + token1Amount + " " + info.token1.symbol + " " + token1Price)
       }).onTimeInterval(priceCalc, 60, 24 * 60 * 30)
   .onEventBurn(async function (event: BurnEvent, ctx: UniswapContext) {
     let info = await getOrCreatePool(ctx)
@@ -220,11 +220,11 @@ for (let i = 0; i < poolWatching.length; i++) {
           type: "burn",
         }
     )
-    ctx.meter.Counter("total_tokens").sub(token0Amount.toFixed(2),
+    ctx.meter.Counter("total_tokens").sub(token0Amount,
         {token: info.token0.symbol, poolName: name})
-    ctx.meter.Counter("total_tokens").sub(token1Amount.toFixed(2),
+    ctx.meter.Counter("total_tokens").sub(token1Amount,
         {token: info.token1.symbol, poolName: name})
-    ctx.logger.info("burn: " + token0Amount.toFixed(2) + " " + info.token0.symbol + " " + token0Price.toFixed(2) + " " + token1Amount.toFixed(2) + " " + info.token1.symbol + " " + token1Price.toFixed(2))
+    ctx.logger.info("burn: " + token0Amount + " " + info.token0.symbol + " " + token0Price + " " + token1Amount + " " + info.token1.symbol + " " + token1Price)
   })
   .onEventMint(async function (event: MintEvent, ctx: UniswapContext) {
     let info = await getOrCreatePool(ctx)
@@ -239,11 +239,11 @@ for (let i = 0; i < poolWatching.length; i++) {
           type: "mint",
         }
     )
-    ctx.meter.Counter("total_tokens").add(token0Amount.toFixed(2),
+    ctx.meter.Counter("total_tokens").add(token0Amount,
         {token: info.token0.symbol, poolName: name})
-    ctx.meter.Counter("total_tokens").add(token1Amount.toFixed(2),
+    ctx.meter.Counter("total_tokens").add(token1Amount,
         {token: info.token1.symbol, poolName: name})
-    ctx.logger.info("mint: " + token0Amount.toFixed(2) + " " + info.token0.symbol + " " + token0Price.toFixed(2) + " " + token1Amount.toFixed(2) + " " + info.token1.symbol + " " + token1Price.toFixed(2))
+    ctx.logger.info("mint: " + token0Amount + " " + info.token0.symbol + " " + token0Price + " " + token1Amount + " " + info.token1.symbol + " " + token1Price)
   })
 
 }
