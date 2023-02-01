@@ -16,8 +16,6 @@ EbisusbayProcessor.bind({ address: '0x7a3CdB2364f92369a602CAE81167d0679087e6a3',
 
         const getListing = await ctx.contract.activeListing(listingId)
 
-
-
         console.log("getListing", getListing)
 
         const amount = Number(getListing.price.toBigInt()) / Math.pow(10, 18)
