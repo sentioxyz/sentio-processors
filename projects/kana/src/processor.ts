@@ -1,5 +1,5 @@
 import { kana_aggregatorv1 } from './types/aptos/KanalabsV0'
-import { KanalabsAggregatorV1 } from './types/aptos/KanalabsAggregatorV1'
+import { KanalabsAggregatorV1, KanalabsRouterV1 } from './types/aptos/KanalabsAggregatorV1'
 import { getPrice, getCoinInfo, whiteListed, scaleDown } from "@sentio-processor/common/dist/aptos/coin"
 import { AccountEventTracker, Counter, Gauge } from "@sentio/sdk"
 import { type_info } from "@sentio/sdk-aptos/lib/builtin/0x1"
@@ -17,6 +17,10 @@ const accountTracker = AccountEventTracker.register("users")
 const totalTx = Counter.register("tx", commonOptions)
 const volCounter = Counter.register("vol_counter", commonOptions)
 const vol = Gauge.register("vol", commonOptions)
+const routes = Gauge.register("routes", commonOptions)
+const routesCounter = Counter.register("routes_counter", commonOptions)
+
+
 
 // here starts the previous contract
 kana_aggregatorv1.bind()
@@ -82,6 +86,13 @@ KanalabsAggregatorV1.bind()
 
   })
 
+KanalabsRouterV1.bind()
+  .onEventRouteCount((async (event, ctx) => {
+    const routeType = Number(event.data_typed.type)
+    routes.record(ctx, 1, { routeType: getRoute(routeType) })
+    routesCounter.add(ctx, 1, { routeType: getRoute(routeType) })
+  }))
+
 function constructPair(xType: String, yType: String) {
   if (xType > yType) {
     return xType + "-" + yType
@@ -137,4 +148,28 @@ const DEX_MAP = new Map<number, string>([
   [6, 'Animeswap'],
   [7, 'Aux'],
   [8, 'Orbic']
+])
+
+function getRoute(routeType: number) {
+  if (ROUTE_MAP.has(routeType)) {
+    return ROUTE_MAP.get(routeType)!
+  } else {
+    return 'route_unk_' + routeType.toString()
+  }
+}
+
+const ROUTE_MAP = new Map<number, string>([
+  [1, 'SWAP'],
+  [2, 'STAKE'],
+  [3, 'UNSTAKE'],
+  [4, 'TRANSFER'],
+  [5, 'CLAIM'],
+  [6, 'SWAP_STAKE'],
+  [7, 'STAKE_SWAP'],
+  [8, 'UNSTAKE_SWAP'],
+  [9, 'SWAP_TRANSFER'],
+  [10, 'CLAIM_SWAP'],
+  [11, 'CLAIM_SWAP_STAKE'],
+  [12, 'STAKE_SWAP_TRANSFER'],
+  [13, 'UNSTAKE_SWAP_TRANSFER'],
 ])
