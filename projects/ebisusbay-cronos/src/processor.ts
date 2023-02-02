@@ -28,7 +28,7 @@ const rewardGauge_USD = Gauge.register("stakeReward_USD")
 
 
 
-EbisusbayProcessor.bind({ address: '0x7a3CdB2364f92369a602CAE81167d0679087e6a3', network: 25, startBlock: 6761435 })
+EbisusbayProcessor.bind({ address: '0x7a3CdB2364f92369a602CAE81167d0679087e6a3', network: 25, startBlock: 6216653 })
     .onEventSold(async (event, ctx) => {
         ctx.meter.Counter('sold').add(1)
 
@@ -88,14 +88,14 @@ EbisusbayProcessor.bind({ address: '0x7a3CdB2364f92369a602CAE81167d0679087e6a3',
 
 
 
-MembershipStakerV3Processor.bind({ address: '0xeb074cc764F20d8fE4317ab63f45A85bcE2bEcB1', network: 25, startBlock: 6761435 })
+MembershipStakerV3Processor.bind({ address: '0xeb074cc764F20d8fE4317ab63f45A85bcE2bEcB1', network: 25, startBlock: 2084066 })
     .onEventRyoshiStaked(async (event, ctx) => {
         const owner = event.args.owner
         const tokenId = event.args.tokenId.toString()
 
         stakeGauge.record(ctx, 1, { owner: owner, tokenId: tokenId })
         stakeCounter.add(ctx, 1, { owner: owner, tokenId: tokenId })
-        console.log("RyoshiStaked--", "owner:", owner, "tokenId:", tokenId)
+        // console.log("RyoshiStaked--", "owner:", owner, "tokenId:", tokenId)
 
     })
     .onEventRyoshiUnstaked(async (event, ctx) => {
@@ -104,7 +104,7 @@ MembershipStakerV3Processor.bind({ address: '0xeb074cc764F20d8fE4317ab63f45A85bc
 
         stakeGauge.record(ctx, 1, { owner: owner, tokenId: tokenId })
         stakeCounter.sub(ctx, 1, { owner: owner, tokenId: tokenId })
-        console.log("RyoshiUnstaked--", "owner:", owner, "tokenId:", tokenId)
+        // console.log("RyoshiUnstaked--", "owner:", owner, "tokenId:", tokenId)
 
     })
     .onEventHarvest(async (event, ctx) => {
@@ -115,7 +115,7 @@ MembershipStakerV3Processor.bind({ address: '0xeb074cc764F20d8fE4317ab63f45A85bc
 
         const hash = event.transactionHash
 
-        console.log("Harvest--", "Reward:", reward, "tokenPrice:", tokenPrice, "reward_USD", reward_USD, "to:", to, "transactionHash:", hash, "event.args:", event.args)
+        // console.log("Harvest--", "Reward:", reward, "tokenPrice:", tokenPrice, "reward_USD", reward_USD, "to:", to, "transactionHash:", hash, "event.args:", event.args)
 
         rewardCounter_CRO.add(ctx, reward, { to: to })
         rewardGauge_CRO.record(ctx, reward, { to: to })
@@ -127,6 +127,6 @@ MembershipStakerV3Processor.bind({ address: '0xeb074cc764F20d8fE4317ab63f45A85bc
         const tx = await ctx.contract.provider.getTransaction(hash)
         const from = tx.from
         accountTracker.trackEvent(ctx, { distinctId: from })
-        console.log("OnAllEvent--", "transactionHash:", hash, "from:", from)
+        // console.log("OnAllEvent--", "transactionHash:", hash, "from:", from)
 
     })
