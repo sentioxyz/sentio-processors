@@ -41,33 +41,65 @@ liquidity_pool.bind()
     .onEventPoolCreatedEvent(async (evt, ctx) => {
         ctx.meter.Counter("num_pools").add(1)
         lpTracker.trackEvent(ctx, {distinctId: ctx.transaction.sender})
+        ctx.eventTracker.track("lp", {distinctId: ctx.transaction.sender})
         // ctx.logger.info("", {user: "-", value: 0.0001})
     })
     .onEventLiquidityAddedEvent(async (evt, ctx) => {
         ctx.meter.Counter("event_liquidity_add").add(1)
         lpTracker.trackEvent(ctx, {distinctId: ctx.transaction.sender})
+        ctx.eventTracker.track("lp", {distinctId: ctx.transaction.sender})
 
         if (recordAccount) {
             const value = await getPairValue(ctx, evt.type_arguments[0], evt.type_arguments[1], evt.data_typed.added_x_val, evt.data_typed.added_y_val)
             if (value.isGreaterThan(10)) {
                 liquidity_by_account.add(ctx, value, { account: ctx.transaction.sender})
                 net_liquidity_by_account.add(ctx, value, { account: ctx.transaction.sender})
-
+                ctx.eventTracker.track("liquidity", {
+                    distinctId: ctx.transaction.sender,
+                    "account": ctx.transaction.sender,
+                    "value": value.toNumber(),
+                })
+                ctx.eventTracker.track("net_liquidity", {
+                    distinctId: ctx.transaction.sender,
+                    "account": ctx.transaction.sender,
+                    "value": value.toNumber(),
+                })
             } else {
                 liquidity_by_account.add(ctx, value, { account: "Others"})
                 net_liquidity_by_account.add(ctx, value, { account: ctx.transaction.sender})
+                ctx.eventTracker.track("liquidity", {
+                    distinctId: ctx.transaction.sender,
+                    "account": "Others",
+                    "value": value.toNumber(),
+                })
+                ctx.eventTracker.track("net_liquidity", {
+                    distinctId: ctx.transaction.sender,
+                    "account": ctx.transaction.sender,
+                    "value": value.toNumber(),
+                })
             }
         }
     })
     .onEventLiquidityRemovedEvent(async (evt, ctx) => {
         ctx.meter.Counter("event_liquidity_removed").add(1)
         lpTracker.trackEvent(ctx, {distinctId: ctx.transaction.sender})
+        ctx.eventTracker.track("lp", {distinctId: ctx.transaction.sender})
         if (recordAccount) {
             const value = await getPairValue(ctx, evt.type_arguments[0], evt.type_arguments[1], evt.data_typed.returned_x_val, evt.data_typed.returned_y_val)
             if (value.isGreaterThan(10)) {
                 net_liquidity_by_account.sub(ctx, value, { account: ctx.transaction.sender})
+                ctx.eventTracker.track("net_liquidity", {
+                    distinctId: ctx.transaction.sender,
+                    "account": ctx.transaction.sender,
+                    "value": -value.toNumber(),
+                })
             } else {
                 net_liquidity_by_account.sub(ctx, value, { account: "Others" })
+                ctx.eventTracker.track("net_liquidity", {
+                    distinctId: ctx.transaction.sender,
+                    "account": "Others",
+                    "value": -value.toNumber(),
+                })
             }
         }
     })
@@ -79,6 +111,11 @@ liquidity_pool.bind()
             { curve: getCurve(evt.type_arguments[2]) })
         if (recordAccount && value.isGreaterThan(10)) {
             vol_by_account.add(ctx, value, { account: ctx.transaction.sender})
+            ctx.eventTracker.track("vol", {
+                distinctId: ctx.transaction.sender,
+                "account": ctx.transaction.sender,
+                "value": value.toNumber(),
+            })
         }
 
         const coinXInfo = getCoinInfo(evt.type_arguments[0])
@@ -89,6 +126,10 @@ liquidity_pool.bind()
         ctx.meter.Counter("event_swap_by_bridge").add(1, {bridge: coinYInfo.bridge})
 
         accountTracker.trackEvent(ctx, {distinctId: ctx.transaction.sender})
+        ctx.eventTracker.track("account", {
+            distinctId: ctx.transaction.sender,
+            "event": "swap",
+        })
     })
     .onEventFlashloanEvent(async (evt, ctx) => {
         const coinXInfo = getCoinInfo(evt.type_arguments[0])
@@ -97,6 +138,10 @@ liquidity_pool.bind()
         ctx.meter.Counter("event_flashloan_by_bridge").add(1, {bridge: coinYInfo.bridge})
 
         accountTracker.trackEvent(ctx, {distinctId: ctx.transaction.sender})
+        ctx.eventTracker.track("account", {
+            distinctId: ctx.transaction.sender,
+            "event": "flashloan",
+        })
     })
 
 // TODO pool name should consider not just use symbol name
