@@ -107,6 +107,14 @@ account.bind().onEventCoinRegisterEvent(async (call, ctx) => {
     if (token.symbol ==='SOL') {
       accountTracer.trackEvent(ctx, { distinctId: accountAddress})
     }
+    ctx.eventTracker.track("coin_register", {
+      distinctId: accountAddress,
+      "token": {
+        "symbol": token.symbol,
+        "bridge": token.bridge,
+      },
+      "amount": value.toNumber(),
+    })
 
     accounts.add(ctx, 1, {token: token.symbol, condition: "all", bridge: token.bridge})
     if (value.isGreaterThan(0)) {
