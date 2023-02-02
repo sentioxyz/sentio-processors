@@ -17,22 +17,26 @@ const CHAIN_ADDRESS_MAP = new Map<number, string>([
     [1, "0x4305FB66699C3B2702D4d05CF36551390A4c69C6"], //ETH
     [10, "0xff1a0f4744e8582df1ae09d5611b887b6a12925c"], //Optimism
     [56, "0x4D7E825f80bDf85e913E0DD2A2D54927e9dE1594"], //BSC
+    [97, "0xd7308b14bf4008e7c7196ec35610b1427c5702ea"], //BSC testnet
     [137, "0xff1a0f4744e8582DF1aE09D5611b887B6a12925C"], //Polygon
     [42161, "0xff1a0f4744e8582DF1aE09D5611b887B6a12925C"], //Arbitrum
     [250, "0xff1a0f4744e8582DF1aE09D5611b887B6a12925C"], //Fantom
     [1313161554, "0xF89C7b475821EC3fDC2dC8099032c05c6c0c9AB9"], //Aurora
-    [321, "0xE0d0e68297772Dd5a1f1D99897c581E2082dbA5B"] //KCC
+    [321, "0xE0d0e68297772Dd5a1f1D99897c581E2082dbA5B"], //KCC
+    [43114, "0x4305FB66699C3B2702D4d05CF36551390A4c69C6"] //Avalanche
 ])
 
 const CHAIN_NATIVE_MAP = new Map<string, string>([
     ["0x4305FB66699C3B2702D4d05CF36551390A4c69C6".toLowerCase(), "Crypto.ETH/USD"], //ETH
     ["0xff1a0f4744e8582df1ae09d5611b887b6a12925c".toLowerCase(), "Crypto.OP/USD"], //Optimism
     ["0x4D7E825f80bDf85e913E0DD2A2D54927e9dE1594".toLowerCase(), "Crypto.BNB/USD"], //BSC
+    ["0xd7308b14bf4008e7c7196ec35610b1427c5702ea".toLowerCase(), "Crypto.BNB/USD"], //BSC testnet
     ["0xff1a0f4744e8582DF1aE09D5611b887B6a12925C".toLowerCase(), "Crypto.MATIC/USD"], //Polygon
     ["0xff1a0f4744e8582DF1aE09D5611b887B6a12925C".toLowerCase(), "Crypto.ETH/USD"],//Arbitrum
     ["0xff1a0f4744e8582DF1aE09D5611b887B6a12925C".toLowerCase(), "Crypto.FTM/USD"], //Fantom
     ["0xF89C7b475821EC3fDC2dC8099032c05c6c0c9AB9".toLowerCase(), "Crypto.AURORA/USD"], //Aurora
-    ["0xE0d0e68297772Dd5a1f1D99897c581E2082dbA5B".toLowerCase(), "Crypto.KCS/USD"] //KCC
+    ["0xE0d0e68297772Dd5a1f1D99897c581E2082dbA5B".toLowerCase(), "Crypto.KCS/USD"], //KCC
+    ["0x4305FB66699C3B2702D4d05CF36551390A4c69C6".toLowerCase(), "Crypto.AVAX/USD"] //Avalanche
 ])
 
 async function priceFeedUpdate(evt: PriceFeedUpdateEvent, ctx: PythEVMContext) {
