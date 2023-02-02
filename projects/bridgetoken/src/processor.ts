@@ -19,7 +19,7 @@ import type { Transaction_UserTransaction, TransactionPayload_EntryFunctionPaylo
 import { getPriceByType } from "@sentio/sdk/lib/utils/price";
 import { CHAIN_IDS } from "@sentio/sdk";
 import { AptosClient } from "aptos-sdk";
-import { TYPE_REGISTRY, getAptosClient } from "@sentio/sdk-aptos";
+import { defaultMoveCoder, getAptosClient } from "@sentio/sdk-aptos";
 
 const accounts = Counter.register("account", { sparse: false })
 const accountBalance = Gauge.register("account_balance", { sparse: true })
@@ -80,7 +80,7 @@ const client = getAptosClient()!
 // })
 
 
-TYPE_REGISTRY.load(coin.ABI)
+defaultMoveCoder().load(coin.ABI)
 account.bind().onEventCoinRegisterEvent(async (call, ctx) => {
     // .onEntryRegister(async (call, ctx) => {
     const type = extractTypeName(call.data_typed.type_info)
@@ -95,7 +95,7 @@ account.bind().onEventCoinRegisterEvent(async (call, ctx) => {
     const coinStore = `0x1::coin::CoinStore<${token.token_type.type}>`;
 
     const res = await client.getAccountResource(accountAddress, coinStore)
-    const decodedRes = TYPE_REGISTRY.decodeResource<coin.CoinStore<any>>(res)
+    const decodedRes = defaultMoveCoder().decodeResource<coin.CoinStore<any>>(res)
     if (!decodedRes) {
       console.log(res)
       process.exit(1)
