@@ -16,7 +16,7 @@ import { MoveResource } from "aptos-sdk/src/generated";
 import {
   AptosResourceContext,
   TypedMoveResource,
-  TYPE_REGISTRY,
+  defaultMoveCoder,
   AptosAccountProcessor,
   AptosContext,
   getAptosClient
@@ -48,7 +48,7 @@ function isUSDCPair(typeX: string, typeY: string) {
 
 const client = getAptosClient()!
 
-coin.loadTypes(TYPE_REGISTRY)
+coin.loadTypes(defaultMoveCoder())
 for (const token of CORE_TOKENS.values()) {
   if (!isUSDCType(token.token_type.type)) {
     continue
@@ -58,7 +58,7 @@ for (const token of CORE_TOKENS.values()) {
   // const price = await getPrice(v.token_type.type, timestamp)
   AptosAccountProcessor.bind({address: token.token_type.account_address})
     .onVersionInterval(async (resources, ctx) => {
-      const coinInfoRes = TYPE_REGISTRY.filterAndDecodeResources<coin.CoinInfo<any>>(coin.CoinInfo.TYPE_QNAME, resources)
+      const coinInfoRes = defaultMoveCoder().filterAndDecodeResources<coin.CoinInfo<any>>(coin.CoinInfo.TYPE_QNAME, resources)
       if (coinInfoRes.length === 0) {
         return
       }
@@ -261,7 +261,7 @@ export class USDCDex<T> {
       ctx: AptosResourceContext
   ) {
     let pools: TypedMoveResource<T>[] =
-        TYPE_REGISTRY.filterAndDecodeResources(this.poolAdaptor.poolTypeName, resources)
+        defaultMoveCoder().filterAndDecodeResources(this.poolAdaptor.poolTypeName, resources)
 
     console.log("num of pools: ", pools.length, ctx.version.toString())
 

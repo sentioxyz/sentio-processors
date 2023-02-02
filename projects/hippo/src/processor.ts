@@ -15,7 +15,7 @@ export const volOptions = {
 }
 
 const vol = Gauge.register("vol", volOptions)
-const totalTx = new Counter("tx", commonOptions)
+const totalTx = Counter.register("tx", commonOptions)
 // const tvl = new Counter("tvl", commonOptions)
 
 const accountTracker = AccountEventTracker.register("users")
