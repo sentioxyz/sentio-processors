@@ -7,18 +7,31 @@ import { getPriceBySymbol } from "@sentio/sdk/lib/utils/price"
 
 
 const accountTracker = AccountEventTracker.register("users")
-
-const vol = Gauge.register("vol")
+const vol_USD = Gauge.register("vol_USD")
 const vol_CRO = Gauge.register("vol_CRO")
+
 const volCounter_CRO = Counter.register("volCounter_CRO")
+const volCounter_USD = Counter.register("volCounter_USD")
 
-const royaltyGauge = Gauge.register("royaltyFee_CRO")
+const royaltyGauge_CRO = Gauge.register("royaltyFee_CRO")
 const royaltyCounter_CRO = Counter.register("royaltyFeeCounter_CRO")
+const royaltyGauge_USD = Gauge.register("royaltyFee_USD")
+const royaltyCounter_USD = Counter.register("royaltyFeeCounter_USD")
+
+const stakeGauge = Gauge.register("stake")
+const stakeCounter = Counter.register("stakeCounter")
+
+const rewardCounter_CRO = Counter.register("stakeRewardCounter_CRO")
+const rewardGauge_CRO = Gauge.register("stakeReward_CRO")
+const rewardCounter_USD = Counter.register("stakeRewardCounter_USD")
+const rewardGauge_USD = Gauge.register("stakeReward_USD")
 
 
 
-EbisusbayProcessor.bind({ address: '0x7a3CdB2364f92369a602CAE81167d0679087e6a3', network: 25 })
+EbisusbayProcessor.bind({ address: '0x7a3CdB2364f92369a602CAE81167d0679087e6a3', network: 25, startBlock: 6761435 })
     .onEventSold(async (event, ctx) => {
+        ctx.meter.Counter('sold').add(1)
+
         const listingId = event.args.listingId.toNumber()
         // console.log("listingId", listingId)
         const getListing = await ctx.contract.completeListing(listingId)
@@ -37,6 +50,9 @@ EbisusbayProcessor.bind({ address: '0x7a3CdB2364f92369a602CAE81167d0679087e6a3',
         const saleTime = getListing.saleTime
         const endingTime = getListing.endingTime
         const royalty = Number(getListing.royalty) / Math.pow(10, 18)
+        const tokenPrice = await getPriceBySymbol("CRO", ctx.timestamp)
+        const priceUSD = tokenPrice * amount
+        const royalty_USD = royalty * tokenPrice
         // console.log("purchaser: ", purchaser)
         // console.log("nftId: ", nftId)
         // console.log("seller: ", seller)
@@ -48,16 +64,19 @@ EbisusbayProcessor.bind({ address: '0x7a3CdB2364f92369a602CAE81167d0679087e6a3',
         // console.log("endingTime: ", endingTime)
         // console.log("royalty: ", royalty)
 
-        ctx.meter.Counter('sold').add(1)
 
-        //const TokenPrice = await getPriceBySymbol("CRO", ctx.timestamp)
-        //const priceUSD = TokenPrice * amount
 
-        royaltyGauge.record(ctx, royalty, { purchaser: purchaser, nftId: nftId.toString(), seller: seller, nftAddress: nft, fee: fee.toString(), nftTokenStandard: type, listingTime: listingTime.toString(), saleTime: saleTime.toString(), endingTime: endingTime.toString(), royalty: royalty.toString() })
+
+        royaltyGauge_CRO.record(ctx, royalty, { purchaser: purchaser, nftId: nftId.toString(), seller: seller, nftAddress: nft, fee: fee.toString(), nftTokenStandard: type, listingTime: listingTime.toString(), saleTime: saleTime.toString(), endingTime: endingTime.toString(), royalty: royalty.toString() })
         royaltyCounter_CRO.add(ctx, royalty, { purchaser: purchaser, nftId: nftId.toString(), seller: seller, nftAddress: nft, fee: fee.toString(), nftTokenStandard: type, listingTime: listingTime.toString(), saleTime: saleTime.toString(), endingTime: endingTime.toString(), royalty: royalty.toString() })
-        //vol.record(ctx, priceUSD, { purchaser: purchaser, nftId: nftId.toString(), seller: seller, nftAddress: nft, fee: fee.toString(), nftTokenStandard: type, listingTime: listingTime.toString(), saleTime: saleTime.toString(), endingTime: endingTime.toString(), royalty: royalty.toString() })
+        royaltyGauge_USD.record(ctx, royalty_USD, { purchaser: purchaser, nftId: nftId.toString(), seller: seller, nftAddress: nft, fee: fee.toString(), nftTokenStandard: type, listingTime: listingTime.toString(), saleTime: saleTime.toString(), endingTime: endingTime.toString(), royalty: royalty.toString() })
+        royaltyCounter_USD.add(ctx, royalty_USD, { purchaser: purchaser, nftId: nftId.toString(), seller: seller, nftAddress: nft, fee: fee.toString(), nftTokenStandard: type, listingTime: listingTime.toString(), saleTime: saleTime.toString(), endingTime: endingTime.toString(), royalty: royalty.toString() })
+
+        vol_USD.record(ctx, priceUSD, { purchaser: purchaser, nftId: nftId.toString(), seller: seller, nftAddress: nft, fee: fee.toString(), nftTokenStandard: type, listingTime: listingTime.toString(), saleTime: saleTime.toString(), endingTime: endingTime.toString(), royalty: royalty.toString() })
         vol_CRO.record(ctx, amount, { purchaser: purchaser, nftId: nftId.toString(), seller: seller, nftAddress: nft, fee: fee.toString(), nftTokenStandard: type, listingTime: listingTime.toString(), saleTime: saleTime.toString(), endingTime: endingTime.toString(), royalty: royalty.toString() })
+
         volCounter_CRO.add(ctx, amount, { purchaser: purchaser, nftId: nftId.toString(), seller: seller, nftAddress: nft, fee: fee.toString(), nftTokenStandard: type, listingTime: listingTime.toString(), saleTime: saleTime.toString(), endingTime: endingTime.toString(), royalty: royalty.toString() })
+        volCounter_USD.add(ctx, priceUSD, { purchaser: purchaser, nftId: nftId.toString(), seller: seller, nftAddress: nft, fee: fee.toString(), nftTokenStandard: type, listingTime: listingTime.toString(), saleTime: saleTime.toString(), endingTime: endingTime.toString(), royalty: royalty.toString() })
     })
     .onAllEvents(async (event, ctx) => {
         const hash = event.transactionHash
@@ -67,27 +86,47 @@ EbisusbayProcessor.bind({ address: '0x7a3CdB2364f92369a602CAE81167d0679087e6a3',
     })
 
 
-const stakeGauge = Gauge.register("stake")
-const stakeCounter = Counter.register("stakeCounter")
-const rewardCounter = Counter.register("stakeRewardCounter")
 
-MembershipStakerV3Processor.bind({ address: '0xeb074cc764F20d8fE4317ab63f45A85bcE2bEcB1', network: 25 })
+
+MembershipStakerV3Processor.bind({ address: '0xeb074cc764F20d8fE4317ab63f45A85bcE2bEcB1', network: 25, startBlock: 6761435 })
     .onEventRyoshiStaked(async (event, ctx) => {
-        stakeGauge.record(ctx, 1)
-        stakeCounter.add(ctx, 1)
+        const owner = event.args.owner
+        const tokenId = event.args.tokenId.toString()
+
+        stakeGauge.record(ctx, 1, { owner: owner, tokenId: tokenId })
+        stakeCounter.add(ctx, 1, { owner: owner, tokenId: tokenId })
+        console.log("RyoshiStaked--", "owner:", owner, "tokenId:", tokenId)
 
     })
     .onEventRyoshiUnstaked(async (event, ctx) => {
-        stakeGauge.record(ctx, 1)
-        stakeCounter.sub(ctx, 1)
+        const owner = event.args.owner
+        const tokenId = event.args.tokenId.toString()
+
+        stakeGauge.record(ctx, 1, { owner: owner, tokenId: tokenId })
+        stakeCounter.sub(ctx, 1, { owner: owner, tokenId: tokenId })
+        console.log("RyoshiUnstaked--", "owner:", owner, "tokenId:", tokenId)
 
     })
     .onEventHarvest(async (event, ctx) => {
-        rewardCounter.add(ctx, Number(event.args.amount) / Math.pow(10, 18), { to: event.args.arg0 })
+        const reward = Number(event.args.amount) / Math.pow(10, 18)
+        const tokenPrice = await getPriceBySymbol("CRO", ctx.timestamp)
+        const reward_USD = reward * tokenPrice
+        const to = event.args[0]
+
+        const hash = event.transactionHash
+
+        console.log("Harvest--", "Reward:", reward, "tokenPrice:", tokenPrice, "reward_USD", reward_USD, "to:", to, "transactionHash:", hash, "event.args:", event.args)
+
+        rewardCounter_CRO.add(ctx, reward, { to: to })
+        rewardGauge_CRO.record(ctx, reward, { to: to })
+        rewardCounter_USD.add(ctx, reward_USD, { to: to })
+        rewardGauge_USD.record(ctx, reward_USD, { to: to })
     })
     .onAllEvents(async (event, ctx) => {
         const hash = event.transactionHash
         const tx = await ctx.contract.provider.getTransaction(hash)
         const from = tx.from
         accountTracker.trackEvent(ctx, { distinctId: from })
+        console.log("OnAllEvent--", "transactionHash:", hash, "from:", from)
+
     })
