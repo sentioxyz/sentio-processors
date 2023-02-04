@@ -97,7 +97,7 @@ amm.bind()
               distinctId: ctx.transaction.sender,
               "account": "Others",
               "value": -value.toNumber(),
-              "formula_value": value.toNumber() * 2,
+              "formula_value": (-value.toNumber()) * 2,
             })
         }
     }
