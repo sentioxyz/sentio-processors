@@ -62,11 +62,13 @@ liquidity_pool.bind()
                     distinctId: ctx.transaction.sender,
                     "account": ctx.transaction.sender,
                     "value": value.toNumber(),
+                    "formula_value": value.toNumber() * 2,
                 })
                 ctx.eventTracker.track("net_liquidity", {
                     distinctId: ctx.transaction.sender,
                     "account": ctx.transaction.sender,
                     "value": value.toNumber(),
+                    "formula_value": value.toNumber() * 2,
                 })
             } else {
                 // liquidity_by_account.add(ctx, value, { account: "Others"})
@@ -75,11 +77,13 @@ liquidity_pool.bind()
                     distinctId: ctx.transaction.sender,
                     "account": "Others",
                     "value": value.toNumber(),
+                    "formula_value": value.toNumber() * 2,
                 })
                 ctx.eventTracker.track("net_liquidity", {
                     distinctId: ctx.transaction.sender,
                     "account": ctx.transaction.sender,
                     "value": value.toNumber(),
+                    "formula_value": value.toNumber() * 2,
                 })
             }
         }
@@ -96,6 +100,7 @@ liquidity_pool.bind()
                     distinctId: ctx.transaction.sender,
                     "account": ctx.transaction.sender,
                     "value": -value.toNumber(),
+                    "formula_value": (-value.toNumber()) * 2,
                 })
             } else {
                 // net_liquidity_by_account.sub(ctx, value, { account: "Others" })
@@ -103,6 +108,7 @@ liquidity_pool.bind()
                     distinctId: ctx.transaction.sender,
                     "account": "Others",
                     "value": -value.toNumber(),
+                    "formula_value": (-value.toNumber()) * 2,
                 })
             }
         }

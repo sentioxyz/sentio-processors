@@ -79,6 +79,10 @@ coin.bind()
                 distinctId: from,
                 "amount": amount.toNumber(),
                 "symbol": "tAPT",
+                "from": from,
+                "from_label": fromLabel,
+                "to": to,
+                "to_label": toLabel,
             })
             ctx.eventTracker.track("transfer_from", {
                 distinctId: from,
@@ -137,6 +141,10 @@ aptos_account.bind()
             distinctId: from,
             "amount": amount.toNumber(),
             "symbol": "APT",
+            "from": from,
+            "from_label": fromLabel,
+            "to": to,
+            "to_label": toLabel,
         })
         ctx.eventTracker.track("transfer_from", {
             distinctId: from,

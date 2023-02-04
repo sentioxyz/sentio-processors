@@ -25,6 +25,7 @@ swap.bind()
             distinctId: ctx.transaction.sender,
             "account": ctx.transaction.sender,
             "value": value.toNumber(),
+            "formula_value": value.toNumber() * 2,
           })
         }
       }
