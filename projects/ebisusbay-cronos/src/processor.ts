@@ -2,7 +2,7 @@ import { EbisusbayProcessor } from './types/ebisusbay'
 import { MembershipStakerV3Processor } from './types/membershipstakerv3'
 
 
-import { AccountEventTracker, Counter, Gauge } from "@sentio/sdk";
+import { AccountEventTracker, EventTracker, Counter, Gauge } from "@sentio/sdk";
 import { getPriceBySymbol } from "@sentio/sdk/lib/utils/price"
 
 
@@ -33,56 +33,63 @@ EbisusbayProcessor.bind({ address: '0x7a3CdB2364f92369a602CAE81167d0679087e6a3',
         ctx.meter.Counter('sold').add(1)
 
         const listingId = event.args.listingId.toNumber()
-        // console.log("listingId", listingId)
         const getListing = await ctx.contract.completeListing(listingId)
-        //console.log("transaction", event.transactionHash, "getListing", getListing)
         const amount = Number(getListing.price.toBigInt()) / Math.pow(10, 18)
-        // console.log("amount", amount)
-
 
         const purchaser = getListing.purchaser
-        const nftId = Number(getListing.nftId)
+        const nftId = Number(getListing.nftId).toString()
         const seller = getListing.seller
         const nft = getListing.nft
         const fee = Number(getListing.fee) / Math.pow(10, 18)
         const type = getListing.is1155 ? "ERC1155" : "ERC721"
-        const listingTime = getListing.listingTime
-        const saleTime = getListing.saleTime
-        const endingTime = getListing.endingTime
+        const listingTime = getListing.listingTime.toString()
+        const saleTime = getListing.saleTime.toString()
+        const endingTime = getListing.endingTime.toString()
         const royalty = Number(getListing.royalty) / Math.pow(10, 18)
         const tokenPrice = await getPriceBySymbol("CRO", ctx.timestamp)
         const priceUSD = tokenPrice * amount
         const royalty_USD = royalty * tokenPrice
-        // console.log("purchaser: ", purchaser)
-        // console.log("nftId: ", nftId)
-        // console.log("seller: ", seller)
-        // console.log("nft: ", nft)
-        // console.log("fee: ", fee)
-        // console.log("is1155: ", getListing.is1155, "type:", type)
-        // console.log("listingTime: ", listingTime)
-        // console.log("saleTime: ", saleTime)
-        // console.log("endingTime: ", endingTime)
-        // console.log("royalty: ", royalty)
 
 
+        // counter and gauge
+        const labels = { nftId: nftId, seller: seller, nftAddress: nft, fee: fee.toString(), nftTokenStandard: type, listingTime: listingTime, saleTime: saleTime, endingTime: endingTime, royalty: royalty.toString() }
+        royaltyGauge_CRO.record(ctx, royalty, labels)
+        royaltyCounter_CRO.add(ctx, royalty, labels)
+        royaltyGauge_USD.record(ctx, royalty_USD, labels)
+        royaltyCounter_USD.add(ctx, royalty_USD, labels)
 
+        vol_USD.record(ctx, priceUSD, labels)
+        vol_CRO.record(ctx, amount, labels)
+        volCounter_CRO.add(ctx, amount, labels)
+        volCounter_USD.add(ctx, priceUSD, labels)
 
-        royaltyGauge_CRO.record(ctx, royalty, { purchaser: purchaser, nftId: nftId.toString(), seller: seller, nftAddress: nft, fee: fee.toString(), nftTokenStandard: type, listingTime: listingTime.toString(), saleTime: saleTime.toString(), endingTime: endingTime.toString(), royalty: royalty.toString() })
-        royaltyCounter_CRO.add(ctx, royalty, { purchaser: purchaser, nftId: nftId.toString(), seller: seller, nftAddress: nft, fee: fee.toString(), nftTokenStandard: type, listingTime: listingTime.toString(), saleTime: saleTime.toString(), endingTime: endingTime.toString(), royalty: royalty.toString() })
-        royaltyGauge_USD.record(ctx, royalty_USD, { purchaser: purchaser, nftId: nftId.toString(), seller: seller, nftAddress: nft, fee: fee.toString(), nftTokenStandard: type, listingTime: listingTime.toString(), saleTime: saleTime.toString(), endingTime: endingTime.toString(), royalty: royalty.toString() })
-        royaltyCounter_USD.add(ctx, royalty_USD, { purchaser: purchaser, nftId: nftId.toString(), seller: seller, nftAddress: nft, fee: fee.toString(), nftTokenStandard: type, listingTime: listingTime.toString(), saleTime: saleTime.toString(), endingTime: endingTime.toString(), royalty: royalty.toString() })
-
-        vol_USD.record(ctx, priceUSD, { purchaser: purchaser, nftId: nftId.toString(), seller: seller, nftAddress: nft, fee: fee.toString(), nftTokenStandard: type, listingTime: listingTime.toString(), saleTime: saleTime.toString(), endingTime: endingTime.toString(), royalty: royalty.toString() })
-        vol_CRO.record(ctx, amount, { purchaser: purchaser, nftId: nftId.toString(), seller: seller, nftAddress: nft, fee: fee.toString(), nftTokenStandard: type, listingTime: listingTime.toString(), saleTime: saleTime.toString(), endingTime: endingTime.toString(), royalty: royalty.toString() })
-
-        volCounter_CRO.add(ctx, amount, { purchaser: purchaser, nftId: nftId.toString(), seller: seller, nftAddress: nft, fee: fee.toString(), nftTokenStandard: type, listingTime: listingTime.toString(), saleTime: saleTime.toString(), endingTime: endingTime.toString(), royalty: royalty.toString() })
-        volCounter_USD.add(ctx, priceUSD, { purchaser: purchaser, nftId: nftId.toString(), seller: seller, nftAddress: nft, fee: fee.toString(), nftTokenStandard: type, listingTime: listingTime.toString(), saleTime: saleTime.toString(), endingTime: endingTime.toString(), royalty: royalty.toString() })
+        //event analysis
+        ctx.eventTracker.track("Sold_Event", {
+            distinctId: purchaser,
+            priceUSD: priceUSD,
+            price_CRO: amount,
+            royalty_CRO: royalty,
+            royalty_USD: royalty_USD,
+            nftId: nftId,
+            seller: seller,
+            nftAddress: nft,
+            fee: fee.toString(),
+            nftTokenStandard: type,
+            listingTime: listingTime,
+            saleTime: saleTime,
+            endingTime: endingTime,
+            royalty: royalty.toString()
+        })
     })
     .onAllEvents(async (event, ctx) => {
         const hash = event.transactionHash
         const tx = await ctx.contract.provider.getTransaction(hash)
         const from = tx.from
-        accountTracker.trackEvent(ctx, { distinctId: from })
+
+        ctx.eventTracker.track("Any_Event",
+            {
+                distinctId: from
+            })
     })
 
 
@@ -93,9 +100,12 @@ MembershipStakerV3Processor.bind({ address: '0xeb074cc764F20d8fE4317ab63f45A85bc
         const owner = event.args.owner
         const tokenId = event.args.tokenId.toString()
 
-        stakeGauge.record(ctx, 1, { owner: owner, tokenId: tokenId })
-        stakeCounter.add(ctx, 1, { owner: owner, tokenId: tokenId })
-        // console.log("RyoshiStaked--", "owner:", owner, "tokenId:", tokenId)
+        stakeGauge.record(ctx, 1)
+        stakeCounter.add(ctx, 1)
+        ctx.eventTracker.track("RyoshiStaked_Event", {
+            distinctId: owner,
+            tokenId: tokenId
+        })
 
     })
     .onEventRyoshiUnstaked(async (event, ctx) => {
@@ -104,8 +114,10 @@ MembershipStakerV3Processor.bind({ address: '0xeb074cc764F20d8fE4317ab63f45A85bc
 
         stakeGauge.record(ctx, 1, { owner: owner, tokenId: tokenId })
         stakeCounter.sub(ctx, 1, { owner: owner, tokenId: tokenId })
-        // console.log("RyoshiUnstaked--", "owner:", owner, "tokenId:", tokenId)
-
+        ctx.eventTracker.track("RyoshiUnStaked_Event", {
+            distinctId: owner,
+            tokenId: tokenId
+        })
     })
     .onEventHarvest(async (event, ctx) => {
         const reward = Number(event.args.amount) / Math.pow(10, 18)
@@ -113,20 +125,25 @@ MembershipStakerV3Processor.bind({ address: '0xeb074cc764F20d8fE4317ab63f45A85bc
         const reward_USD = reward * tokenPrice
         const to = event.args[0]
 
-        const hash = event.transactionHash
+        rewardCounter_CRO.add(ctx, reward)
+        rewardGauge_CRO.record(ctx, reward)
+        rewardCounter_USD.add(ctx, reward_USD)
+        rewardGauge_USD.record(ctx, reward_USD)
 
-        // console.log("Harvest--", "Reward:", reward, "tokenPrice:", tokenPrice, "reward_USD", reward_USD, "to:", to, "transactionHash:", hash, "event.args:", event.args)
-
-        rewardCounter_CRO.add(ctx, reward, { to: to })
-        rewardGauge_CRO.record(ctx, reward, { to: to })
-        rewardCounter_USD.add(ctx, reward_USD, { to: to })
-        rewardGauge_USD.record(ctx, reward_USD, { to: to })
+        ctx.eventTracker.track("Harvest_Event", {
+            distinctId: to,
+            reward: reward,
+            reward_USD: reward_USD
+        })
     })
     .onAllEvents(async (event, ctx) => {
         const hash = event.transactionHash
         const tx = await ctx.contract.provider.getTransaction(hash)
         const from = tx.from
-        accountTracker.trackEvent(ctx, { distinctId: from })
-        // console.log("OnAllEvent--", "transactionHash:", hash, "from:", from)
-        ctx.eventTracker.track("test ",{distinctId: from})
+        event
+        //accountTracker.trackEvent(ctx, { distinctId: from })
+        ctx.eventTracker.track("Any_Event",
+            {
+                distinctId: from
+            })
     })
