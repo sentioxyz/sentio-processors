@@ -128,5 +128,5 @@ MembershipStakerV3Processor.bind({ address: '0xeb074cc764F20d8fE4317ab63f45A85bc
         const from = tx.from
         accountTracker.trackEvent(ctx, { distinctId: from })
         // console.log("OnAllEvent--", "transactionHash:", hash, "from:", from)
-
+        ctx.eventTracker.track("test ",{distinctId: from})
     })
