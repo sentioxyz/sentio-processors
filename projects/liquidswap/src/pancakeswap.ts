@@ -1,13 +1,13 @@
 import { swap } from "./types/aptos/pancake-swap";
 import { AptosDex, getCoinInfo, getPairValue } from "@sentio-processor/common/dist/aptos";
 import {
-  liquidity_by_account,
   pancakeTvl,
   pancakeTvlAll,
   pancakeTvlByPool,
   pancakeVolume,
   recordAccount,
-  vol_by_account
+  // vol_by_account
+  // liquidity_by_account,
 } from "./metrics";
 import { AptosAccountProcessor } from "@sentio/sdk-aptos";
 
@@ -20,7 +20,12 @@ swap.bind()
       if (recordAccount) {
         const value = await getPairValue(ctx, evt.type_arguments[0], evt.type_arguments[1], evt.data_typed.amount_x, evt.data_typed.amount_y)
         if (value.isGreaterThan(10)) {
-          liquidity_by_account.add(ctx, value, { account: ctx.transaction.sender})
+          // liquidity_by_account.add(ctx, value, { account: ctx.transaction.sender})
+          ctx.eventTracker.track("liquidity", {
+            distinctId: ctx.transaction.sender,
+            "account": ctx.transaction.sender,
+            "value": value.toNumber(),
+          })
         }
       }
     })
@@ -33,7 +38,12 @@ swap.bind()
           evt.data_typed.amount_x_in + evt.data_typed.amount_x_out,
           evt.data_typed.amount_y_in + evt.data_typed.amount_y_out)
       if (recordAccount && value.isGreaterThan(10)) {
-        vol_by_account.add(ctx, value, { account: ctx.transaction.sender})
+        // vol_by_account.add(ctx, value, { account: ctx.transaction.sender})
+        ctx.eventTracker.track("vol", {
+            distinctId: ctx.transaction.sender,
+            "account": ctx.transaction.sender,
+            "value": value.toNumber(),
+        })
       }
       const coinXInfo = await getCoinInfo(evt.type_arguments[0])
       const coinYInfo = await getCoinInfo(evt.type_arguments[1])

@@ -21,8 +21,8 @@ export const priceImpact = Gauge.register("price_impact", commonOptions)
 export const priceGauge = Gauge.register("price", commonOptions)
 export const priceGaugeNew = Gauge.register("price_new", commonOptions)
 
-export const accountTracker = AccountEventTracker.register("users")
-export const lpTracker = AccountEventTracker.register("lp")
+// export const accountTracker = AccountEventTracker.register("users")
+// export const lpTracker = AccountEventTracker.register("lp")
 
 export const auxTvlAll = Gauge.register("aux_tvl_all", commonOptions)
 export const auxTvlByPool = Gauge.register("aux_tvl_by_pool", commonOptions)
@@ -35,7 +35,7 @@ export const pancakeTvl = Gauge.register("pancake_tvl", commonOptions)
 export const pancakeVolume = Gauge.register("pancake_vol", volOptions)
 
 export const recordAccount = false
-export const vol_by_account = Counter.register("vol_by_account", { ...volOptions })
-export const liquidity_by_account = Counter.register("liquidity_by_account", commonOptions)
-export const net_liquidity_by_account = Counter.register("net_liquidity_by_account", commonOptions)
+// export const vol_by_account = Counter.register("vol_by_account", { ...volOptions })
+// export const liquidity_by_account = Counter.register("liquidity_by_account", commonOptions)
+// export const net_liquidity_by_account = Counter.register("net_liquidity_by_account", commonOptions)
 

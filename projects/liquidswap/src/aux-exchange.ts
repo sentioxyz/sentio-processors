@@ -5,10 +5,10 @@ import {
   auxTvlAll,
   auxTvlByPool,
   auxVolume,
-  liquidity_by_account,
-  net_liquidity_by_account,
   recordAccount,
-  vol_by_account
+  // liquidity_by_account,
+  // net_liquidity_by_account,
+  // vol_by_account
 } from "./metrics";
 import { AptosAccountProcessor,TypedMoveResource, AptosResourceContext } from "@sentio/sdk-aptos";
 
@@ -34,12 +34,31 @@ amm.bind()
         ctx.meter.Counter("token_amount_by_pool").add(evt.data_typed.x_added_au, {"pair": pair, "coin": evt.data_typed.x_coin_type})
         ctx.meter.Counter("token_amount_by_pool").add(evt.data_typed.x_added_au, {"pair": pair, "coin": evt.data_typed.y_coin_type})
         if (value.isGreaterThan(10)) {
-          liquidity_by_account.add(ctx, value, { account: ctx.transaction.sender})
-          net_liquidity_by_account.add(ctx, value, { account: ctx.transaction.sender})
-
+          // liquidity_by_account.add(ctx, value, { account: ctx.transaction.sender})
+          // net_liquidity_by_account.add(ctx, value, { account: ctx.transaction.sender})
+          ctx.eventTracker.track("liquidity", {
+            distinctId: ctx.transaction.sender,
+            "account": ctx.transaction.sender,
+            "value": value.toNumber(),
+          })
+          ctx.eventTracker.track("net_liquidity", {
+            distinctId: ctx.transaction.sender,
+            "account": ctx.transaction.sender,
+            "value": value.toNumber(),
+          })
         } else {
-          liquidity_by_account.add(ctx, value, { account: "Others" })
-          net_liquidity_by_account.add(ctx, value, { account: ctx.transaction.sender})
+          // liquidity_by_account.add(ctx, value, { account: "Others" })
+          // net_liquidity_by_account.add(ctx, value, { account: ctx.transaction.sender})
+          ctx.eventTracker.track("liquidity", {
+            distinctId: ctx.transaction.sender,
+            "account": "Others",
+            "value": value.toNumber(),
+          })
+          ctx.eventTracker.track("net_liquidity", {
+            distinctId: ctx.transaction.sender,
+            "account": ctx.transaction.sender,
+            "value": value.toNumber(),
+          })
         }
         const coinXInfo = getCoinInfo(evt.data_typed.x_coin_type)
         const coinYInfo = getCoinInfo(evt.data_typed.y_coin_type)
@@ -61,16 +80,31 @@ amm.bind()
       if (recordAccount) {
         const value = await getPairValue(ctx, evt.data_typed.x_coin_type, evt.data_typed.y_coin_type, evt.data_typed.x_removed_au, evt.data_typed.y_removed_au)
         if (value.isGreaterThan(10)) {
-            net_liquidity_by_account.sub(ctx, value, { account: ctx.transaction.sender})
+            // net_liquidity_by_account.sub(ctx, value, { account: ctx.transaction.sender})
+            ctx.eventTracker.track("net_liquidity", {
+              distinctId: ctx.transaction.sender,
+              "account": ctx.transaction.sender,
+              "value": -value.toNumber(),
+            })
         } else {
-            net_liquidity_by_account.sub(ctx, value, { account: "Others" })
+            // net_liquidity_by_account.sub(ctx, value, { account: "Others" })
+            ctx.eventTracker.track("net_liquidity", {
+              distinctId: ctx.transaction.sender,
+              "account": "Others",
+              "value": -value.toNumber(),
+            })
         }
     }
     })
     .onEventSwapEvent(async (evt, ctx) => {
       const value = await AUX_EXCHANGE.recordTradingVolume(ctx, evt.data_typed.in_coin_type, evt.data_typed.out_coin_type, evt.data_typed.in_au, evt.data_typed.out_au)
       if (recordAccount && value.isGreaterThan(10)) {
-        vol_by_account.add(ctx, value, { account: ctx.transaction.sender})
+        // vol_by_account.add(ctx, value, { account: ctx.transaction.sender})
+        ctx.eventTracker.track("vol", {
+          distinctId: ctx.transaction.sender,
+          "account": ctx.transaction.sender,
+          "value": value.toNumber(),
+        })
       }
       const coinXInfo = await getCoinInfo(evt.data_typed.in_coin_type)
       const coinYInfo = await getCoinInfo(evt.data_typed.out_coin_type)

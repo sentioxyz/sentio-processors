@@ -38,15 +38,15 @@ const WATCHES = new Map<string, string>([
     ]
 )
 
-const fromFTX = Counter.register("from_tx_counter", { sparse: true })
-const fromFTXAmount = Counter.register("from_tx_amount_cume", { sparse: true })
-const totalFromFTX = Counter.register("from_tx_total", { sparse: true })
-
-const toFTX = Counter.register("to_tx_counter", { sparse: true })
-const toFTXAmount = Counter.register("to_tx_amount_cume", { sparse: true })
-const totalToFTX = Counter.register("to_tx_total", { sparse: true })
-
-const total = Counter.register("total_transfer", { sparse: true })
+// const fromFTX = Counter.register("from_tx_counter", { sparse: true })
+// const fromFTXAmount = Counter.register("from_tx_amount_cume", { sparse: true })
+// const totalFromFTX = Counter.register("from_tx_total", { sparse: true })
+//
+// const toFTX = Counter.register("to_tx_counter", { sparse: true })
+// const toFTXAmount = Counter.register("to_tx_amount_cume", { sparse: true })
+// const totalToFTX = Counter.register("to_tx_total", { sparse: true })
+//
+// const total = Counter.register("total_transfer", { sparse: true })
 
 coin.bind()
     .onEntryTransfer((call, ctx) => {
@@ -57,32 +57,42 @@ coin.bind()
             const toLabel = WATCHES.get(to)
             const amount = scaleDown(call.arguments_typed[1], APT_DECIMAL)
 
-            if (amount.gt(100)) {
-                if (fromLabel) {
-                    fromFTX.add(ctx,1, {to: to, symbol: "tAPT", account: fromLabel})
-                    fromFTXAmount.add(ctx, amount, {to: to, symbol: "tAPT", account: fromLabel})
-                }
-                if (toLabel) {
-                    toFTX.add(ctx,1, {from: from, symbol: "tAPT", account: toLabel})
-                    toFTXAmount.add(ctx, amount, {from: from, symbol: "tAPT", account: toLabel})
-                }
-            }
-
-            if (fromLabel) {
-                totalFromFTX.add(ctx, amount.toNumber(), { symbol: "tAPT", account: fromLabel})
-            }
-            if (toLabel) {
-                totalToFTX.add(ctx, amount.toNumber(), { symbol: "tAPT", account: toLabel})
-            }
-            total.add(ctx, 1, {symbol: "tAPT"})
-            ctx.eventTracker.track("transfer", {
+            // if (amount.gt(100)) {
+            //     if (fromLabel) {
+            //         fromFTX.add(ctx,1, {to: to, symbol: "tAPT", account: fromLabel})
+            //         fromFTXAmount.add(ctx, amount, {to: to, symbol: "tAPT", account: fromLabel})
+            //     }
+            //     if (toLabel) {
+            //         toFTX.add(ctx,1, {from: from, symbol: "tAPT", account: toLabel})
+            //         toFTXAmount.add(ctx, amount, {from: from, symbol: "tAPT", account: toLabel})
+            //     }
+            // }
+            //
+            // if (fromLabel) {
+            //     totalFromFTX.add(ctx, amount.toNumber(), { symbol: "tAPT", account: fromLabel})
+            // }
+            // if (toLabel) {
+            //     totalToFTX.add(ctx, amount.toNumber(), { symbol: "tAPT", account: toLabel})
+            // }
+            // total.add(ctx, 1, {symbol: "tAPT"})
+            ctx.eventTracker.track("transfer_total", {
                 distinctId: from,
                 "amount": amount.toNumber(),
                 "symbol": "tAPT",
-                "from": from,
-                "to": to,
-                "fromLabel": fromLabel,
-                "toLabel": toLabel,
+            })
+            ctx.eventTracker.track("transfer_from", {
+                distinctId: from,
+                "amount": amount.toNumber(),
+                "symbol": "tAPT",
+                "account": from,
+                "label": fromLabel,
+            })
+            ctx.eventTracker.track("transfer_to", {
+                distinctId: to,
+                "amount": amount.toNumber(),
+                "symbol": "tAPT",
+                "account": to,
+                "label": toLabel,
             })
         }
   })
@@ -106,30 +116,40 @@ aptos_account.bind()
         const fromLabel = WATCHES.get(from)
         const toLabel = WATCHES.get(to)
 
-        if (amount.gt(100)) {
-            if (fromLabel) {
-                fromFTX.add(ctx,1, {to: to, symbol: "APT", account: fromLabel})
-                fromFTXAmount.add(ctx, amount, {to: to, symbol: "APT", account: fromLabel})
-            }
-            if (toLabel) {
-                toFTX.add(ctx,1, {from: from, symbol: "APT", account: toLabel})
-                toFTXAmount.add(ctx, amount, {from: from, symbol: "APT", account: toLabel})
-            }
-        }
-        if (fromLabel) {
-            totalFromFTX.add(ctx, amount, {account: fromLabel, symbol: "APT"})
-        }
-        if (toLabel) {
-            totalToFTX.add(ctx, amount, {account: toLabel, symbol: "APT"})
-        }
-        total.add(ctx, 1, {symbol: "APT"})
-        ctx.eventTracker.track("transfer", {
+        // if (amount.gt(100)) {
+        //     if (fromLabel) {
+        //         fromFTX.add(ctx,1, {to: to, symbol: "APT", account: fromLabel})
+        //         fromFTXAmount.add(ctx, amount, {to: to, symbol: "APT", account: fromLabel})
+        //     }
+        //     if (toLabel) {
+        //         toFTX.add(ctx,1, {from: from, symbol: "APT", account: toLabel})
+        //         toFTXAmount.add(ctx, amount, {from: from, symbol: "APT", account: toLabel})
+        //     }
+        // }
+        // if (fromLabel) {
+        //     totalFromFTX.add(ctx, amount, {account: fromLabel, symbol: "APT"})
+        // }
+        // if (toLabel) {
+        //     totalToFTX.add(ctx, amount, {account: toLabel, symbol: "APT"})
+        // }
+        // total.add(ctx, 1, {symbol: "APT"})
+        ctx.eventTracker.track("transfer_total", {
             distinctId: from,
             "amount": amount.toNumber(),
             "symbol": "APT",
-            "from": from,
-            "to": to,
-            "fromLabel": fromLabel,
-            "toLabel": toLabel,
+        })
+        ctx.eventTracker.track("transfer_from", {
+            distinctId: from,
+            "amount": amount.toNumber(),
+            "symbol": "APT",
+            "account": from,
+            "label": fromLabel,
+        })
+        ctx.eventTracker.track("transfer_to", {
+            distinctId: to,
+            "amount": amount.toNumber(),
+            "symbol": "APT",
+            "account": to,
+            "label": toLabel,
         })
     })
