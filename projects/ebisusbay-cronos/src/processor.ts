@@ -94,8 +94,8 @@ EbisusbayProcessor.bind({ address: '0x7a3CdB2364f92369a602CAE81167d0679087e6a3',
 
 
 
-
-MembershipStakerV3Processor.bind({ address: '0xeb074cc764F20d8fE4317ab63f45A85bcE2bEcB1', network: 25, startBlock: 2084066 })
+//2084066
+MembershipStakerV3Processor.bind({ address: '0xeb074cc764F20d8fE4317ab63f45A85bcE2bEcB1', network: 25, startBlock: 6216653 })
     .onEventRyoshiStaked(async (event, ctx) => {
         const owner = event.args.owner
         const tokenId = event.args.tokenId.toString()
@@ -140,7 +140,7 @@ MembershipStakerV3Processor.bind({ address: '0xeb074cc764F20d8fE4317ab63f45A85bc
         const hash = event.transactionHash
         const tx = await ctx.contract.provider.getTransaction(hash)
         const from = tx.from
-        event
+
         //accountTracker.trackEvent(ctx, { distinctId: from })
         ctx.eventTracker.track("Any_Event",
             {
