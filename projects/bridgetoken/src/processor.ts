@@ -23,7 +23,6 @@ import { defaultMoveCoder, getAptosClient } from "@sentio/sdk-aptos";
 
 const accounts = Counter.register("account", { sparse: false })
 const accountBalance = Gauge.register("account_balance", { sparse: true })
-
 const accountTracer = AccountEventTracker.register("register_coin_events")
 
 const BRIDGE_TOKENS = new Map<string, BaseCoinInfoWithBridge>()
@@ -104,9 +103,9 @@ account.bind().onEventCoinRegisterEvent(async (call, ctx) => {
     const amount = scaleDown(decodedRes.data_typed.coin.value, token.decimals)
     const value = amount.multipliedBy(PRICES.get(token.token_type.type)!)
 
-    if (token.symbol ==='SOL') {
-      accountTracer.trackEvent(ctx, { distinctId: accountAddress})
-    }
+    // if (token.symbol ==='SOL') {
+    //   accountTracer.trackEvent(ctx, { distinctId: accountAddress})
+    // }
     ctx.eventTracker.track("coin_register", {
       distinctId: accountAddress,
       "token": {
@@ -116,13 +115,13 @@ account.bind().onEventCoinRegisterEvent(async (call, ctx) => {
       "amount": value.toNumber(),
     })
 
-    accounts.add(ctx, 1, {token: token.symbol, condition: "all", bridge: token.bridge})
-    if (value.isGreaterThan(0)) {
-      accounts.add(ctx, 1, {token: token.symbol, condition: "gt_0", bridge: token.bridge})
-    }
-    if (value.isGreaterThan(10)) {
-      accounts.add(ctx, 1, {token: token.symbol, condition: "gt_10", bridge: token.bridge})
-    }
+    // accounts.add(ctx, 1, {token: token.symbol, condition: "all", bridge: token.bridge})
+    // if (value.isGreaterThan(0)) {
+    //   accounts.add(ctx, 1, {token: token.symbol, condition: "gt_0", bridge: token.bridge})
+    // }
+    // if (value.isGreaterThan(10)) {
+    //   accounts.add(ctx, 1, {token: token.symbol, condition: "gt_10", bridge: token.bridge})
+    // }
 
     // accounts.add(ctx, 1, { kind: "account_creation", token: call.type_arguments[0] })
   })
