@@ -1,12 +1,9 @@
-import { EbisusbayProcessor } from './types/ebisusbay'
-import { MembershipStakerV3Processor } from './types/membershipstakerv3'
+import { EbisusbayProcessor } from './types/ebisusbay/index.js'
+import { MembershipStakerV3Processor } from './types/membershipstakerv3/index.js'
+import { Counter, Gauge } from "@sentio/sdk"
+import { getPriceBySymbol } from "@sentio/sdk/lib/utils"
 
 
-import { AccountEventTracker, EventTracker, Counter, Gauge } from "@sentio/sdk";
-import { getPriceBySymbol } from "@sentio/sdk/lib/utils/price"
-
-
-const accountTracker = AccountEventTracker.register("users")
 const vol_USD = Gauge.register("vol_USD")
 const vol_CRO = Gauge.register("vol_CRO")
 
@@ -64,6 +61,9 @@ EbisusbayProcessor.bind({ address: '0x7a3CdB2364f92369a602CAE81167d0679087e6a3',
         volCounter_USD.add(ctx, priceUSD, labels)
 
         //event analysis
+        const hash = event.transactionHash
+        const tx = await ctx.contract.provider.getTransaction(hash)
+
         ctx.eventTracker.track("Sold_Event", {
             distinctId: purchaser,
             priceUSD: priceUSD,
@@ -78,13 +78,16 @@ EbisusbayProcessor.bind({ address: '0x7a3CdB2364f92369a602CAE81167d0679087e6a3',
             listingTime: listingTime,
             saleTime: saleTime,
             endingTime: endingTime,
-            royalty: royalty.toString()
+            txHash: tx
         })
     })
     .onAllEvents(async (event, ctx) => {
         const hash = event.transactionHash
         const tx = await ctx.contract.provider.getTransaction(hash)
         const from = tx.from
+
+        console.log("transactionHash", hash, "tx:", tx)
+        ctx.logger.info("transactionHash: " + hash + "tx" + tx, { testLable1: 1, testLable2: 2 })
 
         ctx.eventTracker.track("Any_Event",
             {
@@ -130,16 +133,22 @@ MembershipStakerV3Processor.bind({ address: '0xeb074cc764F20d8fE4317ab63f45A85bc
         rewardCounter_USD.add(ctx, reward_USD)
         rewardGauge_USD.record(ctx, reward_USD)
 
+        const hash = event.transactionHash
+        const tx = await ctx.contract.provider.getTransaction(hash)
         ctx.eventTracker.track("Harvest_Event", {
             distinctId: to,
             reward: reward,
-            reward_USD: reward_USD
+            reward_USD: reward_USD,
+            txHash: tx
         })
     })
     .onAllEvents(async (event, ctx) => {
         const hash = event.transactionHash
         const tx = await ctx.contract.provider.getTransaction(hash)
         const from = tx.from
+
+        console.log("transactionHash", hash, "tx:", tx)
+        ctx.logger.info("transactionHash: " + hash + "tx" + tx, { testLable1: 3, testLable2: 4 })
 
         //accountTracker.trackEvent(ctx, { distinctId: from })
         ctx.eventTracker.track("Any_Event",
