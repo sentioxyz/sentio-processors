@@ -23,9 +23,10 @@ const rewardGauge_CRO = Gauge.register("stakeReward_CRO")
 const rewardCounter_USD = Counter.register("stakeRewardCounter_USD")
 const rewardGauge_USD = Gauge.register("stakeReward_USD")
 
+const royaltyCounter1000Test_CRO = Counter.register("royalty_test_1000")
 
 //first tx block time 6220924
-EbisusbayProcessor.bind({ address: '0x7a3CdB2364f92369a602CAE81167d0679087e6a3', network: 25, startBlock: 6761435 })
+EbisusbayProcessor.bind({ address: '0x7a3CdB2364f92369a602CAE81167d0679087e6a3', network: 25, startBlock: 6216653 })
     .onEventSold(async (event, ctx) => {
         ctx.meter.Counter('sold').add(1)
 
@@ -54,6 +55,8 @@ EbisusbayProcessor.bind({ address: '0x7a3CdB2364f92369a602CAE81167d0679087e6a3',
         royaltyCounter_CRO.add(ctx, royalty, labels)
         royaltyGauge_USD.record(ctx, royalty_USD, labels)
         royaltyCounter_USD.add(ctx, royalty_USD, labels)
+
+        royaltyCounter1000Test_CRO.add(ctx, royalty * 1000, labels)
 
         vol_USD.record(ctx, priceUSD, labels)
         vol_CRO.record(ctx, amount, labels)
@@ -84,22 +87,26 @@ EbisusbayProcessor.bind({ address: '0x7a3CdB2364f92369a602CAE81167d0679087e6a3',
     })
     .onAllEvents(async (event, ctx) => {
         const hash = event.transactionHash
-        const tx = (await ctx.contract.provider.getTransaction(hash))!
-        const from = tx.from
 
-        console.log("transactionHash", hash, "tx:", tx)
-        ctx.logger.info("transactionHash: " + hash + "tx" + tx, { testLable1: 1, testLable2: 2 })
+        try {
+            console.log("transactionHash", hash)
+            var tx = (await ctx.contract.provider.getTransaction(hash))!
+            var from = tx.from
+            console.log("transactionHash", hash, "tx:", tx)
 
-        ctx.eventTracker.track("Any_Event",
-            {
-                distinctId: from
-            })
+            ctx.eventTracker.track("Any_Event",
+                {
+                    distinctId: from
+                })
+        } catch (e) {
+            console.log(e.message)
+        }
     })
 
 
 
 //first tx block time 2084066
-MembershipStakerV3Processor.bind({ address: '0xeb074cc764F20d8fE4317ab63f45A85bcE2bEcB1', network: 25, startBlock: 6761435 })
+MembershipStakerV3Processor.bind({ address: '0xeb074cc764F20d8fE4317ab63f45A85bcE2bEcB1', network: 25, startBlock: 6216653 })
     .onEventRyoshiStaked(async (event, ctx) => {
         const owner = event.args.owner
         const tokenId = event.args.tokenId.toString()
@@ -147,14 +154,17 @@ MembershipStakerV3Processor.bind({ address: '0xeb074cc764F20d8fE4317ab63f45A85bc
     })
     .onAllEvents(async (event, ctx) => {
         const hash = event.transactionHash
-        const tx = (await ctx.contract.provider.getTransaction(hash))!
-        const from = tx.from
+        try {
+            console.log("transactionHash", hash)
+            var tx = (await ctx.contract.provider.getTransaction(hash))!
+            var from = tx.from
+            console.log("transactionHash", hash, "tx:", tx)
 
-        console.log("transactionHash", hash, "tx:", tx)
-        ctx.logger.info("transactionHash: " + hash + "tx" + tx, { testLable1: 3, testLable2: 4 })
-
-        ctx.eventTracker.track("Any_Event",
-            {
-                distinctId: from
-            })
+            ctx.eventTracker.track("Any_Event",
+                {
+                    distinctId: from
+                })
+        } catch (e) {
+            console.log(e.message)
+        }
     })
