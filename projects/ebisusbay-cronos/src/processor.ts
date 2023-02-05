@@ -24,8 +24,8 @@ const rewardCounter_USD = Counter.register("stakeRewardCounter_USD")
 const rewardGauge_USD = Gauge.register("stakeReward_USD")
 
 
-
-EbisusbayProcessor.bind({ address: '0x7a3CdB2364f92369a602CAE81167d0679087e6a3', network: 25, startBlock: 6216653 })
+//first tx block time 6220924
+EbisusbayProcessor.bind({ address: '0x7a3CdB2364f92369a602CAE81167d0679087e6a3', network: 25, startBlock: 6761435 })
     .onEventSold(async (event, ctx) => {
         ctx.meter.Counter('sold').add(1)
 
@@ -62,6 +62,7 @@ EbisusbayProcessor.bind({ address: '0x7a3CdB2364f92369a602CAE81167d0679087e6a3',
 
         //event analysis
         const hash = event.transactionHash
+        const randomNumber = Math.floor(Math.random() * 10000000000)
 
         ctx.eventTracker.track("Sold_Event", {
             distinctId: purchaser,
@@ -77,7 +78,8 @@ EbisusbayProcessor.bind({ address: '0x7a3CdB2364f92369a602CAE81167d0679087e6a3',
             listingTime: listingTime,
             saleTime: saleTime,
             endingTime: endingTime,
-            txHash: hash
+            txHash: hash,
+            randomNumber: randomNumber
         })
     })
     .onAllEvents(async (event, ctx) => {
@@ -96,8 +98,8 @@ EbisusbayProcessor.bind({ address: '0x7a3CdB2364f92369a602CAE81167d0679087e6a3',
 
 
 
-//2084066
-MembershipStakerV3Processor.bind({ address: '0xeb074cc764F20d8fE4317ab63f45A85bcE2bEcB1', network: 25, startBlock: 6216653 })
+//first tx block time 2084066
+MembershipStakerV3Processor.bind({ address: '0xeb074cc764F20d8fE4317ab63f45A85bcE2bEcB1', network: 25, startBlock: 6761435 })
     .onEventRyoshiStaked(async (event, ctx) => {
         const owner = event.args.owner
         const tokenId = event.args.tokenId.toString()
@@ -133,11 +135,14 @@ MembershipStakerV3Processor.bind({ address: '0xeb074cc764F20d8fE4317ab63f45A85bc
         rewardGauge_USD.record(ctx, reward_USD)
 
         const hash = event.transactionHash
+        const randomNumber = Math.floor(Math.random() * 10000000000)
+
         ctx.eventTracker.track("Harvest_Event", {
             distinctId: to,
             reward: reward,
             reward_USD: reward_USD,
-            txHash: hash
+            txHash: hash,
+            randomNumber: randomNumber
         })
     })
     .onAllEvents(async (event, ctx) => {
@@ -148,7 +153,6 @@ MembershipStakerV3Processor.bind({ address: '0xeb074cc764F20d8fE4317ab63f45A85bc
         console.log("transactionHash", hash, "tx:", tx)
         ctx.logger.info("transactionHash: " + hash + "tx" + tx, { testLable1: 3, testLable2: 4 })
 
-        //accountTracker.trackEvent(ctx, { distinctId: from })
         ctx.eventTracker.track("Any_Event",
             {
                 distinctId: from
