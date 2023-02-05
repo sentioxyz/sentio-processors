@@ -1,12 +1,12 @@
 import { piece_swap, piece_swap_script } from './types/aptos/piece-swap'
 import { AccountEventTracker, Gauge } from "@sentio/sdk";
 
-import { AptosDex, getCoinInfo } from "@sentio-processor/common/dist/aptos"
-import { type_info } from "@sentio/sdk-aptos/lib/builtin/0x1";
-import { AptosAccountProcessor } from "@sentio/sdk-aptos";
+import { AptosDex, getCoinInfo } from "@sentio-processor/common/aptos"
+import { type_info } from "@sentio/sdk/aptos/lib/builtin/0x1";
+import { AptosAccountProcessor } from "@sentio/sdk/aptos";
 
 
-require("./hippo")
+import "./hippo"
 
 const commonOptions = { sparse:  true }
 export const volOptions = {
@@ -55,13 +55,13 @@ piece_swap_script.bind()
 
 piece_swap.bind()
   .onEventSwapEvent(async (evt, ctx) => {
-    const coinX = extractTypeName(evt.data_typed.x)
-    const coinY = extractTypeName(evt.data_typed.y)
+    const coinX = extractTypeName(evt.data_decoded.x)
+    const coinY = extractTypeName(evt.data_decoded.y)
     const value = await pieceSwap.recordTradingVolume(ctx, coinX, coinY,
-        evt.data_typed.x_in,
-        evt.data_typed.y_out)
+        evt.data_decoded.x_in,
+        evt.data_decoded.y_out)
 
-    console.log(coinX, coinY, evt.data_typed.x_in, evt.data_typed.y_out)
+    console.log(coinX, coinY, evt.data_decoded.x_in, evt.data_decoded.y_out)
 
     const coinXInfo = await getCoinInfo(coinX)
     const coinYInfo = await getCoinInfo(coinY)

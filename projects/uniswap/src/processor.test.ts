@@ -1,10 +1,7 @@
-import { TestProcessorServer } from '@sentio/sdk/lib/testing'
-import { mockTransferLog } from '@sentio/sdk/lib/builtin/erc20/test-utils'
-import { BigNumber } from 'ethers'
-import { firstCounterValue } from '@sentio/sdk/lib/testing/metric-utils'
+import { TestProcessorServer } from '@sentio/sdk/testing'
 
 describe('Test Processor', () => {
-  const service = new TestProcessorServer(() => require('./processor'))
+  const service = new TestProcessorServer(() => import('./processor.js'))
 
   beforeAll(async () => {
     await service.start()

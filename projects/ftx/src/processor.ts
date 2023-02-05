@@ -1,8 +1,8 @@
 import { AccountEventTracker,  Counter, Gauge,  } from "@sentio/sdk";
-import { aptos_coin, coin, managed_coin, resource_account, aptos_account } from "@sentio/sdk-aptos/lib/builtin/0x1";
+import { aptos_coin, coin, managed_coin, resource_account, aptos_account } from "@sentio/sdk/aptos/lib/builtin/0x1";
 
 import { DEFAULT_MAINNET_LIST, RawCoinInfo } from "@manahippo/coin-list";
-import { scaleDown } from "@sentio-processor/common/dist/aptos/coin";
+import { scaleDown } from "@sentio-processor/common/aptos/coin";
 
 const coinInfoMap = new Map<string, RawCoinInfo>()
 
@@ -102,12 +102,12 @@ coin.bind()
   })
   // .onEventDepositEvent((evt, ctx) => {
   //   if (evt.guid.account_address === FTX_ADDRESS) {{
-  //     ctx.meter.Counter("in_tx_amount_cume").add(scaleDown(evt.data_typed.amount, APT_DECIMAL), { from: ctx.transaction.sender })
+  //     ctx.meter.Counter("in_tx_amount_cume").add(scaleDown(evt.data_decoded.amount, APT_DECIMAL), { from: ctx.transaction.sender })
   //   }}
   // })
   // .onEventWithdrawEvent((evt, ctx) => {
   //   if (evt.guid.account_address === FTX_ADDRESS) {{
-  //     ctx.meter.Counter("out_tx_amount_cume").add(scaleDown(evt.data_typed.amount, APT_DECIMAL), { from: ctx.transaction.sender })
+  //     ctx.meter.Counter("out_tx_amount_cume").add(scaleDown(evt.data_decoded.amount, APT_DECIMAL), { from: ctx.transaction.sender })
   //   }}
   // })
   //

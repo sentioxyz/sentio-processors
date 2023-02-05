@@ -5,13 +5,12 @@ import {
   UniswapContext,
   UniswapProcessor,
   UniswapProcessorTemplate
-} from './types/uniswap'
-import { PoolCreatedEvent, UniswapFactoryContext, UniswapFactoryProcessor } from "./types/uniswapfactory";
-import { token, conversion} from "@sentio/sdk/lib/utils"
-import type { BaseContract, BigNumber } from 'ethers'
-import { ERC20Context, ERC20Processor, getERC20Contract } from '@sentio/sdk/lib/builtin/erc20'
-import { getPriceByType } from "@sentio/sdk/lib/utils/price"
-import { RichClientError } from "nice-grpc-error-details";
+} from './types/uniswap/index.js'
+import { PoolCreatedEvent, UniswapFactoryContext, UniswapFactoryProcessor } from "./types/uniswapfactory/index.js";
+// import { token, conversion} from "@sentio/sdk/utils"
+// import type { BaseContract, BigNumber } from 'ethers'
+import { ERC20Context, ERC20Processor, getERC20Contract } from '@sentio/sdk/eth/builtin/erc20'
+import { getPriceByType,  token } from "@sentio/sdk/utils"
 import { Status, ClientError } from "nice-grpc-common";
 import {BigDecimal, Gauge, MetricOptions} from "@sentio/sdk";
 
@@ -94,7 +93,7 @@ export const vol = Gauge.register("vol", gaugeOptions)
 
 async function buildPoolInfo(token0Promise: Promise<string>,
                              token1Promise: Promise<string>,
-                             feePromise: Promise<number>): Promise<poolInfo> {
+                             feePromise: Promise<bigint>): Promise<poolInfo> {
   const address0 = await token0Promise
   const address1 = await token1Promise
   const tokenInfo0 = await getTokenInfo(address0)
@@ -110,13 +109,13 @@ async function buildPoolInfo(token0Promise: Promise<string>,
 
 async function getValue(ctx: UniswapContext, address: string, info: token.TokenInfo):
     Promise<BigDecimal> {
-  let amount: any
+  let amount: bigint
   if (info.symbol === "ETH") {
     try {
-      amount = await ctx.contract.provider.getBalance(ctx.address)
+      amount = await ctx.contract.provider!.getBalance(ctx.address)
     } catch (e) {
       console.log(e)
-      amount = 0
+      amount = 0n
     }
   } else {
     try {
@@ -124,10 +123,10 @@ async function getValue(ctx: UniswapContext, address: string, info: token.TokenI
           {blockTag: Number(ctx.blockNumber)})
     } catch (e) {
       console.log("error", e)
-      amount = 0
+      amount = 0n
     }
   }
-  return token.scaleDown(amount, info.decimal)
+  return amount.scaleDown(info.decimal)
 }
 
 async function getTVL(ctx: UniswapContext, info: token.TokenInfo, token :string): Promise<BigDecimal> {
@@ -170,9 +169,9 @@ const priceCalc = async function (_: any, ctx: UniswapContext) {
     poolName: pool})
 }
 
-async function getTokenDetails(ctx: UniswapContext, info: token.TokenInfo, address :string, amount: BigNumber):
+async function getTokenDetails(ctx: UniswapContext, info: token.TokenInfo, address :string, amount: bigint):
     Promise<[BigDecimal, BigDecimal]> {
-  let scaledAmount = token.scaleDown(amount, info.decimal)
+  let scaledAmount = amount.scaleDown(info.decimal)
   let price: any
   try {
     price = await getPriceByType("1", address, ctx.timestamp)

@@ -1,9 +1,9 @@
-import { TestProcessorServer } from '@sentio/sdk/lib/testing'
+import { TestProcessorServer } from '@sentio/sdk/testing'
 import { TextEncoder } from "util";
 import { HandlerType } from "@sentio/sdk";
 
 describe('Test Processor', () => {
-  const service = new TestProcessorServer(() => require('./processor'))
+  const service = new TestProcessorServer(async () => await import('./processor.js'))
 
   beforeAll(async () => {
     await service.start()
@@ -21,8 +21,7 @@ describe('Test Processor', () => {
         {
           data: {
             aptEvent: {
-              transaction: testData3,
-              event: testData3.events[0]
+              transaction: testData3
             }
           },
           handlerIds: [0],

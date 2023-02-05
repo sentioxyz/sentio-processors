@@ -1,11 +1,11 @@
 import { AccountEventTracker, Counter, Gauge } from "@sentio/sdk";
 
 import { aggregator } from './types/aptos/aggregator'
-import { type_info } from "@sentio/sdk-aptos/lib/builtin/0x1"
+import { type_info } from "@sentio/sdk/aptos/lib/builtin/0x1"
 
-import { getPrice, getCoinInfo, whiteListed } from "@sentio-processor/common/dist/aptos/coin"
-import { scaleDown } from "@sentio-processor/common/dist/aptos/coin";
-import { getPair } from "@sentio-processor/common/dist/aptos";
+import { getPrice, getCoinInfo, whiteListed } from "@sentio-processor/common/aptos/coin"
+import { scaleDown } from "@sentio-processor/common/aptos/coin";
+import { getPair } from "@sentio-processor/common/aptos";
 const commonOptions = { sparse:  false }
 export const volOptions = {
   sparse: true,
@@ -21,18 +21,18 @@ const accountTracker = AccountEventTracker.register("users_hippo")
 
 aggregator.bind({address: "0x89576037b3cc0b89645ea393a47787bb348272c76d6941c574b053672b848039"})
 .onEventSwapStepEvent( async (evt, ctx) => {
-  const timestamp = evt.data_typed.time_stamp
-  const inputAmount = evt.data_typed.input_amount
-  const outputAmount = evt.data_typed.output_amount
-  const dexType = evt.data_typed.dex_type
+  const timestamp = evt.data_decoded.time_stamp
+  const inputAmount = evt.data_decoded.input_amount
+  const outputAmount = evt.data_decoded.output_amount
+  const dexType = evt.data_decoded.dex_type
   if (dexType == 12) {
 
-    const xType = extractTypeName(evt.data_typed.x_type_info)
-    const yType = extractTypeName(evt.data_typed.y_type_info)
+    const xType = extractTypeName(evt.data_decoded.x_type_info)
+    const yType = extractTypeName(evt.data_decoded.y_type_info)
 
     const coinXInfo = getCoinInfo(xType)
     const coinYInfo = getCoinInfo(yType)
-    const poolType = evt.data_typed.pool_type
+    const poolType = evt.data_decoded.pool_type
     const priceX =  await getPrice(xType, Number(timestamp))
     const volume = scaleDown(inputAmount, coinXInfo.decimals).multipliedBy(priceX)
     const symbolX = coinXInfo.symbol

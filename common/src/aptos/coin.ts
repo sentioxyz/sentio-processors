@@ -1,8 +1,7 @@
 import { DEFAULT_MAINNET_LIST, RawCoinInfo } from "@manahippo/coin-list";
 import { BigDecimal } from "@sentio/sdk";
-import { getPriceByType } from '@sentio/sdk/lib/utils/price'
+import { getPriceByType } from '@sentio/sdk/utils'
 import { CHAIN_IDS } from "@sentio/sdk";
-import {RichClientError} from 'nice-grpc-error-details';
 import {Status, ClientError} from 'nice-grpc-common';
 
 export interface BaseCoinInfoWithBridge extends RawCoinInfo {

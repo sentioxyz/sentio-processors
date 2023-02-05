@@ -1,10 +1,11 @@
-import { PythEVMContext, PythEVMProcessor, PriceFeedUpdateEvent, getPythEVMContract, UpdatePriceFeedsCallTrace, UpdatePriceFeedsIfNecessaryCallTrace, BatchPriceFeedUpdateEvent } from "./types/pythevm";
-import { PRICE_MAP } from "./pyth";
+import { PythEVMContext, PythEVMProcessor, PriceFeedUpdateEvent, getPythEVMContract, UpdatePriceFeedsCallTrace, UpdatePriceFeedsIfNecessaryCallTrace,
+    BatchPriceFeedUpdateEvent } from "./types/pythevm/index.js";
+import { PRICE_MAP } from "./pyth.js";
 import { Counter, Gauge } from "@sentio/sdk";
-import { getPrice } from "./aptos";
-import { toBigDecimal } from "@sentio/sdk/lib/utils/conversion";
-import { BigDecimal } from "@sentio/sdk/lib/core/big-decimal";
-import { scaleDown } from '@sentio/sdk/lib/utils/token'
+import { getPrice } from "./aptos.js";
+// import { toBigDecimal } from "@sentio/sdk/";
+// import { BigDecimal } from "@sentio/sdk/lib/core/big-decimal";
+// import { scaleDown } from '@sentio/sdk/lib/utils/token'
 
 
 const commonOptions = { sparse: true }
@@ -54,7 +55,7 @@ async function priceFeedUpdate(evt: PriceFeedUpdateEvent, ctx: PythEVMContext) {
     const labels = { priceId, symbol, isNative }
     const pythContract = getPythEVMContract(ctx.address, ctx.chainId)
     const priceUnsafeStruct = await pythContract.getPriceUnsafe(priceId, {blockTag: evt.blockNumber})
-    const priceUnsafe = scaleDown(priceUnsafeStruct.price, -priceUnsafeStruct.expo)
+    const priceUnsafe = priceUnsafeStruct.price.scaleDown(-priceUnsafeStruct.expo)
     priceGauage.record(ctx, price, labels)
     priceUnsafeGauage.record(ctx, priceUnsafe, labels)
     ctx.meter.Counter("price_update_counter").add(1, labels)
@@ -77,7 +78,7 @@ async function updatePriceFeedsIfNecessary(call: UpdatePriceFeedsIfNecessaryCall
 }
 
 CHAIN_ADDRESS_MAP.forEach((addr, chainId) => {
-    // TODO: change this to 
+    // TODO: change this to
     if (addr == "0xff1a0f4744e8582df1ae09d5611b887b6a12925c") {
         PythEVMProcessor.bind({address: addr, network: chainId, startBlock: 45722027})
         .onEventPriceFeedUpdate(priceFeedUpdate)
@@ -89,7 +90,7 @@ CHAIN_ADDRESS_MAP.forEach((addr, chainId) => {
         .onEventPriceFeedUpdate(priceFeedUpdate)
         .onCallUpdatePriceFeeds(updatePriceFeeds)
         .onCallUpdatePriceFeedsIfNecessary(updatePriceFeedsIfNecessary)
-        .onEventBatchPriceFeedUpdate(batchPriceUpdate) 
+        .onEventBatchPriceFeedUpdate(batchPriceUpdate)
     }
 
 })

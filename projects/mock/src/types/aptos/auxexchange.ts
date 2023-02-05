@@ -239,7 +239,7 @@ export namespace amm {
 
   export interface AddLiquidityEventInstance
     extends aptos.TypedEventInstance<AddLiquidityEvent> {
-    data_typed: AddLiquidityEvent;
+    data_decoded: AddLiquidityEvent;
     type_arguments: [];
   }
 
@@ -284,7 +284,7 @@ export namespace amm {
 
   export interface RemoveLiquidityEventInstance
     extends aptos.TypedEventInstance<RemoveLiquidityEvent> {
-    data_typed: RemoveLiquidityEvent;
+    data_decoded: RemoveLiquidityEvent;
     type_arguments: [];
   }
 
@@ -304,7 +304,7 @@ export namespace amm {
 
   export interface SwapEventInstance
     extends aptos.TypedEventInstance<SwapEvent> {
-    data_typed: SwapEvent;
+    data_decoded: SwapEvent;
     type_arguments: [];
   }
 
@@ -592,7 +592,7 @@ export namespace vault {
 
   export interface DepositEventInstance
     extends aptos.TypedEventInstance<DepositEvent> {
-    data_typed: DepositEvent;
+    data_decoded: DepositEvent;
     type_arguments: [];
   }
 
@@ -613,7 +613,7 @@ export namespace vault {
 
   export interface TransferEventInstance
     extends aptos.TypedEventInstance<TransferEvent> {
-    data_typed: TransferEvent;
+    data_decoded: TransferEvent;
     type_arguments: [];
   }
 
@@ -635,7 +635,7 @@ export namespace vault {
 
   export interface WithdrawEventInstance
     extends aptos.TypedEventInstance<WithdrawEvent> {
-    data_typed: WithdrawEvent;
+    data_decoded: WithdrawEvent;
     type_arguments: [];
   }
 
@@ -1331,7 +1331,7 @@ export namespace clob_market {
 
   export interface AllOrdersEventInstance
     extends aptos.TypedEventInstance<AllOrdersEvent> {
-    data_typed: AllOrdersEvent;
+    data_decoded: AllOrdersEvent;
     type_arguments: [];
   }
 
@@ -1349,7 +1349,7 @@ export namespace clob_market {
   }
 
   export interface L2EventInstance extends aptos.TypedEventInstance<L2Event> {
-    data_typed: L2Event;
+    data_decoded: L2Event;
     type_arguments: [];
   }
 
@@ -1426,7 +1426,7 @@ export namespace clob_market {
 
   export interface OpenOrdersEventInstance
     extends aptos.TypedEventInstance<OpenOrdersEvent> {
-    data_typed: OpenOrdersEvent;
+    data_decoded: OpenOrdersEvent;
     type_arguments: [];
   }
 
@@ -1458,7 +1458,7 @@ export namespace clob_market {
 
   export interface OrderCancelEventInstance
     extends aptos.TypedEventInstance<OrderCancelEvent> {
-    data_typed: OrderCancelEvent;
+    data_decoded: OrderCancelEvent;
     type_arguments: [];
   }
 
@@ -1479,7 +1479,7 @@ export namespace clob_market {
 
   export interface OrderFillEventInstance
     extends aptos.TypedEventInstance<OrderFillEvent> {
-    data_typed: OrderFillEvent;
+    data_decoded: OrderFillEvent;
     type_arguments: [];
   }
 
@@ -1497,7 +1497,7 @@ export namespace clob_market {
 
   export interface OrderPlacedEventInstance
     extends aptos.TypedEventInstance<OrderPlacedEvent> {
-    data_typed: OrderPlacedEvent;
+    data_decoded: OrderPlacedEvent;
     type_arguments: [];
   }
 

@@ -139,7 +139,7 @@ export namespace swap {
 
   export interface AddLiquidityEventInstance
     extends aptos.TypedEventInstance<AddLiquidityEvent<any, any>> {
-    data_typed: AddLiquidityEvent<any, any>;
+    data_decoded: AddLiquidityEvent<any, any>;
     type_arguments: [string, string];
   }
 
@@ -159,7 +159,7 @@ export namespace swap {
 
   export interface PairCreatedEventInstance
     extends aptos.TypedEventInstance<PairCreatedEvent> {
-    data_typed: PairCreatedEvent;
+    data_decoded: PairCreatedEvent;
     type_arguments: [];
   }
 
@@ -183,7 +183,7 @@ export namespace swap {
 
   export interface RemoveLiquidityEventInstance
     extends aptos.TypedEventInstance<RemoveLiquidityEvent<any, any>> {
-    data_typed: RemoveLiquidityEvent<any, any>;
+    data_decoded: RemoveLiquidityEvent<any, any>;
     type_arguments: [string, string];
   }
 
@@ -199,7 +199,7 @@ export namespace swap {
 
   export interface SwapEventInstance
     extends aptos.TypedEventInstance<SwapEvent<any, any>> {
-    data_typed: SwapEvent<any, any>;
+    data_decoded: SwapEvent<any, any>;
     type_arguments: [string, string];
   }
 

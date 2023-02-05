@@ -1,8 +1,8 @@
-import { AptosDex, getCoinInfo, whiteListed } from "@sentio-processor/common/dist/aptos";
+import { AptosDex, getCoinInfo, whiteListed } from "@sentio-processor/common/aptos";
 import { amm } from "./types/aptos/auxexchange";
 import { auxTvl, auxTvlAll, auxTvlByPool, auxVolume } from "./metrics";
 import { isWormhole } from "./utils";
-import { AptosAccountProcessor } from "@sentio/sdk-aptos";
+import { AptosAccountProcessor } from "@sentio/sdk/aptos";
 
 const AUX_EXCHANGE = new AptosDex<amm.Pool<any, any>>(auxVolume, auxTvlAll, auxTvl, auxTvlByPool, {
   getXReserve: pool => pool.x_reserve.value,
@@ -22,8 +22,8 @@ amm.bind()
       ctx.meter.Counter("num_pools").add(1, { bridge: coinYInfo.bridge })
     })
     .onEventAddLiquidityEvent(async (evt, ctx) => {
-      const coinXInfo = await getCoinInfo(evt.data_typed.x_coin_type)
-      const coinYInfo = await getCoinInfo(evt.data_typed.y_coin_type)
+      const coinXInfo = await getCoinInfo(evt.data_decoded.x_coin_type)
+      const coinYInfo = await getCoinInfo(evt.data_decoded.y_coin_type)
 
       ctx.meter.Counter("event_liquidity_add").add(1, { bridge: coinXInfo.bridge })
       ctx.meter.Counter("event_liquidity_add").add(1, { bridge: coinYInfo.bridge })
@@ -31,16 +31,16 @@ amm.bind()
       // ctx.logger.info("LiquidityAdded", { user: ctx.transaction.sender })
     })
     .onEventRemoveLiquidityEvent(async (evt, ctx) => {
-      const coinXInfo = await getCoinInfo(evt.data_typed.x_coin_type)
-      const coinYInfo = await getCoinInfo(evt.data_typed.y_coin_type)
+      const coinXInfo = await getCoinInfo(evt.data_decoded.x_coin_type)
+      const coinYInfo = await getCoinInfo(evt.data_decoded.y_coin_type)
 
       ctx.meter.Counter("event_liquidity_removed").add(1, { bridge: coinXInfo.bridge })
       ctx.meter.Counter("event_liquidity_removed").add(1, { bridge: coinYInfo.bridge })
     })
     .onEventSwapEvent(async (evt, ctx) => {
-      const value = await AUX_EXCHANGE.recordTradingVolume(ctx, evt.data_typed.in_coin_type, evt.data_typed.out_coin_type, evt.data_typed.in_au, evt.data_typed.out_au)
-      const coinXInfo = await getCoinInfo(evt.data_typed.in_coin_type)
-      const coinYInfo = await getCoinInfo(evt.data_typed.out_coin_type)
+      const value = await AUX_EXCHANGE.recordTradingVolume(ctx, evt.data_decoded.in_coin_type, evt.data_decoded.out_coin_type, evt.data_decoded.in_au, evt.data_decoded.out_au)
+      const coinXInfo = await getCoinInfo(evt.data_decoded.in_coin_type)
+      const coinYInfo = await getCoinInfo(evt.data_decoded.out_coin_type)
       ctx.meter.Counter("event_swap_by_bridge").add(1, {bridge: coinXInfo.bridge})
       ctx.meter.Counter("event_swap_by_bridge").add(1, {bridge: coinYInfo.bridge})
     })

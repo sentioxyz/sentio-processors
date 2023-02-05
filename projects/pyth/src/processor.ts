@@ -1,2 +1,2 @@
-require('./aptos')
-require('./evm')
+import './aptos.js'
+import './evm.js'

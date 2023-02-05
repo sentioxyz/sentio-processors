@@ -1,5 +1,5 @@
 import { AccountEventTracker, Counter, Gauge } from "@sentio/sdk";
-import { aptos_coin, coin, managed_coin, resource_account, aptos_account } from "@sentio/sdk-aptos/lib/builtin/0x1";
+import { aptos_coin, coin, managed_coin, resource_account, aptos_account } from "@sentio/sdk/aptos/lib/builtin/0x1";
 
 import { DEFAULT_MAINNET_LIST, RawCoinInfo } from "@manahippo/coin-list";
 import * as liquidswap from "./types/aptos/liquidswap";
@@ -7,11 +7,11 @@ import { amm } from "./types/aptos/auxexchange";
 import { TransactionPayload_EntryFunctionPayload } from "aptos-sdk/src/generated";
 import { router, swap } from "./types/aptos/pancake-swap";
 // import { token, token_transfers } from "@sentio/sdk/lib/builtin/aptos/0x3";
-import { getChainQueryClient } from "@sentio/sdk-aptos/lib/api";
+import { getChainQueryClient } from "@sentio/sdk/aptos/lib/api";
 import * as soffle3 from "./types/aptos/soffle3";
 import * as topaz from "./types/aptos/topaz";
 import * as bluemoves from "./types/aptos/bluemoves";
-import { AptosResourceContext, AptosAccountProcessor } from "@sentio/sdk-aptos";
+import { AptosResourceContext, AptosAccountProcessor } from "@sentio/sdk/aptos";
 
 const txnCounter = new Counter("txn_counter")
 

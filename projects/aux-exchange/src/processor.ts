@@ -1,8 +1,8 @@
 import { amm } from './types/aptos/auxexchange'
 import { AccountEventTracker, Gauge } from "@sentio/sdk";
 
-import { AptosDex, getCoinInfo } from "@sentio-processor/common/dist/aptos"
-import { AptosAccountProcessor } from "@sentio/sdk-aptos"
+import { AptosDex, getCoinInfo } from "@sentio-processor/common/aptos"
+import { AptosAccountProcessor } from "@sentio/sdk/aptos"
 
 const commonOptions = { sparse:  true }
 export const volOptions = {
@@ -36,10 +36,10 @@ amm.bind({startVersion: 2331560})
     // ctx.logger.info("LiquidityRemoved", { user: ctx.transaction.sender })
   })
   .onEventSwapEvent(async (evt, ctx) => {
-    const value = await auxExchange.recordTradingVolume(ctx, evt.data_typed.in_coin_type, evt.data_typed.out_coin_type, evt.data_typed.in_au, evt.data_typed.out_au)
+    const value = await auxExchange.recordTradingVolume(ctx, evt.data_decoded.in_coin_type, evt.data_decoded.out_coin_type, evt.data_decoded.in_au, evt.data_decoded.out_au)
     //
-    const coinXInfo = await getCoinInfo(evt.data_typed.in_coin_type)
-    const coinYInfo = await getCoinInfo(evt.data_typed.out_coin_type)
+    const coinXInfo = await getCoinInfo(evt.data_decoded.in_coin_type)
+    const coinYInfo = await getCoinInfo(evt.data_decoded.out_coin_type)
     ctx.meter.Counter("event_swap_by_bridge").add(1, { bridge: coinXInfo.bridge })
     ctx.meter.Counter("event_swap_by_bridge").add(1, { bridge: coinYInfo.bridge })
 

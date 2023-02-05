@@ -1,9 +1,8 @@
-import { pyth, event, price } from "./types/aptos/pyth";
+import { pyth, event, price } from "./types/aptos/pyth.js";
 import { Counter, Gauge } from "@sentio/sdk";
-import { toBigDecimal } from "@sentio/sdk/lib/utils/conversion";
-import { PRICE_MAP } from "./pyth";
-import { BigDecimal } from "@sentio/sdk/lib/core/big-decimal";
-import { console_v1 } from "./types/aptos/pyth2";
+import { PRICE_MAP } from "./pyth.js";
+import { BigDecimal } from "@sentio/sdk";
+import { console_v1 } from "./types/aptos/pyth2.js";
 
 import LRU from 'lru-cache'
 
@@ -34,10 +33,10 @@ event.bind()
       cache.set(ctx.version, {})
     }
 
-    const priceId = evt.data_typed.price_feed.price_identifier.bytes
+    const priceId = evt.data_decoded.price_feed.price_identifier.bytes
     const symbol = PRICE_MAP.get(priceId) || "not listed"
     var isNative
-    
+
     if (priceId == "0x03ae4db29ed4ae33d323568895aa00337e658e348b37509f5372ae51f0af00d5") {
       isNative = "true"
     } else {
@@ -45,10 +44,10 @@ event.bind()
     }
     const labels = { priceId, symbol, isNative }
 
-    priceGauage.record(ctx, getPrice(evt.data_typed.price_feed.price), labels)
+    priceGauage.record(ctx, getPrice(evt.data_decoded.price_feed.price), labels)
     // migration
-    evmPriceGauage.record(ctx, getPrice(evt.data_typed.price_feed.price), labels)
-    priceEMAGauage.record(ctx,  getPrice(evt.data_typed.price_feed.ema_price), labels)
+    evmPriceGauage.record(ctx, getPrice(evt.data_decoded.price_feed.price), labels)
+    priceEMAGauage.record(ctx,  getPrice(evt.data_decoded.price_feed.ema_price), labels)
     updates.add(ctx, 1, labels)
     //migration
     price_update_occur.record(ctx, 1, labels)
@@ -65,11 +64,11 @@ console_v1.bind().onEntryMintWithPythAndPrice((evt, ctx) => {
 })
 
 export function getPrice(p: price.Price) {
-  let expo = toBigDecimal(p.expo.magnitude)
+  let expo = p.expo.magnitude.asBigDecimal()
   if (p.expo.negative) {
     expo = expo.negated()
   }
-  let base = toBigDecimal(p.price.magnitude)
+  let base = p.price.magnitude.asBigDecimal()
   if (p.price.negative) {
     base = base.negated()
   }

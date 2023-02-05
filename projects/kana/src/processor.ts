@@ -1,8 +1,8 @@
 import { kana_aggregatorv1 } from './types/aptos/KanalabsV0'
 import { KanalabsAggregatorV1, KanalabsRouterV1 } from './types/aptos/KanalabsAggregatorV1'
-import { getPrice, getCoinInfo, whiteListed, scaleDown } from "@sentio-processor/common/dist/aptos/coin"
+import { getPrice, getCoinInfo, whiteListed, scaleDown } from "@sentio-processor/common/aptos/coin"
 import { AccountEventTracker, Counter, Gauge } from "@sentio/sdk"
-import { type_info } from "@sentio/sdk-aptos/lib/builtin/0x1"
+import { type_info } from "@sentio/sdk/aptos/lib/builtin/0x1"
 
 const commonOptions = { sparse: true }
 export const volOptions = {
@@ -26,14 +26,14 @@ const routesCounter = Counter.register("routes_counter", commonOptions)
 kana_aggregatorv1.bind()
   .onEventSwapStepEvent(async (event, ctx) => {
     ctx.meter.Counter('swap_step_event_emit').add(1)
-    const dexType = event.data_typed.dex_type
-    const poolType = event.data_typed.pool_type
-    const inputAmount = event.data_typed.input_amount
-    const outputAmount = event.data_typed.output_amount
-    const xType = extractTypeName(event.data_typed.x_type_info)
-    const yType = extractTypeName(event.data_typed.y_type_info)
+    const dexType = event.data_decoded.dex_type
+    const poolType = event.data_decoded.pool_type
+    const inputAmount = event.data_decoded.input_amount
+    const outputAmount = event.data_decoded.output_amount
+    const xType = extractTypeName(event.data_decoded.x_type_info)
+    const yType = extractTypeName(event.data_decoded.y_type_info)
 
-    const timestamp = event.data_typed.time_stamp
+    const timestamp = event.data_decoded.time_stamp
 
     const coinXInfo = getCoinInfo(xType)
     const coinYInfo = getCoinInfo(yType)
@@ -58,14 +58,14 @@ kana_aggregatorv1.bind()
 KanalabsAggregatorV1.bind()
   .onEventSwapStepEvent(async (event, ctx) => {
     ctx.meter.Counter('swap_step_event_emit').add(1)
-    const dexType = event.data_typed.dex_type
-    const poolType = event.data_typed.pool_type
-    const inputAmount = event.data_typed.input_amount
-    const outputAmount = event.data_typed.output_amount
-    const xType = extractTypeName(event.data_typed.x_type_info)
-    const yType = extractTypeName(event.data_typed.y_type_info)
+    const dexType = event.data_decoded.dex_type
+    const poolType = event.data_decoded.pool_type
+    const inputAmount = event.data_decoded.input_amount
+    const outputAmount = event.data_decoded.output_amount
+    const xType = extractTypeName(event.data_decoded.x_type_info)
+    const yType = extractTypeName(event.data_decoded.y_type_info)
 
-    const timestamp = event.data_typed.time_stamp
+    const timestamp = event.data_decoded.time_stamp
 
     const coinXInfo = getCoinInfo(xType)
     const coinYInfo = getCoinInfo(yType)
@@ -88,7 +88,7 @@ KanalabsAggregatorV1.bind()
 
 KanalabsRouterV1.bind()
   .onEventRouteCount((async (event, ctx) => {
-    const routeType = Number(event.data_typed.type)
+    const routeType = Number(event.data_decoded.type)
     routes.record(ctx, 1, { routeType: getRoute(routeType) })
     routesCounter.add(ctx, 1, { routeType: getRoute(routeType) })
   }))

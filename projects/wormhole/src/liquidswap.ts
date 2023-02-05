@@ -7,13 +7,13 @@ import {
     getPrice,
     scaleDown,
     whiteListed
-} from "@sentio-processor/common/dist/aptos/coin"
+} from "@sentio-processor/common/aptos/coin"
 
 import { BigDecimal } from "@sentio/sdk/lib/core/big-decimal"
 
-import { AptosAccountProcessor, defaultMoveCoder, TypedMoveResource } from "@sentio/sdk-aptos"
+import { AptosAccountProcessor, defaultMoveCoder, TypedMoveResource } from "@sentio/sdk/aptos"
 import { MoveResource } from "aptos-sdk/src/generated"
-import { AptosDex } from "@sentio-processor/common/dist/aptos"
+import { AptosDex } from "@sentio-processor/common/aptos"
 import {
     inputUsd,
     // inputUsd,
@@ -26,7 +26,7 @@ import {
     // tvlByPoolNew,
     volume
 } from "./metrics"
-import { AptosResourceContext } from "@sentio/sdk-aptos"
+import { AptosResourceContext } from "@sentio/sdk/aptos"
 import { isWormhole } from "./utils";
 
 
@@ -59,8 +59,8 @@ liquidity_pool.bind()
     .onEventSwapEvent(async (evt, ctx) => {
         const value = await liquidSwap.recordTradingVolume(ctx,
             evt.type_arguments[0], evt.type_arguments[1],
-            evt.data_typed.x_in + evt.data_typed.x_out,
-            evt.data_typed.y_in + evt.data_typed.y_out,
+            evt.data_decoded.x_in + evt.data_decoded.x_out,
+            evt.data_decoded.y_in + evt.data_decoded.y_out,
             { curve: getCurve(evt.type_arguments[2]) })
 
         const coinXInfo = getCoinInfo(evt.type_arguments[0])
@@ -117,8 +117,8 @@ async function syncLiquidSwapPools(resources: MoveResource[], ctx: AptosResource
                 const coinXInfo = getCoinInfo(pool.type_arguments[0])
                 const coinYInfo = getCoinInfo(pool.type_arguments[1])
                 console.log(`pool[${getPair(pool.type_arguments[0], pool.type_arguments[1])}] value: ${
-                    scaleDown(pool.data_typed.coin_x_reserve.value, coinXInfo.decimals)}, ${
-                    scaleDown(pool.data_typed.coin_y_reserve.value, coinYInfo.decimals)
+                    scaleDown(pool.data_decoded.coin_x_reserve.value, coinXInfo.decimals)}, ${
+                    scaleDown(pool.data_decoded.coin_y_reserve.value, coinYInfo.decimals)
                 }`)
             }
         }
@@ -178,8 +178,8 @@ async function syncLiquidSwapPools(resources: MoveResource[], ctx: AptosResource
         const pair = getPair(coinx, coiny)
         const curve = getCurve(pool.type_arguments[2])
 
-        const coinx_amount = pool.data_typed.coin_x_reserve.value
-        const coiny_amount = pool.data_typed.coin_y_reserve.value
+        const coinx_amount = pool.data_decoded.coin_x_reserve.value
+        const coiny_amount = pool.data_decoded.coin_y_reserve.value
         const wormhole = isWormhole(pool.type_arguments[0], pool.type_arguments[1])
 
         let poolValue = BigDecimal(0)
@@ -235,7 +235,7 @@ async function syncLiquidSwapPools(resources: MoveResource[], ctx: AptosResource
                 if (priceX != 0 && priceY != 0) {
                     const nX = scaleDown(coinx_amount, coinXInfo.decimals)
                     const nY = scaleDown(coiny_amount, coinYInfo.decimals)
-                    const fee = scaleDown(pool.data_typed.fee, 4)
+                    const fee = scaleDown(pool.data_decoded.fee, 4)
                     const feeFactor = fee.div(BigDecimal(1).minus(fee))
 
                     for (const k of inputUsd) {
@@ -299,10 +299,10 @@ function calcPrice(coin: string, pools: TypedMoveResource<liquidity_pool.Liquidi
         }
 
         if (pool.type_arguments[0] == coin) {
-            const coinAmount = scaleDown(pool.data_typed.coin_x_reserve.value, coinInfo.decimals)
+            const coinAmount = scaleDown(pool.data_decoded.coin_x_reserve.value, coinInfo.decimals)
             const pairedCoinInfo = getCoinInfo(pool.type_arguments[1])
             const pairedCoinPriceInUsd = priceInUsd.get(pool.type_arguments[1])
-            const pairedCoinAmount = scaleDown(pool.data_typed.coin_y_reserve.value, pairedCoinInfo.decimals)
+            const pairedCoinAmount = scaleDown(pool.data_decoded.coin_y_reserve.value, pairedCoinInfo.decimals)
             if (!pairedCoinPriceInUsd) {
                 continue
             }
@@ -315,10 +315,10 @@ function calcPrice(coin: string, pools: TypedMoveResource<liquidity_pool.Liquidi
             }
 
         } else if (pool.type_arguments[1] == coin) {
-            const coinAmount = scaleDown(pool.data_typed.coin_y_reserve.value, coinInfo.decimals)
+            const coinAmount = scaleDown(pool.data_decoded.coin_y_reserve.value, coinInfo.decimals)
             const pairedCoinInfo = getCoinInfo(pool.type_arguments[0])
             const pairedCoinPriceInUsd = priceInUsd.get(pool.type_arguments[0])
-            const pairedCoinAmount = scaleDown(pool.data_typed.coin_x_reserve.value, pairedCoinInfo.decimals)
+            const pairedCoinAmount = scaleDown(pool.data_decoded.coin_x_reserve.value, pairedCoinInfo.decimals)
             if (!pairedCoinPriceInUsd) {
                 continue
             }

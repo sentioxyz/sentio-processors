@@ -1,12 +1,12 @@
 import { AptosClient } from "aptos-sdk";
-import { aggregator, coin, optional_aggregator } from "@sentio/sdk-aptos/lib/builtin/0x1";
+import { aggregator, coin, optional_aggregator } from "@sentio/sdk/aptos/lib/builtin/0x1";
 import { AccountEventTracker,  Gauge } from "@sentio/sdk";
 import {
   CORE_TOKENS,
   getCoinInfo, getPair,
   getPrice, PoolAdaptor,
   scaleDown, SimpleCoinInfo
-} from "@sentio-processor/common/dist/aptos";
+} from "@sentio-processor/common/aptos";
 import { delay, getRandomInt } from "@sentio-processor/common/dist";
 import { amm } from "./types/aptos/auxexchange";
 import { liquidity_pool } from "./types/aptos/liquidswap";
@@ -20,7 +20,7 @@ import {
   AptosAccountProcessor,
   AptosContext,
   getAptosClient
-} from "@sentio/sdk-aptos";
+} from "@sentio/sdk/aptos";
 
 const commonOptions = { sparse:  true }
 const totalValue = Gauge.register("total_value", commonOptions)
@@ -62,7 +62,7 @@ for (const token of CORE_TOKENS.values()) {
       if (coinInfoRes.length === 0) {
         return
       }
-      const coinInfo = coinInfoRes[0].data_typed
+      const coinInfo = coinInfoRes[0].data_decoded
 
       const aggOption = (coinInfo.supply.vec as optional_aggregator.OptionalAggregator[])[0]
       let amount
@@ -138,8 +138,8 @@ liquidity_pool.bind()
     accountTracker.trackEvent(ctx, {distinctId: ctx.transaction.sender})
     await LIQUID_SWAP.recordTradingVolume(ctx,
         evt.type_arguments[0], evt.type_arguments[1],
-        evt.data_typed.x_in + evt.data_typed.x_out,
-        evt.data_typed.y_in + evt.data_typed.y_out,
+        evt.data_decoded.x_in + evt.data_decoded.x_out,
+        evt.data_decoded.y_in + evt.data_decoded.y_out,
         { curve: getCurve(evt.type_arguments[2]), protocol: "liquidswap" })
   })
   .onEventFlashloanEvent(async (evt, ctx) => {
@@ -164,35 +164,35 @@ amm.bind()
     lpTracker.trackEvent(ctx, { distinctId: ctx.transaction.sender })
   })
   .onEventAddLiquidityEvent(async (evt, ctx) => {
-    if(!isUSDCPair(evt.data_typed.x_coin_type, evt.data_typed.y_coin_type)) {
+    if(!isUSDCPair(evt.data_decoded.x_coin_type, evt.data_decoded.y_coin_type)) {
       return
     }
     ctx.meter.Counter("event_liquidity_add").add(1)
     lpTracker.trackEvent(ctx, { distinctId: ctx.transaction.sender })
   })
   .onEventRemoveLiquidityEvent(async (evt, ctx) => {
-    if(!isUSDCPair(evt.data_typed.x_coin_type, evt.data_typed.y_coin_type)) {
+    if(!isUSDCPair(evt.data_decoded.x_coin_type, evt.data_decoded.y_coin_type)) {
       return
     }
     ctx.meter.Counter("event_liquidity_removed").add(1)
     lpTracker.trackEvent(ctx, { distinctId: ctx.transaction.sender })
   })
   .onEventSwapEvent(async (evt, ctx) => {
-    if(!isUSDCPair(evt.data_typed.in_coin_type, evt.data_typed.out_coin_type)) {
+    if(!isUSDCPair(evt.data_decoded.in_coin_type, evt.data_decoded.out_coin_type)) {
       return
     }
-    const coinXInfo = await getCoinInfo(evt.data_typed.in_coin_type)
-    const coinYInfo = await getCoinInfo(evt.data_typed.out_coin_type)
+    const coinXInfo = await getCoinInfo(evt.data_decoded.in_coin_type)
+    const coinYInfo = await getCoinInfo(evt.data_decoded.out_coin_type)
     ctx.meter.Counter("event_swap_by_bridge").add(1, { bridge: coinXInfo.bridge })
     ctx.meter.Counter("event_swap_by_bridge").add(1, { bridge: coinYInfo.bridge })
     accountTracker.trackEvent(ctx, { distinctId: ctx.transaction.sender })
 
-    await AUX_EXCHANGE.recordTradingVolume(ctx, evt.data_typed.in_coin_type, evt.data_typed.out_coin_type, evt.data_typed.in_au, evt.data_typed.out_au, { protocol: "aux" })
+    await AUX_EXCHANGE.recordTradingVolume(ctx, evt.data_decoded.in_coin_type, evt.data_decoded.out_coin_type, evt.data_decoded.in_au, evt.data_decoded.out_au, { protocol: "aux" })
   })
 
 swap.bind()
   .onEventPairCreatedEvent(async (evt, ctx) => {
-    if(!isUSDCPair(evt.data_typed.token_x, evt.data_typed.token_y)) {
+    if(!isUSDCPair(evt.data_decoded.token_x, evt.data_decoded.token_y)) {
       return
     }
     ctx.meter.Counter("num_pools").add(1)
@@ -224,8 +224,8 @@ swap.bind()
 
     await PANCAKE_SWAP_APTOS.recordTradingVolume(ctx,
         evt.type_arguments[0], evt.type_arguments[1],
-        evt.data_typed.amount_x_in + evt.data_typed.amount_x_out,
-        evt.data_typed.amount_y_in + evt.data_typed.amount_y_out, { protocol: "pancake" })
+        evt.data_decoded.amount_x_in + evt.data_decoded.amount_x_out,
+        evt.data_decoded.amount_y_in + evt.data_decoded.amount_y_out, { protocol: "pancake" })
   })
 
 export class USDCDex<T> {
@@ -279,8 +279,8 @@ export class USDCDex<T> {
       const coinXInfo = await getCoinInfo(coinx)
       const coinYInfo = await getCoinInfo(coiny)
 
-      const coinx_amount = this.poolAdaptor.getXReserve(pool.data_typed)
-      const coiny_amount = this.poolAdaptor.getYReserve(pool.data_typed)
+      const coinx_amount = this.poolAdaptor.getXReserve(pool.data_decoded)
+      const coiny_amount = this.poolAdaptor.getYReserve(pool.data_decoded)
 
       let poolValue = BigDecimal(0)
 

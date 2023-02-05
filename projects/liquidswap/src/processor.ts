@@ -1,4 +1,4 @@
-require("./liquidswap")
-require("./total-value")
-require("./aux-exchange")
-require("./pancakeswap")
+import "./liquidswap.js"
+import "./total-value.js"
+import "./aux-exchange.js"
+import "./pancakeswap.js"

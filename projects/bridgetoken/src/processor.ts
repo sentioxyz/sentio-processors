@@ -4,7 +4,7 @@ import {
   CORE_TOKENS,
   getPrice,
   scaleDown
-} from "@sentio-processor/common/dist/aptos";
+} from "@sentio-processor/common/aptos";
 import { AccountEventTracker, Counter, Gauge } from "@sentio/sdk";
 import {
   aggregator,
@@ -13,13 +13,13 @@ import {
   managed_coin,
   optional_aggregator,
   type_info
-} from "@sentio/sdk-aptos/lib/builtin/0x1";
+} from "@sentio/sdk/aptos/lib/builtin/0x1";
 import { delay, getRandomInt } from "@sentio-processor/common/dist";
 import type { Transaction_UserTransaction, TransactionPayload_EntryFunctionPayload } from 'aptos-sdk/src/generated'
 import { getPriceByType } from "@sentio/sdk/lib/utils/price";
 import { CHAIN_IDS } from "@sentio/sdk";
 import { AptosClient } from "aptos-sdk";
-import { defaultMoveCoder, getAptosClient } from "@sentio/sdk-aptos";
+import { defaultMoveCoder, getAptosClient } from "@sentio/sdk/aptos";
 
 const accounts = Counter.register("account", { sparse: false })
 const accountBalance = Gauge.register("account_balance", { sparse: true })
@@ -53,10 +53,10 @@ const client = getAptosClient()!
 //     return
 //   }
 //
-//   const amount = scaleDown(evt.data_typed.amount, token.decimals)
+//   const amount = scaleDown(evt.data_decoded.amount, token.decimals)
 //   const value = amount.multipliedBy(PRICES.get(token.token_type.type)!)
 //
-//   // const value = await calculateValueInUsd(evt.data_typed.amount, token, priceTimestamp)
+//   // const value = await calculateValueInUsd(evt.data_decoded.amount, token, priceTimestamp)
 //   if (!value.isGreaterThan(0)) {
 //     return
 //   }
@@ -69,9 +69,9 @@ const client = getAptosClient()!
 //     return
 //   }
 //
-//   const amount = scaleDown(evt.data_typed.amount, token.decimals)
+//   const amount = scaleDown(evt.data_decoded.amount, token.decimals)
 //   const value = amount.multipliedBy(PRICES.get(token.token_type.type)!)
-//   // const value = await calculateValueInUsd(evt.data_typed.amount, token, priceTimestamp)
+//   // const value = await calculateValueInUsd(evt.data_decoded.amount, token, priceTimestamp)
 //   if (!value.isGreaterThan(0)) {
 //     return
 //   }
@@ -82,7 +82,7 @@ const client = getAptosClient()!
 defaultMoveCoder().load(coin.ABI)
 account.bind().onEventCoinRegisterEvent(async (call, ctx) => {
     // .onEntryRegister(async (call, ctx) => {
-    const type = extractTypeName(call.data_typed.type_info)
+    const type = extractTypeName(call.data_decoded.type_info)
   const accountAddress  =  call.guid.account_address
     const token = BRIDGE_TOKENS.get(type)
     if (!token) {
@@ -100,7 +100,7 @@ account.bind().onEventCoinRegisterEvent(async (call, ctx) => {
       process.exit(1)
       return
     }
-    const amount = scaleDown(decodedRes.data_typed.coin.value, token.decimals)
+    const amount = scaleDown(decodedRes.data_decoded.coin.value, token.decimals)
     const value = amount.multipliedBy(PRICES.get(token.token_type.type)!)
 
     // if (token.symbol ==='SOL') {

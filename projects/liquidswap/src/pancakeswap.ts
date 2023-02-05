@@ -1,5 +1,5 @@
-import { swap } from "./types/aptos/pancake-swap";
-import { AptosDex, getCoinInfo, getPairValue } from "@sentio-processor/common/dist/aptos";
+import { swap } from "./types/aptos/pancake-swap.js";
+import { AptosDex, getCoinInfo, getPairValue } from "@sentio-processor/common/aptos";
 import {
   pancakeTvl,
   pancakeTvlAll,
@@ -8,8 +8,8 @@ import {
   recordAccount,
   // vol_by_account
   // liquidity_by_account,
-} from "./metrics";
-import { AptosAccountProcessor } from "@sentio/sdk-aptos";
+} from "./metrics.js";
+import { AptosAccountProcessor } from "@sentio/sdk/aptos";
 
 swap.bind()
     .onEventPairCreatedEvent(async (evt, ctx) => {
@@ -18,7 +18,7 @@ swap.bind()
     .onEventAddLiquidityEvent(async (evt, ctx) => {
       ctx.meter.Counter("event_liquidity_add").add(1)
       if (recordAccount) {
-        const value = await getPairValue(ctx, evt.type_arguments[0], evt.type_arguments[1], evt.data_typed.amount_x, evt.data_typed.amount_y)
+        const value = await getPairValue(ctx, evt.type_arguments[0], evt.type_arguments[1], evt.data_decoded.amount_x, evt.data_decoded.amount_y)
         if (value.isGreaterThan(10)) {
           // liquidity_by_account.add(ctx, value, { account: ctx.transaction.sender})
           ctx.eventTracker.track("liquidity", {
@@ -36,8 +36,8 @@ swap.bind()
     .onEventSwapEvent(async (evt, ctx) => {
       const value = await PANCAKE_SWAP_APTOS.recordTradingVolume(ctx,
           evt.type_arguments[0], evt.type_arguments[1],
-          evt.data_typed.amount_x_in + evt.data_typed.amount_x_out,
-          evt.data_typed.amount_y_in + evt.data_typed.amount_y_out)
+          evt.data_decoded.amount_x_in + evt.data_decoded.amount_x_out,
+          evt.data_decoded.amount_y_in + evt.data_decoded.amount_y_out)
       if (recordAccount && value.isGreaterThan(10)) {
         // vol_by_account.add(ctx, value, { account: ctx.transaction.sender})
         ctx.eventTracker.track("vol", {

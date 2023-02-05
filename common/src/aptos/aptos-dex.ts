@@ -1,8 +1,7 @@
 import {  Counter, Gauge } from "@sentio/sdk";
 import { BigDecimal } from "@sentio/bigdecimal";
-import { calculateValueInUsd, CORE_TOKENS, getCoinInfo, whiteListed } from "./coin"
-import { AptosResourceContext, TypedMoveResource, defaultMoveCoder, AptosContext } from "@sentio/sdk-aptos";
-import { MoveResource } from "aptos-sdk/src/generated";
+import { calculateValueInUsd, CORE_TOKENS, getCoinInfo, whiteListed } from "./coin.js"
+import { AptosResourceContext, TypedMoveResource, MoveResource, defaultMoveCoder, AptosContext } from "@sentio/sdk/aptos";
 
 export interface PoolAdaptor<T> {
   getXReserve(pool: T): bigint
@@ -89,8 +88,8 @@ export class AptosDex<T> {
       const coinXInfo = await getCoinInfo(coinx)
       const coinYInfo = await getCoinInfo(coiny)
 
-      const coinx_amount = this.poolAdaptor.getXReserve(pool.data_typed)
-      const coiny_amount = this.poolAdaptor.getYReserve(pool.data_typed)
+      const coinx_amount = this.poolAdaptor.getXReserve(pool.data_decoded)
+      const coiny_amount = this.poolAdaptor.getYReserve(pool.data_decoded)
 
       let poolValue = BigDecimal(0)
 

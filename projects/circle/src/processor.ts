@@ -1,2 +1,2 @@
-require("./ethereum")
-require("./aptos")
+import "./ethereum"
+import "./aptos"

@@ -1,8 +1,8 @@
 import { swap } from './types/aptos/pancake-swap'
 import { AccountEventTracker, Gauge } from "@sentio/sdk";
 
-import { AptosDex, getCoinInfo } from "@sentio-processor/common/dist/aptos"
-import {  AptosAccountProcessor } from "@sentio/sdk-aptos";
+import { AptosDex, getCoinInfo } from "@sentio-processor/common/aptos"
+import {  AptosAccountProcessor } from "@sentio/sdk/aptos";
 
 const commonOptions = { sparse:  true }
 export const volOptions = {
@@ -35,8 +35,8 @@ swap.bind({startVersion: 10463608})
   .onEventSwapEvent(async (evt, ctx) => {
     const value = await PANCAKE_SWAP_APTOS.recordTradingVolume(ctx,
               evt.type_arguments[0], evt.type_arguments[1],
-  evt.data_typed.amount_x_in + evt.data_typed.amount_x_out,
-  evt.data_typed.amount_y_in + evt.data_typed.amount_y_out)
+  evt.data_decoded.amount_x_in + evt.data_decoded.amount_x_out,
+  evt.data_decoded.amount_y_in + evt.data_decoded.amount_y_out)
 
     // console.log(JSON.stringify(ctx.transaction))
     // console.log(JSON.stringify(evt))

@@ -605,7 +605,7 @@ export namespace dao_storage {
 
   export interface CoinDepositedEventInstance
     extends aptos.TypedEventInstance<CoinDepositedEvent<any, any, any>> {
-    data_typed: CoinDepositedEvent<any, any, any>;
+    data_decoded: CoinDepositedEvent<any, any, any>;
     type_arguments: [string, string, string];
   }
 
@@ -618,7 +618,7 @@ export namespace dao_storage {
 
   export interface CoinWithdrawnEventInstance
     extends aptos.TypedEventInstance<CoinWithdrawnEvent<any, any, any>> {
-    data_typed: CoinWithdrawnEvent<any, any, any>;
+    data_decoded: CoinWithdrawnEvent<any, any, any>;
     type_arguments: [string, string, string];
   }
 
@@ -651,7 +651,7 @@ export namespace dao_storage {
 
   export interface StorageCreatedEventInstance
     extends aptos.TypedEventInstance<StorageCreatedEvent<any, any, any>> {
-    data_typed: StorageCreatedEvent<any, any, any>;
+    data_decoded: StorageCreatedEvent<any, any, any>;
     type_arguments: [string, string, string];
   }
 
@@ -801,7 +801,7 @@ export namespace global_config {
 
   export interface UpdateDefaultFeeEventInstance
     extends aptos.TypedEventInstance<UpdateDefaultFeeEvent> {
-    data_typed: UpdateDefaultFeeEvent;
+    data_decoded: UpdateDefaultFeeEvent;
     type_arguments: [];
   }
 
@@ -1046,7 +1046,7 @@ export namespace liquidity_pool {
 
   export interface FlashloanEventInstance
     extends aptos.TypedEventInstance<FlashloanEvent<any, any, any>> {
-    data_typed: FlashloanEvent<any, any, any>;
+    data_decoded: FlashloanEvent<any, any, any>;
     type_arguments: [string, string, string];
   }
 
@@ -1060,7 +1060,7 @@ export namespace liquidity_pool {
 
   export interface LiquidityAddedEventInstance
     extends aptos.TypedEventInstance<LiquidityAddedEvent<any, any, any>> {
-    data_typed: LiquidityAddedEvent<any, any, any>;
+    data_decoded: LiquidityAddedEvent<any, any, any>;
     type_arguments: [string, string, string];
   }
 
@@ -1103,7 +1103,7 @@ export namespace liquidity_pool {
 
   export interface LiquidityRemovedEventInstance
     extends aptos.TypedEventInstance<LiquidityRemovedEvent<any, any, any>> {
-    data_typed: LiquidityRemovedEvent<any, any, any>;
+    data_decoded: LiquidityRemovedEvent<any, any, any>;
     type_arguments: [string, string, string];
   }
 
@@ -1116,7 +1116,7 @@ export namespace liquidity_pool {
 
   export interface OracleUpdatedEventInstance
     extends aptos.TypedEventInstance<OracleUpdatedEvent<any, any, any>> {
-    data_typed: OracleUpdatedEvent<any, any, any>;
+    data_decoded: OracleUpdatedEvent<any, any, any>;
     type_arguments: [string, string, string];
   }
 
@@ -1134,7 +1134,7 @@ export namespace liquidity_pool {
 
   export interface PoolCreatedEventInstance
     extends aptos.TypedEventInstance<PoolCreatedEvent<any, any, any>> {
-    data_typed: PoolCreatedEvent<any, any, any>;
+    data_decoded: PoolCreatedEvent<any, any, any>;
     type_arguments: [string, string, string];
   }
 
@@ -1149,7 +1149,7 @@ export namespace liquidity_pool {
 
   export interface SwapEventInstance
     extends aptos.TypedEventInstance<SwapEvent<any, any, any>> {
-    data_typed: SwapEvent<any, any, any>;
+    data_decoded: SwapEvent<any, any, any>;
     type_arguments: [string, string, string];
   }
 
@@ -1161,7 +1161,7 @@ export namespace liquidity_pool {
 
   export interface UpdateDAOFeeEventInstance
     extends aptos.TypedEventInstance<UpdateDAOFeeEvent<any, any, any>> {
-    data_typed: UpdateDAOFeeEvent<any, any, any>;
+    data_decoded: UpdateDAOFeeEvent<any, any, any>;
     type_arguments: [string, string, string];
   }
 
@@ -1173,7 +1173,7 @@ export namespace liquidity_pool {
 
   export interface UpdateFeeEventInstance
     extends aptos.TypedEventInstance<UpdateFeeEvent<any, any, any>> {
-    data_typed: UpdateFeeEvent<any, any, any>;
+    data_decoded: UpdateFeeEvent<any, any, any>;
     type_arguments: [string, string, string];
   }
 

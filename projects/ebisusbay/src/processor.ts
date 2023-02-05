@@ -1,7 +1,7 @@
 import { listing } from './types/aptos/seashrine'
-import { getPrice, getCoinInfo, scaleDown } from "@sentio-processor/common/dist/aptos/coin"
+import { getPrice, getCoinInfo, scaleDown } from "@sentio-processor/common/aptos/coin"
 import { AccountEventTracker, Counter, Gauge } from "@sentio/sdk";
-import { timestamp, type_info } from "@sentio/sdk-aptos/lib/builtin/0x1"
+import { timestamp, type_info } from "@sentio/sdk/aptos/lib/builtin/0x1"
 
 export const volOptions = {
   sparse: true,
@@ -25,16 +25,16 @@ listing.bind({ startVersion: 6393932 })
     accountTracker.trackEvent(ctx, { distinctId: ctx.transaction.sender })
     totalTx.add(ctx, 1)
 
-    const amount = event.data_typed.min_price
-    const originalCoinInfo = event.data_typed.coin_type
+    const amount = event.data_decoded.min_price
+    const originalCoinInfo = event.data_decoded.coin_type
     const coinType = originalCoinInfo.account_address + "::" + hex_to_ascii(originalCoinInfo.module_name) + "::" + hex_to_ascii(originalCoinInfo.struct_name)
     const coinInfo = getCoinInfo(coinType)
-    const timestamp = event.data_typed.at
-    const collection = event.data_typed.token_id.token_data_id.collection
+    const timestamp = event.data_decoded.at
+    const collection = event.data_decoded.token_id.token_data_id.collection
     const coinPrice = await getPrice(coinType, Number(timestamp))
 
     const volume = scaleDown(amount, coinInfo.decimals).multipliedBy(coinPrice)
-    const creator = event.data_typed.creator
+    const creator = event.data_decoded.creator
 
 
 

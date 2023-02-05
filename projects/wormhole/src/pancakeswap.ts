@@ -1,13 +1,13 @@
 import { swap } from "./types/aptos/pancake-swap";
-import { AptosDex, getCoinInfo } from "@sentio-processor/common/dist/aptos";
+import { AptosDex, getCoinInfo } from "@sentio-processor/common/aptos";
 import { pancakeTvl, pancakeTvlAll, pancakeTvlByPool, pancakeVolume } from "./metrics";
 import { isWormhole } from "./utils";
-import { AptosAccountProcessor } from "@sentio/sdk-aptos";
+import { AptosAccountProcessor } from "@sentio/sdk/aptos";
 
 swap.bind()
     .onEventPairCreatedEvent(async (evt, ctx) => {
-      const coinXInfo = await getCoinInfo(evt.data_typed.token_x)
-      const coinYInfo = await getCoinInfo(evt.data_typed.token_y)
+      const coinXInfo = await getCoinInfo(evt.data_decoded.token_x)
+      const coinYInfo = await getCoinInfo(evt.data_decoded.token_y)
       ctx.meter.Counter("num_pools").add(1, { bridge: coinXInfo.bridge })
       ctx.meter.Counter("num_pools").add(1, { bridge: coinYInfo.bridge })
     })
@@ -29,8 +29,8 @@ swap.bind()
       }
       const value = await PANCAKE_SWAP_APTOS.recordTradingVolume(ctx,
           evt.type_arguments[0], evt.type_arguments[1],
-          evt.data_typed.amount_x_in + evt.data_typed.amount_x_out,
-          evt.data_typed.amount_y_in + evt.data_typed.amount_y_out)
+          evt.data_decoded.amount_x_in + evt.data_decoded.amount_x_out,
+          evt.data_decoded.amount_y_in + evt.data_decoded.amount_y_out)
 
       const coinXInfo = await getCoinInfo(evt.type_arguments[0])
       const coinYInfo = await getCoinInfo(evt.type_arguments[1])

@@ -1,2 +1,2 @@
-export * from './aptos-dex'
-export * from './coin'
+export * from './aptos-dex.js'
+export * from './coin.js'

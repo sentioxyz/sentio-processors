@@ -1,9 +1,9 @@
 import { AptosClient } from "aptos-sdk";
-import { aggregator, coin, optional_aggregator } from "@sentio/sdk-aptos/lib/builtin/0x1";
-import { CORE_TOKENS, getPrice, scaleDown } from "@sentio-processor/common/dist/aptos";
+import { aggregator, coin, optional_aggregator } from "@sentio/sdk/aptos/lib/builtin/0x1";
+import { CORE_TOKENS, getPrice, scaleDown } from "@sentio-processor/common/aptos";
 import { delay, getRandomInt } from "@sentio-processor/common/dist";
 import { totalValue } from "./metrics";
-import { defaultMoveCoder, AptosAccountProcessor, getAptosClient } from "@sentio/sdk-aptos";
+import { defaultMoveCoder, AptosAccountProcessor, getAptosClient } from "@sentio/sdk/aptos";
 
 const client = getAptosClient()!
 
@@ -17,7 +17,7 @@ for (const token of CORE_TOKENS.values()) {
       if (coinInfoRes.length === 0) {
         return
       }
-      const coinInfo = coinInfoRes[0].data_typed
+      const coinInfo = coinInfoRes[0].data_decoded
 
       if (coinInfo.supply.vec.length === 0) {
         return

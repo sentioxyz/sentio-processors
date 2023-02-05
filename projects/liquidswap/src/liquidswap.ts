@@ -1,7 +1,7 @@
-import { liquidity_pool, loadAllTypes } from "./types/aptos/liquidswap"
+import { liquidity_pool, loadAllTypes } from "./types/aptos/liquidswap.js"
 
 import {  Counter, Gauge } from "@sentio/sdk"
-import { defaultMoveCoder, AptosAccountProcessor,TypedMoveResource, AptosResourceContext } from "@sentio/sdk-aptos";
+import { defaultMoveCoder, AptosAccountProcessor,TypedMoveResource,MoveResource, AptosResourceContext } from "@sentio/sdk/aptos";
 
 import {
     AptosDex,
@@ -11,11 +11,10 @@ import {
     getPrice,
     scaleDown,
     whiteListed
-} from "@sentio-processor/common/dist/aptos"
+} from "@sentio-processor/common/aptos"
 
-import { BigDecimal } from "@sentio/sdk/lib/core/big-decimal"
+import { BigDecimal } from "@sentio/sdk"
 
-import { MoveResource } from "aptos-sdk/src/generated"
 import {
     commonOptions,
     inputUsd,
@@ -32,7 +31,7 @@ import {
     // liquidity_by_account,
     // net_liquidity_by_account,
     // lpTracker
-} from "./metrics"
+} from "./metrics.js"
 
 const liquidSwap = new AptosDex<liquidity_pool.LiquidityPool<any, any, any>>(volume, tvlAll, tvl, tvlByPool, {
     getXReserve: pool => pool.coin_x_reserve.value,
@@ -54,7 +53,7 @@ liquidity_pool.bind()
         ctx.eventTracker.track("lp", {distinctId: ctx.transaction.sender})
 
         if (recordAccount) {
-            const value = await getPairValue(ctx, evt.type_arguments[0], evt.type_arguments[1], evt.data_typed.added_x_val, evt.data_typed.added_y_val)
+            const value = await getPairValue(ctx, evt.type_arguments[0], evt.type_arguments[1], evt.data_decoded.added_x_val, evt.data_decoded.added_y_val)
             if (value.isGreaterThan(10)) {
                 // liquidity_by_account.add(ctx, value, { account: ctx.transaction.sender})
                 // net_liquidity_by_account.add(ctx, value, { account: ctx.transaction.sender})
@@ -93,7 +92,7 @@ liquidity_pool.bind()
         // lpTracker.trackEvent(ctx, {distinctId: ctx.transaction.sender})
         ctx.eventTracker.track("lp", {distinctId: ctx.transaction.sender})
         if (recordAccount) {
-            const value = await getPairValue(ctx, evt.type_arguments[0], evt.type_arguments[1], evt.data_typed.returned_x_val, evt.data_typed.returned_y_val)
+            const value = await getPairValue(ctx, evt.type_arguments[0], evt.type_arguments[1], evt.data_decoded.returned_x_val, evt.data_decoded.returned_y_val)
             if (value.isGreaterThan(10)) {
                 // net_liquidity_by_account.sub(ctx, value, { account: ctx.transaction.sender})
                 ctx.eventTracker.track("net_liquidity", {
@@ -116,8 +115,8 @@ liquidity_pool.bind()
     .onEventSwapEvent(async (evt, ctx) => {
         const value = await liquidSwap.recordTradingVolume(ctx,
             evt.type_arguments[0], evt.type_arguments[1],
-            evt.data_typed.x_in + evt.data_typed.x_out,
-            evt.data_typed.y_in + evt.data_typed.y_out,
+            evt.data_decoded.x_in + evt.data_decoded.x_out,
+            evt.data_decoded.y_in + evt.data_decoded.y_out,
             { curve: getCurve(evt.type_arguments[2]) })
         if (recordAccount && value.isGreaterThan(10)) {
             // vol_by_account.add(ctx, value, { account: ctx.transaction.sender})
@@ -194,8 +193,8 @@ async function syncLiquidSwapPools(resources: MoveResource[], ctx: AptosResource
                 const coinXInfo = getCoinInfo(pool.type_arguments[0])
                 const coinYInfo = getCoinInfo(pool.type_arguments[1])
                 console.log(`pool[${getPair(pool.type_arguments[0], pool.type_arguments[1])}] value: ${
-                    scaleDown(pool.data_typed.coin_x_reserve.value, coinXInfo.decimals)}, ${
-                    scaleDown(pool.data_typed.coin_y_reserve.value, coinYInfo.decimals)
+                    scaleDown(pool.data_decoded.coin_x_reserve.value, coinXInfo.decimals)}, ${
+                    scaleDown(pool.data_decoded.coin_y_reserve.value, coinYInfo.decimals)
                 }`)
             }
         }
@@ -251,8 +250,8 @@ async function syncLiquidSwapPools(resources: MoveResource[], ctx: AptosResource
         const pair = getPair(coinx, coiny)
         const curve = getCurve(pool.type_arguments[2])
 
-        const coinx_amount = pool.data_typed.coin_x_reserve.value
-        const coiny_amount = pool.data_typed.coin_y_reserve.value
+        const coinx_amount = pool.data_decoded.coin_x_reserve.value
+        const coiny_amount = pool.data_decoded.coin_y_reserve.value
 
         let poolValue = BigDecimal(0)
         let poolValueNew = BigDecimal(0)
@@ -307,7 +306,7 @@ async function syncLiquidSwapPools(resources: MoveResource[], ctx: AptosResource
                 if (priceX != 0 && priceY != 0) {
                     const nX = scaleDown(coinx_amount, coinXInfo.decimals)
                     const nY = scaleDown(coiny_amount, coinYInfo.decimals)
-                    const fee = scaleDown(pool.data_typed.fee, 4)
+                    const fee = scaleDown(pool.data_decoded.fee, 4)
                     const feeFactor = fee.div(BigDecimal(1).minus(fee))
 
                     for (const k of inputUsd) {
@@ -370,10 +369,10 @@ function calcPrice(coin: string, pools: TypedMoveResource<liquidity_pool.Liquidi
         }
 
         if (pool.type_arguments[0] == coin) {
-            const coinAmount = scaleDown(pool.data_typed.coin_x_reserve.value, coinInfo.decimals)
+            const coinAmount = scaleDown(pool.data_decoded.coin_x_reserve.value, coinInfo.decimals)
             const pairedCoinInfo = getCoinInfo(pool.type_arguments[1])
             const pairedCoinPriceInUsd = priceInUsd.get(pool.type_arguments[1])
-            const pairedCoinAmount = scaleDown(pool.data_typed.coin_y_reserve.value, pairedCoinInfo.decimals)
+            const pairedCoinAmount = scaleDown(pool.data_decoded.coin_y_reserve.value, pairedCoinInfo.decimals)
             if (!pairedCoinPriceInUsd) {
                 continue
             }
@@ -386,10 +385,10 @@ function calcPrice(coin: string, pools: TypedMoveResource<liquidity_pool.Liquidi
             }
 
         } else if (pool.type_arguments[1] == coin) {
-            const coinAmount = scaleDown(pool.data_typed.coin_y_reserve.value, coinInfo.decimals)
+            const coinAmount = scaleDown(pool.data_decoded.coin_y_reserve.value, coinInfo.decimals)
             const pairedCoinInfo = getCoinInfo(pool.type_arguments[0])
             const pairedCoinPriceInUsd = priceInUsd.get(pool.type_arguments[0])
-            const pairedCoinAmount = scaleDown(pool.data_typed.coin_x_reserve.value, pairedCoinInfo.decimals)
+            const pairedCoinAmount = scaleDown(pool.data_decoded.coin_x_reserve.value, pairedCoinInfo.decimals)
             if (!pairedCoinPriceInUsd) {
                 continue
             }
