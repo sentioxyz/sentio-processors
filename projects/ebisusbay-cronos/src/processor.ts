@@ -1,7 +1,7 @@
 import { EbisusbayProcessor } from './types/ebisusbay/index.js'
 import { MembershipStakerV3Processor } from './types/membershipstakerv3/index.js'
 import { Counter, Gauge } from "@sentio/sdk"
-import { getPriceBySymbol } from "@sentio/sdk/lib/utils"
+import { getPriceBySymbol } from "@sentio/sdk/utils"
 
 
 const vol_USD = Gauge.register("vol_USD")
@@ -29,9 +29,9 @@ EbisusbayProcessor.bind({ address: '0x7a3CdB2364f92369a602CAE81167d0679087e6a3',
     .onEventSold(async (event, ctx) => {
         ctx.meter.Counter('sold').add(1)
 
-        const listingId = event.args.listingId.toNumber()
+        const listingId = Number(event.args.listingId)
         const getListing = await ctx.contract.completeListing(listingId)
-        const amount = Number(getListing.price.toBigInt()) / Math.pow(10, 18)
+        const amount = Number(getListing.price) / Math.pow(10, 18)
 
         const purchaser = getListing.purchaser
         const nftId = Number(getListing.nftId).toString()
@@ -83,7 +83,7 @@ EbisusbayProcessor.bind({ address: '0x7a3CdB2364f92369a602CAE81167d0679087e6a3',
     })
     .onAllEvents(async (event, ctx) => {
         const hash = event.transactionHash
-        const tx = await ctx.contract.provider.getTransaction(hash)
+        const tx = (await ctx.contract.provider.getTransaction(hash))!
         const from = tx.from
 
         console.log("transactionHash", hash, "tx:", tx)
@@ -144,7 +144,7 @@ MembershipStakerV3Processor.bind({ address: '0xeb074cc764F20d8fE4317ab63f45A85bc
     })
     .onAllEvents(async (event, ctx) => {
         const hash = event.transactionHash
-        const tx = await ctx.contract.provider.getTransaction(hash)
+        const tx = (await ctx.contract.provider.getTransaction(hash))!
         const from = tx.from
 
         console.log("transactionHash", hash, "tx:", tx)
