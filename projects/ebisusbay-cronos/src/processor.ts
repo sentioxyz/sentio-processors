@@ -62,7 +62,6 @@ EbisusbayProcessor.bind({ address: '0x7a3CdB2364f92369a602CAE81167d0679087e6a3',
 
         //event analysis
         const hash = event.transactionHash
-        const tx = await ctx.contract.provider.getTransaction(hash)
 
         ctx.eventTracker.track("Sold_Event", {
             distinctId: purchaser,
@@ -78,7 +77,7 @@ EbisusbayProcessor.bind({ address: '0x7a3CdB2364f92369a602CAE81167d0679087e6a3',
             listingTime: listingTime,
             saleTime: saleTime,
             endingTime: endingTime,
-            txHash: tx
+            txHash: hash
         })
     })
     .onAllEvents(async (event, ctx) => {
@@ -134,12 +133,11 @@ MembershipStakerV3Processor.bind({ address: '0xeb074cc764F20d8fE4317ab63f45A85bc
         rewardGauge_USD.record(ctx, reward_USD)
 
         const hash = event.transactionHash
-        const tx = await ctx.contract.provider.getTransaction(hash)
         ctx.eventTracker.track("Harvest_Event", {
             distinctId: to,
             reward: reward,
             reward_USD: reward_USD,
-            txHash: tx
+            txHash: hash
         })
     })
     .onAllEvents(async (event, ctx) => {
