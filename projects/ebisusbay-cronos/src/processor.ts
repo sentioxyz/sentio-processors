@@ -43,6 +43,7 @@ EbisusbayProcessor.bind({ address: '0x7a3CdB2364f92369a602CAE81167d0679087e6a3',
             if (!tx) {
                 console.log("no tx:", hash, cnt)
                 cnt++
+                continue
             }
             break
         }
@@ -50,7 +51,6 @@ EbisusbayProcessor.bind({ address: '0x7a3CdB2364f92369a602CAE81167d0679087e6a3',
             console.log("no tx after retry:", hash)
             return
         }
-        console.log("transaction", tx)
         let from = tx.from
         ctx.eventTracker.track("Any_Event",
             {
