@@ -1,7 +1,6 @@
-import { liquidity_pool, loadAllTypes } from "./types/aptos/liquidswap.js"
+import {liquidity_pool, loadAllTypes} from "./types/aptos/liquidswap.js"
 
-import {  Counter, Gauge } from "@sentio/sdk"
-import { defaultMoveCoder, AptosAccountProcessor,TypedMoveResource,MoveResource, AptosResourceContext } from "@sentio/sdk/aptos";
+import {defaultMoveCoder, AptosAccountProcessor, TypedMoveResource, MoveResource, AptosResourceContext} from "@sentio/sdk/aptos";
 
 import {
     AptosDex,
@@ -13,10 +12,9 @@ import {
     whiteListed
 } from "@sentio-processor/common/aptos"
 
-import { BigDecimal } from "@sentio/sdk"
+import {BigDecimal} from "@sentio/sdk"
 
 import {
-    commonOptions,
     inputUsd,
     priceGauge,
     priceGaugeNew,
@@ -26,37 +24,30 @@ import {
     tvlByPool,
     tvlByPoolNew,
     volume,
-    // vol_by_account,
-    // accountTracker,
-    // liquidity_by_account,
-    // net_liquidity_by_account,
-    // lpTracker
 } from "./metrics.js"
 
 const liquidSwap = new AptosDex<liquidity_pool.LiquidityPool<any, any, any>>(volume, tvlAll, tvl, tvlByPool, {
     getXReserve: pool => pool.coin_x_reserve.value,
     getYReserve: pool => pool.coin_y_reserve.value,
-    getExtraPoolTags: pool => { return { curve: pool.type_arguments[2] } },
+    getExtraPoolTags: pool => {
+        return {curve: pool.type_arguments[2]}
+    },
     poolTypeName: liquidity_pool.LiquidityPool.TYPE_QNAME
 })
 
 liquidity_pool.bind()
     .onEventPoolCreatedEvent(async (evt, ctx) => {
         ctx.meter.Counter("num_pools").add(1)
-        // lpTracker.trackEvent(ctx, {distinctId: ctx.transaction.sender})
         ctx.eventTracker.track("lp", {distinctId: ctx.transaction.sender})
         // ctx.logger.info("", {user: "-", value: 0.0001})
     })
     .onEventLiquidityAddedEvent(async (evt, ctx) => {
         ctx.meter.Counter("event_liquidity_add").add(1)
-        // lpTracker.trackEvent(ctx, {distinctId: ctx.transaction.sender})
         ctx.eventTracker.track("lp", {distinctId: ctx.transaction.sender})
 
         if (recordAccount) {
             const value = await getPairValue(ctx, evt.type_arguments[0], evt.type_arguments[1], evt.data_decoded.added_x_val, evt.data_decoded.added_y_val)
             if (value.isGreaterThan(10)) {
-                // liquidity_by_account.add(ctx, value, { account: ctx.transaction.sender})
-                // net_liquidity_by_account.add(ctx, value, { account: ctx.transaction.sender})
                 ctx.eventTracker.track("liquidity", {
                     distinctId: ctx.transaction.sender,
                     "account": ctx.transaction.sender,
@@ -70,8 +61,6 @@ liquidity_pool.bind()
                     "formula_value": value.toNumber() * 2,
                 })
             } else {
-                // liquidity_by_account.add(ctx, value, { account: "Others"})
-                // net_liquidity_by_account.add(ctx, value, { account: ctx.transaction.sender})
                 ctx.eventTracker.track("liquidity", {
                     distinctId: ctx.transaction.sender,
                     "account": "Others",
@@ -89,12 +78,10 @@ liquidity_pool.bind()
     })
     .onEventLiquidityRemovedEvent(async (evt, ctx) => {
         ctx.meter.Counter("event_liquidity_removed").add(1)
-        // lpTracker.trackEvent(ctx, {distinctId: ctx.transaction.sender})
         ctx.eventTracker.track("lp", {distinctId: ctx.transaction.sender})
         if (recordAccount) {
             const value = await getPairValue(ctx, evt.type_arguments[0], evt.type_arguments[1], evt.data_decoded.returned_x_val, evt.data_decoded.returned_y_val)
             if (value.isGreaterThan(10)) {
-                // net_liquidity_by_account.sub(ctx, value, { account: ctx.transaction.sender})
                 ctx.eventTracker.track("net_liquidity", {
                     distinctId: ctx.transaction.sender,
                     "account": ctx.transaction.sender,
@@ -102,7 +89,6 @@ liquidity_pool.bind()
                     "formula_value": (-value.toNumber()) * 2,
                 })
             } else {
-                // net_liquidity_by_account.sub(ctx, value, { account: "Others" })
                 ctx.eventTracker.track("net_liquidity", {
                     distinctId: ctx.transaction.sender,
                     "account": "Others",
@@ -117,9 +103,8 @@ liquidity_pool.bind()
             evt.type_arguments[0], evt.type_arguments[1],
             evt.data_decoded.x_in + evt.data_decoded.x_out,
             evt.data_decoded.y_in + evt.data_decoded.y_out,
-            { curve: getCurve(evt.type_arguments[2]) })
+            {curve: getCurve(evt.type_arguments[2])})
         if (recordAccount && value.isGreaterThan(10)) {
-            // vol_by_account.add(ctx, value, { account: ctx.transaction.sender})
             ctx.eventTracker.track("vol", {
                 distinctId: ctx.transaction.sender,
                 "account": ctx.transaction.sender,
@@ -134,7 +119,6 @@ liquidity_pool.bind()
         ctx.meter.Counter("event_swap_by_bridge").add(1, {bridge: coinXInfo.bridge})
         ctx.meter.Counter("event_swap_by_bridge").add(1, {bridge: coinYInfo.bridge})
 
-        // accountTracker.trackEvent(ctx, {distinctId: ctx.transaction.sender})
         ctx.eventTracker.track("account", {
             distinctId: ctx.transaction.sender,
             "event": "swap",
@@ -146,7 +130,6 @@ liquidity_pool.bind()
         ctx.meter.Counter("event_flashloan_by_bridge").add(1, {bridge: coinXInfo.bridge})
         ctx.meter.Counter("event_flashloan_by_bridge").add(1, {bridge: coinYInfo.bridge})
 
-        // accountTracker.trackEvent(ctx, {distinctId: ctx.transaction.sender})
         ctx.eventTracker.track("account", {
             distinctId: ctx.transaction.sender,
             "event": "flashloan",
@@ -232,7 +215,6 @@ async function syncLiquidSwapPools(resources: MoveResource[], ctx: AptosResource
                 updated.add(coiny)
                 priceY = calcPrice(coiny, pools) ?? BigDecimal(0)
                 if (priceY.eq(BigDecimal(0))) {
- //                   debugCoin(coiny)
                     priceY = priceInUsd.get(coiny) ?? BigDecimal(0)
                 } else {
                     priceInUsd.set(coiny, priceY)
