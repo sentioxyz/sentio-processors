@@ -27,6 +27,7 @@ const royaltyCounter1000Test_CRO = Counter.register("royalty_test_1000")
 
 //first tx block time 6220924
 EbisusbayProcessor.bind({ address: '0x7a3CdB2364f92369a602CAE81167d0679087e6a3', network: 25, startBlock: 6216653 })
+<<<<<<< HEAD
     .onEventSold(async (event, ctx) => {
         ctx.meter.Counter('sold').add(1)
 
@@ -85,19 +86,34 @@ EbisusbayProcessor.bind({ address: '0x7a3CdB2364f92369a602CAE81167d0679087e6a3',
             randomNumber: randomNumber
         })
     })
+=======
+>>>>>>> e57df63 (debug cronos)
     .onAllEvents(async (event, ctx) => {
         const hash = event.transactionHash
 
+        let tx
+        let cnt = 0
+        while (!tx && cnt < 10){
         try {
-            console.log("transactionHash", hash)
-            var tx = (await ctx.contract.provider.getTransaction(hash))!
-            var from = tx.from
-            console.log("transactionHash", hash, "tx:", tx)
-
-            ctx.eventTracker.track("Any_Event",
+            tx = await ctx.contract.provider.getTransaction(hash)
+        } catch (e) {
+            console.log("err get txn",e)
+            return
+        }
+        console.log("no tx:", hash, cnt)
+            cnt++
+        }
+        if (!tx) {
+            console.log("no tx after retry:", hash)
+            return
+        }
+        console.log("transaction", tx)
+        let from = tx.from
+        ctx.eventTracker.track("Any_Event",
                 {
                     distinctId: from
                 })
+<<<<<<< HEAD
         } catch (e) {
             if (e instanceof Error) {
                 console.log(e.message)
@@ -171,4 +187,6 @@ MembershipStakerV3Processor.bind({ address: '0xeb074cc764F20d8fE4317ab63f45A85bc
                 console.log(e.message)
             }
         }
+=======
+>>>>>>> e57df63 (debug cronos)
     })
