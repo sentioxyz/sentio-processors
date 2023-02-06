@@ -50,7 +50,7 @@ EbisusbayProcessor.bind({ address: '0x7a3CdB2364f92369a602CAE81167d0679087e6a3',
 
 
         // counter and gauge
-        const labels = { nftId: nftId, seller: seller, nftAddress: nft, fee: fee.toString(), nftTokenStandard: type, listingTime: listingTime, saleTime: saleTime, endingTime: endingTime, royalty: royalty.toString() }
+        const labels = { nftId: nftId, nftAddress: nft, fee: fee.toString(), nftTokenStandard: type, listingTime: listingTime, saleTime: saleTime, endingTime: endingTime, royalty: royalty.toString() }
         royaltyGauge_CRO.record(ctx, royalty, labels)
         royaltyCounter_CRO.add(ctx, royalty, labels)
         royaltyGauge_USD.record(ctx, royalty_USD, labels)
@@ -99,7 +99,9 @@ EbisusbayProcessor.bind({ address: '0x7a3CdB2364f92369a602CAE81167d0679087e6a3',
                     distinctId: from
                 })
         } catch (e) {
-            console.log(e.message)
+            if (e instanceof Error) {
+                console.log(e.message)
+            }
         }
     })
 
@@ -165,6 +167,8 @@ MembershipStakerV3Processor.bind({ address: '0xeb074cc764F20d8fE4317ab63f45A85bc
                     distinctId: from
                 })
         } catch (e) {
-            console.log(e.message)
+            if (e instanceof Error) {
+                console.log(e.message)
+            }
         }
     })
