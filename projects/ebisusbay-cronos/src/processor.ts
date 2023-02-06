@@ -40,8 +40,11 @@ EbisusbayProcessor.bind({ address: '0x7a3CdB2364f92369a602CAE81167d0679087e6a3',
                 console.log("err get txn",e)
                 return
             }
-            console.log("no tx:", hash, cnt)
-            cnt++
+            if (!tx) {
+                console.log("no tx:", hash, cnt)
+                cnt++
+            }
+            break
         }
         if (!tx) {
             console.log("no tx after retry:", hash)
