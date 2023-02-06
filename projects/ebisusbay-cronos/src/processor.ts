@@ -43,12 +43,13 @@ EbisusbayProcessor.bind({ address: '0x7a3CdB2364f92369a602CAE81167d0679087e6a3',
             if (!tx) {
                 console.log("no tx:", hash, cnt)
                 cnt++
+                await delay(1000)
                 continue
             }
             break
         }
         if (!tx) {
-            console.log("no tx after retry:", hash)
+            console.log("no tx after retry:", hash, tx)
             return
         }
         let from = tx.from
@@ -57,3 +58,7 @@ EbisusbayProcessor.bind({ address: '0x7a3CdB2364f92369a602CAE81167d0679087e6a3',
                 distinctId: from
             })
     })
+
+function delay(ms: number) {
+    return new Promise( resolve => setTimeout(resolve, ms) );
+}
