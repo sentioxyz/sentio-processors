@@ -50,7 +50,7 @@ EbisusbayProcessor.bind({ address: '0x7a3CdB2364f92369a602CAE81167d0679087e6a3',
 
 
         // counter and gauge
-        const labels = { nftId: nftId, nftAddress: nft, fee: fee.toString(), nftTokenStandard: type, royalty: royalty.toString() }
+        const labels = { fee: fee.toString(), nftTokenStandard: type }
         royaltyGauge_CRO.record(ctx, royalty, labels)
         royaltyCounter_CRO.add(ctx, royalty, labels)
         royaltyGauge_USD.record(ctx, royalty_USD, labels)
@@ -125,8 +125,8 @@ MembershipStakerV3Processor.bind({ address: '0xeb074cc764F20d8fE4317ab63f45A85bc
         const owner = event.args.owner
         const tokenId = event.args.tokenId.toString()
 
-        stakeGauge.record(ctx, 1, { owner: owner, tokenId: tokenId })
-        stakeCounter.sub(ctx, 1, { owner: owner, tokenId: tokenId })
+        stakeGauge.record(ctx, 1)
+        stakeCounter.sub(ctx, 1)
         ctx.eventTracker.track("RyoshiUnStaked_Event", {
             distinctId: owner,
             tokenId: tokenId
