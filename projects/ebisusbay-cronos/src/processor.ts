@@ -50,7 +50,7 @@ EbisusbayProcessor.bind({ address: '0x7a3CdB2364f92369a602CAE81167d0679087e6a3',
 
 
         // counter and gauge
-        const labels = { nftId: nftId, nftAddress: nft, fee: fee.toString(), nftTokenStandard: type, listingTime: listingTime, saleTime: saleTime, endingTime: endingTime, royalty: royalty.toString() }
+        const labels = { nftId: nftId, nftAddress: nft, fee: fee.toString(), nftTokenStandard: type, royalty: royalty.toString() }
         royaltyGauge_CRO.record(ctx, royalty, labels)
         royaltyCounter_CRO.add(ctx, royalty, labels)
         royaltyGauge_USD.record(ctx, royalty_USD, labels)
