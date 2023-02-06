@@ -46,21 +46,14 @@ coin.bind()
             const toLabel = WATCHES.get(to)
             const amount = scaleDown(call.arguments_decoded[1], APT_DECIMAL)
 
-            ctx.eventTracker.track("transfer_total", {
-                distinctId: from,
-                "amount": amount.toNumber(),
-                "symbol": "tAPT",
-                "from": from,
-                "from_label": fromLabel,
-                "to": to,
-                "to_label": toLabel,
-            })
             ctx.eventTracker.track("transfer_from", {
                 distinctId: from,
                 "amount": amount.toNumber(),
                 "symbol": "tAPT",
                 "account": from,
                 "label": fromLabel,
+                "to": to,
+                "to_label": toLabel,
             })
             ctx.eventTracker.track("transfer_to", {
                 distinctId: to,
@@ -68,6 +61,8 @@ coin.bind()
                 "symbol": "tAPT",
                 "account": to,
                 "label": toLabel,
+                "from": from,
+                "from_label": fromLabel,
             })
         }
     })
@@ -90,22 +85,15 @@ aptos_account.bind()
         const amount = scaleDown(call.arguments_decoded[1], APT_DECIMAL)
         const fromLabel = WATCHES.get(from)
         const toLabel = WATCHES.get(to)
-
-        ctx.eventTracker.track("transfer_total", {
-            distinctId: from,
-            "amount": amount.toNumber(),
-            "symbol": "APT",
-            "from": from,
-            "from_label": fromLabel,
-            "to": to,
-            "to_label": toLabel,
-        })
+        
         ctx.eventTracker.track("transfer_from", {
             distinctId: from,
             "amount": amount.toNumber(),
             "symbol": "APT",
             "account": from,
             "label": fromLabel,
+            "to": to,
+            "to_label": toLabel,
         })
         ctx.eventTracker.track("transfer_to", {
             distinctId: to,
@@ -113,5 +101,7 @@ aptos_account.bind()
             "symbol": "APT",
             "account": to,
             "label": toLabel,
+            "from": from,
+            "from_label": fromLabel,
         })
     })
