@@ -200,7 +200,13 @@ for (let i = 0; i < poolWatching.length; i++) {
               type: "swap",
             }
         )
-        ctx.eventTracker.track("swap", {distinctId: event.args.recipient})
+        ctx.eventTracker.track("event",
+            {
+              distinctId: event.args.recipient,
+              poolName: name,
+              type: "swap",
+            }
+        )
         ctx.meter.Counter("total_tokens").add(token0Amount,
             {token: info.token0.symbol, poolName: name})
         ctx.meter.Counter("total_tokens").add(token1Amount,
@@ -220,7 +226,12 @@ for (let i = 0; i < poolWatching.length; i++) {
           type: "burn",
         }
     )
-    ctx.eventTracker.track("burn", {distinctId: event.args.owner})
+    ctx.eventTracker.track("event",
+        {
+          distinctId: event.args.owner,
+          poolName: name,
+          type: "burn",
+        })
     ctx.meter.Counter("total_tokens").sub(token0Amount,
         {token: info.token0.symbol, poolName: name})
     ctx.meter.Counter("total_tokens").sub(token1Amount,
@@ -240,7 +251,11 @@ for (let i = 0; i < poolWatching.length; i++) {
           type: "mint",
         }
     )
-    ctx.eventTracker.track("mint", {distinctId: event.args.owner})
+    ctx.eventTracker.track("event", {
+      distinctId: event.args.owner,
+      poolName: name,
+      type: "mint",
+    })
     ctx.meter.Counter("total_tokens").add(token0Amount,
         {token: info.token0.symbol, poolName: name})
     ctx.meter.Counter("total_tokens").add(token1Amount,
