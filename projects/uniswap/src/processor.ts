@@ -200,7 +200,7 @@ for (let i = 0; i < poolWatching.length; i++) {
               type: "swap",
             }
         )
-        ctx.eventTracker.track("swap", {distinctId: event.args.sender})
+        ctx.eventTracker.track("swap", {distinctId: event.args.recipient})
         ctx.meter.Counter("total_tokens").add(token0Amount,
             {token: info.token0.symbol, poolName: name})
         ctx.meter.Counter("total_tokens").add(token1Amount,
