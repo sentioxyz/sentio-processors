@@ -1,19 +1,19 @@
-import { AccountEventTracker, Counter, Gauge } from "@sentio/sdk";
-import { aptos_coin, coin, managed_coin, resource_account, aptos_account } from "@sentio/sdk/aptos/lib/builtin/0x1";
+import { Counter, Gauge } from "@sentio/sdk";
+import { aptos_coin, coin, managed_coin, resource_account, aptos_account } from "@sentio/sdk/aptos/builtin/0x1";
 
 import { DEFAULT_MAINNET_LIST, RawCoinInfo } from "@manahippo/coin-list";
-import * as liquidswap from "./types/aptos/liquidswap";
-import { amm } from "./types/aptos/auxexchange";
-import { TransactionPayload_EntryFunctionPayload } from "aptos-sdk/src/generated";
-import { router, swap } from "./types/aptos/pancake-swap";
+import * as liquidswap from "./types/aptos/liquidswap.js";
+import { amm } from "./types/aptos/auxexchange.js";
+// import { TransactionPayload_EntryFunctionPayload } from "aptos-sdk/src/generated";
+import { router, swap } from "./types/aptos/pancake-swap.js";
 // import { token, token_transfers } from "@sentio/sdk/lib/builtin/aptos/0x3";
-import { getChainQueryClient } from "@sentio/sdk/aptos/lib/api";
-import * as soffle3 from "./types/aptos/soffle3";
-import * as topaz from "./types/aptos/topaz";
-import * as bluemoves from "./types/aptos/bluemoves";
+import { getChainQueryClient } from "@sentio/sdk/aptos";
+import * as soffle3 from "./types/aptos/soffle3.js";
+import * as topaz from "./types/aptos/topaz.js";
+import * as bluemoves from "./types/aptos/bluemoves.js";
 import { AptosResourceContext, AptosAccountProcessor } from "@sentio/sdk/aptos";
 
-const txnCounter = new Counter("txn_counter")
+const txnCounter = Counter.register("txn_counter")
 
 const coinInfoMap = new Map<string, RawCoinInfo>()
 
@@ -106,14 +106,14 @@ for (const m of [bluemoves.marketplaceV2, bluemoves.offer_lib]) {
 }
 
 
-const dailyTxn = new Gauge("txn");
-const accumTxn = new Counter("accum_txn");
-const dailyAverageTps = new Gauge("average_tps");
+const dailyTxn = Gauge.register("txn");
+const accumTxn = Counter.register("accum_txn");
+const dailyAverageTps = Gauge.register("average_tps");
 
-const dau = new Gauge("dau");
+const dau = Gauge.register("dau");
 
-const dailyGas = new Gauge("gas")
-const accumGas = new Counter("accum_gas")
+const dailyGas = Gauge.register("gas")
+const accumGas = Counter.register("accum_gas")
 
 const queryClient = getChainQueryClient()
 
@@ -156,7 +156,7 @@ async function sync(ctx: AptosResourceContext) {
   })
   // console.log(ret)
   for (let row of ret.documents) {
-    let obj: myRow = JSON.parse(row)
+    let obj: myRow = JSON.parse(new TextDecoder().decode(row))
     dailyTxn.record(ctx, obj.num_failed_txns, { kind: "failed"})
     dailyTxn.record(ctx, obj.num_successful_txns, { kind: "successful"})
     dailyTxn.record(ctx, obj.num_total_txns, { kind: "total"})

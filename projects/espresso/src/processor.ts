@@ -1,14 +1,15 @@
-import { CapeContext, CapeProcessor, AssetSponsoredEvent, BlockCommittedEvent, FaucetInitializedEvent, Erc20TokensDepositedEvent, DepositErc20CallTrace} from './types/cape'
-import { CAPE_ARB_GOERLI, CAPE_NEW, CAPE_OLD } from './constant'
-import  {
-  utils
-} from "ethers"
-import {AccountEventTracker, Gauge, MetricOptions} from "@sentio/sdk";
-import type {Trace} from "@sentio/sdk";
+import { CapeContext, CapeProcessor, AssetSponsoredEvent, BlockCommittedEvent, FaucetInitializedEvent, Erc20TokensDepositedEvent, DepositErc20CallTrace} from './types/eth/cape.js'
+import { CAPE_ARB_GOERLI, CAPE_NEW, CAPE_OLD } from './constant.js'
+
+import { Gauge, MetricOptions} from "@sentio/sdk";
+
+import { AbiCoder } from 'ethers/abi'
+// import type {Trace} from "@sentio/sdk";
 import { Log } from '@ethersproject/abstract-provider';
 
-const senderTracker4 = AccountEventTracker.register("senders4", {distinctByDays: [1,7,12,30]})
-const tokenTracker = AccountEventTracker.register("unique_tokens", {distinctByDays: [1,7,12,30]})
+// const senderTracker4 = AccountEventTracker.register("senders4", {distinctByDays: [1,7,12,30]})
+// const tokenTracker = AccountEventTracker.register("unique_tokens", {distinctByDays: [1,7,12,30]})
+
 // const senderTracker = AccountEventTracker.register("senders", {distinctByDays: [1,7,12,30]})
 
 export const gaugeOptions: MetricOptions = {
@@ -46,18 +47,18 @@ const handleAssetSponsored = async (event: AssetSponsoredEvent, ctx: CapeContext
   gaugeAndCounter("Sponsor", ctx)
   const hash = event.transactionHash
   const tx = await ctx.contract.provider.getTransaction(hash)
-  const from = tx.from
+  const from = tx!.from
   const token = event.args.erc20Address
-  tokenTracker.trackEvent(ctx, {distinctId: token})
-  senderTracker4.trackEvent(ctx, {distinctId: from})
+  ctx.eventLogger.emit("token", {distinctId: token})
+  ctx.eventLogger.emit("sender", {distinctId: from})
 }
 
 const handleErc20TokensDeposited = async (event: Erc20TokensDepositedEvent, ctx: CapeContext) => {
   gaugeAndCounter("Wrap", ctx)
   const hash = event.transactionHash
   const tx = await ctx.contract.provider.getTransaction(hash)
-  const from = tx.from
-  senderTracker4.trackEvent(ctx, {distinctId: from})
+  const from = tx!.from
+  ctx.eventLogger.emit("sender", {distinctId: from})
 }
 
 // const handleAllEvent = async (event: Log, ctx: CapeContext) => {
@@ -71,7 +72,7 @@ const handleErc20TokensDeposited = async (event: Erc20TokensDepositedEvent, ctx:
 const handleBlockCommittedEvent = async (event: BlockCommittedEvent, ctx: CapeContext) => {
   ctx.meter.Counter("total_block_commit").add(1)
 
-  const note_types_uint = utils.defaultAbiCoder.decode(["uint8[]"], event.args.noteTypes)
+  const note_types_uint = AbiCoder.defaultAbiCoder().decode(["uint8[]"], event.args.noteTypes)
   if (note_types_uint.length > 1) {
     ctx.meter.Counter("note_type_unit_gt_one").add(1)
   } else if (note_types_uint.length == 1) {

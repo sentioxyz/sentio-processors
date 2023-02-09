@@ -1,11 +1,9 @@
-import { AccountEventTracker, Counter, Gauge } from "@sentio/sdk";
+import { Counter, Gauge, scaleDown } from "@sentio/sdk";
 
-import { aggregator } from './types/aptos/aggregator'
-import { type_info } from "@sentio/sdk/aptos/lib/builtin/0x1"
+import { aggregator } from './types/aptos/aggregator.js'
+import { type_info } from "@sentio/sdk/aptos/builtin/0x1"
+import { getPrice, getCoinInfo, whiteListed } from "@sentio-processor/common/aptos"
 
-import { getPrice, getCoinInfo, whiteListed } from "@sentio-processor/common/aptos/coin"
-import { scaleDown } from "@sentio-processor/common/aptos/coin";
-import { getPair } from "@sentio-processor/common/aptos";
 const commonOptions = { sparse:  false }
 export const volOptions = {
   sparse: true,
@@ -15,9 +13,12 @@ export const volOptions = {
   }
 }
 
-const vol = Gauge.register("vol_hippo", volOptions)
+const vol = Gauge.register("vol", volOptions)
+const totalTx = Counter.register("tx", commonOptions)
+// const tvl = new Counter("tvl", commonOptions)
 
-const accountTracker = AccountEventTracker.register("users_hippo")
+// const accountTracker = AccountEventTracker.register("users")
+// const exporter = Exporter.register("tortuga", "test_channel")
 
 aggregator.bind({address: "0x89576037b3cc0b89645ea393a47787bb348272c76d6941c574b053672b848039"})
 .onEventSwapStepEvent( async (evt, ctx) => {
@@ -25,31 +26,26 @@ aggregator.bind({address: "0x89576037b3cc0b89645ea393a47787bb348272c76d6941c574b
   const inputAmount = evt.data_decoded.input_amount
   const outputAmount = evt.data_decoded.output_amount
   const dexType = evt.data_decoded.dex_type
-  if (dexType == 12) {
+  const xType = extractTypeName(evt.data_decoded.x_type_info)
+  const yType = extractTypeName(evt.data_decoded.y_type_info)
 
-    const xType = extractTypeName(evt.data_decoded.x_type_info)
-    const yType = extractTypeName(evt.data_decoded.y_type_info)
+  const coinXInfo = getCoinInfo(xType)
+  const coinYInfo = getCoinInfo(yType)
+  const poolType = evt.data_decoded.pool_type
+  const priceX =  await getPrice(xType, Number(timestamp))
+  const priceY =  await getPrice(yType, Number(timestamp))
+  const pair = constructPair(xType, yType)
+  const volume = scaleDown(inputAmount, coinXInfo.decimals).multipliedBy(priceX)
+  const symbolX = coinXInfo.symbol
+  const symbolY = coinYInfo.symbol
+  const displayPair = constructDisplay(symbolX, symbolY)
 
-    const coinXInfo = getCoinInfo(xType)
-    const coinYInfo = getCoinInfo(yType)
-    const poolType = evt.data_decoded.pool_type
-    const priceX =  await getPrice(xType, Number(timestamp))
-    const volume = scaleDown(inputAmount, coinXInfo.decimals).multipliedBy(priceX)
-    const symbolX = coinXInfo.symbol
-    const symbolY = coinYInfo.symbol
-    if (!whiteListed(xType) || !whiteListed(yType)) {
-        return
-    }
-    const displayPair = await getPair(xType, yType)
 
-    accountTracker.trackEvent(ctx, { distinctId: ctx.transaction.sender})
-    if (whiteListed(xType)) {
-        vol.record(ctx, volume, {dex: getDex(dexType), pair: displayPair, bridge: coinXInfo.bridge})
-    }
-
-    if (whiteListed(yType)) {
-        vol.record(ctx, volume, {dex: getDex(dexType), pair: displayPair, bridge: coinYInfo.bridge})
-    }
+  // accountTracker.trackEvent(ctx, { distinctId: ctx.transaction.sender})
+  ctx.eventLogger.emit("user",{ distinctId: ctx.transaction.sender} )
+  totalTx.add(ctx, 1)
+  if (whiteListed(xType)) {
+    vol.record(ctx, volume, {dex: getDex(dexType), poolType: poolType.toString(), xType: xType, yType: yType, symbolX: symbolX, symbolY: symbolY, pair: displayPair})
   }
 })
 
@@ -62,22 +58,13 @@ function extractTypeName(typeInfo: type_info.TypeInfo) {
   }
 }
 
-// function constructPair(xType: String, yType: String) {
-//   if (xType > yType) {
-//     return xType + "-" + yType
-//   } else {
-//     return yType + "-" + xType
-//   }
-// }
-
-// export async function getPair(coinx: string, coiny: string): Promise<string> {
-//     const coinXInfo = await getCoinInfo(coinx)
-//     const coinYInfo = await getCoinInfo(coiny)
-//     if (coinXInfo.symbol.localeCompare(coinYInfo.symbol) > 0) {
-//       return `${coinYInfo.symbol}-${coinXInfo.symbol}`
-//     }
-//     return `${coinXInfo.symbol}-${coinYInfo.symbol}`
-//   }
+function constructPair(xType: String, yType: String) {
+  if (xType > yType) {
+    return xType + "-" + yType
+  } else {
+    return yType + "-" + xType
+  }
+}
 
 function constructDisplay(symbolX: String, symbolY: String) {
   if (symbolX > symbolY) {

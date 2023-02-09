@@ -1,12 +1,12 @@
-import { piece_swap, piece_swap_script } from './types/aptos/piece-swap'
-import { AccountEventTracker, Gauge } from "@sentio/sdk";
+import { piece_swap, piece_swap_script } from './types/aptos/piece-swap.js'
+import {  Gauge } from "@sentio/sdk";
 
 import { AptosDex, getCoinInfo } from "@sentio-processor/common/aptos"
-import { type_info } from "@sentio/sdk/aptos/lib/builtin/0x1";
+import { type_info } from "@sentio/sdk/aptos/builtin/0x1";
 import { AptosAccountProcessor } from "@sentio/sdk/aptos";
 
 
-import "./hippo"
+import "./hippo.js"
 
 const commonOptions = { sparse:  true }
 export const volOptions = {
@@ -21,22 +21,22 @@ const tvl = Gauge.register("tvl", commonOptions)
 const tvlByPool = Gauge.register("tvl_by_pool", commonOptions)
 const volume = Gauge.register("vol", volOptions)
 
-const accountTracker = AccountEventTracker.register("users")
+// const accountTracker = AccountEventTracker.register("users")
 
 piece_swap_script.bind()
   .onEntryCreateNewPoolScript(async (evt, ctx) => {
     ctx.meter.Counter("num_pools").add(1)
-    accountTracker.trackEvent(ctx, { distinctId: ctx.transaction.sender })
+    ctx.eventLogger.emit("user", { distinctId: ctx.transaction.sender })
     // ctx.logger.info("PoolCreated", { user: ctx.transaction.sender })
   })
   .onEntryAddLiquidityScript(async (evt, ctx) => {
     ctx.meter.Counter("event_liquidity_add").add(1)
-    accountTracker.trackEvent(ctx, { distinctId: ctx.transaction.sender })
+    ctx.eventLogger.emit("user", { distinctId: ctx.transaction.sender })
     // ctx.logger.info("LiquidityAdded", { user: ctx.transaction.sender })
   })
   .onEntryRemoveLiquidityScript(async (evt, ctx) => {
     ctx.meter.Counter("event_liquidity_removed").add(1)
-    accountTracker.trackEvent(ctx, { distinctId: ctx.transaction.sender })
+    ctx.eventLogger.emit("user", { distinctId: ctx.transaction.sender })
     // ctx.logger.info("LiquidityRemoved", { user: ctx.transaction.sender })
   })
   // .onEntrySwapScript(async (evt, ctx) => {
@@ -68,7 +68,7 @@ piece_swap.bind()
     ctx.meter.Counter("event_swap_by_bridge").add(1, { bridge: coinXInfo.bridge })
     ctx.meter.Counter("event_swap_by_bridge").add(1, { bridge: coinYInfo.bridge })
 
-    accountTracker.trackEvent(ctx, { distinctId: ctx.transaction.sender })
+    ctx.eventLogger.emit("user", { distinctId: ctx.transaction.sender })
   })
 
 const pieceSwap = new AptosDex<piece_swap.PieceSwapPoolInfo<any, any>>(volume, tvlAll, tvl, tvlByPool, {

@@ -5,8 +5,8 @@ import {
   UniswapContext,
   UniswapProcessor,
   UniswapProcessorTemplate
-} from './types/uniswap/index.js'
-import { PoolCreatedEvent, UniswapFactoryContext, UniswapFactoryProcessor } from "./types/uniswapfactory/index.js";
+} from './types/eth/uniswap.js'
+import { PoolCreatedEvent, UniswapFactoryContext, UniswapFactoryProcessor } from "./types/eth/uniswapfactory.js";
 // import { token, conversion} from "@sentio/sdk/utils"
 // import type { BaseContract, BigNumber } from 'ethers'
 import { ERC20Context, ERC20Processor, getERC20Contract } from '@sentio/sdk/eth/builtin/erc20'
@@ -200,7 +200,7 @@ for (let i = 0; i < poolWatching.length; i++) {
               type: "swap",
             }
         )
-        ctx.eventTracker.track("event",
+        ctx.eventLogger.emit("event",
             {
               distinctId: event.args.recipient,
               poolName: name,
@@ -226,7 +226,7 @@ for (let i = 0; i < poolWatching.length; i++) {
           type: "burn",
         }
     )
-    ctx.eventTracker.track("event",
+    ctx.eventLogger.emit("event",
         {
           distinctId: event.args.owner,
           poolName: name,
@@ -251,7 +251,7 @@ for (let i = 0; i < poolWatching.length; i++) {
           type: "mint",
         }
     )
-    ctx.eventTracker.track("event", {
+    ctx.eventLogger.emit("event", {
       distinctId: event.args.owner,
       poolName: name,
       type: "mint",

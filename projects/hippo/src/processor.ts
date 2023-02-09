@@ -1,9 +1,8 @@
-import { AccountEventTracker, Counter, Gauge } from "@sentio/sdk";
+import { Counter, Gauge, scaleDown } from "@sentio/sdk";
 
-import { aggregator } from './types/aptos/aggregator'
-import { type_info } from "@sentio/sdk/aptos/lib/builtin/0x1"
-import { getPrice, getCoinInfo, whiteListed } from "@sentio-processor/common/aptos/coin"
-import { scaleDown } from "@sentio-processor/common/aptos/coin";
+import { aggregator } from './types/aptos/aggregator.js'
+import { type_info } from "@sentio/sdk/aptos/builtin/0x1"
+import { getPrice, getCoinInfo, whiteListed } from "@sentio-processor/common/aptos"
 
 const commonOptions = { sparse:  false }
 export const volOptions = {
@@ -18,7 +17,7 @@ const vol = Gauge.register("vol", volOptions)
 const totalTx = Counter.register("tx", commonOptions)
 // const tvl = new Counter("tvl", commonOptions)
 
-const accountTracker = AccountEventTracker.register("users")
+// const accountTracker = AccountEventTracker.register("users")
 // const exporter = Exporter.register("tortuga", "test_channel")
 
 aggregator.bind({address: "0x89576037b3cc0b89645ea393a47787bb348272c76d6941c574b053672b848039"})
@@ -42,7 +41,8 @@ aggregator.bind({address: "0x89576037b3cc0b89645ea393a47787bb348272c76d6941c574b
   const displayPair = constructDisplay(symbolX, symbolY)
 
 
-  accountTracker.trackEvent(ctx, { distinctId: ctx.transaction.sender})
+  // accountTracker.trackEvent(ctx, { distinctId: ctx.transaction.sender})
+  ctx.eventLogger.emit("user",{ distinctId: ctx.transaction.sender} )
   totalTx.add(ctx, 1)
   if (whiteListed(xType)) {
     vol.record(ctx, volume, {dex: getDex(dexType), poolType: poolType.toString(), xType: xType, yType: yType, symbolX: symbolX, symbolY: symbolY, pair: displayPair})

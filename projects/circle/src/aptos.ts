@@ -1,21 +1,21 @@
 import { AptosClient } from "aptos-sdk";
-import { aggregator, coin, optional_aggregator } from "@sentio/sdk/aptos/lib/builtin/0x1";
-import { AccountEventTracker,  Gauge } from "@sentio/sdk";
+import { aggregator, coin, optional_aggregator } from "@sentio/sdk/aptos/builtin/0x1";
+import {  Gauge } from "@sentio/sdk";
 import {
   CORE_TOKENS,
   getCoinInfo, getPair,
   getPrice, PoolAdaptor,
   scaleDown, SimpleCoinInfo
 } from "@sentio-processor/common/aptos";
-import { delay, getRandomInt } from "@sentio-processor/common/dist";
-import { amm } from "./types/aptos/auxexchange";
-import { liquidity_pool } from "./types/aptos/liquidswap";
-import { swap } from "./types/aptos/pancake-swap";
-import { BigDecimal } from "@sentio/sdk/lib/core/big-decimal";
-import { MoveResource } from "aptos-sdk/src/generated";
+import { delay, getRandomInt } from "@sentio-processor/common";
+import { amm } from "./types/aptos/auxexchange.js";
+import { liquidity_pool } from "./types/aptos/liquidswap.js";
+import { swap } from "./types/aptos/pancake-swap.js";
+import { BigDecimal } from "@sentio/sdk";
 import {
   AptosResourceContext,
   TypedMoveResource,
+  MoveResource,
   defaultMoveCoder,
   AptosAccountProcessor,
   AptosContext,
@@ -24,8 +24,8 @@ import {
 
 const commonOptions = { sparse:  true }
 const totalValue = Gauge.register("total_value", commonOptions)
-const accountTracker = AccountEventTracker.register("users")
-const lpTracker = AccountEventTracker.register("lp")
+// const accountTracker = AccountEventTracker.register("users")
+// const lpTracker = AccountEventTracker.register("lp")
 
 export const tvlByPool = Gauge.register("tvl_by_pool", commonOptions)
 export const volume = Gauge.register("vol", commonOptions)
@@ -106,7 +106,7 @@ liquidity_pool.bind()
     }
 
     ctx.meter.Counter("num_pools").add(1)
-    lpTracker.trackEvent(ctx, {distinctId: ctx.transaction.sender})
+    ctx.eventLogger.emit("lp", {distinctId: ctx.transaction.sender})
   })
   .onEventLiquidityAddedEvent(async (evt, ctx) => {
     if(!isUSDCPair(evt.type_arguments[0], evt.type_arguments[1])) {
@@ -114,7 +114,7 @@ liquidity_pool.bind()
     }
 
     ctx.meter.Counter("event_liquidity_add").add(1)
-    lpTracker.trackEvent(ctx, {distinctId: ctx.transaction.sender})
+    ctx.eventLogger.emit("lp",  {distinctId: ctx.transaction.sender})
   })
   .onEventLiquidityRemovedEvent(async (evt, ctx) => {
     if(!isUSDCPair(evt.type_arguments[0], evt.type_arguments[1])) {
@@ -122,7 +122,7 @@ liquidity_pool.bind()
     }
 
     ctx.meter.Counter("event_liquidity_removed").add(1)
-    lpTracker.trackEvent(ctx, {distinctId: ctx.transaction.sender})
+    ctx.eventLogger.emit("lp",  {distinctId: ctx.transaction.sender})
   })
   .onEventSwapEvent(async (evt, ctx) => {
     if(!isUSDCPair(evt.type_arguments[0], evt.type_arguments[1])) {
@@ -135,7 +135,7 @@ liquidity_pool.bind()
     ctx.meter.Counter("event_swap_by_bridge").add(1, {bridge: coinXInfo.bridge})
     ctx.meter.Counter("event_swap_by_bridge").add(1, {bridge: coinYInfo.bridge})
 
-    accountTracker.trackEvent(ctx, {distinctId: ctx.transaction.sender})
+    ctx.eventLogger.emit("user",  {distinctId: ctx.transaction.sender})
     await LIQUID_SWAP.recordTradingVolume(ctx,
         evt.type_arguments[0], evt.type_arguments[1],
         evt.data_decoded.x_in + evt.data_decoded.x_out,
@@ -152,7 +152,7 @@ liquidity_pool.bind()
     ctx.meter.Counter("event_flashloan_by_bridge").add(1, {bridge: coinXInfo.bridge})
     ctx.meter.Counter("event_flashloan_by_bridge").add(1, {bridge: coinYInfo.bridge})
 
-    accountTracker.trackEvent(ctx, {distinctId: ctx.transaction.sender})
+    ctx.eventLogger.emit("user", {distinctId: ctx.transaction.sender})
   })
 
 amm.bind()
@@ -161,21 +161,21 @@ amm.bind()
       return
     }
     ctx.meter.Counter("num_pools").add(1)
-    lpTracker.trackEvent(ctx, { distinctId: ctx.transaction.sender })
+    ctx.eventLogger.emit("lp",  { distinctId: ctx.transaction.sender })
   })
   .onEventAddLiquidityEvent(async (evt, ctx) => {
     if(!isUSDCPair(evt.data_decoded.x_coin_type, evt.data_decoded.y_coin_type)) {
       return
     }
     ctx.meter.Counter("event_liquidity_add").add(1)
-    lpTracker.trackEvent(ctx, { distinctId: ctx.transaction.sender })
+    ctx.eventLogger.emit("lp",   { distinctId: ctx.transaction.sender })
   })
   .onEventRemoveLiquidityEvent(async (evt, ctx) => {
     if(!isUSDCPair(evt.data_decoded.x_coin_type, evt.data_decoded.y_coin_type)) {
       return
     }
     ctx.meter.Counter("event_liquidity_removed").add(1)
-    lpTracker.trackEvent(ctx, { distinctId: ctx.transaction.sender })
+    ctx.eventLogger.emit("lp",   { distinctId: ctx.transaction.sender })
   })
   .onEventSwapEvent(async (evt, ctx) => {
     if(!isUSDCPair(evt.data_decoded.in_coin_type, evt.data_decoded.out_coin_type)) {
@@ -185,7 +185,7 @@ amm.bind()
     const coinYInfo = await getCoinInfo(evt.data_decoded.out_coin_type)
     ctx.meter.Counter("event_swap_by_bridge").add(1, { bridge: coinXInfo.bridge })
     ctx.meter.Counter("event_swap_by_bridge").add(1, { bridge: coinYInfo.bridge })
-    accountTracker.trackEvent(ctx, { distinctId: ctx.transaction.sender })
+    ctx.eventLogger.emit("user", { distinctId: ctx.transaction.sender })
 
     await AUX_EXCHANGE.recordTradingVolume(ctx, evt.data_decoded.in_coin_type, evt.data_decoded.out_coin_type, evt.data_decoded.in_au, evt.data_decoded.out_au, { protocol: "aux" })
   })
@@ -196,21 +196,21 @@ swap.bind()
       return
     }
     ctx.meter.Counter("num_pools").add(1)
-    lpTracker.trackEvent(ctx, { distinctId: ctx.transaction.sender })
+    ctx.eventLogger.emit("lp",   { distinctId: ctx.transaction.sender })
   })
   .onEventAddLiquidityEvent(async (evt, ctx) => {
     if(!isUSDCPair(evt.type_arguments[0], evt.type_arguments[1])) {
       return
     }
     ctx.meter.Counter("event_liquidity_add").add(1)
-    lpTracker.trackEvent(ctx, { distinctId: ctx.transaction.sender })
+    ctx.eventLogger.emit("lp",   { distinctId: ctx.transaction.sender })
   })
   .onEventRemoveLiquidityEvent(async (evt, ctx) => {
     if(!isUSDCPair(evt.type_arguments[0], evt.type_arguments[1])) {
       return
     }
     ctx.meter.Counter("event_liquidity_removed").add(1)
-    lpTracker.trackEvent(ctx, { distinctId: ctx.transaction.sender })
+    ctx.eventLogger.emit("lp",   { distinctId: ctx.transaction.sender })
   })
   .onEventSwapEvent(async (evt, ctx) => {
     if(!isUSDCPair(evt.type_arguments[0], evt.type_arguments[1])) {
@@ -220,7 +220,7 @@ swap.bind()
     const coinYInfo = await getCoinInfo(evt.type_arguments[1])
     ctx.meter.Counter("event_swap_by_bridge").add(1, { bridge: coinXInfo.bridge })
     ctx.meter.Counter("event_swap_by_bridge").add(1, { bridge: coinYInfo.bridge })
-    accountTracker.trackEvent(ctx, { distinctId: ctx.transaction.sender })
+    ctx.eventLogger.emit("user",  { distinctId: ctx.transaction.sender })
 
     await PANCAKE_SWAP_APTOS.recordTradingVolume(ctx,
         evt.type_arguments[0], evt.type_arguments[1],

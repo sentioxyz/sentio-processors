@@ -1,5 +1,5 @@
-import { swap } from './types/aptos/pancake-swap'
-import { AccountEventTracker, Gauge } from "@sentio/sdk";
+import { swap } from './types/aptos/pancake-swap.js'
+import { Gauge } from "@sentio/sdk";
 
 import { AptosDex, getCoinInfo } from "@sentio-processor/common/aptos"
 import {  AptosAccountProcessor } from "@sentio/sdk/aptos";
@@ -17,20 +17,20 @@ const tvl = Gauge.register("tvl", commonOptions)
 const tvlByPool = Gauge.register("tvl_by_pool", commonOptions)
 const volume = Gauge.register("vol", volOptions)
 
-const accountTracker = AccountEventTracker.register("users")
+// const accountTracker = AccountEventTracker.register("users")
 
 swap.bind({startVersion: 10463608})
   .onEventPairCreatedEvent(async (evt, ctx) => {
     ctx.meter.Counter("num_pools").add(1)
-    accountTracker.trackEvent(ctx, { distinctId: ctx.transaction.sender })
+    ctx.eventLogger.emit("user", { distinctId: ctx.transaction.sender })
   })
   .onEventAddLiquidityEvent(async (evt, ctx) => {
     ctx.meter.Counter("event_liquidity_add").add(1)
-    accountTracker.trackEvent(ctx, { distinctId: ctx.transaction.sender })
+    ctx.eventLogger.emit("user", { distinctId: ctx.transaction.sender })
   })
   .onEventRemoveLiquidityEvent(async (evt, ctx) => {
     ctx.meter.Counter("event_liquidity_removed").add(1)
-    accountTracker.trackEvent(ctx, { distinctId: ctx.transaction.sender })
+    ctx.eventLogger.emit("user", { distinctId: ctx.transaction.sender })
   })
   .onEventSwapEvent(async (evt, ctx) => {
     const value = await PANCAKE_SWAP_APTOS.recordTradingVolume(ctx,
@@ -46,7 +46,7 @@ swap.bind({startVersion: 10463608})
     ctx.meter.Counter("event_swap_by_bridge").add(1, { bridge: coinXInfo.bridge })
     ctx.meter.Counter("event_swap_by_bridge").add(1, { bridge: coinYInfo.bridge })
 
-    accountTracker.trackEvent(ctx, { distinctId: ctx.transaction.sender })
+    ctx.eventLogger.emit("user", { distinctId: ctx.transaction.sender })
   })
 
 const PANCAKE_SWAP_APTOS = new AptosDex<swap.TokenPairReserve<any, any>>(volume, tvlAll, tvl, tvlByPool,{

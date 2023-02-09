@@ -1,5 +1,5 @@
-import { StarNFTProcessor, StarNFTContext, ApprovalForAllEvent, TransferEvent } from './types/starnft'
-import { ReadOnArchiveProcessor, ReadOnArchiveContext, TransferEvent as ReadOnTransferEvent } from './types/readonarchive'
+import { StarNFTProcessor, StarNFTContext, ApprovalForAllEvent, TransferEvent } from './types/eth/starnft.js'
+import { ReadOnArchiveProcessor, ReadOnArchiveContext, TransferEvent as ReadOnTransferEvent } from './types/eth/readonarchive.js'
 
 const BSC_ADDR = "0xf2e0ac05157a2843c53c6295c0edea6c9ac65c72"
 const ARB_ADDR = "0xD6e5E55e342236D4044Fd071E710b7545d9e45DE"

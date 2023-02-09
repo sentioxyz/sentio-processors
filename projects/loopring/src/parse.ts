@@ -1,23 +1,22 @@
-import { ExchangeData } from "./types/internal/ExchangeV3";
-import { ExchangeV3Context } from "./types/internal/exchangev3_processor";
-import { Bitstream } from "@sentio/loopring-protocols/src/bitstream";
-import { TransactionType } from "@sentio/loopring-protocols/src/types";
-import { DepositProcessor } from "@sentio/loopring-protocols/src/request_processors/deposit_processor";
-import { SpotTradeProcessor } from "@sentio/loopring-protocols/src/request_processors/spot_trade_processor";
-import { TransferProcessor } from "@sentio/loopring-protocols/src/request_processors/transfer_processor";
-import { WithdrawalProcessor } from "@sentio/loopring-protocols/src/request_processors/withdrawal_processor";
-import { AccountUpdateProcessor } from "@sentio/loopring-protocols/src/request_processors/account_update_processor";
-import { AmmUpdateProcessor } from "@sentio/loopring-protocols/src/request_processors/amm_update_processor";
-import { SignatureVerificationProcessor } from "@sentio/loopring-protocols/src/request_processors/signature_verification_processor";
-import { NftMintProcessor } from "@sentio/loopring-protocols/src/request_processors/nft_mint_processor";
-import { NftDataProcessor } from "@sentio/loopring-protocols/src/request_processors/nft_data_processor";
-import { getTxData, ThinBlock } from "@sentio/loopring-protocols/src/parse";
+import { ExchangeData, ExchangeV3Context } from "./types/eth/ExchangeV3.js";
+import { Bitstream } from "@sentio/loopring-protocols/src/bitstream.js";
+import { TransactionType } from "@sentio/loopring-protocols/src/types.js";
+import { DepositProcessor } from "@sentio/loopring-protocols/src/request_processors/deposit_processor.js";
+import { SpotTradeProcessor } from "@sentio/loopring-protocols/src/request_processors/spot_trade_processor.js";
+import { TransferProcessor } from "@sentio/loopring-protocols/src/request_processors/transfer_processor.js";
+import { WithdrawalProcessor } from "@sentio/loopring-protocols/src/request_processors/withdrawal_processor.js";
+import { AccountUpdateProcessor } from "@sentio/loopring-protocols/src/request_processors/account_update_processor.js";
+import { AmmUpdateProcessor } from "@sentio/loopring-protocols/src/request_processors/amm_update_processor.js";
+import { SignatureVerificationProcessor } from "@sentio/loopring-protocols/src/request_processors/signature_verification_processor.js";
+import { NftMintProcessor } from "@sentio/loopring-protocols/src/request_processors/nft_mint_processor.js";
+import { NftDataProcessor } from "@sentio/loopring-protocols/src/request_processors/nft_data_processor.js";
+import { getTxData, ThinBlock } from "@sentio/loopring-protocols/src/parse.js";
 import assert from "assert";
-import { AddressZero } from "@ethersproject/constants"
-import { AccountEventTracker} from "@sentio/sdk";
-import {block_sizes, tx_processed} from "./metrics";
+import { ZeroAddress } from "ethers/constants"
+// import { AccountEventTracker} from "@sentio/sdk";
+import {block_sizes, tx_processed} from "./metrics.js";
 
-const accountTracker = AccountEventTracker.register("wallets")
+// const accountTracker = AccountEventTracker.register("wallets")
 function parseSingleTx(txData: Bitstream, ctx: ExchangeV3Context) {
   const txType = txData.extractUint8(0);
   tx_processed.record(ctx,1, {txType: txType.toString()})
@@ -42,8 +41,8 @@ function parseSingleTx(txData: Bitstream, ctx: ExchangeV3Context) {
     const request = DepositProcessor.extractData(txData);
     var account = request.toAccountID
     var address = request.to
-    if (account !== undefined && address !== undefined && account! !== 0 && address !== AddressZero) {
-      accountTracker.trackEvent(ctx, { distinctId: account.toString(16) })
+    if (account !== undefined && address !== undefined && account! !== 0 && address !== ZeroAddress) {
+      ctx.eventLogger.emit("Wallet activity", { distinctId: account.toString(16) })
     }
   } else if (txType === TransactionType.SPOT_TRADE) {
     const request = SpotTradeProcessor.extractData(txData);
@@ -51,8 +50,8 @@ function parseSingleTx(txData: Bitstream, ctx: ExchangeV3Context) {
     const request = TransferProcessor.extractData(txData);
     var account = request.accountToID
     var address = request.to
-    if (account !== undefined && address !== undefined && account! !== 0 && address !== AddressZero) {
-      accountTracker.trackEvent(ctx, { distinctId: account.toString(16) })
+    if (account !== undefined && address !== undefined && account! !== 0 && address !== ZeroAddress) {
+      ctx.eventLogger.emit("Wallet activity", { distinctId: account.toString(16) })
     }
   } else if (txType === TransactionType.WITHDRAWAL) {
     const request = WithdrawalProcessor.extractData(txData);
@@ -60,8 +59,8 @@ function parseSingleTx(txData: Bitstream, ctx: ExchangeV3Context) {
     const request = AccountUpdateProcessor.extractData(txData);
     var account = request.accountID
     var address = request.owner
-    if (account !== undefined && address !== undefined && account! !== 0 && address !== AddressZero) {
-      accountTracker.trackEvent(ctx, { distinctId: account.toString(16) })
+    if (account !== undefined && address !== undefined && account! !== 0 && address !== ZeroAddress) {
+      ctx.eventLogger.emit("Wallet activity", { distinctId: account.toString(16) })
     }
   } else if (txType === TransactionType.AMM_UPDATE) {
     const request = AmmUpdateProcessor.extractData(txData);
@@ -96,8 +95,8 @@ export function processBlockStruct(block: ExchangeData.BlockStructOutput, transa
   const merkleRoot = bs.extractUint(20 + 32).toString(10);
 
   const newBlock: ThinBlock = {
-    blockSize: block.blockSize,
-    blockVersion: block.blockVersion,
+    blockSize: Number(block.blockSize),
+    blockVersion: Number(block.blockVersion),
     data: block.data,
     offchainData: block.offchainData,
     operator: owner,

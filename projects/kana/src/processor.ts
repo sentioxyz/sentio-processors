@@ -1,8 +1,8 @@
-import { kana_aggregatorv1 } from './types/aptos/KanalabsV0'
-import { KanalabsAggregatorV1, KanalabsRouterV1 } from './types/aptos/KanalabsAggregatorV1'
-import { getPrice, getCoinInfo, whiteListed, scaleDown } from "@sentio-processor/common/aptos/coin"
-import { AccountEventTracker, Counter, Gauge } from "@sentio/sdk"
-import { type_info } from "@sentio/sdk/aptos/lib/builtin/0x1"
+import { kana_aggregatorv1 } from './types/aptos/KanalabsV0.js'
+import { KanalabsAggregatorV1, KanalabsRouterV1 } from './types/aptos/KanalabsAggregatorV1.js'
+import { getPrice, getCoinInfo, whiteListed, scaleDown } from "@sentio-processor/common/aptos"
+import { Counter, Gauge } from "@sentio/sdk"
+import { type_info } from "@sentio/sdk/aptos/builtin/0x1"
 
 const commonOptions = { sparse: true }
 export const volOptions = {
@@ -13,14 +13,12 @@ export const volOptions = {
   }
 }
 
-const accountTracker = AccountEventTracker.register("users")
+// const accountTracker = AccountEventTracker.register("users")
 const totalTx = Counter.register("tx", commonOptions)
 const volCounter = Counter.register("vol_counter", commonOptions)
 const vol = Gauge.register("vol", commonOptions)
 const routes = Gauge.register("routes", commonOptions)
 const routesCounter = Counter.register("routes_counter", commonOptions)
-
-
 
 // here starts the previous contract
 kana_aggregatorv1.bind()
@@ -45,7 +43,7 @@ kana_aggregatorv1.bind()
     const volume = scaleDown(inputAmount, coinXInfo.decimals).multipliedBy(priceX)
     const displayPair = constructDisplay(symbolX, symbolY)
 
-    accountTracker.trackEvent(ctx, { distinctId: ctx.transaction.sender, address: '0x62fdfe47c9c37227be1f885e79be827be292fe1833ac63a2fe2c2c16c55ecb12', contract: 'kana_aggregatorv1' })
+    ctx.eventLogger.emit("swap", { distinctId: ctx.transaction.sender, address: '0x62fdfe47c9c37227be1f885e79be827be292fe1833ac63a2fe2c2c16c55ecb12', contract: 'kana_aggregatorv1' })
     totalTx.add(ctx, 1)
     if (whiteListed(xType)) {
       vol.record(ctx, volume, { dex: getDex(dexType), poolType: poolType.toString(), xType: xType, yType: yType, symbolX: symbolX, symbolY: symbolY, pair: displayPair })
@@ -77,7 +75,7 @@ KanalabsAggregatorV1.bind()
     const volume = scaleDown(inputAmount, coinXInfo.decimals).multipliedBy(priceX)
     const displayPair = constructDisplay(symbolX, symbolY)
 
-    accountTracker.trackEvent(ctx, { distinctId: ctx.transaction.sender, address: '0xcdca128119681f791ddc2283e8c7b364ae22d416c5be95b0faf6aa1818c7afd6', contract: 'KanalabsAggregatorV1' })
+    ctx.eventLogger.emit("swap", { distinctId: ctx.transaction.sender, address: '0xcdca128119681f791ddc2283e8c7b364ae22d416c5be95b0faf6aa1818c7afd6', contract: 'KanalabsAggregatorV1' })
     totalTx.add(ctx, 1)
     if (whiteListed(xType)) {
       vol.record(ctx, volume, { dex: getDex(dexType), poolType: poolType.toString(), xType: xType, yType: yType, symbolX: symbolX, symbolY: symbolY, pair: displayPair })

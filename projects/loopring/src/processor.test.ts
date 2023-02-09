@@ -1,9 +1,9 @@
-import { TestProcessorServer } from '@sentio/sdk/lib/testing'
+import { TestProcessorServer } from '@sentio/sdk/testing'
 import { Log } from '@ethersproject/abstract-provider'
 
 
 describe('Test Processor', () => {
-  const service = new TestProcessorServer(()=>require('./processor'),  {
+  const service = new TestProcessorServer(()=>import('./processor.js'),  {
     1: "https://eth-mainnet.g.alchemy.com/v2/SAow9F_73wmx_Uj5yEcI_au8y9GXYYd5",
   })
 

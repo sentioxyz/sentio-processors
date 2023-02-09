@@ -1,7 +1,7 @@
-import { listing } from './types/aptos/seashrine'
-import { getPrice, getCoinInfo, scaleDown } from "@sentio-processor/common/aptos/coin"
-import { AccountEventTracker, Counter, Gauge } from "@sentio/sdk";
-import { timestamp, type_info } from "@sentio/sdk/aptos/lib/builtin/0x1"
+import { listing } from './types/aptos/seashrine.js'
+import { getPrice, getCoinInfo, scaleDown } from "@sentio-processor/common/aptos"
+import { Counter, Gauge } from "@sentio/sdk";
+import { timestamp, type_info } from "@sentio/sdk/aptos/builtin/0x1"
 
 export const volOptions = {
   sparse: true,
@@ -15,14 +15,14 @@ const commonOptions = { sparse: false }
 const vol = Gauge.register("volume", volOptions)
 const vol_apt = Gauge.register("volume_apt", volOptions)
 
-const accountTracker = AccountEventTracker.register("users")
-const totalTx = new Counter("tx", commonOptions)
+// const accountTracker = AccountEventTracker.register("users")
+const totalTx = Counter.register("tx", commonOptions)
 
 
 listing.bind({ startVersion: 6393932 })
   .onEventBuyListingEvent(async (event, ctx) => {
     ctx.meter.Counter('buy_listing').add(1)
-    accountTracker.trackEvent(ctx, { distinctId: ctx.transaction.sender })
+    ctx.eventLogger.emit("users", { distinctId: ctx.transaction.sender })
     totalTx.add(ctx, 1)
 
     const amount = event.data_decoded.min_price
@@ -44,19 +44,19 @@ listing.bind({ startVersion: 6393932 })
   })
   .onEventCancelListingEvent(async (event, ctx) => {
     ctx.meter.Counter('cancel_listing').add(1)
-    accountTracker.trackEvent(ctx, { distinctId: ctx.transaction.sender })
+    ctx.eventLogger.emit("users",  { distinctId: ctx.transaction.sender })
 
 
   })
   .onEventCreateListingEvent(async (event, ctx) => {
     ctx.meter.Counter('create_listing').add(1)
-    accountTracker.trackEvent(ctx, { distinctId: ctx.transaction.sender })
+    ctx.eventLogger.emit("users",  { distinctId: ctx.transaction.sender })
 
 
   })
   .onEventUpdateListingEvent(async (event, ctx) => {
     ctx.meter.Counter('update_listing').add(1)
-    accountTracker.trackEvent(ctx, { distinctId: ctx.transaction.sender })
+    ctx.eventLogger.emit("users",  { distinctId: ctx.transaction.sender })
   })
 
 function hex_to_ascii(str1: String) {
