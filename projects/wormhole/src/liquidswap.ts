@@ -1,4 +1,4 @@
-import { liquidity_pool } from "./types/aptos/liquidswap"
+import { liquidity_pool } from "./types/aptos/liquidswap.js"
 
 import {
     calculateValueInUsd,
@@ -7,12 +7,11 @@ import {
     getPrice,
     scaleDown,
     whiteListed
-} from "@sentio-processor/common/aptos/coin"
+} from "@sentio-processor/common/aptos"
 
-import { BigDecimal } from "@sentio/sdk/lib/core/big-decimal"
+import { BigDecimal } from "@sentio/sdk"
 
 import { AptosAccountProcessor, defaultMoveCoder, TypedMoveResource } from "@sentio/sdk/aptos"
-import { MoveResource } from "aptos-sdk/src/generated"
 import { AptosDex } from "@sentio-processor/common/aptos"
 import {
     inputUsd,
@@ -25,9 +24,9 @@ import {
     tvlByPool,
     // tvlByPoolNew,
     volume
-} from "./metrics"
-import { AptosResourceContext } from "@sentio/sdk/aptos"
-import { isWormhole } from "./utils";
+} from "./metrics.js"
+import { AptosResourceContext, MoveResource } from "@sentio/sdk/aptos"
+import { isWormhole } from "./utils.js";
 
 
 const liquidSwap = new AptosDex<liquidity_pool.LiquidityPool<any, any, any>>(volume, tvlAll, tvl, tvlByPool, {

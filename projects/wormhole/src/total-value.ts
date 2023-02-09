@@ -1,8 +1,8 @@
 import { AptosClient } from "aptos-sdk";
-import { aggregator, coin, optional_aggregator } from "@sentio/sdk/aptos/lib/builtin/0x1";
+import { aggregator, coin, optional_aggregator } from "@sentio/sdk/aptos/builtin/0x1";
 import { CORE_TOKENS, getPrice, scaleDown } from "@sentio-processor/common/aptos";
-import { delay, getRandomInt } from "@sentio-processor/common/dist";
-import { totalValue } from "./metrics";
+import { delay, getRandomInt } from "@sentio-processor/common";
+import { totalValue } from "./metrics.js";
 import { defaultMoveCoder, AptosAccountProcessor, getAptosClient } from "@sentio/sdk/aptos";
 
 const client = getAptosClient()!

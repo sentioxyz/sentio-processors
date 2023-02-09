@@ -21,8 +21,7 @@ describe('Test Processor', () => {
         {
           data: {
             aptEvent: {
-              transaction: testData3,
-              event: testData3.events[0]
+              transaction: testData3
             },
           },
           handlerIds: [0],
