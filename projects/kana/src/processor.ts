@@ -4,7 +4,6 @@ import { getPrice, getCoinInfo, whiteListed, scaleDown } from "@sentio-processor
 import { Counter, Gauge } from "@sentio/sdk"
 import { type_info } from "@sentio/sdk/aptos/builtin/0x1"
 
-const commonOptions = { sparse: true }
 export const volOptions = {
   sparse: true,
   aggregationConfig: {
@@ -13,12 +12,12 @@ export const volOptions = {
   }
 }
 
-// const accountTracker = AccountEventTracker.register("users")
-const totalTx = Counter.register("tx", commonOptions)
-const volCounter = Counter.register("vol_counter", commonOptions)
-const vol = Gauge.register("vol", commonOptions)
-const routes = Gauge.register("routes", commonOptions)
-const routesCounter = Counter.register("routes_counter", commonOptions)
+
+const totalTx = Counter.register("tx")
+const volCounter = Counter.register("vol_counter")
+const vol = Gauge.register("vol")
+const routes = Gauge.register("routes")
+const routesCounter = Counter.register("routes_counter")
 
 // here starts the previous contract
 kana_aggregatorv1.bind()
@@ -44,6 +43,8 @@ kana_aggregatorv1.bind()
     const displayPair = constructDisplay(symbolX, symbolY)
 
     ctx.eventLogger.emit("swap", { distinctId: ctx.transaction.sender, address: '0x62fdfe47c9c37227be1f885e79be827be292fe1833ac63a2fe2c2c16c55ecb12', contract: 'kana_aggregatorv1' })
+    ctx.eventLogger.emit("any", { distinctId: ctx.transaction.sender, address: '0x62fdfe47c9c37227be1f885e79be827be292fe1833ac63a2fe2c2c16c55ecb12', contract: 'kana_aggregatorv1' })
+
     totalTx.add(ctx, 1)
     if (whiteListed(xType)) {
       vol.record(ctx, volume, { dex: getDex(dexType), poolType: poolType.toString(), xType: xType, yType: yType, symbolX: symbolX, symbolY: symbolY, pair: displayPair })
@@ -51,6 +52,7 @@ kana_aggregatorv1.bind()
     }
 
   })
+
 
 // here starts the new contract
 KanalabsAggregatorV1.bind()
@@ -76,6 +78,8 @@ KanalabsAggregatorV1.bind()
     const displayPair = constructDisplay(symbolX, symbolY)
 
     ctx.eventLogger.emit("swap", { distinctId: ctx.transaction.sender, address: '0xcdca128119681f791ddc2283e8c7b364ae22d416c5be95b0faf6aa1818c7afd6', contract: 'KanalabsAggregatorV1' })
+    ctx.eventLogger.emit("any", { distinctId: ctx.transaction.sender, address: '0x62fdfe47c9c37227be1f885e79be827be292fe1833ac63a2fe2c2c16c55ecb12', contract: 'kana_aggregatorv1' })
+
     totalTx.add(ctx, 1)
     if (whiteListed(xType)) {
       vol.record(ctx, volume, { dex: getDex(dexType), poolType: poolType.toString(), xType: xType, yType: yType, symbolX: symbolX, symbolY: symbolY, pair: displayPair })
@@ -89,6 +93,10 @@ KanalabsRouterV1.bind()
     const routeType = Number(event.data_decoded.type)
     routes.record(ctx, 1, { routeType: getRoute(routeType) })
     routesCounter.add(ctx, 1, { routeType: getRoute(routeType) })
+
+    ctx.eventLogger.emit("route", { distinctId: ctx.transaction.sender, address: '0xcdca128119681f791ddc2283e8c7b364ae22d416c5be95b0faf6aa1818c7afd6', contract: 'KanalabsRouterV1' })
+    ctx.eventLogger.emit("any", { distinctId: ctx.transaction.sender, address: '0x62fdfe47c9c37227be1f885e79be827be292fe1833ac63a2fe2c2c16c55ecb12', contract: 'kana_aggregatorv1' })
+
   }))
 
 function constructPair(xType: String, yType: String) {
