@@ -1,4 +1,4 @@
-{"data":
+export const goldfinchPools =
     [
         {
           "auto": true,
@@ -192,4 +192,3 @@
           "status": "OPEN"
         }
       ]
-}

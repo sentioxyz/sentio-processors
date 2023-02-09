@@ -1,6 +1,6 @@
 import { Counter, Gauge, scaleDown, toBigInteger } from '@sentio/sdk'
-import { token } from '@sentio/sdk/utils'
-import { ERC20Processor } from '@sentio/sdk/eth/builtin/erc20'
+// import { token } from '@sentio/sdk/utils'
+// import { ERC20Processor } from '@sentio/sdk/eth/builtin/erc20'
 import { getGroVaultContract } from './types/eth/grovault.js'
 import { MetapoolProcessor, MetapoolContext } from './types/eth/metapool.js'
 import { StableConvexXPoolProcessor, StableConvexXPoolContext } from './types/eth/stableconvexxpool.js'

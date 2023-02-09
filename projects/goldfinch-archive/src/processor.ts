@@ -7,21 +7,21 @@ import { DepositMadeEvent,
   InvestmentMadeInJuniorEvent,
   InterestCollectedEvent,
   PrincipalCollectedEvent
-} from './types/seniorpool'
+} from './types/eth/seniorpool.js'
 import { DepositMadeEvent as TranchedDepositMadeEvent,
   WithdrawalMadeEvent as TranchedWithdrawalMadeEvent,
   ReserveFundsCollectedEvent as TranchedReserveFundsCollectedEvent,
   PaymentAppliedEvent,
   DrawdownMadeEvent as TranchedDrawdownMadeEvent
-} from './types/tranchedpool';
-import { CreditLineContext, CreditLineProcessor, CreditLineProcessorTemplate } from './types/creditline'
+} from './types/eth/tranchedpool.js';
+import { CreditLineContext, CreditLineProcessor, CreditLineProcessorTemplate } from './types/eth/creditline.js'
 
-import * as goldfinchPools from "./goldfinchPools.json"
-import { GoldfinchFactoryProcessor } from "./types/goldfinchfactory";
-import { CreditDeskContext, CreditDeskProcessor, DrawdownMadeEvent } from "./types/creditdesk";
-import { TranchedPoolContext, TranchedPoolProcessor } from './types/tranchedpool';
-import { conversion } from "@sentio/sdk/lib/utils"
-const toBigDecimal = conversion.toBigDecimal
+import { goldfinchPools } from "./goldfinchPools.js"
+import { GoldfinchFactoryProcessor } from "./types/eth/goldfinchfactory.js";
+import { CreditDeskContext, CreditDeskProcessor, DrawdownMadeEvent } from "./types/eth/creditdesk.js";
+import { TranchedPoolContext, TranchedPoolProcessor } from './types/eth/tranchedpool.js';
+// import { conversion } from "@sentio/sdk/lib/utils"
+// const toBigDecimal = conversion.toBigDecimal
 
 import { BigDecimal } from '@sentio/sdk';
 /*
@@ -39,15 +39,15 @@ const seniorPoolAddress = "0x8481a6ebaf5c7dabc3f7e09e44a89531fd31f822"
 
 const seniorPoolHandler = async function(_:any, ctx: SeniorPoolContext) {
   const p1 = ctx.contract.totalLoansOutstanding().then(v => {
-    const totalLoansOutstanding = Number(v.toBigInt() / 10n**6n)
+    const totalLoansOutstanding = Number(v / 10n**6n)
     ctx.meter.Gauge('goldfinch_totalLoansOutstanding').record(totalLoansOutstanding)
   })
   const p2 = ctx.contract.sharePrice().then(v => {
-    const sharePrice = Number(v.toBigInt()/ 10n**6n)
+    const sharePrice = Number(v / 10n**6n)
     ctx.meter.Gauge('goldfinch_sharePrice').record(sharePrice)
   })
   const p3 = ctx.contract.assets().then(v => {
-    const assets = Number(v.toBigInt() / 10n**6n)
+    const assets = Number(v / 10n**6n)
     ctx.meter.Gauge('goldfinch_assets').record(assets)
   })
   return Promise.all([p1, p2, p3])
@@ -79,14 +79,14 @@ FROM goldfinch."MigratedTranchedPool_evt_DepositMade"
 
 //MigratedTranchedPool_evt_DepositMade
 const tranchedDepositEventHandler = async function(event: TranchedDepositMadeEvent, ctx: TranchedPoolContext) {
-  const amount = toBigDecimal(event.args.amount).div(BigDecimal(10).pow(decimal))
+  const amount = event.args.amount.scaleDown(decimal)
   ctx.meter.Gauge('deposit').record(amount)
   ctx.meter.Counter('deposit_acc').add(amount)
 }
 
 //SeniorPool_evt_DepositMade
 const seniorDepositEventHandler = async function(event: DepositMadeEvent, ctx: SeniorPoolContext) {
-  const amount = toBigDecimal(event.args.amount).div(BigDecimal(10).pow(decimal))
+  const amount = event.args.amount.scaleDown(decimal)
   ctx.meter.Gauge('deposit').record(amount)
   ctx.meter.Counter('deposit_acc').add(amount)
 }
@@ -117,7 +117,7 @@ const seniorDepositEventHandler = async function(event: DepositMadeEvent, ctx: S
 
 //MigratedTranchedPool_evt_WithdrawalMade
 const tranchedWithdrawEventHandler = async function(event: TranchedWithdrawalMadeEvent, ctx: TranchedPoolContext) {
-  const amount = toBigDecimal(event.args.interestWithdrawn.add(event.args.principalWithdrawn)).div(BigDecimal(10).pow(decimal))
+  const amount = (event.args.interestWithdrawn + event.args.principalWithdrawn).scaleDown(decimal)
   ctx.meter.Gauge('withdraw').record(amount)
   ctx.meter.Counter('withdraw_acc').add(amount)
 }
@@ -125,7 +125,7 @@ const tranchedWithdrawEventHandler = async function(event: TranchedWithdrawalMad
 //SeniorPool_evt_WithdrawalMade
 const seniorWithdrawEventHandler = async function(event: WithdrawalMadeEvent, ctx: SeniorPoolContext) {
   event.address
-  const amount = toBigDecimal(event.args.userAmount.add(event.args.reserveAmount)).div(BigDecimal(10).pow(decimal))
+  const amount = (event.args.userAmount + event.args.reserveAmount).scaleDown(decimal)
   ctx.meter.Gauge('withdraw').record(amount)
   ctx.meter.Counter('withdraw_acc').add(amount)
 }
@@ -147,13 +147,13 @@ UNION ALL SELECT
 FROM goldfinch."MigratedTranchedPool_evt_DrawdownMade"
 */
 const drawDownMadeHandler = async function(event: DrawdownMadeEvent, ctx: CreditDeskContext) {
-  const amount = toBigDecimal(event.args.drawdownAmount).div(BigDecimal(10).pow(decimal))
+  const amount = event.args.drawdownAmount.scaleDown(decimal)
   ctx.meter.Gauge('drowdown').record(amount)
   ctx.meter.Counter('drawdown_acc').add(amount)
 }
 
 const TranchedDrawDownMadeHandler = async function(event: TranchedDrawdownMadeEvent, ctx: TranchedPoolContext) {
-  const amount = toBigDecimal(event.args.amount).div(BigDecimal(10).pow(decimal))
+  const amount = event.args.amount.scaleDown(decimal)
   ctx.meter.Gauge('drowdown').record(amount)
   ctx.meter.Counter('drawdown_acc').add(amount)
 }
@@ -190,21 +190,21 @@ const TranchedDrawDownMadeHandler = async function(event: TranchedDrawdownMadeEv
 
 //SeniorPool_evt_InvestmentMadeInSenior
 const investmentMadeInSeniorEventHandler = async function(event: InvestmentMadeInSeniorEvent, ctx: SeniorPoolContext) {
-  const amount = toBigDecimal(event.args.amount).div(BigDecimal(10).pow(decimal))
+  const amount = event.args.amount.scaleDown(decimal)
   ctx.meter.Gauge('allocation').record(amount)
   ctx.meter.Counter('allocation_acc').add(amount)
 }
 
 //SeniorPool_evt_InvestmentMadeInJunior
 const investmentMadeInJuniorEventHandler = async function(event: InvestmentMadeInJuniorEvent, ctx: SeniorPoolContext) {
-  const amount = toBigDecimal(event.args.amount).div(BigDecimal(10).pow(decimal))
+  const amount = event.args.amount.scaleDown(decimal)
   ctx.meter.Gauge('allocation').record(amount)
   ctx.meter.Counter('allocation_acc').add(amount)
 }
 
 //SeniorPool_evt_InterestCollected, note the minus sign
 const interestCollectedEventHandler = async function(event: InterestCollectedEvent, ctx: SeniorPoolContext) {
-  const amount = toBigDecimal(event.args.amount).div(BigDecimal(10).pow(decimal))
+  const amount = event.args.amount.scaleDown(decimal)
   // note as allocation it is negative according to https://dune.com/queries/15148/30399
   ctx.meter.Gauge('allocation').record(-amount)
   ctx.meter.Counter('allocation_acc').sub(amount)
@@ -212,7 +212,7 @@ const interestCollectedEventHandler = async function(event: InterestCollectedEve
 
 //SeniorPool_evt_PrincipalCollected, note the minus sign
 const principalCollectedEventHandler = async function(event: PrincipalCollectedEvent, ctx: SeniorPoolContext) {
-  const amount = toBigDecimal(event.args.amount).div(BigDecimal(10).pow(decimal))
+  const amount = event.args.amount.scaleDown(decimal)
   // note as allocation it is negative according to https://dune.com/queries/15148/30399
   ctx.meter.Gauge('allocation').record(-amount)
   ctx.meter.Counter('allocation_acc').sub(amount)
@@ -252,8 +252,8 @@ const principalCollectedEventHandler = async function(event: PrincipalCollectedE
 //MigratedTranchedPool_evt_PaymentApplied
 const PaymentAppliedEventHandler = async function(event: PaymentAppliedEvent, ctx: TranchedPoolContext) {
   //interest - reserve: https://dune.com/queries/15148/30399
-  const interestAmount = toBigDecimal(event.args.interestAmount.sub(event.args.reserveAmount)).div(BigDecimal(10).pow(decimal))
-  const principalAmount = toBigDecimal(event.args.principalAmount).div(BigDecimal(10).pow(decimal))
+  const interestAmount = (event.args.interestAmount - event.args.reserveAmount).scaleDown(decimal)
+  const principalAmount = event.args.principalAmount.scaleDown(decimal)
   ctx.meter.Gauge('interest').record(interestAmount)
   ctx.meter.Counter('interest_acc').add(interestAmount)
   ctx.meter.Gauge('principle').record(principalAmount)
@@ -289,27 +289,27 @@ const PaymentAppliedEventHandler = async function(event: PaymentAppliedEvent, ct
 
 //SeniorPool_evt_ReserveFundsCollected
 const seniorFundsCollectedEventHandler = async function(event: ReserveFundsCollectedEvent, ctx: SeniorPoolContext) {
-  const amount = toBigDecimal(event.args.amount).div(BigDecimal(10).pow(decimal))
+  const amount = event.args.amount.scaleDown(decimal)
   ctx.meter.Gauge('revenue').record(amount)
   ctx.meter.Counter('revenue_acc').add(amount)
 }
 
 //MigratedTranchedPool_evt_ReserveFundsCollected
 const tranchedFundsCollectedEventHandler = async function(event: TranchedReserveFundsCollectedEvent, ctx: TranchedPoolContext) {
-  const amount = toBigDecimal(event.args.amount).div(BigDecimal(10).pow(decimal))
+  const amount = event.args.amount.scaleDown(decimal)
   ctx.meter.Gauge('revenue').record(amount)
   ctx.meter.Counter('revenue_acc').add(amount)
 }
 
 async function creditlineHandler (_: any, ctx: CreditLineContext) {
   // console.log("start" +  ctx.contract._underlineContract.address)
-  const loanBalance = Number((await ctx.contract.balance()).toBigInt() / 10n ** 6n)
+  const loanBalance = (await ctx.contract.balance()).scaleDown(6)
   ctx.meter.Gauge('tranchedPool_balance').record(loanBalance)
   // console.log("end" + ctx.contract._underlineContract.address)
 }
 
 const creditLineTemplate = new CreditLineProcessorTemplate()
-    .onBlock(creditlineHandler)
+    .onBlockInterval(creditlineHandler)
 
 // add TODO push contract level label
 GoldfinchFactoryProcessor.bind({address: "0xd20508E1E971b80EE172c73517905bfFfcBD87f9", startBlock: 11370655})
@@ -330,7 +330,7 @@ CreditDeskProcessor.bind({address: "0xb2Bea2610FEEfA4868C3e094D2E44b113b6D6138",
 
 //senior pool processor
 SeniorPoolProcessor.bind({address: seniorPoolAddress, startBlock: startBlock})
-  .onBlock(seniorPoolHandler)
+  .onBlockInterval(seniorPoolHandler)
   .onEventDepositMade(seniorDepositEventHandler)
   .onEventWithdrawalMade(seniorWithdrawEventHandler)
   .onEventReserveFundsCollected(seniorFundsCollectedEventHandler)
@@ -340,11 +340,11 @@ SeniorPoolProcessor.bind({address: seniorPoolAddress, startBlock: startBlock})
   .onEventPrincipalCollected(principalCollectedEventHandler)
 
 // batch handle Tranched Pools
-for (let i = 0; i < goldfinchPools.data.length; i++) {
-  const tranchedPool = goldfinchPools.data[i];
+for (let i = 0; i < goldfinchPools.length; i++) {
+  const tranchedPool = goldfinchPools[i];
   if (!tranchedPool.auto) {
     CreditLineProcessor.bind({address: tranchedPool.creditLineAddress, startBlock: tranchedPool.creditLineStartBlock})
-        .onBlock(creditlineHandler)
+        .onBlockInterval(creditlineHandler)
   }
   TranchedPoolProcessor.bind({address: tranchedPool.poolAddress, startBlock: tranchedPool.poolStartBlock})
   .onEventDepositMade(tranchedDepositEventHandler)
