@@ -14,6 +14,7 @@ export const volOptions = {
 
 
 const totalTx = Counter.register("tx")
+
 const volCounter = Counter.register("vol_counter")
 const vol = Gauge.register("vol")
 const routes = Gauge.register("routes")
@@ -39,16 +40,36 @@ kana_aggregatorv1.bind()
     const priceX = await getPrice(xType, Number(timestamp))
     const priceY = await getPrice(yType, Number(timestamp))
     const pair = constructPair(xType, yType)
-    const volume = scaleDown(inputAmount, coinXInfo.decimals).multipliedBy(priceX)
+    const volume = Number(scaleDown(inputAmount, coinXInfo.decimals).multipliedBy(priceX))
+    console.log("volume1", volume)
     const displayPair = constructDisplay(symbolX, symbolY)
 
-    ctx.eventLogger.emit("swap", { distinctId: ctx.transaction.sender, address: '0x62fdfe47c9c37227be1f885e79be827be292fe1833ac63a2fe2c2c16c55ecb12', contract: 'kana_aggregatorv1' })
-    ctx.eventLogger.emit("any", { distinctId: ctx.transaction.sender, address: '0x62fdfe47c9c37227be1f885e79be827be292fe1833ac63a2fe2c2c16c55ecb12', contract: 'kana_aggregatorv1' })
 
     totalTx.add(ctx, 1)
+    ctx.meter.Gauge("tx_gauge").record(1)
+
     if (whiteListed(xType)) {
       vol.record(ctx, volume, { dex: getDex(dexType), poolType: poolType.toString(), xType: xType, yType: yType, symbolX: symbolX, symbolY: symbolY, pair: displayPair })
       volCounter.add(ctx, volume, { dex: getDex(dexType), poolType: poolType.toString(), xType: xType, yType: yType, symbolX: symbolX, symbolY: symbolY, pair: displayPair })
+      ctx.eventLogger.emit("swap", {
+        distinctId: ctx.transaction.sender,
+        address: '0x62fdfe47c9c37227be1f885e79be827be292fe1833ac63a2fe2c2c16c55ecb12',
+        contract: 'kana_aggregatorv1',
+        volume: volume,
+        dex: getDex(dexType),
+        poolType: poolType.toString(),
+        xType: xType,
+        yType: yType,
+        symbolX: symbolX,
+        symbolY: symbolY,
+        pair: displayPair
+      })
+      ctx.eventLogger.emit("any", {
+        distinctId: ctx.transaction.sender,
+        address: '0x62fdfe47c9c37227be1f885e79be827be292fe1833ac63a2fe2c2c16c55ecb12',
+        contract: 'kana_aggregatorv1'
+      })
+
     }
 
   })
@@ -74,16 +95,36 @@ KanalabsAggregatorV1.bind()
     const priceX = await getPrice(xType, Number(timestamp))
     const priceY = await getPrice(yType, Number(timestamp))
     const pair = constructPair(xType, yType)
-    const volume = scaleDown(inputAmount, coinXInfo.decimals).multipliedBy(priceX)
+    const volume = Number(scaleDown(inputAmount, coinXInfo.decimals).multipliedBy(priceX))
     const displayPair = constructDisplay(symbolX, symbolY)
 
-    ctx.eventLogger.emit("swap", { distinctId: ctx.transaction.sender, address: '0xcdca128119681f791ddc2283e8c7b364ae22d416c5be95b0faf6aa1818c7afd6', contract: 'KanalabsAggregatorV1' })
-    ctx.eventLogger.emit("any", { distinctId: ctx.transaction.sender, address: '0x62fdfe47c9c37227be1f885e79be827be292fe1833ac63a2fe2c2c16c55ecb12', contract: 'kana_aggregatorv1' })
+    console.log("volume2", volume)
+
 
     totalTx.add(ctx, 1)
+    ctx.meter.Gauge("tx_gauge").record(1)
+
     if (whiteListed(xType)) {
       vol.record(ctx, volume, { dex: getDex(dexType), poolType: poolType.toString(), xType: xType, yType: yType, symbolX: symbolX, symbolY: symbolY, pair: displayPair })
       volCounter.add(ctx, volume, { dex: getDex(dexType), poolType: poolType.toString(), xType: xType, yType: yType, symbolX: symbolX, symbolY: symbolY, pair: displayPair })
+      ctx.eventLogger.emit("swap", {
+        distinctId: ctx.transaction.sender,
+        address: '0xcdca128119681f791ddc2283e8c7b364ae22d416c5be95b0faf6aa1818c7afd6',
+        contract: 'KanalabsAggregatorV1',
+        volume: volume,
+        dex: getDex(dexType),
+        poolType: poolType.toString(),
+        xType: xType,
+        yType: yType,
+        symbolX: symbolX,
+        symbolY: symbolY,
+        pair: displayPair
+      })
+      ctx.eventLogger.emit("any", {
+        distinctId: ctx.transaction.sender,
+        address: '0xcdca128119681f791ddc2283e8c7b364ae22d416c5be95b0faf6aa1818c7afd6',
+        contract: 'KanalabsAggregatorV1'
+      })
     }
 
   })
@@ -94,8 +135,16 @@ KanalabsRouterV1.bind()
     routes.record(ctx, 1, { routeType: getRoute(routeType) })
     routesCounter.add(ctx, 1, { routeType: getRoute(routeType) })
 
-    ctx.eventLogger.emit("route", { distinctId: ctx.transaction.sender, address: '0xcdca128119681f791ddc2283e8c7b364ae22d416c5be95b0faf6aa1818c7afd6', contract: 'KanalabsRouterV1' })
-    ctx.eventLogger.emit("any", { distinctId: ctx.transaction.sender, address: '0x62fdfe47c9c37227be1f885e79be827be292fe1833ac63a2fe2c2c16c55ecb12', contract: 'kana_aggregatorv1' })
+    ctx.eventLogger.emit("route", {
+      distinctId: ctx.transaction.sender,
+      address: '0xcdca128119681f791ddc2283e8c7b364ae22d416c5be95b0faf6aa1818c7afd6',
+      contract: 'KanalabsRouterV1'
+    })
+    ctx.eventLogger.emit("any", {
+      distinctId: ctx.transaction.sender,
+      address: '0xcdca128119681f791ddc2283e8c7b364ae22d416c5be95b0faf6aa1818c7afd6',
+      contract: 'KanalabsRouterV1'
+    })
 
   }))
 
