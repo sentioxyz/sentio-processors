@@ -1,5 +1,5 @@
 import { PythEVMContext, PythEVMProcessor, PriceFeedUpdateEvent, getPythEVMContract, UpdatePriceFeedsCallTrace, UpdatePriceFeedsIfNecessaryCallTrace,
-    BatchPriceFeedUpdateEvent } from "./types/pythevm/index.js";
+    BatchPriceFeedUpdateEvent } from "./types/eth/pythevm.js";
 import { PRICE_MAP } from "./pyth.js";
 import { Counter, Gauge } from "@sentio/sdk";
 import { getPrice } from "./aptos.js";

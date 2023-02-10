@@ -3,6 +3,7 @@ import { Gauge } from "@sentio/sdk";
 
 import { AptosDex, getCoinInfo } from "@sentio-processor/common/aptos"
 import {  AptosAccountProcessor } from "@sentio/sdk/aptos";
+import { IFO } from "./types/aptos/movecoin.js";
 
 const commonOptions = { sparse:  true }
 export const volOptions = {
@@ -18,6 +19,23 @@ const tvlByPool = Gauge.register("tvl_by_pool", commonOptions)
 const volume = Gauge.register("vol", volOptions)
 
 // const accountTracker = AccountEventTracker.register("users")
+
+IFO.bind()
+    .onEventDepositEvent(async (evt, ctx)=>{
+      ctx.eventLogger.emit("user", {
+        distinctId: evt.data_decoded.user, eventLabel: "Deposit",
+        amount: evt.data_decoded.amount,
+        pid: evt.data_decoded.pid,
+      })
+    })
+    .onEventHarvestEvent(async (evt, ctx) => {
+      ctx.eventLogger.emit("user", {
+        distinctId: evt.data_decoded.user,
+        eventLabel: "Harvest",
+        amount: evt.data_decoded.offering_amount,
+        pid: evt.data_decoded.pid
+      })
+    })
 
 swap.bind({startVersion: 10463608})
   .onEventPairCreatedEvent(async (evt, ctx) => {
