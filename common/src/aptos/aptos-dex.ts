@@ -40,27 +40,27 @@ export class AptosDex<T> {
     const coinYInfo = await getCoinInfo(coiny)
     const timestamp = ctx.transaction.timestamp
     let result = new BigDecimal(0.0)
-
+    const pair = await getPair(coinx, coiny)
+    let baseLabels: Record<string, string> = extraLabels ? { ...extraLabels, pair } : { pair }
     if (!whitelistx || !whitelisty) {
       if (whitelistx) {
         result = await calculateValueInUsd(coinXAmount, coinXInfo, timestamp)
-        this.volumeSingle.record(ctx, result, {coin: coinXInfo.symbol, type: coinXInfo.token_type.type})
+        this.volumeSingle.record(ctx, result, {...baseLabels, coin: coinXInfo.symbol, type: coinXInfo.token_type.type})
       }
       if (whitelisty) {
         result = await calculateValueInUsd(coinYAmount, coinYInfo, timestamp)
-        this.volumeSingle.record(ctx, result, {coin: coinYInfo.symbol, type: coinYInfo.token_type.type})
+        this.volumeSingle.record(ctx, result, {...baseLabels, coin: coinYInfo.symbol, type: coinYInfo.token_type.type})
       }
       return result
     }
 
-    const pair = await getPair(coinx, coiny)
-    let baseLabels: Record<string, string> = extraLabels ? { ...extraLabels, pair } : { pair }
+
     // Both x and y are whitelisted
     let value = await calculateValueInUsd(coinXAmount, coinXInfo, timestamp)
     this.volume.record(ctx, value, { ...baseLabels, coin: coinXInfo.symbol, bridge: coinXInfo.bridge, type: coinXInfo.token_type.type})
     value = await calculateValueInUsd(coinYAmount, coinYInfo, timestamp)
     this.volume.record(ctx, value, { ...baseLabels, coin: coinYInfo.symbol, bridge: coinYInfo.bridge, type: coinYInfo.token_type.type})
-    this.volumeSingle.record(ctx, value, {coin: coinYInfo.symbol, type: coinYInfo.token_type.type})
+    this.volumeSingle.record(ctx, value, {...baseLabels, coin: coinYInfo.symbol, type: coinYInfo.token_type.type})
     return value
   }
 
