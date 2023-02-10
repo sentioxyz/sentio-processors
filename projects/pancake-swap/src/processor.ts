@@ -23,6 +23,7 @@ const singleVolume = Gauge.register("vol_single", volOptions)
 
 IFO.bind()
     .onEventDepositEvent(async (evt, ctx)=>{
+      console.log(JSON.stringify(evt))
       ctx.eventLogger.emit("user", {
         distinctId: evt.data_decoded.user, eventLabel: "Deposit",
         amount: evt.data_decoded.amount,
