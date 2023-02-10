@@ -18,7 +18,7 @@ import {
     // inputUsd,
     // priceGauge,
     // priceGaugeNew,
-    priceImpact,
+    priceImpact, singleVolume,
     tvl,
     tvlAll,
     tvlByPool,
@@ -29,7 +29,10 @@ import { AptosResourceContext, MoveResource } from "@sentio/sdk/aptos"
 import { isWormhole } from "./utils.js";
 
 
-const liquidSwap = new AptosDex<liquidity_pool.LiquidityPool<any, any, any>>(volume, tvlAll, tvl, tvlByPool, {
+const liquidSwap = new AptosDex<liquidity_pool.LiquidityPool<any, any, any>>(
+    volume,
+    singleVolume,
+    tvlAll, tvl, tvlByPool, {
     getXReserve: pool => pool.coin_x_reserve.value,
     getYReserve: pool => pool.coin_y_reserve.value,
     getExtraPoolTags: pool => { return { curve: getCurve(pool.type_arguments[2]), wormhole: isWormhole(pool.type_arguments[0], pool.type_arguments[1]) } },
