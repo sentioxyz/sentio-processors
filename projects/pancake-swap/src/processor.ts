@@ -17,6 +17,7 @@ const tvlAll = Gauge.register("tvl_all", commonOptions)
 const tvl = Gauge.register("tvl", commonOptions)
 const tvlByPool = Gauge.register("tvl_by_pool", commonOptions)
 const volume = Gauge.register("vol", volOptions)
+const singleVolume = Gauge.register("vol_single", volOptions)
 
 // const accountTracker = AccountEventTracker.register("users")
 
@@ -67,7 +68,8 @@ swap.bind({startVersion: 10463608})
     ctx.eventLogger.emit("user", { distinctId: ctx.transaction.sender })
   })
 
-const PANCAKE_SWAP_APTOS = new AptosDex<swap.TokenPairReserve<any, any>>(volume, tvlAll, tvl, tvlByPool,{
+const PANCAKE_SWAP_APTOS = new AptosDex<swap.TokenPairReserve<any, any>>(
+    volume, singleVolume, tvlAll, tvl, tvlByPool,{
   getXReserve: pool => pool.reserve_x,
   getYReserve: pool => pool.reserve_y,
   getExtraPoolTags: _ => {},

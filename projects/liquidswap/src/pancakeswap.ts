@@ -1,6 +1,13 @@
 import {swap} from "./types/aptos/pancake-swap.js";
 import {AptosDex, getCoinInfo, getPairValue} from "@sentio-processor/common/aptos";
-import {pancakeTvl, pancakeTvlAll, pancakeTvlByPool, pancakeVolume, recordAccount,} from "./metrics.js";
+import {
+    pancakeSingleVolume,
+    pancakeTvl,
+    pancakeTvlAll,
+    pancakeTvlByPool,
+    pancakeVolume,
+    recordAccount,
+} from "./metrics.js";
 import {AptosAccountProcessor} from "@sentio/sdk/aptos";
 
 swap.bind()
@@ -42,7 +49,10 @@ swap.bind()
         ctx.meter.Counter("event_swap_by_bridge").add(1, {bridge: coinYInfo.bridge})
     })
 
-const PANCAKE_SWAP_APTOS = new AptosDex<swap.TokenPairReserve<any, any>>(pancakeVolume, pancakeTvlAll, pancakeTvl, pancakeTvlByPool, {
+const PANCAKE_SWAP_APTOS = new AptosDex<swap.TokenPairReserve<any, any>>(
+    pancakeVolume,
+    pancakeSingleVolume,
+    pancakeTvlAll, pancakeTvl, pancakeTvlByPool, {
     getXReserve: pool => pool.reserve_x,
     getYReserve: pool => pool.reserve_y,
     getExtraPoolTags: _ => {

@@ -18,7 +18,7 @@ import {
     inputUsd,
     priceGauge,
     priceGaugeNew,
-    priceImpact, recordAccount,
+    priceImpact, recordAccount, singleVolume,
     tvl,
     tvlAll,
     tvlByPool,
@@ -26,7 +26,9 @@ import {
     volume,
 } from "./metrics.js"
 
-const liquidSwap = new AptosDex<liquidity_pool.LiquidityPool<any, any, any>>(volume, tvlAll, tvl, tvlByPool, {
+const liquidSwap = new AptosDex<liquidity_pool.LiquidityPool<any, any, any>>(volume,
+    singleVolume,
+    tvlAll, tvl, tvlByPool, {
     getXReserve: pool => pool.coin_x_reserve.value,
     getYReserve: pool => pool.coin_y_reserve.value,
     getExtraPoolTags: pool => {

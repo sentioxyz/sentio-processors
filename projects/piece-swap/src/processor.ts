@@ -20,6 +20,7 @@ const tvlAll = Gauge.register("tvl_all", commonOptions)
 const tvl = Gauge.register("tvl", commonOptions)
 const tvlByPool = Gauge.register("tvl_by_pool", commonOptions)
 const volume = Gauge.register("vol", volOptions)
+const singleVolume = Gauge.register("vol_single", volOptions)
 
 // const accountTracker = AccountEventTracker.register("users")
 
@@ -71,7 +72,10 @@ piece_swap.bind()
     ctx.eventLogger.emit("user", { distinctId: ctx.transaction.sender })
   })
 
-const pieceSwap = new AptosDex<piece_swap.PieceSwapPoolInfo<any, any>>(volume, tvlAll, tvl, tvlByPool, {
+const pieceSwap = new AptosDex<piece_swap.PieceSwapPoolInfo<any, any>>(
+    volume,
+    singleVolume,
+    tvlAll, tvl, tvlByPool, {
   getXReserve: pool => pool.reserve_x.value,
   getYReserve: pool => pool.reserve_y.value,
   getExtraPoolTags: _ => {},

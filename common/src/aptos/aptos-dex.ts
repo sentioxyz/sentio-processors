@@ -13,12 +13,20 @@ export interface PoolAdaptor<T> {
 export class AptosDex<T> {
   poolAdaptor: PoolAdaptor<T>
   volume: Gauge
+  volumeSingle: Gauge
   tvlAll: Gauge
   tvlByPool: Gauge
   tvlByCoin: Gauge
 
-  constructor(volume: Gauge, tvlAll: Gauge, tvlByCoin: Gauge, tvlByPool: Gauge, poolAdaptor: PoolAdaptor<T>) {
+
+  constructor(volume: Gauge,
+              volumeSingle: Gauge,
+              tvlAll: Gauge,
+              tvlByCoin: Gauge,
+              tvlByPool: Gauge,
+              poolAdaptor: PoolAdaptor<T>) {
     this.volume = volume
+    this.volumeSingle = volumeSingle
     this.tvlAll = tvlAll
     this.tvlByPool = tvlByPool
     this.tvlByCoin = tvlByCoin
@@ -34,27 +42,26 @@ export class AptosDex<T> {
     let result = new BigDecimal(0.0)
 
     if (!whitelistx || !whitelisty) {
+      if (whitelistx) {
+        result = await calculateValueInUsd(coinXAmount, coinXInfo, timestamp)
+        this.volumeSingle.record(ctx, result, {coin: coinXInfo.symbol, type: coinXInfo.token_type.type})
+      }
+      if (whitelisty) {
+        result = await calculateValueInUsd(coinYAmount, coinYInfo, timestamp)
+        this.volumeSingle.record(ctx, result, {coin: coinYInfo.symbol, type: coinYInfo.token_type.type})
+      }
       return result
     }
 
     const pair = await getPair(coinx, coiny)
-
     let baseLabels: Record<string, string> = extraLabels ? { ...extraLabels, pair } : { pair }
-
-    if (whitelistx) {
-      const value = await calculateValueInUsd(coinXAmount, coinXInfo, timestamp)
-      result = value
-
-      this.volume.record(ctx, value, { ...baseLabels, coin: coinXInfo.symbol, bridge: coinXInfo.bridge, type: coinXInfo.token_type.type})
-    }
-    if (whitelisty) {
-      const value = await calculateValueInUsd(coinYAmount, coinYInfo, timestamp)
-      result = value
-
-      this.volume.record(ctx, value, { ...baseLabels, coin: coinYInfo.symbol, bridge: coinYInfo.bridge, type: coinYInfo.token_type.type})
-    }
-
-    return result
+    // Both x and y are whitelisted
+    let value = await calculateValueInUsd(coinXAmount, coinXInfo, timestamp)
+    this.volume.record(ctx, value, { ...baseLabels, coin: coinXInfo.symbol, bridge: coinXInfo.bridge, type: coinXInfo.token_type.type})
+    value = await calculateValueInUsd(coinYAmount, coinYInfo, timestamp)
+    this.volume.record(ctx, value, { ...baseLabels, coin: coinYInfo.symbol, bridge: coinYInfo.bridge, type: coinYInfo.token_type.type})
+    this.volumeSingle.record(ctx, value, {coin: coinYInfo.symbol, type: coinYInfo.token_type.type})
+    return value
   }
 
   async syncPools(
