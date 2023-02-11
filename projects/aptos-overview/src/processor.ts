@@ -1,4 +1,4 @@
-import { Counter, Gauge } from "@sentio/sdk";
+import { Counter, Gauge, MetricOptions } from "@sentio/sdk";
 import { aptos_coin, coin, managed_coin, resource_account, aptos_account } from "@sentio/sdk/aptos/builtin/0x1";
 
 import { DEFAULT_MAINNET_LIST, RawCoinInfo } from "@manahippo/coin-list";
@@ -105,8 +105,14 @@ for (const m of [bluemoves.marketplaceV2, bluemoves.offer_lib]) {
     })
 }
 
-
-const dailyTxn = Gauge.register("txn");
+export const volOptions: MetricOptions = {
+    sparse: true,
+    aggregationConfig: {
+        intervalInMinutes: [60*24],
+        discardOrigin: true,
+    }
+}
+const dailyTxn = Gauge.register("txn", volOptions);
 const accumTxn = Counter.register("accum_txn");
 const dailyAverageTps = Gauge.register("average_tps");
 
