@@ -27,7 +27,7 @@ const rewardGauge_CRO = Gauge.register("stakeReward_CRO")
 
 
 //first tx block time 6220924
-PortProcessor.bind({ address: '0x7a3CdB2364f92369a602CAE81167d0679087e6a3', network: 25, startBlock: 6288500, endBlock: 6688655 })
+PortProcessor.bind({ address: '0x7a3CdB2364f92369a602CAE81167d0679087e6a3', network: 25, startBlock: 6220924 })
     .onEventSold(async (event, ctx) => {
         ctx.meter.Counter('sold').add(1)
 
@@ -139,7 +139,7 @@ PortProcessor.bind({ address: '0x7a3CdB2364f92369a602CAE81167d0679087e6a3', netw
 
 
 //first tx block time 2084066,6216653
-MembershipStakerV3Processor.bind({ address: '0xeb074cc764F20d8fE4317ab63f45A85bcE2bEcB1', network: 25, startBlock: 6288500, endBlock: 6688655 })
+MembershipStakerV3Processor.bind({ address: '0xeb074cc764F20d8fE4317ab63f45A85bcE2bEcB1', network: 25, startBlock: 6216653 })
     .onEventRyoshiStaked(async (event, ctx) => {
         const owner = event.args.owner
         const tokenId = event.args.tokenId.toString()
@@ -271,7 +271,7 @@ MembershipStakerV3Processor.bind({ address: '0xeb074cc764F20d8fE4317ab63f45A85bc
 
 
 //first tx block time 6688239
-TradeshipProcessor.bind({ address: '0x523d6f30c4aaca133daad97ee2a0c48235bff137', network: 25, startBlock: 6688239, endBlock: 6688655 })
+TradeshipProcessor.bind({ address: '0x523d6f30c4aaca133daad97ee2a0c48235bff137', network: 25, startBlock: 6688239 })
     .onEventOrderFilled(async (event, ctx) => {
         ctx.meter.Counter("order_filled").add(1)
         const hash = event.transactionHash
@@ -279,49 +279,39 @@ TradeshipProcessor.bind({ address: '0x523d6f30c4aaca133daad97ee2a0c48235bff137',
         console.log("orderFilled txHash", hash)
         const tx = (await ctx.contract.provider.getTransaction(hash))!
         const from = tx.from
-        const value = Number(tx.value) / Math.pow(10, 18)
+
 
         //decode input data
-        // console.log("input data: ", tx.data)
+        const decodedRawData = ctx.contract.rawContract.interface.parseTransaction({ data: tx.data })
+        const decodedRawDataObj = JSON.parse(JSON.stringify(decodedRawData?.args[0]))
+        // console.log("obj[0][0]:", obj[0][0], " array[0][1][0]:", obj[0][1][0])
+        for (var i = 0; i < decodedRawDataObj.length; i++) {
+            const seller = decodedRawDataObj[i][0]
+            const nftAddress = decodedRawDataObj[i][1][0][1]
+            const nftId = decodedRawDataObj[i][1][0][2]
+            const amount = Number(decodedRawDataObj[i][2][0][3]) / Math.pow(10, 18)
 
-        // var decodedRawData = ctx.contract.rawContract.interface.parseTransaction({ data: tx.data })
+            // console.log("seller:", seller, " nftAddress: ", nftAddress, " nftId:", nftId, " amount:", amount)
 
-        //method 1 
-
-
-        // const arg_details: string = ""
-        // for (var i = 0; i < arg0.length; i++) {
-        //     arg_details.concat(" arg[0][" + i + "]=" + arg0[i])
-        // }
-        // console.log(arg_details)
-        // const arg0Raw = decodedRawData?.args[0]
-        // console.log("arg0Raw", arg0Raw)
-        // const arg0object = JSON.parse(arg0Raw)
-        // console.log("arg0object", arg0object)
-        // console.log(arg0object[0][0], " ", arg0object[0][1][1])
-
-        // const decodedDataArray = []
-        // for (var i = 0; i < arg0Raw.length; i++) {
-        //     decodedDataArray[i] = arg0Raw[0]
-        //     console.log("decodedDataArray[", i, "]:", JSON.stringify(decodedDataArray[i]))
-        // }
-
-
-        try {
-
-            console.log("orderFilled value:", value, "royalty:", royalty, "txhash:", hash)
-
-            ctx.eventLogger.emit("Order_Filled_Event",
-                {
-                    distinctId: from,
-                    value: value,
-                    royalty: royalty
-                })
-        } catch (e) {
-            if (e instanceof Error) {
-                console.log(e.message)
+            //catch empty from
+            try {
+                ctx.eventLogger.emit("Order_Filled_Event",
+                    {
+                        distinctId: from,
+                        amount: amount,
+                        seller: seller,
+                        nftAddress: nftAddress,
+                        nftId: nftId
+                    })
+            }
+            catch (e) {
+                if (e instanceof Error) {
+                    console.log(e.message)
+                }
             }
         }
+
+
     })
     .onAllEvents(async (event, ctx) => {
         const hash = event.transactionHash
@@ -345,7 +335,7 @@ TradeshipProcessor.bind({ address: '0x523d6f30c4aaca133daad97ee2a0c48235bff137',
 
 
 //first tx block time 4079464
-OfferContractProcessor.bind({ address: '0x016b347aeb70cc45e3bbaf324feb3c7c464e18b0', network: 25, startBlock: 6688239, endBlock: 6688655 })
+OfferContractProcessor.bind({ address: '0x016b347aeb70cc45e3bbaf324feb3c7c464e18b0', network: 25, startBlock: 6220924 })
     .onAllEvents(async (event, ctx) => {
         const hash = event.transactionHash
         try {
