@@ -205,6 +205,9 @@ for (let i = 0; i < poolWatching.length; i++) {
               distinctId: event.args.recipient,
               poolName: name,
               type: "swap",
+              amount: token0Price,
+              message: name + " swap " + token0Amount.abs().toString() + " " +
+                  info.token0.symbol + " for " + token1Amount.abs().toString() + " " + info.token1.symbol,
             }
         )
         ctx.meter.Counter("total_tokens").add(token0Amount,
@@ -230,6 +233,10 @@ for (let i = 0; i < poolWatching.length; i++) {
           distinctId: event.args.owner,
           poolName: name,
           type: "burn",
+          amount: total,
+          message: name + " burn " + token0Amount.abs().toString() +
+              " " + info.token0.symbol + " and " +
+              token1Amount.abs().toString() + " " + info.token1.symbol,
         })
     ctx.meter.Counter("total_tokens").sub(token0Amount,
         {token: info.token0.symbol, poolName: name})
@@ -253,6 +260,11 @@ for (let i = 0; i < poolWatching.length; i++) {
       distinctId: event.args.owner,
       poolName: name,
       type: "mint",
+      amount: total,
+        message: name + " mint " +
+            token0Amount.abs().toString() + " " +
+            info.token0.symbol + " and " +
+            token1Amount.abs().toString() + " " + info.token1.symbol,
     })
     ctx.meter.Counter("total_tokens").add(token0Amount,
         {token: info.token0.symbol, poolName: name})
