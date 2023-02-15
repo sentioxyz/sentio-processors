@@ -172,7 +172,12 @@ async function sync(ctx: AptosResourceContext) {
     accumTxn.add(ctx, obj.num_total_txns, { kind: "total"})
     dailyAverageTps.record(ctx, obj.average_tps)
     dau.record(ctx, obj.estimated_num_unique_users)
-    dailyGas.record(ctx, obj.total_gas_price)
-    accumGas.add(ctx, obj.total_gas_price)
+    if (obj.total_gas_price == null) {
+      console.log("sql", sql)
+      console.log("obj", JSON.stringify(obj))
+    } else {
+      dailyGas.record(ctx, obj.total_gas_price)
+      accumGas.add(ctx, obj.total_gas_price)
+    }
   }
 }

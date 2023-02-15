@@ -2,6 +2,7 @@ import {liquidity_pool, loadAllTypes} from "./types/aptos/liquidswap.js"
 
 import {defaultMoveCoder, AptosAccountProcessor, TypedMoveResource, MoveResource, AptosResourceContext} from "@sentio/sdk/aptos";
 
+
 import {
     AptosDex,
     calculateValueInUsd,
@@ -40,36 +41,36 @@ const liquidSwap = new AptosDex<liquidity_pool.LiquidityPool<any, any, any>>(vol
 liquidity_pool.bind()
     .onEventPoolCreatedEvent(async (evt, ctx) => {
         ctx.meter.Counter("num_pools").add(1)
-        ctx.eventTracker.track("lp", {distinctId: ctx.transaction.sender})
+        ctx.eventLogger.emit("lp", {distinctId: ctx.transaction.sender})
         // ctx.logger.info("", {user: "-", value: 0.0001})
     })
     .onEventLiquidityAddedEvent(async (evt, ctx) => {
         ctx.meter.Counter("event_liquidity_add").add(1)
-        ctx.eventTracker.track("lp", {distinctId: ctx.transaction.sender})
+        ctx.eventLogger.emit("lp", {distinctId: ctx.transaction.sender})
 
         if (recordAccount) {
             const value = await getPairValue(ctx, evt.type_arguments[0], evt.type_arguments[1], evt.data_decoded.added_x_val, evt.data_decoded.added_y_val)
             if (value.isGreaterThan(10)) {
-                ctx.eventTracker.track("liquidity", {
+                ctx.eventLogger.emit("liquidity", {
                     distinctId: ctx.transaction.sender,
                     "account": ctx.transaction.sender,
                     "value": value.toNumber(),
                     "formula_value": value.toNumber() * 2,
                 })
-                ctx.eventTracker.track("net_liquidity", {
+                ctx.eventLogger.emit("net_liquidity", {
                     distinctId: ctx.transaction.sender,
                     "account": ctx.transaction.sender,
                     "value": value.toNumber(),
                     "formula_value": value.toNumber() * 2,
                 })
             } else {
-                ctx.eventTracker.track("liquidity", {
+                ctx.eventLogger.emit("liquidity", {
                     distinctId: ctx.transaction.sender,
                     "account": "Others",
                     "value": value.toNumber(),
                     "formula_value": value.toNumber() * 2,
                 })
-                ctx.eventTracker.track("net_liquidity", {
+                ctx.eventLogger.emit("net_liquidity", {
                     distinctId: ctx.transaction.sender,
                     "account": ctx.transaction.sender,
                     "value": value.toNumber(),
@@ -80,18 +81,18 @@ liquidity_pool.bind()
     })
     .onEventLiquidityRemovedEvent(async (evt, ctx) => {
         ctx.meter.Counter("event_liquidity_removed").add(1)
-        ctx.eventTracker.track("lp", {distinctId: ctx.transaction.sender})
+        ctx.eventLogger.emit("lp", {distinctId: ctx.transaction.sender})
         if (recordAccount) {
             const value = await getPairValue(ctx, evt.type_arguments[0], evt.type_arguments[1], evt.data_decoded.returned_x_val, evt.data_decoded.returned_y_val)
             if (value.isGreaterThan(10)) {
-                ctx.eventTracker.track("net_liquidity", {
+                ctx.eventLogger.emit("net_liquidity", {
                     distinctId: ctx.transaction.sender,
                     "account": ctx.transaction.sender,
                     "value": -value.toNumber(),
                     "formula_value": (-value.toNumber()) * 2,
                 })
             } else {
-                ctx.eventTracker.track("net_liquidity", {
+                ctx.eventLogger.emit("net_liquidity", {
                     distinctId: ctx.transaction.sender,
                     "account": "Others",
                     "value": -value.toNumber(),
@@ -107,7 +108,7 @@ liquidity_pool.bind()
             evt.data_decoded.y_in + evt.data_decoded.y_out,
             {curve: getCurve(evt.type_arguments[2])})
         if (recordAccount && value.isGreaterThan(10)) {
-            ctx.eventTracker.track("vol", {
+            ctx.eventLogger.emit("vol", {
                 distinctId: ctx.transaction.sender,
                 "account": ctx.transaction.sender,
                 "value": value.toNumber(),
@@ -121,7 +122,7 @@ liquidity_pool.bind()
         ctx.meter.Counter("event_swap_by_bridge").add(1, {bridge: coinXInfo.bridge})
         ctx.meter.Counter("event_swap_by_bridge").add(1, {bridge: coinYInfo.bridge})
 
-        ctx.eventTracker.track("account", {
+        ctx.eventLogger.emit("account", {
             distinctId: ctx.transaction.sender,
             "event": "swap",
         })
@@ -132,7 +133,7 @@ liquidity_pool.bind()
         ctx.meter.Counter("event_flashloan_by_bridge").add(1, {bridge: coinXInfo.bridge})
         ctx.meter.Counter("event_flashloan_by_bridge").add(1, {bridge: coinYInfo.bridge})
 
-        ctx.eventTracker.track("account", {
+        ctx.eventLogger.emit("account", {
             distinctId: ctx.transaction.sender,
             "event": "flashloan",
         })

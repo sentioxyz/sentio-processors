@@ -86,7 +86,7 @@ ExchangeV3Processor.bind({address: LOOPRING_EXCHANGE})
       if (call.error) {
         return
       }
-      ctx.logger.info(`SubmitBlocks triggered at ${ctx.blockNumber}`)
+      // ctx.logger.info(`SubmitBlocks triggered at ${ctx.blockNumber}`)
       ctx.meter.Counter("submit_block").add(1)
       const tx = await ctx.contract.provider.getTransaction(call.transactionHash)
       const gasPrice = tx!.gasPrice
@@ -113,7 +113,7 @@ async function depositGauge(event: DepositRequestedEvent, ctx: ExchangeV3Context
   const amount = event.args.amount.scaleDown(tokenInfo.decimal)
 
   if (!tokenInfo.symbol.startsWith("LP-")) {
-    ctx.logger.info(`Deposit ${amount} ${tokenInfo.symbol} at ${ctx.blockNumber}`)
+    ctx.eventLogger.emit('Deposit', { message: `Deposit ${amount} ${tokenInfo.symbol} at ${ctx.blockNumber}`})
     deposit.record(ctx, amount, {tokenId: tokenInfo.symbol, address: event.args.token})
   }
 }
@@ -123,7 +123,7 @@ async function withdrawGauge(event: WithdrawalCompletedEvent, ctx: ExchangeV3Con
   const amount = event.args.amount.scaleDown(tokenInfo.decimal)
 
   if (!tokenInfo.symbol.startsWith("LP-")) {
-    ctx.logger.info(`Withdraw ${amount} ${tokenInfo.symbol} at ${ctx.blockNumber}`)
+    ctx.eventLogger.emit("Withdraw", { message: `Withdraw ${amount} ${tokenInfo.symbol} at ${ctx.blockNumber}`})
     withdraw.record(ctx, amount, {token: tokenInfo.symbol, address: event.args.token})
   }
 }

@@ -1,4 +1,4 @@
-import { AccountEventTracker, Counter, Gauge } from "@sentio/sdk";
+import { Counter, Gauge } from "@sentio/sdk";
 
 import { amm } from './types/aptos/auxexchange.js'
 import { liquidity_pool } from "./types/aptos/liquidswap.js";
@@ -6,6 +6,7 @@ import { stake_router } from "./types/aptos/tortuga.js";
 import { BigDecimal } from "@sentio/sdk";
 import { AptosAccountProcessor, defaultMoveCoder, TypedMoveResource } from "@sentio/sdk/aptos";
 import { coin, optional_aggregator } from "@sentio/sdk/aptos/builtin/0x1";
+// import { AccountEventTracker } from "@sentio/sdk";
 
 const commonOptions = { sparse:  false }
 
@@ -27,7 +28,7 @@ const claimAmount = Counter.register("claim_amount", commonOptions)
 const vol = Gauge.register("vol", commonOptions)
 const tvl = Counter.register("tvl", commonOptions)
 
-const accountTracker = AccountEventTracker.register("users")
+// const accountTracker = AccountEventTracker.register("users")
 
 const APT = '0x1::aptos_coin::AptosCoin'
 const tAPT = '0x84d7aeef42d38a5ffc3ccef853e1b82e4958659d16a7de736a29c55fbbeb0114::staked_aptos_coin::StakedAptosCoin'
@@ -36,7 +37,7 @@ const coinInfoType = `0x1::coin::CoinInfo<${tAPT}>`
 // tortuga
 stake_router.bind()
   .onEventStakeEvent((evt, ctx) => {
-    accountTracker.trackEvent(ctx, { distinctId: ctx.transaction.sender})
+    ctx.eventLogger.emit("user event", { distinctId: ctx.transaction.sender})
     const amount = scaleDown(evt.data_decoded.amount)
     stakeAmount.add(ctx, amount, { coin: "APT"})
     stakeAmount.add(ctx, scaleDown(evt.data_decoded.t_apt_coins), { coin: "tAPT"})
@@ -45,22 +46,22 @@ stake_router.bind()
       lastStakeAmount.record(ctx, scaleDown(evt.data_decoded.t_apt_coins), { coin: "tAPT"})
     }
     // if (amount.gt(1000)) {
-    ctx.logger.info("stake " + amount + " APT", { type: "stake", amount: amount.toNumber()})
+    ctx.eventLogger.emit("stake", { message: "stake " + amount + " APT", type: "stake", amount: amount.toNumber()})
     // }
     stake.add(ctx, 1)
   })
   .onEventUnstakeEvent((evt, ctx) => {
-    accountTracker.trackEvent(ctx, { distinctId: ctx.transaction.sender})
+    ctx.eventLogger.emit("user event",  { distinctId: ctx.transaction.sender})
     const amount = scaleDown(evt.data_decoded.amount)
     unstakeAmount.add(ctx, amount, { coin: "APT"})
     unstakeAmount.add(ctx, scaleDown(evt.data_decoded.t_apt_coins), { coin: "tAPT"})
     // if (amount.gt(1000) ) {
-    ctx.logger.info("unstake apt " + amount + "APT", { type: "unstake", amount: amount.toNumber()})
+    ctx.eventLogger.emit("unstake", { message: "unstake apt " + amount + "APT", type: "unstake", amount: amount.toNumber()})
     // }
     unstake.add(ctx, 1)
   })
   .onEventClaimEvent((evt, ctx) => {
-    accountTracker.trackEvent(ctx, { distinctId: ctx.transaction.sender})
+    ctx.eventLogger.emit("user event", { distinctId: ctx.transaction.sender})
     claimAmount.add(ctx, scaleDown(evt.data_decoded.amount), { coin: "APT"})
     claim.add(ctx, 1)
   })
@@ -69,7 +70,7 @@ stake_router.bind()
 amm.bind({startVersion: 299999})
   .onEventAddLiquidityEvent(async (evt, ctx) => {
     if (isAptTAptPair(evt.data_decoded.x_coin_type, evt.data_decoded.y_coin_type)) {
-      accountTracker.trackEvent(ctx, { distinctId: ctx.transaction.sender})
+      ctx.eventLogger.emit("user event",  { distinctId: ctx.transaction.sender})
       liquidityAdd.add(ctx, 1, { protocol: "aux"})
       tvl.add(ctx, scaleDown(evt.data_decoded.x_added_au), { coin: getSymbol(evt.data_decoded.x_coin_type), protocol: "aux"} )
       tvl.add(ctx, scaleDown(evt.data_decoded.y_added_au), { coin: getSymbol(evt.data_decoded.y_coin_type), protocol: "aux"} )
@@ -77,7 +78,7 @@ amm.bind({startVersion: 299999})
   })
   .onEventRemoveLiquidityEvent(async (evt, ctx) => {
     if (isAptTAptPair(evt.data_decoded.x_coin_type, evt.data_decoded.y_coin_type)) {
-      accountTracker.trackEvent(ctx, { distinctId: ctx.transaction.sender})
+      ctx.eventLogger.emit("user event",  { distinctId: ctx.transaction.sender})
       liquidityRemoved.add(ctx, 1, { protocol: "aux"})
       tvl.sub(ctx, scaleDown(evt.data_decoded.x_removed_au), { coin: getSymbol(evt.data_decoded.x_coin_type), protocol: "aux"} )
       tvl.sub(ctx, scaleDown(evt.data_decoded.y_removed_au), { coin: getSymbol(evt.data_decoded.y_coin_type), protocol: "aux"} )
@@ -85,7 +86,7 @@ amm.bind({startVersion: 299999})
   })
   .onEventSwapEvent(async (evt, ctx) => {
     if (isAptTAptPair(evt.data_decoded.in_coin_type, evt.data_decoded.out_coin_type)) {
-      accountTracker.trackEvent(ctx, { distinctId: ctx.transaction.sender})
+      ctx.eventLogger.emit("user event",  { distinctId: ctx.transaction.sender})
       swap.add(ctx,1, { protocol: "aux"})
 
       tvl.add(ctx, scaleDown(evt.data_decoded.in_au), { coin: getSymbol(evt.data_decoded.in_coin_type), protocol: "aux"} )
@@ -100,7 +101,7 @@ amm.bind({startVersion: 299999})
 liquidity_pool.bind({startVersion: 299999})
   .onEventLiquidityAddedEvent(async (evt, ctx) => {
     if (isAptTAptPair(evt.type_arguments[0], evt.type_arguments[1])) {
-      accountTracker.trackEvent(ctx, { distinctId: ctx.transaction.sender})
+      ctx.eventLogger.emit("user event",  { distinctId: ctx.transaction.sender})
       liquidityAdd.add(ctx, 1, { protocol: "liquidswap"})
       tvl.add(ctx, scaleDown(evt.data_decoded.added_x_val), { coin: getSymbol(evt.type_arguments[0]), protocol: "liquidswap"} )
       tvl.add(ctx, scaleDown(evt.data_decoded.added_y_val), { coin: getSymbol(evt.type_arguments[1]), protocol: "liquidswap"} )
@@ -116,7 +117,7 @@ liquidity_pool.bind({startVersion: 299999})
   })
   .onEventLiquidityRemovedEvent(async (evt, ctx) => {
     if (isAptTAptPair(evt.type_arguments[0], evt.type_arguments[1])) {
-      accountTracker.trackEvent(ctx, { distinctId: ctx.transaction.sender})
+      ctx.eventLogger.emit("user event", { distinctId: ctx.transaction.sender})
       liquidityRemoved.add(ctx, 1, { protocol: "liquidswap"})
       tvl.sub(ctx, scaleDown(evt.data_decoded.returned_x_val), { coin: getSymbol(evt.type_arguments[0]), protocol: "liquidswap"} )
       tvl.sub(ctx, scaleDown(evt.data_decoded.returned_y_val), { coin: getSymbol(evt.type_arguments[1]), protocol: "liquidswap"} )
@@ -132,7 +133,7 @@ liquidity_pool.bind({startVersion: 299999})
   })
   .onEventSwapEvent(async (evt, ctx) => {
     if (isAptTAptPair(evt.type_arguments[0], evt.type_arguments[1])) {
-      accountTracker.trackEvent(ctx, { distinctId: ctx.transaction.sender})
+      ctx.eventLogger.emit("user event", { distinctId: ctx.transaction.sender})
       swap.add(ctx,1, { protocol: "liquidswap"})
 
       tvl.add(ctx, scaleDown(evt.data_decoded.x_in), { coin: getSymbol(evt.type_arguments[0]), protocol: "liquidswap"} )
@@ -156,7 +157,7 @@ liquidity_pool.bind({startVersion: 299999})
   })
     .onEventFlashloanEvent(async (evt, ctx) => {
       if (isAptTAptPair(evt.type_arguments[0], evt.type_arguments[1])) {
-        accountTracker.trackEvent(ctx, { distinctId: ctx.transaction.sender})
+        ctx.eventLogger.emit("user event", { distinctId: ctx.transaction.sender})
         swap.add(ctx,1, { protocol: "liquidswap"})
 
         tvl.add(ctx, scaleDown(evt.data_decoded.x_in), { coin: getSymbol(evt.type_arguments[0]), protocol: "liquidswap"} )
@@ -164,7 +165,7 @@ liquidity_pool.bind({startVersion: 299999})
         tvl.add(ctx, scaleDown(evt.data_decoded.y_in), { coin: getSymbol(evt.type_arguments[1]), protocol: "liquidswap"} )
         tvl.sub(ctx, scaleDown(evt.data_decoded.y_out), { coin: getSymbol(evt.type_arguments[1]), protocol: "liquidswap"} )
 
-        ctx.logger.info("liquidswap flashloan for " + scaleDown(evt.data_decoded.x_in).toString(), {
+        ctx.eventLogger.emit("flashloan", { message: "liquidswap flashloan for " + scaleDown(evt.data_decoded.x_in).toString(),
           x_in: scaleDown(evt.data_decoded.x_in).toNumber(),
           x_out: scaleDown(evt.data_decoded.x_out).toNumber(),
           y_in: scaleDown(evt.data_decoded.y_in).toNumber(),
