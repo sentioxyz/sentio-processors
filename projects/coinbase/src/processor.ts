@@ -6,8 +6,19 @@ import { MintEvent, BurnEvent } from "./types/eth/stakedtokenv1.js"
 import { StakedTokenV1Context, StakedTokenV1Processor } from "./types/eth/stakedtokenv1.js"
 import { getEACAggregatorProxyContract } from "./types/eth/eacaggregatorproxy.js"
 import { token } from "@sentio/sdk/utils"
-import { BigDecimal } from "@sentio/sdk"
+import {BigDecimal, Counter, Gauge} from "@sentio/sdk"
 
+export const volOptions = {
+  sparse: true,
+  aggregationConfig: {
+    intervalInMinutes: [60],
+  }
+}
+
+const mint = Gauge.register("mint", volOptions)
+const burn = Gauge.register("burn", volOptions)
+const mintAcc = Counter.register("mint_acc")
+const burnAcc = Counter.register("burn_acc")
 
 const blockHandler = async function(_:any, ctx: StakedTokenV1Context) {
   const tokenInfo = await token.getERC20TokenInfo(ctx.contract.address)
@@ -35,15 +46,15 @@ const blockHandler = async function(_:any, ctx: StakedTokenV1Context) {
 const mintEventHandler = async function(event: MintEvent, ctx: StakedTokenV1Context) {
   const tokenInfo = await token.getERC20TokenInfo(ctx.contract.address)
   const amount = event.args.amount.scaleDown(tokenInfo.decimal)
-  ctx.meter.Gauge("mint").record(amount, {token: tokenInfo.symbol})
-  ctx.meter.Counter("mint_acc").add(amount, {token: tokenInfo.symbol})
+  mint.record(ctx, amount, {token: tokenInfo.symbol})
+  mintAcc.add(ctx, amount, {token: tokenInfo.symbol})
 }
 
 const burnEventHandler = async function(event: BurnEvent, ctx: StakedTokenV1Context) {
   const tokenInfo = await token.getERC20TokenInfo(ctx.contract.address)
   const amount = event.args.amount.scaleDown(tokenInfo.decimal)
-  ctx.meter.Gauge("burn").record(amount, {token: tokenInfo.symbol})
-  ctx.meter.Counter("burn_acc").add(amount, {token: tokenInfo.symbol})
+  burn.record(ctx, amount, {token: tokenInfo.symbol})
+  burnAcc.add(ctx, amount, {token: tokenInfo.symbol})
 }
 
 StakedTokenV1Processor.bind({address: CBETH_PROXY})
