@@ -12,7 +12,7 @@ import { PoolCreatedEvent, UniswapFactoryContext, UniswapFactoryProcessor } from
 import { ERC20Context, ERC20Processor, getERC20Contract } from '@sentio/sdk/eth/builtin/erc20'
 import { getPriceByType,  token } from "@sentio/sdk/utils"
 import { Status, ClientError } from "nice-grpc-common";
-import {BigDecimal, Gauge, MetricOptions} from "@sentio/sdk";
+import { BigDecimal, CHAIN_IDS, Gauge, MetricOptions } from "@sentio/sdk";
 
 
 const poolWatching = [
@@ -174,7 +174,7 @@ async function getTokenDetails(ctx: UniswapContext, info: token.TokenInfo, addre
   let scaledAmount = amount.scaleDown(info.decimal)
   let price: any
   try {
-    price = await getPriceByType("1", address, ctx.timestamp)
+    price = await getPriceByType(CHAIN_IDS.ETHEREUM, address, ctx.timestamp)
   } catch (error) {
     if (error instanceof ClientError && error.code === Status.NOT_FOUND) {
       return [scaledAmount, BigDecimal(0)]
@@ -200,11 +200,10 @@ for (let i = 0; i < poolWatching.length; i++) {
               type: "swap",
             }
         )
-        ctx.eventLogger.emit("event",
+        ctx.eventLogger.emit("Swap",
             {
               distinctId: event.args.recipient,
               poolName: name,
-              type: "swap",
               amount: token0Price,
               message: name + " swap " + token0Amount.abs().toString() + " " +
                   info.token0.symbol + " for " + token1Amount.abs().toString() + " " + info.token1.symbol,
@@ -228,11 +227,10 @@ for (let i = 0; i < poolWatching.length; i++) {
           type: "burn",
         }
     )
-    ctx.eventLogger.emit("event",
+    ctx.eventLogger.emit("Burn",
         {
           distinctId: event.args.owner,
           poolName: name,
-          type: "burn",
           amount: total,
           message: name + " burn " + token0Amount.abs().toString() +
               " " + info.token0.symbol + " and " +
@@ -256,15 +254,14 @@ for (let i = 0; i < poolWatching.length; i++) {
           type: "mint",
         }
     )
-    ctx.eventLogger.emit("event", {
+    ctx.eventLogger.emit("Mint", {
       distinctId: event.args.owner,
       poolName: name,
-      type: "mint",
       amount: total,
-        message: name + " mint " +
-            token0Amount.abs().toString() + " " +
-            info.token0.symbol + " and " +
-            token1Amount.abs().toString() + " " + info.token1.symbol,
+      message: name + " mint " +
+          token0Amount.abs().toString() + " " +
+          info.token0.symbol + " and " +
+          token1Amount.abs().toString() + " " + info.token1.symbol,
     })
     ctx.meter.Counter("total_tokens").add(token0Amount,
         {token: info.token0.symbol, poolName: name})

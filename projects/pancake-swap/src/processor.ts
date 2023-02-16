@@ -4,6 +4,8 @@ import { Gauge } from "@sentio/sdk";
 import { AptosDex, getCoinInfo } from "@sentio-processor/common/aptos"
 import {  AptosAccountProcessor } from "@sentio/sdk/aptos";
 import { IFO } from "./types/aptos/movecoin.js";
+import { getPair, getPairValue } from "@sentio-processor/common/aptos";
+import { coin } from "@sentio/sdk/aptos/builtin/0x1";
 
 const commonOptions = { sparse:  true }
 export const volOptions = {
@@ -41,31 +43,67 @@ IFO.bind()
 swap.bind({startVersion: 10463608})
   .onEventPairCreatedEvent(async (evt, ctx) => {
     ctx.meter.Counter("num_pools").add(1)
-    ctx.eventLogger.emit("Create Pair", { distinctId: ctx.transaction.sender })
+    const coinx = evt.data_decoded.token_x
+    const coiny = evt.data_decoded.token_y
+    const pair = await getPair(coinx, coiny)
+    ctx.eventLogger.emit("Create Pair", {
+      distinctId: ctx.transaction.sender,
+      pair,
+      message: `Created ${pair}`
+    })
   })
   .onEventAddLiquidityEvent(async (evt, ctx) => {
     ctx.meter.Counter("event_liquidity_add").add(1)
-    ctx.eventLogger.emit("Add Liquidity", { distinctId: ctx.transaction.sender })
+    const coinx = evt.type_arguments[0]
+    const coiny = evt.type_arguments[1]
+    const value = await getPairValue(ctx, coinx, coiny, evt.data_decoded.amount_x, evt.data_decoded.amount_y)
+    ctx.eventLogger.emit("Add Liquidity", {
+      distinctId: ctx.transaction.sender,
+      pair: await getPair(coinx, coiny),
+      value,
+    })
   })
   .onEventRemoveLiquidityEvent(async (evt, ctx) => {
     ctx.meter.Counter("event_liquidity_removed").add(1)
-    ctx.eventLogger.emit("Remove Liquidity", { distinctId: ctx.transaction.sender })
+    const coinx = evt.type_arguments[0]
+    const coiny = evt.type_arguments[1]
+    const value = await getPairValue(ctx, coinx, coiny, evt.data_decoded.amount_x, evt.data_decoded.amount_y)
+    ctx.eventLogger.emit("Remove Liquidity", {
+      distinctId: ctx.transaction.sender,
+      pair: await getPair(coinx, coiny),
+      value
+    })
   })
   .onEventSwapEvent(async (evt, ctx) => {
-    const value = await PANCAKE_SWAP_APTOS.recordTradingVolume(ctx,
-              evt.type_arguments[0], evt.type_arguments[1],
-  evt.data_decoded.amount_x_in + evt.data_decoded.amount_x_out,
-  evt.data_decoded.amount_y_in + evt.data_decoded.amount_y_out)
+    const coinx = evt.type_arguments[0]
+    const coiny = evt.type_arguments[1]
+
+    const amountx = evt.data_decoded.amount_x_in + evt.data_decoded.amount_x_out
+    const amounty = evt.data_decoded.amount_y_in + evt.data_decoded.amount_y_out
+    const value = await PANCAKE_SWAP_APTOS.recordTradingVolume(ctx, coinx, coiny, amountx, amounty)
 
     // console.log(JSON.stringify(ctx.transaction))
     // console.log(JSON.stringify(evt))
-
-    const coinXInfo = await getCoinInfo(evt.type_arguments[0])
-    const coinYInfo = await getCoinInfo(evt.type_arguments[1])
+    const coinXInfo = await getCoinInfo(coinx)
+    const coinYInfo = await getCoinInfo(coiny)
     ctx.meter.Counter("event_swap_by_bridge").add(1, { bridge: coinXInfo.bridge })
     ctx.meter.Counter("event_swap_by_bridge").add(1, { bridge: coinYInfo.bridge })
 
-    ctx.eventLogger.emit("Swap", { distinctId: ctx.transaction.sender })
+    let message: string
+    const summaryX = `${amountx.scaleDown(coinXInfo.decimals).toNumber()} ${coinXInfo.symbol}`
+    const summaryY = `${amounty.scaleDown(coinYInfo.decimals).toNumber()} ${coinYInfo.symbol}`
+    if (evt.data_decoded.amount_x_in) {
+      message = `Swap ${summaryX} to ${summaryY}`
+    } else {
+      message = `Swap ${summaryY} to ${summaryX}`
+    }
+
+    ctx.eventLogger.emit("Swap", {
+      distinctId: ctx.transaction.sender,
+      pair: await getPair(coinx, coiny),
+      value: value,
+      message
+    })
   })
 
 const PANCAKE_SWAP_APTOS = new AptosDex<swap.TokenPairReserve<any, any>>(
