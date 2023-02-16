@@ -24,16 +24,15 @@ const singleVolume = Gauge.register("vol_single", volOptions)
 IFO.bind()
     .onEventDepositEvent(async (evt, ctx)=>{
       console.log(JSON.stringify(evt))
-      ctx.eventLogger.emit("user", {
-        distinctId: evt.data_decoded.user, eventLabel: "Deposit",
+      ctx.eventLogger.emit("Deposit", {
+        distinctId: evt.data_decoded.user,
         amount: evt.data_decoded.amount,
         pid: evt.data_decoded.pid,
       })
     })
     .onEventHarvestEvent(async (evt, ctx) => {
-      ctx.eventLogger.emit("user", {
+      ctx.eventLogger.emit("Harvest", {
         distinctId: evt.data_decoded.user,
-        eventLabel: "Harvest",
         amount: evt.data_decoded.offering_amount,
         pid: evt.data_decoded.pid
       })
@@ -42,15 +41,15 @@ IFO.bind()
 swap.bind({startVersion: 10463608})
   .onEventPairCreatedEvent(async (evt, ctx) => {
     ctx.meter.Counter("num_pools").add(1)
-    ctx.eventLogger.emit("user", { distinctId: ctx.transaction.sender })
+    ctx.eventLogger.emit("Create Pair", { distinctId: ctx.transaction.sender })
   })
   .onEventAddLiquidityEvent(async (evt, ctx) => {
     ctx.meter.Counter("event_liquidity_add").add(1)
-    ctx.eventLogger.emit("user", { distinctId: ctx.transaction.sender })
+    ctx.eventLogger.emit("Add Liquidity", { distinctId: ctx.transaction.sender })
   })
   .onEventRemoveLiquidityEvent(async (evt, ctx) => {
     ctx.meter.Counter("event_liquidity_removed").add(1)
-    ctx.eventLogger.emit("user", { distinctId: ctx.transaction.sender })
+    ctx.eventLogger.emit("Remove Liquidity", { distinctId: ctx.transaction.sender })
   })
   .onEventSwapEvent(async (evt, ctx) => {
     const value = await PANCAKE_SWAP_APTOS.recordTradingVolume(ctx,
@@ -66,7 +65,7 @@ swap.bind({startVersion: 10463608})
     ctx.meter.Counter("event_swap_by_bridge").add(1, { bridge: coinXInfo.bridge })
     ctx.meter.Counter("event_swap_by_bridge").add(1, { bridge: coinYInfo.bridge })
 
-    ctx.eventLogger.emit("user", { distinctId: ctx.transaction.sender })
+    ctx.eventLogger.emit("Swap", { distinctId: ctx.transaction.sender })
   })
 
 const PANCAKE_SWAP_APTOS = new AptosDex<swap.TokenPairReserve<any, any>>(

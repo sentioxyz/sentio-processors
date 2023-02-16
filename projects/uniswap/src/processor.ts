@@ -271,6 +271,5 @@ for (let i = 0; i < poolWatching.length; i++) {
     ctx.meter.Counter("total_tokens").add(token1Amount,
         {token: info.token1.symbol, poolName: name})
   })
-
 }
 

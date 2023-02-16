@@ -78,7 +78,8 @@ const handleBlockCommittedEvent = async (event: BlockCommittedEvent, ctx: CapeCo
   } else if (note_types_uint.length == 1) {
     const note_types = note_types_uint[0]
     if (note_types) {
-      switch (note_types[0]) {
+      const note_type = note_types.length > 0 ? note_types[0] : undefined
+      switch (note_type) {
         case 0:
           gaugeAndCounter("Transfer", ctx)
           break;
