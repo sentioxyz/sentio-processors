@@ -67,7 +67,7 @@ export async function getPrice(coinType: string, timestamp: number): Promise<num
   }
   const date = new Date(timestamp / 1000)
   try {
-    return await getPriceByType(CHAIN_IDS.APTOS_MAINNET, coinType, date)
+    return await getPriceByType(CHAIN_IDS.APTOS_MAINNET, coinType, date) || 0
   } catch (error) {
     if (error instanceof ClientError && error.code === Status.NOT_FOUND) {
       return 0

@@ -63,14 +63,9 @@ const tvl = async function (_: any, ctx: ExchangeV3Context) {
   for (let i = 0; i < TOKEN_ARRAY.length; i++) {
     const [tokenInfo, amount] = await getTokenDetails(ctx, TOKEN_ARRAY[i])
     const scaledAmount = amount.scaleDown(tokenInfo.decimal)
-    let price : any
-    try {
-      price = await getPriceByType("ethereum_mainnet", TOKEN_ARRAY[i], ctx.timestamp)
-    } catch (error) {
-        if (error instanceof ClientError && error.code === Status.NOT_FOUND) {
-            continue
-        }
-        throw error
+    const price = await getPriceByType("ethereum_mainnet", TOKEN_ARRAY[i], ctx.timestamp)
+    if (!price) {
+      continue
     }
     ctx.meter.Gauge("tvl").record(scaledAmount.multipliedBy(price),
         {token: tokenInfo.symbol, address: TOKEN_ARRAY[i]})

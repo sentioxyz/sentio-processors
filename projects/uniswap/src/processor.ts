@@ -131,15 +131,7 @@ async function getValue(ctx: UniswapContext, address: string, info: token.TokenI
 
 async function getTVL(ctx: UniswapContext, info: token.TokenInfo, token :string): Promise<BigDecimal> {
   const amount = await getValue(ctx, token, info)
-  let price : any
-  try {
-    price = await getPriceByType("1", token, ctx.timestamp)
-  } catch (error) {
-    if (error instanceof ClientError && error.code === Status.NOT_FOUND) {
-      return BigDecimal(0)
-    }
-    throw error
-  }
+  const price = await getPriceByType("1", token, ctx.timestamp) || 0
   return amount.multipliedBy(price)
 }
 
@@ -172,15 +164,7 @@ const priceCalc = async function (_: any, ctx: UniswapContext) {
 async function getTokenDetails(ctx: UniswapContext, info: token.TokenInfo, address :string, amount: bigint):
     Promise<[BigDecimal, BigDecimal]> {
   let scaledAmount = amount.scaleDown(info.decimal)
-  let price: any
-  try {
-    price = await getPriceByType(CHAIN_IDS.ETHEREUM, address, ctx.timestamp)
-  } catch (error) {
-    if (error instanceof ClientError && error.code === Status.NOT_FOUND) {
-      return [scaledAmount, BigDecimal(0)]
-    }
-    throw error
-  }
+  const price = await getPriceByType(CHAIN_IDS.ETHEREUM, address, ctx.timestamp) || 0
   return [scaledAmount, scaledAmount.multipliedBy(price)]
 }
 
