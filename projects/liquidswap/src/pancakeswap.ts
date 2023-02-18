@@ -19,7 +19,7 @@ swap.bind()
         if (recordAccount) {
             const value = await getPairValue(ctx, evt.type_arguments[0], evt.type_arguments[1], evt.data_decoded.amount_x, evt.data_decoded.amount_y)
             if (value.isGreaterThan(10)) {
-                ctx.eventTracker.track("liquidity", {
+                ctx.eventLogger.emit("liquidity", {
                     distinctId: ctx.transaction.sender,
                     "account": ctx.transaction.sender,
                     "value": value.toNumber(),
@@ -37,7 +37,7 @@ swap.bind()
             evt.data_decoded.amount_x_in + evt.data_decoded.amount_x_out,
             evt.data_decoded.amount_y_in + evt.data_decoded.amount_y_out)
         if (recordAccount && value.isGreaterThan(10)) {
-            ctx.eventTracker.track("vol", {
+            ctx.eventLogger.emit("vol", {
                 distinctId: ctx.transaction.sender,
                 "account": ctx.transaction.sender,
                 "value": value.toNumber(),

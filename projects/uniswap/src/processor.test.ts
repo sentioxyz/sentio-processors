@@ -14,7 +14,7 @@ describe('Test Processor', () => {
 
   test('check transfer event handling', async () => {
 
-    const x = await service.testTrace(data)
+    const x = await service.eth.testTrace(data)
     console.log(x)
     // expect(tokenCounter).toEqual(10n)
   })

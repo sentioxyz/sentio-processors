@@ -16,19 +16,7 @@ describe('Test Processor', () => {
 
   jest.setTimeout(1000000000)
   test('test event', async () => {
-    const res = await service.processBindings({
-      bindings: [
-        {
-          data: {
-            aptEvent: {
-              transaction: testData3
-            },
-          },
-          handlerIds: [0],
-          handlerType: HandlerType.APT_EVENT
-        }
-      ]
-    })
+    const res = await service.aptos.testEvent(testData3 as any, 0)
     console.log(res)
   })
 })

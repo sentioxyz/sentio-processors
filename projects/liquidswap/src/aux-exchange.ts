@@ -34,26 +34,26 @@ amm.bind()
             ctx.meter.Counter("token_amount_by_pool").add(evt.data_decoded.x_added_au, {"pair": pair, "coin": evt.data_decoded.x_coin_type})
             ctx.meter.Counter("token_amount_by_pool").add(evt.data_decoded.x_added_au, {"pair": pair, "coin": evt.data_decoded.y_coin_type})
             if (value.isGreaterThan(10)) {
-                ctx.eventTracker.track("liquidity", {
+                ctx.eventLogger.emit("liquidity", {
                     distinctId: ctx.transaction.sender,
                     "account": ctx.transaction.sender,
                     "value": value.toNumber(),
                     "formula_value": value.toNumber() * 2,
                 })
-                ctx.eventTracker.track("net_liquidity", {
+                ctx.eventLogger.emit("net_liquidity", {
                     distinctId: ctx.transaction.sender,
                     "account": ctx.transaction.sender,
                     "value": value.toNumber(),
                     "formula_value": value.toNumber() * 2,
                 })
             } else {
-                ctx.eventTracker.track("liquidity", {
+                ctx.eventLogger.emit("liquidity", {
                     distinctId: ctx.transaction.sender,
                     "account": "Others",
                     "value": value.toNumber(),
                     "formula_value": value.toNumber() * 2,
                 })
-                ctx.eventTracker.track("net_liquidity", {
+                ctx.eventLogger.emit("net_liquidity", {
                     distinctId: ctx.transaction.sender,
                     "account": ctx.transaction.sender,
                     "value": value.toNumber(),
@@ -62,7 +62,7 @@ amm.bind()
             }
             const coinXInfo = getCoinInfo(evt.data_decoded.x_coin_type)
             const coinYInfo = getCoinInfo(evt.data_decoded.y_coin_type)
-            ctx.logger.info("add liquidity for " + pair, {
+            ctx.eventLogger.emit("add liquidity for " + pair, {
                 symbol: coinXInfo.symbol,
                 user: ctx.transaction.sender,
                 value: value,
@@ -70,7 +70,7 @@ amm.bind()
                 pair: pair,
                 coin: evt.data_decoded.x_coin_type
             })
-            ctx.logger.info("add liquidity for " + pair, {
+            ctx.eventLogger.emit("add liquidity for " + pair, {
                 symbol: coinYInfo.symbol,
                 user: ctx.transaction.sender,
                 value: value,
@@ -92,14 +92,14 @@ amm.bind()
         if (recordAccount) {
             const value = await getPairValue(ctx, evt.data_decoded.x_coin_type, evt.data_decoded.y_coin_type, evt.data_decoded.x_removed_au, evt.data_decoded.y_removed_au)
             if (value.isGreaterThan(10)) {
-                ctx.eventTracker.track("net_liquidity", {
+                ctx.eventLogger.emit("net_liquidity", {
                     distinctId: ctx.transaction.sender,
                     "account": ctx.transaction.sender,
                     "value": -value.toNumber(),
                     "formula_value": (-value.toNumber()) * 2,
                 })
             } else {
-                ctx.eventTracker.track("net_liquidity", {
+                ctx.eventLogger.emit("net_liquidity", {
                     distinctId: ctx.transaction.sender,
                     "account": "Others",
                     "value": -value.toNumber(),
@@ -111,7 +111,7 @@ amm.bind()
     .onEventSwapEvent(async (evt, ctx) => {
         const value = await AUX_EXCHANGE.recordTradingVolume(ctx, evt.data_decoded.in_coin_type, evt.data_decoded.out_coin_type, evt.data_decoded.in_au, evt.data_decoded.out_au)
         if (recordAccount && value.isGreaterThan(10)) {
-            ctx.eventTracker.track("vol", {
+            ctx.eventLogger.emit("vol", {
                 distinctId: ctx.transaction.sender,
                 "account": ctx.transaction.sender,
                 "value": value.toNumber(),
