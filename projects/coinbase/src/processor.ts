@@ -1,6 +1,5 @@
 import {
   CBETH_PROXY,
-  USDC_ETH_ORACLE
 } from "./constant.js"
 import { MintEvent, BurnEvent, TransferEvent } from "./types/eth/stakedtokenv1.js"
 import { StakedTokenV1Context, StakedTokenV1Processor } from "./types/eth/stakedtokenv1.js"
