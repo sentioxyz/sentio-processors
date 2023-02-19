@@ -15,8 +15,10 @@ export const volOptions = {
 
 const mint = Gauge.register("mint", volOptions)
 const burn = Gauge.register("burn", volOptions)
+const transfer = Gauge.register("transfer", volOptions)
 const mintAcc = Counter.register("mint_acc")
 const burnAcc = Counter.register("burn_acc")
+const transferAcc = Counter.register("transfer_acc")
 
 const blockHandler = async function(_:any, ctx: StakedTokenV1Context) {
   const tokenInfo = await token.getERC20TokenInfo(ctx.contract.address)
@@ -46,8 +48,9 @@ const blockHandler = async function(_:any, ctx: StakedTokenV1Context) {
 
 const transferEventHandler = async function(event: TransferEvent, ctx: StakedTokenV1Context) {
   const tokenInfo = await token.getERC20TokenInfo(ctx.contract.address)
-  ctx.meter.Counter("transfer_counter").add(1, {token: tokenInfo.symbol})
+  transferAcc.add(ctx, 1, {token: tokenInfo.symbol})
   const value = event.args.value.scaleDown(tokenInfo.decimal)
+  transfer.record(ctx, value, {token: tokenInfo.symbol})
   ctx.eventLogger.emit("Transfer",
       {
         distinctId: event.args.to,
