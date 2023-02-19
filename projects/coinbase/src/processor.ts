@@ -2,11 +2,10 @@ import {
   CBETH_PROXY,
   USDC_ETH_ORACLE
 } from "./constant.js"
-import { MintEvent, BurnEvent } from "./types/eth/stakedtokenv1.js"
+import { MintEvent, BurnEvent, TransferEvent } from "./types/eth/stakedtokenv1.js"
 import { StakedTokenV1Context, StakedTokenV1Processor } from "./types/eth/stakedtokenv1.js"
-import { getEACAggregatorProxyContract } from "./types/eth/eacaggregatorproxy.js"
-import { token } from "@sentio/sdk/utils"
-import {BigDecimal, Counter, Gauge} from "@sentio/sdk"
+import {getPriceByType, token} from "@sentio/sdk/utils"
+import {BigDecimal, CHAIN_IDS, Counter, Gauge} from "@sentio/sdk"
 
 export const volOptions = {
   sparse: true,
@@ -27,20 +26,37 @@ const blockHandler = async function(_:any, ctx: StakedTokenV1Context) {
   ctx.meter.Gauge("total_supply").record(totalSupply, {token: tokenInfo.symbol})
   ctx.meter.Gauge("exchange_rate").record(exchangeRate, {token: tokenInfo.symbol})
 
-  const latestAnswer = await getEACAggregatorProxyContract(USDC_ETH_ORACLE).latestAnswer({blockTag: Number(ctx.blockNumber)})
-  // the oracle actually returns USDC/ETH price with 18 decimal
-  // so to get ETH/USDC price, just do 1e18.div(result)
-  const eth_usdc_price = BigDecimal(10).pow(18).div(latestAnswer.asBigDecimal())
+  // This is address is WETH.
+  const eth_usdc_price = await getPriceByType(CHAIN_IDS.ETHEREUM,
+      "0xC02aaA39b223FE8D0A0e5C4F27eAD9083C756Cc2", ctx.timestamp)
+  if (!eth_usdc_price) {
+    console.warn("cannot get price for ETH")
+    return
+  }
 
   // divide exchange rate between ETH/cbETH to get cbETH price
   let cbEth_usdc_price
   if (!exchangeRate.isEqualTo(BigDecimal(0))) {
-    cbEth_usdc_price = eth_usdc_price.div(exchangeRate)
+    cbEth_usdc_price = BigDecimal(eth_usdc_price).dividedBy(exchangeRate)
   } else {
     cbEth_usdc_price = 0
   }
   ctx.meter.Gauge("cbETH_price").record(cbEth_usdc_price, {token: tokenInfo.symbol})
   ctx.meter.Gauge("tvl").record(totalSupply.multipliedBy(cbEth_usdc_price), {token: tokenInfo.symbol})
+}
+
+const transferEventHandler = async function(event: TransferEvent, ctx: StakedTokenV1Context) {
+  const tokenInfo = await token.getERC20TokenInfo(ctx.contract.address)
+  ctx.meter.Counter("transfer_counter").add(1, {token: tokenInfo.symbol})
+  const value = event.args.value.scaleDown(tokenInfo.decimal)
+  ctx.eventLogger.emit("Transfer",
+      {
+        distinctId: event.args.to,
+        from: event.args.from,
+        to: event.args.to,
+        amount: value,
+        message: event.args.from + " transfers " + value + " cbETH from " + event.args.to,
+      })
 }
 
 const mintEventHandler = async function(event: MintEvent, ctx: StakedTokenV1Context) {
@@ -61,3 +77,4 @@ StakedTokenV1Processor.bind({address: CBETH_PROXY})
   .onBlockInterval(blockHandler)
   .onEventMint(mintEventHandler)
   .onEventBurn(burnEventHandler)
+.onEventTransfer(transferEventHandler)
