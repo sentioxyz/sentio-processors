@@ -80,16 +80,16 @@ const handleBlockCommittedEvent = async (event: BlockCommittedEvent, ctx: CapeCo
     if (note_types) {
       const note_type = note_types.length > 0 ? note_types[0] : undefined
       switch (note_type) {
-        case 0:
+        case 0n:
           gaugeAndCounter("Transfer", ctx)
           break;
-        case 1:
+        case 1n:
           gaugeAndCounter("Mint", ctx)
           break;
-        case 2:
+        case 2n:
           gaugeAndCounter("Freeze", ctx)
           break;
-        case 3:
+        case 3n:
           gaugeAndCounter("Burn", ctx)
           break;
         default:
