@@ -46,7 +46,7 @@ coin.bind()
             const toLabel = WATCHES.get(to)
             const amount = scaleDown(call.arguments_decoded[1], APT_DECIMAL)
 
-            ctx.eventTracker.track("transfer_from", {
+            ctx.eventLogger.emit("transfer_from", {
                 distinctId: from,
                 "amount": amount.toNumber(),
                 "symbol": "tAPT",
@@ -55,7 +55,7 @@ coin.bind()
                 "to": to,
                 "to_label": toLabel,
             })
-            ctx.eventTracker.track("transfer_to", {
+            ctx.eventLogger.emit("transfer_to", {
                 distinctId: to,
                 "amount": amount.toNumber(),
                 "symbol": "tAPT",
@@ -85,8 +85,8 @@ aptos_account.bind()
         const amount = scaleDown(call.arguments_decoded[1], APT_DECIMAL)
         const fromLabel = WATCHES.get(from)
         const toLabel = WATCHES.get(to)
-        
-        ctx.eventTracker.track("transfer_from", {
+
+        ctx.eventLogger.emit("transfer_from", {
             distinctId: from,
             "amount": amount.toNumber(),
             "symbol": "APT",
@@ -95,7 +95,7 @@ aptos_account.bind()
             "to": to,
             "to_label": toLabel,
         })
-        ctx.eventTracker.track("transfer_to", {
+        ctx.eventLogger.emit("transfer_to", {
             distinctId: to,
             "amount": amount.toNumber(),
             "symbol": "APT",

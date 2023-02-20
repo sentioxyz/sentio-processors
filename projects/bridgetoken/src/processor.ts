@@ -17,6 +17,7 @@ for (const token of CORE_TOKENS.values()) {
     BRIDGE_TOKENS.set(token.token_type.type, token)
 
     getPriceByType(CHAIN_IDS.APTOS_MAINNET, token.token_type.type, date).then((price) => {
+        price = price || 0
         PRICES.set(token.token_type.type, price)
         console.log("price", token.token_type.type, price)
     })
@@ -57,7 +58,7 @@ const client = getAptosClient()!
 // })
 
 
-defaultMoveCoder().load(coin.ABI)
+// defaultMoveCoder().load(coin.ABI)
 account.bind().onEventCoinRegisterEvent(async (call, ctx) => {
     const type = extractTypeName(call.data_decoded.type_info)
     const accountAddress = call.guid.account_address
@@ -77,7 +78,7 @@ account.bind().onEventCoinRegisterEvent(async (call, ctx) => {
     const amount = scaleDown(decodedRes.data_decoded.coin.value, token.decimals)
     const value = amount.multipliedBy(PRICES.get(token.token_type.type)!)
 
-    ctx.eventTracker.track("coin_register", {
+    ctx.eventLogger.emit("coin_register", {
         distinctId: accountAddress,
         "token": {
             "symbol": token.symbol,

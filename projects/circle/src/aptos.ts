@@ -48,7 +48,7 @@ function isUSDCPair(typeX: string, typeY: string) {
 
 const client = getAptosClient()!
 
-coin.loadTypes(defaultMoveCoder())
+// coin.loadTypes(defaultMoveCoder())
 for (const token of CORE_TOKENS.values()) {
   if (!isUSDCType(token.token_type.type)) {
     continue
