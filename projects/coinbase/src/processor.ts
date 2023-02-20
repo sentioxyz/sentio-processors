@@ -38,12 +38,20 @@ const transferEventHandler = async function(event: TransferEvent, ctx: StakedTok
   const amount = event.args.value.scaleDown(tokenInfo.decimal)
   transferAcc.add(ctx, amount, {token: tokenInfo.symbol})
   transfer.record(ctx, amount, {token: tokenInfo.symbol})
-  ctx.eventLogger.emit("Transfer", {
+  ctx.eventLogger.emit("NetTransfer", {
         distinctId: event.args.to,
         from: event.args.from,
         to:event.args.to,
         amount: amount,
-        message: event.args.from + " transfers " + amount + " cbETH from " + event.args.to,
+        message: event.args.to + " received " + amount + " cbETH from " + event.args.from,
+      }
+  )
+  ctx.eventLogger.emit("NetTransfer", {
+        distinctId: event.args.from,
+        from: event.args.from,
+        to:event.args.to,
+        amount: amount.multipliedBy(-1),
+        message: event.args.from + " transferred " + amount + " cbETH to " + event.args.to,
       }
   )
 }
@@ -55,20 +63,20 @@ const blockHandler = async function(_:any, ctx: StakedTokenV1Context) {
   ctx.meter.Gauge("total_supply").record(totalSupply, {token: tokenInfo.symbol})
   ctx.meter.Gauge("exchange_rate").record(exchangeRate, {token: tokenInfo.symbol})
 
-  const eth_usdc_price = await getPriceByType(CHAIN_IDS.ETHEREUM,
+  const weth_price = await getPriceByType(CHAIN_IDS.ETHEREUM,
       "0xC02aaA39b223FE8D0A0e5C4F27eAD9083C756Cc2", ctx.timestamp)
-  if (!eth_usdc_price) {
+  if (!weth_price) {
     console.warn("cannot get price for ETH")
     return
   }
-  let cbEth_usdc_price
+  let cbEth_price
   if (!exchangeRate.isEqualTo(BigDecimal(0))) {
-    cbEth_usdc_price = BigDecimal(eth_usdc_price).dividedBy(exchangeRate)
+      cbEth_price = BigDecimal(weth_price).dividedBy(exchangeRate)
   } else {
-    cbEth_usdc_price = 0
+      cbEth_price = 0
   }
-  ctx.meter.Gauge("cbETH_price").record(cbEth_usdc_price, {token: tokenInfo.symbol})
-  ctx.meter.Gauge("tvl").record(totalSupply.multipliedBy(cbEth_usdc_price), {token: tokenInfo.symbol})
+  ctx.meter.Gauge("cbETH_price").record(cbEth_price, {token: tokenInfo.symbol})
+  ctx.meter.Gauge("tvl").record(totalSupply.multipliedBy(cbEth_price), {token: tokenInfo.symbol})
 }
 
 
