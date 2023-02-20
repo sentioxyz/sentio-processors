@@ -108,8 +108,7 @@ for (const m of [bluemoves.marketplaceV2, bluemoves.offer_lib]) {
 export const volOptions: MetricOptions = {
     sparse: true,
     aggregationConfig: {
-        intervalInMinutes: [60*24],
-        discardOrigin: true,
+        intervalInMinutes: [60],
     }
 }
 const dailyTxn = Gauge.register("txn", volOptions);
