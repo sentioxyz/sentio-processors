@@ -6,7 +6,7 @@ import {AptosAccountProcessor, defaultMoveCoder, getAptosClient} from "@sentio/s
 
 const client = getAptosClient()!
 
-coin.loadTypes(defaultMoveCoder())
+// coin.loadTypes(defaultMoveCoder())
 for (const token of CORE_TOKENS.values()) {
     const coinInfoType = `0x1::coin::CoinInfo<${token.token_type.type}>`
     // const price = await getPrice(v.token_type.type, timestamp)

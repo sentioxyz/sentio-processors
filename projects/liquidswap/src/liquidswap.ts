@@ -13,7 +13,7 @@ import {
     whiteListed
 } from "@sentio-processor/common/aptos"
 
-import {BigDecimal} from "@sentio/sdk"
+import { AccountEventTracker, BigDecimal } from "@sentio/sdk"
 
 import {
     inputUsd,
@@ -26,6 +26,10 @@ import {
     tvlByPoolNew,
     volume,
 } from "./metrics.js"
+
+// TODO to remove
+export const accountTracker = AccountEventTracker.register("users")
+export const lps = AccountEventTracker.register("lps")
 
 const liquidSwap = new AptosDex<liquidity_pool.LiquidityPool<any, any, any>>(volume,
     singleVolume,
@@ -102,6 +106,8 @@ liquidity_pool.bind()
         }
     })
     .onEventSwapEvent(async (evt, ctx) => {
+        accountTracker.trackEvent(ctx, {distinctId: ctx.transaction.sender})
+
         const value = await liquidSwap.recordTradingVolume(ctx,
             evt.type_arguments[0], evt.type_arguments[1],
             evt.data_decoded.x_in + evt.data_decoded.x_out,
@@ -128,6 +134,8 @@ liquidity_pool.bind()
         })
     })
     .onEventFlashloanEvent(async (evt, ctx) => {
+        accountTracker.trackEvent(ctx, {distinctId: ctx.transaction.sender})
+
         const coinXInfo = getCoinInfo(evt.type_arguments[0])
         const coinYInfo = getCoinInfo(evt.type_arguments[1])
         ctx.meter.Counter("event_flashloan_by_bridge").add(1, {bridge: coinXInfo.bridge})

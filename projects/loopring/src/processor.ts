@@ -83,10 +83,12 @@ ExchangeV3Processor.bind({address: LOOPRING_EXCHANGE})
       }
       // ctx.logger.info(`SubmitBlocks triggered at ${ctx.blockNumber}`)
       ctx.meter.Counter("submit_block").add(1)
-      const tx = await ctx.contract.provider.getTransaction(call.transactionHash)
+      // const tx = await ctx.contract.provider.getTransaction(call.transactionHash)
+      const tx = ctx.transaction
       const gasPrice = tx!.gasPrice
       const gasUsedFromCall = call.result.gasUsed
-      const receipt = await ctx.contract.provider.getTransactionReceipt(call.transactionHash)
+      // const receipt = await ctx.contract.provider.getTransactionReceipt(call.transactionHash)
+      const receipt = ctx.transactionReceipt
       const gasUsed = receipt!.gasUsed
       if (gasPrice !== undefined) {
         const gasSpent = gasUsed.asBigDecimal().multipliedBy(gasPrice.scaleDown(18))
@@ -97,6 +99,10 @@ ExchangeV3Processor.bind({address: LOOPRING_EXCHANGE})
       for (const block of call.args.blocks) {
         processBlockStruct(block, call.transactionHash, ctx)
       }
+    }, {
+      transaction: true,
+      transactionReceipt: true,
+      block: false
     })
 
 async function walletCounter(event: any, ctx: ContractContext<BaseContract, BoundContractView<BaseContract, ContractView<BaseContract>>>) {
