@@ -8,7 +8,7 @@ import {
 export const volOptions = {
     sparse: true,
     aggregationConfig: {
-        intervalInMinutes: [10],
+        intervalInMinutes: [60],
     }
 }
 
