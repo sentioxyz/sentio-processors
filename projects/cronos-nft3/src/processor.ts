@@ -1,5 +1,5 @@
 import { MintedexchangeProcessor } from './types/eth/mintedexchange.js'
-
+import { getERC721Contract } from '@sentio/sdk/eth/builtin/erc721'
 
 //first tx block time 6006174	
 MintedexchangeProcessor.bind({ address: '0x40cBf9C75a46b147E0fd9aB47df5E064aE015f92', network: 25, startBlock: 6006174 })
@@ -28,53 +28,62 @@ MintedexchangeProcessor.bind({ address: '0x40cBf9C75a46b147E0fd9aB47df5E064aE015
   })
   .onEventRoyaltyPayment(async (event, ctx) => {
     const collection = event.args.collection
+    console.log(collection)
+
+    const collectionName = (await getERC721Contract(collection).name())
+    //const collectionName = (await getERC721Contract(collection).name()).toString()
+
+
     const tokenId = Number(event.args.tokenId)
     const royaltyRecipient = event.args.royaltyRecipient
     const currency = event.args.currency
     const amount = Number(event.args.amount) / Math.pow(10, 18)
 
-    console.log(collection, tokenId, royaltyRecipient, currency, amount)
 
-    const hash = event.transactionHash
-    try {
-      // console.log("transactionHash", hash)
-      const tx = (await ctx.contract.provider.getTransaction(hash))!
-      const from = tx.from
-      console.log("event royaltypayment transactionHash", hash, "tx from:", from)
+    console.log(collectionName, collection, tokenId, royaltyRecipient, currency, amount)
 
-      ctx.eventLogger.emit("RoyaltyPayment", {
-        distinctId: from,
-        collection: collection,
-        tokenId: tokenId,
-        royaltyRecipient: royaltyRecipient,
-        currency: currency,
-        amount: amount
-      })
+    // const hash = event.transactionHash
+    // try {
+    //   // console.log("transactionHash", hash)
+    //   const tx = (await ctx.contract.provider.getTransaction(hash))!
+    //   const from = tx.from
+    //   console.log("event royaltypayment transactionHash", hash, "tx from:", from)
 
-    } catch (e) {
-      if (e instanceof Error) {
-        console.log(e.message)
-      }
-    }
+    //   ctx.eventLogger.emit("RoyaltyPayment", {
+    //     distinctId: from,
+    //     collection: collection,
+    //     collectionName: collectionName,
+    //     tokenId: tokenId,
+    //     royaltyRecipient: royaltyRecipient,
+    //     currency: currency,
+    //     amount: amount
+    //   })
+
+    // } catch (e) {
+    //   if (e instanceof Error) {
+    //     console.log(e.message)
+    //   }
+    // }
 
   })
 
-  // .onAllEvents(async (event: any, ctx: any) => {
-  //   const hash = event.transactionHash
-  //   try {
-  //     // console.log("transactionHash", hash)
-  //     var tx = (await ctx.contract.provider.getTransaction(hash))!
-  //     var from = tx.from
-  //     console.log("mintedexchange transactionHash", hash, "tx from:", from, "event", event.name)
+// .onAllEvents(async (event: any, ctx: any) => {
+//   const hash = event.transactionHash
+//   try {
+//     // console.log("transactionHash", hash)
+//     var tx = (await ctx.contract.provider.getTransaction(hash))!
+//     var from = tx.from
+//     console.log("mintedexchange transactionHash", hash, "tx from:", from, "event", event.name)
 
-  //     ctx.eventLogger.emit("Any_Event",
-  //       {
-  //         distinctId: from,
-  //         event: event.name
-  //       })
-  //   } catch (e) {
-  //     if (e instanceof Error) {
-  //       console.log(e.message)
-  //     }
-  //   }
-  // })
+//     ctx.eventLogger.emit("Any_Event",
+//       {
+//         distinctId: from,
+//         event: event.name
+//       })
+//   } catch (e) {
+//     if (e instanceof Error) {
+//       console.log(e.message)
+//     }
+//   }
+// })
+
