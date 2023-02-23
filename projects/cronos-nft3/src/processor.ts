@@ -29,10 +29,15 @@ MintedexchangeProcessor.bind({ address: '0x40cBf9C75a46b147E0fd9aB47df5E064aE015
   .onEventRoyaltyPayment(async (event, ctx) => {
     const collection = event.args.collection
     console.log(collection)
-
-    const collectionName = (await getERC721Contract(collection).name())
-    //const collectionName = (await getERC721Contract(collection).name()).toString()
-
+    const collectionName = JSON.stringify(await getERC721Contract(collection, 25).name())
+    // try {
+    //   const collectionName = (await getERC721Contract(collection, 25).name()).toString
+    // } catch (e) {
+    //   if (e instanceof Error) {
+    //     console.log(e.message)
+    //     console.log("error retrieving name", collection)
+    //   }
+    // }
 
     const tokenId = Number(event.args.tokenId)
     const royaltyRecipient = event.args.royaltyRecipient
@@ -42,28 +47,28 @@ MintedexchangeProcessor.bind({ address: '0x40cBf9C75a46b147E0fd9aB47df5E064aE015
 
     console.log(collectionName, collection, tokenId, royaltyRecipient, currency, amount)
 
-    // const hash = event.transactionHash
-    // try {
-    //   // console.log("transactionHash", hash)
-    //   const tx = (await ctx.contract.provider.getTransaction(hash))!
-    //   const from = tx.from
-    //   console.log("event royaltypayment transactionHash", hash, "tx from:", from)
+    const hash = event.transactionHash
+    try {
+      // console.log("transactionHash", hash)
+      const tx = (await ctx.contract.provider.getTransaction(hash))!
+      const from = tx.from
+      console.log("event royaltypayment transactionHash", hash, "tx from:", from)
 
-    //   ctx.eventLogger.emit("RoyaltyPayment", {
-    //     distinctId: from,
-    //     collection: collection,
-    //     collectionName: collectionName,
-    //     tokenId: tokenId,
-    //     royaltyRecipient: royaltyRecipient,
-    //     currency: currency,
-    //     amount: amount
-    //   })
+      ctx.eventLogger.emit("RoyaltyPayment", {
+        distinctId: from,
+        collection: collection,
+        collectionName: collectionName,
+        tokenId: tokenId,
+        royaltyRecipient: royaltyRecipient,
+        currency: currency,
+        amount: amount
+      })
 
-    // } catch (e) {
-    //   if (e instanceof Error) {
-    //     console.log(e.message)
-    //   }
-    // }
+    } catch (e) {
+      if (e instanceof Error) {
+        console.log(e.message)
+      }
+    }
 
   })
 
