@@ -1,5 +1,5 @@
 import { PancakeRouterProcessor } from './types/eth/pancakerouter.js'
-import { PancakePairProcessor } from './types/eth/pancakepair.js'
+import { PancakePairProcessor, PancakePairContext } from './types/eth/pancakepair.js'
 
 import { getPriceByType, getPriceBySymbol, token } from "@sentio/sdk/utils"
 import { CHAIN_IDS } from "@sentio/sdk"
@@ -47,15 +47,13 @@ interface poolInfo {
   token1: token.TokenInfo
   token0Address: string
   token1Address: string
-  fee: string
 }
 
 // define a map from string to poolInfo
 let poolInfoMap = new Map<string, Promise<poolInfo>>()
 
 async function buildPoolInfo(token0Promise: Promise<string>,
-  token1Promise: Promise<string>,
-  feePromise: Promise<bigint>): Promise<poolInfo> {
+  token1Promise: Promise<string>): Promise<poolInfo> {
   const address0 = await token0Promise
   const address1 = await token1Promise
   const tokenInfo0 = await getTokenInfo(address0)
@@ -64,15 +62,14 @@ async function buildPoolInfo(token0Promise: Promise<string>,
     token0: tokenInfo0,
     token1: tokenInfo1,
     token0Address: address0,
-    token1Address: address1,
-    fee: (await feePromise).toString(),
+    token1Address: address1
   }
 }
 
-const getOrCreatePool = async function (ctx: UniswapContext): Promise<poolInfo> {
+const getOrCreatePool = async function (ctx: PancakePairContext): Promise<poolInfo> {
   let infoPromise = poolInfoMap.get(ctx.address)
   if (!infoPromise) {
-    infoPromise = buildPoolInfo(ctx.contract.token0(), ctx.contract.token1(), ctx.contract.fee())
+    infoPromise = buildPoolInfo(ctx.contract.token0(), ctx.contract.token1())
     poolInfoMap.set(ctx.address, infoPromise)
     console.log("set poolInfoMap for " + ctx.address)
   }
