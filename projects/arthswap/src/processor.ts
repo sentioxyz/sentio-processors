@@ -33,97 +33,153 @@ const PairWatching = [
 const ROUTER_ADDRESS = "0xE915D2393a08a00c5A463053edD31bAe2199b9e7"
 const FACTORY_ADDRESS = "0xA9473608514457b4bF083f9045fA63ae5810A03E"
 
+
+async function getTokenInfo(address: string): Promise<token.TokenInfo> {
+  if (address !== "0x0000000000000000000000000000000000000000") {
+    return await token.getERC20TokenInfo(address)
+  } else {
+    return token.NATIVE_ETH
+  }
+}
+
+interface poolInfo {
+  token0: token.TokenInfo
+  token1: token.TokenInfo
+  token0Address: string
+  token1Address: string
+  fee: string
+}
+
+// define a map from string to poolInfo
+let poolInfoMap = new Map<string, Promise<poolInfo>>()
+
+async function buildPoolInfo(token0Promise: Promise<string>,
+  token1Promise: Promise<string>,
+  feePromise: Promise<bigint>): Promise<poolInfo> {
+  const address0 = await token0Promise
+  const address1 = await token1Promise
+  const tokenInfo0 = await getTokenInfo(address0)
+  const tokenInfo1 = await getTokenInfo(address1)
+  return {
+    token0: tokenInfo0,
+    token1: tokenInfo1,
+    token0Address: address0,
+    token1Address: address1,
+    fee: (await feePromise).toString(),
+  }
+}
+
+const getOrCreatePool = async function (ctx: UniswapContext): Promise<poolInfo> {
+  let infoPromise = poolInfoMap.get(ctx.address)
+  if (!infoPromise) {
+    infoPromise = buildPoolInfo(ctx.contract.token0(), ctx.contract.token1(), ctx.contract.fee())
+    poolInfoMap.set(ctx.address, infoPromise)
+    console.log("set poolInfoMap for " + ctx.address)
+  }
+  return await infoPromise
+}
+
 for (let i = 0; i < PairWatching.length; i++) {
   let address = PairWatching[i]
   PancakePairProcessor.bind({ address: address, network: CHAIN_IDS.ASTAR, startBlock: 3010709 })
     .onEventSwap(async (event, ctx) => {
       ctx.meter.Counter('swap').add(1)
-      //   // ctx.meter.Gauge("reserve").record(totalSupply, { token: tokenInfo.symbol })
+      // ctx.meter.Gauge("reserve").record(totalSupply, { token: tokenInfo.symbol })
 
-      //   const address0 = await ctx.contract.token0()
-      //   const address1 = await ctx.contract.token1()
-      //   const symbol0 = (await token.getERC20TokenInfo(address0)).symbol
-      //   const symbol1 = (await token.getERC20TokenInfo(address1)).symbol
-      //   const decimal0 = (await token.getERC20TokenInfo(address0)).decimal
-      //   const decimal1 = (await token.getERC20TokenInfo(address1)).decimal
-      //   const pairName = symbol0 + "-" + symbol1
+      const info = await getOrCreatePool(ctx)
 
-      //   const amount0Out = Number(event.args.amount0Out) / Math.pow(10, decimal0)
-      //   const amount0In = Number(event.args.amount0In) / Math.pow(10, decimal0)
-      //   const amount1Out = Number(event.args.amount1Out) / Math.pow(10, decimal1)
-      //   const amount1In = Number(event.args.amount1In) / Math.pow(10, decimal1)
+      const address0 = info.token0Address
+      const address1 = info.token1Address
+      console.log(address0, address1)
 
-      //   console.log("Token0:", symbol0, "amount0Out:", amount0Out, " amount0In:", amount0In, "Token1:", symbol1, "amount1Out:", amount1Out, "amount1In:", amount1In)
+      const symbol0 = info.token0.symbol
+      const symbol1 = info.token1.symbol
+      const decimal0 = info.token0.decimal
+      const decimal1 = info.token1.decimal
+      const pairName = symbol0 + "-" + symbol1
+
+      const amount0Out = Number(event.args.amount0Out) / Math.pow(10, decimal0)
+      const amount0In = Number(event.args.amount0In) / Math.pow(10, decimal0)
+      const amount1Out = Number(event.args.amount1Out) / Math.pow(10, decimal1)
+      const amount1In = Number(event.args.amount1In) / Math.pow(10, decimal1)
+
+      console.log("Token0:", symbol0, "amount0Out:", amount0Out, " amount0In:", amount0In, "Token1:", symbol1, "amount1Out:", amount1Out, "amount1In:", amount1In)
 
 
-      //   //getReserve
-      //   const getReserve = await ctx.contract.getReserves()
-      //   const reserve0 = Number(getReserve[0]) / Math.pow(10, decimal0)
-      //   const reserve1 = Number(getReserve[1]) / Math.pow(10, decimal1)
-      //   const blockTimestampLast = getReserve[2]
-      //   console.log("reserve0:", reserve0, " reserve1:", reserve1, "blockTimestampLast:", blockTimestampLast, "blockTimestampNow:", ctx.timestamp)
-      //   ctx.meter.Gauge('reserve0').record(reserve0)
-      //   ctx.meter.Gauge('reserve1').record(reserve1)
+      //getReserve
+      const getReserve = await ctx.contract.getReserves()
+      const reserve0 = Number(getReserve[0]) / Math.pow(10, decimal0)
+      const reserve1 = Number(getReserve[1]) / Math.pow(10, decimal1)
+      const blockTimestampLast = getReserve[2]
+      console.log("reserve0:", reserve0, " reserve1:", reserve1, "blockTimestampLast:", blockTimestampLast, "blockTimestampNow:", ctx.timestamp)
+      ctx.meter.Gauge('reserve0').record(reserve0)
+      ctx.meter.Gauge('reserve1').record(reserve1)
 
-      //   // //trading volume
-      //   // const token0Price = await getPriceBySymbol(symbol0, ctx.timestamp)
-      //   // const volume0 = amount0In * token0Price
-      //   // console.log("token0Price:", token0Price, "amount0In", amount0In, " volume:", volume0)
-      //   // ctx.meter.Counter('vol_counter').add(volume0, { symbol: symbol0, pair: pairName })
-      //   // ctx.meter.Gauge('vol_gauge').record(volume0, { symbol: symbol0, pair: pairName })
+      // //trading volume
+      // const token0Price = await getPriceBySymbol(symbol0, ctx.timestamp)
+      // const volume0 = amount0In * token0Price
+      // console.log("token0Price:", token0Price, "amount0In", amount0In, " volume:", volume0)
+      // ctx.meter.Counter('vol_counter').add(volume0, { symbol: symbol0, pair: pairName })
+      // ctx.meter.Gauge('vol_gauge').record(volume0, { symbol: symbol0, pair: pairName })
 
-      //   // const token1Price = await getPriceBySymbol(symbol1, ctx.timestamp)
-      //   // const volume1 = amount1In * token1Price
-      //   // console.log("token1Price:", token1Price, "amount1In", amount1In, " volume:", volume1)
-      //   // ctx.meter.Counter('vol_counter').add(volume1, { symbol: symbol1, pair: pairName })
-      //   // ctx.meter.Gauge('vol_gauge').record(volume1, { symbol: symbol1, pair: pairName })
+      // const token1Price = await getPriceBySymbol(symbol1, ctx.timestamp)
+      // const volume1 = amount1In * token1Price
+      // console.log("token1Price:", token1Price, "amount1In", amount1In, " volume:", volume1)
+      // ctx.meter.Counter('vol_counter').add(volume1, { symbol: symbol1, pair: pairName })
+      // ctx.meter.Gauge('vol_gauge').record(volume1, { symbol: symbol1, pair: pairName })
 
-      // })
-      // .onEventMint(async (event, ctx) => {
-      //   ctx.meter.Counter('mint').add(1)
-      //   //ctx.meter.Gauge("").record(totalSupply, { token: tokenInfo.symbol })
-      //   const address0 = await ctx.contract.token0()
-      //   const address1 = await ctx.contract.token1()
-      //   const symbol0 = (await token.getERC20TokenInfo(address0)).symbol
-      //   const symbol1 = (await token.getERC20TokenInfo(address1)).symbol
-      //   const decimal0 = (await token.getERC20TokenInfo(address0)).decimal
-      //   const decimal1 = (await token.getERC20TokenInfo(address1)).decimal
-      //   const pairName = symbol0 + "-" + symbol1
+    })
+    .onEventMint(async (event, ctx) => {
+      ctx.meter.Counter('mint').add(1)
+      //ctx.meter.Gauge("").record(totalSupply, { token: tokenInfo.symbol })
+      const info = await getOrCreatePool(ctx)
 
-      //   const amount0 = Number(event.args.amount0) / Math.pow(10, decimal0)
-      //   const amount1 = Number(event.args.amount1) / Math.pow(10, decimal1)
+      const address0 = info.token0Address
+      const address1 = info.token1Address
 
-      //   console.log("MINT--", "amount0:", amount0, " amount1:", amount1)
+      const symbol0 = info.token0.symbol
+      const symbol1 = info.token1.symbol
+      const decimal0 = info.token0.decimal
+      const decimal1 = info.token1.decimal
+      const pairName = symbol0 + "-" + symbol1
 
-      //   ctx.meter.Counter("total_mint").add(amount0, {
-      //     symbol: symbol0, pair: pairName
-      //   })
-      //   ctx.meter.Counter("total_mint").add(amount1, {
-      //     symbol: symbol1, pair: pairName
-      //   })
-      // })
-      // .onEventBurn(async (event, ctx) => {
-      //   ctx.meter.Counter('burn').add(1)
-      //   //ctx.meter.Gauge("").record(totalSupply, { token: tokenInfo.symbol })
-      //   const address0 = await ctx.contract.token0()
-      //   const address1 = await ctx.contract.token1()
-      //   const symbol0 = (await token.getERC20TokenInfo(address0)).symbol
-      //   const symbol1 = (await token.getERC20TokenInfo(address1)).symbol
-      //   const decimal0 = (await token.getERC20TokenInfo(address0)).decimal
-      //   const decimal1 = (await token.getERC20TokenInfo(address1)).decimal
-      //   const pairName = symbol0 + "-" + symbol1
+      const amount0 = Number(event.args.amount0) / Math.pow(10, decimal0)
+      const amount1 = Number(event.args.amount1) / Math.pow(10, decimal1)
 
-      //   const amount0 = Number(event.args.amount0) / Math.pow(10, decimal0)
-      //   const amount1 = Number(event.args.amount1) / Math.pow(10, decimal1)
+      console.log("MINT--", "amount0:", amount0, " amount1:", amount1)
 
-      //   console.log("BURN--", "amount0:", amount0, " amount1:", amount1)
+      ctx.meter.Counter("total_mint").add(amount0, {
+        symbol: symbol0, pair: pairName
+      })
+      ctx.meter.Counter("total_mint").add(amount1, {
+        symbol: symbol1, pair: pairName
+      })
+    })
+    .onEventBurn(async (event, ctx) => {
+      ctx.meter.Counter('burn').add(1)
+      //ctx.meter.Gauge("").record(totalSupply, { token: tokenInfo.symbol })
+      const info = await getOrCreatePool(ctx)
 
-      //   ctx.meter.Counter("total_burn").add(amount0, {
-      //     symbol: symbol0, pair: pairName
-      //   })
-      //   ctx.meter.Counter("total_burn").add(amount1, {
-      //     symbol: symbol1, pair: pairName
-      //   })
+      const address0 = info.token0Address
+      const address1 = info.token1Address
+
+      const symbol0 = info.token0.symbol
+      const symbol1 = info.token1.symbol
+      const decimal0 = info.token0.decimal
+      const decimal1 = info.token1.decimal
+      const pairName = symbol0 + "-" + symbol1
+
+      const amount0 = Number(event.args.amount0) / Math.pow(10, decimal0)
+      const amount1 = Number(event.args.amount1) / Math.pow(10, decimal1)
+
+      console.log("BURN--", "amount0:", amount0, " amount1:", amount1)
+
+      ctx.meter.Counter("total_burn").add(amount0, {
+        symbol: symbol0, pair: pairName
+      })
+      ctx.meter.Counter("total_burn").add(amount1, {
+        symbol: symbol1, pair: pairName
+      })
     })
 
 }
