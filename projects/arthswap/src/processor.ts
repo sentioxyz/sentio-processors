@@ -39,7 +39,7 @@ async function getTokenInfo(address: string): Promise<token.TokenInfo> {
   if (address !== "0x0000000000000000000000000000000000000000") {
       // This is a hack.
     try {
-        return await token.getERC20TokenInfo(address)
+        return await token.getERC20TokenInfo(address, 592)
     } catch (error) {
         console.log(error, address)
         return token.NATIVE_ETH
