@@ -117,29 +117,21 @@ for (let i = 0; i < PairWatching.length; i++) {
       const amount1Out = Number(event.args.amount1Out) / Math.pow(10, decimal1)
       const amount1In = Number(event.args.amount1In) / Math.pow(10, decimal1)
 
+      const ABS_Amount0 = (amount0In > amount0Out) ? (amount0In - amount0Out) : (amount0Out - amount0In)
+
       console.log("Token0:", symbol0, "amount0Out:", amount0Out, " amount0In:", amount0In, "Token1:", symbol1, "amount1Out:", amount1Out, "amount1In:", amount1In)
 
-      const hash = event.transactionHash
-      try {
-        var tx = (await ctx.contract.provider.getTransaction(hash))!
-        var from = tx.from
-        ctx.eventLogger.emit("swap", {
-          distinctId: from,
-          token0: symbol0,
-          token1: symbol1,
-          amount0In: amount0In,
-          amount1In: amount1In,
-          amount0Out: amount0Out,
-          amount1Out: amount1Out,
-          pairName: pairName
-        })
-
-      }
-      catch (e) {
-        if (e instanceof Error) {
-          console.log(e.message)
-        }
-      }
+      ctx.eventLogger.emit("swap", {
+        distinctId: event.args.sender,
+        token0: symbol0,
+        token1: symbol1,
+        amount0In: amount0In,
+        amount1In: amount1In,
+        amount0Out: amount0Out,
+        amount1Out: amount1Out,
+        ABS_Amount0: ABS_Amount0,
+        pairName: pairName
+      })
 
       //getReserve
       const getReserve = await ctx.contract.getReserves()
