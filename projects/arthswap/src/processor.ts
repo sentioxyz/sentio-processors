@@ -35,14 +35,14 @@ const FACTORY_ADDRESS = "0xA9473608514457b4bF083f9045fA63ae5810A03E"
 
 
 async function getTokenInfo(address: string): Promise<token.TokenInfo> {
-    // TODO(ye): this is wrong in the first place. this is a special address for native eth. does not apply here.
+  // TODO(ye): this is wrong in the first place. this is a special address for native eth. does not apply here.
   if (address !== "0x0000000000000000000000000000000000000000") {
-      // This is a hack.
+    // This is a hack.
     try {
-        return await token.getERC20TokenInfo(address, 592)
+      return await token.getERC20TokenInfo(address, 592)
     } catch (error) {
-        console.log(error, address)
-        return token.NATIVE_ETH
+      console.log(error, address)
+      return token.NATIVE_ETH
     }
   } else {
     return token.NATIVE_ETH
@@ -61,18 +61,18 @@ let poolInfoMap = new Map<string, Promise<poolInfo>>()
 
 async function buildPoolInfo(token0Promise: Promise<string>,
   token1Promise: Promise<string>): Promise<poolInfo> {
-    let address0 =  ""
-    let address1 =  ""
-    try {
-        address0 = await token0Promise
-    } catch (error) {
-        console.log(error, address0)
-    }
-    try {
-        address1 = await token1Promise
-    } catch (error) {
-        console.log(error, address1)
-    }
+  let address0 = ""
+  let address1 = ""
+  try {
+    address0 = await token0Promise
+  } catch (error) {
+    console.log(error, address0)
+  }
+  try {
+    address1 = await token1Promise
+  } catch (error) {
+    console.log(error, address1)
+  }
   const tokenInfo0 = await getTokenInfo(address0)
   const tokenInfo1 = await getTokenInfo(address1)
   return {
@@ -119,6 +119,27 @@ for (let i = 0; i < PairWatching.length; i++) {
 
       console.log("Token0:", symbol0, "amount0Out:", amount0Out, " amount0In:", amount0In, "Token1:", symbol1, "amount1Out:", amount1Out, "amount1In:", amount1In)
 
+      const hash = event.transactionHash
+      try {
+        var tx = (await ctx.contract.provider.getTransaction(hash))!
+        var from = tx.from
+        ctx.eventLogger.emit("swap", {
+          distinctId: from,
+          token0: symbol0,
+          token1: symbol1,
+          amount0In: amount0In,
+          amount1In: amount1In,
+          amount0Out: amount0Out,
+          amount1Out: amount1Out,
+          pairName: pairName
+        })
+
+      }
+      catch (e) {
+        if (e instanceof Error) {
+          console.log(e.message)
+        }
+      }
 
       //getReserve
       const getReserve = await ctx.contract.getReserves()
@@ -126,8 +147,8 @@ for (let i = 0; i < PairWatching.length; i++) {
       const reserve1 = Number(getReserve[1]) / Math.pow(10, decimal1)
       const blockTimestampLast = getReserve[2]
       console.log("reserve0:", reserve0, " reserve1:", reserve1, "blockTimestampLast:", blockTimestampLast, "blockTimestampNow:", ctx.timestamp)
-      ctx.meter.Gauge('reserve0').record(reserve0)
-      ctx.meter.Gauge('reserve1').record(reserve1)
+      ctx.meter.Gauge('reserve0').record(reserve0, { pairName: pairName })
+      ctx.meter.Gauge('reserve1').record(reserve1, { pairName: pairName })
 
       // //trading volume
       // const token0Price = await getPriceBySymbol(symbol0, ctx.timestamp)
@@ -168,6 +189,19 @@ for (let i = 0; i < PairWatching.length; i++) {
       ctx.meter.Counter("total_mint").add(amount1, {
         symbol: symbol1, pair: pairName
       })
+
+      ctx.eventLogger.emit("Mint", {
+        distinctId: event.args.sender,
+        amount0: amount0,
+        symbol0: symbol0,
+        amount1: amount1,
+        symbol1: symbol1,
+        pairName: pairName,
+        message: "Mint"
+      })
+
+
+
     })
     .onEventBurn(async (event, ctx) => {
       ctx.meter.Counter('burn').add(1)
@@ -194,6 +228,16 @@ for (let i = 0; i < PairWatching.length; i++) {
       ctx.meter.Counter("total_burn").add(amount1, {
         symbol: symbol1, pair: pairName
       })
+      ctx.eventLogger.emit("Burn", {
+        distinctId: event.args.sender,
+        amount0: amount0,
+        symbol0: symbol0,
+        amount1: amount1,
+        symbol1: symbol1,
+        pairName: pairName
+      })
+
+
     })
 
 }
