@@ -95,9 +95,8 @@ const getOrCreatePool = async function (ctx: PancakePairContext): Promise<poolIn
 
 for (let i = 0; i < PairWatching.length; i++) {
   let address = PairWatching[i]
-  PancakePairProcessor.bind({ address: address, network: CHAIN_IDS.ASTAR, startBlock: 3010709 })
+  PancakePairProcessor.bind({ address: address, network: CHAIN_IDS.ASTAR, startBlock: 1647497 })
     .onEventSwap(async (event, ctx) => {
-      ctx.meter.Counter('swap').add(1)
       // ctx.meter.Gauge("reserve").record(totalSupply, { token: tokenInfo.symbol })
 
       const info = await getOrCreatePool(ctx)
@@ -142,6 +141,10 @@ for (let i = 0; i < PairWatching.length; i++) {
       ctx.meter.Gauge('reserve0').record(reserve0, { pairName: pairName })
       ctx.meter.Gauge('reserve1').record(reserve1, { pairName: pairName })
 
+
+      //counter
+      ctx.meter.Counter('swap').add(1, { pairName: pairName })
+
       // //trading volume
       // const token0Price = await getPriceBySymbol(symbol0, ctx.timestamp)
       // const volume0 = amount0In * token0Price
@@ -157,8 +160,7 @@ for (let i = 0; i < PairWatching.length; i++) {
 
     })
     .onEventMint(async (event, ctx) => {
-      ctx.meter.Counter('mint').add(1)
-      //ctx.meter.Gauge("").record(totalSupply, { token: tokenInfo.symbol })
+
       const info = await getOrCreatePool(ctx)
 
       const address0 = info.token0Address
@@ -192,12 +194,11 @@ for (let i = 0; i < PairWatching.length; i++) {
         message: "Mint"
       })
 
-
+      //counter
+      ctx.meter.Counter('mint').add(1, { pair: pairName })
 
     })
     .onEventBurn(async (event, ctx) => {
-      ctx.meter.Counter('burn').add(1)
-      //ctx.meter.Gauge("").record(totalSupply, { token: tokenInfo.symbol })
       const info = await getOrCreatePool(ctx)
 
       const address0 = info.token0Address
@@ -228,9 +229,11 @@ for (let i = 0; i < PairWatching.length; i++) {
         symbol1: symbol1,
         pairName: pairName
       })
-
+      //counter
+      ctx.meter.Counter('burn').add(1, { pairName: pairName })
 
     })
+    .onAllEvents(async (event, ctx) => { })
 
 }
 
