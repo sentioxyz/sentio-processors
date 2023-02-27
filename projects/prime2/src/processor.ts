@@ -32,7 +32,7 @@ async function borrowComplete(event: BorrowCompleteEvent, ctx: RequestController
     })
   }
   ctx.meter.Counter("borrow_occurred").add(1, { "pAsset": pAsset })
-  ctx.eventLogger.emit("borrowers", { distinctId: borrower })
+  // ctx.eventLogger.emit("borrowers", { distinctId: borrower })
   // borrowerTracker.trackEvent(ctx, {distinctId: borrower})
 
 
@@ -78,7 +78,7 @@ async function totalSupply(block: any, ctx: ERC20Context) {
   // console.log(pToken, JSON.stringify(tokenInfo), symbol)
 
   const totalSupply = Number(scaleDown(await ctx.contract.totalSupply(), tokenInfo.decimal))
-  console.log("total supply of " + symbol + " " + totalSupply + " at chain" + ctx.chainId + " " + ctx.contract.address)
+  // console.log("total supply of " + symbol + " " + totalSupply + " at chain" + ctx.chainId + " " + ctx.contract.address)
 
   ctx.meter.Gauge("token_total_supply").record(totalSupply, label)
   // some tokes such as usp and pwETH are not wrapped so not getting their balance
