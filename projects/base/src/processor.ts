@@ -1,3 +1,4 @@
+import { token } from "@sentio/sdk/utils";
 import { ApetimismLaunchpadNFTProcessor, ApetimismLaunchpadNFTContext } from "./types/eth/apetimismlaunchpadnft.js";
 
 const collections = [
@@ -42,7 +43,8 @@ for (let i = 0; i < collections.length; i++) {
           distinctId: to,
           tokenId: tokenId,
           collectionName: collectionName,
-          collectionAddress: address
+          collectionAddress: address,
+          message: "Mint " + collectionName + " collection #" + tokenId + " token to " + to + "(collection address: " + address + ")"
         })
       else
         ctx.eventLogger.emit("Transfer", {
@@ -50,7 +52,8 @@ for (let i = 0; i < collections.length; i++) {
           from: from,
           tokenId: tokenId,
           collectionName: collectionName,
-          collectionAddress: address
+          collectionAddress: address,
+          message: "Transfer " + collectionName + " collection #" + tokenId + " token from " + from + " to " + to + "(collection address: " + address + ")"
         })
 
 
