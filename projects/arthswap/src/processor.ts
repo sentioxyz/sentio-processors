@@ -27,7 +27,28 @@ const PairWatching = [
   "0x73eea1180c2d1772ea2118fda888a81943bac3c8",
   "0x50497e7181eb9e8ccd70a9c44fb997742149482a",
   "0xddda37daddffda55a0f4b1bde1ea5b5ba8cb0903",
-  "0x048f02d143638a40c0b0e425daaf276df2e64e96"
+  "0x048f02d143638a40c0b0e425daaf276df2e64e96",
+  "0xbb1290c1829007f440c771b37718fabf309cd527",
+  "0x806f746a7c4293092ac7aa604347be123322df1e",
+  "0x87988ebde7e661f44eb3a586c5e0ceab533a2d9c",
+  "0x40e938688a121370092a06745704c112c5ee5791",
+  "0xddea1b3343c438c2e2d636d070cfb4f63d26636e",
+  "0x61a49ba86e168cd25ca795b07b0a93236bb25127",
+  "0xf041a8e6e27341f5f865a22f01fa37e065c32156",
+  "0x3d78a6cca5c717c0e8702896892f3522d0b07010",
+  "0xccefddff4808f3e1e0340e19e43f1e9fd088b3f2",
+  "0xf4119c3d9e65602bb34f2455644e45c98d29bb4b",
+  "0xbd13fd873d36f7d2a349b35e6854e3183ede18ab",
+  "0xeee106aa8a0de519e8eb21c66a5c2275b46b3f4d",
+  "0x78d5c2adeb11be00033cc4edb2c2889cf945415e",
+  "0x74d9ba3eeed8ea15fbf883ed86895b388dc1d36f",
+  "0x7843ecd6f3234d72d0b7034dd9894b77c416c6ef",
+  "0x92127ec0ebef8b30378d757bbe8dce18210b848b",
+  "0xd72a602c714ae36d990dc835ea5f96ef87657d5e",
+  "0xdc0b29cb77c225a2a7767f20d49721858fa9822f",
+  "0x8897d79334c2d517b83e7846da4b922e68fda61b",
+  "0xca59df939290421047876c917789afdb68d5d6f1",
+  "0x4f38eaa2ee8b1344e268496e02bbbaf9d1b34f0a"
 ]
 
 const ROUTER_ADDRESS = "0xE915D2393a08a00c5A463053edD31bAe2199b9e7"
@@ -88,17 +109,22 @@ const getOrCreatePool = async function (ctx: PancakePairContext): Promise<poolIn
   if (!infoPromise) {
     infoPromise = buildPoolInfo(ctx.contract.token0(), ctx.contract.token1())
     poolInfoMap.set(ctx.address, infoPromise)
-    console.log("set poolInfoMap for " + ctx.address)
+    const info = await infoPromise
+    const symbol0 = info.token0.symbol
+    const symbol1 = info.token1.symbol
+    const address0 = info.token0Address
+    const address1 = info.token1Address
+    console.log("set poolInfoMap for " + ctx.address + " " + symbol0 + " " + address0 + " " + symbol1 + " " + address1)
   }
   return await infoPromise
 }
 
+
+//first pair created at 1647497
 for (let i = 0; i < PairWatching.length; i++) {
   let address = PairWatching[i]
-  PancakePairProcessor.bind({ address: address, network: CHAIN_IDS.ASTAR, startBlock: 1647497 })
+  PancakePairProcessor.bind({ address: address, network: CHAIN_IDS.ASTAR, startBlock: 3000000 })
     .onEventSwap(async (event, ctx) => {
-      // ctx.meter.Gauge("reserve").record(totalSupply, { token: tokenInfo.symbol })
-
       const info = await getOrCreatePool(ctx)
 
       const address0 = info.token0Address
@@ -120,19 +146,10 @@ for (let i = 0; i < PairWatching.length; i++) {
 
       console.log("Token0:", symbol0, "amount0Out:", amount0Out, " amount0In:", amount0In, "Token1:", symbol1, "amount1Out:", amount1Out, "amount1In:", amount1In)
 
-      ctx.eventLogger.emit("swap", {
-        distinctId: event.args.sender,
-        token0: symbol0,
-        token1: symbol1,
-        amount0In: amount0In,
-        amount1In: amount1In,
-        amount0Out: amount0Out,
-        amount1Out: amount1Out,
-        ABS_Amount0: ABS_Amount0,
-        pairName: pairName
-      })
+      //counter swap
+      ctx.meter.Counter('swap').add(1, { pairName: pairName })
 
-      //getReserve
+      //Gauge reserve
       const getReserve = await ctx.contract.getReserves()
       const reserve0 = Number(getReserve[0]) / Math.pow(10, decimal0)
       const reserve1 = Number(getReserve[1]) / Math.pow(10, decimal1)
@@ -142,22 +159,46 @@ for (let i = 0; i < PairWatching.length; i++) {
       ctx.meter.Gauge('reserve1').record(reserve1, { pairName: pairName })
 
 
-      //counter
-      ctx.meter.Counter('swap').add(1, { pairName: pairName })
+      //trading volume
+      try {
+        const token0Price = (await getPriceBySymbol(symbol0, ctx.timestamp, { toleranceInDays: 365 }))!
+        const token1Price = (await getPriceBySymbol(symbol1, ctx.timestamp, { toleranceInDays: 365 }))!
+        if (token0Price == null) {
+          console.log("null token0 price" + symbol0)
+        }
+        else if (token1Price == null) {
+          console.log("null token1 price" + symbol1)
+        }
+        else {
+          const volume0 = ABS_Amount0 * token0Price
+          console.log("token0 " + symbol0 + " Price:", token0Price, "Swap amount0", ABS_Amount0, " volume:", volume0)
+          console.log("token1 " + symbol1 + " Price:", token1Price)
 
-      // //trading volume
-      // const token0Price = await getPriceBySymbol(symbol0, ctx.timestamp)
-      // const volume0 = amount0In * token0Price
-      // console.log("token0Price:", token0Price, "amount0In", amount0In, " volume:", volume0)
-      // ctx.meter.Counter('vol_counter').add(volume0, { symbol: symbol0, pair: pairName })
-      // ctx.meter.Gauge('vol_gauge').record(volume0, { symbol: symbol0, pair: pairName })
+          //gauge reserve usd value
+          ctx.meter.Gauge('reserve0_USD').record(reserve0 * token0Price, { pairName: pairName })
+          ctx.meter.Gauge('reserve1_USD').record(reserve1 * token1Price, { pairName: pairName })
 
-      // const token1Price = await getPriceBySymbol(symbol1, ctx.timestamp)
-      // const volume1 = amount1In * token1Price
-      // console.log("token1Price:", token1Price, "amount1In", amount1In, " volume:", volume1)
-      // ctx.meter.Counter('vol_counter').add(volume1, { symbol: symbol1, pair: pairName })
-      // ctx.meter.Gauge('vol_gauge').record(volume1, { symbol: symbol1, pair: pairName })
-
+          //eventLogger
+          ctx.eventLogger.emit("swap", {
+            distinctId: event.args.sender,
+            token0: symbol0,
+            token1: symbol1,
+            amount0In: amount0In,
+            amount1In: amount1In,
+            amount0Out: amount0Out,
+            amount1Out: amount1Out,
+            ABS_Amount0: ABS_Amount0,
+            tradingVolume: volume0,
+            pairName: pairName
+          })
+        }
+      }
+      catch (e) {
+        if (e instanceof Error) {
+          console.log(e.message)
+          console.log("catch get price error " + symbol0 + " " + symbol1)
+        }
+      }
     })
     .onEventMint(async (event, ctx) => {
 
