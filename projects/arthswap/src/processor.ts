@@ -146,8 +146,10 @@ for (let i = 0; i < PairWatching.length; i++) {
 
       console.log("Token0:", symbol0, "amount0Out:", amount0Out, " amount0In:", amount0In, "Token1:", symbol1, "amount1Out:", amount1Out, "amount1In:", amount1In)
 
-      //counter swap
-      ctx.meter.Counter('swap').add(1, { pairName: pairName })
+      //counter swap & gauge
+      ctx.meter.Counter('swap_counter').add(1, { pairName: pairName })
+      ctx.meter.Gauge('swap').record(1, { pairName: pairName })
+
 
       //Gauge reserve
       const getReserve = await ctx.contract.getReserves()
@@ -175,8 +177,12 @@ for (let i = 0; i < PairWatching.length; i++) {
           console.log("token1 " + symbol1 + " Price:", token1Price)
 
           //gauge reserve usd value
-          ctx.meter.Gauge('reserve0_USD').record(reserve0 * token0Price, { pairName: pairName })
-          ctx.meter.Gauge('reserve1_USD').record(reserve1 * token1Price, { pairName: pairName })
+          const liquidity0 = reserve0 * token0Price
+          const liquidity1 = reserve1 * token1Price
+          ctx.meter.Gauge('reserve0_USD').record(liquidity0, { pairName: pairName })
+          ctx.meter.Gauge('reserve1_USD').record(liquidity1, { pairName: pairName })
+          ctx.meter.Gauge('total_liquitity_USD').record(liquidity0 + liquidity1, { pairName: pairName })
+
 
           //eventLogger
           ctx.eventLogger.emit("swap", {
@@ -191,6 +197,9 @@ for (let i = 0; i < PairWatching.length; i++) {
             tradingVolume: volume0,
             pairName: pairName
           })
+          //counter n gauge
+          ctx.meter.Gauge('tradingVolume').record(volume0, { pairName: pairName })
+          ctx.meter.Counter('tradingVolume_counter').add(volume0, { pairName: pairName })
         }
       }
       catch (e) {
