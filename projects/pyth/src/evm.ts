@@ -24,7 +24,9 @@ const CHAIN_ADDRESS_MAP = new Map<number, string>([
     [250, "0xff1a0f4744e8582DF1aE09D5611b887B6a12925C"], //Fantom
     [1313161554, "0xF89C7b475821EC3fDC2dC8099032c05c6c0c9AB9"], //Aurora
     [321, "0xE0d0e68297772Dd5a1f1D99897c581E2082dbA5B"], //KCC
-    [43114, "0x4305FB66699C3B2702D4d05CF36551390A4c69C6"] //Avalanche
+    [43114, "0x4305FB66699C3B2702D4d05CF36551390A4c69C6"], //Avalanche
+    [25, "0xE0d0e68297772Dd5a1f1D99897c581E2082dbA5B"], //Cronos
+
 ])
 
 const CHAIN_NATIVE_MAP = new Map<string, string>([
@@ -37,7 +39,9 @@ const CHAIN_NATIVE_MAP = new Map<string, string>([
     ["0xff1a0f4744e8582DF1aE09D5611b887B6a12925C".toLowerCase(), "Crypto.FTM/USD"], //Fantom
     ["0xF89C7b475821EC3fDC2dC8099032c05c6c0c9AB9".toLowerCase(), "Crypto.AURORA/USD"], //Aurora
     ["0xE0d0e68297772Dd5a1f1D99897c581E2082dbA5B".toLowerCase(), "Crypto.KCS/USD"], //KCC
-    ["0x4305FB66699C3B2702D4d05CF36551390A4c69C6".toLowerCase(), "Crypto.AVAX/USD"] //Avalanche
+    ["0x4305FB66699C3B2702D4d05CF36551390A4c69C6".toLowerCase(), "Crypto.AVAX/USD"], //Avalanche
+    ["0xE0d0e68297772Dd5a1f1D99897c581E2082dbA5B".toLowerCase(), "Crypto.CRO/USD"], //Cronos
+
 ])
 
 async function priceFeedUpdate(evt: PriceFeedUpdateEvent, ctx: PythEVMContext) {
