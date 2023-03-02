@@ -12,6 +12,7 @@ const gaugeOptions: MetricOptions = {
 
 const vol = Gauge.register("vol", gaugeOptions)
 const feeVol = Gauge.register("feeVol", gaugeOptions)
+const transferVol = Gauge.register("transferVol", gaugeOptions)
 
 Erc721Processor.bind({address: "0xD4307E0acD12CF46fD6cf93BC264f5D5D1598792"})
 .onEventSale(async (event, ctx) => {
@@ -22,4 +23,8 @@ Erc721Processor.bind({address: "0xD4307E0acD12CF46fD6cf93BC264f5D5D1598792"})
     const ethAmount = event.args.mintFeeAmount.scaleDown(18)
     ctx.meter.Counter("mint_fee").add(ethAmount)
     feeVol.record(ctx, ethAmount)
+})
+.onEventTransfer(async (event, ctx) => {
+    ctx.meter.Counter("transfer_counter").add(1)
+    transferVol.record(ctx, 1)
 })
