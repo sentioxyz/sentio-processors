@@ -43,11 +43,12 @@ function getFillSource(inputDataSuffix: string) {
 // define a map from collection address to name
 let nftCollectionMap = new Map<string, string>()
 
-async function getCollectionName(nftAddress: string) {
+async function getCollectionName(nftAddress: string, block: number) {
   let collectionName = nftCollectionMap.get(nftAddress)
   if (!collectionName) {
     try {
-      collectionName = await getERC721Contract(nftAddress).name()!
+      //override {blockTag:block}？
+      collectionName = await getERC721Contract(nftAddress).name({ blockTag: block })!
       nftCollectionMap.set(nftAddress, collectionName)
     }
     catch (e) {
@@ -71,7 +72,9 @@ SeaportProcessor.bind({ address: SEAPORT_ADDRESS, startBlock: 16731645, endBlock
 
     //retrieve offer[0] info
     const nftAddress = offer[0].token
-    const nftCollection = await getCollectionName(nftAddress)
+    const block = Number(ctx.blockNumber)
+    console.log("blockNumber", block)
+    const nftCollection = await getCollectionName(nftAddress, block)
     const nftType = Number(offer[0].itemType)
     const nftId = Number(offer[0].identifier)
     const nftAmount = Number(offer[0].amount)
