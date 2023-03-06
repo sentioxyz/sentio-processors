@@ -46,13 +46,9 @@ async function getERC1155Name(nftAddress: string, id: number, hash_debug: string
   if (!collectionName) {
     try {
       const metadataURL = await getERC1155Contract(nftAddress).uri(id)!
-      // let metadata = {}
-
       let res = await fetch(metadataURL)
       const json = await res.json() as any
-      const name = json.name
-  
-
+      collectionName = json.name
       if (collectionName != null) nftCollectionMap.set(nftAddress, collectionName)
       console.log("Set collection name: ", collectionName, " txhash ", hash_debug)
     }
@@ -134,13 +130,6 @@ SeaportProcessor.bind({ address: constant.SEAPORT_ADDRESS, startBlock: 16731645,
       }
     }
     fillSource = getFillSource(inputDataSuffix)
-
-
-    //if (!FILL_SOURCE_LOOKUP.get(inputDataSuffix)) console.log("txHash: " + hash + " fillSource: " + fillSource)
-
-    //debug log amount !=1
-    //if (nftAmount != 1) console.log("txHash: " + hash + " amount " + nftAmount)
-
 
 
     //event
