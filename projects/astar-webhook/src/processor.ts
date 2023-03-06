@@ -26,7 +26,7 @@ const tokenWatching = [
 
 let tokenInfoMap = new Map<string, Promise<token.TokenInfo>>()
 
-const exporter = Exporter.register('astar', 'astar-alert')
+const exporter = Exporter.register('astaralert', 'astaralert')
 
 async function getTokenInfo(address: string): Promise<token.TokenInfo> {
 
@@ -67,7 +67,7 @@ for (const token of tokenWatching) {
             amount: event.args.value,
             value: value,
         })
-        if (value.gt(50000.0)) {
+        if (value.gt(10000.0)) {
             exporter.emit(ctx, {
                 symbol: token.symbol,
                 from: event.args.from,
