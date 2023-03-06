@@ -15,8 +15,12 @@ function getFillSource(inputDataSuffix: string) {
 // define a map from collection address to name
 let nftCollectionMap = new Map<string, string>()
 
-async function getERC721Name(nftAddress: string, block: number, hash_debug: string, itemType: number) {
-  if (nftAddress == "0x57f1887a8bf19b14fc0df6fd9b2acc9af147ea85") return "ENS"
+async function getERC721Name(nftAddress: string, hash_debug: string) {
+  if (nftAddress.toLowerCase() == "0x57f1887a8bf19b14fc0df6fd9b2acc9af147ea85") {
+    console.log(hash_debug, " ENS")
+    return "ENS"
+  }
+
   let collectionName = nftCollectionMap.get(nftAddress)
   if (!collectionName) {
     try {
@@ -26,7 +30,7 @@ async function getERC721Name(nftAddress: string, block: number, hash_debug: stri
     }
     catch (e) {
       if (e instanceof Error) {
-        console.log(e.message, " itemType: " + itemType + " retrieve nft collection name failed. txHash: ", hash_debug)
+        console.log(e.message, " retrieve nft collection name failed. txHash: ", hash_debug, " nftAddress", nftAddress)
         return "unknown_collection"
       }
     }
@@ -34,23 +38,9 @@ async function getERC721Name(nftAddress: string, block: number, hash_debug: stri
   return collectionName
 }
 
-async function getERC1155Name(nftAddress: string, id: number, block: number, hash_debug: string, itemType: number) {
-  let collectionName = nftCollectionMap.get(nftAddress)
-  // if (!collectionName) {
-  //   try {
-  //     const provider = new ethers.providers.JsonRpcProvider("<your_ethereum_node_url>");
-
-  //     collectionName = await ctx.contract.uri(id)
-  //     nftCollectionMap.set(nftAddress, collectionName)
-  //     console.log("Set collection name: ", collectionName)
-  //   }
-  //   catch (e) {
-  //     if (e instanceof Error) {
-  //       console.log(e.message, " itemType: " + itemType + " retrieve nft collection name failed. txHash: ", hash_debug)
-  //       return "unknown_collection"
-  //     }
-  //   }
-  // }
+async function getERC1155Name(nftAddress: string, id: number) {
+  let collectionName = "ERC1155"
+  // TODO: getERC1155Contract
   return collectionName
 }
 
@@ -65,36 +55,41 @@ SeaportProcessor.bind({ address: constant.SEAPORT_ADDRESS, startBlock: 16731645,
     const consideration = event.args.consideration
 
     //retrieve offer[0] info
+
+    //skip when empty offer[]
+    if (offer.length == 0) return
+
     const nftAddress = offer[0].token
-    const block = Number(ctx.blockNumber)
-    console.log("blockNumber", block)
+    const nftType = Number(offer[0].itemType)
+    const nftId = Number(offer[0].identifier)
+    const nftAmount = Number(offer[0].amount)
+    const itemType = Number(offer[0].itemType)
+
+    // const block = Number(ctx.blockNumber)
+    // console.log("blockNumber", block)
 
     //debug getCollection
     const hash_debug = event.transactionHash
     let nftCollection = ""
-    switch (Number(offer[0].itemType)) {
+
+    switch (itemType) {
       case 2: {
-        nftCollection = (await getERC721Name(nftAddress, block, hash_debug, Number(offer[0].itemType)))!
+        nftCollection = (await getERC721Name(nftAddress, hash_debug))!
         break
       }
       case 3: {
-        //getERC1155Name
+        nftCollection = (await getERC1155Name(nftAddress, nftId))!
         break
       }
       default: {
-        console.log("can't handle the itemType")
+        console.log("itemType: " + itemType + ", can't handle the itemType, skip for now. TxHash: " + hash_debug)
         break
       }
     }
 
-
-
-    const nftType = Number(offer[0].itemType)
-    const nftId = Number(offer[0].identifier)
-    const nftAmount = Number(offer[0].amount)
     console.log("nftAddress, Type, Id, Amount, Collection: ", nftAddress, " ", nftType, " ", nftId, " ", nftAmount, " ", nftCollection)
 
-    //retrieve consideration info
+    //retrieve consideration value, only considering eth atm
     let value = 0
     for (let i = 0; i < consideration.length; i++) {
       if ((Number(consideration[i].itemType) == 0) && (consideration[i].token == "0x0000000000000000000000000000000000000000")) {
@@ -141,5 +136,6 @@ SeaportProcessor.bind({ address: constant.SEAPORT_ADDRESS, startBlock: 16731645,
         value: value,
         message: " NFT Collection: " + nftCollection + " Id:" + nftId + " Value: " + value + " ETH" + " Fill Source: " + fillSource + "OTHER_INTERNAL_HTTP_REQUEST_LOGS" + " Recipient: " + recipient + " Offerer: " + offerer
       })
+
 
   })
