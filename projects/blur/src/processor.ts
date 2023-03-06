@@ -1,5 +1,6 @@
 import { SeaportProcessor, SeaportContext } from "./types/eth/seaport.js";
 import { getERC721Contract } from "@sentio/sdk/eth/builtin/erc721";
+import { getERC1155Contract } from "./types/eth/erc1155.js";
 import * as constant from "./constant.js"
 // import { ethers } from "ethers";
 
@@ -30,7 +31,7 @@ async function getERC721Name(nftAddress: string, hash_debug: string) {
     }
     catch (e) {
       if (e instanceof Error) {
-        console.log(e.message, " retrieve nft collection name failed. txHash: ", hash_debug, " nftAddress", nftAddress)
+        console.log(e.message, " retrieve 721 nft collection name failed. txHash: ", hash_debug, " nftAddress", nftAddress)
         return "unknown_collection"
       }
     }
@@ -38,13 +39,38 @@ async function getERC721Name(nftAddress: string, hash_debug: string) {
   return collectionName
 }
 
-async function getERC1155Name(nftAddress: string, id: number) {
-  let collectionName = "ERC1155"
+async function getERC1155Name(nftAddress: string, id: number, hash_debug: string) {
+  let collectionName = nftCollectionMap.get(nftAddress)
   // TODO: getERC1155Contract
+  if (!collectionName) {
+    try {
+      const metadataURL = await getERC1155Contract(nftAddress).uri(id)!
+      // let metadata = {}
+
+      //to do
+      // fetch(metadataURL)
+      //   .then(function (response) {
+      //     return response.json();
+      //   })
+      //   .then(function (myJson) {
+      //     collectionName = myJson.name
+      //     console.log(collectionName)
+      //   });
+
+      if (collectionName != null) nftCollectionMap.set(nftAddress, collectionName)
+      console.log("Set collection name: ", collectionName, " txhash ", hash_debug)
+    }
+    catch (e) {
+      if (e instanceof Error) {
+        console.log(e.message, " retrieve 1155 nft collection name failed. txHash: ", hash_debug, " nftAddress ", nftAddress, " id ", id)
+        return "unknown_1155_collection"
+      }
+    }
+  }
   return collectionName
 }
 
-SeaportProcessor.bind({ address: constant.SEAPORT_ADDRESS, startBlock: 16731645, endBlock: 16731645 })
+SeaportProcessor.bind({ address: constant.SEAPORT_ADDRESS, startBlock: 16731645, endBlock: 16731700 })
   .onEventOrderFulfilled(async (event, ctx) => {
     ctx.meter.Counter("OrderFilled_Counter").add(1)
 
@@ -78,7 +104,7 @@ SeaportProcessor.bind({ address: constant.SEAPORT_ADDRESS, startBlock: 16731645,
         break
       }
       case 3: {
-        nftCollection = (await getERC1155Name(nftAddress, nftId))!
+        nftCollection = (await getERC1155Name(nftAddress, nftId, hash_debug))!
         break
       }
       default: {
