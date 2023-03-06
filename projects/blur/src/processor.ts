@@ -3,6 +3,7 @@ import { getERC721Contract } from "@sentio/sdk/eth/builtin/erc721";
 import { getERC1155Contract } from "./types/eth/erc1155.js";
 import * as constant from "./constant.js"
 // import { ethers } from "ethers";
+import fetch from 'node-fetch';
 
 
 
@@ -47,15 +48,10 @@ async function getERC1155Name(nftAddress: string, id: number, hash_debug: string
       const metadataURL = await getERC1155Contract(nftAddress).uri(id)!
       // let metadata = {}
 
-      //to do
-      // fetch(metadataURL)
-      //   .then(function (response) {
-      //     return response.json();
-      //   })
-      //   .then(function (myJson) {
-      //     collectionName = myJson.name
-      //     console.log(collectionName)
-      //   });
+      let res = await fetch(metadataURL)
+      const json = await res.json() as any
+      const name = json.name
+  
 
       if (collectionName != null) nftCollectionMap.set(nftAddress, collectionName)
       console.log("Set collection name: ", collectionName, " txhash ", hash_debug)
@@ -124,7 +120,7 @@ SeaportProcessor.bind({ address: constant.SEAPORT_ADDRESS, startBlock: 16731645,
     }
     console.log("consideration value: ", value)
 
-    //get fill source from last 6 bits of input data 
+    //get fill source from last 6 bits of input data
     const hash = event.transactionHash
     let fillSource = ""
     let inputDataSuffix = ""
