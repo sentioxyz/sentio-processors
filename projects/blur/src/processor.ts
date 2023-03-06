@@ -5,8 +5,6 @@ import * as constant from "./constant.js"
 // import { ethers } from "ethers";
 import fetch from 'node-fetch';
 
-
-
 function getFillSource(inputDataSuffix: string) {
   let source = constant.FILL_SOURCE_LOOKUP.get(inputDataSuffix)
   if (!source) {
