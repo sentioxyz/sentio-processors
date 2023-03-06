@@ -1,40 +1,12 @@
-import { SeaportProcessor } from "./types/eth/seaport.js";
+import { SeaportProcessor, SeaportContext } from "./types/eth/seaport.js";
 import { getERC721Contract } from "@sentio/sdk/eth/builtin/erc721";
+import * as constant from "./constant.js"
+// import { ethers } from "ethers";
 
-export const SEAPORT_ADDRESS = "0x00000000006c3852cbEf3e08E8dF289169EdE581"
-export const FILL_SOURCE_LOOKUP = new Map<string, string>([
-  ['2d1229', 'Blur'],
-  ['000000', 'Blur'],
-  ['0c6ebe', 'Opensea'],
-  ['a9c101', 'Opensea'],
-  ['db8c0b', 'Opensea'],
-  ['68cfd5', 'Opensea'],
-  ['db8c0b', 'Opensea'],
-  ['9c1cb7', 'Opensea'],
-  ['e27964', 'Opensea'],
-  ['a3aa28', 'Opensea'],
-  ['4ff553', 'Opensea'],
-  ['7560b1', 'Opensea'],
-  ['61691f', 'Opensea'],
-  ['6f6d1f', 'Opensea'],
-  ['d24601', 'Opensea'],
-  ['8fb141', 'Opensea'],
-  ['d24601', 'Opensea'],
-  ['d0ccf0', 'Opensea'],
-  ['0a57de', 'Opensea'],
-  ['947c2d', 'Opensea'],
-  ['617461', 'Opensea'],
-  ['2e16d7', 'Opensea'],
-  ['6d93db', 'Opensea'],
-  ['14e8a3', 'Reservoir'],
-  ['54e411', 'Reservoir'],
-  ['7e4c66', 'Reservoir'],
-  ['4a730c', 'Reservoir']
-])
 
 
 function getFillSource(inputDataSuffix: string) {
-  let source = FILL_SOURCE_LOOKUP.get(inputDataSuffix)
+  let source = constant.FILL_SOURCE_LOOKUP.get(inputDataSuffix)
   if (!source) {
     source = inputDataSuffix
   }
@@ -43,24 +15,46 @@ function getFillSource(inputDataSuffix: string) {
 // define a map from collection address to name
 let nftCollectionMap = new Map<string, string>()
 
-async function getCollectionName(nftAddress: string, block: number) {
+async function getERC721Name(nftAddress: string, block: number, hash_debug: string, itemType: number) {
+  if (nftAddress == "0x57f1887a8bf19b14fc0df6fd9b2acc9af147ea85") return "ENS"
   let collectionName = nftCollectionMap.get(nftAddress)
   if (!collectionName) {
     try {
-      //override {blockTag:block}？
-      collectionName = await getERC721Contract(nftAddress).name({ blockTag: block })!
+      collectionName = await getERC721Contract(nftAddress).name()!
       nftCollectionMap.set(nftAddress, collectionName)
+      console.log("Set collection name: ", collectionName)
     }
     catch (e) {
       if (e instanceof Error) {
-        console.log(e.message, " retrieve nft collection name failed")
+        console.log(e.message, " itemType: " + itemType + " retrieve nft collection name failed. txHash: ", hash_debug)
+        return "unknown_collection"
       }
     }
   }
   return collectionName
 }
 
-SeaportProcessor.bind({ address: SEAPORT_ADDRESS, startBlock: 16731645, endBlock: 16731645 })
+async function getERC1155Name(nftAddress: string, id: number, block: number, hash_debug: string, itemType: number) {
+  let collectionName = nftCollectionMap.get(nftAddress)
+  // if (!collectionName) {
+  //   try {
+  //     const provider = new ethers.providers.JsonRpcProvider("<your_ethereum_node_url>");
+
+  //     collectionName = await ctx.contract.uri(id)
+  //     nftCollectionMap.set(nftAddress, collectionName)
+  //     console.log("Set collection name: ", collectionName)
+  //   }
+  //   catch (e) {
+  //     if (e instanceof Error) {
+  //       console.log(e.message, " itemType: " + itemType + " retrieve nft collection name failed. txHash: ", hash_debug)
+  //       return "unknown_collection"
+  //     }
+  //   }
+  // }
+  return collectionName
+}
+
+SeaportProcessor.bind({ address: constant.SEAPORT_ADDRESS, startBlock: 16731645, endBlock: 16731645 })
   .onEventOrderFulfilled(async (event, ctx) => {
     ctx.meter.Counter("OrderFilled_Counter").add(1)
 
@@ -74,7 +68,27 @@ SeaportProcessor.bind({ address: SEAPORT_ADDRESS, startBlock: 16731645, endBlock
     const nftAddress = offer[0].token
     const block = Number(ctx.blockNumber)
     console.log("blockNumber", block)
-    const nftCollection = await getCollectionName(nftAddress, block)
+
+    //debug getCollection
+    const hash_debug = event.transactionHash
+    let nftCollection = ""
+    switch (Number(offer[0].itemType)) {
+      case 2: {
+        nftCollection = (await getERC721Name(nftAddress, block, hash_debug, Number(offer[0].itemType)))!
+        break
+      }
+      case 3: {
+        //getERC1155Name
+        break
+      }
+      default: {
+        console.log("can't handle the itemType")
+        break
+      }
+    }
+
+
+
     const nftType = Number(offer[0].itemType)
     const nftId = Number(offer[0].identifier)
     const nftAmount = Number(offer[0].amount)

@@ -2,7 +2,7 @@ import { PancakeRouterProcessor } from './types/eth/pancakerouter.js'
 import { PancakePairProcessor, PancakePairContext } from './types/eth/pancakepair.js'
 
 import { getPriceByType, getPriceBySymbol, token } from "@sentio/sdk/utils"
-import { CHAIN_IDS } from "@sentio/sdk"
+import { CHAIN_IDS, Gauge, Counter } from "@sentio/sdk"
 import { ERC20Context, ERC20Processor, getERC20Contract } from '@sentio/sdk/eth/builtin/erc20'
 
 
@@ -54,6 +54,13 @@ const PairWatching = [
 const ROUTER_ADDRESS = "0xE915D2393a08a00c5A463053edD31bAe2199b9e7"
 const FACTORY_ADDRESS = "0xA9473608514457b4bF083f9045fA63ae5810A03E"
 
+export const volOptions = {
+  sparse: true,
+  aggregationConfig: {
+    intervalInMinutes: [60],
+    // discardOrigin: false
+  }
+}
 
 async function getTokenInfo(address: string): Promise<token.TokenInfo> {
   // TODO(ye): this is wrong in the first place. this is a special address for native eth. does not apply here.
@@ -120,10 +127,17 @@ const getOrCreatePool = async function (ctx: PancakePairContext): Promise<poolIn
 }
 
 
+
+
+//define the counter and gauge with volOptions
+const swap_gauge = Gauge.register("swap", volOptions)
+const tradingVolume_gauge = Gauge.register('tradingVolume', volOptions)
+
+
 //first pair created at 1647497
 for (let i = 0; i < PairWatching.length; i++) {
   let address = PairWatching[i]
-  PancakePairProcessor.bind({ address: address, network: CHAIN_IDS.ASTAR, startBlock: 3000000 })
+  PancakePairProcessor.bind({ address: address, network: CHAIN_IDS.ASTAR, startBlock: 2700000 })
     .onEventSwap(async (event, ctx) => {
       const info = await getOrCreatePool(ctx)
 
@@ -148,7 +162,7 @@ for (let i = 0; i < PairWatching.length; i++) {
 
       //counter swap & gauge
       ctx.meter.Counter('swap_counter').add(1, { pairName: pairName })
-      ctx.meter.Gauge('swap').record(1, { pairName: pairName })
+      swap_gauge.record(ctx, 1, { pairName: pairName })
 
 
       //Gauge reserve
@@ -198,7 +212,7 @@ for (let i = 0; i < PairWatching.length; i++) {
             pairName: pairName
           })
           //counter n gauge
-          ctx.meter.Gauge('tradingVolume').record(volume0, { pairName: pairName })
+          tradingVolume_gauge.record(ctx, volume0, { pairName: pairName })
           ctx.meter.Counter('tradingVolume_counter').add(volume0, { pairName: pairName })
         }
       }
