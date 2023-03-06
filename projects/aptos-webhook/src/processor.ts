@@ -40,6 +40,7 @@ async function handleTransfer(ctx: AptosContext, to: string, type: string, amoun
         ctx.eventLogger.emit(
             "tokenTransfer",
             {
+                from: ctx.transaction.sender,
                 to: to,
                 symbol: symbol.symbol,
                 type: symbol.token_type.type,
