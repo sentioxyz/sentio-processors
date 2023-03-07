@@ -43,17 +43,20 @@ async function getERC1155Name(nftAddress: string, id: number, hash_debug: string
   // TODO: getERC1155Contract
   if (!collectionName) {
     try {
-      const metadataURL = await getERC1155Contract(nftAddress).uri(id)!
-      let res = await fetch(metadataURL)
-      const json = await res.json() as any
-      collectionName = json.name
-      if (collectionName != null) nftCollectionMap.set(nftAddress, collectionName)
-      console.log("Set collection name: ", collectionName, " txhash ", hash_debug)
+      const collectionName = await getERC721Contract(nftAddress).name()!
+      nftCollectionMap.set(nftAddress, collectionName)
+      console.log("Set collection name: ", collectionName)
+      // const metadataURL = await getERC1155Contract(nftAddress).uri(id)!
+      // let res = await fetch(metadataURL)
+      // const json = await res.json() as any
+      // collectionName = json.name
+      // if (collectionName != null) nftCollectionMap.set(nftAddress, collectionName)
+      // console.log("Set collection name: ", collectionName, " txhash ", hash_debug)
     }
     catch (e) {
       if (e instanceof Error) {
         console.log(e.message, " retrieve 1155 nft collection name failed. txHash: ", hash_debug, " nftAddress ", nftAddress, " id ", id)
-        return "unknown_1155_collection"
+        return "unknown_1155_collection" + nftAddress
       }
     }
   }
