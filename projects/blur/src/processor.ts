@@ -56,14 +56,14 @@ async function getERC1155Name(nftAddress: string, id: number, hash_debug: string
     catch (e) {
       if (e instanceof Error) {
         console.log(e.message, " retrieve 1155 nft collection name failed. txHash: ", hash_debug, " nftAddress ", nftAddress, " id ", id)
-        return "unknown_1155_collection" + nftAddress
+        collectionName = "unknown_1155_collection" + nftAddress
       }
     }
   }
   return collectionName
 }
 
-SeaportProcessor.bind({ address: constant.SEAPORT_ADDRESS, startBlock: 16731645, endBlock: 16731700 })
+SeaportProcessor.bind({ address: constant.SEAPORT_ADDRESS, startBlock: 16731645 })
   .onEventOrderFulfilled(async (event, ctx) => {
     ctx.meter.Counter("OrderFilled_Counter").add(1)
 
