@@ -22,41 +22,49 @@ const totalTx = Counter.register("tx", commonOptions)
 listing.bind({ startVersion: 6393932 })
   .onEventBuyListingEvent(async (event, ctx) => {
     ctx.meter.Counter('buy_listing').add(1)
-    ctx.eventLogger.emit("users", { distinctId: ctx.transaction.sender })
     totalTx.add(ctx, 1)
 
-    const amount = event.data_decoded.min_price
     const originalCoinInfo = event.data_decoded.coin_type
     const coinType = originalCoinInfo.account_address + "::" + hex_to_ascii(originalCoinInfo.module_name) + "::" + hex_to_ascii(originalCoinInfo.struct_name)
     const coinInfo = getCoinInfo(coinType)
+    const amount = scaleDown(event.data_decoded.min_price, coinInfo.decimals)
+
     const timestamp = event.data_decoded.at
     const collection = event.data_decoded.token_id.token_data_id.collection
     const coinPrice = await getPrice(coinType, Number(timestamp))
 
-    const volume = scaleDown(amount, coinInfo.decimals).multipliedBy(coinPrice)
+    const volume = amount.multipliedBy(coinPrice)
     const creator = event.data_decoded.creator
 
 
 
     vol.record(ctx, volume, { creator: creator, collection: collection })
-    vol_apt.record(ctx, scaleDown(amount, coinInfo.decimals), { creator: creator, collection: collection })
+    vol_apt.record(ctx, amount, { creator: creator, collection: collection })
+    ctx.eventLogger.emit("buy_listing", {
+      distinctId: ctx.transaction.sender,
+      amount: amount,
+      volume: volume,
+      creator: creator,
+      collection: collection
+    })
+
 
   })
   .onEventCancelListingEvent(async (event, ctx) => {
     ctx.meter.Counter('cancel_listing').add(1)
-    ctx.eventLogger.emit("users",  { distinctId: ctx.transaction.sender })
+    ctx.eventLogger.emit("cancel_listing", { distinctId: ctx.transaction.sender })
 
 
   })
   .onEventCreateListingEvent(async (event, ctx) => {
     ctx.meter.Counter('create_listing').add(1)
-    ctx.eventLogger.emit("users",  { distinctId: ctx.transaction.sender })
+    ctx.eventLogger.emit("create_listing", { distinctId: ctx.transaction.sender })
 
 
   })
   .onEventUpdateListingEvent(async (event, ctx) => {
     ctx.meter.Counter('update_listing').add(1)
-    ctx.eventLogger.emit("users",  { distinctId: ctx.transaction.sender })
+    ctx.eventLogger.emit("update_listing", { distinctId: ctx.transaction.sender })
   })
 
 function hex_to_ascii(str1: String) {

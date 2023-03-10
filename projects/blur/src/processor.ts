@@ -1,6 +1,6 @@
 import { SeaportProcessor, SeaportContext } from "./types/eth/seaport.js";
 import { getERC721Contract } from "@sentio/sdk/eth/builtin/erc721";
-import { getERC1155Contract } from "./types/eth/erc1155.js";
+import { BlurExchangeProcessor } from "./types/eth/blurexchange.js";
 import * as constant from "./constant.js"
 // import { ethers } from "ethers";
 import fetch from 'node-fetch';
@@ -45,7 +45,7 @@ async function getERC1155Name(nftAddress: string, id: number, hash_debug: string
     try {
       const collectionName = await getERC721Contract(nftAddress).name()!
       nftCollectionMap.set(nftAddress, collectionName)
-      console.log("Set collection name: ", collectionName)
+      console.log("Set ERC721 collection name: ", collectionName)
       // const metadataURL = await getERC1155Contract(nftAddress).uri(id)!
       // let res = await fetch(metadataURL)
       // const json = await res.json() as any
@@ -56,7 +56,9 @@ async function getERC1155Name(nftAddress: string, id: number, hash_debug: string
     catch (e) {
       if (e instanceof Error) {
         console.log(e.message, " retrieve 1155 nft collection name failed. txHash: ", hash_debug, " nftAddress ", nftAddress, " id ", id)
-        collectionName = "unknown_1155_collection" + nftAddress
+        collectionName = "ERC1155_" + nftAddress
+        nftCollectionMap.set(nftAddress, collectionName)
+        console.log("Set ERC1155 collection name: ", collectionName)
       }
     }
   }
@@ -131,7 +133,9 @@ SeaportProcessor.bind({ address: constant.SEAPORT_ADDRESS, startBlock: 16731645 
       }
     }
     fillSource = getFillSource(inputDataSuffix)
-
+    if (fillSource == "Blur") {
+      console.log(`blur->os tx: ${hash}`)
+    }
 
     //event
     ctx.eventLogger.emit("OrderFilled_Event",
@@ -148,6 +152,32 @@ SeaportProcessor.bind({ address: constant.SEAPORT_ADDRESS, startBlock: 16731645 
         value: value,
         message: " NFT Collection: " + nftCollection + " Id:" + nftId + " Value: " + value + " ETH" + " Fill Source: " + fillSource + "OTHER_INTERNAL_HTTP_REQUEST_LOGS" + " Recipient: " + recipient + " Offerer: " + offerer
       })
+
+
+  })
+
+BlurExchangeProcessor.bind({ address: constant.BLUR_EXCHANGE_ADDRESS, startBlock: 16731645 })
+  .onEventOrdersMatched(async (event, ctx) => {
+    //get fill source from last 6 bits of input data
+    const hash = event.transactionHash
+    let fillSource = ""
+    let inputDataSuffix = ""
+    try {
+      const tx = (await ctx.contract.provider.getTransaction(hash))!
+      inputDataSuffix = tx.data.toString().slice(-6)
+    }
+    catch (e) {
+      if (e instanceof Error) {
+        console.log(e.message, "BlurEx retrieve transaction data failed")
+      }
+    }
+    fillSource = getFillSource(inputDataSuffix)
+    // if (fillSource == "Opensea") {
+    //   console.log(`blur->os tx: ${hash}`)
+    // }
+
+    const maker = event.args.maker
+    const taker = event.args.taker
 
 
   })

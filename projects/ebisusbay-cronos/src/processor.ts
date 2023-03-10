@@ -2,6 +2,7 @@ import { PortProcessor } from './types/eth/port.js'
 import { MembershipStakerV3Processor } from './types/eth/membershipstakerv3.js'
 import { TradeshipProcessor } from './types/eth/tradeship.js'
 import { OfferContractProcessor } from './types/eth/offercontract.js'
+import { getERC721Contract } from '@sentio/sdk/eth/builtin/erc721'
 
 import { Counter, Gauge } from "@sentio/sdk"
 // import { getPriceBySymbol } from "@sentio/sdk/utils"
@@ -25,6 +26,68 @@ const rewardGauge_CRO = Gauge.register("stakeReward_CRO")
 // const rewardCounter_USD = Counter.register("stakeRewardCounter_USD")
 // const rewardGauge_USD = Gauge.register("stakeReward_USD")
 
+// define a map from collection address to name
+let nftCollectionMap = new Map<string, string>()
+
+
+async function getERC721Name(nftAddress: string) {
+    if (nftAddress.toLowerCase() == "0x57f1887a8bf19b14fc0df6fd9b2acc9af147ea85") {
+        console.log(" ENS")
+        return "ENS"
+    }
+
+    let collectionName = nftCollectionMap.get(nftAddress)
+    if (!collectionName) {
+        try {
+            collectionName = await getERC721Contract(nftAddress).name()!
+            nftCollectionMap.set(nftAddress, collectionName)
+            console.log("Set ERC721 collection name: ", collectionName)
+        }
+        catch (e) {
+            if (e instanceof Error) {
+                console.log(e.message, " retrieve 721 nft collection name failed. txHash: ", " nftAddress", nftAddress)
+                return "unknown_collection"
+            }
+        }
+    }
+    return collectionName
+}
+
+async function getERC1155Name(nftAddress: string) {
+    let collectionName = nftCollectionMap.get(nftAddress)
+    if (!collectionName) {
+        try {
+            const collectionName = await getERC721Contract(nftAddress).name()!
+            nftCollectionMap.set(nftAddress, collectionName)
+            console.log("Set ERC1155 collection name: ", collectionName)
+        }
+        catch (e) {
+            if (e instanceof Error) {
+                console.log(e.message, " retrieve 1155 nft collection name failed. txHash: ", " nftAddress ", nftAddress)
+                collectionName = "ERC1155_" + nftAddress
+                nftCollectionMap.set(nftAddress, collectionName)
+                console.log("Set ERC1155 collection name: ", collectionName)
+            }
+        }
+    }
+    return collectionName
+}
+
+
+async function getNameByERCType(type: string, nftAddress: string) {
+    let collectionName = ""
+    if (type == "ERC1155") {
+        collectionName = (await getERC1155Name(nftAddress))!
+    }
+    else {
+        collectionName = (await getERC721Name(nftAddress))!
+    }
+
+    return collectionName
+}
+
+
+
 
 //first tx block time 6220924
 PortProcessor.bind({ address: '0x7a3CdB2364f92369a602CAE81167d0679087e6a3', network: 25, startBlock: 6220924 })
@@ -35,11 +98,12 @@ PortProcessor.bind({ address: '0x7a3CdB2364f92369a602CAE81167d0679087e6a3', netw
         const getListing = await ctx.contract.completeListing(listingId)
         const amount = Number(getListing.price) / Math.pow(10, 18)
         const purchaser = getListing.purchaser
-        const nftId = Number(getListing.nftId).toString()
+        const nftId = Number(getListing.nftId)
         const seller = getListing.seller
-        const nft = getListing.nft
+        const nftAddress = getListing.nft
         const fee = Number(getListing.fee) / Math.pow(10, 18)
         const type = getListing.is1155 ? "ERC1155" : "ERC721"
+        const collectionName = await getNameByERCType(type, nftAddress)
         const listingTime = getListing.listingTime.toString()
         const saleTime = getListing.saleTime.toString()
         const endingTime = getListing.endingTime.toString()
@@ -61,8 +125,9 @@ PortProcessor.bind({ address: '0x7a3CdB2364f92369a602CAE81167d0679087e6a3', netw
             price_CRO: amount,
             nftId: nftId,
             seller: seller,
-            nftAddress: nft,
-            fee: fee.toString(),
+            nftAddress: nftAddress,
+            collectionName: collectionName,
+            fee: fee,
             nftTokenStandard: type,
             listingTime: listingTime,
             saleTime: saleTime,
@@ -94,6 +159,8 @@ PortProcessor.bind({ address: '0x7a3CdB2364f92369a602CAE81167d0679087e6a3', netw
         const nftAddress = event.args.collection
         const nftId = event.args.id
         const royalty = Number(event.args.amount) / Math.pow(10, 18)
+        const collectionName = (await getERC1155Name(nftAddress))!
+
         // const tokenPrice = await getPriceBySymbol("CRO", ctx.timestamp)
         // const priceUSD = tokenPrice * amount
         // const royalty_USD = royalty * tokenPrice
@@ -106,7 +173,8 @@ PortProcessor.bind({ address: '0x7a3CdB2364f92369a602CAE81167d0679087e6a3', netw
                 distinctId: from,
                 royalty: royalty,
                 nftId: nftId,
-                nftAddress: nftAddress
+                nftAddress: nftAddress,
+                collectionName: collectionName
             })
         }
         catch (e) {
@@ -117,24 +185,7 @@ PortProcessor.bind({ address: '0x7a3CdB2364f92369a602CAE81167d0679087e6a3', netw
 
 
     })
-    .onAllEvents(async (event, ctx) => {
-        const hash = event.transactionHash
-        try {
-            console.log("port txHash", hash)
-            var tx = (await ctx.contract.provider.getTransaction(hash))!
-            var from = tx.from
-            console.log("port txHash", hash, "tx from:", from)
-
-            ctx.eventLogger.emit("Any_Event",
-                {
-                    distinctId: from
-                })
-        } catch (e) {
-            if (e instanceof Error) {
-                console.log(e.message)
-            }
-        }
-    })
+    .onAllEvents(async (event, ctx) => { })
 
 
 
@@ -249,24 +300,7 @@ MembershipStakerV3Processor.bind({ address: '0xeb074cc764F20d8fE4317ab63f45A85bc
 
 
     })
-    .onAllEvents(async (event, ctx) => {
-        const hash = event.transactionHash
-        try {
-            console.log("membership v3 transactionHash", hash)
-            var tx = (await ctx.contract.provider.getTransaction(hash))!
-            var from = tx.from
-            console.log("membership v3 transactionHash", hash, "tx from:", from)
-
-            ctx.eventLogger.emit("Any_Event",
-                {
-                    distinctId: from
-                })
-        } catch (e) {
-            if (e instanceof Error) {
-                console.log(e.message)
-            }
-        }
-    })
+    .onAllEvents(async (event, ctx) => { })
 
 
 
@@ -280,7 +314,6 @@ TradeshipProcessor.bind({ address: '0x523d6f30c4aaca133daad97ee2a0c48235bff137',
         const tx = (await ctx.contract.provider.getTransaction(hash))!
         const from = tx.from
 
-
         //decode input data
         const decodedRawData = ctx.contract.rawContract.interface.parseTransaction({ data: tx.data })
         const decodedRawDataObj = JSON.parse(JSON.stringify(decodedRawData?.args[0]))
@@ -290,6 +323,7 @@ TradeshipProcessor.bind({ address: '0x523d6f30c4aaca133daad97ee2a0c48235bff137',
             const nftAddress = decodedRawDataObj[i][1][0][1]
             const nftId = decodedRawDataObj[i][1][0][2]
             const amount = Number(decodedRawDataObj[i][2][0][3]) / Math.pow(10, 18)
+            const collectionName = (await getERC1155Name(nftAddress))!
 
             // console.log("seller:", seller, " nftAddress: ", nftAddress, " nftId:", nftId, " amount:", amount)
 
@@ -301,6 +335,7 @@ TradeshipProcessor.bind({ address: '0x523d6f30c4aaca133daad97ee2a0c48235bff137',
                         amount: amount,
                         seller: seller,
                         nftAddress: nftAddress,
+                        collectionName: collectionName,
                         nftId: nftId
                     })
             }
@@ -313,46 +348,12 @@ TradeshipProcessor.bind({ address: '0x523d6f30c4aaca133daad97ee2a0c48235bff137',
 
 
     })
-    .onAllEvents(async (event, ctx) => {
-        const hash = event.transactionHash
-        try {
-            console.log("tradeship transactionHash", hash)
-            var tx = (await ctx.contract.provider.getTransaction(hash))!
-            var from = tx.from
-            console.log("tradeship transactionHash", hash, "tx from:", from)
-
-            ctx.eventLogger.emit("Any_Event",
-                {
-                    distinctId: from
-                })
-        } catch (e) {
-            if (e instanceof Error) {
-                console.log(e.message)
-            }
-        }
-    })
+    .onAllEvents(async (event, ctx) => { })
 
 
 
 //first tx block time 4079464
 OfferContractProcessor.bind({ address: '0x016b347aeb70cc45e3bbaf324feb3c7c464e18b0', network: 25, startBlock: 6220924 })
-    .onAllEvents(async (event, ctx) => {
-        const hash = event.transactionHash
-        try {
-            console.log("transactionHash", hash)
-            var tx = (await ctx.contract.provider.getTransaction(hash))!
-            var from = tx.from
-            console.log("offerContract transactionHash", hash, "tx from:", from)
-
-            ctx.eventLogger.emit("Any_Event",
-                {
-                    distinctId: from
-                })
-        } catch (e) {
-            if (e instanceof Error) {
-                console.log(e.message)
-            }
-        }
-    })
+    .onAllEvents(async (event, ctx) => { })
 
 

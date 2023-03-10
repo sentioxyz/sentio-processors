@@ -1,4 +1,5 @@
 export const SEAPORT_ADDRESS = "0x00000000006c3852cbEf3e08E8dF289169EdE581"
+export const BLUR_EXCHANGE_ADDRESS = "0x000000000000Ad05Ccc4F10045630fb830B95127"
 export const FILL_SOURCE_LOOKUP = new Map<string, string>([
     ['2d1229', 'Blur'],
     ['000000', 'Blur'],
