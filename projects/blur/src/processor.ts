@@ -1,6 +1,7 @@
 import { SeaportProcessor, SeaportContext } from "./types/eth/seaport.js";
 import { getERC721Contract } from "@sentio/sdk/eth/builtin/erc721";
 import { BlurExchangeProcessor } from "./types/eth/blurexchange.js";
+
 import * as constant from "./constant.js"
 // import { ethers } from "ethers";
 import fetch from 'node-fetch';
@@ -46,6 +47,7 @@ async function getERC1155Name(nftAddress: string, id: number, hash_debug: string
       const collectionName = await getERC721Contract(nftAddress).name()!
       nftCollectionMap.set(nftAddress, collectionName)
       console.log("Set ERC721 collection name: ", collectionName)
+
       // const metadataURL = await getERC1155Contract(nftAddress).uri(id)!
       // let res = await fetch(metadataURL)
       // const json = await res.json() as any
@@ -90,25 +92,25 @@ SeaportProcessor.bind({ address: constant.SEAPORT_ADDRESS, startBlock: 16731645 
     // console.log("blockNumber", block)
 
     //debug getCollection
-    const hash_debug = event.transactionHash
-    let nftCollection = ""
+    // const hash_debug = event.transactionHash
+    // let nftCollection = ""
 
-    switch (itemType) {
-      case 2: {
-        nftCollection = (await getERC721Name(nftAddress, hash_debug))!
-        break
-      }
-      case 3: {
-        nftCollection = (await getERC1155Name(nftAddress, nftId, hash_debug))!
-        break
-      }
-      default: {
-        console.log("itemType: " + itemType + ", can't handle the itemType, skip for now. TxHash: " + hash_debug)
-        break
-      }
-    }
+    // switch (itemType) {
+    //   case 2: {
+    //     nftCollection = (await getERC721Name(nftAddress, hash_debug))!
+    //     break
+    //   }
+    //   case 3: {
+    //     nftCollection = (await getERC1155Name(nftAddress, nftId, hash_debug))!
+    //     break
+    //   }
+    //   default: {
+    //     console.log("itemType: " + itemType + ", can't handle the itemType, skip for now. TxHash: " + hash_debug)
+    //     break
+    //   }
+    // }
 
-    console.log("nftAddress, Type, Id, Amount, Collection: ", nftAddress, " ", nftType, " ", nftId, " ", nftAmount, " ", nftCollection)
+    // console.log("nftAddress, Type, Id, Amount, Collection: ", nftAddress, " ", nftType, " ", nftId, " ", nftAmount, " ", nftCollection)
 
     //retrieve consideration value, only considering eth atm
     let value = 0
@@ -145,12 +147,13 @@ SeaportProcessor.bind({ address: constant.SEAPORT_ADDRESS, startBlock: 16731645 
         fillSource: fillSource,
         zone: zone,
         nftAddress: nftAddress,
-        nftCollection: nftCollection,
+        // nftCollection: nftCollection,
         nftType: nftType,
         nftId: nftId,
         nftAmount: nftAmount,
         value: value,
-        message: " NFT Collection: " + nftCollection + " Id:" + nftId + " Value: " + value + " ETH" + " Fill Source: " + fillSource + "OTHER_INTERNAL_HTTP_REQUEST_LOGS" + " Recipient: " + recipient + " Offerer: " + offerer
+        message: " NFT Address: " + nftAddress + " Id:" + nftId + " Value: " + value + " ETH" + " Fill Source: " + fillSource + "OTHER_INTERNAL_HTTP_REQUEST_LOGS" + " Recipient: " + recipient + " Offerer: " + offerer
+        // message: " NFT Collection: " + nftCollection + " Id:" + nftId + " Value: " + value + " ETH" + " Fill Source: " + fillSource + "OTHER_INTERNAL_HTTP_REQUEST_LOGS" + " Recipient: " + recipient + " Offerer: " + offerer
       })
 
 
