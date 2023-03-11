@@ -138,7 +138,6 @@ SeaportProcessor.bind({ address: constant.SEAPORT_ADDRESS, startBlock: 16731645 
     if (fillSource == "Blur") {
       console.log(`blur->os tx: ${hash}`)
     }
-
     //event
     ctx.eventLogger.emit("OrderFilled_Event",
       {
@@ -149,14 +148,12 @@ SeaportProcessor.bind({ address: constant.SEAPORT_ADDRESS, startBlock: 16731645 
         nftAddress: nftAddress,
         // nftCollection: nftCollection,
         nftType: nftType,
-        nftId: nftId,
+        nftId: nftId.toString(),
         nftAmount: nftAmount,
         value: value,
         message: " NFT Address: " + nftAddress + " Id:" + nftId + " Value: " + value + " ETH" + " Fill Source: " + fillSource + "OTHER_INTERNAL_HTTP_REQUEST_LOGS" + " Recipient: " + recipient + " Offerer: " + offerer
         // message: " NFT Collection: " + nftCollection + " Id:" + nftId + " Value: " + value + " ETH" + " Fill Source: " + fillSource + "OTHER_INTERNAL_HTTP_REQUEST_LOGS" + " Recipient: " + recipient + " Offerer: " + offerer
       })
-
-
   })
 
 BlurExchangeProcessor.bind({ address: constant.BLUR_EXCHANGE_ADDRESS, startBlock: 16731645 })
