@@ -262,6 +262,12 @@
             "stacked": "samesign"
           }
         },
+        "formulas": [
+          {
+            "expression": "a/2",
+            "id": "A"
+          }
+        ],
         "queries": [
           {
             "aggregate": {
@@ -270,7 +276,7 @@
               ],
               "op": "SUM"
             },
-            "alias": "{{pair}}",
+            "disabled": true,
             "functions": [
               {
                 "arguments": [
@@ -293,7 +299,7 @@
               }
             ],
             "id": "a",
-            "query": "vol_single_sum"
+            "query": "vol_sum"
           }
         ],
         "type": "PIE"
@@ -1208,12 +1214,19 @@
             "maxSignificantDigits": 3
           }
         },
+        "formulas": [
+          {
+            "alias": "daily_volume",
+            "expression": "a/2",
+            "id": "A"
+          }
+        ],
         "queries": [
           {
             "aggregate": {
               "op": "SUM"
             },
-            "alias": "daily_volume",
+            "disabled": true,
             "functions": [
               {
                 "arguments": [
@@ -1228,7 +1241,7 @@
               }
             ],
             "id": "a",
-            "query": "vol_single_sum"
+            "query": "vol_sum"
           }
         ],
         "type": "BAR"
@@ -1326,5 +1339,5 @@
     }
   },
   "projectId": "IrneKFHq",
-  "updatedAt": "2023-03-11T23:10:57.240742Z"
+  "updatedAt": "2023-03-12T08:40:30.335532Z"
 }
