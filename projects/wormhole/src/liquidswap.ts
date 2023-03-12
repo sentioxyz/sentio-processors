@@ -16,7 +16,7 @@ import {
     // inputUsd,
     // priceGauge,
     // priceGaugeNew,
-    priceImpact, singleVolume,
+    priceImpact,
     tvl,
     tvlAll,
     tvlByPool,
@@ -29,7 +29,6 @@ import { isWormhole } from "./utils.js";
 
 const liquidSwap = new AptosDex<liquidity_pool.LiquidityPool<any, any, any>>(
     volume,
-    singleVolume,
     tvlAll, tvl, tvlByPool, {
     getXReserve: pool => pool.coin_x_reserve.value,
     getYReserve: pool => pool.coin_y_reserve.value,

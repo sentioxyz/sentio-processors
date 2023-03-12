@@ -1,11 +1,10 @@
 import { AptosDex, getCoinInfo, whiteListed } from "@sentio/sdk/aptos/ext";
 import { amm } from "./types/aptos/auxexchange.js";
-import {auxSingleVolume, auxTvl, auxTvlAll, auxTvlByPool, auxVolume} from "./metrics.js";
+import { auxTvl, auxTvlAll, auxTvlByPool, auxVolume} from "./metrics.js";
 import { isWormhole } from "./utils.js";
 import { AptosAccountProcessor } from "@sentio/sdk/aptos";
 
 const AUX_EXCHANGE = new AptosDex<amm.Pool<any, any>>(auxVolume,
-    auxSingleVolume,
     auxTvlAll, auxTvl, auxTvlByPool, {
   getXReserve: pool => pool.x_reserve.value,
   getYReserve: pool => pool.y_reserve.value,

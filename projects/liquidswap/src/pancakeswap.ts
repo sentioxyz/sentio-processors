@@ -1,7 +1,6 @@
 import {swap} from "./types/aptos/pancake-swap.js";
 import {AptosDex, getCoinInfo, getPairValue} from "@sentio/sdk/aptos/ext";
 import {
-    pancakeSingleVolume,
     pancakeTvl,
     pancakeTvlAll,
     pancakeTvlByPool,
@@ -51,7 +50,6 @@ swap.bind()
 
 const PANCAKE_SWAP_APTOS = new AptosDex<swap.TokenPairReserve<any, any>>(
     pancakeVolume,
-    pancakeSingleVolume,
     pancakeTvlAll, pancakeTvl, pancakeTvlByPool, {
     getXReserve: pool => pool.reserve_x,
     getYReserve: pool => pool.reserve_y,

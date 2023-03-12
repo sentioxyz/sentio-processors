@@ -17,7 +17,7 @@ import {
     inputUsd,
     priceGauge,
     priceGaugeNew,
-    priceImpact, recordAccount, singleVolume,
+    priceImpact, recordAccount,
     tvl,
     tvlAll,
     tvlByPool,
@@ -30,7 +30,6 @@ export const accountTracker = AccountEventTracker.register("users")
 export const lps = AccountEventTracker.register("lps")
 
 const liquidSwap = new AptosDex<liquidity_pool.LiquidityPool<any, any, any>>(volume,
-    singleVolume,
     tvlAll, tvl, tvlByPool, {
     getXReserve: pool => pool.coin_x_reserve.value,
     getYReserve: pool => pool.coin_y_reserve.value,

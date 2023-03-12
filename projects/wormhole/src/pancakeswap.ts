@@ -1,6 +1,6 @@
 import { swap } from "./types/aptos/pancake-swap.js";
 import { AptosDex, getCoinInfo } from "@sentio/sdk/aptos/ext";
-import {pancakeSingleVolume, pancakeTvl, pancakeTvlAll, pancakeTvlByPool, pancakeVolume} from "./metrics.js";
+import { pancakeTvl, pancakeTvlAll, pancakeTvlByPool, pancakeVolume} from "./metrics.js";
 import { isWormhole } from "./utils.js";
 import { AptosAccountProcessor } from "@sentio/sdk/aptos";
 
@@ -40,7 +40,6 @@ swap.bind()
 
 const PANCAKE_SWAP_APTOS = new AptosDex<swap.TokenPairReserve<any, any>>(
     pancakeVolume,
-    pancakeSingleVolume,
     pancakeTvlAll, pancakeTvl, pancakeTvlByPool,{
   getXReserve: pool => pool.reserve_x,
   getYReserve: pool => pool.reserve_y,

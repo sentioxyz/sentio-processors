@@ -1,7 +1,10 @@
 import { swap } from './types/aptos/pancake-swap.js'
 import { Gauge } from "@sentio/sdk";
 
-import { AptosDex, getCoinInfo, getPair, getPairValue } from "@sentio/sdk/aptos/ext"
+import { AptosDex, getCoinInfo, getPair, getPairValue }
+  from "@sentio/sdk/aptos/ext"
+  // from "@sentio-processor/common/aptos"
+
 import {  AptosAccountProcessor } from "@sentio/sdk/aptos";
 import { IFO } from "./types/aptos/movecoin.js";
 
@@ -17,13 +20,13 @@ const tvlAll = Gauge.register("tvl_all", commonOptions)
 const tvl = Gauge.register("tvl", commonOptions)
 const tvlByPool = Gauge.register("tvl_by_pool", commonOptions)
 const volume = Gauge.register("vol", volOptions)
-const singleVolume = Gauge.register("vol_single", volOptions)
+// const singleVolume = Gauge.register("vol_single", volOptions)
 
 // const accountTracker = AccountEventTracker.register("users")
 
 IFO.bind()
     .onEventDepositEvent(async (evt, ctx)=>{
-      console.log(JSON.stringify(evt))
+      // console.log(JSON.stringify(evt))
       ctx.eventLogger.emit("Deposit", {
         distinctId: evt.data_decoded.user,
         amount: evt.data_decoded.amount,
@@ -105,7 +108,7 @@ swap.bind({startVersion: 10463608})
   })
 
 const PANCAKE_SWAP_APTOS = new AptosDex<swap.TokenPairReserve<any, any>>(
-    volume, singleVolume, tvlAll, tvl, tvlByPool,{
+    volume, tvlAll, tvl, tvlByPool,{
   getXReserve: pool => pool.reserve_x,
   getYReserve: pool => pool.reserve_y,
   getExtraPoolTags: _ => {},

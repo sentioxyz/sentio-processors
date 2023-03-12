@@ -16,7 +16,7 @@ const tvlAll = Gauge.register("tvl_all", commonOptions)
 const tvl = Gauge.register("tvl", commonOptions)
 const tvlByPool = Gauge.register("tvl_by_pool", commonOptions)
 const volume = Gauge.register("vol", volOptions)
-const singleVolume = Gauge.register("vol_single", volOptions)
+// const singleVolume = Gauge.register("vol_single", volOptions)
 
 // const accountTracker = AccountEventTracker.register("users")
 
@@ -47,7 +47,7 @@ amm.bind({startVersion: 2331560})
     ctx.eventLogger.emit("User", { distinctId: ctx.transaction.sender })
   })
 
-const auxExchange = new AptosDex<amm.Pool<any, any>>(volume, singleVolume, tvlAll, tvl, tvlByPool, {
+const auxExchange = new AptosDex<amm.Pool<any, any>>(volume, tvlAll, tvl, tvlByPool, {
   getXReserve: pool => pool.x_reserve.value,
   getYReserve: pool => pool.y_reserve.value,
   getExtraPoolTags: _ => {},
