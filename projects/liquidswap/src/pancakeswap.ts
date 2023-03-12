@@ -1,5 +1,5 @@
 import {swap} from "./types/aptos/pancake-swap.js";
-import {AptosDex, getCoinInfo, getPairValue} from "@sentio-processor/common/aptos";
+import {AptosDex, getCoinInfo, getPairValue} from "@sentio/sdk/aptos/ext";
 import {
     pancakeSingleVolume,
     pancakeTvl,

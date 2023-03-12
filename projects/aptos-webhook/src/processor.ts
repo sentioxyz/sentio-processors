@@ -1,7 +1,6 @@
 import {CHAIN_IDS, Counter, Gauge, MetricOptions} from "@sentio/sdk";
 import {getPriceBySymbol, getPriceByType} from "@sentio/sdk/utils";
 import { aptos_coin, coin, managed_coin, resource_account, aptos_account } from "@sentio/sdk/aptos/builtin/0x1";
-import {AptosDex, getCoinInfo, getPairValue} from "@sentio-processor/common/aptos";
 
 import { DEFAULT_MAINNET_LIST, RawCoinInfo } from "@manahippo/coin-list";
 import * as liquidswap from "./types/aptos/liquidswap.js";

@@ -2,7 +2,7 @@ import { Counter, Gauge, scaleDown } from "@sentio/sdk";
 
 import { aggregator } from './types/aptos/aggregator.js'
 import { type_info } from "@sentio/sdk/aptos/builtin/0x1"
-import { getPrice, getCoinInfo, whiteListed } from "@sentio-processor/common/aptos"
+import { getPrice, getCoinInfo, whiteListed } from "@sentio/sdk/aptos/ext"
 
 const commonOptions = { sparse:  false }
 export const volOptions = {

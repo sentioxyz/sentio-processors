@@ -1,7 +1,7 @@
 import { amm } from './types/aptos/auxexchange.js'
 import {  Gauge } from "@sentio/sdk";
 
-import { AptosDex, getCoinInfo } from "@sentio-processor/common/aptos"
+import { AptosDex, getCoinInfo } from "@sentio/sdk/aptos/ext"
 import { AptosAccountProcessor } from "@sentio/sdk/aptos"
 
 const commonOptions = { sparse:  true }

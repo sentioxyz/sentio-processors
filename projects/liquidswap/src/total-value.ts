@@ -1,5 +1,5 @@
 import {aggregator, coin, optional_aggregator} from "@sentio/sdk/aptos/builtin/0x1";
-import {CORE_TOKENS, getPrice, scaleDown} from "@sentio-processor/common/aptos";
+import { getPrice, whitelistCoins } from "@sentio/sdk/aptos/ext";
 import {delay, getRandomInt} from "@sentio-processor/common";
 import {totalValue} from "./metrics.js";
 import {AptosAccountProcessor, defaultMoveCoder, getAptosClient} from "@sentio/sdk/aptos";
@@ -7,9 +7,10 @@ import {AptosAccountProcessor, defaultMoveCoder, getAptosClient} from "@sentio/s
 const client = getAptosClient()!
 
 // coin.loadTypes(defaultMoveCoder())
-for (const token of CORE_TOKENS.values()) {
+for (const token of whitelistCoins().values()) {
     const coinInfoType = `0x1::coin::CoinInfo<${token.token_type.type}>`
     // const price = await getPrice(v.token_type.type, timestamp)
+  // @ts-ignore
     AptosAccountProcessor.bind({address: token.token_type.account_address})
         .onTimeInterval(async (resources, ctx) => {
             const coinInfoRes = defaultMoveCoder().filterAndDecodeResources<coin.CoinInfo<any>>(coin.CoinInfo.TYPE_QNAME, resources)
@@ -47,7 +48,7 @@ for (const token of CORE_TOKENS.values()) {
             }
 
             const price = await getPrice(token.token_type.type, ctx.timestampInMicros)
-            const value = scaleDown(amount, coinInfo.decimals).multipliedBy(price)
+            const value = amount.scaleDown(coinInfo.decimals).multipliedBy(price)
             if (value.isGreaterThan(0)) {
                 totalValue.record(ctx, value, {coin: token.symbol, bridge: token.bridge, type: token.token_type.type})
             }

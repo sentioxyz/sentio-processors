@@ -1,7 +1,7 @@
 import {aptos_account, coin} from "@sentio/sdk/aptos/builtin/0x1";
 
 import {DEFAULT_MAINNET_LIST, RawCoinInfo} from "@manahippo/coin-list";
-import {scaleDown} from "@sentio-processor/common/aptos";
+import { scaleDown } from "@sentio/sdk";
 
 const coinInfoMap = new Map<string, RawCoinInfo>()
 

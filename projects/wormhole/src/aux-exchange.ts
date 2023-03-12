@@ -1,4 +1,4 @@
-import { AptosDex, getCoinInfo, whiteListed } from "@sentio-processor/common/aptos";
+import { AptosDex, getCoinInfo, whiteListed } from "@sentio/sdk/aptos/ext";
 import { amm } from "./types/aptos/auxexchange.js";
 import {auxSingleVolume, auxTvl, auxTvlAll, auxTvlByPool, auxVolume} from "./metrics.js";
 import { isWormhole } from "./utils.js";

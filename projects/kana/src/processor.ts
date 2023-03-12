@@ -1,6 +1,6 @@
 import { kana_aggregatorv1 } from './types/aptos/KanalabsV0.js'
 import { KanalabsAggregatorV1, KanalabsRouterV1 } from './types/aptos/KanalabsAggregatorV1.js'
-import { getPrice, getCoinInfo, whiteListed, scaleDown } from "@sentio-processor/common/aptos"
+import { getPrice, getCoinInfo, whiteListed } from "@sentio/sdk/aptos/ext"
 import { Counter, Gauge } from "@sentio/sdk"
 import { type_info } from "@sentio/sdk/aptos/builtin/0x1"
 
@@ -40,7 +40,7 @@ kana_aggregatorv1.bind()
     const priceX = await getPrice(xType, Number(timestamp))
     const priceY = await getPrice(yType, Number(timestamp))
     const pair = constructPair(xType, yType)
-    const volume = Number(scaleDown(inputAmount, coinXInfo.decimals).multipliedBy(priceX))
+    const volume = Number(inputAmount.scaleDown(coinXInfo.decimals).multipliedBy(priceX))
     console.log("volume1", volume)
     const displayPair = constructDisplay(symbolX, symbolY)
 
@@ -95,7 +95,7 @@ KanalabsAggregatorV1.bind()
     const priceX = await getPrice(xType, Number(timestamp))
     const priceY = await getPrice(yType, Number(timestamp))
     const pair = constructPair(xType, yType)
-    const volume = Number(scaleDown(inputAmount, coinXInfo.decimals).multipliedBy(priceX))
+    const volume = Number(inputAmount.scaleDown(coinXInfo.decimals).multipliedBy(priceX))
     const displayPair = constructDisplay(symbolX, symbolY)
 
     console.log("volume2", volume)

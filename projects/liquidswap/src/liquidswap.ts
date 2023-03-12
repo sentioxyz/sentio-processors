@@ -6,14 +6,12 @@ import {defaultMoveCoder, AptosAccountProcessor, TypedMoveResource, MoveResource
 import {
     AptosDex,
     calculateValueInUsd,
-    CORE_TOKENS,
     getCoinInfo, getPairValue,
-    getPrice,
-    scaleDown,
+    getPrice, whitelistCoins,
     whiteListed
-} from "@sentio-processor/common/aptos"
+} from "@sentio/sdk/aptos/ext"
 
-import { AccountEventTracker, BigDecimal } from "@sentio/sdk"
+import { AccountEventTracker, BigDecimal, scaleDown } from "@sentio/sdk"
 
 import {
     inputUsd,
@@ -187,8 +185,8 @@ async function syncLiquidSwapPools(resources: MoveResource[], ctx: AptosResource
                 const coinXInfo = getCoinInfo(pool.type_arguments[0])
                 const coinYInfo = getCoinInfo(pool.type_arguments[1])
                 console.log(`pool[${getPair(pool.type_arguments[0], pool.type_arguments[1])}] value: ${
-                    scaleDown(pool.data_decoded.coin_x_reserve.value, coinXInfo.decimals)}, ${
-                    scaleDown(pool.data_decoded.coin_y_reserve.value, coinYInfo.decimals)
+                    pool.data_decoded.coin_x_reserve.value.scaleDown(coinXInfo.decimals)}, ${
+                    pool.data_decoded.coin_y_reserve.value.scaleDown(coinYInfo.decimals)
                 }`)
             }
         }
@@ -251,7 +249,7 @@ async function syncLiquidSwapPools(resources: MoveResource[], ctx: AptosResource
         if (whitelistx) {
             const value = await calculateValueInUsd(coinx_amount, coinXInfo, timestamp)
             poolValue = poolValue.plus(value)
-            const valueNew = scaleDown(coinx_amount, coinXInfo.decimals).multipliedBy(priceX)
+            const valueNew = coinx_amount.scaleDown(coinXInfo.decimals).multipliedBy(priceX)
             poolValueNew = poolValueNew.plus(valueNew)
             // tvlTotal.record(ctx, value, { pool: poolName, type: coinXInfo.token_type.type })
 
@@ -331,7 +329,7 @@ async function syncLiquidSwapPools(resources: MoveResource[], ctx: AptosResource
     tvlAll.record(ctx, tvlAllValue)
 
     for (const [k, v] of volumeByCoin) {
-        const coinInfo = CORE_TOKENS.get(k)
+        const coinInfo = whitelistCoins().get(k)
         if (!coinInfo) {
             throw Error("unexpected coin " + k)
         }

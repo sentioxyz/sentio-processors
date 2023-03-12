@@ -1,15 +1,15 @@
-import {BaseCoinInfoWithBridge, CORE_TOKENS, scaleDown} from "@sentio-processor/common/aptos";
+import { SimpleCoinInfo, whitelistCoins } from "@sentio/sdk/aptos/ext";
 import {CHAIN_IDS} from "@sentio/sdk";
 import {account, coin, type_info} from "@sentio/sdk/aptos/builtin/0x1";
 import {getPriceByType} from "@sentio/sdk/utils";
 import {defaultMoveCoder, getAptosClient} from "@sentio/sdk/aptos";
 
-const BRIDGE_TOKENS = new Map<string, BaseCoinInfoWithBridge>()
+const BRIDGE_TOKENS = new Map<string, SimpleCoinInfo>()
 const PRICES = new Map<string, number>()
 
 const date = new Date(2022, 11, 1)
 
-for (const token of CORE_TOKENS.values()) {
+for (const token of whitelistCoins().values()) {
     if (token.bridge === "native") {
         continue
     }
@@ -75,7 +75,7 @@ account.bind().onEventCoinRegisterEvent(async (call, ctx) => {
         process.exit(1)
         return
     }
-    const amount = scaleDown(decodedRes.data_decoded.coin.value, token.decimals)
+    const amount = decodedRes.data_decoded.coin.value.scaleDown(token.decimals)
     const value = amount.multipliedBy(PRICES.get(token.token_type.type)!)
 
     ctx.eventLogger.emit("coin_register", {

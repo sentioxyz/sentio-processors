@@ -1,7 +1,7 @@
 import { piece_swap, piece_swap_script } from './types/aptos/piece-swap.js'
 import {  Gauge } from "@sentio/sdk";
 
-import { AptosDex, getCoinInfo } from "@sentio-processor/common/aptos"
+import { AptosDex, getCoinInfo } from "@sentio/sdk/aptos/ext"
 import { type_info } from "@sentio/sdk/aptos/builtin/0x1";
 import { AptosAccountProcessor } from "@sentio/sdk/aptos";
 

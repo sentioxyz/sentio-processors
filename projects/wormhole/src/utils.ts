@@ -1,4 +1,4 @@
-import { getCoinInfo } from "@sentio-processor/common/aptos";
+import { getCoinInfo } from "@sentio/sdk/aptos/ext";
 
 export function isWormhole(coinx: string, coiny: string): string {
   const coinXInfo = getCoinInfo(coinx)

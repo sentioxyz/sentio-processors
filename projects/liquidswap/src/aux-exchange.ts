@@ -1,4 +1,4 @@
-import {AptosDex, getCoinInfo, getPair, getPairValue} from "@sentio-processor/common/aptos";
+import {AptosDex, getCoinInfo, getPair, getPairValue} from "@sentio/sdk/aptos/ext";
 import {amm} from "./types/aptos/auxexchange.js";
 import {
     auxSingleVolume,

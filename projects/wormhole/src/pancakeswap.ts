@@ -1,5 +1,5 @@
 import { swap } from "./types/aptos/pancake-swap.js";
-import { AptosDex, getCoinInfo } from "@sentio-processor/common/aptos";
+import { AptosDex, getCoinInfo } from "@sentio/sdk/aptos/ext";
 import {pancakeSingleVolume, pancakeTvl, pancakeTvlAll, pancakeTvlByPool, pancakeVolume} from "./metrics.js";
 import { isWormhole } from "./utils.js";
 import { AptosAccountProcessor } from "@sentio/sdk/aptos";

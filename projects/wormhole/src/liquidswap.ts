@@ -2,17 +2,15 @@ import { liquidity_pool } from "./types/aptos/liquidswap.js"
 
 import {
     calculateValueInUsd,
-    CORE_TOKENS,
     getCoinInfo,
-    getPrice,
-    scaleDown,
+    getPrice, whitelistCoins,
     whiteListed
-} from "@sentio-processor/common/aptos"
+} from "@sentio/sdk/aptos/ext"
 
-import { BigDecimal } from "@sentio/sdk"
+import { BigDecimal, scaleDown } from "@sentio/sdk"
 
 import { AptosAccountProcessor, defaultMoveCoder, TypedMoveResource } from "@sentio/sdk/aptos"
-import { AptosDex } from "@sentio-processor/common/aptos"
+import { AptosDex } from "@sentio/sdk/aptos/ext"
 import {
     inputUsd,
     // inputUsd,
@@ -271,7 +269,7 @@ async function syncLiquidSwapPools(resources: MoveResource[], ctx: AptosResource
     tvlAll.record(ctx, tvlAllValue)
 
     for (const [k, v] of volumeByCoin) {
-        const coinInfo = CORE_TOKENS.get(k)
+        const coinInfo = whitelistCoins().get(k)
         if (!coinInfo) {
             throw Error("unexpected coin " + k)
         }

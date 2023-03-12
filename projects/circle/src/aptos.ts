@@ -1,12 +1,11 @@
 import { AptosClient } from "aptos-sdk";
 import { aggregator, coin, optional_aggregator } from "@sentio/sdk/aptos/builtin/0x1";
-import {  Gauge } from "@sentio/sdk";
+import { Gauge, scaleDown } from "@sentio/sdk";
 import {
-  CORE_TOKENS,
   getCoinInfo, getPair,
   getPrice, PoolAdaptor,
-  scaleDown, SimpleCoinInfo
-} from "@sentio-processor/common/aptos";
+  SimpleCoinInfo, whitelistCoins
+} from "@sentio/sdk/aptos/ext";
 import { delay, getRandomInt } from "@sentio-processor/common";
 import { amm } from "./types/aptos/auxexchange.js";
 import { liquidity_pool } from "./types/aptos/liquidswap.js";
@@ -35,7 +34,7 @@ export const volume = Gauge.register("vol", commonOptions)
 // }
 
 function isUSDCType(type: string): boolean {
-  const r = CORE_TOKENS.get(type)
+  const r = whitelistCoins().get(type)
   if (!r) {
     return false
   }
@@ -49,13 +48,14 @@ function isUSDCPair(typeX: string, typeY: string) {
 const client = getAptosClient()!
 
 // coin.loadTypes(defaultMoveCoder())
-for (const token of CORE_TOKENS.values()) {
+for (const token of whitelistCoins().values()) {
   if (!isUSDCType(token.token_type.type)) {
     continue
   }
 
   const coinInfoType = `0x1::coin::CoinInfo<${token.token_type.type}>`
   // const price = await getPrice(v.token_type.type, timestamp)
+  // @ts-ignore
   AptosAccountProcessor.bind({address: token.token_type.account_address})
     .onVersionInterval(async (resources, ctx) => {
       const coinInfoRes = defaultMoveCoder().filterAndDecodeResources<coin.CoinInfo<any>>(coin.CoinInfo.TYPE_QNAME, resources)

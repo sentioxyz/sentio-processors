@@ -1,5 +1,5 @@
 import { listing } from './types/aptos/seashrine.js'
-import { getPrice, getCoinInfo, scaleDown } from "@sentio-processor/common/aptos"
+import { getPrice, getCoinInfo } from "@sentio/sdk/aptos/ext"
 import { Counter, Gauge } from "@sentio/sdk";
 import { timestamp, type_info } from "@sentio/sdk/aptos/builtin/0x1"
 
@@ -27,7 +27,7 @@ listing.bind({ startVersion: 6393932 })
     const originalCoinInfo = event.data_decoded.coin_type
     const coinType = originalCoinInfo.account_address + "::" + hex_to_ascii(originalCoinInfo.module_name) + "::" + hex_to_ascii(originalCoinInfo.struct_name)
     const coinInfo = getCoinInfo(coinType)
-    const amount = scaleDown(event.data_decoded.min_price, coinInfo.decimals)
+    const amount = event.data_decoded.min_price.scaleDown(coinInfo.decimals)
 
     const timestamp = event.data_decoded.at
     const collection = event.data_decoded.token_id.token_data_id.collection
