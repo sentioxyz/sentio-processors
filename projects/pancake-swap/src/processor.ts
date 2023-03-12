@@ -1,11 +1,9 @@
 import { swap } from './types/aptos/pancake-swap.js'
 import { Gauge } from "@sentio/sdk";
 
-import { AptosDex, getCoinInfo } from "@sentio-processor/common/aptos"
+import { AptosDex, getCoinInfo, getPair, getPairValue } from "@sentio/sdk/aptos/ext"
 import {  AptosAccountProcessor } from "@sentio/sdk/aptos";
 import { IFO } from "./types/aptos/movecoin.js";
-import { getPair, getPairValue } from "@sentio-processor/common/aptos";
-import { coin } from "@sentio/sdk/aptos/builtin/0x1";
 
 const commonOptions = { sparse:  true }
 export const volOptions = {
