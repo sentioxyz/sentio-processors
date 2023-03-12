@@ -6,6 +6,7 @@ import { getPrice } from "./aptos.js";
 // import { toBigDecimal } from "@sentio/sdk/";
 // import { BigDecimal } from "@sentio/sdk/lib/core/big-decimal";
 import { scaleDown } from '@sentio/sdk'
+import {EthEvent} from "@sentio/sdk/eth";
 
 
 const commonOptions = { sparse: true }
@@ -64,11 +65,13 @@ async function priceFeedUpdate(evt: PriceFeedUpdateEvent, ctx: PythEVMContext) {
     priceUnsafeGauage.record(ctx, priceUnsafe, labels)
     ctx.meter.Counter("price_update_counter").add(1, labels)
     price_update_occur.record(ctx, 1, labels)
+    await recordGasUsage("priceFeedUpdate", evt.transactionHash, ctx)
 }
 
 async function batchPriceUpdate(evt: BatchPriceFeedUpdateEvent, ctx: PythEVMContext) {
     ctx.meter.Counter("batch_price_update_counter").add(1)
     batch_price_update_occur.record(ctx, 1)
+    await recordGasUsage("batchPriceUpdate", evt.transactionHash, ctx)
 }
 
 async function updatePriceFeeds(call: UpdatePriceFeedsCallTrace, ctx: PythEVMContext) {
@@ -79,6 +82,19 @@ async function updatePriceFeeds(call: UpdatePriceFeedsCallTrace, ctx: PythEVMCon
 async function updatePriceFeedsIfNecessary(call: UpdatePriceFeedsIfNecessaryCallTrace, ctx: PythEVMContext) {
     const from = call.action.from
     ctx.meter.Counter("update_price_feed_if_necessary_caller").add(1, {"caller": from})
+}
+
+async function recordGasUsage(evt : string, hash : string, ctx: PythEVMContext) {
+    try {
+        const receipt = await ctx.contract.provider.getTransactionReceipt(hash)
+        const gasUsed = receipt!.gasUsed
+        const gasPrice = receipt!.gasPrice.scaleDown(18)
+        ctx.meter.Counter("gas_usage").add(gasUsed.asBigDecimal().
+        multipliedBy(gasPrice).toNumber(), {"event": evt})
+    } catch (e) {
+        console.log(e)
+        return
+    }
 }
 
 CHAIN_ADDRESS_MAP.forEach((addr, chainId) => {
@@ -96,7 +112,6 @@ CHAIN_ADDRESS_MAP.forEach((addr, chainId) => {
         .onCallUpdatePriceFeedsIfNecessary(updatePriceFeedsIfNecessary)
         .onEventBatchPriceFeedUpdate(batchPriceUpdate)
     }
-
 })
 
 // PythEVMProcessor.bind({address: PYTH_ETH})
