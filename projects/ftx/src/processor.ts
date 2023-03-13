@@ -1,11 +1,11 @@
 import {aptos_account, coin} from "@sentio/sdk/aptos/builtin/0x1";
 
-import {DEFAULT_MAINNET_LIST, RawCoinInfo} from "@manahippo/coin-list";
+import { SimpleCoinInfo, whitelistCoins } from "@sentio/sdk/aptos/ext";
 import { scaleDown } from "@sentio/sdk";
 
-const coinInfoMap = new Map<string, RawCoinInfo>()
+const coinInfoMap = new Map<string, SimpleCoinInfo>()
 
-for (const x of DEFAULT_MAINNET_LIST) {
+for (const x of whitelistCoins().values()) {
     coinInfoMap.set(x.token_type.type, x)
 }
 
