@@ -15,6 +15,8 @@ export const volOptions = {
 
 const vol = Gauge.register("vol", volOptions)
 const totalTx = Counter.register("tx", commonOptions)
+const cumeVol = Counter.register("cumeVol", commonOptions)
+
 // const tvl = new Counter("tvl", commonOptions)
 
 // const accountTracker = AccountEventTracker.register("users")
@@ -28,7 +30,7 @@ aggregator.bind({address: "0x89576037b3cc0b89645ea393a47787bb348272c76d6941c574b
   const dexType = evt.data_decoded.dex_type
   const xType = extractTypeName(evt.data_decoded.x_type_info)
   const yType = extractTypeName(evt.data_decoded.y_type_info)
-
+  evt
   const coinXInfo = getCoinInfo(xType)
   const coinYInfo = getCoinInfo(yType)
   const poolType = evt.data_decoded.pool_type
@@ -43,9 +45,31 @@ aggregator.bind({address: "0x89576037b3cc0b89645ea393a47787bb348272c76d6941c574b
 
   // accountTracker.trackEvent(ctx, { distinctId: ctx.transaction.sender})
   ctx.eventLogger.emit("user",{ distinctId: ctx.transaction.sender} )
-  totalTx.add(ctx, 1)
+  var volBucket = "nan"
+  if (volume.lte(1)) {
+    volBucket = "lt1"
+  } else if (volume.lte(10)) {
+    volBucket = "1to10"
+  } else if (volume.lte(100)) {
+    volBucket = "10to100"
+  } else if (volume.lte(1000)) {
+    volBucket = "100to1000"
+  } else if (volume.lte(10000)) {
+    volBucket = "1000to10000"
+  } else {
+    volBucket = "gt10000"
+  }
+  const wallet = ctx.transaction.sender
+  totalTx.add(ctx, 1, {volBucket})
   if (whiteListed(xType)) {
-    vol.record(ctx, volume, {dex: getDex(dexType), poolType: poolType.toString(), xType: xType, yType: yType, symbolX: symbolX, symbolY: symbolY, pair: displayPair})
+    vol.record(ctx, volume, {dex: getDex(dexType), poolType: poolType.toString(), xType: xType, yType: yType, symbolX: symbolX, symbolY: symbolY, pair: displayPair, volBucket: volBucket})
+    cumeVol.add(ctx, volume, {dex: getDex(dexType), poolType: poolType.toString(), xType: xType, yType: yType, symbolX: symbolX, symbolY: symbolY, pair: displayPair, volBucket: volBucket})
+    ctx.eventLogger.emit("vol_event", {
+      distinctId: wallet,
+      "wallet" : wallet,
+      "volBucket": volBucket,
+      "value": volume 
+    })
   }
 })
 
