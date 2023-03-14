@@ -4,7 +4,7 @@ import { BlurExchangeProcessor } from "./types/eth/blurexchange.js";
 
 import * as constant from "./constant.js"
 // import { ethers } from "ethers";
-import fetch from 'node-fetch';
+// import fetch from 'node-fetch';
 
 function getFillSource(inputDataSuffix: string) {
   let source = constant.FILL_SOURCE_LOOKUP.get(inputDataSuffix)
@@ -135,9 +135,9 @@ SeaportProcessor.bind({ address: constant.SEAPORT_ADDRESS, startBlock: 16731645 
       }
     }
     fillSource = getFillSource(inputDataSuffix)
-    if (fillSource == "Blur") {
-      console.log(`blur->os tx: ${hash}`)
-    }
+    // if (fillSource == "Blur") {
+    //   console.log(`blur->os tx: ${hash}`)
+    // }
     //event
     ctx.eventLogger.emit("OrderFilled_Event",
       {
@@ -156,28 +156,27 @@ SeaportProcessor.bind({ address: constant.SEAPORT_ADDRESS, startBlock: 16731645 
       })
   })
 
-BlurExchangeProcessor.bind({ address: constant.BLUR_EXCHANGE_ADDRESS, startBlock: 16731645 })
-  .onEventOrdersMatched(async (event, ctx) => {
-    //get fill source from last 6 bits of input data
-    const hash = event.transactionHash
-    let fillSource = ""
-    let inputDataSuffix = ""
-    try {
-      const tx = (await ctx.contract.provider.getTransaction(hash))!
-      inputDataSuffix = tx.data.toString().slice(-6)
-    }
-    catch (e) {
-      if (e instanceof Error) {
-        console.log(e.message, "BlurEx retrieve transaction data failed")
-      }
-    }
-    fillSource = getFillSource(inputDataSuffix)
-    // if (fillSource == "Opensea") {
-    //   console.log(`blur->os tx: ${hash}`)
-    // }
+// BlurExchangeProcessor.bind({ address: constant.BLUR_EXCHANGE_ADDRESS, startBlock: 16731645 })
+//   .onEventOrdersMatched(async (event, ctx) => {
+//     //get fill source from last 6 bits of input data
+//     const hash = event.transactionHash
+//     let fillSource = ""
+//     let inputDataSuffix = ""
+//     try {
+//       const tx = (await ctx.contract.provider.getTransaction(hash))!
+//       inputDataSuffix = tx.data.toString().slice(-6)
+//     }
+//     catch (e) {
+//       if (e instanceof Error) {
+//         console.log(e.message, "BlurEx retrieve transaction data failed")
+//       }
+//     }
+//     fillSource = getFillSource(inputDataSuffix)
+//     // if (fillSource == "Opensea") {
+//     //   console.log(`blur->os tx: ${hash}`)
+//     // }
 
-    const maker = event.args.maker
-    const taker = event.args.taker
+//     const taker = event.args.taker
 
 
-  })
+//   })
