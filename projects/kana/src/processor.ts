@@ -1,5 +1,7 @@
 import { kana_aggregatorv1 } from './types/aptos/KanalabsV0.js'
 import { KanalabsAggregatorV1, KanalabsRouterV1 } from './types/aptos/KanalabsAggregatorV1.js'
+import { swap } from './types/aptos/pancakeswap.js'
+import { aggregator } from './types/aptos/hippoAggregator.js'
 import { getPrice, getCoinInfo, whiteListed } from "@sentio/sdk/aptos/ext"
 import { Counter, Gauge } from "@sentio/sdk"
 import { type_info } from "@sentio/sdk/aptos/builtin/0x1"
@@ -49,26 +51,27 @@ kana_aggregatorv1.bind()
     ctx.meter.Gauge("tx_gauge").record(1)
 
     if (whiteListed(xType)) {
-      vol.record(ctx, volume, { dex: getDex(dexType), poolType: poolType.toString(), xType: xType, yType: yType, symbolX: symbolX, symbolY: symbolY, pair: displayPair })
-      volCounter.add(ctx, volume, { dex: getDex(dexType), poolType: poolType.toString(), xType: xType, yType: yType, symbolX: symbolX, symbolY: symbolY, pair: displayPair })
+      vol.record(ctx, volume, { dex: getDex(dexType, KANA_DEX_MAP), poolType: poolType.toString(), xType: xType, yType: yType, symbolX: symbolX, symbolY: symbolY, pair: displayPair })
+      volCounter.add(ctx, volume, { dex: getDex(dexType, KANA_DEX_MAP), poolType: poolType.toString(), xType: xType, yType: yType, symbolX: symbolX, symbolY: symbolY, pair: displayPair })
       ctx.eventLogger.emit("swap", {
         distinctId: ctx.transaction.sender,
-        address: '0x62fdfe47c9c37227be1f885e79be827be292fe1833ac63a2fe2c2c16c55ecb12',
-        contract: 'kana_aggregatorv1',
+        // address: '0x62fdfe47c9c37227be1f885e79be827be292fe1833ac63a2fe2c2c16c55ecb12',
+        // contract: 'kana_aggregatorv1',
         volume: volume,
-        dex: getDex(dexType),
+        dex: getDex(dexType, KANA_DEX_MAP),
         poolType: poolType.toString(),
         xType: xType,
         yType: yType,
         symbolX: symbolX,
         symbolY: symbolY,
-        pair: displayPair
+        pair: displayPair,
+        message: `Legacy Kana contract swap ${volume} ${symbolX} to ${symbolY} through dex ${getDex(dexType, KANA_DEX_MAP)}`
       })
-      ctx.eventLogger.emit("any", {
-        distinctId: ctx.transaction.sender,
-        address: '0x62fdfe47c9c37227be1f885e79be827be292fe1833ac63a2fe2c2c16c55ecb12',
-        contract: 'kana_aggregatorv1'
-      })
+      // ctx.eventLogger.emit("any", {
+      //   distinctId: ctx.transaction.sender,
+      //   address: '0x62fdfe47c9c37227be1f885e79be827be292fe1833ac63a2fe2c2c16c55ecb12',
+      //   contract: 'kana_aggregatorv1'
+      // })
 
     }
 
@@ -98,32 +101,31 @@ KanalabsAggregatorV1.bind()
     const volume = Number(inputAmount.scaleDown(coinXInfo.decimals).multipliedBy(priceX))
     const displayPair = constructDisplay(symbolX, symbolY)
 
-    console.log("volume2", volume)
-
 
     totalTx.add(ctx, 1)
     ctx.meter.Gauge("tx_gauge").record(1)
 
     if (whiteListed(xType)) {
-      vol.record(ctx, volume, { dex: getDex(dexType), poolType: poolType.toString(), xType: xType, yType: yType, symbolX: symbolX, symbolY: symbolY, pair: displayPair })
-      volCounter.add(ctx, volume, { dex: getDex(dexType), poolType: poolType.toString(), xType: xType, yType: yType, symbolX: symbolX, symbolY: symbolY, pair: displayPair })
+      vol.record(ctx, volume, { dex: getDex(dexType, KANA_DEX_MAP), poolType: poolType.toString(), xType: xType, yType: yType, symbolX: symbolX, symbolY: symbolY, pair: displayPair })
+      volCounter.add(ctx, volume, { dex: getDex(dexType, KANA_DEX_MAP), poolType: poolType.toString(), xType: xType, yType: yType, symbolX: symbolX, symbolY: symbolY, pair: displayPair })
       ctx.eventLogger.emit("swap", {
         distinctId: ctx.transaction.sender,
-        address: '0xcdca128119681f791ddc2283e8c7b364ae22d416c5be95b0faf6aa1818c7afd6',
-        contract: 'KanalabsAggregatorV1',
+        // address: '0xcdca128119681f791ddc2283e8c7b364ae22d416c5be95b0faf6aa1818c7afd6',
+        // contract: 'KanalabsAggregatorV1',
         volume: volume,
-        dex: getDex(dexType),
+        dex: getDex(dexType, KANA_DEX_MAP),
         poolType: poolType.toString(),
         xType: xType,
         yType: yType,
         symbolX: symbolX,
         symbolY: symbolY,
-        pair: displayPair
+        pair: displayPair,
+        message: `New Kana contract swap ${volume} ${symbolX} to ${symbolY} through dex ${getDex(dexType, KANA_DEX_MAP)}`
       })
       ctx.eventLogger.emit("any", {
         distinctId: ctx.transaction.sender,
-        address: '0xcdca128119681f791ddc2283e8c7b364ae22d416c5be95b0faf6aa1818c7afd6',
-        contract: 'KanalabsAggregatorV1'
+        // address: '0xcdca128119681f791ddc2283e8c7b364ae22d416c5be95b0faf6aa1818c7afd6',
+        // contract: 'KanalabsAggregatorV1'
       })
     }
 
@@ -137,16 +139,112 @@ KanalabsRouterV1.bind()
 
     ctx.eventLogger.emit("route", {
       distinctId: ctx.transaction.sender,
-      address: '0xcdca128119681f791ddc2283e8c7b364ae22d416c5be95b0faf6aa1818c7afd6',
-      contract: 'KanalabsRouterV1'
+      // address: '0xcdca128119681f791ddc2283e8c7b364ae22d416c5be95b0faf6aa1818c7afd6',
+      // contract: 'KanalabsRouterV1'
     })
     ctx.eventLogger.emit("any", {
       distinctId: ctx.transaction.sender,
-      address: '0xcdca128119681f791ddc2283e8c7b364ae22d416c5be95b0faf6aa1818c7afd6',
-      contract: 'KanalabsRouterV1'
+      // address: '0xcdca128119681f791ddc2283e8c7b364ae22d416c5be95b0faf6aa1818c7afd6',
+      // contract: 'KanalabsRouterV1'
     })
 
   }))
+
+
+//hippo aggregator
+aggregator.bind({ address: "0x89576037b3cc0b89645ea393a47787bb348272c76d6941c574b053672b848039" })
+  .onEventSwapStepEvent(async (evt, ctx) => {
+    const timestamp = evt.data_decoded.time_stamp
+    const inputAmount = evt.data_decoded.input_amount
+    const outputAmount = evt.data_decoded.output_amount
+    const dexType = evt.data_decoded.dex_type
+    const xType = extractTypeName(evt.data_decoded.x_type_info)
+    const yType = extractTypeName(evt.data_decoded.y_type_info)
+
+    const coinXInfo = getCoinInfo(xType)
+    const coinYInfo = getCoinInfo(yType)
+    const poolType = evt.data_decoded.pool_type
+    const priceX = await getPrice(xType, Number(timestamp))
+    const priceY = await getPrice(yType, Number(timestamp))
+    const pair = constructPair(xType, yType)
+    const volume = Number(inputAmount.scaleDown(coinXInfo.decimals).multipliedBy(priceX))
+    const symbolX = coinXInfo.symbol
+    const symbolY = coinYInfo.symbol
+    const displayPair = constructDisplay(symbolX, symbolY)
+
+    totalTx.add(ctx, 1)
+
+    if (whiteListed(xType)) {
+      vol.record(ctx, volume, { dex: getDex(dexType, HIPPO_DEX_MAP), poolType: poolType.toString(), xType: xType, yType: yType, symbolX: symbolX, symbolY: symbolY, pair: displayPair })
+      volCounter.add(ctx, volume, { dex: getDex(dexType, HIPPO_DEX_MAP), poolType: poolType.toString(), xType: xType, yType: yType, symbolX: symbolX, symbolY: symbolY, pair: displayPair })
+      ctx.eventLogger.emit("swap", {
+        distinctId: ctx.transaction.sender,
+        volume: volume,
+        dex: getDex(dexType, HIPPO_DEX_MAP),
+        poolType: poolType.toString(),
+        xType: xType,
+        yType: yType,
+        symbolX: symbolX,
+        symbolY: symbolY,
+        pair: displayPair,
+        message: `Hippo swap ${volume} ${symbolX} to ${symbolY} through dex ${getDex(dexType, HIPPO_DEX_MAP)}`
+      })
+      ctx.eventLogger.emit("any", {
+        distinctId: ctx.transaction.sender
+      })
+    }
+  })
+
+
+//pancake
+swap.bind()
+  .onEventSwapEvent(async (event, ctx) => {
+    const coinX = event.type_arguments[0]
+    const coinY = event.type_arguments[1]
+    const amountX = event.data_decoded.amount_x_in > event.data_decoded.amount_x_out ? event.data_decoded.amount_x_in - event.data_decoded.amount_x_out : event.data_decoded.amount_x_out - event.data_decoded.amount_x_in
+    const amountY = event.data_decoded.amount_y_in > event.data_decoded.amount_y_out ? event.data_decoded.amount_y_in - event.data_decoded.amount_y_out : event.data_decoded.amount_y_out - event.data_decoded.amount_y_in
+    // const value = await PANCAKE_SWAP_APTOS.recordTradingVolume(ctx, coinx, coiny, amountx, amounty)
+
+    // console.log(JSON.stringify(ctx.transaction))
+    // console.log(JSON.stringify(evt))
+    const coinXInfo = getCoinInfo(coinX)
+    const coinYInfo = getCoinInfo(coinY)
+    const symbolX = coinXInfo.symbol
+    const symbolY = coinYInfo.symbol
+    const pair = constructPair(symbolX, symbolY)
+    // console.log(`pancakeswap coinX ${coinX} coinY ${coinY}, amountX ${amountX} amountY ${amountY}, symbolX ${symbolX} symbolY ${symbolY} `)
+    const timestamp = ctx.transaction.timestamp
+    // const xType = extractTypeName(event.data_decoded.x_type_info)
+    // const yType = extractTypeName(event.data_decoded.y_type_info)
+
+    const priceX = await getPrice(coinX, Number(timestamp))
+    const volume = Number(amountX.scaleDown(coinXInfo.decimals).multipliedBy(priceX))
+    console.log(`pancakeswap swap volume ${volume}, priceX ${priceX}, amountX ${amountX}, txHash ${ctx.transaction.hash}`)
+
+    // ctx.meter.Counter("event_swap_by_bridge").add(1, { bridge: coinXInfo.bridge })
+    // ctx.meter.Counter("event_swap_by_bridge").add(1, { bridge: coinYInfo.bridge })
+
+    let message: string
+    const summaryX = `${amountX.scaleDown(coinXInfo.decimals).toNumber()} ${coinXInfo.symbol}`
+    const summaryY = `${amountY.scaleDown(coinYInfo.decimals).toNumber()} ${coinYInfo.symbol}`
+    if (event.data_decoded.amount_x_in > event.data_decoded.amount_x_out) {
+      message = `Swap ${summaryX} to ${summaryY}`
+    } else {
+      message = `Swap ${summaryY} to ${summaryX}`
+    }
+
+    totalTx.add(ctx, 1)
+
+    ctx.eventLogger.emit("Swap", {
+      distinctId: ctx.transaction.sender,
+      volume: volume,
+      symbolX: symbolX,
+      symbolY: symbolY,
+      pair: pair,
+      message
+    })
+  })
+
 
 function constructPair(xType: String, yType: String) {
   if (xType > yType) {
@@ -186,15 +284,15 @@ function hex_to_ascii(str1: String) {
 }
 
 
-function getDex(dex: number) {
-  if (DEX_MAP.has(dex)) {
-    return DEX_MAP.get(dex)!
+function getDex(dex: number, map: Map<number, string>) {
+  if (map.has(dex)) {
+    return map.get(dex)!
   } else {
     return 'dex_unk_' + dex.toString()
   }
 }
 
-const DEX_MAP = new Map<number, string>([
+const KANA_DEX_MAP = new Map<number, string>([
   [1, 'Liquidswap'],
   [2, 'Aptoswap'],
   [3, 'Basiq'],
@@ -205,15 +303,30 @@ const DEX_MAP = new Map<number, string>([
   [8, 'Orbic']
 ])
 
+const HIPPO_DEX_MAP = new Map<number, string>([
+  [1, 'HIPPO'],
+  [2, 'ECONIA'],
+  [3, 'PONTEM'],
+  [4, 'BASIQ'],
+  [5, 'DITTO'],
+  [6, 'TORTUGA'],
+  [7, 'APTOSWAP'],
+  [8, 'AUX'],
+  [9, 'ANIMESWAP'],
+  [10, 'CETUS'],
+  [11, 'PANCAKE'],
+  [12, 'OBRIC']
+])
+
 function getRoute(routeType: number) {
-  if (ROUTE_MAP.has(routeType)) {
-    return ROUTE_MAP.get(routeType)!
+  if (KANA_DEX_MAP.has(routeType)) {
+    return KANA_DEX_MAP.get(routeType)!
   } else {
     return 'route_unk_' + routeType.toString()
   }
 }
 
-const ROUTE_MAP = new Map<number, string>([
+const KANA_ROUTE_MAP = new Map<number, string>([
   [1, 'SWAP'],
   [2, 'STAKE'],
   [3, 'UNSTAKE'],
