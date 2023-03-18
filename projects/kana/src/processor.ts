@@ -47,16 +47,14 @@ kana_aggregatorv1.bind()
     const displayPair = constructDisplay(symbolX, symbolY)
 
 
-    totalTx.add(ctx, 1)
+    totalTx.add(ctx, 1, { tag: "kana" })
     ctx.meter.Gauge("tx_gauge").record(1)
 
     if (whiteListed(xType)) {
       vol.record(ctx, volume, { dex: getDex(dexType, KANA_DEX_MAP), poolType: poolType.toString(), xType: xType, yType: yType, symbolX: symbolX, symbolY: symbolY, pair: displayPair })
-      volCounter.add(ctx, volume, { dex: getDex(dexType, KANA_DEX_MAP), poolType: poolType.toString(), xType: xType, yType: yType, symbolX: symbolX, symbolY: symbolY, pair: displayPair })
+      volCounter.add(ctx, volume, { dex: getDex(dexType, KANA_DEX_MAP), poolType: poolType.toString(), xType: xType, yType: yType, symbolX: symbolX, symbolY: symbolY, pair: displayPair, tag: "kana" })
       ctx.eventLogger.emit("swap", {
         distinctId: ctx.transaction.sender,
-        // address: '0x62fdfe47c9c37227be1f885e79be827be292fe1833ac63a2fe2c2c16c55ecb12',
-        // contract: 'kana_aggregatorv1',
         volume: volume,
         dex: getDex(dexType, KANA_DEX_MAP),
         poolType: poolType.toString(),
@@ -65,13 +63,9 @@ kana_aggregatorv1.bind()
         symbolX: symbolX,
         symbolY: symbolY,
         pair: displayPair,
+        tag: "kana",
         message: `Legacy Kana contract swap ${volume} ${symbolX} to ${symbolY} through dex ${getDex(dexType, KANA_DEX_MAP)}`
       })
-      // ctx.eventLogger.emit("any", {
-      //   distinctId: ctx.transaction.sender,
-      //   address: '0x62fdfe47c9c37227be1f885e79be827be292fe1833ac63a2fe2c2c16c55ecb12',
-      //   contract: 'kana_aggregatorv1'
-      // })
 
     }
 
@@ -102,12 +96,12 @@ KanalabsAggregatorV1.bind()
     const displayPair = constructDisplay(symbolX, symbolY)
 
 
-    totalTx.add(ctx, 1)
+    totalTx.add(ctx, 1, { tag: "kana" })
     ctx.meter.Gauge("tx_gauge").record(1)
 
     if (whiteListed(xType)) {
       vol.record(ctx, volume, { dex: getDex(dexType, KANA_DEX_MAP), poolType: poolType.toString(), xType: xType, yType: yType, symbolX: symbolX, symbolY: symbolY, pair: displayPair })
-      volCounter.add(ctx, volume, { dex: getDex(dexType, KANA_DEX_MAP), poolType: poolType.toString(), xType: xType, yType: yType, symbolX: symbolX, symbolY: symbolY, pair: displayPair })
+      volCounter.add(ctx, volume, { dex: getDex(dexType, KANA_DEX_MAP), poolType: poolType.toString(), xType: xType, yType: yType, symbolX: symbolX, symbolY: symbolY, pair: displayPair, tag: "kana" })
       ctx.eventLogger.emit("swap", {
         distinctId: ctx.transaction.sender,
         // address: '0xcdca128119681f791ddc2283e8c7b364ae22d416c5be95b0faf6aa1818c7afd6',
@@ -120,12 +114,11 @@ KanalabsAggregatorV1.bind()
         symbolX: symbolX,
         symbolY: symbolY,
         pair: displayPair,
+        tag: "kana",
         message: `New Kana contract swap ${volume} ${symbolX} to ${symbolY} through dex ${getDex(dexType, KANA_DEX_MAP)}`
       })
       ctx.eventLogger.emit("any", {
-        distinctId: ctx.transaction.sender,
-        // address: '0xcdca128119681f791ddc2283e8c7b364ae22d416c5be95b0faf6aa1818c7afd6',
-        // contract: 'KanalabsAggregatorV1'
+        distinctId: ctx.transaction.sender
       })
     }
 
@@ -139,14 +132,9 @@ KanalabsRouterV1.bind()
 
     ctx.eventLogger.emit("route", {
       distinctId: ctx.transaction.sender,
-      // address: '0xcdca128119681f791ddc2283e8c7b364ae22d416c5be95b0faf6aa1818c7afd6',
-      // contract: 'KanalabsRouterV1'
+      tag: "kana"
     })
-    ctx.eventLogger.emit("any", {
-      distinctId: ctx.transaction.sender,
-      // address: '0xcdca128119681f791ddc2283e8c7b364ae22d416c5be95b0faf6aa1818c7afd6',
-      // contract: 'KanalabsRouterV1'
-    })
+
 
   }))
 
@@ -172,11 +160,11 @@ aggregator.bind({ address: "0x89576037b3cc0b89645ea393a47787bb348272c76d6941c574
     const symbolY = coinYInfo.symbol
     const displayPair = constructDisplay(symbolX, symbolY)
 
-    totalTx.add(ctx, 1)
+    totalTx.add(ctx, 1, { tag: "hippo" })
 
     if (whiteListed(xType)) {
       vol.record(ctx, volume, { dex: getDex(dexType, HIPPO_DEX_MAP), poolType: poolType.toString(), xType: xType, yType: yType, symbolX: symbolX, symbolY: symbolY, pair: displayPair })
-      volCounter.add(ctx, volume, { dex: getDex(dexType, HIPPO_DEX_MAP), poolType: poolType.toString(), xType: xType, yType: yType, symbolX: symbolX, symbolY: symbolY, pair: displayPair })
+      volCounter.add(ctx, volume, { dex: getDex(dexType, HIPPO_DEX_MAP), poolType: poolType.toString(), xType: xType, yType: yType, symbolX: symbolX, symbolY: symbolY, pair: displayPair, tag: "hippo" })
       ctx.eventLogger.emit("swap", {
         distinctId: ctx.transaction.sender,
         volume: volume,
@@ -187,6 +175,7 @@ aggregator.bind({ address: "0x89576037b3cc0b89645ea393a47787bb348272c76d6941c574
         symbolX: symbolX,
         symbolY: symbolY,
         pair: displayPair,
+        tag: "hippo",
         message: `Hippo swap ${volume} ${symbolX} to ${symbolY} through dex ${getDex(dexType, HIPPO_DEX_MAP)}`
       })
       ctx.eventLogger.emit("any", {
@@ -219,7 +208,7 @@ swap.bind()
 
     const priceX = await getPrice(coinX, Number(timestamp))
     const volume = Number(amountX.scaleDown(coinXInfo.decimals).multipliedBy(priceX))
-    console.log(`pancakeswap swap volume ${volume}, priceX ${priceX}, amountX ${amountX}, txHash ${ctx.transaction.hash}`)
+    // console.log(`pancakeswap swap volume ${volume}, priceX ${priceX}, amountX ${amountX}, txHash ${ctx.transaction.hash}`)
 
     // ctx.meter.Counter("event_swap_by_bridge").add(1, { bridge: coinXInfo.bridge })
     // ctx.meter.Counter("event_swap_by_bridge").add(1, { bridge: coinYInfo.bridge })
@@ -228,12 +217,13 @@ swap.bind()
     const summaryX = `${amountX.scaleDown(coinXInfo.decimals).toNumber()} ${coinXInfo.symbol}`
     const summaryY = `${amountY.scaleDown(coinYInfo.decimals).toNumber()} ${coinYInfo.symbol}`
     if (event.data_decoded.amount_x_in > event.data_decoded.amount_x_out) {
-      message = `Swap ${summaryX} to ${summaryY}`
+      message = `Pancake swap ${summaryX} to ${summaryY}`
     } else {
-      message = `Swap ${summaryY} to ${summaryX}`
+      message = `Pancake swap ${summaryY} to ${summaryX}`
     }
 
-    totalTx.add(ctx, 1)
+    totalTx.add(ctx, 1, { tag: "pancake" })
+    volCounter.add(ctx, volume, { dex: "pancake", symbolX: symbolX, symbolY: symbolY, pair: pair, tag: "pancake" })
 
     ctx.eventLogger.emit("Swap", {
       distinctId: ctx.transaction.sender,
@@ -241,6 +231,7 @@ swap.bind()
       symbolX: symbolX,
       symbolY: symbolY,
       pair: pair,
+      tag: "pancake",
       message
     })
   })
