@@ -91,7 +91,7 @@ async function getNameByERCType(type: string, nftAddress: string, txHash: string
 
 
 //first tx block time 6220924
-PortProcessor.bind({ address: '0x7a3CdB2364f92369a602CAE81167d0679087e6a3', network: 25, startBlock: 7450847 })
+PortProcessor.bind({ address: '0x7a3CdB2364f92369a602CAE81167d0679087e6a3', network: 25, startBlock: 6220924 })
     .onEventSold(async (event, ctx) => {
         ctx.meter.Counter('sold').add(1)
         const hash = event.transactionHash
@@ -205,7 +205,7 @@ PortProcessor.bind({ address: '0x7a3CdB2364f92369a602CAE81167d0679087e6a3', netw
 
 
 //first tx block time 2084066,6216653
-MembershipStakerV3Processor.bind({ address: '0xeb074cc764F20d8fE4317ab63f45A85bcE2bEcB1', network: 25, startBlock: 7450847 })
+MembershipStakerV3Processor.bind({ address: '0xeb074cc764F20d8fE4317ab63f45A85bcE2bEcB1', network: 25, startBlock: 6216653 })
     .onEventRyoshiStaked(async (event, ctx) => {
         const owner = event.args.owner
         const tokenId = event.args.tokenId.toString()
@@ -315,7 +315,7 @@ MembershipStakerV3Processor.bind({ address: '0xeb074cc764F20d8fE4317ab63f45A85bc
         const hash = event.transactionHash
         let stakeBalance
         try {
-            stakeBalance = Number(ctx.contract.totalStaked())
+            stakeBalance = Number(await ctx.contract.totalStaked())
             console.log(`stakeBalance success, ${stakeBalance}. tx ${hash}`)
 
             ctx.meter.Gauge("totalStaked").record(stakeBalance)
@@ -343,7 +343,7 @@ MembershipStakerV3Processor.bind({ address: '0xeb074cc764F20d8fE4317ab63f45A85bc
 
 
 //first tx block time 6688239
-TradeshipProcessor.bind({ address: '0x523d6f30c4aaca133daad97ee2a0c48235bff137', network: 25, startBlock: 7450847 })
+TradeshipProcessor.bind({ address: '0x523d6f30c4aaca133daad97ee2a0c48235bff137', network: 25, startBlock: 6688239 })
     .onEventOrderFilled(async (event, ctx) => {
         ctx.meter.Counter("order_filled").add(1)
         const hash = event.transactionHash
@@ -406,7 +406,7 @@ TradeshipProcessor.bind({ address: '0x523d6f30c4aaca133daad97ee2a0c48235bff137',
 
 
 //first tx block time 4079464
-OfferContractProcessor.bind({ address: '0x016b347aeb70cc45e3bbaf324feb3c7c464e18b0', network: 25, startBlock: 7450847 })
+OfferContractProcessor.bind({ address: '0x016b347aeb70cc45e3bbaf324feb3c7c464e18b0', network: 25, startBlock: 6216653 })
     .onAllEvents(async (event, ctx) => {
         const hash = event.transactionHash
         try {
