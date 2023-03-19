@@ -20,7 +20,7 @@ async function getOrCreateToken(ctx:VaultContext, token: string) : Promise<token
     if (!infoPromise) {
         infoPromise = getTokenInfo(token)
         tokenMap.set(token, infoPromise)
-        console.log("set tokenInfoMap for " + ctx.address)
+        console.log("set tokenInfoMap for " + token)
     }
     return await infoPromise
 }
