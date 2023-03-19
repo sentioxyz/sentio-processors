@@ -5,24 +5,29 @@ import {MetaStablePoolProcessor, MetaStablePoolContext} from './types/eth/metast
 import {ComposableStablePoolProcessor} from './types/eth/composablestablepool.js'
 import { getPriceByType,  token } from "@sentio/sdk/utils"
 
-let tokenMap = new Map<string, Promise<token.TokenInfo>>()
+let tokenMap = new Map<string, Promise<token.TokenInfo | undefined>>()
 
-async function getTokenInfo(address: string): Promise<token.TokenInfo> {
+async function getTokenInfo(address: string): Promise<token.TokenInfo | undefined> {
     if (address !== "0x0000000000000000000000000000000000000000") {
-        return await token.getERC20TokenInfo(address)
+        try {
+            return await token.getERC20TokenInfo(address)
+        } catch(e) {
+            console.log(e)
+            return undefined
+        }
     } else {
         return token.NATIVE_ETH
     }
 }
 
-async function getOrCreateToken(ctx:VaultContext, token: string) : Promise<token.TokenInfo>{
+async function getOrCreateToken(ctx:VaultContext, token: string) : Promise<token.TokenInfo | undefined>{
     let infoPromise = tokenMap.get(ctx.address)
     if (!infoPromise) {
         infoPromise = getTokenInfo(token)
         tokenMap.set(token, infoPromise)
         console.log("set tokenInfoMap for " + token)
     }
-    return await infoPromise
+    return infoPromise
 }
 
 async function getPriceByTokenInfo(amount: bigint, addr:string, ctx:VaultContext) : Promise<BigDecimal> {
@@ -32,6 +37,9 @@ async function getPriceByTokenInfo(amount: bigint, addr:string, ctx:VaultContext
         price = await getPriceByType(CHAIN_IDS.ETHEREUM, addr, ctx.timestamp)
     } catch (e) {
         console.log(e)
+        return BigDecimal(0)
+    }
+    if (token == undefined) {
         return BigDecimal(0)
     }
     let scaledAmount = amount.scaleDown(token.decimal)
