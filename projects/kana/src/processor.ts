@@ -43,7 +43,7 @@ kana_aggregatorv1.bind()
     const priceY = await getPrice(yType, Number(timestamp))
     const pair = constructPair(xType, yType)
     const volume = Number(inputAmount.scaleDown(coinXInfo.decimals).multipliedBy(priceX))
-    console.log("volume1", volume)
+    // console.log("volume1", volume)
     const displayPair = constructDisplay(symbolX, symbolY)
 
 
@@ -192,10 +192,7 @@ swap.bind()
     const coinY = event.type_arguments[1]
     const amountX = event.data_decoded.amount_x_in > event.data_decoded.amount_x_out ? event.data_decoded.amount_x_in - event.data_decoded.amount_x_out : event.data_decoded.amount_x_out - event.data_decoded.amount_x_in
     const amountY = event.data_decoded.amount_y_in > event.data_decoded.amount_y_out ? event.data_decoded.amount_y_in - event.data_decoded.amount_y_out : event.data_decoded.amount_y_out - event.data_decoded.amount_y_in
-    // const value = await PANCAKE_SWAP_APTOS.recordTradingVolume(ctx, coinx, coiny, amountx, amounty)
 
-    // console.log(JSON.stringify(ctx.transaction))
-    // console.log(JSON.stringify(evt))
     const coinXInfo = getCoinInfo(coinX)
     const coinYInfo = getCoinInfo(coinY)
     const symbolX = coinXInfo.symbol
@@ -203,15 +200,12 @@ swap.bind()
     const pair = constructPair(symbolX, symbolY)
     // console.log(`pancakeswap coinX ${coinX} coinY ${coinY}, amountX ${amountX} amountY ${amountY}, symbolX ${symbolX} symbolY ${symbolY} `)
     const timestamp = ctx.transaction.timestamp
-    // const xType = extractTypeName(event.data_decoded.x_type_info)
-    // const yType = extractTypeName(event.data_decoded.y_type_info)
+
 
     const priceX = await getPrice(coinX, Number(timestamp))
     const volume = Number(amountX.scaleDown(coinXInfo.decimals).multipliedBy(priceX))
     // console.log(`pancakeswap swap volume ${volume}, priceX ${priceX}, amountX ${amountX}, txHash ${ctx.transaction.hash}`)
 
-    // ctx.meter.Counter("event_swap_by_bridge").add(1, { bridge: coinXInfo.bridge })
-    // ctx.meter.Counter("event_swap_by_bridge").add(1, { bridge: coinYInfo.bridge })
 
     let message: string
     const summaryX = `${amountX.scaleDown(coinXInfo.decimals).toNumber()} ${coinXInfo.symbol}`
@@ -224,8 +218,9 @@ swap.bind()
 
     totalTx.add(ctx, 1, { tag: "pancake" })
     volCounter.add(ctx, volume, { dex: "pancake", symbolX: symbolX, symbolY: symbolY, pair: pair, tag: "pancake" })
+    vol.record(ctx, volume, { dex: "pancake", symbolX: symbolX, symbolY: symbolY, pair: pair, tag: "pancake" })
 
-    ctx.eventLogger.emit("Swap", {
+    ctx.eventLogger.emit("swap", {
       distinctId: ctx.transaction.sender,
       volume: volume,
       symbolX: symbolX,
@@ -310,8 +305,8 @@ const HIPPO_DEX_MAP = new Map<number, string>([
 ])
 
 function getRoute(routeType: number) {
-  if (KANA_DEX_MAP.has(routeType)) {
-    return KANA_DEX_MAP.get(routeType)!
+  if (KANA_ROUTE_MAP.has(routeType)) {
+    return KANA_ROUTE_MAP.get(routeType)!
   } else {
     return 'route_unk_' + routeType.toString()
   }
