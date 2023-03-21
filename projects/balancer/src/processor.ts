@@ -25,7 +25,6 @@ async function getOrCreateToken(ctx:VaultContext, token: string) : Promise<token
     if (!infoPromise) {
         infoPromise = getTokenInfo(token)
         tokenMap.set(token, infoPromise)
-        console.log("set tokenInfoMap for " + token)
     }
     return infoPromise
 }
@@ -47,6 +46,20 @@ async function getPriceByTokenInfo(amount: bigint, addr:string, ctx:VaultContext
 }
 
 VaultProcessor.bind({address: "0xBA12222222228d8Ba445958a75a0704d566BF2C8"})
+    .onEventPoolBalanceChanged(async (evt, ctx) => {
+        for (let i=0;i<evt.args.tokens.length;i++) {
+            let token = await getOrCreateToken(ctx, evt.args.tokens[i])
+            if (token == undefined) {
+                continue
+            }
+            ctx.eventLogger.emit("pool",{
+                distinctId: evt.args.liquidityProvider,
+                token: evt.args.tokens[i],
+                poolID: evt.args.poolId,
+                amount: evt.args.deltas[i].scaleDown(token.decimal),
+            })
+        }
+    })
     .onCallFlashLoan(async (call:FlashLoanCallTrace, ctx) => {
         if (call.error) {
             return
