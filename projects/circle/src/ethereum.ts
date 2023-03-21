@@ -11,7 +11,7 @@ import {Gauge} from "@sentio/sdk";
 const DECIMAL = 6
 
 const totalSupplyHandler = async function(_:any, ctx: FiatTokenV2Context) {
-  const tokenInfo = await token.getERC20TokenInfo(ctx.contract.address)
+  const tokenInfo = await token.getERC20TokenInfo(ctx, ctx.contract.address)
   const totalSupply = (await ctx.contract.totalSupply()).scaleDown(DECIMAL)
   ctx.meter.Gauge("total_supply").record(totalSupply, {labels: tokenInfo.symbol})
 }
@@ -26,14 +26,14 @@ const mint = Gauge.register("mint", volOptions)
 const burn = Gauge.register("burn", volOptions)
 
 const mintEventHandler = async function(event: MintEvent, ctx: FiatTokenV2Context) {
-  const tokenInfo = await token.getERC20TokenInfo(ctx.contract.address)
+  const tokenInfo = await token.getERC20TokenInfo(ctx, ctx.contract.address)
   const amount = event.args.amount.scaleDown(DECIMAL)
   mint.record(ctx, amount, {labels: tokenInfo.symbol})
   ctx.meter.Counter("mint_acc").add(amount, {labels: tokenInfo.symbol})
 }
 
 const burnEventHandler = async function(event: BurnEvent, ctx: FiatTokenV2Context) {
-  const tokenInfo = await token.getERC20TokenInfo(ctx.contract.address)
+  const tokenInfo = await token.getERC20TokenInfo(ctx, ctx.contract.address)
   const amount = event.args.amount.scaleDown(DECIMAL)
   burn.record(ctx, amount, {labels: tokenInfo.symbol})
   ctx.meter.Counter("burn_acc").add(amount, {labels: tokenInfo.symbol})

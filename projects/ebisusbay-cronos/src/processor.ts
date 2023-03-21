@@ -4,7 +4,7 @@ import { TradeshipProcessor } from './types/eth/tradeship.js'
 import { OfferContractProcessor } from './types/eth/offercontract.js'
 import { getERC721Contract } from '@sentio/sdk/eth/builtin/erc721'
 import { getERC1155Contract } from '@sentio/sdk/eth/builtin/erc1155'
-import { Counter, Gauge } from "@sentio/sdk"
+import { CHAIN_IDS, Counter, Gauge } from "@sentio/sdk"
 // import { getPriceBySymbol } from "@sentio/sdk/utils"
 
 
@@ -39,7 +39,7 @@ async function getERC721Name(nftAddress: string, txHash: string) {
     let collectionName = nftCollectionMap.get(nftAddress)
     if (!collectionName) {
         try {
-            collectionName = await getERC721Contract(nftAddress, 25).name()!
+            collectionName = await getERC721Contract(CHAIN_IDS.CRONOS, nftAddress).name()!
             nftCollectionMap.set(nftAddress, collectionName)
             console.log("Set ERC721 collection name: ", collectionName)
         }
@@ -58,7 +58,7 @@ async function getERC1155Name(nftAddress: string, txHash: string) {
     if (!collectionName) {
         try {
             //Only handles collection with name() function
-            const collectionName = await getERC721Contract(nftAddress, 25).name()!
+            const collectionName = await getERC721Contract(CHAIN_IDS.CRONOS, nftAddress).name()!
             nftCollectionMap.set(nftAddress, collectionName)
             console.log("Set ERC1155 collection name: ", collectionName)
         }

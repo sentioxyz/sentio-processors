@@ -19,21 +19,21 @@ export interface PoolAdaptor<T> {
 export class AptosDex<T> {
   poolAdaptor: PoolAdaptor<T>
   volume: Gauge
-  volumeSingle: Gauge
+  volumeByCoin: Gauge
   tvlAll: Gauge
   tvlByPool: Gauge
   tvlByCoin: Gauge
 
   constructor(
       volume: Gauge,
-      // volumeSingle: Gauge,
+      volumeByCoin: Gauge,
       tvlAll: Gauge,
       tvlByCoin: Gauge,
       tvlByPool: Gauge,
       poolAdaptor: PoolAdaptor<T>
   ) {
     this.volume = volume
-    // this.volumeSingle = volumeSingle
+    this.volumeByCoin = volumeByCoin
     this.tvlAll = tvlAll
     this.tvlByPool = tvlByPool
     this.tvlByCoin = tvlByCoin
@@ -55,7 +55,6 @@ export class AptosDex<T> {
     if (!whitelistx && !whitelisty) {
       return result
     }
-    // console.log("enter vol cal")
     const coinXInfo = await getCoinInfo(coinx)
     const coinYInfo = await getCoinInfo(coiny)
     const timestamp = ctx.transaction.timestamp
@@ -75,25 +74,28 @@ export class AptosDex<T> {
     if (resultY.eq(0)) {
       resultY = BigDecimal(resultX)
     }
-    // console.log(resultX.toNumber(), resultY.toNumber())
-
-    if (resultX.gt(0)) {
-      this.volume.record(ctx, resultX, {
+    const total = resultX.plus(resultY)
+    if (total.gt(0)) {
+      this.volume.record(ctx, total, {
         ...baseLabels,
+        bridge: coinXInfo.bridge,
+      })
+    }
+    if (resultX.gt(0)) {
+      this.volumeByCoin.record(ctx, resultX, {
         coin: coinXInfo.symbol,
         bridge: coinXInfo.bridge,
         type: coinXInfo.token_type.type,
       })
     }
     if (resultY.gt(0)) {
-      this.volume.record(ctx, resultY, {
-        ...baseLabels,
+      this.volumeByCoin.record(ctx, resultY, {
         coin: coinYInfo.symbol,
         bridge: coinYInfo.bridge,
         type: coinYInfo.token_type.type,
       })
     }
-    result = resultX.plus(resultY).dividedBy(2)
+    result = resultX.plus(resultY).div(2)
     return result
   }
 

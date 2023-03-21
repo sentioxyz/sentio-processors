@@ -1634,20 +1634,28 @@
     truffle-privatekey-provider "^1.5.0"
     web3 "^1.3.0"
 
-"@sentio/protos@^2.7.3-rc.3":
-  version "2.7.3-rc.3"
-  resolved "https://registry.yarnpkg.com/@sentio/protos/-/protos-2.7.3-rc.3.tgz#01469e551567382ac56476ab5385cb8e5beb8013"
-  integrity sha512-nPFiyX0bQivP15Pp3c8Yxy2k4vbEhKl03UpXpOMMVXU4M/iuPhVOidc9JoxJpXx0xXIT386OKiWr+Dhy4oQhBQ==
+"@sentio/protos@^2.7.3":
+  version "2.7.3"
+  resolved "https://registry.yarnpkg.com/@sentio/protos/-/protos-2.7.3.tgz#fa34b6db19eb41cfe9eb82e6988f9aa7894c2134"
+  integrity sha512-yUPJK+YnbNPh+YMpcT0zxJTVsdIq8AGP6I95Lz+fW7EpnJ6+fCdebicFxzFfJvhh67qnOC202PuyJ4ChHj4kkA==
   dependencies:
     google-protobuf "^3.21.2"
     nice-grpc "^2.1.0"
 
-"@sentio/runtime@^2.7.3-rc.3":
-  version "2.7.3-rc.3"
-  resolved "https://registry.yarnpkg.com/@sentio/runtime/-/runtime-2.7.3-rc.3.tgz#e1cf383751daaacdb2a7d31b42b16492d88cc25b"
-  integrity sha512-MvpZPyvprKsh07eScMcUdwmuNMfKA+ZwEMEveRoQz8j3NKjlANs4/I9DpSu6pma2mdJ160a1mX+Yxuo4JehV2g==
+"@sentio/protos@^2.8.0-rc.3":
+  version "2.8.0-rc.3"
+  resolved "https://registry.yarnpkg.com/@sentio/protos/-/protos-2.8.0-rc.3.tgz#f19102050782e7946f32adab48f1674cb300c644"
+  integrity sha512-dARzPq/Hlj8NwNjF1PuYGfrWBVHimuwKxx0dF2xleeCOreJy2CHgLMOOqspY2HSGuvw3h+rgELClsp/nauMC5A==
   dependencies:
-    "@sentio/protos" "^2.7.3-rc.3"
+    google-protobuf "^3.21.2"
+    nice-grpc "^2.1.0"
+
+"@sentio/runtime@^2.7.3":
+  version "2.7.3"
+  resolved "https://registry.yarnpkg.com/@sentio/runtime/-/runtime-2.7.3.tgz#23e2be8633f2c214267476c5633496f69860284d"
+  integrity sha512-jzpldBLEo/261K0N7DtVQJu4aBJposLvKvUb6+WLk1nO8sG4HA6bEDT3O7kTjdwlJcxZvfdMJEDNIzRLnURTCA==
+  dependencies:
+    "@sentio/protos" "^2.7.3"
     command-line-args "^5.2.1"
     command-line-usage "^7.0.1"
     fs-extra "^11.0.0"
@@ -1657,17 +1665,57 @@
     nice-grpc-prometheus "^0.1.2"
     winston "^3.8.2"
 
-"@sentio/sdk@v2.7.3-rc.3":
-  version "2.7.3-rc.3"
-  resolved "https://registry.yarnpkg.com/@sentio/sdk/-/sdk-2.7.3-rc.3.tgz#a2d1b473d40304e688dd06a1d023fd5c9fe49c39"
-  integrity sha512-pswitU6/9N0fDK/RI8Iwa/zFoYlpmQVcOR/BE98fnr6hZ5z1Nrt8wnbxWnK0L67Zd8qf6qZmgEHHA3KbIiRFug==
+"@sentio/runtime@^2.8.0-rc.3":
+  version "2.8.0-rc.3"
+  resolved "https://registry.yarnpkg.com/@sentio/runtime/-/runtime-2.8.0-rc.3.tgz#c9b082ac24540b1954f401e8b44e8efbb3fe983d"
+  integrity sha512-arU2e3V2Uz392wxcpHBFEjPPFqVfkhywA3FNz111JC4a1dhrK7s5uuqHzon6Gmo1j1QGV8sGx9eawezPlZA/sw==
+  dependencies:
+    "@sentio/protos" "^2.8.0-rc.3"
+    command-line-args "^5.2.1"
+    command-line-usage "^7.0.1"
+    fs-extra "^11.0.0"
+    google-protobuf "^3.15.8"
+    nice-grpc "^2.1.0"
+    nice-grpc-client-middleware-retry "^3.1.2"
+    nice-grpc-prometheus "^0.1.2"
+    winston "^3.8.2"
+
+"@sentio/sdk@^2.7.3":
+  version "2.7.3"
+  resolved "https://registry.yarnpkg.com/@sentio/sdk/-/sdk-2.7.3.tgz#08994d4f5c775e76ebfc2587167939d5f1900456"
+  integrity sha512-3kGnCd6FBXq8zsr48VAw6D6oVdRi6ZN3IwPd7229rXZkycolwGqVyh9tPkokXSN6DLhM2unqIfMy14aeYoJG0Q==
   dependencies:
     "@mysten/sui.js" "npm:@sentio/sui.js@0.17.0"
     "@project-serum/anchor" "^0.26.0"
     "@sentio/bigdecimal" "^9.1.1-patch.3"
     "@sentio/ethers-v6" "^1.0.25"
-    "@sentio/protos" "^2.7.3-rc.3"
-    "@sentio/runtime" "^2.7.3-rc.3"
+    "@sentio/protos" "^2.7.3"
+    "@sentio/runtime" "^2.7.3"
+    "@solana/web3.js" "^1.73.2"
+    "@types/prettier" "^2.7.2"
+    aptos-sdk "npm:aptos@^1.7.1"
+    bs58 "^5.0.0"
+    chalk "^5.2.0"
+    csv-parse "^5.3.0"
+    ethers "npm:@sentio/ethers@^6.1.0-patch.1"
+    lodash-es "^4.17.21"
+    mkdirp "^2.1.3"
+    node-fetch "^3.3.1"
+    p-queue "^7.3.4"
+    prettier "^2.8.4"
+    typechain "^8.0.0"
+
+"@sentio/sdk@^2.8.0-rc.2":
+  version "2.8.0-rc.3"
+  resolved "https://registry.yarnpkg.com/@sentio/sdk/-/sdk-2.8.0-rc.3.tgz#5717b0b730af0c59e623dc9e77dca0c36aff41a9"
+  integrity sha512-kEpD3ctfrjkhMBy2hsrv3idZ17spmkvDAjUvvKBfBLbs6KAjLwm06vNBnApWgqSFPCp40LjUeXUGTRk0Da+EqQ==
+  dependencies:
+    "@mysten/sui.js" "npm:@sentio/sui.js@0.17.0"
+    "@project-serum/anchor" "^0.26.0"
+    "@sentio/bigdecimal" "^9.1.1-patch.3"
+    "@sentio/ethers-v6" "^1.0.25"
+    "@sentio/protos" "^2.8.0-rc.3"
+    "@sentio/runtime" "^2.8.0-rc.3"
     "@solana/web3.js" "^1.73.2"
     "@types/prettier" "^2.7.2"
     aptos-sdk "npm:aptos@^1.7.1"
@@ -7132,6 +7180,14 @@ nice-grpc-client-middleware-retry@^2.0.2:
   version "2.0.2"
   resolved "https://registry.yarnpkg.com/nice-grpc-client-middleware-retry/-/nice-grpc-client-middleware-retry-2.0.2.tgz#1cfd6d69e512590b5a95a0e3de4a5321e2d60b48"
   integrity sha512-9w8DhDm3nFo51CGBLPfCrqZCbOmdTQffzb8HzCzRhQm6s7vo6yAioH75bqEoriYfkhk2Bm8ndQpSLBpAWPHF8g==
+  dependencies:
+    abort-controller-x "^0.4.0"
+    nice-grpc-common "^2.0.1"
+
+nice-grpc-client-middleware-retry@^3.1.2:
+  version "3.1.2"
+  resolved "https://registry.yarnpkg.com/nice-grpc-client-middleware-retry/-/nice-grpc-client-middleware-retry-3.1.2.tgz#95f5c35a06534178ee260956374253589aecee38"
+  integrity sha512-1qneChH/d5QCLwOrhNpxeeJdL/CCTl0/zjNzqVhfnZKDED0b3I3OlV3dge9JA1ahyoJwqSOHIp8hHOVnBqjFqQ==
   dependencies:
     abort-controller-x "^0.4.0"
     nice-grpc-common "^2.0.1"

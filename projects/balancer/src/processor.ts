@@ -10,7 +10,7 @@ let tokenMap = new Map<string, Promise<token.TokenInfo | undefined>>()
 async function getTokenInfo(address: string): Promise<token.TokenInfo | undefined> {
     if (address !== "0x0000000000000000000000000000000000000000") {
         try {
-            return await token.getERC20TokenInfo(address)
+            return await token.getERC20TokenInfo(1, address)
         } catch(e) {
             console.log(e)
             return undefined

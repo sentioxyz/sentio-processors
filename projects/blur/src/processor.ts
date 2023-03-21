@@ -3,6 +3,7 @@ import { getERC721Contract } from "@sentio/sdk/eth/builtin/erc721";
 import { BlurExchangeProcessor } from "./types/eth/blurexchange.js";
 
 import * as constant from "./constant.js"
+import { CHAIN_IDS } from "@sentio/sdk";
 // import { ethers } from "ethers";
 // import fetch from 'node-fetch';
 
@@ -25,7 +26,7 @@ async function getERC721Name(nftAddress: string, hash_debug: string) {
   let collectionName = nftCollectionMap.get(nftAddress)
   if (!collectionName) {
     try {
-      collectionName = await getERC721Contract(nftAddress).name()!
+      collectionName = await getERC721Contract(CHAIN_IDS.ETHEREUM, nftAddress).name()!
       nftCollectionMap.set(nftAddress, collectionName)
       console.log("Set collection name: ", collectionName)
     }
@@ -44,7 +45,7 @@ async function getERC1155Name(nftAddress: string, id: number, hash_debug: string
   // TODO: getERC1155Contract
   if (!collectionName) {
     try {
-      const collectionName = await getERC721Contract(nftAddress).name()!
+      const collectionName = await getERC721Contract(CHAIN_IDS.ETHEREUM, nftAddress).name()!
       nftCollectionMap.set(nftAddress, collectionName)
       console.log("Set ERC721 collection name: ", collectionName)
 

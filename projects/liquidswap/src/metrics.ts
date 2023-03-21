@@ -14,6 +14,7 @@ export const tvlByPool = Gauge.register("tvl_by_pool", commonOptions)
 export const tvlByPoolNew = Gauge.register("tvl_by_pool_new", commonOptions)
 export const tvl = Gauge.register("tvl", commonOptions)
 export const volume = Gauge.register("vol", volOptions)
+export const volumeByCoin = Gauge.register("vol_by_coin", volOptions)
 
 // export const singleVolume = Gauge.register("vol_single", volOptions)
 
@@ -27,6 +28,7 @@ export const auxTvlAll = Gauge.register("aux_tvl_all", commonOptions)
 export const auxTvlByPool = Gauge.register("aux_tvl_by_pool", commonOptions)
 export const auxTvl = Gauge.register("aux_tvl", commonOptions)
 export const auxVolume = Gauge.register("aux_vol", volOptions)
+export const auxVolumeByCoin = Gauge.register("aux_vol_by_coin", volOptions)
 
 // export const auxSingleVolume = Gauge.register("aux_vol_single", volOptions)
 
@@ -34,6 +36,7 @@ export const pancakeTvlAll = Gauge.register("pancake_tvl_all", commonOptions)
 export const pancakeTvlByPool = Gauge.register("pancake_tvl_by_pool", commonOptions)
 export const pancakeTvl = Gauge.register("pancake_tvl", commonOptions)
 export const pancakeVolume = Gauge.register("pancake_vol", volOptions)
+export const pancakeVolumeByCoin = Gauge.register("pancake_by_coin", volOptions)
 
 // export const pancakeSingleVolume = Gauge.register("pancake_vol_single", volOptions)
 

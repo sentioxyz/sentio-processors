@@ -12,7 +12,7 @@ import { BigDecimal, CHAIN_IDS, Gauge, MetricOptions } from "@sentio/sdk";
 
 async function getTokenInfo(address: string): Promise<token.TokenInfo> {
     if (address !== "0x0000000000000000000000000000000000000000") {
-        return await token.getERC20TokenInfo(address)
+        return await token.getERC20TokenInfo(1, address)
     } else {
         return token.NATIVE_ETH
     }
@@ -89,7 +89,7 @@ async function getValue(ctx: UniswapPoolContext, address: string, info: token.To
         }
     } else {
         try {
-            amount = await getERC20Contract(address).balanceOf(ctx.address,
+            amount = await getERC20Contract(ctx, address).balanceOf(ctx.address,
                 {blockTag: Number(ctx.blockNumber)})
         } catch (e) {
             console.log("error", e)

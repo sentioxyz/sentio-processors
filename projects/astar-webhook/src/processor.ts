@@ -31,7 +31,7 @@ const exporter = Exporter.register('astaralert', 'astaralert')
 async function getTokenInfo(address: string): Promise<token.TokenInfo> {
 
     try {
-      return await token.getERC20TokenInfo(address, 592)
+      return await token.getERC20TokenInfo(CHAIN_IDS.ASTAR, address)
     } catch (error) {
       console.log(error, address)
       return token.NATIVE_ETH

@@ -21,7 +21,7 @@ import {
     tvlAll,
     tvlByPool,
     // tvlByPoolNew,
-    volume
+    volume, volumeByCoin
 } from "./metrics.js"
 import { AptosResourceContext, MoveResource } from "@sentio/sdk/aptos"
 import { isWormhole } from "./utils.js";
@@ -29,6 +29,7 @@ import { isWormhole } from "./utils.js";
 
 const liquidSwap = new AptosDex<liquidity_pool.LiquidityPool<any, any, any>>(
     volume,
+    volumeByCoin,
     tvlAll, tvl, tvlByPool, {
     getXReserve: pool => pool.coin_x_reserve.value,
     getYReserve: pool => pool.coin_y_reserve.value,

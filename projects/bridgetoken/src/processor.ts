@@ -57,6 +57,8 @@ const client = getAptosClient()!
 //   ctx.logger.info("withdraw", {value: value.negated().toNumber(), token: token.symbol, bridge: token.bridge, account: evt.guid.account_address})
 // })
 
+coin.bind()
+
 
 // defaultMoveCoder().load(coin.ABI)
 account.bind().onEventCoinRegisterEvent(async (call, ctx) => {

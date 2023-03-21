@@ -48,7 +48,7 @@ async function getTokenDetails(ctx: ExchangeV3Context, address: string): Promise
     }
   } else {
     try {
-      amount = await getERC20Contract(address).balanceOf("0x674bdf20a0f284d710bc40872100128e2d66bd3f",
+      amount = await getERC20Contract(ctx, address).balanceOf("0x674bdf20a0f284d710bc40872100128e2d66bd3f",
           {blockTag: Number(ctx.blockNumber)})
     } catch (e) {
       console.log("error", e)
@@ -105,6 +105,7 @@ ExchangeV3Processor.bind({address: LOOPRING_EXCHANGE})
       block: false
     })
 
+
 async function walletCounter(event: any, ctx: ContractContext<BaseContract, BoundContractView<BaseContract, ContractView<BaseContract>>>) {
   ctx.meter.Counter("wallet_count").add(1)
 }
@@ -136,7 +137,7 @@ async function withdrawGauge(event: WithdrawalCompletedEvent, ctx: ExchangeV3Con
 
 async function getTokenInfo(address: string): Promise<token.TokenInfo> {
   if (address !== "0x0000000000000000000000000000000000000000") {
-    return await token.getERC20TokenInfo(address)
+    return await token.getERC20TokenInfo(1, address)
   } else {
     return token.NATIVE_ETH
   }

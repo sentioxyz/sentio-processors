@@ -1,15 +1,17 @@
-import {AptosDex, getCoinInfo, getPair, getPairValue} from "@sentio/sdk/aptos/ext";
+import {AptosDex, getCoinInfo, getPair, getPairValue} from "@sentio/sdk/aptos/ext"
+
 import {amm} from "./types/aptos/auxexchange.js";
 import {
     auxTvl,
     auxTvlAll,
     auxTvlByPool,
-    auxVolume,
+    auxVolume, auxVolumeByCoin,
     recordAccount,
 } from "./metrics.js";
 import {AptosAccountProcessor, TypedMoveResource, AptosResourceContext} from "@sentio/sdk/aptos";
 
 const AUX_EXCHANGE = new AptosDex<amm.Pool<any, any>>(auxVolume,
+    auxVolumeByCoin,
     auxTvlAll, auxTvl, auxTvlByPool, {
     getXReserve: pool => pool.x_reserve.value,
     getYReserve: pool => pool.y_reserve.value,
