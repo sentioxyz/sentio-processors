@@ -1,5 +1,5 @@
 import { amm } from './types/aptos/auxexchange.js'
-import {  Gauge } from "@sentio/sdk";
+import {  Gauge, scaleDown } from "@sentio/sdk";
 
 import { AptosDex, getCoinInfo } from "@sentio/sdk/aptos/ext"
 import { AptosAccountProcessor } from "@sentio/sdk/aptos"
@@ -34,6 +34,20 @@ amm.bind({startVersion: 2331560})
   .onEventRemoveLiquidityEvent(async (evt, ctx) => {
     ctx.meter.Counter("event_liquidity_removed").add(1)
     ctx.eventLogger.emit("User",  { distinctId: ctx.transaction.sender })
+    const coinXInfo = await getCoinInfo(evt.data_decoded.x_coin_type)
+    const coinYInfo = await getCoinInfo(evt.data_decoded.y_coin_type)
+    const xAmount = scaleDown(evt.data_decoded.x_removed_au, coinXInfo.decimals)
+    const yAmount = scaleDown(evt.data_decoded.y_removed_au, coinYInfo.decimals)
+
+
+    ctx.eventLogger.emit("LiquidityRemove",  {
+      distinctId: ctx.transaction.sender,
+      xAmount: xAmount,
+      yAmount: yAmount,
+      xType: coinXInfo.symbol,
+      yType: coinYInfo.symbol,
+      message: `${ctx.transaction.sender} removed liquidity for ${evt.data_decoded.x_removed_au} ${coinXInfo.symbol} and ${evt.data_decoded.y_removed_au} ${coinYInfo.symbol}`
+    })
     // ctx.logger.info("LiquidityRemoved", { user: ctx.transaction.sender })
   })
   .onEventSwapEvent(async (evt, ctx) => {
