@@ -21,7 +21,7 @@ async function getTokenInfo(address: string): Promise<token.TokenInfo | undefine
 }
 
 async function getOrCreateToken(ctx:VaultContext, token: string) : Promise<token.TokenInfo | undefined>{
-    let infoPromise = tokenMap.get(ctx.address)
+    let infoPromise = tokenMap.get(token)
     if (!infoPromise) {
         infoPromise = getTokenInfo(token)
         tokenMap.set(token, infoPromise)
