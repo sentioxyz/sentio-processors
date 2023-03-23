@@ -158,7 +158,7 @@ for (let i = 0; i < PairWatching.length; i++) {
 
       const ABS_Amount0 = (amount0In > amount0Out) ? (amount0In - amount0Out) : (amount0Out - amount0In)
 
-      console.log("Token0:", symbol0, "amount0Out:", amount0Out, " amount0In:", amount0In, "Token1:", symbol1, "amount1Out:", amount1Out, "amount1In:", amount1In)
+      // console.log("Token0:", symbol0, "amount0Out:", amount0Out, " amount0In:", amount0In, "Token1:", symbol1, "amount1Out:", amount1Out, "amount1In:", amount1In)
 
       //counter swap & gauge
       ctx.meter.Counter('swap_counter').add(1, { pairName: pairName })
@@ -170,7 +170,7 @@ for (let i = 0; i < PairWatching.length; i++) {
       const reserve0 = Number(getReserve[0]) / Math.pow(10, decimal0)
       const reserve1 = Number(getReserve[1]) / Math.pow(10, decimal1)
       const blockTimestampLast = getReserve[2]
-      console.log("reserve0:", reserve0, " reserve1:", reserve1, "blockTimestampLast:", blockTimestampLast, "blockTimestampNow:", ctx.timestamp)
+      // console.log("reserve0:", reserve0, " reserve1:", reserve1, "blockTimestampLast:", blockTimestampLast, "blockTimestampNow:", ctx.timestamp)
       ctx.meter.Gauge('reserve0').record(reserve0, { pairName: pairName })
       ctx.meter.Gauge('reserve1').record(reserve1, { pairName: pairName })
 
@@ -187,8 +187,8 @@ for (let i = 0; i < PairWatching.length; i++) {
         }
         else {
           const volume0 = ABS_Amount0 * token0Price
-          console.log("token0 " + symbol0 + " Price:", token0Price, "Swap amount0", ABS_Amount0, " volume:", volume0)
-          console.log("token1 " + symbol1 + " Price:", token1Price)
+          // console.log("token0 " + symbol0 + " Price:", token0Price, "Swap amount0", ABS_Amount0, " volume:", volume0)
+          // console.log("token1 " + symbol1 + " Price:", token1Price)
 
           //gauge reserve usd value
           const liquidity0 = reserve0 * token0Price
@@ -209,7 +209,8 @@ for (let i = 0; i < PairWatching.length; i++) {
             amount1Out: amount1Out,
             ABS_Amount0: ABS_Amount0,
             tradingVolume: volume0,
-            pairName: pairName
+            pairName: pairName,
+            message: `${pairName}, ${symbol0} AmountIn: ${amount0In}, AmountOut: ${amount0Out}; ${symbol1} AmountIn: ${amount1In}, AmountOut: ${amount1Out}; Trading Volume: ${volume0}`
           })
           //counter n gauge
           tradingVolume_gauge.record(ctx, volume0, { pairName: pairName })
@@ -239,7 +240,7 @@ for (let i = 0; i < PairWatching.length; i++) {
       const amount0 = Number(event.args.amount0) / Math.pow(10, decimal0)
       const amount1 = Number(event.args.amount1) / Math.pow(10, decimal1)
 
-      console.log("MINT--", "amount0:", amount0, " amount1:", amount1)
+      console.log(`${pairName} Mint ${amount0} ${symbol0}, ${amount1} ${symbol1}`)
 
       ctx.meter.Counter("total_mint").add(amount0, {
         symbol: symbol0, pair: pairName
@@ -255,7 +256,7 @@ for (let i = 0; i < PairWatching.length; i++) {
         amount1: amount1,
         symbol1: symbol1,
         pairName: pairName,
-        message: "Mint"
+        message: `${pairName} Mint ${amount0} ${symbol0}, ${amount1} ${symbol1}`
       })
 
       //counter
@@ -277,7 +278,7 @@ for (let i = 0; i < PairWatching.length; i++) {
       const amount0 = Number(event.args.amount0) / Math.pow(10, decimal0)
       const amount1 = Number(event.args.amount1) / Math.pow(10, decimal1)
 
-      console.log("BURN--", "amount0:", amount0, " amount1:", amount1)
+      console.log(`${pairName} Burn ${amount0} ${symbol0}, ${amount1} ${symbol1}`)
 
       ctx.meter.Counter("total_burn").add(amount0, {
         symbol: symbol0, pair: pairName
@@ -291,7 +292,8 @@ for (let i = 0; i < PairWatching.length; i++) {
         symbol0: symbol0,
         amount1: amount1,
         symbol1: symbol1,
-        pairName: pairName
+        pairName: pairName,
+        message: `${pairName} Burn ${amount0} ${symbol0}, ${amount1} ${symbol1}`
       })
       //counter
       ctx.meter.Counter('burn').add(1, { pairName: pairName })
