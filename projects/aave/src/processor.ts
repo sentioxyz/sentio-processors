@@ -1,8 +1,20 @@
-import { Counter, Gauge } from '@sentio/sdk'
+import {CHAIN_IDS, Counter, Gauge} from '@sentio/sdk'
 import { ERC20Processor } from '@sentio/sdk/eth/builtin'
 import {PoolContext, PoolProcessor} from './types/eth/pool.js'
 
-PoolProcessor.bind({address: "0x87870Bca3F3fD6335C3F4ce8392D69350B4fA4E2"})
+// a const map from chain name to address.
+const CHAIN_ADDRESS_MAP = new Map<string, string>([
+    [CHAIN_IDS.ETHEREUM, "0x87870Bca3F3fD6335C3F4ce8392D69350B4fA4E2"],
+    [CHAIN_IDS.OPTIMISM, "0x794a61358d6845594f94dc1db02a252b5b4814ad"],
+    [CHAIN_IDS.ARBITRUM, "0x794a61358d6845594f94dc1db02a252b5b4814ad"],
+    [CHAIN_IDS.POLYGON, "0x794a61358d6845594f94dc1db02a252b5b4814ad"],
+    [CHAIN_IDS.FANTOM, "0x794a61358d6845594f94dc1db02a252b5b4814ad"],
+//    [CHAIN_IDS.AVALANCHE, "0x794a61358d6845594f94dc1db02a252b5b4814ad"],
+])
+
+
+CHAIN_ADDRESS_MAP.forEach((addr, chainId) => {
+PoolProcessor.bind({address: addr, network: chainId})
 .onEventSupply(async (evt, ctx)=>{
     ctx.meter.Counter("supply_counter").add(1)
     ctx.eventLogger.emit("supply", {
@@ -52,4 +64,5 @@ PoolProcessor.bind({address: "0x87870Bca3F3fD6335C3F4ce8392D69350B4fA4E2"})
         referralCode: evt.args.referralCode,
         target: evt.args.target,
     })
+})
 })
