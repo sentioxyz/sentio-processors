@@ -86,8 +86,9 @@ RouterProcessor.bind({ address: constant.ETH_ROUTER })
         console.log(e.message)
       }
     }
-    ctx.eventLogger.emit(event.name, {
-      distinctId: from
+    ctx.eventLogger.emit("Any_Event", {
+      distinctId: from,
+      eventName: event.name
     })
   })
 
@@ -103,9 +104,9 @@ const marketTemplate = new MarketProcessorTemplate()
   .onEventBurn(async (event, ctx) => {
     const hash = ctx.transactionHash
     const [SY_address, PT_address, YT_address] = await ctx.contract.readTokens()
-    const SY_balance = Number((await getERC20Contract(ctx.chainId, SY_address.toLowerCase()).balanceOf(ctx.address)).scaleDown(18))
-    const PT_balance = Number((await getERC20Contract(ctx.chainId, PT_address.toLowerCase()).balanceOf(ctx.address)).scaleDown(18))
-    const YT_balance = Number((await getERC20Contract(ctx.chainId, YT_address.toLowerCase()).balanceOf(ctx.address)).scaleDown(18))
+    const SY_balance = Number((await getERC20Contract(ctx.chainId, SY_address.toLowerCase()).balanceOf(ctx.address, { blockTag: Number(ctx.blockNumber) })).scaleDown(18))
+    const PT_balance = Number((await getERC20Contract(ctx.chainId, PT_address.toLowerCase()).balanceOf(ctx.address, { blockTag: Number(ctx.blockNumber) })).scaleDown(18))
+    const YT_balance = Number((await getERC20Contract(ctx.chainId, YT_address.toLowerCase()).balanceOf(ctx.address, { blockTag: Number(ctx.blockNumber) })).scaleDown(18))
     console.log(`token_addresses ${SY_address}, ${PT_address}, ${YT_address}, SY_balance ${SY_balance}, PT_balance${PT_balance}, YT_balance ${YT_balance}, contract address ${ctx.address}`)
 
     const market = getMarketName(constant.ETH_MARKET_MAP, ctx.address)
@@ -118,9 +119,9 @@ const marketTemplate = new MarketProcessorTemplate()
   .onEventMint(async (event, ctx) => {
     const hash = ctx.transactionHash
     const [SY_address, PT_address, YT_address] = await ctx.contract.readTokens()
-    const SY_balance = Number((await getERC20Contract(ctx.chainId, SY_address.toLowerCase()).balanceOf(ctx.address)).scaleDown(18))
-    const PT_balance = Number((await getERC20Contract(ctx.chainId, PT_address.toLowerCase()).balanceOf(ctx.address)).scaleDown(18))
-    const YT_balance = Number((await getERC20Contract(ctx.chainId, YT_address.toLowerCase()).balanceOf(ctx.address)).scaleDown(18))
+    const SY_balance = Number((await getERC20Contract(ctx.chainId, SY_address.toLowerCase()).balanceOf(ctx.address, { blockTag: Number(ctx.blockNumber) })).scaleDown(18))
+    const PT_balance = Number((await getERC20Contract(ctx.chainId, PT_address.toLowerCase()).balanceOf(ctx.address, { blockTag: Number(ctx.blockNumber) })).scaleDown(18))
+    const YT_balance = Number((await getERC20Contract(ctx.chainId, YT_address.toLowerCase()).balanceOf(ctx.address, { blockTag: Number(ctx.blockNumber) })).scaleDown(18))
     console.log(`token_addresses ${SY_address}, ${PT_address}, ${YT_address}, SY_balance ${SY_balance}, PT_balance${PT_balance}, YT_balance ${YT_balance}, contract address ${ctx.address}`)
 
     const market = getMarketName(constant.ETH_MARKET_MAP, ctx.address)
@@ -132,9 +133,9 @@ const marketTemplate = new MarketProcessorTemplate()
   .onEventSwap(async (event, ctx) => {
     const hash = ctx.transactionHash
     const [SY_address, PT_address, YT_address] = await ctx.contract.readTokens()
-    const SY_balance = Number((await getERC20Contract(ctx.chainId, SY_address.toLowerCase()).balanceOf(ctx.address)).scaleDown(18))
-    const PT_balance = Number((await getERC20Contract(ctx.chainId, PT_address.toLowerCase()).balanceOf(ctx.address)).scaleDown(18))
-    const YT_balance = Number((await getERC20Contract(ctx.chainId, YT_address.toLowerCase()).balanceOf(ctx.address)).scaleDown(18))
+    const SY_balance = Number((await getERC20Contract(ctx.chainId, SY_address.toLowerCase()).balanceOf(ctx.address, { blockTag: Number(ctx.blockNumber) })).scaleDown(18))
+    const PT_balance = Number((await getERC20Contract(ctx.chainId, PT_address.toLowerCase()).balanceOf(ctx.address, { blockTag: Number(ctx.blockNumber) })).scaleDown(18))
+    const YT_balance = Number((await getERC20Contract(ctx.chainId, YT_address.toLowerCase()).balanceOf(ctx.address, { blockTag: Number(ctx.blockNumber) })).scaleDown(18))
     console.log(`token_addresses ${SY_address}, ${PT_address}, ${YT_address}, SY_balance ${SY_balance}, PT_balance${PT_balance}, YT_balance ${YT_balance}, contract address ${ctx.address}`)
 
     const market = getMarketName(constant.ETH_MARKET_MAP, ctx.address)
