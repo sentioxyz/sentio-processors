@@ -1,7 +1,13 @@
 import { Counter, Gauge, LogLevel } from "@sentio/sdk";
 import { ERC20Processor } from "@sentio/sdk/eth/builtin";
 import { X2y2Processor } from "./types/eth/x2y2.js";
-import { BenddistributorProcessor } from "./types/eth/benddistributor.js";
+import {
+    BenddistributorContractView,
+    BenddistributorProcessor,
+    getBenddistributorContract
+} from "./types/eth/benddistributor.js";
+import { Benddistributor__factory } from "./types/eth/internal/index.js";
+import { getProvider } from "@sentio/sdk/eth";
 
 const rewardPerDistributed = Gauge.register("reward_per_distributed", {
     description: "rewards for each distribution",
@@ -15,6 +21,7 @@ const userReward = Gauge.register("user_reward", {
 
 const addrs = [
     "0x826eB237dAC0bC494cED68Fb93d3337a0379EEA1",
+    // "0xb12CAF9e6EB0Ae059CB04f232A21D8870c2a3657"
 ];
 
 BenddistributorProcessor.bind({
@@ -52,7 +59,7 @@ BenddistributorProcessor.bind({
                 const total = (claimed + claimable).scaleDown(18);
                 userReward.record(ctx, total);
             } catch (e) {
-                console.log(e);
+                console.log(ctx.blockNumber, ctx.chainId, addr, await ctx.contract.rawContract.getAddress(), e);
             }
         }
     }, 5 * 60 * 24 * 7);
