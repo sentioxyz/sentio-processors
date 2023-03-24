@@ -52,7 +52,7 @@ BenddistributorProcessor.bind({
         });
     })
     .onBlockInterval(async (block, ctx) => {
-        for (const addr in addrs) {
+        for (const addr of addrs) {
             try {
                 const claimed = await ctx.contract.totalClaimed(addr.toLowerCase());
                 const claimable = await ctx.contract.claimable(addr.toLowerCase());
