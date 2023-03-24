@@ -1,6 +1,6 @@
 import { kana_aggregatorv1 } from './types/aptos/KanalabsV0.js'
 import { KanalabsAggregatorV1, KanalabsRouterV1 } from './types/aptos/KanalabsAggregatorV1.js'
-import { swap } from './types/aptos/pancakeswap.js'
+
 import { aggregator } from './types/aptos/hippoAggregator.js'
 import { getPrice, getCoinInfo, whiteListed } from "@sentio/sdk/aptos/ext"
 import { Counter, Gauge } from "@sentio/sdk"
@@ -184,52 +184,6 @@ aggregator.bind({ address: "0x89576037b3cc0b89645ea393a47787bb348272c76d6941c574
     }
   })
 
-
-//pancake
-swap.bind()
-  .onEventSwapEvent(async (event, ctx) => {
-    const coinX = event.type_arguments[0]
-    const coinY = event.type_arguments[1]
-    const amountX = event.data_decoded.amount_x_in > event.data_decoded.amount_x_out ? event.data_decoded.amount_x_in - event.data_decoded.amount_x_out : event.data_decoded.amount_x_out - event.data_decoded.amount_x_in
-    const amountY = event.data_decoded.amount_y_in > event.data_decoded.amount_y_out ? event.data_decoded.amount_y_in - event.data_decoded.amount_y_out : event.data_decoded.amount_y_out - event.data_decoded.amount_y_in
-
-    const coinXInfo = getCoinInfo(coinX)
-    const coinYInfo = getCoinInfo(coinY)
-    const symbolX = coinXInfo.symbol
-    const symbolY = coinYInfo.symbol
-    const pair = constructPair(symbolX, symbolY)
-    // console.log(`pancakeswap coinX ${coinX} coinY ${coinY}, amountX ${amountX} amountY ${amountY}, symbolX ${symbolX} symbolY ${symbolY} `)
-    const timestamp = ctx.transaction.timestamp
-
-
-    const priceX = await getPrice(coinX, Number(timestamp))
-    const volume = Number(amountX.scaleDown(coinXInfo.decimals).multipliedBy(priceX))
-    // console.log(`pancakeswap swap volume ${volume}, priceX ${priceX}, amountX ${amountX}, txHash ${ctx.transaction.hash}`)
-
-
-    let message: string
-    const summaryX = `${amountX.scaleDown(coinXInfo.decimals).toNumber()} ${coinXInfo.symbol}`
-    const summaryY = `${amountY.scaleDown(coinYInfo.decimals).toNumber()} ${coinYInfo.symbol}`
-    if (event.data_decoded.amount_x_in > event.data_decoded.amount_x_out) {
-      message = `Pancake swap ${summaryX} to ${summaryY}`
-    } else {
-      message = `Pancake swap ${summaryY} to ${summaryX}`
-    }
-
-    totalTx.add(ctx, 1, { tag: "pancake" })
-    volCounter.add(ctx, volume, { dex: "pancake", symbolX: symbolX, symbolY: symbolY, pair: pair, tag: "pancake" })
-    vol.record(ctx, volume, { dex: "pancake", symbolX: symbolX, symbolY: symbolY, pair: pair, tag: "pancake" })
-
-    ctx.eventLogger.emit("swap", {
-      distinctId: ctx.transaction.sender,
-      volume: volume,
-      symbolX: symbolX,
-      symbolY: symbolY,
-      pair: pair,
-      tag: "pancake",
-      message
-    })
-  })
 
 
 function constructPair(xType: String, yType: String) {
