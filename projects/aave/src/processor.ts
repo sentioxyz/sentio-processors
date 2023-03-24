@@ -25,10 +25,10 @@ export const volOptions = {
 
 const vol = Gauge.register("vol", volOptions)
 
-async function getTokenInfo(address: string): Promise<token.TokenInfo | undefined> {
+async function getTokenInfo(address: string, ctx:PoolContext): Promise<token.TokenInfo | undefined> {
     if (address !== "0x0000000000000000000000000000000000000000") {
         try {
-            return await token.getERC20TokenInfo(1, address)
+            return await token.getERC20TokenInfo(ctx.chainId, address)
         } catch(e) {
             console.log(e)
             return undefined
@@ -41,7 +41,7 @@ async function getTokenInfo(address: string): Promise<token.TokenInfo | undefine
 async function getOrCreateToken(ctx:PoolContext, token: string) : Promise<token.TokenInfo | undefined>{
     let infoPromise = tokenMap.get(token)
     if (!infoPromise) {
-        infoPromise = getTokenInfo(token)
+        infoPromise = getTokenInfo(token, ctx)
         tokenMap.set(token, infoPromise)
     }
     return infoPromise
@@ -85,7 +85,7 @@ PoolProcessor.bind({address: addr, network: chainId})
     ctx.meter.Counter("borrow_counter").add(1)
     let value = await getPriceByTokenInfo(evt.args.amount, evt.args.reserve, ctx)
     if (isNaN(value.toNumber())) {
-        console.log("value is NaN", evt.args.amount, evt.args.reserve)
+        console.log("value is NaN", evt.args.amount, evt.args.reserve, ctx.chainId)
         value = BigDecimal(0)
     }
     vol.record(ctx, value, {"token": evt.args.reserve, "type": "borrow"})
@@ -104,7 +104,7 @@ PoolProcessor.bind({address: addr, network: chainId})
     // emit event log
     let value = await getPriceByTokenInfo(evt.args.amount, evt.args.reserve, ctx)
     if (isNaN(value.toNumber())) {
-        console.log("value is NaN", evt.args.amount, evt.args.reserve)
+        console.log("value is NaN", evt.args.amount, evt.args.reserve, ctx.chainId)
         value = BigDecimal(0)
     }
     vol.record(ctx, value, {"token": evt.args.reserve, "type": "repay"})
@@ -120,7 +120,7 @@ PoolProcessor.bind({address: addr, network: chainId})
     // emit event log like before
     let value = await getPriceByTokenInfo(evt.args.amount, evt.args.asset, ctx)
     if (isNaN(value.toNumber())) {
-        console.log("value is NaN", evt.args.amount, evt.args.asset)
+        console.log("value is NaN", evt.args.amount, evt.args.asset, ctx.chainId)
         value = BigDecimal(0)
     }
     vol.record(ctx, value, {"token": evt.args.asset, "type": "flashloan"})
