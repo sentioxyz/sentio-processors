@@ -6,7 +6,7 @@ import { getPrice } from "./aptos.js";
 // import { toBigDecimal } from "@sentio/sdk/";
 // import { BigDecimal } from "@sentio/sdk/lib/core/big-decimal";
 import { scaleDown } from '@sentio/sdk'
-import {EthEvent} from "@sentio/sdk/eth";
+import { EthEvent, getNetworkFromCtxOrNetworkish } from "@sentio/sdk/eth";
 
 
 const commonOptions = { sparse: true }
@@ -57,15 +57,19 @@ async function priceFeedUpdate(evt: PriceFeedUpdateEvent, ctx: PythEVMContext) {
     } else {
         isNative = "false"
     }
-    const labels = { priceId, symbol, isNative }
-    const pythContract = getPythEVMContract(ctx.chainId, ctx.address)
-    const priceUnsafeStruct = await pythContract.getPriceUnsafe(priceId, {blockTag: evt.blockNumber})
-    const priceUnsafe = scaleDown(priceUnsafeStruct.price, -priceUnsafeStruct.expo)
-    priceGauage.record(ctx, price, labels)
-    priceUnsafeGauage.record(ctx, priceUnsafe, labels)
-    ctx.meter.Counter("price_update_counter").add(1, labels)
-    price_update_occur.record(ctx, 1, labels)
-    await recordGasUsage("priceFeedUpdate", evt.transactionHash, ctx)
+    try {
+        const labels = {priceId, symbol, isNative}
+        const pythContract = getPythEVMContract(ctx, ctx.address)
+        const priceUnsafeStruct = await pythContract.getPriceUnsafe(priceId, {blockTag: evt.blockNumber})
+        const priceUnsafe = scaleDown(priceUnsafeStruct.price, -priceUnsafeStruct.expo)
+        priceGauage.record(ctx, price, labels)
+        priceUnsafeGauage.record(ctx, priceUnsafe, labels)
+        ctx.meter.Counter("price_update_counter").add(1, labels)
+        price_update_occur.record(ctx, 1, labels)
+        await recordGasUsage("priceFeedUpdate", evt.transactionHash, ctx)
+    } catch (e) {
+        console.log(ctx.chainId, priceId, ctx.address, evt.blockNumber, e)
+    }
 }
 
 async function batchPriceUpdate(evt: BatchPriceFeedUpdateEvent, ctx: PythEVMContext) {
