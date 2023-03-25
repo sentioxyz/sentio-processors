@@ -54,7 +54,7 @@ async function getPriceByTokenInfo(amount: bigint, addr:string,
         console.log("token is still undefined", addr, ctx.chainId)
         return BigDecimal(0)
     }
-    let price :any
+    let price : any
     try {
         price = await getPriceByType(ctx.chainId.toString(), addr, ctx.timestamp)
     } catch (e) {
@@ -64,8 +64,12 @@ async function getPriceByTokenInfo(amount: bigint, addr:string,
     }
 
     let scaledAmount = amount.scaleDown(token.decimal)
-    vol.record(ctx, scaledAmount.multipliedBy(price), {token: token.symbol, type: type})
-    return scaledAmount.multipliedBy(price)
+    let v = scaledAmount.multipliedBy(price)
+    if (!isNaN(v.toNumber())) {
+        vol.record(ctx, scaledAmount.multipliedBy(price), {token: token.symbol, type: type})
+        return v
+    }
+    return BigDecimal(0)
 }
 
 CHAIN_ADDRESS_MAP.forEach((addr, chainId) => {
@@ -89,10 +93,6 @@ PoolProcessor.bind({address: addr, network: chainId})
 }).onEventBorrow(async (evt, ctx)=>{
     ctx.meter.Counter("borrow_counter").add(1)
     let value = await getPriceByTokenInfo(evt.args.amount, evt.args.reserve, ctx, "borrow")
-    if (isNaN(value.toNumber())) {
-        console.log("value is NaN", evt.args.amount, evt.args.reserve, ctx.chainId)
-        value = BigDecimal(0)
-    }
     // emit event log
     ctx.eventLogger.emit("borrow", {
         distinctId: evt.args.user,
@@ -107,10 +107,6 @@ PoolProcessor.bind({address: addr, network: chainId})
     ctx.meter.Counter("repay_counter").add(1)
     // emit event log
     let value = await getPriceByTokenInfo(evt.args.amount, evt.args.reserve, ctx, "repay")
-    if (isNaN(value.toNumber())) {
-        console.log("value is NaN", evt.args.amount, evt.args.reserve, ctx.chainId)
-        value = BigDecimal(0)
-    }
     ctx.eventLogger.emit("repay", {
         distinctId: evt.args.user,
         repayer: evt.args.repayer,
@@ -122,10 +118,6 @@ PoolProcessor.bind({address: addr, network: chainId})
     ctx.meter.Counter("flashloan_counter").add(1)
     // emit event log like before
     let value = await getPriceByTokenInfo(evt.args.amount, evt.args.asset, ctx, "flashloan")
-    if (isNaN(value.toNumber())) {
-        console.log("value is NaN", evt.args.amount, evt.args.asset, ctx.chainId)
-        value = BigDecimal(0)
-    }
     ctx.eventLogger.emit("flashloan", {
         distinctId: evt.args.initiator,
         amount: evt.args.amount,
