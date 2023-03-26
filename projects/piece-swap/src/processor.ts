@@ -3,7 +3,7 @@ import {  Gauge } from "@sentio/sdk";
 
 import { AptosDex, getCoinInfo } from "@sentio/sdk/aptos/ext"
 import { type_info } from "@sentio/sdk/aptos/builtin/0x1";
-import { AptosAccountProcessor } from "@sentio/sdk/aptos";
+import { AptosResourcesProcessor } from "@sentio/sdk/aptos";
 
 
 import "./hippo.js"
@@ -82,7 +82,7 @@ const pieceSwap = new AptosDex<piece_swap.PieceSwapPoolInfo<any, any>>(
 })
 
 // amm.loadTypes(aptos.TYPE_REGISTRY)
-AptosAccountProcessor.bind({address: piece_swap.DEFAULT_OPTIONS.address, startVersion: 26000000})
+AptosResourcesProcessor.bind({address: piece_swap.DEFAULT_OPTIONS.address, startVersion: 26000000})
     .onVersionInterval((rs, ctx) => pieceSwap.syncPools(rs, ctx))
 
 

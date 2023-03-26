@@ -4,7 +4,7 @@ import { amm } from './types/aptos/auxexchange.js'
 import { liquidity_pool } from "./types/aptos/liquidswap.js";
 import { stake_router } from "./types/aptos/tortuga.js";
 import { BigDecimal } from "@sentio/sdk";
-import { AptosAccountProcessor, defaultMoveCoder, TypedMoveResource } from "@sentio/sdk/aptos";
+import { AptosResourcesProcessor, defaultMoveCoder, TypedMoveResource } from "@sentio/sdk/aptos";
 import { coin, optional_aggregator } from "@sentio/sdk/aptos/builtin/0x1";
 // import { AccountEventTracker } from "@sentio/sdk";
 
@@ -180,7 +180,7 @@ liquidity_pool.bind({startVersion: 299999})
       }
     })
 
-AptosAccountProcessor.bind({address: "0x84d7aeef42d38a5ffc3ccef853e1b82e4958659d16a7de736a29c55fbbeb0114"})
+AptosResourcesProcessor.bind({address: "0x84d7aeef42d38a5ffc3ccef853e1b82e4958659d16a7de736a29c55fbbeb0114"})
     .onTimeInterval(async (resources, ctx) => {
       const coinInfoRes = defaultMoveCoder().filterAndDecodeResources<coin.CoinInfo<any>>(coin.CoinInfo.TYPE_QNAME, resources)
       if (coinInfoRes.length === 0) {

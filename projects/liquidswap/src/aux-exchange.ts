@@ -8,7 +8,7 @@ import {
     auxVolume, auxVolumeByCoin,
     recordAccount,
 } from "./metrics.js";
-import {AptosAccountProcessor, TypedMoveResource, AptosResourceContext} from "@sentio/sdk/aptos";
+import {AptosResourcesProcessor, TypedMoveResource, AptosResourcesContext} from "@sentio/sdk/aptos";
 
 const AUX_EXCHANGE = new AptosDex<amm.Pool<any, any>>(auxVolume,
     auxVolumeByCoin,
@@ -20,7 +20,7 @@ const AUX_EXCHANGE = new AptosDex<amm.Pool<any, any>>(auxVolume,
     poolTypeName: amm.Pool.TYPE_QNAME
 })
 
-AptosAccountProcessor.bind({address: amm.DEFAULT_OPTIONS.address})
+AptosResourcesProcessor.bind({address: amm.DEFAULT_OPTIONS.address})
     .onTimeInterval((rs, ctx) =>
         AUX_EXCHANGE.syncPools(rs, ctx), 60, 12 * 60)
 

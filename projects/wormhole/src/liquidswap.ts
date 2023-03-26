@@ -9,7 +9,7 @@ import {
 
 import { BigDecimal, scaleDown } from "@sentio/sdk"
 
-import { AptosAccountProcessor, defaultMoveCoder, TypedMoveResource } from "@sentio/sdk/aptos"
+import { AptosResourcesProcessor, defaultMoveCoder, TypedMoveResource } from "@sentio/sdk/aptos"
 import { AptosDex } from "@sentio/sdk/aptos/ext"
 import {
     inputUsd,
@@ -23,7 +23,7 @@ import {
     // tvlByPoolNew,
     volume, volumeByCoin
 } from "./metrics.js"
-import { AptosResourceContext, MoveResource } from "@sentio/sdk/aptos"
+import { AptosResourcesContext, MoveResource } from "@sentio/sdk/aptos"
 import { isWormhole } from "./utils.js";
 
 
@@ -96,7 +96,7 @@ function getCurve(type: string) {
 }
 
 // TODO refactor this
-async function syncLiquidSwapPools(resources: MoveResource[], ctx: AptosResourceContext) {
+async function syncLiquidSwapPools(resources: MoveResource[], ctx: AptosResourcesContext) {
 
     let pools: TypedMoveResource<liquidity_pool.LiquidityPool<any, any, any>>[]
     pools = defaultMoveCoder().filterAndDecodeResources<liquidity_pool.LiquidityPool<any, any, any>>("0x190d44266241744264b964a37b8f09863167a12d3e70cda39376cfb4e3561e12::liquidity_pool::LiquidityPool", resources)
@@ -339,5 +339,5 @@ function calcPrice(coin: string, pools: TypedMoveResource<liquidity_pool.Liquidi
     return res
 }
 
-AptosAccountProcessor.bind({address: "0x5a97986a9d031c4567e15b797be516910cfcb4156312482efc6a19c0a30c948"})
+AptosResourcesProcessor.bind({address: "0x5a97986a9d031c4567e15b797be516910cfcb4156312482efc6a19c0a30c948"})
     .onVersionInterval(async (resources, ctx) => syncLiquidSwapPools(resources, ctx))

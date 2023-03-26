@@ -11,7 +11,7 @@ import { getChainQueryClient } from "@sentio/sdk/aptos";
 import * as soffle3 from "./types/aptos/soffle3.js";
 import * as topaz from "./types/aptos/topaz.js";
 import * as bluemoves from "./types/aptos/bluemoves.js";
-import { AptosResourceContext, AptosAccountProcessor } from "@sentio/sdk/aptos";
+import { AptosResourcesContext, AptosResourcesProcessor } from "@sentio/sdk/aptos";
 
 const txnCounter = Counter.register("txn_counter")
 
@@ -122,11 +122,11 @@ const accumGas = Counter.register("accum_gas")
 
 const queryClient = getChainQueryClient()
 
-AptosAccountProcessor.bind({address: "0x1"})
+AptosResourcesProcessor.bind({address: "0x1"})
     .onTimeInterval(async (resources, ctx) => sync(ctx),
        1*60)
 
-async function sync(ctx: AptosResourceContext) {
+async function sync(ctx: AptosResourcesContext) {
   interface myRow {
     num_failed_txns: number;
     num_successful_txns: number;

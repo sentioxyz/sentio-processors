@@ -13,7 +13,7 @@ import * as soffle3 from "./types/aptos/soffle3.js";
 import * as topaz from "./types/aptos/topaz.js";
 import * as bluemoves from "./types/aptos/bluemoves.js";
 import * as tt from "./types/aptos/topaz.js";
-import { AptosResourceContext, AptosAccountProcessor } from "@sentio/sdk/aptos";
+import { AptosResourcesContext, AptosResourcesProcessor } from "@sentio/sdk/aptos";
 
 const coinInfoMap = new Map<string, RawCoinInfo>()
 

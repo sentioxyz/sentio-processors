@@ -1,6 +1,6 @@
 import {liquidity_pool, loadAllTypes} from "./types/aptos/liquidswap.js"
 
-import {defaultMoveCoder, AptosAccountProcessor, TypedMoveResource, MoveResource, AptosResourceContext} from "@sentio/sdk/aptos";
+import {defaultMoveCoder, AptosResourcesProcessor, TypedMoveResource, MoveResource, AptosResourcesContext} from "@sentio/sdk/aptos";
 
 
 import {
@@ -164,7 +164,7 @@ function getCurve(type: string) {
 }
 
 // TODO refactor this
-async function syncLiquidSwapPools(resources: MoveResource[], ctx: AptosResourceContext) {
+async function syncLiquidSwapPools(resources: MoveResource[], ctx: AptosResourcesContext) {
 
     let pools: TypedMoveResource<liquidity_pool.LiquidityPool<any, any, any>>[]
     pools = defaultMoveCoder().filterAndDecodeResources<liquidity_pool.LiquidityPool<any, any, any>>("0x190d44266241744264b964a37b8f09863167a12d3e70cda39376cfb4e3561e12::liquidity_pool::LiquidityPool", resources)
@@ -402,6 +402,6 @@ function calcPrice(coin: string, pools: TypedMoveResource<liquidity_pool.Liquidi
 }
 
 loadAllTypes(defaultMoveCoder())
-AptosAccountProcessor.bind({address: "0x5a97986a9d031c4567e15b797be516910cfcb4156312482efc6a19c0a30c948"})
+AptosResourcesProcessor.bind({address: "0x5a97986a9d031c4567e15b797be516910cfcb4156312482efc6a19c0a30c948"})
     .onTimeInterval(async (resources, ctx) =>
         syncLiquidSwapPools(resources, ctx), 60, 12 * 60)

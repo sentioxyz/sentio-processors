@@ -8,7 +8,7 @@ import {
     pancakeVolume, pancakeVolumeByCoin,
     recordAccount,
 } from "./metrics.js";
-import {AptosAccountProcessor} from "@sentio/sdk/aptos";
+import {AptosResourcesProcessor} from "@sentio/sdk/aptos";
 
 swap.bind()
     .onEventPairCreatedEvent(async (evt, ctx) => {
@@ -60,6 +60,6 @@ const PANCAKE_SWAP_APTOS = new AptosDex<swap.TokenPairReserve<any, any>>(
     poolTypeName: swap.TokenPairReserve.TYPE_QNAME
 })
 
-AptosAccountProcessor.bind({address: swap.DEFAULT_OPTIONS.address})
+AptosResourcesProcessor.bind({address: swap.DEFAULT_OPTIONS.address})
     .onTimeInterval((rs, ctx) =>
         PANCAKE_SWAP_APTOS.syncPools(rs, ctx), 60, 12 * 60)

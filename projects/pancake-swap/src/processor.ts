@@ -5,7 +5,7 @@ import { AptosDex, getCoinInfo, getPair, getPairValue }
   from "@sentio/sdk/aptos/ext"
   // from "@sentio-processor/common/aptos"
 
-import {  AptosAccountProcessor } from "@sentio/sdk/aptos";
+import {  AptosResourcesProcessor } from "@sentio/sdk/aptos";
 import { IFO } from "./types/aptos/movecoin.js";
 
 const commonOptions = { sparse:  true }
@@ -116,5 +116,5 @@ const PANCAKE_SWAP_APTOS = new AptosDex<swap.TokenPairReserve<any, any>>(
   },
 )
 
-AptosAccountProcessor.bind({address: swap.DEFAULT_OPTIONS.address, startVersion: 10463608})
+AptosResourcesProcessor.bind({address: swap.DEFAULT_OPTIONS.address, startVersion: 10463608})
     .onVersionInterval((rs, ctx) => PANCAKE_SWAP_APTOS.syncPools(rs, ctx))

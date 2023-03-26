@@ -3,7 +3,7 @@ import { aggregator, coin, optional_aggregator } from "@sentio/sdk/aptos/builtin
 import { getPrice, whitelistCoins } from "@sentio/sdk/aptos/ext";
 import { delay, getRandomInt } from "@sentio-processor/common";
 import { totalValue } from "./metrics.js";
-import { defaultMoveCoder, AptosAccountProcessor, getAptosClient } from "@sentio/sdk/aptos";
+import { defaultMoveCoder, AptosResourcesProcessor, getAptosClient } from "@sentio/sdk/aptos";
 
 const client = getAptosClient()!
 
@@ -12,7 +12,7 @@ for (const token of whitelistCoins().values()) {
   const coinInfoType = `0x1::coin::CoinInfo<${token.token_type.type}>`
     // const price = await getPrice(v.token_type.type, timestamp)
   // @ts-ignore
-  AptosAccountProcessor.bind({address: token.token_type.account_address})
+  AptosResourcesProcessor.bind({address: token.token_type.account_address})
     .onVersionInterval(async (resources, ctx) => {
       const coinInfoRes = defaultMoveCoder().filterAndDecodeResources<coin.CoinInfo<any>>(coin.CoinInfo.TYPE_QNAME, resources)
       if (coinInfoRes.length === 0) {

@@ -12,11 +12,11 @@ import { liquidity_pool } from "./types/aptos/liquidswap.js";
 import { swap } from "./types/aptos/pancake-swap.js";
 import { BigDecimal } from "@sentio/sdk";
 import {
-  AptosResourceContext,
+  AptosResourcesContext,
   TypedMoveResource,
   MoveResource,
   defaultMoveCoder,
-  AptosAccountProcessor,
+  AptosResourcesProcessor,
   AptosContext,
   getAptosClient
 } from "@sentio/sdk/aptos";
@@ -56,7 +56,7 @@ for (const token of whitelistCoins().values()) {
   const coinInfoType = `0x1::coin::CoinInfo<${token.token_type.type}>`
   // const price = await getPrice(v.token_type.type, timestamp)
   // @ts-ignore
-  AptosAccountProcessor.bind({address: token.token_type.account_address})
+  AptosResourcesProcessor.bind({address: token.token_type.account_address})
     .onVersionInterval(async (resources, ctx) => {
       const coinInfoRes = defaultMoveCoder().filterAndDecodeResources<coin.CoinInfo<any>>(coin.CoinInfo.TYPE_QNAME, resources)
       if (coinInfoRes.length === 0) {
@@ -258,7 +258,7 @@ export class USDCDex<T> {
 
   async syncPools(
       resources: MoveResource[],
-      ctx: AptosResourceContext
+      ctx: AptosResourcesContext
   ) {
     let pools: TypedMoveResource<T>[] =
         defaultMoveCoder().filterAndDecodeResources(this.poolAdaptor.poolTypeName, resources)
@@ -305,7 +305,7 @@ const AUX_EXCHANGE = new USDCDex<amm.Pool<any, any>>({
   poolTypeName: amm.Pool.TYPE_QNAME
 })
 
-AptosAccountProcessor.bind({address: amm.DEFAULT_OPTIONS.address})
+AptosResourcesProcessor.bind({address: amm.DEFAULT_OPTIONS.address})
     .onTimeInterval((rs,ctx) => AUX_EXCHANGE.syncPools(rs, ctx),
         60 * 24, 60 * 24)
 
@@ -324,7 +324,7 @@ function getCurve(type: string) {
   }
 }
 
-AptosAccountProcessor.bind({address: swap.DEFAULT_OPTIONS.address })
+AptosResourcesProcessor.bind({address: swap.DEFAULT_OPTIONS.address })
     .onTimeInterval((rs, ctx) => PANCAKE_SWAP_APTOS.syncPools(rs, ctx),
         60 * 24, 60 * 24)
 
@@ -335,6 +335,6 @@ const LIQUID_SWAP = new USDCDex<liquidity_pool.LiquidityPool<any, any, any>>({
   poolTypeName: liquidity_pool.LiquidityPool.TYPE_QNAME
 })
 
-AptosAccountProcessor.bind({address: "0x5a97986a9d031c4567e15b797be516910cfcb4156312482efc6a19c0a30c948"})
+AptosResourcesProcessor.bind({address: "0x5a97986a9d031c4567e15b797be516910cfcb4156312482efc6a19c0a30c948"})
     .onTimeInterval(async (resources, ctx) => LIQUID_SWAP.syncPools(resources, ctx),
         60 * 24, 60 * 24)
