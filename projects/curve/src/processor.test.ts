@@ -21,7 +21,7 @@ describe('Test Processor', () => {
     // let x = await contract.totalClaimed('0x826eB237dAC0bC494cED68Fb93d3337a0379EEA1', { blockTag: 14643000 })
     // let y = await contract.claimable('0x826eB237dAC0bC494cED68Fb93d3337a0379EEA1', { blockTag: 14643000 })
 
-    const res = await service.eth.testBlock({ ...blockData, number: 14643000 })
+    const res = await service.eth.testBlock({ ...blockData, number: 15000001 })
 
     // console.log(x,y)
   })
