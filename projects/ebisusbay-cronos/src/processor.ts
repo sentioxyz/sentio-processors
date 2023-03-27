@@ -124,7 +124,7 @@ PortProcessor.bind({ address: '0x7a3CdB2364f92369a602CAE81167d0679087e6a3', netw
             distinctId: purchaser,
             // priceUSD: priceUSD,
             price_CRO: amount,
-            nftId: nftId,
+            nftId: nftId.toString(),
             seller: seller,
             nftAddress: nftAddress,
             collectionName: collectionName,
@@ -172,7 +172,7 @@ PortProcessor.bind({ address: '0x7a3CdB2364f92369a602CAE81167d0679087e6a3', netw
             ctx.eventLogger.emit("RoyaltyPaid_Event", {
                 distinctId: from,
                 royalty: royalty,
-                nftId: nftId,
+                nftId: nftId.toString(),
                 nftAddress: nftAddress,
                 collectionName: collectionName,
                 message: `royalty paid ${collectionName} token id ${nftId} from ${from}, with royalty amount ${royalty} CRO`
@@ -374,7 +374,7 @@ TradeshipProcessor.bind({ address: '0x523d6f30c4aaca133daad97ee2a0c48235bff137',
                         seller: seller,
                         nftAddress: nftAddress,
                         collectionName: collectionName,
-                        nftId: nftId,
+                        nftId: nftId.toString(),
                         message: `orderfilled nft collection ${collectionName} token id ${nftId} from ${seller} to ${from}, for the price of ${amount} CRO`
                     })
             }
