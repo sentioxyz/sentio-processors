@@ -27,7 +27,7 @@ const CHAIN_ADDRESS_MAP = new Map<number, string>([
     [321, "0xE0d0e68297772Dd5a1f1D99897c581E2082dbA5B"], //KCC
     [43114, "0x4305FB66699C3B2702D4d05CF36551390A4c69C6"], //Avalanche
     [25, "0xE0d0e68297772Dd5a1f1D99897c581E2082dbA5B"], //Cronos
-
+    [1101, "0xC5E56d6b40F3e3B5fbfa266bCd35C37426537c65"], // Polygon zk
 ])
 
 const CHAIN_NATIVE_MAP = new Map<string, string>([
