@@ -27,30 +27,33 @@ const CHAIN_ADDRESS_MAP = new Map<number, string>([
     [321, "0xE0d0e68297772Dd5a1f1D99897c581E2082dbA5B"], //KCC
     [43114, "0x4305FB66699C3B2702D4d05CF36551390A4c69C6"], //Avalanche
     [25, "0xE0d0e68297772Dd5a1f1D99897c581E2082dbA5B"], //Cronos
-    [1101, "0xC5E56d6b40F3e3B5fbfa266bCd35C37426537c65"], // Polygon zk
+    [1101, "0xC5E56d6b40F3e3B5fbfa266bCd35C37426537c65"], // Polygon zkEVM
+    [324, "0xf087c864AEccFb6A2Bf1Af6A0382B0d0f6c5D834"] // ZKsync
 ])
 
-const CHAIN_NATIVE_MAP = new Map<string, string>([
-    ["0x4305FB66699C3B2702D4d05CF36551390A4c69C6".toLowerCase(), "Crypto.ETH/USD"], //ETH
-    ["0xff1a0f4744e8582df1ae09d5611b887b6a12925c".toLowerCase(), "Crypto.OP/USD"], //Optimism
-    ["0x4D7E825f80bDf85e913E0DD2A2D54927e9dE1594".toLowerCase(), "Crypto.BNB/USD"], //BSC
+const CHAIN_NATIVE_MAP = new Map<number, string>([
+    [1, "Crypto.ETH/USD"], //ETH
+    [10, "Crypto.OP/USD"], //Optimism
+    [56, "Crypto.BNB/USD"], //BSC
     // ["0xd7308b14bf4008e7c7196ec35610b1427c5702ea".toLowerCase(), "Crypto.BNB/USD"], //BSC testnet
-    ["0xff1a0f4744e8582DF1aE09D5611b887B6a12925C".toLowerCase(), "Crypto.MATIC/USD"], //Polygon
-    ["0xff1a0f4744e8582DF1aE09D5611b887B6a12925C".toLowerCase(), "Crypto.ETH/USD"],//Arbitrum
-    ["0xff1a0f4744e8582DF1aE09D5611b887B6a12925C".toLowerCase(), "Crypto.FTM/USD"], //Fantom
-    ["0xF89C7b475821EC3fDC2dC8099032c05c6c0c9AB9".toLowerCase(), "Crypto.AURORA/USD"], //Aurora
-    ["0xE0d0e68297772Dd5a1f1D99897c581E2082dbA5B".toLowerCase(), "Crypto.KCS/USD"], //KCC
-    ["0x4305FB66699C3B2702D4d05CF36551390A4c69C6".toLowerCase(), "Crypto.AVAX/USD"], //Avalanche
-    ["0xE0d0e68297772Dd5a1f1D99897c581E2082dbA5B".toLowerCase(), "Crypto.CRO/USD"], //Cronos
-
+    [137, "Crypto.MATIC/USD"], //Polygon
+    [42161, "Crypto.ARB/USD"],//Arbitrum
+    [250, "Crypto.FTM/USD"], //Fantom
+    [1313161554, "Crypto.AURORA/USD"], //Aurora
+    [321, "Crypto.KCS/USD"], //KCC
+    [43114, "Crypto.AVAX/USD"], //Avalanche
+    [25, "Crypto.CRO/USD"], //Cronos
+    [1101, "Crypto.MATIC/USD"], // Polygon zk
+    [324, "Crypto.ETH/USD"] // ZKsync
 ])
 
 async function priceFeedUpdate(evt: PriceFeedUpdateEvent, ctx: PythEVMContext) {
     const price = evt.args.price
+    const chainId = ctx.chainId
     const priceId = evt.args.id
     const address = ctx.address.toLowerCase()
     const symbol = PRICE_MAP.get(priceId) || "not listed"
-    const nativeSymbol = CHAIN_NATIVE_MAP.get(address) || "not found"
+    const nativeSymbol = CHAIN_NATIVE_MAP.get(chainId) || "not found"
     var isNative
     if (nativeSymbol == symbol) {
         isNative = "true"
