@@ -1,6 +1,4 @@
 import { TokenDistributorContext, TokenDistributorProcessor, HasClaimedEvent, CanClaimEvent } from './types/eth/tokendistributor.js'
-import {getPriceByType, token} from "@sentio/sdk/utils"
-import {BigDecimal, CHAIN_IDS, Counter, Gauge} from "@sentio/sdk"
 import { scaleDown } from '@sentio/sdk'
 import { ARB_AIRDROP } from './constant.js'
 
@@ -8,8 +6,7 @@ const DECIMAL = 18
 
 const hasClaimEventHandler = async function(event: HasClaimedEvent, ctx: TokenDistributorContext) {
     const amount = scaleDown(event.args.amount, DECIMAL)
-    const claimer = ctx.transaction!.from
-    // const claimer = "test"
+    const claimer = event.args.recipient
 
     ctx.meter.Counter("hasClaimed_counter").add(amount, {coin_symbol: "ARB"})
     ctx.eventLogger.emit("HasClaimed", {
@@ -25,7 +22,7 @@ const canClaimEventHandler = async function(event: CanClaimEvent, ctx: TokenDist
     const amount = scaleDown(event.args.amount, DECIMAL)
     const claimer = event.args.recipient
 
-    ctx.meter.Counter("canClaim_counter").add(amount)
+    ctx.meter.Counter("canClaim_counter").add(amount, {coin_symbol: "ARB"})
     ctx.eventLogger.emit("CanClaim", {
         distinctId: claimer,
         message: `${amount} ARB granted to ${claimer}`,
@@ -36,6 +33,6 @@ const canClaimEventHandler = async function(event: CanClaimEvent, ctx: TokenDist
 } 
 
 TokenDistributorProcessor.bind({address: ARB_AIRDROP, network: 42161})
-.onEventHasClaimed(hasClaimEventHandler, undefined, {transaction: true})
-// .onEventHasClaimed(hasClaimEventHandler)
+// .onEventHasClaimed(hasClaimEventHandler, undefined, {transaction: true})
+.onEventHasClaimed(hasClaimEventHandler)
 .onEventCanClaim(canClaimEventHandler)

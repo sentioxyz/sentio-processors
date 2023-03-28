@@ -1,4 +1,6 @@
 export const CBETH_PROXY = "0xBe9895146f7AF43049ca1c1AE358B0541Ea49704"
 export const CBETH_IMPLEMENTATION = "0x31724ca0c982a31fbb5c57f4217ab585271fc9a5"
 
+// https://arbiscan.io/address/0x67a24ce4321ab3af51c2d0a4801c3e111d88c9d9#events
 export const ARB_AIRDROP = "0x67a24ce4321ab3af51c2d0a4801c3e111d88c9d9"
+export const ARB_TOKEN = "0x912ce59144191c1204e64559fe8253a0e49e6548"
