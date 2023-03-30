@@ -1,6 +1,7 @@
 import {BigDecimal, Counter, Gauge} from '@sentio/sdk'
 import { ERC20Processor } from '@sentio/sdk/eth/builtin'
 import { CUSDCProcessor, CUSDCContext } from './types/eth/cusdc.js'
+import {RewardProcessor, RewardContext} from './types/eth/reward.js'
 import {getPriceByType, token} from "@sentio/sdk/utils";
 
 
@@ -184,6 +185,15 @@ CUSDCProcessor.bind({address: "0xA17581A9E3356d9A858b789D68B4d866e593aE94"})
         } catch (e) {
             console.log("get total supply failed", e)
         }
+    })
+
+RewardProcessor.bind({address: "0x1B0e765F6224C21223AeA2af16c1C46E38885a40"})
+    .onEventRewardClaimed(async (evt, ctx)=>{
+        ctx.eventLogger.emit("reward_claimed", {
+            distinctId: evt.args.recipient,
+            amount: evt.args.amount,
+            token: evt.args.token,
+        })
     })
 
 
