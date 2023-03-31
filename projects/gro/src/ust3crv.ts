@@ -58,7 +58,7 @@ const crv3poolHandler = async function(block: Block, ctx: MetapoolContext) {
 const stableConvexXPoolHandler = async function(block: Block, ctx: StableConvexXPoolContext) {
   const totalAssets = scaleDown(await ctx.contract.estimatedTotalAssets(), UST_DECIMAL)
   const vaultAddr = await ctx.contract.vault()
-  const performance = await getGroVaultContract(vaultAddr).strategies(ctx.address, {blockTag: block.number})
+  const performance = await getGroVaultContract(ctx, vaultAddr).strategies(ctx.address, {blockTag: block.number})
   const totalDebt = scaleDown(performance[5], UST_DECIMAL)
   ctx.meter.Gauge('total_debt').record(totalDebt)
   ctx.meter.Gauge('total_assets').record(totalAssets)
