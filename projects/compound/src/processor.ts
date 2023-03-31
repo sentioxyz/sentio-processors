@@ -73,7 +73,7 @@ CUSDCProcessor.bind({address: "0xc3d688B66703497DAA19211EEdff47f25384cdc3"})
         await getPriceByTokenInfo(evt.args.amount, evt.args.asset, token, ctx, "supply")
         const amount = evt.args.amount.scaleDown(token.decimal)
         const from = evt.args.from
-        ctx.eventLogger.emit("supply",
+        ctx.eventLogger.emit("supplyCollateral",
             {
                 distinctId: from,
                 to: evt.args.dst,
@@ -87,7 +87,7 @@ CUSDCProcessor.bind({address: "0xc3d688B66703497DAA19211EEdff47f25384cdc3"})
         }
         await getPriceByTokenInfo(evt.args.amount, evt.args.asset, token, ctx, "withdraw")
         const amount = evt.args.amount.scaleDown(token.decimal)
-        ctx.eventLogger.emit("withdraw",
+        ctx.eventLogger.emit("withdrawCollateral",
             {
                 distinctId: evt.args.src,
                 to: evt.args.to,
@@ -108,6 +108,27 @@ CUSDCProcessor.bind({address: "0xc3d688B66703497DAA19211EEdff47f25384cdc3"})
             distinctId: evt.args.to,
             from: evt.args.src,
             amount: evt.args.amount.scaleDown(6),
+        })
+    })
+    .onEventTransfer(async (evt, ctx)=>{
+        stake.record(ctx, evt.args.amount.scaleDown(6), {token: "USDC", type: "transfer"})
+        ctx.eventLogger.emit("transfer",{
+            distinctId: evt.args.from,
+            to: evt.args.to,
+            amount: evt.args.amount.scaleDown(6),
+        })
+    })
+    .onEventTransferCollateral(async (evt, ctx)=>{
+        const token = await getOrCreateToken(ctx.chainId.toString(), evt.args.asset)
+        if (token === undefined) {
+            return
+        }
+        await getPriceByTokenInfo(evt.args.amount, evt.args.asset, token, ctx, "transfer")
+        const amount = evt.args.amount.scaleDown(token.decimal)
+        ctx.eventLogger.emit("transferCollateral",{
+            distinctId: evt.args.from,
+            to: evt.args.to,
+            amount: amount,
         })
     })
     .onTimeInterval(async function (_:any, ctx) {
