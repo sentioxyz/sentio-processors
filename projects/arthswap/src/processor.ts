@@ -4,7 +4,7 @@ import { PancakePairProcessor, PancakePairContext } from './types/eth/pancakepai
 import { getPriceByType, getPriceBySymbol, token } from "@sentio/sdk/utils"
 import { CHAIN_IDS, Gauge, Counter } from "@sentio/sdk"
 import { ERC20Context, ERC20Processor, getERC20Contract } from '@sentio/sdk/eth/builtin/erc20'
-
+import { MasterChefProcessor } from './types/eth/masterchef.js'
 
 const PairWatching = [
   "0x4a2e82964f3a4af50fc332497803f77a87647e6d",
@@ -62,12 +62,12 @@ export const volOptions = {
   }
 }
 
-async function getTokenInfo(address: string): Promise<token.TokenInfo> {
+async function getTokenInfo(ctx: PancakePairContext, address: string): Promise<token.TokenInfo> {
   // TODO(ye): this is wrong in the first place. this is a special address for native eth. does not apply here.
   if (address !== "0x0000000000000000000000000000000000000000") {
     // This is a hack.
     try {
-      return await token.getERC20TokenInfo(address, 592)
+      return await token.getERC20TokenInfo(ctx, address)
     } catch (error) {
       console.log(error, address)
       return token.NATIVE_ETH
@@ -87,7 +87,7 @@ interface poolInfo {
 // define a map from string to poolInfo
 let poolInfoMap = new Map<string, Promise<poolInfo>>()
 
-async function buildPoolInfo(token0Promise: Promise<string>,
+async function buildPoolInfo(ctx: PancakePairContext, token0Promise: Promise<string>,
   token1Promise: Promise<string>): Promise<poolInfo> {
   let address0 = ""
   let address1 = ""
@@ -101,8 +101,8 @@ async function buildPoolInfo(token0Promise: Promise<string>,
   } catch (error) {
     console.log(error, address1)
   }
-  const tokenInfo0 = await getTokenInfo(address0)
-  const tokenInfo1 = await getTokenInfo(address1)
+  const tokenInfo0 = await getTokenInfo(ctx, address0)
+  const tokenInfo1 = await getTokenInfo(ctx, address1)
   return {
     token0: tokenInfo0,
     token1: tokenInfo1,
@@ -114,7 +114,7 @@ async function buildPoolInfo(token0Promise: Promise<string>,
 const getOrCreatePool = async function (ctx: PancakePairContext): Promise<poolInfo> {
   let infoPromise = poolInfoMap.get(ctx.address)
   if (!infoPromise) {
-    infoPromise = buildPoolInfo(ctx.contract.token0(), ctx.contract.token1())
+    infoPromise = buildPoolInfo(ctx, ctx.contract.token0(), ctx.contract.token1())
     poolInfoMap.set(ctx.address, infoPromise)
     const info = await infoPromise
     const symbol0 = info.token0.symbol
@@ -303,3 +303,41 @@ for (let i = 0; i < PairWatching.length; i++) {
 
 }
 
+
+
+MasterChefProcessor.bind({ address: '0xc5b016c5597D298Fe9eD22922CE290A048aA5B75', network: CHAIN_IDS.ASTAR })
+  .onEventDeposit(async (event, ctx) => {
+    const user = event.args.user
+    const pid = Number(event.args.pid)
+    const amount = Number(event.args.amount)
+    const to = event.args.to
+    ctx.eventLogger.emit("Deposit", {
+      distinctId: user,
+      pid,
+      amount,
+      to
+    }
+    )
+  })
+  .onEventWithdraw(async (event, ctx) => {
+    const user = event.args.user
+    const pid = Number(event.args.pid)
+    const amount = Number(event.args.amount)
+    ctx.eventLogger.emit("Withdraw", {
+      distinctId: user,
+      pid,
+      amount
+    }
+    )
+  })
+  .onEventHarvest(async (event, ctx) => {
+    const user = event.args.user
+    const pid = Number(event.args.pid)
+    const amount = Number(event.args.amount)
+    ctx.eventLogger.emit("Harvest", {
+      distinctId: user,
+      pid,
+      amount
+    }
+    )
+  })
