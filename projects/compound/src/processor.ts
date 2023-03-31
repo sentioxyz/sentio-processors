@@ -111,6 +111,7 @@ CUSDCProcessor.bind({address: "0xc3d688B66703497DAA19211EEdff47f25384cdc3"})
         })
     })
     .onEventTransfer(async (evt, ctx)=>{
+        console.log("transfer", evt.args.amount.scaleDown(6))
         stake.record(ctx, evt.args.amount.scaleDown(6), {token: "USDC", type: "transfer"})
         ctx.eventLogger.emit("transfer",{
             distinctId: evt.args.from,
@@ -119,6 +120,7 @@ CUSDCProcessor.bind({address: "0xc3d688B66703497DAA19211EEdff47f25384cdc3"})
         })
     })
     .onEventTransferCollateral(async (evt, ctx)=>{
+        console.log("transfer collateral")
         const token = await getOrCreateToken(ctx.chainId.toString(), evt.args.asset)
         if (token === undefined) {
             return
@@ -128,6 +130,7 @@ CUSDCProcessor.bind({address: "0xc3d688B66703497DAA19211EEdff47f25384cdc3"})
         ctx.eventLogger.emit("transferCollateral",{
             distinctId: evt.args.from,
             to: evt.args.to,
+            asset: evt.args.asset,
             amount: amount,
         })
     })
