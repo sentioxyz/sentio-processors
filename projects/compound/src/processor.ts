@@ -2,8 +2,11 @@ import {BigDecimal, Counter, Gauge} from '@sentio/sdk'
 import { ERC20Processor } from '@sentio/sdk/eth/builtin'
 import { CUSDCProcessor, CUSDCContext } from './types/eth/cusdc.js'
 import {RewardProcessor, RewardContext} from './types/eth/reward.js'
+import {ExtProcessor, ExtContext, getExtContract} from './types/eth/ext.js'
 import {getPriceByType, token} from "@sentio/sdk/utils";
 
+
+ExtProcessor.bind({address: "0x285617313887d43256F852cAE0Ee4de4b68D45B0"})
 
 // define map for token
 let tokenMap = new Map<string, Promise<token.TokenInfo | undefined>>()
@@ -69,9 +72,10 @@ CUSDCProcessor.bind({address: "0xc3d688B66703497DAA19211EEdff47f25384cdc3"})
         }
         await getPriceByTokenInfo(evt.args.amount, evt.args.asset, token, ctx, "supply")
         const amount = evt.args.amount.scaleDown(token.decimal)
+        const from = evt.args.from
         ctx.eventLogger.emit("supply",
             {
-                distinctId: evt.args.from,
+                distinctId: from,
                 to: evt.args.dst,
                 amount: amount,
             token: token.symbol})
