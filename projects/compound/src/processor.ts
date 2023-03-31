@@ -134,6 +134,20 @@ CUSDCProcessor.bind({address: "0xc3d688B66703497DAA19211EEdff47f25384cdc3"})
             amount: amount,
         })
     })
+    .onEventBuyCollateral(async (evt, ctx)=>{
+        const token = await getOrCreateToken(ctx.chainId.toString(), evt.args.asset)
+        if (token === undefined) {
+            return
+        }
+        await getPriceByTokenInfo(evt.args.collateralAmount, evt.args.asset, token, ctx, "buy")
+        const amount = evt.args.collateralAmount.scaleDown(token.decimal)
+        ctx.eventLogger.emit("buyCollateral",{
+            distinctId: evt.args.buyer,
+            asset: evt.args.asset,
+            amount: amount,
+            baseAmount: evt.args.baseAmount.scaleDown(6),
+        })
+    })
     .onTimeInterval(async function (_:any, ctx) {
         try {
             const totalSupply = await ctx.contract.totalSupply()
