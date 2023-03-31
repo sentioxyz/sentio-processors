@@ -41,17 +41,17 @@ const depositApeCoinHandler = async function(trace: DepositApeCoinCallTrace, ctx
         amount: amount,
         message: `${user} issued deposit of ${amount} APE for recipient: ${recipient}`,
     })
-    if(ctx.transaction!.from.toLowerCase() != trace.action.from.toLowerCase()) {
-        ctx.eventLogger.emit("smartContractCallDetected", {
-            distinctId: user,
-            receipient: recipient,
-            amount: amount,
-            origin: ctx.transaction!.from,
-            sender: trace.action.from,
-            message: `${user} issued deposit of ${amount} APE for recipient: ${recipient}`,
-        })
-
-    }
+    // if(ctx.transaction!.from.toLowerCase() != trace.action.from.toLowerCase()) {
+    //     ctx.eventLogger.emit("smartContractCallDetected", {
+    //         distinctId: user,
+    //         receipient: recipient,
+    //         amount: amount,
+    //         origin: ctx.transaction!.from,
+    //         sender: trace.action.from,
+    //         message: `${user} issued deposit of ${amount} APE for recipient: ${recipient}`,
+    //     })
+    //
+    // }
 
 }
 
