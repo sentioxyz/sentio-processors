@@ -85,6 +85,7 @@ BentoBoxV1Processor.bind({address: "0xF5BCE5077908a1b7370B9ae04AdC565EBd643966"}
         }
         ctx.eventLogger.emit("flashloan", {
             distinctId: evt.args.borrower,
+            token: tokenInfo.symbol,
             value: price,
         })
     })
