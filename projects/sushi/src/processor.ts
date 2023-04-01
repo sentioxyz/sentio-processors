@@ -1,6 +1,7 @@
 import {BigDecimal, Counter, Gauge} from '@sentio/sdk'
 import { ERC20Processor } from '@sentio/sdk/eth/builtin'
 import { SushiPairProcessor, SushiPairContext } from './types/eth/sushipair.js'
+import { BentoBoxV1Processor, BentoBoxV1Context} from './types/eth/bentoboxv1.js'
 import {getPriceByType, token} from "@sentio/sdk/utils";
 
 const CONTRACT_MAP = new Map<string, string>([
@@ -14,23 +15,18 @@ const CONTRACT_MAP = new Map<string, string>([
 
 async function getPriceByTokenInfo(amount: bigint, addr: string,
                                    token: token.TokenInfo,
-                                   ctx:SushiPairContext, type: string) {
+                                   chainID: string, timestamp: Date): Promise<BigDecimal> {
     let price : any
     try {
-        price = await getPriceByType(ctx.chainId.toString(), addr, ctx.timestamp)
+        price = await getPriceByType(chainID, addr, timestamp)
     } catch (e) {
         console.log(e)
-        console.log("get price failed", addr, ctx.chainId)
+        console.log("get price failed", addr, chainID)
         return BigDecimal(0)
     }
 
     let scaledAmount = amount.scaleDown(token.decimal)
-    let v = scaledAmount.multipliedBy(price)
-    if (!isNaN(v.toNumber())) {
-        vol.record(ctx, scaledAmount.multipliedBy(price), {token: token.symbol, type: type})
-        return v
-    }
-    return BigDecimal(0)
+    return scaledAmount.multipliedBy(price)
 }
 
 export const volOptions = {
@@ -43,6 +39,7 @@ export const volOptions = {
 
 // define gauge for stake
 const vol = Gauge.register("vol", volOptions)
+const loan = Gauge.register("loan", volOptions)
 
 CONTRACT_MAP.forEach((addr, name) => {
     SushiPairProcessor.bind({address: addr, name: name})
@@ -55,21 +52,63 @@ CONTRACT_MAP.forEach((addr, name) => {
             const token1 = await ctx.contract.token1({blockTag: "latest"})
             const token0Info = await token.getERC20TokenInfo(ctx, token0)
             const token1Info = await token.getERC20TokenInfo(ctx, token1)
+            let price = BigDecimal(0)
             if (amount0In > BigInt(0)) {
-                await getPriceByTokenInfo(amount0In, token0, token0Info, ctx, "swap")
+                price = await getPriceByTokenInfo(amount0In, token0, token0Info, ctx.chainId.toString(), ctx.timestamp)
             }
             if (amount0Out > BigInt(0)) {
-                await getPriceByTokenInfo(amount0Out, token0, token0Info, ctx, "swap")
+                price = await getPriceByTokenInfo(amount0Out, token0, token0Info, ctx.chainId.toString(), ctx.timestamp)
             }
             if (amount1In > BigInt(0)) {
-                await getPriceByTokenInfo(amount1In, token1, token1Info, ctx, "swap")
+                price = await getPriceByTokenInfo(amount1In, token1, token1Info, ctx.chainId.toString(), ctx.timestamp)
             }
             if (amount1Out > BigInt(0)) {
-                await getPriceByTokenInfo(amount1Out, token1, token1Info, ctx, "swap")
+                price = await getPriceByTokenInfo(amount1Out, token1, token1Info, ctx.chainId.toString(), ctx.timestamp)
             }
+            if (!isNaN(price.toNumber())) {
+                vol.record(ctx, price)
+            }
+            ctx.eventLogger.emit("swap", {
+                distinctId: evt.args.sender,
+                value: price,
+            })
         })
-
 })
+
+BentoBoxV1Processor.bind({address: "0xF5BCE5077908a1b7370B9ae04AdC565EBd643966"})
+    .onEventLogFlashLoan(async (evt, ctx) => {
+        const tokenInfo = await token.getERC20TokenInfo(ctx, evt.args.token)
+        const amount = evt.args.amount
+        const price = await getPriceByTokenInfo(amount, evt.args.token, tokenInfo, ctx.chainId.toString(), ctx.timestamp)
+        if (!isNaN(price.toNumber())) {
+            loan.record(ctx, price)
+        }
+        ctx.eventLogger.emit("flashloan", {
+            distinctId: evt.args.borrower,
+            value: price,
+        })
+    })
+    .onEventLogDeposit(async (evt, ctx) => {
+        const tokenInfo = await token.getERC20TokenInfo(ctx, evt.args.token)
+        ctx.eventLogger.emit("deposit", {
+            distinctId: evt.args.from,
+            value: evt.args.amount.scaleDown(tokenInfo.decimal),
+            token: tokenInfo.symbol,
+            from: evt.args.from,
+            to: evt.args.to,
+        })
+    })
+    .onEventLogWithdraw(async (evt, ctx) => {
+        const tokenInfo = await token.getERC20TokenInfo(ctx, evt.args.token)
+        ctx.eventLogger.emit("deposit", {
+            distinctId: evt.args.to,
+            value: evt.args.amount.scaleDown(tokenInfo.decimal),
+            token: tokenInfo.symbol,
+            from: evt.args.from,
+            to: evt.args.to,
+        })
+    })
+
 
 
 
