@@ -101,12 +101,40 @@ BentoBoxV1Processor.bind({address: "0xF5BCE5077908a1b7370B9ae04AdC565EBd643966"}
     })
     .onEventLogWithdraw(async (evt, ctx) => {
         const tokenInfo = await token.getERC20TokenInfo(ctx, evt.args.token)
-        ctx.eventLogger.emit("deposit", {
+        ctx.eventLogger.emit("withdraw", {
             distinctId: evt.args.to,
             value: evt.args.amount.scaleDown(tokenInfo.decimal),
             token: tokenInfo.symbol,
             from: evt.args.from,
             to: evt.args.to,
+        })
+    })
+    .onEventLogStrategyProfit(async (evt, ctx) => {
+        const tokenInfo = await token.getERC20TokenInfo(ctx, evt.args.token)
+        ctx.eventLogger.emit("strategyprofit", {
+            value: evt.args.amount.scaleDown(tokenInfo.decimal),
+            token: tokenInfo.symbol,
+        })
+    })
+    .onEventLogStrategyLoss(async (evt, ctx) => {
+        const tokenInfo = await token.getERC20TokenInfo(ctx, evt.args.token)
+        ctx.eventLogger.emit("strategyloss", {
+            value: evt.args.amount.scaleDown(tokenInfo.decimal),
+            token: tokenInfo.symbol,
+        })
+    })
+    .onEventLogStrategyInvest(async (evt, ctx) => {
+        const tokenInfo = await token.getERC20TokenInfo(ctx, evt.args.token)
+        ctx.eventLogger.emit("strategyinvest", {
+            value: evt.args.amount.scaleDown(tokenInfo.decimal),
+            token: tokenInfo.symbol,
+        })
+    })
+    .onEventLogStrategyDivest(async (evt, ctx) => {
+        const tokenInfo = await token.getERC20TokenInfo(ctx, evt.args.token)
+        ctx.eventLogger.emit("strategydivest", {
+            value: evt.args.amount.scaleDown(tokenInfo.decimal),
+            token: tokenInfo.symbol,
         })
     })
 
