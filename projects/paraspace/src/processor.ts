@@ -34,6 +34,8 @@ const depositApeCoinHandler = async function(trace: DepositApeCoinCallTrace, ctx
 
     const recipient = trace.args._recipient
     const user = trace.action.from
+    const success = trace.error
+    const gas = trace.action.gas
 
     ctx.eventLogger.emit("depositApeCoin", {
         distinctId: user,
@@ -41,18 +43,18 @@ const depositApeCoinHandler = async function(trace: DepositApeCoinCallTrace, ctx
         amount: amount,
         message: `${user} issued deposit of ${amount} APE for recipient: ${recipient}`,
     })
-    // if(ctx.transaction!.from.toLowerCase() != trace.action.from.toLowerCase()) {
-    //     ctx.eventLogger.emit("smartContractCallDetected", {
-    //         distinctId: user,
-    //         receipient: recipient,
-    //         amount: amount,
-    //         origin: ctx.transaction!.from,
-    //         sender: trace.action.from,
-    //         message: `${user} issued deposit of ${amount} APE for recipient: ${recipient}`,
-    //     })
-    //
-    // }
-
+    if(ctx.transaction!.from.toLowerCase() != trace.action.from.toLowerCase()) {
+        ctx.eventLogger.emit("smartContractCallDetected", {
+            distinctId: user,
+            receipient: recipient,
+            amount: amount,
+            origin: ctx.transaction!.from,
+            sender: trace.action.from,
+            success: success,
+            gas: gas,
+            message: `${user} issued deposit of ${amount} APE for recipient: ${recipient}`,
+        })
+    }
 }
 
 ApeStakingProcessor.bind({address: APE_STAKING})
