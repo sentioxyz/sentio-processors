@@ -21,33 +21,39 @@ const DepositEventHandler = async (event: any, ctx: any) => {
 }
 
 const WithdrawEventHandler = async (event: any, ctx: any) => {
+  const hash = event.transactionHash
+  console.log(`Withdraw tx ${hash} contract address ${ctx.address}`)
+
+
   const user = event.args.user
-  const pid = Number(event.args.pid)
+  //const pid = Number(event.args.pid) 
   const amount = Number(event.args.amount) / Math.pow(10, 18)
 
-  ctx.meter.Counter(`withdraw_counter`).add(amount, {
-    pid: pid.toString()
-  })
+  ctx.meter.Counter(`withdraw_counter`).add(amount,
+    //   {
+    //   pid: pid.toString()
+    // }
+  )
 
   ctx.eventLogger.emit("Withdraw", {
     distinctId: user,
-    pid,
+    // pid,
     amount
   })
 }
 
 const WithdrawEarlyEventHandler = async (event: WithdrawEarlyEvent, ctx: FountainContext) => {
   const user = event.args.user
-  const pid = Number(event.args.pid)
   const amount = Number(event.args.amount) / Math.pow(10, 18)
+  const stakeId = Number(event.args.stakeId)
+  // const hash = event.transactionHash
+  // console.log(`WithdrawEarly tx ${hash}`)
 
-  ctx.meter.Counter(`withdraw_early_counter`).add(amount, {
-    pid: pid.toString()
-  })
+  ctx.meter.Counter(`withdraw_early_counter`).add(amount)
 
   ctx.eventLogger.emit("WithdrawEarly", {
     distinctId: user,
-    pid,
+    stakeId,
     amount
   })
 }
