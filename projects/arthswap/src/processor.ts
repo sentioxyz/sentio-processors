@@ -143,7 +143,7 @@ for (let i = 0; i < PairWatching.length; i++) {
 
       const address0 = info.token0Address
       const address1 = info.token1Address
-      console.log(address0, address1)
+      // console.log(address0, address1)
 
       const symbol0 = info.token0.symbol
       const symbol1 = info.token1.symbol
@@ -309,7 +309,7 @@ MasterChefProcessor.bind({ address: '0xc5b016c5597D298Fe9eD22922CE290A048aA5B75'
   .onEventDeposit(async (event, ctx) => {
     const user = event.args.user
     const pid = Number(event.args.pid)
-    const amount = Number(event.args.amount)
+    const amount = Number(event.args.amount) / Math.pow(10, 18)
     const to = event.args.to
     ctx.eventLogger.emit("Deposit", {
       distinctId: user,
@@ -322,7 +322,7 @@ MasterChefProcessor.bind({ address: '0xc5b016c5597D298Fe9eD22922CE290A048aA5B75'
   .onEventWithdraw(async (event, ctx) => {
     const user = event.args.user
     const pid = Number(event.args.pid)
-    const amount = Number(event.args.amount)
+    const amount = Number(event.args.amount) / Math.pow(10, 18)
     ctx.eventLogger.emit("Withdraw", {
       distinctId: user,
       pid,
@@ -333,7 +333,7 @@ MasterChefProcessor.bind({ address: '0xc5b016c5597D298Fe9eD22922CE290A048aA5B75'
   .onEventHarvest(async (event, ctx) => {
     const user = event.args.user
     const pid = Number(event.args.pid)
-    const amount = Number(event.args.amount)
+    const amount = Number(event.args.amount) / Math.pow(10, 18)
     ctx.eventLogger.emit("Harvest", {
       distinctId: user,
       pid,
