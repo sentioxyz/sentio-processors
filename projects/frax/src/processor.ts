@@ -18,12 +18,21 @@ const vol = Gauge.register("vol", volOptions)
 FRAXStablecoinProcessor.bind({address: "0x853d955acef822db058eb8505911ed77f175b99e"})
 .onEventFRAXMinted(async (evt, ctx)=>{
     ctx.meter.Counter("frax").add(evt.args.amount.scaleDown(18))
+    ctx.eventLogger.emit("frax_minted", {
+        distinctId: evt.args.to,
+        amount: evt.args.amount.scaleDown(18),
+    })
 })
 .onEventFRAXBurned(async (evt, ctx)=>{
     ctx.meter.Counter("frax").sub(evt.args.amount.scaleDown(18))
 })
 .onEventTransfer(async (evt, ctx)=>{
     vol.record(ctx, evt.args.value.scaleDown(18))
+    ctx.eventLogger.emit("frax_transfer", {
+        distinctId: evt.args.to,
+        from: evt.args.from,
+        amount: evt.args.value.scaleDown(18),
+    })
 })
 .onTimeInterval(async (_ : any, ctx)=>{
     try {
