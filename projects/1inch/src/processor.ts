@@ -87,15 +87,15 @@ AggregationRouterV5Processor.bind({address: "0x1111111254EEB25477B68fb85Ed929f73
             return
         }
         let makerAsset =
-            await getTokenWithPrice(call.args.order_.makerAsset, ctx.chainId.toString(),
-                ctx.timestamp, call.args.order_.makingAmount)
+            await getTokenWithPrice(call.args.order.makerAsset, ctx.chainId.toString(),
+                ctx.timestamp, call.args.order.makingAmount)
         if (makerAsset !== undefined) {
             let total = makerAsset.scaledAmount.multipliedBy(makerAsset.price)
             vol.record(ctx, total, {asset: makerAsset.token.symbol})
         }
         let takerAsset =
-            await getTokenWithPrice(call.args.order_.takerAsset, ctx.chainId.toString(),
-                ctx.timestamp, call.args.order_.takingAmount)
+            await getTokenWithPrice(call.args.order.takerAsset, ctx.chainId.toString(),
+                ctx.timestamp, call.args.order.takingAmount)
         if (takerAsset !== undefined) {
             let total = takerAsset.scaledAmount.multipliedBy(takerAsset.price)
             vol.record(ctx, total, {asset: takerAsset.token.symbol})
