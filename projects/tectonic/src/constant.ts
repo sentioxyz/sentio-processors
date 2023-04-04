@@ -19,22 +19,22 @@ export const T_TOKEN_SYMBOL: Map<string, string> = new Map([
     ["0x67fd498e94d95972a4a2a44acce00a000af7fe00", "tWBTC"],
     ["0xb3bbf1be947b245aef26e3b6a9d777d7703f4c8e", "tUSDC"],
     ["0xa683fdfd9286eedfea81cf6da14703da683c44e5", "tUSDT"],
-    ["0x4bd41f188f6a05f02b46bb2a1f8ba776e528f9d2", "tUSD"],
+    ["0x4bd41f188f6a05f02b46bb2a1f8ba776e528f9d2", "tTUSD"],
     ["0xe1c4c56f772686909c28c319079d41adfd6ec89b", "tDAI"],
     ["0xfe6934fdf050854749945921faa83191bccf20ad", "tTONIC"]
 ])
 
 
-export const UNDERLYING_TOKENS = {
-    "tCRO": "CRO",
-    "tETH": "ETH",
-    "tWBTC": "BTC",
-    "tUSDC": "USDC",
-    "tUSDT": "USDT",
-    "tUSD": "USD",
-    "tDAI": "DAI",
-    "tTONIC": "TONIC"
-}
+export const COLLATERAL_TOKENS: Map<string, string> = new Map([
+    ["tCRO", "cro"],
+    ["tETH", "eth"],
+    ["tWBTC", "wbtc"],
+    ["tUSDC", "usdc"],
+    ["tUSDT", "usdt"],
+    ["tTUSD", "tusd"],
+    ["tDAI", "dai"],
+    ["tTONIC", "tonic"]
+])
 
 
 export const L_CRO_POOLS = [
