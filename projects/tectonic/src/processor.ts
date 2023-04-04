@@ -9,11 +9,9 @@ import { getPriceBySymbol } from '@sentio/sdk/utils'
 const MintEventHandler = async (event: any, ctx: TCROContext) => {
   const minter = event.args.minter
   const mintAmount = Number(event.args.mintAmount) / Math.pow(10, 18)
-  const tokenDecimal = Number(await ctx.contract.decimals())
-  const mintTokens = Number(event.args.mintTokens) / Math.pow(10, tokenDecimal)
+  const mintTokens = Number(event.args.mintTokens) / Math.pow(10, 8)
   const CRO_price = (await getPriceBySymbol("CRO", ctx.timestamp))!
-  const symbol = await ctx.contract.symbol()
-  const name = await ctx.contract.name()
+  const symbol = constant.T_TOKEN_SYMBOL.get(ctx.address.toLowerCase())!
   const volume = mintAmount * CRO_price
 
   ctx.eventLogger.emit("Mint", {
@@ -22,22 +20,19 @@ const MintEventHandler = async (event: any, ctx: TCROContext) => {
     mintTokens,
     symbol,
     coin_symbol: "cro", //get CRO price in Ethereum. TO DO: update more price symbols in cronos
-    name,
     volume
   })
 
-  ctx.meter.Counter("Collateral_counter").add(mintAmount, { symbol, name })
-  ctx.meter.Counter("tTokens_counter").add(mintTokens, { symbol, name })
+  ctx.meter.Counter("Collateral_counter").add(mintAmount, { symbol })
+  ctx.meter.Counter("tTokens_counter").add(mintTokens, { symbol })
 
 }
 
 const RedeemEventHandler = async (event: any, ctx: TCROContext) => {
   const redeemer = event.args.redeemer
   const redeemAmount = Number(event.args.redeemAmount) / Math.pow(10, 18)
-  const tokenDecimal = Number(await ctx.contract.decimals())
-  const redeemTokens = Number(event.args.redeemTokens) / Math.pow(10, tokenDecimal)
-  const symbol = await ctx.contract.symbol()
-  const name = await ctx.contract.name()
+  const redeemTokens = Number(event.args.redeemTokens) / Math.pow(10, 8)
+  const symbol = constant.T_TOKEN_SYMBOL.get(ctx.address.toLowerCase())!
 
   ctx.eventLogger.emit("Redeem", {
     distinctId: redeemer,
@@ -45,19 +40,17 @@ const RedeemEventHandler = async (event: any, ctx: TCROContext) => {
     redeemTokens,
     symbol,
     coin_symbol: "cro", //get CRO price in Ethereum. TO DO: update more price symbols in cronos
-    name
   })
 
-  ctx.meter.Counter("Collateral_counter").sub(redeemAmount, { symbol, name })
-  ctx.meter.Counter("tTokens_counter").sub(redeemTokens, { symbol, name })
+  ctx.meter.Counter("Collateral_counter").sub(redeemAmount, { symbol })
+  ctx.meter.Counter("tTokens_counter").sub(redeemTokens, { symbol })
 }
 
 const BorrowEventHandler = async (event: any, ctx: TCROContext) => {
   const borrower = event.args.borrower
   const borrowAmount = Number(event.args.borrowAmount) / Math.pow(10, 18)
   const accountBorrows = Number(event.args.accountBorrows)
-  const symbol = await ctx.contract.symbol()
-  const name = await ctx.contract.name()
+  const symbol = constant.T_TOKEN_SYMBOL.get(ctx.address.toLowerCase())!
 
   ctx.eventLogger.emit("Borrow", {
     distinctId: borrower,
@@ -68,7 +61,7 @@ const BorrowEventHandler = async (event: any, ctx: TCROContext) => {
     name
   })
 
-  ctx.meter.Counter("Collateral_counter").sub(borrowAmount, { symbol, name })
+  ctx.meter.Counter("Collateral_counter").sub(borrowAmount, { symbol })
 }
 
 const RepayBorrowEventHandler = async (event: any, ctx: TCROContext) => {
@@ -76,8 +69,7 @@ const RepayBorrowEventHandler = async (event: any, ctx: TCROContext) => {
   const borrower = event.args.borrower
   const repayAmount = Number(event.args.repayAmount) / Math.pow(10, 18)
   const accountBorrows = Number(event.args.accountBorrows)
-  const symbol = await ctx.contract.symbol()
-  const name = await ctx.contract.name()
+  const symbol = constant.T_TOKEN_SYMBOL.get(ctx.address.toLowerCase())!
 
   ctx.eventLogger.emit("RepayBorrow", {
     distinctId: payer,
@@ -86,21 +78,19 @@ const RepayBorrowEventHandler = async (event: any, ctx: TCROContext) => {
     accountBorrows,
     symbol,
     coin_symbol: "cro", //get CRO price in Ethereum. TO DO: update more price symbols in cronos
-    name
   })
 
-  ctx.meter.Counter("Collateral_counter").add(repayAmount, { symbol, name })
+  ctx.meter.Counter("Collateral_counter").add(repayAmount, { symbol })
 }
 const AllEventHandler = async (event: any, ctx: TCROContext) => {
-  const tokenDecimal = Number(await ctx.contract.decimals())
-  const totalBorrows = Number(await ctx.contract.totalBorrows()) / tokenDecimal
-  const totalSupply = Number(await ctx.contract.totalSupply()) / tokenDecimal
-  const totalReserves = Number(await ctx.contract.totalReserves()) / tokenDecimal
-  const symbol = await ctx.contract.symbol()
-  const name = await ctx.contract.name()
-  ctx.meter.Gauge("totalBorrows").record(totalBorrows, { symbol, name })
-  ctx.meter.Gauge("totalSupply").record(totalSupply, { symbol, name })
-  ctx.meter.Gauge("totalReserves").record(totalReserves, { symbol, name })
+  const totalBorrows = Number(await ctx.contract.totalBorrows()) / Math.pow(10, 8)
+  const totalSupply = Number(await ctx.contract.totalSupply()) / Math.pow(10, 8)
+  const totalReserves = Number(await ctx.contract.totalReserves()) / Math.pow(10, 8)
+  const symbol = constant.T_TOKEN_SYMBOL.get(ctx.address.toLowerCase())!
+
+  ctx.meter.Gauge("totalBorrows").record(totalBorrows, { symbol })
+  ctx.meter.Gauge("totalSupply").record(totalSupply, { symbol })
+  ctx.meter.Gauge("totalReserves").record(totalReserves, { symbol })
 
 }
 
@@ -108,7 +98,7 @@ const AllEventHandler = async (event: any, ctx: TCROContext) => {
 //t_tokens
 for (let i = 0; i < constant.T_TOKEN_POOLS.length; i++) {
   let address = constant.T_TOKEN_POOLS[i]
-  TCROProcessor.bind({ address: address, network: CHAIN_IDS.CRONOS })
+  TCROProcessor.bind({ address: address, network: CHAIN_IDS.CRONOS, startBlock: 7400000 })
     .onEventMint(MintEventHandler)
     .onEventBorrow(BorrowEventHandler)
     .onEventRepayBorrow(RepayBorrowEventHandler)
