@@ -12,52 +12,36 @@ RocketTokenRETHProcessor.bind({
     address: "0xae78736Cd615f374D3085123A210448E74Fc6393",
     network: 1,
 })
-    .onAllEvents((evt, ctx) => {
+    .onEventTransfer(async (evt, ctx) => {
         ctx.meter.Counter("event_count").add(1, { name: evt.name });
-        ctx.eventLogger.emit(evt.name, {
-            ...evt.args.toObject(),
-        });
+        ctx.eventLogger.emit("Transfer", {
+            distinctId: evt.args.from,
+            amount: evt.args.value.scaleDown(18),
+            to: evt.args.to,
+        })
     })
-    .onAllTraces(function (trace, ctx) {
-        ctx.meter.Counter("trace_count").add(1, { name: trace.name });
-        ctx.eventLogger.emit(trace.name, {
-            distinctId: trace.action.from,
-            ...trace.args.toObject(),
-        });
-    });
 
 RocketTokenRPLProcessor.bind({
     address: "0xD33526068D116cE69F19A9ee46F0bd304F21A51f",
     network: 1,
 })
-    .onAllEvents((evt, ctx) => {
+    .onEventTransfer(async (evt, ctx) => {
         ctx.meter.Counter("event_count").add(1, { name: evt.name });
-        ctx.eventLogger.emit(evt.name, {
-            ...evt.args.toObject(),
-        });
+        ctx.eventLogger.emit("Transfer", {
+            distinctId: evt.args.from,
+            amount: evt.args.value.scaleDown(18),
+            to: evt.args.to,
+        })
     })
-    .onAllTraces(function (trace, ctx) {
-        ctx.meter.Counter("trace_count").add(1, { name: trace.name });
-        ctx.eventLogger.emit(trace.name, {
-            distinctId: trace.action.from,
-            ...trace.args.toObject(),
-        });
-    });
 
 RocketDepositPoolProcessor.bind({
     address: "0x2cac916b2A963Bf162f076C0a8a4a8200BCFBfb4",
     network: 1,
 })
-    .onAllEvents((evt, ctx) => {
+    .onEventDepositReceived(async (evt, ctx) => {
         ctx.meter.Counter("event_count").add(1, { name: evt.name });
-        ctx.eventLogger.emit(evt.name, {
-            ...evt.args.toObject(),
-        });
+        ctx.eventLogger.emit("DepositReceived", {
+            distinctId: evt.args.from,
+            amount: evt.args.amount.scaleDown(18),
+        })
     })
-    .onAllTraces(function (trace, ctx) {
-        ctx.meter.Counter("trace_count").add(1, { name: trace.name });
-        ctx.eventLogger.emit(trace.name, {
-            distinctId: trace.action.from,
-            ...trace.args.toObject(),
-        });
-    });
