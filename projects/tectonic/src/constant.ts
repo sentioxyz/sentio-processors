@@ -36,6 +36,17 @@ export const COLLATERAL_TOKENS: Map<string, string> = new Map([
     ["tTONIC", "tonic"]
 ])
 
+export const COLLATERAL_DECIMAL: Map<string, number> = new Map([
+    ["cro", 8],
+    ["eth", 18],
+    ["wbtc", 8],
+    ["usdc", 6],
+    ["usdt", 6],
+    ["tusd", 18],
+    ["dai", 18],
+    ["tonic", 18]
+])
+
 
 export const L_CRO_POOLS = [
     "0x972173afb7eefb80a0815831b318a643442ad0c1",
