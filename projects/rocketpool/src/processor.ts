@@ -26,8 +26,8 @@ RocketTokenRETHProcessor.bind({
         try {
             const rate = await ctx.contract.getExchangeRate()
             ctx.meter.Gauge("exchange_rate").record(rate.scaleDown(18))
-            const collateral = await ctx.contract.getCollateralRate()
-            ctx.meter.Gauge("collateral_rate").record(collateral.scaleDown(18))
+            const collateral = await ctx.contract.getTotalCollateral()
+            ctx.meter.Gauge("collateral").record(collateral.scaleDown(18))
         } catch (e) {
             console.log(e)
         }
