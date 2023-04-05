@@ -23,6 +23,14 @@ RocketTokenRETHProcessor.bind({
         const total = await ctx.contract.totalSupply()
         ctx.meter.Gauge("total_supply").record(
             total.scaleDown(18), { symbol: "RETH" })
+        try {
+            const rate = await ctx.contract.getExchangeRate()
+            ctx.meter.Gauge("exchange_rate").record(rate.scaleDown(18))
+            const collateral = await ctx.contract.getCollateralRate()
+            ctx.meter.Gauge("collateral_rate").record(collateral.scaleDown(18))
+        } catch (e) {
+            console.log(e)
+        }
     })
 
 RocketTokenRPLProcessor.bind({
