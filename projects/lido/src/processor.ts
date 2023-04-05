@@ -3,13 +3,16 @@ import { ERC20Processor } from '@sentio/sdk/eth/builtin'
 import { LidoProcessor, LidoContext } from './types/eth/lido.js'
 import {WstETHProcessor, WstETHContext} from './types/eth/wsteth.js'
 
+
 LidoProcessor.bind({address: "0xae7ab96520DE3A18E5e111B5EaAb095312D7fE84"})
     .onEventSubmitted(async (evt, ctx)=>{
         ctx.meter.Counter("eth_submitted").add(evt.args.amount.scaleDown(18))
+        ctx.eventLogger.emit("submitted", {
+            distinctId: evt.args.sender,
+            amount: evt.args.amount.scaleDown(18),
+        })
     })
-    .onEventWithdrawal(async (evt, ctx)=>{
-        ctx.meter.Counter("lido_withdrawal").add(1)
-    }).onEventSharesBurnt(async (evt, ctx)=>{
+    .onEventSharesBurnt(async (evt, ctx)=>{
         ctx.meter.Counter("lido_shares_burnt").add(evt.args.sharesAmount)
 }).onEventELRewardsReceived(async (evt, ctx)=>{
     ctx.meter.Counter("lido_el_rewards_received").add(evt.args.amount.scaleDown(18))
@@ -22,6 +25,11 @@ LidoProcessor.bind({address: "0xae7ab96520DE3A18E5e111B5EaAb095312D7fE84"})
     } catch (e) {
         console.log(e)
     }
+}).onEventTransfer(async (evt, ctx)=>{
+    ctx.eventLogger.emit("transfer_stETH", {
+        distinctId: evt.args.to,
+        amount: evt.args.value.scaleDown(18),
+    })
 })
 
 WstETHProcessor.bind({address: "0x7f39C581F595B53c5cb19bD0b3f8dA6c935E2Ca0"})
@@ -34,6 +42,11 @@ WstETHProcessor.bind({address: "0x7f39C581F595B53c5cb19bD0b3f8dA6c935E2Ca0"})
         } catch (e) {
             console.log(e)
         }
-    })
+    }).onEventTransfer(async (evt, ctx)=>{
+        ctx.eventLogger.emit("transfer_wstETH", {
+            distinctId: evt.args.to,
+            amount: evt.args.value.scaleDown(18),
+        })
+})
 
 
