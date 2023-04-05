@@ -43,7 +43,7 @@ const transferEventHandler = async function(event: TransferEvent, ctx: StakedTok
         from: event.args.from,
         to:event.args.to,
         amount: amount,
-        message: event.args.from + " transfers " + amount + " cbETH from " + event.args.to,
+        message: event.args.from + " transfers " + amount + " cbETH to " + event.args.to,
     })
 }
 
