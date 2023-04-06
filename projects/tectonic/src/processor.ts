@@ -4,7 +4,7 @@ import * as constant from "./constant.js"
 import { TCROContext, TCROProcessor, LiquidateBorrowEvent, AccrueInterestEvent } from './types/eth/tcro.js'
 import { LCROProcessor } from './types/eth/lcro.js'
 import { getPriceBySymbol } from '@sentio/sdk/utils'
-import { WCROProcessor } from './types/eth/wcro.js'
+import { WCROProcessor, TransferEvent, WCROContext } from './types/eth/wcro.js'
 
 const MintEventHandler = async (event: any, ctx: TCROContext) => {
   const minter = event.args.minter
@@ -119,11 +119,10 @@ const LiquidateBorrowHandler = async (event: LiquidateBorrowEvent, ctx: TCROCont
 }
 
 const AccrueInterestHandler = async (event: AccrueInterestEvent, ctx: TCROContext) => {
-  const totalReserves = Number(await ctx.contract.totalReserves()) / Math.pow(10, 8)
   const tSymbol = constant.T_TOKEN_SYMBOL.get(ctx.address.toLowerCase())!
   const collateralSymbol = (constant.COLLATERAL_TOKENS.get(tSymbol))!
   const collateralDecimal = (constant.COLLATERAL_DECIMAL.get(collateralSymbol))!
-  const accumulatedInterest = Number(event.args.accumulatedInterest) / Math.pow(10, collateralDecimal)
+  const accumulatedInterest = Number(event.args[1]) / Math.pow(10, collateralDecimal)
 
   ctx.meter.Gauge("accumulatedInterest").record(accumulatedInterest, { tSymbol, coin_symbol: collateralSymbol })
 }
@@ -157,13 +156,12 @@ for (let i = 0; i < constant.T_TOKEN_POOLS.length; i++) {
 
 
 //liquidation interest. TO DO: check if treasury address is correct
-const filter = WCROProcessor.filters.Approval('0xcdcabcbe21a4f18cefacb37715fc6baa0d4e98c0')
+const filter = WCROProcessor.filters.Transfer('0xcdcabcbe21a4f18cefacb37715fc6baa0d4e98c0')
 
 WCROProcessor.bind({ address: '0x5c7f8a570d578ed84e63fdfa7b1ee72deae1ae23', network: CHAIN_IDS.CRONOS })
-  .onEventTransfer(async (event, ctx) => {
-    if (event.args.amount) {
-      const amount = Number(event.args.amount) / Math.pow(10, 18)
+  .onEventTransfer(async (event: TransferEvent, ctx: WCROContext) => {
+    if (event.args[2]) {
+      const amount = Number(event.args[2]) / Math.pow(10, 18)
       ctx.meter.Counter('liquidation_interest_counter').add(amount, { coin_symbol: 'cro' })
     }
-
-  })
+  }, filter)
