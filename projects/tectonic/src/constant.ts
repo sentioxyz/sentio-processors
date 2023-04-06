@@ -37,7 +37,7 @@ export const COLLATERAL_TOKENS: Map<string, string> = new Map([
 ])
 
 export const COLLATERAL_DECIMAL: Map<string, number> = new Map([
-    ["cro", 8],
+    ["cro", 18],
     ["eth", 18],
     ["wbtc", 8],
     ["usdc", 6],
