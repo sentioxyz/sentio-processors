@@ -6,7 +6,7 @@ import { getPrice } from "./aptos.js";
 // import { toBigDecimal } from "@sentio/sdk/";
 // import { BigDecimal } from "@sentio/sdk/lib/core/big-decimal";
 import { scaleDown } from '@sentio/sdk'
-import { EthEvent, getNetworkFromCtxOrNetworkish } from "@sentio/sdk/eth";
+import { TypedEvent, getNetworkFromCtxOrNetworkish } from "@sentio/sdk/eth";
 
 
 const commonOptions = { sparse: true }
