@@ -17,6 +17,9 @@ AugustusSwapperProcessor.bind({address: "0xDEF171Fe48CF0115B1d80b88dc8eAB59176FE
         ctx.meter.Counter("setImplementationErrors").add(1)
         return
     }
-    console.log("setImplementation", call.args.selector, call.args.implementation.toString())
+    ctx.eventLogger.emit("setImplementation", {
+        implementation: call.args.implementation,
+        selector: call.args.selector,
+    })
     ctx.meter.Counter("setImplementations").add(1)
 })
