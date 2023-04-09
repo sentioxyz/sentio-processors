@@ -41,3 +41,9 @@ VaultProcessor.bind({address: "0x489ee077994B6658eAfA855C308275EAd8097C4A", netw
         amountOut: evt.args.amountOut,
     })
 })
+.onEventDirectPoolDeposit(async (evt, ctx)=>{
+    ctx.eventLogger.emit("vault.directPoolDeposit", {
+        token: evt.args.token,
+        amount: evt.args.amount,
+    })
+})
