@@ -1,5 +1,6 @@
 export const CORE_ADDRESS = "0x7De56Bd8b37827c51835e162c867848fE2403a48"
-export const SOCKET_ADDRESS = "0xb3831584acb95ed9ccb0c11f677b5ad01deaEc0"
+export const SOCKET_ADDRESS = "0xb3831584acb95ed9ccb0c11f677b5ad01deaeec0"
+export const WCRO_ADDRESS = "0x5c7f8a570d578ed84e63fdfa7b1ee72deae1ae23"
 
 
 export const T_TOKEN_POOLS = [
@@ -59,3 +60,4 @@ export const L_CRO_POOLS = [
 // tLCRO (LCRO) - Smart Contract - 0xCd8F4147A4F9452e027f5203bfc5B7A786055138
 // tUSDC (LCRO) - Smart Contract - 0x498BD0Cbdf3ba43c02fE768F8E993d4bF21d011d
 // tUSDT (LCRO) - Smart Contract - 0x3C920600e049A128b01D2Ef0b932108687196502
+
