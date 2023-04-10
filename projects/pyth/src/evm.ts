@@ -1,12 +1,11 @@
 import { PythEVMContext, PythEVMProcessor, PriceFeedUpdateEvent, getPythEVMContract, UpdatePriceFeedsCallTrace, UpdatePriceFeedsIfNecessaryCallTrace,
     BatchPriceFeedUpdateEvent } from "./types/eth/pythevm.js";
 import { PRICE_MAP } from "./pyth.js";
-import { Counter, Gauge } from "@sentio/sdk";
+import { CHAIN_IDS, Counter, Gauge } from "@sentio/sdk";
 import { getPrice } from "./aptos.js";
 // import { toBigDecimal } from "@sentio/sdk/";
 // import { BigDecimal } from "@sentio/sdk/lib/core/big-decimal";
 import { scaleDown } from '@sentio/sdk'
-import { TypedEvent, getNetworkFromCtxOrNetworkish } from "@sentio/sdk/eth";
 
 
 const commonOptions = { sparse: true }
@@ -14,6 +13,7 @@ const priceGauage = Gauge.register("evm_price", commonOptions)
 const priceUnsafeGauage = Gauge.register("evm_price_unsafe", commonOptions)
 const price_update_occur = Gauge.register("price_update_occur", commonOptions)
 const batch_price_update_occur = Gauge.register("batch_price_update_occur", commonOptions)
+const eth_balance = Gauge.register("eth_balance", commonOptions)
 
 const CHAIN_ADDRESS_MAP = new Map<number, string>([
     [1, "0x4305FB66699C3B2702D4d05CF36551390A4c69C6"], //ETH
@@ -79,6 +79,18 @@ async function batchPriceUpdate(evt: BatchPriceFeedUpdateEvent, ctx: PythEVMCont
     ctx.meter.Counter("batch_price_update_counter").add(1)
     batch_price_update_occur.record(ctx, 1)
     await recordGasUsage("batchPriceUpdate", evt.transactionHash, ctx)
+    // other than onblock, also need to track this whenever batchPriceUpdate was triggered
+    try {
+        if (ctx.chainId == 250) {
+            const amount = await ctx.contract.provider!.getBalance(ctx.address, ctx.blockNumber)
+            eth_balance.record(ctx, amount)  
+        }  
+    } catch (e) {
+        console.log("chainId" + ctx.chainId)
+        console.log("blockNumber" + ctx.blockNumber)
+        console.log(e)
+        return
+    }
 }
 
 async function updatePriceFeeds(call: UpdatePriceFeedsCallTrace, ctx: PythEVMContext) {
@@ -104,20 +116,46 @@ async function recordGasUsage(evt : string, hash : string, ctx: PythEVMContext) 
     }
 }
 
+async function blockHandler(block: any, ctx:PythEVMContext) {
+    try {
+        if (ctx.chainId == 250) {
+            const amount = await ctx.contract.provider!.getBalance(ctx.address, ctx.blockNumber)
+            eth_balance.record(ctx, amount)   
+        } 
+    } catch (e) {
+        console.log("chainId" + ctx.chainId)
+        console.log("blockNumber" + ctx.blockNumber)
+        console.log(e)
+        return
+    }
+}
+
 CHAIN_ADDRESS_MAP.forEach((addr, chainId) => {
-    // TODO: change this to
+    // TODO: has to enforce starting block for OP otherwise it will query old implementation contract and fail
+    // other L2s have larger block number as starting point
     if (addr == "0xff1a0f4744e8582df1ae09d5611b887b6a12925c") {
         PythEVMProcessor.bind({address: addr, network: chainId, startBlock: 45722027})
         .onEventPriceFeedUpdate(priceFeedUpdate)
         .onCallUpdatePriceFeeds(updatePriceFeeds)
         .onCallUpdatePriceFeedsIfNecessary(updatePriceFeedsIfNecessary)
         .onEventBatchPriceFeedUpdate(batchPriceUpdate)
-    } else {
+        .onBlockInterval(blockHandler, 10000)
+    } 
+    // else if (chainId == 250) { // TODO: individually pulling fantom eth_balance
+    //     PythEVMProcessor.bind({address: addr, network: chainId})
+    //     .onEventPriceFeedUpdate(priceFeedUpdate)
+    //     .onCallUpdatePriceFeeds(updatePriceFeeds)
+    //     .onCallUpdatePriceFeedsIfNecessary(updatePriceFeedsIfNecessary)
+    //     .onEventBatchPriceFeedUpdate(batchPriceUpdate)
+    //     .onBlockInterval(blockHandler, 10000)
+    // }
+    else {
         PythEVMProcessor.bind({address: addr, network: chainId})
         .onEventPriceFeedUpdate(priceFeedUpdate)
         .onCallUpdatePriceFeeds(updatePriceFeeds)
         .onCallUpdatePriceFeedsIfNecessary(updatePriceFeedsIfNecessary)
         .onEventBatchPriceFeedUpdate(batchPriceUpdate)
+        .onBlockInterval(blockHandler)
     }
 })
 

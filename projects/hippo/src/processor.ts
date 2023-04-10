@@ -30,7 +30,6 @@ aggregator.bind({address: "0x89576037b3cc0b89645ea393a47787bb348272c76d6941c574b
   const dexType = evt.data_decoded.dex_type
   const xType = extractTypeName(evt.data_decoded.x_type_info)
   const yType = extractTypeName(evt.data_decoded.y_type_info)
-  evt
   const coinXInfo = getCoinInfo(xType)
   const coinYInfo = getCoinInfo(yType)
   const poolType = evt.data_decoded.pool_type
