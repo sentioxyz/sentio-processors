@@ -1,6 +1,6 @@
 import { GVaultProcessor, GVaultContext, WithdrawEvent, DepositEvent } from "./types/eth/gvault.js";
 import {BigDecimal, CHAIN_IDS, Counter, Gauge, scaleDown} from "@sentio/sdk"
-import { EthEvent } from "@sentio/sdk/eth";
+import { TypedEvent } from "@sentio/sdk/eth";
 
 const DECIMAL = 18
 export const volOptions = {
@@ -60,7 +60,7 @@ async function blockHandler(_:any, ctx: GVaultContext) {
     ctx.meter.Gauge("totalAssets").record(totalAssets)
 }
 
-async function genericEventHandler(evt: EthEvent<any, any>, ctx: GVaultContext) {
+async function genericEventHandler(evt: TypedEvent<any, any>, ctx: GVaultContext) {
     const eventName = evt.name
     if (eventName != 'Deposit' && eventName != 'Withdraw') {
         ctx.eventLogger.emit(eventName, {
