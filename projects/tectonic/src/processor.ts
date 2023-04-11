@@ -139,9 +139,11 @@ const AllEventHandler = async (event: any, ctx: TCROContext) => {
   if (event.name == "RepayBorrow" || "Mint" || "Borrow" || "Redeem") {
     const totalBorrows = Number(await ctx.contract.totalBorrows()) / Math.pow(10, 8)
     const totalSupply = Number(await ctx.contract.totalSupply()) / Math.pow(10, 8)
-    const totalReserves = Number(await ctx.contract.totalReserves()) / Math.pow(10, 8)
     const tSymbol = constant.T_TOKEN_SYMBOL.get(ctx.address.toLowerCase())!
     const collateralSymbol = (constant.COLLATERAL_TOKENS.get(tSymbol))!
+    const collateralDecimal = (constant.COLLATERAL_DECIMAL.get(collateralSymbol))!
+    const totalReserves = Number(await ctx.contract.totalReserves()) / Math.pow(10, collateralDecimal)
+
 
     ctx.meter.Gauge("totalBorrows").record(totalBorrows, { tSymbol, coin_symbol: collateralSymbol })
     ctx.meter.Gauge("totalSupply").record(totalSupply, { tSymbol, coin_symbol: collateralSymbol })
@@ -192,24 +194,16 @@ TectonicCoreProcessor.bind({ address: constant.SOCKET_ADDRESS, network: CHAIN_ID
       const tonicDelta = Number(event.args.tonicDelta) / Math.pow(10, 18)
       const tonicBorrowIndex = "index" + event.args.tonicBorrowIndex
       const tSymbol = constant.T_TOKEN_SYMBOL.get(tToken)!
-      const collateralSymbol = (constant.COLLATERAL_TOKENS.get(tSymbol))!
-
-      // console.log(`DistributedBorrowerTonic: borrower ${borrower},
-      //   tSymbol ${tSymbol},
-      //   tonicDelta ${tonicDelta},
-      //   tonicBorrowIndex ${tonicBorrowIndex},
-      //   collateralSymbol ${collateralSymbol},
-      //   hash ${hash}`)
 
       ctx.eventLogger.emit("DistributedBorrowerTonic", {
         distinctId: borrower,
         tSymbol,
         tonicDelta,
         tonicBorrowIndex,
-        coin_symbol: collateralSymbol
+        coin_symbol: "tonic",
       })
 
-      ctx.meter.Counter("tonic_counter").add(tonicDelta, { tSymbol, event: "DistributedBorrowerTonic" })
+      ctx.meter.Counter("tonic_counter").add(tonicDelta, { tSymbol, coin_symbol: "tonic", event: "DistributedBorrowerTonic" })
     } catch (error) {
       console.log(error.message, hash)
     }
@@ -230,10 +224,11 @@ TectonicCoreProcessor.bind({ address: constant.SOCKET_ADDRESS, network: CHAIN_ID
         distinctId: supplier,
         tSymbol,
         tonicDelta,
-        tonicSupplyIndex
+        tonicSupplyIndex,
+        coin_symbol: "tonic",
       })
 
-      ctx.meter.Counter("tonic_counter").add(tonicDelta, { tSymbol, event: "DistributedSupplierTonic" })
+      ctx.meter.Counter("tonic_counter").add(tonicDelta, { tSymbol, coin_symbol: "tonic", event: "DistributedSupplierTonic" })
 
     } catch (error) {
       console.log(error.message, hash)
