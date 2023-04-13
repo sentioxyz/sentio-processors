@@ -119,13 +119,17 @@ const SwapEventHandler = async (event: SwapEvent, ctx: OKCSwapPairContext) => {
 
 
   //Gauge reserve
-  const getReserve = await ctx.contract.getReserves()
-  const reserve0 = Number(getReserve[0]) / Math.pow(10, decimal0)
-  const reserve1 = Number(getReserve[1]) / Math.pow(10, decimal1)
-  const blockTimestampLast = getReserve[2]
-  // console.log("reserve0:", reserve0, " reserve1:", reserve1, "blockTimestampLast:", blockTimestampLast, "blockTimestampNow:", ctx.timestamp)
-  ctx.meter.Gauge('reserve0').record(reserve0, { pairName: pairName })
-  ctx.meter.Gauge('reserve1').record(reserve1, { pairName: pairName })
+  try {
+    const getReserve = await ctx.contract.getReserves()
+    const reserve0 = Number(getReserve[0]) / Math.pow(10, decimal0)
+    const reserve1 = Number(getReserve[1]) / Math.pow(10, decimal1)
+    const blockTimestampLast = getReserve[2]
+    // console.log("reserve0:", reserve0, " reserve1:", reserve1, "blockTimestampLast:", blockTimestampLast, "blockTimestampNow:", ctx.timestamp)
+    ctx.meter.Gauge('reserve0').record(reserve0, {pairName: pairName})
+    ctx.meter.Gauge('reserve1').record(reserve1, {pairName: pairName})
+  } catch (error) {
+    console.log("failed to get reserved at ",error, ctx.blockNumber)
+  }
 
 
   //trading volume
