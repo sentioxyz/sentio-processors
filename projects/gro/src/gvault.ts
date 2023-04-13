@@ -1,6 +1,14 @@
 import { GVaultProcessor, GVaultContext, WithdrawEvent, DepositEvent } from "./types/eth/gvault.js";
+import { 
+    GStrategyGuardProcessor, 
+    GStrategyGuardContext,
+    LogStopLossEscalatedEvent,
+    LogStopLossDescalatedEvent,
+    LogStopLossExecutedEvent,
+    LogStrategyHarvestFailureEvent
+} from "./types/eth/gstrategyguard.js";
 import {BigDecimal, CHAIN_IDS, Counter, Gauge, scaleDown} from "@sentio/sdk"
-import { TypedEvent } from "@sentio/sdk/eth";
+import { TypedEvent } from "./types/eth/internal/common.js";
 
 const DECIMAL = 18
 export const volOptions = {
@@ -52,6 +60,37 @@ async function depositHandler(evt: DepositEvent, ctx: GVaultContext) {
     })
 }
 
+async function logStopLossEscalated(evt: LogStopLossEscalatedEvent, ctx: GStrategyGuardContext) {
+    ctx.eventLogger.emit("LogStopLossEscalated", {
+        message: `LogStopLossEscalated for strategy: ${evt.args.strategy}`,
+        strategy: evt.args.strategy
+    })
+}
+
+async function logStopLossDescalated(evt: LogStopLossDescalatedEvent, ctx: GStrategyGuardContext) {
+    ctx.eventLogger.emit("LogStopLossDescalated", {
+        message: `LogStopLossDescalated for ${evt.args.strategy}, active: ${evt.args.active}`,
+        strategy: evt.args.strategy,
+        active: evt.args.active
+    })
+}
+
+async function logStopLossExecuted(evt: LogStopLossExecutedEvent, ctx: GStrategyGuardContext) {
+    ctx.eventLogger.emit("LogStopLossDescalated", {
+        message: `LogStopLossDescalated for ${evt.args.strategy}, success: ${evt.args.success}`,
+        strategy: evt.args.strategy,
+        success: evt.args.success
+    })
+}
+
+async function logStrategyHarvestFailure(evt: LogStrategyHarvestFailureEvent, ctx: GStrategyGuardContext) {
+    ctx.eventLogger.emit("LogStopLossDescalated", {
+        message: `LogStrategyHarvestFailure for ${evt.args.strategy}, reason: ${evt.args.reason} \n data: ${evt.args.lowLevelData}`,
+        strategy: evt.args.strategy,
+        reason: evt.args.reason
+    })
+}
+
 async function blockHandler(_:any, ctx: GVaultContext) {
     const totalSupply = scaleDown(await ctx.contract.totalSupply(), DECIMAL)
     const totalAssets = scaleDown(await ctx.contract.totalAssets(), DECIMAL)
@@ -75,3 +114,9 @@ GVaultProcessor.bind({address: "0x1402c1cAa002354fC2C4a4cD2b4045A5b9625EF3"})
 .onEventDeposit(depositHandler)
 .onBlockInterval(blockHandler)
 .onAllEvents(genericEventHandler)
+
+GStrategyGuardProcessor.bind({address: "0xe09de1b49118bb197b2ea45d4d7054d48d1c3224"})
+.onEventLogStopLossEscalated(logStopLossEscalated)
+.onEventLogStopLossDescalated(logStopLossDescalated)
+.onEventLogStopLossExecuted(logStopLossExecuted)
+.onEventLogStrategyHarvestFailure(logStrategyHarvestFailure)
