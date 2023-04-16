@@ -20,7 +20,8 @@ validator.bind({ network: SuiNetwork.TEST_NET }).onEventStakingRequestEvent((evt
   const amount = evt.data_decoded.amount
   // expect(amount_original).eq(amount)
   if (evt.data_decoded.pool_id != "0x0c0d9dbf38d60345678c95d54705e6d491811f13120f1bc8320996e7a5244c3f"
-  && evt.data_decoded.pool_id != "0x168f9da2c19f15115df7c9820f01440a3811b43c1d1391e1ef0881343e26e248") {
+  && evt.data_decoded.pool_id != "0x168f9da2c19f15115df7c9820f01440a3811b43c1d1391e1ef0881343e26e248"
+  && evt.data_decoded.pool_id != "0x258b7102ec10c70dabe68d5d2e176569ef0520585c847813b06686de00eb23b5") {
     ctx.meter.Counter('amount').add(amount, {pool: evt.data_decoded.pool_id})
   } else {
     ctx.meter.Counter('large_account_amount').add(amount, {pool: evt.data_decoded.pool_id})
