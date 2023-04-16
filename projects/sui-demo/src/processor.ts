@@ -19,11 +19,18 @@ validator.bind({ network: SuiNetwork.TEST_NET }).onEventStakingRequestEvent((evt
   const amount_original = BigInt(evt.parsedJson?.amount)
   const amount = evt.data_decoded.amount
   // expect(amount_original).eq(amount)
-  ctx.meter.Counter('amount').add(amount, { pool: evt.data_decoded.pool_id })
+  if (evt.data_decoded.pool_id != "0x0c0d9dbf38d60345678c95d54705e6d491811f13120f1bc8320996e7a5244c3f") {
+    ctx.meter.Counter('amount').add(amount, {pool: evt.data_decoded.pool_id})
+  }
 })
 
 sui_system.bind({ network: SuiNetwork.TEST_NET }).onEntryRequestAddStake((call: RequestAddStakePayload, ctx) => {
-  ctx.meter.Gauge('tmp').record(1, { coin: call.arguments_decoded[2] || '' })
+  ctx.meter.Gauge('addStake').record(1, { addr: call.arguments_decoded[2] || '' })
+  ctx.eventLogger.emit("staking_request", {
+    distinctId: ctx.transaction.transaction?.data.sender,
+    addr: call.arguments_decoded[2] || '',
+    message: `staking_request called for ${call.arguments_decoded[2] || ''}`
+  })
 })
 
 SuiDynamicFieldObjectsProcessor.bind({
