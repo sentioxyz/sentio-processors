@@ -124,12 +124,31 @@ const AccrueInterestHandler = async (event: AccrueInterestEvent, ctx: TCROContex
   const collateralSymbol = (constant.COLLATERAL_TOKENS.get(tSymbol))!
   const collateralDecimal = (constant.COLLATERAL_DECIMAL.get(collateralSymbol))!
   const interestAccumulated = Number(event.args.interestAccumulated) / Math.pow(10, collateralDecimal)
-  // console.log(`AccrueInterestHandler tSymbol ${tSymbol}, collateralSymbol ${collateralSymbol}, collateralDecimal ${collateralDecimal}, interestAccumulated ${interestAccumulated}`)
+  const reserveFactor = Number(await ctx.contract.reserveFactorMantissa()) / Math.pow(10, 18)
+  const protocolInterestRevenue = interestAccumulated * reserveFactor
 
-  ctx.meter.Gauge("accumulatedInterest").record(interestAccumulated, { tSymbol, coin_symbol: collateralSymbol })
+  ctx.meter.Gauge("protocolInterestRevenue").record(protocolInterestRevenue, { tSymbol, coin_symbol: collateralSymbol })
+  ctx.meter.Counter("protocolInterestRevenue_counter").add(protocolInterestRevenue, { tSymbol, coin_symbol: collateralSymbol })
+
   ctx.eventLogger.emit("AccrueInterest", {
     tSymbol,
-    interestAccumulated,
+    protocolInterestRevenue,
+    coin_symbol: collateralSymbol
+  })
+
+}
+
+const ReservesAddedHandler = async (event: any, ctx: TCROContext) => {
+  const tSymbol = constant.T_TOKEN_SYMBOL.get(ctx.address.toLowerCase())!
+  const collateralSymbol = (constant.COLLATERAL_TOKENS.get(tSymbol))!
+  const collateralDecimal = (constant.COLLATERAL_DECIMAL.get(collateralSymbol))!
+  const protocolLiquidationRevenue = event.args.addAmount / Math.pow(10, collateralDecimal)
+  ctx.meter.Gauge("protocolLiquidationRevenue").record(protocolLiquidationRevenue, { tSymbol, coin_symbol: collateralSymbol })
+  ctx.meter.Counter("protocolLiquidationRevenue_counter").add(protocolLiquidationRevenue, { tSymbol, coin_symbol: collateralSymbol })
+
+  ctx.eventLogger.emit("ReservesAdded", {
+    tSymbol,
+    protocolLiquidationRevenue,
     coin_symbol: collateralSymbol
   })
 
@@ -167,22 +186,23 @@ for (let i = 0; i < constant.T_TOKEN_POOLS.length; i++) {
     .onEventBorrow(BorrowEventHandler)
     .onEventRepayBorrow(RepayBorrowEventHandler)
     .onEventRedeem(RedeemEventHandler)
-    .onEventLiquidateBorrow(LiquidateBorrowHandler)
+    //.onEventLiquidateBorrow(LiquidateBorrowHandler)
+    .onEventReservesAdded(ReservesAddedHandler)
     .onEventAccrueInterest(AccrueInterestHandler)
     .onAllEvents(AllEventHandler)
 }
 
 
-//liquidation interest. TO DO: check if treasury address is correct
-const filter = WCROProcessor.filters.Transfer('0xcdcabcbe21a4f18cefacb37715fc6baa0d4e98c0')
+// //liquidation interest. TO DO: check if treasury address is correct
+// const filter = WCROProcessor.filters.Transfer('0xcdcabcbe21a4f18cefacb37715fc6baa0d4e98c0')
 
-WCROProcessor.bind({ address: constant.WCRO_ADDRESS, network: CHAIN_IDS.CRONOS })
-  .onEventTransfer(async (event: TransferEvent, ctx: WCROContext) => {
-    if (event.args[2]) {
-      const amount = Number(event.args[2]) / Math.pow(10, 18)
-      ctx.meter.Counter('liquidation_interest_counter').add(amount, { coin_symbol: 'cro' })
-    }
-  }, filter)
+// WCROProcessor.bind({ address: constant.WCRO_ADDRESS, network: CHAIN_IDS.CRONOS })
+//   .onEventTransfer(async (event: TransferEvent, ctx: WCROContext) => {
+//     if (event.args[2]) {
+//       const amount = Number(event.args[2]) / Math.pow(10, 18)
+//       ctx.meter.Counter('liquidation_interest_counter').add(amount, { coin_symbol: 'cro' })
+//     }
+//   }, filter)
 
 //Tonic
 TectonicCoreProcessor.bind({ address: constant.SOCKET_ADDRESS, network: CHAIN_IDS.CRONOS })
