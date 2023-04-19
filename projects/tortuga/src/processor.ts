@@ -182,7 +182,7 @@ liquidity_pool.bind({startVersion: 299999})
 
 AptosResourcesProcessor.bind({address: "0x84d7aeef42d38a5ffc3ccef853e1b82e4958659d16a7de736a29c55fbbeb0114"})
     .onTimeInterval(async (resources, ctx) => {
-      const coinInfoRes = defaultMoveCoder().filterAndDecodeResources<coin.CoinInfo<any>>(coin.CoinInfo.TYPE_QNAME, resources)
+      const coinInfoRes = await defaultMoveCoder().filterAndDecodeResources(coin.CoinInfo.type(), resources)
       if (coinInfoRes.length === 0) {
         return
       }

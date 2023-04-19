@@ -7,8 +7,7 @@ import { BigDecimal, getChainName } from '@sentio/sdk';
 import { AnyswapERC20Context, AnyswapERC20Processor } from "./types/eth/anyswaperc20.js";
 import { AnyswapRouterContext, AnyswapRouterProcessor } from './types/eth/anyswaprouter.js';
 import { LogAnySwapInEvent, LogAnySwapOut_address_address_address_uint256_uint256_uint256_Event, LogAnySwapOut_address_address_string_uint256_uint256_uint256_Event } from './types/eth/anyswaprouter.js';
-import { BscAnyswapRouterContext, BscAnyswapRouterProcessor } from './types/eth/bscanyswaprouter.js';
-import { LogAnySwapInEvent as BscLogAnySwapInEvent, LogAnySwapOutEvent as BscLogAnySwapOutEvent } from './types/eth/BscAnyswapRouter.js';
+import { BscAnyswapRouterContext, BscAnyswapRouterProcessor, LogAnySwapInEvent as BscLogAnySwapInEvent, LogAnySwapOutEvent as BscLogAnySwapOutEvent } from './types/eth/bscanyswaprouter.js';
 // import { Bep20Context, Bep20Processor } from './types/bep20';
 
 const startBlock = 14215845

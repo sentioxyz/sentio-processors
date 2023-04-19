@@ -65,7 +65,7 @@ const poolWatching = [
 
 async function getTokenInfo(address: string): Promise<token.TokenInfo> {
   if (address !== "0x0000000000000000000000000000000000000000") {
-    return await token.getERC20TokenInfo(address)
+    return await token.getERC20TokenInfo(CHAIN_IDS.ETHEREUM, address)
   } else {
     return token.NATIVE_ETH
   }
@@ -119,7 +119,7 @@ async function getValue(ctx: UniswapContext, address: string, info: token.TokenI
     }
   } else {
     try {
-      amount = await getERC20Contract(address).balanceOf(ctx.address,
+      amount = await getERC20Contract(ctx, address).balanceOf(ctx.address,
           {blockTag: Number(ctx.blockNumber)})
     } catch (e) {
       console.log("error", e)

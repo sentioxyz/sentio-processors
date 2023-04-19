@@ -78,7 +78,7 @@ const pieceSwap = new AptosDex<piece_swap.PieceSwapPoolInfo<any, any>>(
   getXReserve: pool => pool.reserve_x.value,
   getYReserve: pool => pool.reserve_y.value,
   getExtraPoolTags: _ => {},
-  poolTypeName: piece_swap.PieceSwapPoolInfo.TYPE_QNAME
+  poolType: piece_swap.PieceSwapPoolInfo.type()
 })
 
 // amm.loadTypes(aptos.TYPE_REGISTRY)

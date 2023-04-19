@@ -14,7 +14,7 @@ const client = getAptosClient()!
     const coinInfoType = `0x1::coin::CoinInfo<${token.token_type.type}>`
     AptosResourcesProcessor.bind({address: token.token_type.account_address})
         .onTimeInterval(async (resources, ctx) => {
-          const coinInfoRes = defaultMoveCoder().filterAndDecodeResources<coin.CoinInfo<any>>(coin.CoinInfo.TYPE_QNAME, resources)
+          const coinInfoRes = await defaultMoveCoder().filterAndDecodeResources(coin.CoinInfo.type(), resources)
           if (coinInfoRes.length === 0) {
             return
           }

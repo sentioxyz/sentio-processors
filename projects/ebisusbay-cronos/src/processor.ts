@@ -277,7 +277,7 @@ MembershipStakerV3Processor.bind({ address: '0xeb074cc764F20d8fE4317ab63f45A85bc
         const reward = Number(event.args.amount) / Math.pow(10, 18)
         // const tokenPrice = await getPriceBySymbol("CRO", ctx.timestamp)
         // const reward_USD = reward * tokenPrice
-        const to = event.args[0]
+        const to = event.args.arg0
 
         rewardCounter_CRO.add(ctx, reward)
         rewardGauge_CRO.record(ctx, reward)

@@ -9,7 +9,7 @@ const AUX_EXCHANGE = new AptosDex<amm.Pool<any, any>>(auxVolume, auxVolumeByCoin
   getXReserve: pool => pool.x_reserve.value,
   getYReserve: pool => pool.y_reserve.value,
   getExtraPoolTags: pool => { return { wormhole: isWormhole(pool.type_arguments[0], pool.type_arguments[1]) } },
-  poolTypeName: amm.Pool.TYPE_QNAME
+  poolType: amm.Pool.type()
 })
 
 AptosResourcesProcessor.bind({address: amm.DEFAULT_OPTIONS.address})

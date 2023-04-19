@@ -14,7 +14,7 @@ for (const token of whitelistCoins().values()) {
   // @ts-ignore
   AptosResourcesProcessor.bind({address: token.token_type.account_address})
     .onVersionInterval(async (resources, ctx) => {
-      const coinInfoRes = defaultMoveCoder().filterAndDecodeResources<coin.CoinInfo<any>>(coin.CoinInfo.TYPE_QNAME, resources)
+      const coinInfoRes = await defaultMoveCoder().filterAndDecodeResources(coin.CoinInfo.type(), resources)
       if (coinInfoRes.length === 0) {
         return
       }

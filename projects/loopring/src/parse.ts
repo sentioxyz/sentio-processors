@@ -1,4 +1,4 @@
-import { ExchangeData, ExchangeV3Context } from "./types/eth/ExchangeV3.js";
+import { ExchangeData, ExchangeV3Context } from "./types/eth/exchangev3.js";
 import { Bitstream } from "@sentio/loopring-protocols/src/bitstream.js";
 import { TransactionType } from "@sentio/loopring-protocols/src/types.js";
 import { DepositProcessor } from "@sentio/loopring-protocols/src/request_processors/deposit_processor.js";

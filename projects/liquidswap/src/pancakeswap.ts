@@ -57,7 +57,7 @@ const PANCAKE_SWAP_APTOS = new AptosDex<swap.TokenPairReserve<any, any>>(
     getYReserve: pool => pool.reserve_y,
     getExtraPoolTags: _ => {
     },
-    poolTypeName: swap.TokenPairReserve.TYPE_QNAME
+    poolType: swap.TokenPairReserve.type()
 })
 
 AptosResourcesProcessor.bind({address: swap.DEFAULT_OPTIONS.address})

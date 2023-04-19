@@ -183,8 +183,8 @@ CUSDCProcessor.bind({address: "0xA17581A9E3356d9A858b789D68B4d866e593aE94"})
         const amount = evt.args.amount.scaleDown(token.decimal)
         ctx.eventLogger.emit("withdraw",
             {
-                distinctId: evt.args.from,
-                to: evt.args.dst,
+                distinctId: evt.args.src,
+                to: evt.args.to,
                 amount: amount,
                 token: token.symbol})
     })
@@ -215,8 +215,8 @@ CUSDCProcessor.bind({address: "0xA17581A9E3356d9A858b789D68B4d866e593aE94"})
         const amount = evt.args.amount.scaleDown(token.decimal)
         ctx.eventLogger.emit("withdraw",
             {
-                distinctId: evt.args.from,
-                to: evt.args.dst,
+                distinctId: evt.args.src,
+                to: evt.args.to,
                 amount: amount,
                 token: token.symbol})
     })

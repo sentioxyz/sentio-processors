@@ -34,7 +34,7 @@ const liquidSwap = new AptosDex<liquidity_pool.LiquidityPool<any, any, any>>(
     getXReserve: pool => pool.coin_x_reserve.value,
     getYReserve: pool => pool.coin_y_reserve.value,
     getExtraPoolTags: pool => { return { curve: getCurve(pool.type_arguments[2]), wormhole: isWormhole(pool.type_arguments[0], pool.type_arguments[1]) } },
-    poolTypeName: liquidity_pool.LiquidityPool.TYPE_QNAME
+    poolType: liquidity_pool.LiquidityPool.type()
 })
 
 liquidity_pool.bind()
@@ -98,8 +98,7 @@ function getCurve(type: string) {
 // TODO refactor this
 async function syncLiquidSwapPools(resources: MoveResource[], ctx: AptosResourcesContext) {
 
-    let pools: TypedMoveResource<liquidity_pool.LiquidityPool<any, any, any>>[]
-    pools = defaultMoveCoder().filterAndDecodeResources<liquidity_pool.LiquidityPool<any, any, any>>("0x190d44266241744264b964a37b8f09863167a12d3e70cda39376cfb4e3561e12::liquidity_pool::LiquidityPool", resources)
+    let pools = await defaultMoveCoder().filterAndDecodeResources(liquidity_pool.LiquidityPool.type(), resources)
 
     const volumeByCoin = new Map<string, BigDecimal>()
     const timestamp = ctx.timestampInMicros

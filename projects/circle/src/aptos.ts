@@ -6,7 +6,7 @@ import {
   getPrice, PoolAdaptor,
   SimpleCoinInfo, whitelistCoins
 } from "@sentio/sdk/aptos/ext";
-import { delay, getRandomInt } from "@sentio-processor/common";
+import { delay } from "@sentio/sdk/aptos/ext";
 import { amm } from "./types/aptos/auxexchange.js";
 import { liquidity_pool } from "./types/aptos/liquidswap.js";
 import { swap } from "./types/aptos/pancake-swap.js";
@@ -58,7 +58,7 @@ for (const token of whitelistCoins().values()) {
   // @ts-ignore
   AptosResourcesProcessor.bind({address: token.token_type.account_address})
     .onVersionInterval(async (resources, ctx) => {
-      const coinInfoRes = defaultMoveCoder().filterAndDecodeResources<coin.CoinInfo<any>>(coin.CoinInfo.TYPE_QNAME, resources)
+      const coinInfoRes = await defaultMoveCoder().filterAndDecodeResources(coin.CoinInfo.type(), resources)
       if (coinInfoRes.length === 0) {
         return
       }
@@ -82,7 +82,7 @@ for (const token of whitelistCoins().values()) {
             }, {ledgerVersion: ctx.version})
           } catch (e) {
             if (e.status === 429) {
-              await delay(1000 + getRandomInt(1000))
+              await delay(1000 + Math.floor(Math.random() * 1000))
             } else {
               throw e
             }
@@ -260,8 +260,7 @@ export class USDCDex<T> {
       resources: MoveResource[],
       ctx: AptosResourcesContext
   ) {
-    let pools: TypedMoveResource<T>[] =
-        defaultMoveCoder().filterAndDecodeResources(this.poolAdaptor.poolTypeName, resources)
+    let pools = await defaultMoveCoder().filterAndDecodeResources(this.poolAdaptor.poolType, resources)
 
     console.log("num of pools: ", pools.length, ctx.version.toString())
 
@@ -302,7 +301,7 @@ const AUX_EXCHANGE = new USDCDex<amm.Pool<any, any>>({
   getXReserve: pool => pool.x_reserve.value,
   getYReserve: pool => pool.y_reserve.value,
   getExtraPoolTags: _ => { return { protocol: "aux" }},
-  poolTypeName: amm.Pool.TYPE_QNAME
+  poolType: amm.Pool.type()
 })
 
 AptosResourcesProcessor.bind({address: amm.DEFAULT_OPTIONS.address})
@@ -313,7 +312,7 @@ const PANCAKE_SWAP_APTOS = new USDCDex<swap.TokenPairReserve<any, any>>({
   getXReserve: pool => pool.reserve_x,
   getYReserve: pool => pool.reserve_y,
   getExtraPoolTags: _ => { return { protocol: "pancake" }},
-  poolTypeName: swap.TokenPairReserve.TYPE_QNAME
+  poolType: swap.TokenPairReserve.type()
 })
 
 function getCurve(type: string) {
@@ -332,7 +331,7 @@ const LIQUID_SWAP = new USDCDex<liquidity_pool.LiquidityPool<any, any, any>>({
   getXReserve: pool => pool.coin_x_reserve.value,
   getYReserve: pool => pool.coin_y_reserve.value,
   getExtraPoolTags: pool => { return { protocol: "liquidswap", curve: getCurve(pool.type_arguments[2]) } },
-  poolTypeName: liquidity_pool.LiquidityPool.TYPE_QNAME
+  poolType: liquidity_pool.LiquidityPool.type()
 })
 
 AptosResourcesProcessor.bind({address: "0x5a97986a9d031c4567e15b797be516910cfcb4156312482efc6a19c0a30c948"})

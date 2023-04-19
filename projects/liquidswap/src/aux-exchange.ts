@@ -17,7 +17,7 @@ const AUX_EXCHANGE = new AptosDex<amm.Pool<any, any>>(auxVolume,
     getYReserve: pool => pool.y_reserve.value,
     getExtraPoolTags: _ => {
     },
-    poolTypeName: amm.Pool.TYPE_QNAME
+    poolType: amm.Pool.type()
 })
 
 AptosResourcesProcessor.bind({address: amm.DEFAULT_OPTIONS.address})

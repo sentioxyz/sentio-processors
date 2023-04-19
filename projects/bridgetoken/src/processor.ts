@@ -71,7 +71,7 @@ account.bind().onEventCoinRegisterEvent(async (call, ctx) => {
     const coinStore = `0x1::coin::CoinStore<${token.token_type.type}>`;
 
     const res = await client.getAccountResource(accountAddress, coinStore)
-    const decodedRes = defaultMoveCoder().decodeResource<coin.CoinStore<any>>(res)
+    const decodedRes = await defaultMoveCoder().decodeResource<coin.CoinStore<any>>(res)
     if (!decodedRes) {
         console.log(res)
         process.exit(1)
