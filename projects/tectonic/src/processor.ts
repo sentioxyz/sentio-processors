@@ -1,4 +1,4 @@
-import { CHAIN_IDS, Counter, Gauge } from '@sentio/sdk'
+import { CHAIN_IDS, Counter, Gauge, scaleDown } from '@sentio/sdk'
 import { ERC20Processor } from '@sentio/sdk/eth/builtin'
 import * as constant from "./constant.js"
 import { TCROContext, TCROProcessor, LiquidateBorrowEvent, AccrueInterestEvent } from './types/eth/tcro.js'
@@ -123,26 +123,30 @@ const AccrueInterestHandler = async (event: AccrueInterestEvent, ctx: TCROContex
   const tSymbol = constant.T_TOKEN_SYMBOL.get(ctx.address.toLowerCase())!
   const collateralSymbol = (constant.COLLATERAL_TOKENS.get(tSymbol))!
   const collateralDecimal = (constant.COLLATERAL_DECIMAL.get(collateralSymbol))!
-  const interestAccumulated = Number(event.args.interestAccumulated) / Math.pow(10, collateralDecimal)
-  const reserveFactor = Number(await ctx.contract.reserveFactorMantissa()) / Math.pow(10, 18)
-  const protocolInterestRevenue = interestAccumulated * reserveFactor
+  const interestAccumulated = Number(scaleDown(event.args.interestAccumulated, collateralDecimal))
+  try {
+    const reserveFactor = Number(scaleDown(await ctx.contract.reserveFactorMantissa(), 18))
+    const protocolInterestRevenue = interestAccumulated * reserveFactor
 
-  ctx.meter.Gauge("protocolInterestRevenue").record(protocolInterestRevenue, { tSymbol, coin_symbol: collateralSymbol })
-  ctx.meter.Counter("protocolInterestRevenue_counter").add(protocolInterestRevenue, { tSymbol, coin_symbol: collateralSymbol })
+    ctx.meter.Gauge("protocolInterestRevenue").record(protocolInterestRevenue, { tSymbol, coin_symbol: collateralSymbol })
+    ctx.meter.Counter("protocolInterestRevenue_counter").add(protocolInterestRevenue, { tSymbol, coin_symbol: collateralSymbol })
 
-  ctx.eventLogger.emit("AccrueInterest", {
-    tSymbol,
-    protocolInterestRevenue,
-    coin_symbol: collateralSymbol
-  })
-
+    ctx.eventLogger.emit("AccrueInterest", {
+      tSymbol,
+      protocolInterestRevenue,
+      coin_symbol: collateralSymbol
+    })
+  }
+  catch (e) {
+    console.log(e.message, `get reserveFactorMantissa() issue at ${ctx.transactionHash}`)
+  }
 }
 
 const ReservesAddedHandler = async (event: any, ctx: TCROContext) => {
   const tSymbol = constant.T_TOKEN_SYMBOL.get(ctx.address.toLowerCase())!
   const collateralSymbol = (constant.COLLATERAL_TOKENS.get(tSymbol))!
   const collateralDecimal = (constant.COLLATERAL_DECIMAL.get(collateralSymbol))!
-  const protocolLiquidationRevenue = event.args.addAmount / Math.pow(10, collateralDecimal)
+  const protocolLiquidationRevenue = Number(scaleDown(event.args.addAmount, collateralDecimal))
   ctx.meter.Gauge("protocolLiquidationRevenue").record(protocolLiquidationRevenue, { tSymbol, coin_symbol: collateralSymbol })
   ctx.meter.Counter("protocolLiquidationRevenue_counter").add(protocolLiquidationRevenue, { tSymbol, coin_symbol: collateralSymbol })
 
