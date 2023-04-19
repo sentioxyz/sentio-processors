@@ -1,6 +1,6 @@
 import {aggregator, coin, optional_aggregator} from "@sentio/sdk/aptos/builtin/0x1";
 import { getPrice, whitelistCoins, initCoinList } from "@sentio/sdk/aptos/ext";
-import {delay, getRandomInt} from "@sentio-processor/common";
+import {delay} from "@sentio/sdk/aptos/ext";
 import {totalValue} from "./metrics.js";
 import {AptosResourcesProcessor, defaultMoveCoder, getAptosClient} from "@sentio/sdk/aptos";
 
@@ -39,7 +39,8 @@ const client = getAptosClient()!
                 }, {ledgerVersion: ctx.version})
               } catch (e) {
                 if (e.status === 429) {
-                  await delay(1000 + getRandomInt(1000))
+                  const random =  Math.floor(Math.random() * 1000);
+                  await delay(1000 + random)
                 } else {
                   throw e
                 }
