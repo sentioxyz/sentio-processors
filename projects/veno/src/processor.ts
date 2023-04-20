@@ -20,24 +20,53 @@ const DepositEventHandler = async (event: any, ctx: any) => {
   })
 }
 
-const WithdrawEventHandler = async (event: any, ctx: any) => {
+const VenostormWithdrawEventHandler = async (event: any, ctx: any) => {
   const hash = event.transactionHash
-  console.log(`Withdraw tx ${hash} contract address ${ctx.address}`)
-
 
   const user = event.args.user
-  //const pid = Number(event.args.pid) 
   const amount = Number(event.args.amount) / Math.pow(10, 18)
+  const pid = Number(event.args.pid)
 
   ctx.meter.Counter(`withdraw_counter`).add(amount,
-    //   {
-    //   pid: pid.toString()
-    // }
+    {
+      pid: pid
+    }
   )
 
   ctx.eventLogger.emit("Withdraw", {
     distinctId: user,
-    // pid,
+    pid: pid,
+    amount
+  })
+}
+
+
+
+const WithdrawEventHandler = async (event: any, ctx: any) => {
+  const hash = event.transactionHash
+  const user = event.args.user
+  const stakeId = Number(event.args.stakeId)
+  const amount = Number(event.args.amount) / Math.pow(10, 18)
+  const weightedAmount = Number(event.args.weightedAmount)
+  let pid = -1
+  try {
+    const stake = await ctx.contract.getUserStake(user, stakeId)
+    pid = Number(stake[1])
+    console.log("get pid from view function ", pid)
+  }
+  catch (e) {
+    console.log(e.message, "Get pid failure, tx ", hash)
+  }
+
+  ctx.meter.Counter(`withdraw_counter`).add(amount,
+    {
+      pid: pid
+    }
+  )
+
+  ctx.eventLogger.emit("Withdraw", {
+    distinctId: user,
+    pid: pid,
     amount
   })
 }
@@ -83,6 +112,6 @@ ReservoirProcessor.bind({ address: '0x21179329c1dcfd36ffe0862cca2c7e85538cca07',
 
 VenostormProcessor.bind({ address: '0x579206e4e49581ca8ada619e9e42641f61a84ac3', network: 25 })
   .onEventDeposit(DepositEventHandler)
-  .onEventWithdraw(WithdrawEventHandler)
+  .onEventWithdraw(VenostormWithdrawEventHandler)
 
 
