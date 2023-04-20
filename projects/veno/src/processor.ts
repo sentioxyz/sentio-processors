@@ -3,6 +3,7 @@ import { ERC20Processor } from '@sentio/sdk/eth/builtin'
 import { FountainProcessor, WithdrawEarlyEvent, ClaimVaultPenaltyEvent, FountainContext } from './types/eth/fountain.js'
 import { ReservoirProcessor } from './types/eth/reservoir.js'
 import { VenostormProcessor } from './types/eth/venostorm.js'
+import { LiquidCroProcessor, StakeEvent, RequestUnbondEvent, UnbondEvent, AccrueRewardEvent, LiquidCroContext } from './types/eth/liquidcro.js'
 
 const DepositEventHandler = async (event: any, ctx: any) => {
   const user = event.args.user
@@ -99,6 +100,74 @@ const ClaimVaultPenaltyEventHandler = async (event: ClaimVaultPenaltyEvent, ctx:
   })
 }
 
+const StakeEventHandler = async (event: StakeEvent, ctx: LiquidCroContext) => {
+  const receiver = event.args.receiver
+  const croAmount = Number(event.args.croAmount) / Math.pow(10, 18)
+  const shareAmount = Number(event.args.shareAmount) / Math.pow(10, 18)
+  ctx.meter.Counter(`lcro_staked_counter`).add(croAmount)
+
+  ctx.eventLogger.emit("StakeLcro", {
+    distinctId: receiver,
+    croAmount,
+    shareAmount
+  })
+}
+
+const RequestUnbondEventHandler = async (event: RequestUnbondEvent, ctx: LiquidCroContext) => {
+  const receiver = event.args.receiver
+  const tokenId = Number(event.args.tokenId)
+  const shareAmount = Number(event.args.shareAmount) / Math.pow(10, 18)
+  const liquidCro2CroExchangeRate = Number(event.args.liquidCro2CroExchangeRate)
+  const batchNo = Number(event.args.batchNo)
+  try {
+    const EXCHANGE_RATE_PRECISION = Number(await ctx.contract.EXCHANGE_RATE_PRECISION())
+    const lcro_unstaked = shareAmount * liquidCro2CroExchangeRate / EXCHANGE_RATE_PRECISION
+
+    ctx.meter.Counter(`lcro_unstaked_counter`).add(lcro_unstaked)
+
+    ctx.eventLogger.emit("RequestUnbond", {
+      distinctId: receiver,
+      tokenId,
+      shareAmount,
+      liquidCro2CroExchangeRate,
+      batchNo,
+      EXCHANGE_RATE_PRECISION,
+      lcro_unstaked
+    })
+  }
+  catch (e) {
+    console.log(e.message, "get EXCHANGE_RATE_PRECISION issue at ", ctx.transactionHash)
+  }
+}
+
+const UnbondEventHandler = async (event: UnbondEvent, ctx: LiquidCroContext) => {
+  const receiver = event.args.receiver
+  const tokenId = Number(event.args.tokenId)
+  const croAmount = Number(event.args.croAmount) / Math.pow(10, 18)
+  const croFeeAmount = Number(event.args.croFeeAmount) / Math.pow(10, 18)
+  ctx.meter.Counter(`lcro_claimed`).add(croAmount)
+  ctx.meter.Counter(`lcro_withdrawal_fees`).add(croFeeAmount)
+
+
+  ctx.eventLogger.emit("StakeLcro", {
+    distinctId: receiver,
+    tokenId,
+    croAmount,
+    croFeeAmount
+  })
+}
+const AccrueRewardEventHandler = async (event: AccrueRewardEvent, ctx: LiquidCroContext) => {
+  const amount = Number(event.args.amount) / Math.pow(10, 18)
+  const txnHash = event.args.txnHash
+  ctx.meter.Counter(`accrueReward_counter`).add(amount)
+  ctx.eventLogger.emit("AccrueReward", {
+    amount,
+    txnHash
+  })
+
+
+}
+
 FountainProcessor.bind({ address: '0xb4be51216f4926ab09ddf4e64bc20f499fd6ca95', network: 25 })
   .onEventDeposit(DepositEventHandler)
   .onEventWithdraw(WithdrawEventHandler)
@@ -114,4 +183,8 @@ VenostormProcessor.bind({ address: '0x579206e4e49581ca8ada619e9e42641f61a84ac3',
   .onEventDeposit(DepositEventHandler)
   .onEventWithdraw(VenostormWithdrawEventHandler)
 
-
+LiquidCroProcessor.bind({ address: '0x9fae23a2700feecd5b93e43fdbc03c76aa7c08a6', network: 25 })
+  .onEventStake(StakeEventHandler)
+  .onEventRequestUnbond(RequestUnbondEventHandler)
+  .onEventUnbond(UnbondEventHandler)
+  .onEventAccrueReward(AccrueRewardEventHandler)
