@@ -19,40 +19,33 @@ interface dataByTxn {
 
 // define a struct for edge
 interface Edge {
-  tokenAddress: string;
-  fromAddr: string;
-  toAddr: string;
-  value: bigint;
-}
-
-// define a struct for node
-interface Node {
-  addr: string;
+  readonly tokenAddress: string;
+  readonly toAddr: string;
+  readonly value: bigint;
 }
 
 class TokenFlowGraph {
-  nodes: Map<Node, number>;
-  edges: Map<Edge, number>;
+  adjList: Map<string, Map<string, Edge>>;
 
   constructor() {
-    this.nodes = new Map<Node, number>();
-    this.edges = new Map<Edge, number>();
+    this.adjList = new Map<string, Map<string, Edge>>();
   }
 
-  addNode(node: Node): void {
-    if (this.nodes.has(node)) {
-      this.nodes.set(node, 1 + this.nodes.get(node)!);
-    } else {
-      this.nodes.set(node, 1);
+  addEdge(from: string, edge: Edge): void {
+    from = from.toLowerCase();
+    const edgeKey =
+      edge.tokenAddress.toLowerCase() + "/" + edge.toAddr.toLowerCase();
+    if (!this.adjList.has(from)) {
+      this.adjList.set(from, new Map<string, Edge>());
     }
-  }
-
-  addEdge(edge: Edge): void {
-    if (this.edges.has(edge)) {
-      this.edges.set(edge, this.edges.get(edge)! + 1);
-    } else {
-      this.edges.set(edge, 1);
+    if (this.adjList.get(from)!.has(edgeKey)) {
+      const oldEdge = this.adjList.get(from)!.get(edgeKey)!;
+      this.adjList.get(from)!.set(edgeKey, {
+        ...edge,
+        value: oldEdge.value + edge.value,
+      });
     }
+    this.adjList.get(from)!.set(edgeKey, edge);
   }
 }
 
@@ -70,16 +63,9 @@ function buildGraph(d: dataByTxn, ctx: GlobalContext): TokenFlowGraph {
           console.log("undefined to");
           continue;
         }
-        graph.addNode({
-          addr: trace.action.from,
-        });
-        graph.addNode({
-          addr: trace.action.to,
-        });
-        graph.addEdge({
-          tokenAddress: "0x",
-          fromAddr: trace.action.from,
+        graph.addEdge(trace.action.from, {
           toAddr: trace.action.to,
+          tokenAddress: "0x",
           value: BigInt(trace.action.value),
         });
       }
@@ -130,19 +116,9 @@ function buildGraph(d: dataByTxn, ctx: GlobalContext): TokenFlowGraph {
             args: parsed.args,
           } as any as TransferEvent;
           ctx.meter.Counter("erc20_transfer").add(1);
-          graph.addNode({
-            addr: tokenAddress,
-          });
-          graph.addNode({
-            addr: transfer.args.from,
-          });
-          graph.addNode({
-            addr: transfer.args.to,
-          });
-          graph.addEdge({
-            tokenAddress: tokenAddress,
-            fromAddr: transfer.args.from,
+          graph.addEdge(transfer.args.from, {
             toAddr: transfer.args.to,
+            tokenAddress: tokenAddress,
             value: transfer.args.value,
           });
         }
@@ -154,7 +130,7 @@ function buildGraph(d: dataByTxn, ctx: GlobalContext): TokenFlowGraph {
   return graph;
 }
 
-const START_BLOCK = 0x104fb1f;
+const START_BLOCK = 16818057;
 
 function getDataByTxn(
   b: RichBlock,
@@ -200,9 +176,22 @@ GlobalProcessor.bind({ startBlock: START_BLOCK }).onBlockInterval(
     console.log("test");
     console.log("dataByTxn size:", dataByTxn.size);
     for (const [txnHash, data] of dataByTxn) {
-      console.log("txnHash:", txnHash);
+      if (
+        txnHash !==
+        "0x71a908be0bef6174bccc3d493becdfd28395d78898e355d451cb52f7bac38617"
+      ) {
+        continue;
+      }
       const graph = buildGraph(data, ctx);
-      console.log("graph size: ", graph.nodes.size, graph.edges.size);
+      let total = 0;
+      for (const [node, edges] of graph.adjList) {
+        console.log(node, " ", edges.size);
+        total += edges.size;
+        for (const [edgeKey, edge] of edges) {
+          console.log(node, edge.toAddr, edge.value, edge.tokenAddress);
+        }
+      }
+      console.log("graph size: ", txnHash, graph.adjList.size, total);
     }
   },
   10000000,
