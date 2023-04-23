@@ -6,7 +6,12 @@
 // })
 
 import { sui_system, validator } from '@sentio/sdk/sui/builtin/0x3'
-import { SuiNetwork, SuiDynamicFieldObjectsProcessor, TypedSuiMoveObject, BUILTIN_TYPES } from '@sentio/sdk/sui'
+import {
+  SuiNetwork,
+  TypedSuiMoveObject,
+  BUILTIN_TYPES,
+  SuiObjectProcessor
+} from '@sentio/sdk/sui'
 import RequestAddStakePayload = sui_system.RequestAddStakePayload
 import { dynamic_field } from "@sentio/sdk/sui/builtin/0x2";
 import {
@@ -35,10 +40,10 @@ sui_system.bind({ network: SuiNetwork.TEST_NET }).onEntryRequestAddStake((call: 
   })
 })
 
-SuiDynamicFieldObjectsProcessor.bind({
+SuiObjectProcessor.bind({
   network: SuiNetwork.TEST_NET,
   objectId: '0xdcb1f0c4d31528a67f89303e3a99e15b9e21c7e22b4123a0e43e90b3fae5ea1e',
-}).onTimeInterval(async (objects: SuiMoveObject[], ctx) => {
+}).onTimeInterval(async (self, objects, ctx) => {
   ctx.meter.Gauge('num_portfolio_vault').record(objects.length)
 
   const decodedObjects = await ctx.coder.getDynamicFields(
