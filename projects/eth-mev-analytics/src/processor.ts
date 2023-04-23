@@ -1,5 +1,6 @@
 import { Counter, EthFetchConfig, Gauge } from "@sentio/sdk";
 import { ERC20Processor } from "@sentio/sdk/eth/builtin";
+import { DepositEvent, WithdrawalEvent } from "./types/eth/weth9.js";
 import {
   GlobalContext,
   GlobalProcessor,
@@ -49,12 +50,11 @@ class TokenFlowGraph {
   }
 }
 
-function buildGraph(d: dataByTxn, ctx: GlobalContext): TokenFlowGraph {
-  let graph: TokenFlowGraph = new TokenFlowGraph();
-
-  ctx.meter.Counter("all_block").add(1);
-  console.log("block", ctx.blockNumber);
-
+function buildNativeETH(
+  graph: TokenFlowGraph,
+  d: dataByTxn,
+  ctx: GlobalContext
+) {
   for (const trace of d.traces || []) {
     if (trace.type === "call") {
       if (trace.action.input == "0x") {
@@ -71,7 +71,9 @@ function buildGraph(d: dataByTxn, ctx: GlobalContext): TokenFlowGraph {
       }
     }
   }
+}
 
+function buildERC20(graph: TokenFlowGraph, d: dataByTxn, ctx: GlobalContext) {
   const iface = new Interface([
     {
       anonymous: false,
@@ -127,10 +129,97 @@ function buildGraph(d: dataByTxn, ctx: GlobalContext): TokenFlowGraph {
       ctx.meter.Counter("erc20_transfer_decoding_error").add(1);
     }
   }
-  return graph;
 }
 
-const START_BLOCK = 16818057;
+function buildWETH(graph: TokenFlowGraph, d: dataByTxn, ctx: GlobalContext) {
+  const iface = new Interface([
+    {
+      anonymous: false,
+      inputs: [
+        { indexed: true, name: "dst", type: "address" },
+        { indexed: false, name: "wad", type: "uint256" },
+      ],
+      name: "Deposit",
+      type: "event",
+    },
+    {
+      anonymous: false,
+      inputs: [
+        { indexed: true, name: "src", type: "address" },
+        { indexed: false, name: "wad", type: "uint256" },
+      ],
+      name: "Withdrawal",
+      type: "event",
+    },
+  ]);
+
+  let fragment = iface.getEvent("Deposit")!;
+  for (const tx of d.receipts || []) {
+    try {
+      for (const log of tx.logs || []) {
+        if (log.topics[0] !== fragment.topicHash) {
+          continue;
+        }
+        let tokenAddress = log.address;
+        const parsed = iface.parseLog(log as any);
+        if (parsed) {
+          const deposit = {
+            ...log,
+            name: parsed.name,
+            args: parsed.args,
+          } as any as DepositEvent;
+          ctx.meter.Counter("weth_deposit").add(1);
+          graph.addEdge(deposit.args.dst, {
+            toAddr: tokenAddress,
+            tokenAddress: tokenAddress,
+            value: deposit.args.wad,
+          });
+        }
+      }
+    } catch (e) {
+      ctx.meter.Counter("erc20_transfer_decoding_error").add(1);
+    }
+  }
+
+  fragment = iface.getEvent("Withdrawal")!;
+  for (const tx of d.receipts || []) {
+    try {
+      for (const log of tx.logs || []) {
+        if (log.topics[0] !== fragment.topicHash) {
+          continue;
+        }
+        let tokenAddress = log.address;
+        const parsed = iface.parseLog(log as any);
+        if (parsed) {
+          const deposit = {
+            ...log,
+            name: parsed.name,
+            args: parsed.args,
+          } as any as WithdrawalEvent;
+          ctx.meter.Counter("weth_deposit").add(1);
+          graph.addEdge(tokenAddress, {
+            toAddr: deposit.args.src,
+            tokenAddress: tokenAddress,
+            value: deposit.args.wad,
+          });
+        }
+      }
+    } catch (e) {
+      ctx.meter.Counter("erc20_transfer_decoding_error").add(1);
+    }
+  }
+}
+
+function buildGraph(d: dataByTxn, ctx: GlobalContext): TokenFlowGraph {
+  let graph: TokenFlowGraph = new TokenFlowGraph();
+
+  ctx.meter.Counter("all_block").add(1);
+  console.log("block", ctx.blockNumber);
+  buildNativeETH(graph, d, ctx);
+  buildERC20(graph, d, ctx);
+  buildWETH(graph, d, ctx);
+  return graph;
+}
 
 function getDataByTxn(
   b: RichBlock,
@@ -169,12 +258,12 @@ function getDataByTxn(
   return ret;
 }
 
+const START_BLOCK = 16818057;
+
 GlobalProcessor.bind({ startBlock: START_BLOCK }).onBlockInterval(
   async (b, ctx) => {
     console.log(b.number);
     const dataByTxn = getDataByTxn(b, ctx);
-    console.log("test");
-    console.log("dataByTxn size:", dataByTxn.size);
     for (const [txnHash, data] of dataByTxn) {
       if (
         txnHash !==
