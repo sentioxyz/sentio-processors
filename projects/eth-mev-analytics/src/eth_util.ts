@@ -2,14 +2,17 @@ import { ERC20Processor } from "@sentio/sdk/eth/builtin";
 import { DepositEvent, WithdrawalEvent } from "./types/eth/weth9.js";
 import { TransferEvent } from "@sentio/sdk/eth/builtin/erc20";
 import { Interface } from "ethers";
-import { TransactionReceiptParams } from "ethers/providers";
+import {
+  TransactionReceiptParams,
+  TransactionResponseParams,
+} from "ethers/providers";
 
 import { GlobalContext, RichBlock, Trace } from "@sentio/sdk/eth";
 import { TokenFlowGraph } from "./graph.js";
 
 interface dataByTxn {
   blockNumber: number;
-  txnHash: string;
+  tx: TransactionResponseParams;
   traces: Trace[];
   receipts: TransactionReceiptParams[];
 }
@@ -27,8 +30,8 @@ function buildNativeETH(
           console.log("undefined to");
           continue;
         }
-        graph.addEdge(trace.action.from, {
-          toAddr: trace.action.to,
+        graph.addEdge(trace.action.from.toLowerCase(), {
+          toAddr: trace.action.to.toLowerCase(),
           tokenAddress: "0x",
           value: BigInt(trace.action.value),
         });
@@ -82,9 +85,9 @@ function buildERC20(graph: TokenFlowGraph, d: dataByTxn, ctx: GlobalContext) {
             args: parsed.args,
           } as any as TransferEvent;
           ctx.meter.Counter("erc20_transfer").add(1);
-          graph.addEdge(transfer.args.from, {
-            toAddr: transfer.args.to,
-            tokenAddress: tokenAddress,
+          graph.addEdge(transfer.args.from.toLowerCase(), {
+            toAddr: transfer.args.to.toLowerCase(),
+            tokenAddress: tokenAddress.toLowerCase(),
             value: transfer.args.value,
           });
         }
@@ -133,9 +136,9 @@ function buildWETH(graph: TokenFlowGraph, d: dataByTxn, ctx: GlobalContext) {
             args: parsed.args,
           } as any as DepositEvent;
           ctx.meter.Counter("weth_deposit").add(1);
-          graph.addEdge(tokenAddress, {
-            toAddr: deposit.args.dst,
-            tokenAddress: tokenAddress,
+          graph.addEdge(tokenAddress.toLowerCase(), {
+            toAddr: deposit.args.dst.toLowerCase(),
+            tokenAddress: tokenAddress.toLowerCase(),
             value: deposit.args.wad,
           });
         }
@@ -161,9 +164,9 @@ function buildWETH(graph: TokenFlowGraph, d: dataByTxn, ctx: GlobalContext) {
             args: parsed.args,
           } as any as WithdrawalEvent;
           ctx.meter.Counter("weth_withdraw").add(1);
-          graph.addEdge(deposit.args.src, {
-            toAddr: tokenAddress,
-            tokenAddress: tokenAddress,
+          graph.addEdge(deposit.args.src.toLowerCase(), {
+            toAddr: tokenAddress.toLowerCase(),
+            tokenAddress: tokenAddress.toLowerCase(),
             value: deposit.args.wad,
           });
         }
@@ -190,33 +193,30 @@ export function getDataByTxn(
   ctx: GlobalContext
 ): Map<string, dataByTxn> {
   let ret = new Map<string, dataByTxn>();
+  for (const tx of b.transactions || []) {
+    // check if tx is string
+    if (typeof tx === "string") {
+      continue;
+    }
+    // add tx to ret
+    ret.set(tx.hash, {
+      receipts: [],
+      traces: [],
+      blockNumber: b.number,
+      tx: tx,
+    });
+  }
 
   for (const trace of b.traces || []) {
-    // add trace to ret
-    if (ret.has(trace.transactionHash)) {
-      ret.get(trace.transactionHash)!.traces.push(trace);
-    } else {
-      ret.set(trace.transactionHash, {
-        blockNumber: b.number,
-        txnHash: trace.transactionHash,
-        traces: [trace],
-        receipts: [],
-      });
+    if (!ret.has(trace.transactionHash)) {
+      console.log("trace not found", trace.transactionHash, trace.error);
+      continue;
     }
+    ret.get(trace.transactionHash)!.traces.push(trace);
   }
 
   for (const tx of b.transactionReceipts || []) {
-    // add receipt to ret
-    if (ret.has(tx.hash)) {
-      ret.get(tx.hash)!.receipts.push(tx);
-    } else {
-      ret.set(tx.hash, {
-        blockNumber: b.number,
-        txnHash: tx.hash,
-        traces: [],
-        receipts: [tx],
-      });
-    }
+    ret.get(tx.hash)!.receipts.push(tx);
   }
 
   return ret;

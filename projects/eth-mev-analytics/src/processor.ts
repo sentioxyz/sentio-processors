@@ -35,6 +35,13 @@ GlobalProcessor.bind({ startBlock: START_BLOCK }).onBlockInterval(
       for (const scc of sccs) {
         console.log("scc: ", scc.length, scc.join(", "));
       }
+      console.log("receiver:", data.tx.to);
+      const ret = graph.findBalanceChanges(data.tx.to!, sccs);
+      for (const [addr, change] of ret) {
+        for (const [token, value] of change) {
+          console.log(addr, token, value);
+        }
+      }
     }
   },
   10000000,

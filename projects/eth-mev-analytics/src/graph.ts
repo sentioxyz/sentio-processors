@@ -29,6 +29,58 @@ export class TokenFlowGraph {
     this.adjList.get(from)!.set(edgeKey, edge);
   }
 
+  findBalanceChanges(
+    receiver: string,
+    scc: Array<Array<string>>
+  ): Map<string, Map<string, bigint>> {
+    const balances: Map<string, Map<string, bigint>> = new Map();
+    let component: Set<string> = new Set();
+    receiver = receiver.toLowerCase();
+    console.log("scc", scc.length, receiver);
+    for (const sccComponent of scc) {
+      if (sccComponent.includes(receiver)) {
+        for (const addr of sccComponent) {
+          component.add(addr);
+        }
+        break;
+      }
+    }
+    console.log("component", component.size);
+    for (const [fromAddr, v] of this.adjList) {
+      if (!component.has(fromAddr)) {
+        console.log("not in component", fromAddr);
+        continue;
+      }
+      if (!balances.has(fromAddr)) {
+        balances.set(fromAddr, new Map());
+      }
+      for (const edge of v.values()) {
+        if (!component.has(edge.toAddr)) {
+          console.log("not in component", edge.toAddr);
+          continue;
+        }
+        const toAddr = edge.toAddr;
+        const tokenAddr = edge.tokenAddress;
+        if (!balances.has(toAddr)) {
+          balances.set(toAddr, new Map());
+        }
+        if (!balances.get(fromAddr)!.has(tokenAddr)) {
+          balances.get(fromAddr)!.set(tokenAddr, BigInt(0));
+        }
+        if (!balances.get(toAddr)!.has(tokenAddr)) {
+          balances.get(toAddr)!.set(tokenAddr, BigInt(0));
+        }
+        balances
+          .get(fromAddr)!
+          .set(tokenAddr, balances.get(fromAddr)!.get(tokenAddr)! - edge.value);
+        balances
+          .get(toAddr)!
+          .set(tokenAddr, balances.get(toAddr)!.get(tokenAddr)! + edge.value);
+      }
+    }
+    return balances;
+  }
+
   findStronglyConnectedComponents(): Array<Array<string>> {
     let index = 0;
     const stack: string[] = [];
