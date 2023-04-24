@@ -30,9 +30,11 @@ function buildNativeETH(
           console.log("undefined to");
           continue;
         }
+        // Here is a hack to treat ETH as WETH.
         graph.addEdge(trace.action.from.toLowerCase(), {
           toAddr: trace.action.to.toLowerCase(),
-          tokenAddress: "0x",
+          tokenAddress:
+            "0xC02aaA39b223FE8D0A0e5C4F27eAD9083C756Cc2".toLowerCase(),
           value: BigInt(trace.action.value),
         });
       }
@@ -181,7 +183,6 @@ export function buildGraph(d: dataByTxn, ctx: GlobalContext): TokenFlowGraph {
   let graph: TokenFlowGraph = new TokenFlowGraph();
 
   ctx.meter.Counter("all_block").add(1);
-  console.log("block", ctx.blockNumber);
   buildNativeETH(graph, d, ctx);
   buildERC20(graph, d, ctx);
   buildWETH(graph, d, ctx);
