@@ -121,17 +121,19 @@ const SwapEventHandler = async (event: SwapEvent, ctx: OKCSwapPairContext) => {
 
 
   //Gauge reserve
-  // try {
-  const getReserve = await ctx.contract.getReserves()
-  const reserve0 = Number(getReserve[0]) / Math.pow(10, decimal0)
-  const reserve1 = Number(getReserve[1]) / Math.pow(10, decimal1)
-  const blockTimestampLast = getReserve[2]
-  // console.log("reserve0:", reserve0, " reserve1:", reserve1, "blockTimestampLast:", blockTimestampLast, "blockTimestampNow:", ctx.timestamp)
-  ctx.meter.Gauge('reserve0').record(reserve0, { pairName: pairName })
-  ctx.meter.Gauge('reserve1').record(reserve1, { pairName: pairName })
-  // } catch (error) {
-  //   console.log("failed to get reserved at ", error, ctx.blockNumber)
-  // }
+  let reserve0 = -1
+  let reserve1 = -1
+  try {
+    const getReserve = await ctx.contract.getReserves({ blockTag: Number(ctx.blockNumber) })
+
+    reserve0 = Number(getReserve[0]) / Math.pow(10, decimal0)
+    reserve1 = Number(getReserve[1]) / Math.pow(10, decimal1)
+    // console.log("reserve0:", reserve0, " reserve1:", reserve1, "blockTimestampLast:", blockTimestampLast, "blockTimestampNow:", ctx.timestamp)
+    ctx.meter.Gauge('reserve0').record(reserve0, { pairName: pairName })
+    ctx.meter.Gauge('reserve1').record(reserve1, { pairName: pairName })
+  } catch (error) {
+    console.log("failed to get reserved at ", error, ctx.blockNumber)
+  }
 
 
   //trading volume
@@ -271,18 +273,3 @@ for (let i = 0; i < PAIR_WATCHING.length; i++) {
 }
 
 
-
-// OKCSwapFactoryProcessor.bind({ address: OKCSWAP_FACTORY, network: CHAIN_IDS.OKEXCHAIN })
-//   .onEventPairCreated(async (event, ctx) => {
-//     ctx.meter.Counter("pairCreated_counter").add(1)
-//     const pair = event.args.pair
-//     //console.log(pair)
-//     // pairTemplate.bind({ address: pair, network: CHAIN_IDS.OKEXCHAIN })
-//   })
-
-
-
-// const pairTemplate = new OKCSwapPairProcessorTemplate()
-//   .onEventSwap(SwapEventHandler)
-//   .onEventMint(MintEventHandler)
-//   .onEventBurn(BurnEventHandler)

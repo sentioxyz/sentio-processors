@@ -97,59 +97,63 @@ PortProcessor.bind({ address: '0x7a3CdB2364f92369a602CAE81167d0679087e6a3', netw
         const hash = event.transactionHash
 
         const listingId = Number(event.args.listingId)
-        const getListing = await ctx.contract.completeListing(listingId)
-        const amount = Number(getListing.price) / Math.pow(10, 18)
-        const purchaser = getListing.purchaser
-        const nftId = Number(getListing.nftId)
-        const seller = getListing.seller
-        const nftAddress = getListing.nft
-        const fee = Number(getListing.fee) / Math.pow(10, 18)
-        const type = getListing.is1155 ? "ERC1155" : "ERC721"
-        const collectionName = await getNameByERCType(type, nftAddress, hash)
-        const listingTime = getListing.listingTime.toString()
-        const saleTime = getListing.saleTime.toString()
-        const endingTime = getListing.endingTime.toString()
 
-
-        // counter and gauge
-        const labels = { nftTokenStandard: type }
-
-        // vol_USD.record(ctx, priceUSD, labels)
-        vol_CRO.record(ctx, amount, labels)
-        volCounter_CRO.add(ctx, amount, labels)
-        // volCounter_USD.add(ctx, priceUSD, labels)
-
-        //event analysis
-        ctx.eventLogger.emit("Sold_Event", {
-            distinctId: purchaser,
-            // priceUSD: priceUSD,
-            price_CRO: amount,
-            nftId: nftId.toString(),
-            seller: seller,
-            nftAddress: nftAddress,
-            collectionName: collectionName,
-            fee: fee,
-            nftTokenStandard: type,
-            listingTime: listingTime,
-            saleTime: saleTime,
-            endingTime: endingTime,
-            message: `sold nft collection ${collectionName} token id ${nftId} from ${seller} to ${purchaser}, for the price of ${amount} CRO, fee of ${fee} CRO`
-        })
-
-        //check purchaser and from
-        console.log("sold tx hash:", hash)
         try {
+            const getListing = await ctx.contract.completeListing(listingId)
+            const amount = Number(getListing.price) / Math.pow(10, 18)
+            const purchaser = getListing.purchaser
+            const nftId = Number(getListing.nftId)
+            const seller = getListing.seller
+            const nftAddress = getListing.nft
+            const fee = Number(getListing.fee) / Math.pow(10, 18)
+            const type = getListing.is1155 ? "ERC1155" : "ERC721"
+            const collectionName = await getNameByERCType(type, nftAddress, hash)
+            const listingTime = getListing.listingTime.toString()
+            const saleTime = getListing.saleTime.toString()
+            const endingTime = getListing.endingTime.toString()
+
+
+            // counter and gauge
+            const labels = { nftTokenStandard: type }
+
+            // vol_USD.record(ctx, priceUSD, labels)
+            vol_CRO.record(ctx, amount, labels)
+            volCounter_CRO.add(ctx, amount, labels)
+            // volCounter_USD.add(ctx, priceUSD, labels)
+
+            //event analysis
+            ctx.eventLogger.emit("Sold_Event", {
+                distinctId: purchaser,
+                // priceUSD: priceUSD,
+                price_CRO: amount,
+                nftId: nftId.toString(),
+                seller: seller,
+                nftAddress: nftAddress,
+                collectionName: collectionName,
+                fee: fee,
+                nftTokenStandard: type,
+                listingTime: listingTime,
+                saleTime: saleTime,
+                endingTime: endingTime,
+                message: `sold nft collection ${collectionName} token id ${nftId} from ${seller} to ${purchaser}, for the price of ${amount} CRO, fee of ${fee} CRO`
+            })
+
+            //check purchaser and from
+            console.log("sold tx hash:", hash)
+
             var tx = (await ctx.contract.provider.getTransaction(hash))!
             var from = tx.from
 
             if (purchaser !== from)
                 console.log("false debug log:", purchaser, " and ", from)
+
         }
         catch (e) {
-            if (e instanceof Error) {
-                console.log(e.message)
-            }
+            console.log(e.message, ` getListing error at ${ctx.transactionHash}`)
         }
+
+
+
 
 
     })
@@ -220,11 +224,8 @@ MembershipStakerV3Processor.bind({ address: '0xeb074cc764F20d8fE4317ab63f45A85bc
 
         //check owner and from
         const hash = event.transactionHash
-        // console.log("stake tx hash:", hash)
         try {
             const tx = (await ctx.contract.provider.getTransaction(hash))!
-            // console.log("stake tx hash:", hash)
-
             const from = tx.from
 
             if (owner != from)
@@ -293,11 +294,8 @@ MembershipStakerV3Processor.bind({ address: '0xeb074cc764F20d8fE4317ab63f45A85bc
         })
 
         //check owner and from
-        // console.log("harvest tx hash:", hash)
         try {
             const tx = (await ctx.contract.provider.getTransaction(hash))!
-            console.log("harvest tx", tx, "harvest tx hash:", hash)
-
             const from = tx.from
 
             if (to != from)
