@@ -17,7 +17,7 @@ import {
   getProperty,
 } from "./classifier.js";
 
-const START_BLOCK = 16818057;
+let START_BLOCK = 1000000000;
 
 GlobalProcessor.bind({ startBlock: START_BLOCK }).onBlockInterval(
   async (b, ctx) => {
@@ -41,11 +41,13 @@ GlobalProcessor.bind({ startBlock: START_BLOCK }).onBlockInterval(
         rolesCount.get(AddressProperty.Trader)! > 1
       ) {
         const link = `https://explorer.phalcon.xyz/tx/eth/${txnHash}`;
-        console.log(link);
+        ctx.eventLogger.emit("arbitrage", {
+          message: `Arbitrage txn detected: ${link}`,
+        });
       }
     }
   },
-  10000000,
+  1,
   100000000,
   {
     block: true,
