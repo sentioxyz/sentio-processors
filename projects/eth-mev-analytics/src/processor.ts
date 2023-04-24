@@ -43,12 +43,13 @@ GlobalProcessor.bind({ startBlock: START_BLOCK }).onBlockInterval(
         const link = `https://explorer.phalcon.xyz/tx/eth/${txnHash}`;
         ctx.eventLogger.emit("arbitrage", {
           message: `Arbitrage txn detected: ${link}`,
+          link: link,
         });
       }
     }
   },
   1,
-  100000000,
+  10000,
   {
     block: true,
     transaction: true,
