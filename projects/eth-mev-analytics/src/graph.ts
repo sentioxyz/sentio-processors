@@ -25,8 +25,9 @@ export class TokenFlowGraph {
         ...edge,
         value: oldEdge.value + edge.value,
       });
+    } else {
+      this.adjList.get(from)!.set(edgeKey, edge);
     }
-    this.adjList.get(from)!.set(edgeKey, edge);
   }
 
   findStronglyConnectedComponents(): Array<Array<string>> {
@@ -80,7 +81,7 @@ export class TokenFlowGraph {
   print() {
     for (const [from, edges] of this.adjList) {
       for (const [_, edge] of edges) {
-        console.log("edge:", from, edge.toAddr);
+        console.log("edge:", from, edge.toAddr, edge.tokenAddress, edge.value);
       }
     }
   }

@@ -1,5 +1,5 @@
 import { ERC20Processor } from "@sentio/sdk/eth/builtin";
-import { DepositEvent, WithdrawalEvent } from "./types/eth/weth9.js";
+import * as weth from "./types/eth/weth9.js";
 import { TransferEvent } from "@sentio/sdk/eth/builtin/erc20";
 import { Interface } from "ethers";
 import {
@@ -24,7 +24,7 @@ function buildNativeETH(
 ) {
   for (const trace of d.traces || []) {
     if (trace.type === "call") {
-      if (trace.action.input == "0x") {
+      if (trace.action.value > 0) {
         ctx.meter.Counter("eth_transfer").add(1);
         if (trace.action.to === undefined) {
           console.log("undefined to");
@@ -120,6 +120,16 @@ function buildWETH(graph: TokenFlowGraph, d: dataByTxn, ctx: GlobalContext) {
       name: "Withdrawal",
       type: "event",
     },
+    {
+      anonymous: false,
+      inputs: [
+        { indexed: true, name: "src", type: "address" },
+        { indexed: true, name: "dst", type: "address" },
+        { indexed: false, name: "wad", type: "uint256" },
+      ],
+      name: "Transfer",
+      type: "event",
+    },
   ]);
 
   let fragment = iface.getEvent("Deposit")!;
@@ -136,7 +146,7 @@ function buildWETH(graph: TokenFlowGraph, d: dataByTxn, ctx: GlobalContext) {
             ...log,
             name: parsed.name,
             args: parsed.args,
-          } as any as DepositEvent;
+          } as any as weth.DepositEvent;
           ctx.meter.Counter("weth_deposit").add(1);
           graph.addEdge(tokenAddress.toLowerCase(), {
             toAddr: deposit.args.dst.toLowerCase(),
@@ -164,12 +174,40 @@ function buildWETH(graph: TokenFlowGraph, d: dataByTxn, ctx: GlobalContext) {
             ...log,
             name: parsed.name,
             args: parsed.args,
-          } as any as WithdrawalEvent;
+          } as any as weth.WithdrawalEvent;
           ctx.meter.Counter("weth_withdraw").add(1);
           graph.addEdge(deposit.args.src.toLowerCase(), {
             toAddr: tokenAddress.toLowerCase(),
             tokenAddress: tokenAddress.toLowerCase(),
             value: deposit.args.wad,
+          });
+        }
+      }
+    } catch (e) {
+      ctx.meter.Counter("erc20_transfer_decoding_error").add(1);
+    }
+  }
+
+  fragment = iface.getEvent("Transfer")!;
+  for (const tx of d.receipts || []) {
+    try {
+      for (const log of tx.logs || []) {
+        if (log.topics[0] !== fragment.topicHash) {
+          continue;
+        }
+        let tokenAddress = log.address;
+        const parsed = iface.parseLog(log as any);
+        if (parsed) {
+          const transfer = {
+            ...log,
+            name: parsed.name,
+            args: parsed.args,
+          } as any as weth.TransferEvent;
+          ctx.meter.Counter("weth_transfer").add(1);
+          graph.addEdge(transfer.args.src.toLowerCase(), {
+            toAddr: transfer.args.dst.toLowerCase(),
+            tokenAddress: tokenAddress.toLowerCase(),
+            value: transfer.args.wad,
           });
         }
       }

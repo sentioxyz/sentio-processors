@@ -65,8 +65,15 @@ export function winnerRewards(
   mergeBalance(sender, rewards, balanceChanges);
   mergeBalance(receiver, rewards, balanceChanges);
   let sccMap = new Map<string, number>();
+  for (let scc of sccs) {
+    for (let addr of scc) {
+      // set index of scc to addr
+      sccMap.set(addr, sccs.indexOf(scc));
+    }
+  }
+
   for (const [from, edges] of graph.adjList) {
-    if (from !== receiver) {
+    if (from !== receiver && from !== sender) {
       continue;
     }
     for (const [_, edge] of edges) {
@@ -143,4 +150,14 @@ export function getRolesCount(
     rolesCount.set(role, rolesCount.get(role)! + 1);
   }
   return rolesCount;
+}
+
+export function printBalances(
+  balanceChanges: Map<string, Map<string, bigint>>
+) {
+  for (const [addr, tokenBalances] of balanceChanges) {
+    for (const [tokenAddr, balance] of tokenBalances) {
+      console.log(addr, tokenAddr, balance.toString());
+    }
+  }
 }
