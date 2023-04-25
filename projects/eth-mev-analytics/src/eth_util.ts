@@ -14,18 +14,13 @@ interface dataByTxn {
   blockNumber: number;
   tx: TransactionResponseParams;
   traces: Trace[];
-  receipts: TransactionReceiptParams[];
+  transactionReceipts: TransactionReceiptParams[];
 }
 
-function buildNativeETH(
-  graph: TokenFlowGraph,
-  d: dataByTxn,
-  ctx: GlobalContext
-) {
+function buildNativeETH(graph: TokenFlowGraph, d: dataByTxn) {
   for (const trace of d.traces || []) {
     if (trace.type === "call") {
       if (trace.action.value > 0) {
-        ctx.meter.Counter("eth_transfer").add(1);
         if (trace.action.to === undefined) {
           console.log("undefined to");
           continue;
@@ -42,7 +37,7 @@ function buildNativeETH(
   }
 }
 
-function buildERC20(graph: TokenFlowGraph, d: dataByTxn, ctx: GlobalContext) {
+function buildERC20(graph: TokenFlowGraph, d: dataByTxn) {
   const iface = new Interface([
     {
       anonymous: false,
@@ -72,7 +67,7 @@ function buildERC20(graph: TokenFlowGraph, d: dataByTxn, ctx: GlobalContext) {
   ]);
 
   const fragment = iface.getEvent("Transfer")!;
-  for (const tx of d.receipts || []) {
+  for (const tx of d.transactionReceipts || []) {
     try {
       for (const log of tx.logs || []) {
         if (log.topics[0] !== fragment.topicHash) {
@@ -86,7 +81,6 @@ function buildERC20(graph: TokenFlowGraph, d: dataByTxn, ctx: GlobalContext) {
             name: parsed.name,
             args: parsed.args,
           } as any as TransferEvent;
-          ctx.meter.Counter("erc20_transfer").add(1);
           graph.addEdge(transfer.args.from.toLowerCase(), {
             toAddr: transfer.args.to.toLowerCase(),
             tokenAddress: tokenAddress.toLowerCase(),
@@ -94,13 +88,11 @@ function buildERC20(graph: TokenFlowGraph, d: dataByTxn, ctx: GlobalContext) {
           });
         }
       }
-    } catch (e) {
-      ctx.meter.Counter("erc20_transfer_decoding_error").add(1);
-    }
+    } catch (e) {}
   }
 }
 
-function buildWETH(graph: TokenFlowGraph, d: dataByTxn, ctx: GlobalContext) {
+function buildWETH(graph: TokenFlowGraph, d: dataByTxn) {
   const iface = new Interface([
     {
       anonymous: false,
@@ -133,7 +125,7 @@ function buildWETH(graph: TokenFlowGraph, d: dataByTxn, ctx: GlobalContext) {
   ]);
 
   let fragment = iface.getEvent("Deposit")!;
-  for (const tx of d.receipts || []) {
+  for (const tx of d.transactionReceipts || []) {
     try {
       for (const log of tx.logs || []) {
         if (log.topics[0] !== fragment.topicHash) {
@@ -147,7 +139,6 @@ function buildWETH(graph: TokenFlowGraph, d: dataByTxn, ctx: GlobalContext) {
             name: parsed.name,
             args: parsed.args,
           } as any as weth.DepositEvent;
-          ctx.meter.Counter("weth_deposit").add(1);
           graph.addEdge(tokenAddress.toLowerCase(), {
             toAddr: deposit.args.dst.toLowerCase(),
             tokenAddress: tokenAddress.toLowerCase(),
@@ -155,13 +146,11 @@ function buildWETH(graph: TokenFlowGraph, d: dataByTxn, ctx: GlobalContext) {
           });
         }
       }
-    } catch (e) {
-      ctx.meter.Counter("erc20_transfer_decoding_error").add(1);
-    }
+    } catch (e) {}
   }
 
   fragment = iface.getEvent("Withdrawal")!;
-  for (const tx of d.receipts || []) {
+  for (const tx of d.transactionReceipts || []) {
     try {
       for (const log of tx.logs || []) {
         if (log.topics[0] !== fragment.topicHash) {
@@ -175,7 +164,6 @@ function buildWETH(graph: TokenFlowGraph, d: dataByTxn, ctx: GlobalContext) {
             name: parsed.name,
             args: parsed.args,
           } as any as weth.WithdrawalEvent;
-          ctx.meter.Counter("weth_withdraw").add(1);
           graph.addEdge(deposit.args.src.toLowerCase(), {
             toAddr: tokenAddress.toLowerCase(),
             tokenAddress: tokenAddress.toLowerCase(),
@@ -183,13 +171,11 @@ function buildWETH(graph: TokenFlowGraph, d: dataByTxn, ctx: GlobalContext) {
           });
         }
       }
-    } catch (e) {
-      ctx.meter.Counter("erc20_transfer_decoding_error").add(1);
-    }
+    } catch (e) {}
   }
 
   fragment = iface.getEvent("Transfer")!;
-  for (const tx of d.receipts || []) {
+  for (const tx of d.transactionReceipts || []) {
     try {
       for (const log of tx.logs || []) {
         if (log.topics[0] !== fragment.topicHash) {
@@ -203,7 +189,6 @@ function buildWETH(graph: TokenFlowGraph, d: dataByTxn, ctx: GlobalContext) {
             name: parsed.name,
             args: parsed.args,
           } as any as weth.TransferEvent;
-          ctx.meter.Counter("weth_transfer").add(1);
           graph.addEdge(transfer.args.src.toLowerCase(), {
             toAddr: transfer.args.dst.toLowerCase(),
             tokenAddress: tokenAddress.toLowerCase(),
@@ -211,26 +196,20 @@ function buildWETH(graph: TokenFlowGraph, d: dataByTxn, ctx: GlobalContext) {
           });
         }
       }
-    } catch (e) {
-      ctx.meter.Counter("erc20_transfer_decoding_error").add(1);
-    }
+    } catch (e) {}
   }
 }
 
-export function buildGraph(d: dataByTxn, ctx: GlobalContext): TokenFlowGraph {
+export function buildGraph(d: dataByTxn): TokenFlowGraph {
   let graph: TokenFlowGraph = new TokenFlowGraph();
 
-  ctx.meter.Counter("all_block").add(1);
-  buildNativeETH(graph, d, ctx);
-  buildERC20(graph, d, ctx);
-  buildWETH(graph, d, ctx);
+  buildNativeETH(graph, d);
+  buildERC20(graph, d);
+  buildWETH(graph, d);
   return graph;
 }
 
-export function getDataByTxn(
-  b: RichBlock,
-  ctx: GlobalContext
-): Map<string, dataByTxn> {
+export function getDataByTxn(b: RichBlock): Map<string, dataByTxn> {
   let ret = new Map<string, dataByTxn>();
   for (const tx of b.transactions || []) {
     // check if tx is string
@@ -239,7 +218,7 @@ export function getDataByTxn(
     }
     // add tx to ret
     ret.set(tx.hash, {
-      receipts: [],
+      transactionReceipts: [],
       traces: [],
       blockNumber: b.number,
       tx: tx,
@@ -248,14 +227,13 @@ export function getDataByTxn(
 
   for (const trace of b.traces || []) {
     if (!ret.has(trace.transactionHash)) {
-      console.log("trace not found", trace.transactionHash, trace.error);
       continue;
     }
     ret.get(trace.transactionHash)!.traces.push(trace);
   }
 
   for (const tx of b.transactionReceipts || []) {
-    ret.get(tx.hash)!.receipts.push(tx);
+    ret.get(tx.hash)!.transactionReceipts.push(tx);
   }
 
   return ret;
