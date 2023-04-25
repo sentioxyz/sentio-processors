@@ -12,13 +12,14 @@ export class TokenFlowGraph {
     this.adjList = new Map<string, Map<string, Edge>>();
   }
 
-  addEdge(from: string, edge: Edge): void {
+  addEdge(from: string, edge: Edge, source: string): void {
     from = from.toLowerCase();
     const edgeKey =
       edge.tokenAddress.toLowerCase() + "/" + edge.toAddr.toLowerCase();
     if (!this.adjList.has(from)) {
       this.adjList.set(from, new Map<string, Edge>());
     }
+    //  console.log("adding edge", source, from, edgeKey, edge.value);
     if (this.adjList.get(from)!.has(edgeKey)) {
       const oldEdge = this.adjList.get(from)!.get(edgeKey)!;
       this.adjList.get(from)!.set(edgeKey, {

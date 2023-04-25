@@ -26,12 +26,16 @@ function buildNativeETH(graph: TokenFlowGraph, d: dataByTxn) {
           continue;
         }
         // Here is a hack to treat ETH as WETH.
-        graph.addEdge(trace.action.from.toLowerCase(), {
-          toAddr: trace.action.to.toLowerCase(),
-          tokenAddress:
-            "0xC02aaA39b223FE8D0A0e5C4F27eAD9083C756Cc2".toLowerCase(),
-          value: BigInt(trace.action.value),
-        });
+        graph.addEdge(
+          trace.action.from.toLowerCase(),
+          {
+            toAddr: trace.action.to.toLowerCase(),
+            tokenAddress:
+              "0xC02aaA39b223FE8D0A0e5C4F27eAD9083C756Cc2".toLowerCase(),
+            value: BigInt(trace.action.value),
+          },
+          "native"
+        );
       }
     }
   }
@@ -81,11 +85,15 @@ function buildERC20(graph: TokenFlowGraph, d: dataByTxn) {
             name: parsed.name,
             args: parsed.args,
           } as any as TransferEvent;
-          graph.addEdge(transfer.args.from.toLowerCase(), {
-            toAddr: transfer.args.to.toLowerCase(),
-            tokenAddress: tokenAddress.toLowerCase(),
-            value: transfer.args.value,
-          });
+          graph.addEdge(
+            transfer.args.from.toLowerCase(),
+            {
+              toAddr: transfer.args.to.toLowerCase(),
+              tokenAddress: tokenAddress.toLowerCase(),
+              value: transfer.args.value,
+            },
+            "erc20"
+          );
         }
       }
     } catch (e) {}
@@ -112,16 +120,6 @@ function buildWETH(graph: TokenFlowGraph, d: dataByTxn) {
       name: "Withdrawal",
       type: "event",
     },
-    {
-      anonymous: false,
-      inputs: [
-        { indexed: true, name: "src", type: "address" },
-        { indexed: true, name: "dst", type: "address" },
-        { indexed: false, name: "wad", type: "uint256" },
-      ],
-      name: "Transfer",
-      type: "event",
-    },
   ]);
 
   let fragment = iface.getEvent("Deposit")!;
@@ -139,11 +137,15 @@ function buildWETH(graph: TokenFlowGraph, d: dataByTxn) {
             name: parsed.name,
             args: parsed.args,
           } as any as weth.DepositEvent;
-          graph.addEdge(tokenAddress.toLowerCase(), {
-            toAddr: deposit.args.dst.toLowerCase(),
-            tokenAddress: tokenAddress.toLowerCase(),
-            value: deposit.args.wad,
-          });
+          graph.addEdge(
+            tokenAddress.toLowerCase(),
+            {
+              toAddr: deposit.args.dst.toLowerCase(),
+              tokenAddress: tokenAddress.toLowerCase(),
+              value: deposit.args.wad,
+            },
+            "weth_deposit"
+          );
         }
       }
     } catch (e) {}
@@ -164,36 +166,15 @@ function buildWETH(graph: TokenFlowGraph, d: dataByTxn) {
             name: parsed.name,
             args: parsed.args,
           } as any as weth.WithdrawalEvent;
-          graph.addEdge(deposit.args.src.toLowerCase(), {
-            toAddr: tokenAddress.toLowerCase(),
-            tokenAddress: tokenAddress.toLowerCase(),
-            value: deposit.args.wad,
-          });
-        }
-      }
-    } catch (e) {}
-  }
-
-  fragment = iface.getEvent("Transfer")!;
-  for (const tx of d.transactionReceipts || []) {
-    try {
-      for (const log of tx.logs || []) {
-        if (log.topics[0] !== fragment.topicHash) {
-          continue;
-        }
-        let tokenAddress = log.address;
-        const parsed = iface.parseLog(log as any);
-        if (parsed) {
-          const transfer = {
-            ...log,
-            name: parsed.name,
-            args: parsed.args,
-          } as any as weth.TransferEvent;
-          graph.addEdge(transfer.args.src.toLowerCase(), {
-            toAddr: transfer.args.dst.toLowerCase(),
-            tokenAddress: tokenAddress.toLowerCase(),
-            value: transfer.args.wad,
-          });
+          graph.addEdge(
+            deposit.args.src.toLowerCase(),
+            {
+              toAddr: tokenAddress.toLowerCase(),
+              tokenAddress: tokenAddress.toLowerCase(),
+              value: deposit.args.wad,
+            },
+            "weth_withdrawal"
+          );
         }
       }
     } catch (e) {}

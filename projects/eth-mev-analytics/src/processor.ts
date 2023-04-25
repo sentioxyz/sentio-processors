@@ -1,4 +1,4 @@
-import { Counter, EthFetchConfig, Gauge } from "@sentio/sdk";
+import { Counter, EthFetchConfig, Gauge, CHAIN_IDS } from "@sentio/sdk";
 
 import {
   GlobalContext,
@@ -19,6 +19,18 @@ import {
 } from "./classifier.js";
 
 let START_BLOCK = 1000000000;
+
+CHAIN_IDS.ETHEREUM;
+// define a constant map from string to a list of builder addresses
+let builderAddressesByChain: Map<string, Set<string>>;
+builderAddressesByChain = new Map<string, Set<string>>();
+builderAddressesByChain.set(
+  CHAIN_IDS.ETHEREUM,
+  new Set<string>([
+    "0x95222290DD7278Aa3Ddd389Cc1E1d165CC4BAfe5", // beaver
+    "0xDAFEA492D9c6733ae3d56b7Ed1ADB60692c98Bc5", // flashbots
+  ])
+);
 
 export function handleBlock(b: RichBlock): Array<string> {
   const ret = new Array<string>();
