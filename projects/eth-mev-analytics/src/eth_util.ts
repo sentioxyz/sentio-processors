@@ -10,7 +10,7 @@ import {
 import { GlobalContext, RichBlock, Trace } from "@sentio/sdk/eth";
 import { TokenFlowGraph } from "./graph.js";
 
-interface dataByTxn {
+export interface dataByTxn {
   blockNumber: number;
   tx: TransactionResponseParams;
   traces: Trace[];

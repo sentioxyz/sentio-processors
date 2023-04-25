@@ -7,7 +7,7 @@ import {
   Trace,
 } from "@sentio/sdk/eth";
 
-import { getDataByTxn, buildGraph } from "./eth_util.js";
+import { getDataByTxn, buildGraph, dataByTxn } from "./eth_util.js";
 import {
   findBalanceChanges,
   getAddressProperty,
@@ -25,31 +25,38 @@ export function handleBlock(b: RichBlock): Array<string> {
   const dataByTxn = getDataByTxn(b);
   console.log(`block ${b.number} has ${dataByTxn.size} txns`);
   for (const [txnHash, data] of dataByTxn) {
-    const graph = buildGraph(data);
-    let total = 0;
-    for (const [node, edges] of graph.adjList) {
-      total += edges.size;
-    }
-    const sccs = graph.findStronglyConnectedComponents();
-    //    graph.print();
-    const balances = findBalanceChanges(sccs, graph);
-    //    printBalances(balances);
-    const addressProperty = getAddressProperty(balances);
-    const rolesCount = getRolesCount(addressProperty);
-    const sender = data.tx.from.toLowerCase();
-    if (data.tx.to === undefined || data.tx.to === null) {
-      continue;
-    }
-    const receiver = data.tx.to!.toLowerCase();
-    const rewards = winnerRewards(sender, receiver, sccs, balances, graph);
-    if (
-      getProperty("group", rewards) == AddressProperty.Winner &&
-      rolesCount.get(AddressProperty.Trader)! > 1
-    ) {
+    if (handleTxn(data)) {
       ret.push(txnHash);
     }
   }
   return ret;
+}
+
+export function handleTxn(data: dataByTxn): boolean {
+  const graph = buildGraph(data);
+  let total = 0;
+  for (const [node, edges] of graph.adjList) {
+    total += edges.size;
+  }
+  const sccs = graph.findStronglyConnectedComponents();
+  //  graph.print();
+  const balances = findBalanceChanges(sccs, graph);
+  //  printBalances(balances);
+  const addressProperty = getAddressProperty(balances);
+  const rolesCount = getRolesCount(addressProperty);
+  const sender = data.tx.from.toLowerCase();
+  if (data.tx.to === undefined || data.tx.to === null) {
+    return false;
+  }
+  const receiver = data.tx.to!.toLowerCase();
+  const rewards = winnerRewards(sender, receiver, sccs, balances, graph);
+  if (
+    getProperty("group", rewards) == AddressProperty.Winner &&
+    rolesCount.get(AddressProperty.Trader)! > 1
+  ) {
+    return true;
+  }
+  return false;
 }
 
 GlobalProcessor.bind({ startBlock: START_BLOCK }).onBlockInterval(
