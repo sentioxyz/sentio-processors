@@ -24,14 +24,6 @@ GlobalProcessor.bind({ startBlock: START_BLOCK }).onBlockInterval(
   async (b, ctx) => {
     const dataByTxn = getDataByTxn(b, ctx);
     for (const [txnHash, data] of dataByTxn) {
-      /*
-      if (
-        txnHash !==
-        "0xa32c84ad09369880dfbdf01bcacc2de632ab8c49d97c33ef695fd0d344955b3d"
-      ) {
-        continue;
-      }
-      */
       const graph = buildGraph(data, ctx);
       let total = 0;
       for (const [node, edges] of graph.adjList) {
@@ -44,7 +36,7 @@ GlobalProcessor.bind({ startBlock: START_BLOCK }).onBlockInterval(
       const addressProperty = getAddressProperty(balances);
       const rolesCount = getRolesCount(addressProperty);
       const sender = data.tx.from.toLowerCase();
-      if (data.tx.to === undefined) {
+      if (data.tx.to === undefined || data.tx.to === null) {
         continue;
       }
       const receiver = data.tx.to!.toLowerCase();
