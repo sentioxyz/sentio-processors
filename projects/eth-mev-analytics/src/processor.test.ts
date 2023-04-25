@@ -26,6 +26,7 @@ describe("Test Processor", () => {
     const strValue = JSON.stringify(blockJson);
     const block = JSON.parse(strValue) as RichBlock;
     const formattedBlock = formatRichBlock(block);
+    //const test = await service.eth.testBlock(formattedBlock);
     const data = filterByHash(
       formattedBlock,
       "0x629971cc2bceb52b73804546b76842084ef6d77c66f7b1c3b06d639760a54fd5"
