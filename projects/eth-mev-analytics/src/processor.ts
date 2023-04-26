@@ -18,34 +18,30 @@ import {
   printBalances,
 } from "./classifier.js";
 
+import { chainConfigs, ChainConstants } from "./common.js";
+
 let START_BLOCK = 1000000000;
 
-CHAIN_IDS.ETHEREUM;
-// define a constant map from string to a list of builder addresses
-let builderAddressesByChain: Map<string, Set<string>>;
-builderAddressesByChain = new Map<string, Set<string>>();
-builderAddressesByChain.set(
-  CHAIN_IDS.ETHEREUM,
-  new Set<string>([
-    "0x95222290DD7278Aa3Ddd389Cc1E1d165CC4BAfe5", // beaver
-    "0xDAFEA492D9c6733ae3d56b7Ed1ADB60692c98Bc5", // flashbots
-  ])
-);
-
-export function handleBlock(b: RichBlock): Array<string> {
+export function handleBlock(
+  b: RichBlock,
+  chainConfig: ChainConstants
+): Array<string> {
   const ret = new Array<string>();
   const dataByTxn = getDataByTxn(b);
   console.log(`block ${b.number} has ${dataByTxn.size} txns`);
   for (const [txnHash, data] of dataByTxn) {
-    if (handleTxn(data)) {
+    if (handleTxn(data, chainConfig)) {
       ret.push(txnHash);
     }
   }
   return ret;
 }
 
-export function handleTxn(data: dataByTxn): boolean {
-  const graph = buildGraph(data);
+export function handleTxn(
+  data: dataByTxn,
+  chainConfig: ChainConstants
+): boolean {
+  const graph = buildGraph(data, chainConfig);
   let total = 0;
   for (const [node, edges] of graph.adjList) {
     total += edges.size;
@@ -62,6 +58,13 @@ export function handleTxn(data: dataByTxn): boolean {
   }
   const receiver = data.tx.to!.toLowerCase();
   const rewards = winnerRewards(sender, receiver, sccs, balances, graph);
+  const gasPrice = data.tx.gasPrice;
+  if (data.transactionReceipts.length === 0) {
+    console.log("no transaction receipt");
+  } else if (data.transactionReceipts[0].gasUsed === undefined) {
+    console.log("gas used is undefined");
+  }
+
   if (
     getProperty("group", rewards) == AddressProperty.Winner &&
     rolesCount.get(AddressProperty.Trader)! > 1
@@ -71,23 +74,28 @@ export function handleTxn(data: dataByTxn): boolean {
   return false;
 }
 
-GlobalProcessor.bind({ startBlock: START_BLOCK }).onBlockInterval(
-  async (b, ctx) => {
-    const txnHashes = handleBlock(b);
-    for (const txnHash of txnHashes) {
-      const link = `https://explorer.phalcon.xyz/tx/eth/${txnHash}`;
-      ctx.eventLogger.emit("arbitrage", {
-        message: `Arbitrage txn detected: ${link}`,
-        link: link,
-      });
+for (const chainConfig of chainConfigs) {
+  GlobalProcessor.bind({
+    startBlock: START_BLOCK,
+    network: chainConfig.chainID,
+  }).onBlockInterval(
+    async (b, ctx) => {
+      const txnHashes = handleBlock(b, chainConfig);
+      for (const txnHash of txnHashes) {
+        const link = `https://explorer.phalcon.xyz/tx/eth/${txnHash}`;
+        ctx.eventLogger.emit("arbitrage", {
+          message: `Arbitrage txn detected: ${link}`,
+          link: link,
+        });
+      }
+    },
+    1,
+    10000,
+    {
+      block: true,
+      transaction: true,
+      transactionReceipt: true,
+      trace: true,
     }
-  },
-  1,
-  10000,
-  {
-    block: true,
-    transaction: true,
-    transactionReceipt: true,
-    trace: true,
-  }
-);
+  );
+}

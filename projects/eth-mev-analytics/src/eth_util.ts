@@ -9,6 +9,7 @@ import {
 
 import { GlobalContext, RichBlock, Trace } from "@sentio/sdk/eth";
 import { TokenFlowGraph } from "./graph.js";
+import { chainConfigs, ChainConstants } from "./common.js";
 
 export interface dataByTxn {
   blockNumber: number;
@@ -17,7 +18,11 @@ export interface dataByTxn {
   transactionReceipts: TransactionReceiptParams[];
 }
 
-function buildNativeETH(graph: TokenFlowGraph, d: dataByTxn) {
+function buildNativeETH(
+  graph: TokenFlowGraph,
+  d: dataByTxn,
+  chainConfig: ChainConstants
+) {
   for (const trace of d.traces || []) {
     if (trace.type === "call") {
       if (trace.action.value > 0) {
@@ -30,8 +35,7 @@ function buildNativeETH(graph: TokenFlowGraph, d: dataByTxn) {
           trace.action.from.toLowerCase(),
           {
             toAddr: trace.action.to.toLowerCase(),
-            tokenAddress:
-              "0xC02aaA39b223FE8D0A0e5C4F27eAD9083C756Cc2".toLowerCase(),
+            tokenAddress: chainConfig.nativeTokenWrappedAddress.toLowerCase(),
             value: BigInt(trace.action.value),
           },
           "native"
@@ -41,7 +45,11 @@ function buildNativeETH(graph: TokenFlowGraph, d: dataByTxn) {
   }
 }
 
-function buildERC20(graph: TokenFlowGraph, d: dataByTxn) {
+function buildERC20(
+  graph: TokenFlowGraph,
+  d: dataByTxn,
+  chainConfig: ChainConstants
+) {
   const iface = new Interface([
     {
       anonymous: false,
@@ -100,7 +108,11 @@ function buildERC20(graph: TokenFlowGraph, d: dataByTxn) {
   }
 }
 
-function buildWETH(graph: TokenFlowGraph, d: dataByTxn) {
+function buildWETH(
+  graph: TokenFlowGraph,
+  d: dataByTxn,
+  chainConfig: ChainConstants
+) {
   const iface = new Interface([
     {
       anonymous: false,
@@ -181,12 +193,15 @@ function buildWETH(graph: TokenFlowGraph, d: dataByTxn) {
   }
 }
 
-export function buildGraph(d: dataByTxn): TokenFlowGraph {
+export function buildGraph(
+  d: dataByTxn,
+  chainConfig: ChainConstants
+): TokenFlowGraph {
   let graph: TokenFlowGraph = new TokenFlowGraph();
 
-  buildNativeETH(graph, d);
-  buildERC20(graph, d);
-  buildWETH(graph, d);
+  buildNativeETH(graph, d, chainConfig);
+  buildERC20(graph, d, chainConfig);
+  buildWETH(graph, d, chainConfig);
   return graph;
 }
 
