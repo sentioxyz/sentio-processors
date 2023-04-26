@@ -73,6 +73,9 @@ export function handleTxn(
   if (data.tx.to === undefined || data.tx.to === null) {
     return [false, rewards, costs];
   }
+  if (chainConfig.blackListedAddresses.has(data.tx.to)) {
+    console.log("skip blacklisted address for:", data.tx.to, data.tx.hash);
+  }
   const receiver = data.tx.to!.toLowerCase();
   const gasPrice = data.tx.gasPrice;
   if (data.transactionReceipts.length === 0) {
