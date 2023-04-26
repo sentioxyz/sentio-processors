@@ -59,8 +59,9 @@ export function winnerRewards(
   receiver: string,
   sccs: Array<Array<string>>,
   balanceChanges: Map<string, Map<string, bigint>>,
-  graph: TokenFlowGraph
-): Map<string, bigint> {
+  graph: TokenFlowGraph,
+  builderAddresses: Set<string>
+): [Map<string, bigint>, Map<string, bigint>] {
   let rewards: Map<string, bigint> = new Map();
   mergeBalance(sender, rewards, balanceChanges);
   mergeBalance(receiver, rewards, balanceChanges);
@@ -71,7 +72,7 @@ export function winnerRewards(
       sccMap.set(addr, sccs.indexOf(scc));
     }
   }
-
+  let cost: Map<string, bigint> = new Map();
   for (const [from, edges] of graph.adjList) {
     if (from !== receiver && from !== sender) {
       continue;
@@ -83,6 +84,15 @@ export function winnerRewards(
       if (!balanceChanges.has(edge.toAddr)) {
         continue;
       }
+      if (edge.toAddr == sender || edge.toAddr == receiver) {
+        continue;
+      }
+      if (builderAddresses.has(edge.toAddr)) {
+        if (!cost.has(edge.tokenAddress)) {
+          cost.set(edge.tokenAddress, BigInt(0));
+        }
+        cost.set(edge.tokenAddress, cost.get(edge.tokenAddress)! + edge.value);
+      }
       for (const [tokenAddr, value] of balanceChanges.get(edge.toAddr)!) {
         if (!rewards.has(tokenAddr)) {
           rewards.set(tokenAddr, BigInt(0));
@@ -92,7 +102,7 @@ export function winnerRewards(
     }
   }
 
-  return rewards;
+  return [rewards, cost];
 }
 
 // define a enum type
