@@ -27,56 +27,117 @@ import {
 import { getPriceByType, token } from "@sentio/sdk/utils";
 
 import { chainConfigs, ChainConstants } from "./common.js";
+import { TokenFlowGraph } from "./graph.js";
 
 let START_BLOCK = 1000000000;
 
-interface TxnResult {
+interface arbTxnResult {
   txnHash: string;
+  revenue: Map<string, bigint>;
+  costs: Map<string, bigint>;
+  addressProperty: Map<string, AddressProperty>;
+}
+
+interface sandwichTxnResult {
+  frontTxnHash: string;
+  backTxnHash: string;
   rewards: Map<string, bigint>;
   costs: Map<string, bigint>;
+}
+
+interface mevBlockResult {
+  arbTxns: Array<arbTxnResult>;
+  sandwichTxns: Array<sandwichTxnResult>;
+}
+
+export function findSandwich(
+  data: Map<string, dataByTxn>,
+  arbResults: Map<string, arbTxnResult>
+): Array<sandwichTxnResult> {
+  let ret = new Array<sandwichTxnResult>();
+  return ret;
 }
 
 export function handleBlock(
   b: RichBlock,
   chainConfig: ChainConstants
-): Array<TxnResult> {
-  const ret = new Array<TxnResult>();
+): mevBlockResult {
   const dataByTxn = getDataByTxn(b);
   console.log(`block ${b.number} has ${dataByTxn.size} txns`);
-  for (const [txnHash, data] of dataByTxn) {
-    const [result, rewards, costs] = handleTxn(data, chainConfig);
-    if (result) {
-      ret.push({ txnHash, rewards, costs });
+  let txnResults = new Map<string, arbTxnResult>();
+  for (const [hash, data] of dataByTxn) {
+    let ret = txnProfitAndCost(data, chainConfig);
+    if (ret.revenue.size > 0) {
+      txnResults.set(hash, ret);
     }
   }
-  return ret;
+  let sandwichResults = findSandwich(dataByTxn, txnResults);
+  for (const result of sandwichResults) {
+    if (txnResults.has(result.frontTxnHash)) {
+      txnResults.delete(result.frontTxnHash);
+    }
+    if (txnResults.has(result.backTxnHash)) {
+      txnResults.delete(result.backTxnHash);
+    }
+  }
+  let arbTxnResults = new Array<arbTxnResult>();
+  for (const [hash, result] of txnResults) {
+    const txn = dataByTxn.get(hash);
+    if (
+      isArbitrage(txn!, chainConfig, result.revenue, result.addressProperty)
+    ) {
+      arbTxnResults.push(result);
+    }
+  }
+  return {
+    arbTxns: arbTxnResults,
+    sandwichTxns: sandwichResults,
+  };
 }
 
-export function handleTxn(
+export function isArbitrage(
+  data: dataByTxn,
+  chainConfig: ChainConstants,
+  revenue: Map<string, bigint>,
+  addressProperty: Map<string, AddressProperty>
+): boolean {
+  const rolesCount = getRolesCount(addressProperty);
+  if (chainConfig.blackListedAddresses.has(data.tx.to!.toLowerCase())) {
+    console.log("skip blacklisted address for:", data.tx.to, data.tx.hash);
+    return false;
+  }
+
+  if (
+    getProperty("group", revenue) == AddressProperty.Winner &&
+    rolesCount.get(AddressProperty.Trader)! > 1
+  ) {
+    return true;
+  }
+  return false;
+}
+
+export function txnProfitAndCost(
   data: dataByTxn,
   chainConfig: ChainConstants
-): [boolean, Map<string, bigint>, Map<string, bigint>] {
+): arbTxnResult {
   const graph = buildGraph(data, chainConfig);
   let rewards = new Map<string, bigint>();
   let costs = new Map<string, bigint>();
-  let total = 0;
-  for (const [node, edges] of graph.adjList) {
-    total += edges.size;
+  if (data.tx.to === undefined || data.tx.to === null) {
+    return {
+      txnHash: data.tx.hash,
+      revenue: rewards,
+      costs: costs,
+      addressProperty: new Map<string, AddressProperty>(),
+    };
   }
   const sccs = graph.findStronglyConnectedComponents();
   //  graph.print();
   const balances = findBalanceChanges(sccs, graph);
   // printBalances(balances);
   const addressProperty = getAddressProperty(balances);
-  const rolesCount = getRolesCount(addressProperty);
   const sender = data.tx.from.toLowerCase();
-  if (data.tx.to === undefined || data.tx.to === null) {
-    return [false, rewards, costs];
-  }
-  if (chainConfig.blackListedAddresses.has(data.tx.to.toLowerCase())) {
-    console.log("skip blacklisted address for:", data.tx.to, data.tx.hash);
-    return [false, rewards, costs];
-  }
+
   const receiver = data.tx.to!.toLowerCase();
   const gasPrice = data.tx.gasPrice;
   if (data.transactionReceipts.length === 0) {
@@ -94,14 +155,12 @@ export function handleTxn(
     data.feeRecipent
   );
   costs.set("gas", gasTotal);
-
-  if (
-    getProperty("group", rewards) == AddressProperty.Winner &&
-    rolesCount.get(AddressProperty.Trader)! > 1
-  ) {
-    return [true, rewards, costs];
-  }
-  return [false, rewards, costs];
+  return {
+    txnHash: data.tx.hash,
+    revenue: rewards,
+    costs: costs,
+    addressProperty: addressProperty,
+  };
 }
 
 type TokenWithPrice = {
@@ -145,14 +204,14 @@ async function getTokenWithPrice(
 }
 
 async function computePnL(
-  ret: TxnResult,
+  ret: arbTxnResult,
   ctx: GlobalContext,
   config: ChainConstants
 ): Promise<[BigDecimal, BigDecimal]> {
   let pnl = BigDecimal(0);
   let gasCost = BigInt(0);
   let cost = BigDecimal(0);
-  for (const [addr, amount] of ret.rewards) {
+  for (const [addr, amount] of ret.revenue) {
     const tokenWithPrice = await getTokenWithPrice(
       addr,
       ctx.chainId.toString(),
@@ -203,8 +262,8 @@ for (const chainConfig of chainConfigs) {
     network: chainConfig.chainID,
   }).onBlockInterval(
     async (b, ctx) => {
-      const txnResults = handleBlock(b, chainConfig);
-      for (const txn of txnResults) {
+      const mevResults = handleBlock(b, chainConfig);
+      for (const txn of mevResults.arbTxns) {
         const link = `https://explorer.phalcon.xyz/tx/eth/${txn.txnHash}`;
         const [revenue, cost] = await computePnL(txn, ctx, chainConfig);
         if (revenue.comparedTo(0) <= 0) {

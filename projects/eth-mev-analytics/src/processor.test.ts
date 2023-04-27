@@ -5,7 +5,7 @@ import blockJsonUniswapMint from "./14202253.json";
 import blockWrongRevenue from "./17128908.json";
 import block2Botsfrom from "./17134096.json";
 import { RichBlock, formatRichBlock } from "@sentio/sdk/eth";
-import { handleTxn } from "./processor.js";
+import { txnProfitAndCost, isArbitrage } from "./processor.js";
 import { dataByTxn, getDataByTxn } from "./eth_util.js";
 import { chainConfigs, ChainConstants } from "./common.js";
 
@@ -24,6 +24,18 @@ describe("Test Processor", () => {
       }
     }
     throw new Error(`cannot find txn ${hash}`);
+  }
+
+  function handleTxn(
+    data: dataByTxn,
+    chainConfig: ChainConstants
+  ): [boolean, Map<string, bigint>, Map<string, bigint>] {
+    let ret = txnProfitAndCost(data, chainConfig);
+    return [
+      isArbitrage(data, chainConfig, ret.revenue, ret.addressProperty),
+      ret.revenue,
+      ret.costs,
+    ];
   }
 
   function compute(
