@@ -3,8 +3,9 @@ import blockJson from "./17121437.json";
 import blockJsonX from "./17126233.json";
 import blockJsonUniswapMint from "./14202253.json";
 import blockWrongRevenue from "./17128908.json";
+import block2Botsfrom from "./17134096.json";
 import { RichBlock, formatRichBlock } from "@sentio/sdk/eth";
-import { handleBlock, handleTxn } from "./processor.js";
+import { handleTxn } from "./processor.js";
 import { dataByTxn, getDataByTxn } from "./eth_util.js";
 import { chainConfigs, ChainConstants } from "./common.js";
 
@@ -42,8 +43,7 @@ describe("Test Processor", () => {
       blockJson,
       "0x629971cc2bceb52b73804546b76842084ef6d77c66f7b1c3b06d639760a54fd5"
     );
-    // TODO: fix this. Likely need to blacklist some addresses
-    expect(ret[0]).toBe(true);
+    expect(ret[0]).toBe(false);
   });
 
   test("WETH transfer duplicate", async () => {
@@ -61,11 +61,23 @@ describe("Test Processor", () => {
     );
     expect(ret[0]).toBe(false);
   });
+
   test("wrong revenue", async () => {
     const ret = compute(
       blockWrongRevenue,
       "0x80114900676c3c3da04ed5f4acd702acb344b0190f92a40a00dafb001fff6c71"
     );
     expect(ret[0]).toBe(true);
+  });
+
+  test("2 bots", async () => {
+    const ret = compute(
+      block2Botsfrom,
+      "0xd5695fefdc8c4e00f648fe62d8e77c7f9b4ab2b98ac1fcee5cbfd529689dcd49"
+    );
+    expect(ret[0]).toBe(true);
+    expect(ret[1].get("0xc02aaa39b223fe8d0a0e5c4f27ead9083c756cc2")).toBe(
+      2939038981219406289n
+    );
   });
 });

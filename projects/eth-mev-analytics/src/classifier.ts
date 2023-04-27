@@ -54,6 +54,40 @@ function mergeBalance(
   }
 }
 
+function updateRewardToAddress(
+  sender: string,
+  receiver: string,
+  addr: string,
+  rewards: Map<string, bigint>,
+  sccMap: Map<string, number>,
+  balanceChanges: Map<string, Map<string, bigint>>,
+  graph: TokenFlowGraph
+) {
+  for (const [from, edges] of graph.adjList) {
+    for (const [_, edge] of edges) {
+      if (addr !== edge.toAddr) {
+        continue;
+      }
+      if (sccMap.get(addr) === sccMap.get(from)) {
+        continue;
+      }
+      if (from == sender || from == receiver) {
+        continue;
+      }
+      if (!balanceChanges.has(from)) {
+        continue;
+      }
+
+      for (const [tokenAddr, value] of balanceChanges.get(from)!) {
+        if (!rewards.has(tokenAddr)) {
+          rewards.set(tokenAddr, BigInt(0));
+        }
+        rewards.set(tokenAddr, rewards.get(tokenAddr)! + value);
+      }
+    }
+  }
+}
+
 export function winnerRewards(
   sender: string,
   receiver: string,
@@ -101,7 +135,24 @@ export function winnerRewards(
       }
     }
   }
-
+  updateRewardToAddress(
+    sender,
+    receiver,
+    sender,
+    rewards,
+    sccMap,
+    balanceChanges,
+    graph
+  );
+  updateRewardToAddress(
+    sender,
+    receiver,
+    receiver,
+    rewards,
+    sccMap,
+    balanceChanges,
+    graph
+  );
   return [rewards, cost];
 }
 

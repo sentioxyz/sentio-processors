@@ -21,6 +21,7 @@ export const chainConfigs = [
     blackListedAddresses: new Set<string>([
       "0xB33af361843357E05B6Df3e45ae3B5CEc8E01137".toLowerCase(), // dsproxy
       "0x9008D19f58AAbD9eD0D60971565AA8510560ab41".toLowerCase(), // GPLv2
+      "0xDEF171Fe48CF0115B1d80b88dc8eAB59176FEe57", // paraswap v5
     ]),
   },
 ];
