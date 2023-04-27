@@ -16,6 +16,7 @@ export interface dataByTxn {
   tx: TransactionResponseParams;
   traces: Trace[];
   transactionReceipts: TransactionReceiptParams[];
+  feeRecipent: string;
 }
 
 function buildNativeETH(
@@ -218,6 +219,7 @@ export function getDataByTxn(b: RichBlock): Map<string, dataByTxn> {
       traces: [],
       blockNumber: b.number,
       tx: tx,
+      feeRecipent: b.miner.toLowerCase(),
     });
   }
 

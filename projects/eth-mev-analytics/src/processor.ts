@@ -91,7 +91,7 @@ export function handleTxn(
     sccs,
     balances,
     graph,
-    chainConfig.builderAddresses
+    data.feeRecipent
   );
   costs.set("gas", gasTotal);
 

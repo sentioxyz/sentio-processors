@@ -94,7 +94,7 @@ export function winnerRewards(
   sccs: Array<Array<string>>,
   balanceChanges: Map<string, Map<string, bigint>>,
   graph: TokenFlowGraph,
-  builderAddresses: Set<string>
+  feeRecipent: string
 ): [Map<string, bigint>, Map<string, bigint>] {
   let rewards: Map<string, bigint> = new Map();
   mergeBalance(sender, rewards, balanceChanges);
@@ -121,7 +121,7 @@ export function winnerRewards(
       if (edge.toAddr == sender || edge.toAddr == receiver) {
         continue;
       }
-      if (builderAddresses.has(edge.toAddr)) {
+      if (feeRecipent == edge.toAddr) {
         if (!cost.has(edge.tokenAddress)) {
           cost.set(edge.tokenAddress, BigInt(0));
         }
