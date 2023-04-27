@@ -4,8 +4,9 @@ import blockJsonX from "./17126233.json";
 import blockJsonUniswapMint from "./14202253.json";
 import blockWrongRevenue from "./17128908.json";
 import block2Botsfrom from "./17134096.json";
+import blockSandwichBasic from "./17139815.json";
 import { RichBlock, formatRichBlock } from "@sentio/sdk/eth";
-import { txnProfitAndCost, isArbitrage } from "./processor.js";
+import { txnProfitAndCost, isArbitrage, handleBlock } from "./processor.js";
 import { dataByTxn, getDataByTxn } from "./eth_util.js";
 import { chainConfigs, ChainConstants } from "./common.js";
 
@@ -91,5 +92,20 @@ describe("Test Processor", () => {
     expect(ret[1].get("0xc02aaa39b223fe8d0a0e5c4f27ead9083c756cc2")).toBe(
       2939038981219406289n
     );
+  });
+
+  test("sandwich", async () => {
+    const strValue = JSON.stringify(blockSandwichBasic);
+    const block = JSON.parse(strValue) as RichBlock;
+    const formattedBlock = formatRichBlock(block);
+    for (const tx of formattedBlock.transactions || []) {
+      if (typeof tx === "string") {
+        continue;
+      }
+      console.log(tx.hash, tx.index);
+    }
+    const mevResults = handleBlock(formattedBlock, chainConfigs[0]);
+    expect(mevResults.sandwichTxns).toHaveLength(1);
+    expect(mevResults.arbTxns).toHaveLength(2);
   });
 });

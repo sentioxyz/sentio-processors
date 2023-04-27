@@ -27,11 +27,10 @@ import {
 import { getPriceByType, token } from "@sentio/sdk/utils";
 
 import { chainConfigs, ChainConstants } from "./common.js";
-import { TokenFlowGraph } from "./graph.js";
 
 let START_BLOCK = 1000000000;
 
-interface arbTxnResult {
+interface txnResult {
   txnHash: string;
   revenue: Map<string, bigint>;
   costs: Map<string, bigint>;
@@ -41,20 +40,89 @@ interface arbTxnResult {
 interface sandwichTxnResult {
   frontTxnHash: string;
   backTxnHash: string;
-  rewards: Map<string, bigint>;
+  revenue: Map<string, bigint>;
   costs: Map<string, bigint>;
 }
 
 interface mevBlockResult {
-  arbTxns: Array<arbTxnResult>;
+  arbTxns: Array<txnResult>;
   sandwichTxns: Array<sandwichTxnResult>;
+}
+
+function isSandwich(
+  front: txnResult,
+  back: txnResult
+): [boolean, sandwichTxnResult] {
+  let ret = {
+    frontTxnHash: front.txnHash,
+    backTxnHash: back.txnHash,
+    revenue: new Map<string, bigint>(),
+    costs: new Map<string, bigint>(),
+  };
+  let revenue = front.revenue;
+  let costs = front.revenue;
+  for (const [address, value] of back.revenue) {
+    if (revenue.has(address)) {
+      revenue.set(address, revenue.get(address)! + value);
+    } else {
+      revenue.set(address, value);
+    }
+  }
+  for (const [address, value] of back.costs) {
+    if (costs.has(address)) {
+      costs.set(address, costs.get(address)! + value);
+    } else {
+      costs.set(address, value);
+    }
+  }
+  const property = getProperty("sandwich", revenue);
+  if (property == AddressProperty.Winner) {
+    ret.revenue = revenue;
+    ret.costs = costs;
+    return [true, ret];
+  } else {
+    return [false, ret];
+  }
 }
 
 export function findSandwich(
   data: Map<string, dataByTxn>,
-  arbResults: Map<string, arbTxnResult>
+  arbResults: Map<string, txnResult>
 ): Array<sandwichTxnResult> {
   let ret = new Array<sandwichTxnResult>();
+  let txnMap = new Map<string, Array<dataByTxn>>();
+  for (const [_, txnData] of data) {
+    const from = txnData.tx.from.toLowerCase();
+    const to = txnData.tx.to!.toLowerCase();
+    if (!txnMap.has(from + "-" + to)) {
+      txnMap.set(from + "-" + to, new Array<dataByTxn>());
+    }
+    txnMap.get(from + "-" + to)!.push(txnData);
+  }
+  // sort array
+  for (const [key, txnList] of txnMap) {
+    if (txnList.length < 2) {
+      continue;
+    }
+    txnList.sort((a, b) => a.tx.index - b.tx.index);
+    for (const txn of txnList) {
+      console.log(key, txn.tx.hash, txn.tx.index);
+    }
+    let targetStart = 0;
+    for (let i = 1; i < txnList.length; i++) {
+      if (i - targetStart > 1) {
+        const [is, sandwichResult] = isSandwich(
+          arbResults.get(txnList[targetStart].tx.hash)!,
+          arbResults.get(txnList[i].tx.hash)!
+        );
+        if (is) {
+          ret.push(sandwichResult);
+          targetStart = i + 1;
+        }
+      }
+      targetStart = i;
+    }
+  }
   return ret;
 }
 
@@ -64,7 +132,7 @@ export function handleBlock(
 ): mevBlockResult {
   const dataByTxn = getDataByTxn(b);
   console.log(`block ${b.number} has ${dataByTxn.size} txns`);
-  let txnResults = new Map<string, arbTxnResult>();
+  let txnResults = new Map<string, txnResult>();
   for (const [hash, data] of dataByTxn) {
     let ret = txnProfitAndCost(data, chainConfig);
     if (ret.revenue.size > 0) {
@@ -80,7 +148,7 @@ export function handleBlock(
       txnResults.delete(result.backTxnHash);
     }
   }
-  let arbTxnResults = new Array<arbTxnResult>();
+  let arbTxnResults = new Array<txnResult>();
   for (const [hash, result] of txnResults) {
     const txn = dataByTxn.get(hash);
     if (
@@ -119,7 +187,7 @@ export function isArbitrage(
 export function txnProfitAndCost(
   data: dataByTxn,
   chainConfig: ChainConstants
-): arbTxnResult {
+): txnResult {
   const graph = buildGraph(data, chainConfig);
   let rewards = new Map<string, bigint>();
   let costs = new Map<string, bigint>();
@@ -204,14 +272,15 @@ async function getTokenWithPrice(
 }
 
 async function computePnL(
-  ret: arbTxnResult,
+  revenue: Map<string, bigint>,
+  costs: Map<string, bigint>,
   ctx: GlobalContext,
   config: ChainConstants
 ): Promise<[BigDecimal, BigDecimal]> {
   let pnl = BigDecimal(0);
   let gasCost = BigInt(0);
   let cost = BigDecimal(0);
-  for (const [addr, amount] of ret.revenue) {
+  for (const [addr, amount] of revenue) {
     const tokenWithPrice = await getTokenWithPrice(
       addr,
       ctx.chainId.toString(),
@@ -225,7 +294,7 @@ async function computePnL(
       tokenWithPrice.price.multipliedBy(tokenWithPrice.scaledAmount)
     );
   }
-  for (const [addr, amount] of ret.costs) {
+  for (const [addr, amount] of costs) {
     if (addr === "gas") {
       gasCost = gasCost + amount;
     }
@@ -265,7 +334,12 @@ for (const chainConfig of chainConfigs) {
       const mevResults = handleBlock(b, chainConfig);
       for (const txn of mevResults.arbTxns) {
         const link = `https://explorer.phalcon.xyz/tx/eth/${txn.txnHash}`;
-        const [revenue, cost] = await computePnL(txn, ctx, chainConfig);
+        const [revenue, cost] = await computePnL(
+          txn.revenue,
+          txn.costs,
+          ctx,
+          chainConfig
+        );
         if (revenue.comparedTo(0) <= 0) {
           console.log("revenue is 0, likely not a popular token", txn.txnHash);
           continue;
@@ -273,6 +347,32 @@ for (const chainConfig of chainConfigs) {
         ctx.eventLogger.emit("arbitrage", {
           message: `Arbitrage txn detected: ${link}`,
           link: link,
+          revenue: revenue,
+          cost: cost,
+          profit: revenue.minus(cost),
+        });
+      }
+      for (const txn of mevResults.sandwichTxns) {
+        const frontLink = `https://explorer.phalcon.xyz/tx/eth/${txn.frontTxnHash}`;
+        const backLink = `https://explorer.phalcon.xyz/tx/eth/${txn.backTxnHash}`;
+        const [revenue, cost] = await computePnL(
+          txn.revenue,
+          txn.costs,
+          ctx,
+          chainConfig
+        );
+        if (revenue.comparedTo(0) <= 0) {
+          console.log(
+            "revenue is 0, likely not a popular token",
+            txn.frontTxnHash,
+            txn.backTxnHash
+          );
+          continue;
+        }
+        ctx.eventLogger.emit("sandwich", {
+          message: `Sandwich txn detected: ${frontLink} and ${backLink}`,
+          frontLink: frontLink,
+          backLink: backLink,
           revenue: revenue,
           cost: cost,
           profit: revenue.minus(cost),
