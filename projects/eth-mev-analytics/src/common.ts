@@ -16,6 +16,7 @@ export const chainConfigs = [
       "0xDAFEA492D9c6733ae3d56b7Ed1ADB60692c98Bc5".toLowerCase(), // flashbots
       "0x690B9A9E9aa1C9dB991C7721a92d351Db4FaC990".toLowerCase(), // builder0x69
       "0x388C818CA8B9251b393131C08a736A67ccB19297".toLowerCase(), // lido execution rewards
+      "0x1f9090aae28b8a3dceadf281b0f12828e676c326".toLowerCase(), // rsync builder
     ]),
     blackListedAddresses: new Set<string>([
       "0xB33af361843357E05B6Df3e45ae3B5CEc8E01137".toLowerCase(), // dsproxy
