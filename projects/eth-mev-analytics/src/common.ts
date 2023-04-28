@@ -17,6 +17,7 @@ export const chainConfigs = [
       "0xb46Fb07b0c80DBC3F97cae3BFe168AcaD46dF507", // zenbull
       "0x3DdC956B08c0A6dA2249f8c528fF0594F5AEa381", // zber
       "0x36b49ebf089be8860d7fc60f2553461e9cc8e9e2", // yearngate/timeless
+      "0x6753f23905f15376429e6f0c381fcc4862e48222", // pcvxzaps strategy
     ]),
   },
 ];
