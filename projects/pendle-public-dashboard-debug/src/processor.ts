@@ -10,8 +10,8 @@ PendleMarketFactoryProcessor.bind({
   startBlock: ethConfig.PendleMarketFactory_startBlock,
 }).onEventCreateNewMarket(tradingVolume_handleCreateNewMarket);
 
-PendleMarketFactoryProcessor.bind({
-  address: arbConfig.PendleMarketFactory,
-  startBlock: arbConfig.PendleMarketFactory_startBlock,
-  network: 42161,
-}).onEventCreateNewMarket(tradingVolume_handleCreateNewMarket);
+// PendleMarketFactoryProcessor.bind({
+//   address: arbConfig.PendleMarketFactory,
+//   startBlock: arbConfig.PendleMarketFactory_startBlock,
+//   network: 42161,
+// }).onEventCreateNewMarket(tradingVolume_handleCreateNewMarket);

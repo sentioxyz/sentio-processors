@@ -16,9 +16,11 @@ import { getStandardizedYieldContract } from '../types/eth/standardizedyield.js'
 import { getNormalizedTokenName } from '../helpers/misc.js';
 import { TIME_INTERVAL, whitelistedMarkets } from '../helpers/consts.js';
 
-const tradingVolumeCounter = Counter.register('trading_volume', {});
-const totalValueLockedGauge = Gauge.register('total_value_locked', {
+const tradingVolumeCounter = Counter.register('trading_volume', {
     sparse: false,
+});
+const totalValueLockedGauge = Gauge.register('total_value_locked', {
+    sparse: true,
 });
 
 export async function tradingVolume_handleCreateNewMarket(
@@ -71,7 +73,7 @@ const PendleMarketTemplate = new PendleMarketProcessorTemplate()
                 message: e
             })
         }
-    }, 10);
+    }, 60, 60);
 
 async function recordMarketTvl(ctx: PendleMarketContext) {
     const market = ctx.contract;
