@@ -60,7 +60,7 @@ function isSandwich(
     costs: new Map<string, bigint>(),
   };
   let revenue = front.revenue;
-  let costs = front.revenue;
+  let costs = front.costs;
   for (const [address, value] of back.revenue) {
     if (revenue.has(address)) {
       revenue.set(address, revenue.get(address)! + value);
@@ -79,6 +79,7 @@ function isSandwich(
   if (property == AddressProperty.Winner) {
     ret.revenue = revenue;
     ret.costs = costs;
+
     return [true, ret];
   } else {
     return [false, ret];
@@ -356,6 +357,7 @@ for (const chainConfig of chainConfigs) {
       for (const txn of mevResults.sandwichTxns) {
         const frontLink = `https://explorer.phalcon.xyz/tx/eth/${txn.frontTxnHash}`;
         const backLink = `https://explorer.phalcon.xyz/tx/eth/${txn.backTxnHash}`;
+
         const [revenue, cost] = await computePnL(
           txn.revenue,
           txn.costs,
