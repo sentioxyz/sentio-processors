@@ -164,13 +164,38 @@ export enum AddressProperty {
   NPC,
 }
 
+// Some bots treat USDT , DAI and USDC as the same token
+function normalizeToken(token: string): string {
+  if (token === "0xdac17f958d2ee523a2206206994597c13d831ec7") {
+    return "0xa0b86991c6218b36c1d19d4a2e9eb0ce3606eb48";
+  }
+  if (token === "0x6B175474E89094C44Da98b954EedeAC495271d0F") {
+    return "0xa0b86991c6218b36c1d19d4a2e9eb0ce3606eb48";
+  }
+  return token;
+}
+
 export function getProperty(
   addr: string,
-  ret: Map<string, bigint>
+  ret: Map<string, bigint>,
+  normalize: boolean
 ): AddressProperty {
   let numIncrease = 0;
   let numDecrease = 0;
-  for (const [_, balance] of ret) {
+  let normalizedBalance = new Map<string, bigint>();
+  if (!normalize) {
+    normalizedBalance = ret;
+  } else {
+    for (const [tokenAddr, balance] of ret) {
+      const norm = normalizeToken(tokenAddr);
+      if (!normalizedBalance.has(norm)) {
+        normalizedBalance.set(norm, BigInt(0));
+      }
+      normalizedBalance.set(norm, normalizedBalance.get(norm)! + balance);
+    }
+  }
+
+  for (const [_, balance] of normalizedBalance) {
     if (balance > BigInt(0)) {
       numIncrease++;
     } else if (balance < BigInt(0)) {
@@ -195,7 +220,7 @@ export function getAddressProperty(
 ): Map<string, AddressProperty> {
   let addressProperty: Map<string, AddressProperty> = new Map();
   for (const [addr, tokenBalances] of addresses) {
-    addressProperty.set(addr, getProperty(addr, tokenBalances));
+    addressProperty.set(addr, getProperty(addr, tokenBalances, false));
   }
   return addressProperty;
 }

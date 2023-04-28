@@ -75,7 +75,7 @@ function isSandwich(
       costs.set(address, value);
     }
   }
-  const property = getProperty("sandwich", revenue);
+  const property = getProperty("sandwich", revenue, true);
   if (property == AddressProperty.Winner) {
     ret.revenue = revenue;
     ret.costs = costs;
@@ -97,6 +97,9 @@ export function findSandwich(
     if (!txnMap.has(from + "-" + to)) {
       txnMap.set(from + "-" + to, new Array<dataByTxn>());
     }
+    // This is a hack to handle ethers bug.
+    // @ts-ignore
+    txnData.tx.index = parseInt(txnData.tx.transactionIndex);
     txnMap.get(from + "-" + to)!.push(txnData);
   }
   // sort array
@@ -105,12 +108,10 @@ export function findSandwich(
       continue;
     }
     txnList.sort((a, b) => a.tx.index - b.tx.index);
-    for (const txn of txnList) {
-      console.log(key, txn.tx.hash, txn.tx.index);
-    }
     let targetStart = 0;
+
     for (let i = 1; i < txnList.length; i++) {
-      if (i - targetStart > 1) {
+      if (txnList[i].tx.index - txnList[targetStart].tx.index > 1) {
         const [is, sandwichResult] = isSandwich(
           arbResults.get(txnList[targetStart].tx.hash)!,
           arbResults.get(txnList[i].tx.hash)!
@@ -176,7 +177,7 @@ export function isArbitrage(
   }
 
   if (
-    getProperty("group", revenue) == AddressProperty.Winner &&
+    getProperty("group", revenue, true) == AddressProperty.Winner &&
     rolesCount.get(AddressProperty.Trader)! > 1
   ) {
     return true;

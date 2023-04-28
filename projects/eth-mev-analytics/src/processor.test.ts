@@ -98,14 +98,8 @@ describe("Test Processor", () => {
     const strValue = JSON.stringify(blockSandwichBasic);
     const block = JSON.parse(strValue) as RichBlock;
     const formattedBlock = formatRichBlock(block);
-    for (const tx of formattedBlock.transactions || []) {
-      if (typeof tx === "string") {
-        continue;
-      }
-      console.log(tx.hash, tx.index);
-    }
     const mevResults = handleBlock(formattedBlock, chainConfigs[0]);
-    expect(mevResults.sandwichTxns).toHaveLength(1);
+    expect(mevResults.sandwichTxns).toHaveLength(2);
     expect(mevResults.arbTxns).toHaveLength(2);
   });
 });
