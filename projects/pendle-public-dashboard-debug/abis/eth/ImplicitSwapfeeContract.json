@@ -1,0 +1,181 @@
+[
+    {
+        "inputs": [],
+        "stateMutability": "nonpayable",
+        "type": "constructor"
+    },
+    {
+        "inputs": [
+            {
+                "internalType": "int256",
+                "name": "exchangeRate",
+                "type": "int256"
+            }
+        ],
+        "name": "MarketExchangeRateBelowOne",
+        "type": "error"
+    },
+    {
+        "inputs": [],
+        "name": "MarketExpired",
+        "type": "error"
+    },
+    {
+        "inputs": [
+            {
+                "internalType": "int256",
+                "name": "currentAmount",
+                "type": "int256"
+            },
+            {
+                "internalType": "int256",
+                "name": "requiredAmount",
+                "type": "int256"
+            }
+        ],
+        "name": "MarketInsufficientPtForTrade",
+        "type": "error"
+    },
+    {
+        "inputs": [],
+        "name": "MarketProportionMustNotEqualOne",
+        "type": "error"
+    },
+    {
+        "inputs": [
+            {
+                "internalType": "int256",
+                "name": "proportion",
+                "type": "int256"
+            },
+            {
+                "internalType": "int256",
+                "name": "maxProportion",
+                "type": "int256"
+            }
+        ],
+        "name": "MarketProportionTooHigh",
+        "type": "error"
+    },
+    {
+        "inputs": [
+            {
+                "internalType": "int256",
+                "name": "rateScalar",
+                "type": "int256"
+            }
+        ],
+        "name": "MarketRateScalarBelowZero",
+        "type": "error"
+    },
+    {
+        "inputs": [],
+        "name": "MarketZeroLnImpliedRate",
+        "type": "error"
+    },
+    {
+        "inputs": [
+            {
+                "internalType": "int256",
+                "name": "totalPt",
+                "type": "int256"
+            },
+            {
+                "internalType": "int256",
+                "name": "totalAsset",
+                "type": "int256"
+            }
+        ],
+        "name": "MarketZeroTotalPtOrTotalAsset",
+        "type": "error"
+    },
+    {
+        "inputs": [],
+        "name": "K",
+        "outputs": [
+            {
+                "internalType": "int256",
+                "name": "",
+                "type": "int256"
+            }
+        ],
+        "stateMutability": "view",
+        "type": "function"
+    },
+    {
+        "inputs": [
+            {
+                "internalType": "address",
+                "name": "market",
+                "type": "address"
+            },
+            {
+                "components": [
+                    {
+                        "internalType": "int256",
+                        "name": "totalPt",
+                        "type": "int256"
+                    },
+                    {
+                        "internalType": "int256",
+                        "name": "totalSy",
+                        "type": "int256"
+                    },
+                    {
+                        "internalType": "int256",
+                        "name": "totalLp",
+                        "type": "int256"
+                    },
+                    {
+                        "internalType": "address",
+                        "name": "treasury",
+                        "type": "address"
+                    },
+                    {
+                        "internalType": "int256",
+                        "name": "scalarRoot",
+                        "type": "int256"
+                    },
+                    {
+                        "internalType": "uint256",
+                        "name": "expiry",
+                        "type": "uint256"
+                    },
+                    {
+                        "internalType": "uint256",
+                        "name": "lnFeeRateRoot",
+                        "type": "uint256"
+                    },
+                    {
+                        "internalType": "uint256",
+                        "name": "reserveFeePercent",
+                        "type": "uint256"
+                    },
+                    {
+                        "internalType": "uint256",
+                        "name": "lastLnImpliedRate",
+                        "type": "uint256"
+                    }
+                ],
+                "internalType": "struct MarketState",
+                "name": "prevState",
+                "type": "tuple"
+            },
+            {
+                "internalType": "int256",
+                "name": "netPtToAccount",
+                "type": "int256"
+            }
+        ],
+        "name": "execute",
+        "outputs": [
+            {
+                "internalType": "int256",
+                "name": "netScyToAccount",
+                "type": "int256"
+            }
+        ],
+        "stateMutability": "view",
+        "type": "function"
+    }
+]

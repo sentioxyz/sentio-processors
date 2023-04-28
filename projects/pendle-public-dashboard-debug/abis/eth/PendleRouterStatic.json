@@ -1,0 +1,2417 @@
+[
+    {
+        "inputs": [
+            {
+                "internalType": "contract IPYieldContractFactory",
+                "name": "_yieldContractFactory",
+                "type": "address"
+            },
+            {
+                "internalType": "contract IPMarketFactory",
+                "name": "_marketFactory",
+                "type": "address"
+            },
+            {
+                "internalType": "contract IPVotingEscrowMainchain",
+                "name": "_vePENDLE",
+                "type": "address"
+            },
+            {
+                "internalType": "contract IPBulkSellerFactory",
+                "name": "_bulkFactory",
+                "type": "address"
+            }
+        ],
+        "stateMutability": "nonpayable",
+        "type": "constructor"
+    },
+    {
+        "inputs": [
+            {
+                "internalType": "uint256",
+                "name": "currentAmount",
+                "type": "uint256"
+            },
+            {
+                "internalType": "uint256",
+                "name": "requiredAmount",
+                "type": "uint256"
+            }
+        ],
+        "name": "BulkInsufficientSyForTrade",
+        "type": "error"
+    },
+    {
+        "inputs": [
+            {
+                "internalType": "uint256",
+                "name": "currentAmount",
+                "type": "uint256"
+            },
+            {
+                "internalType": "uint256",
+                "name": "requiredAmount",
+                "type": "uint256"
+            }
+        ],
+        "name": "BulkInsufficientTokenForTrade",
+        "type": "error"
+    },
+    {
+        "inputs": [
+            {
+                "internalType": "uint256",
+                "name": "expiry",
+                "type": "uint256"
+            }
+        ],
+        "name": "ExpiryInThePast",
+        "type": "error"
+    },
+    {
+        "inputs": [
+            {
+                "internalType": "uint256",
+                "name": "wTime",
+                "type": "uint256"
+            }
+        ],
+        "name": "InvalidWTime",
+        "type": "error"
+    },
+    {
+        "inputs": [
+            {
+                "internalType": "uint256",
+                "name": "netSyDesired",
+                "type": "uint256"
+            },
+            {
+                "internalType": "uint256",
+                "name": "netSyUsed",
+                "type": "uint256"
+            }
+        ],
+        "name": "RouterNotAllSyUsed",
+        "type": "error"
+    },
+    {
+        "inputs": [],
+        "name": "VEExceededMaxLockTime",
+        "type": "error"
+    },
+    {
+        "inputs": [],
+        "name": "VEInsufficientLockTime",
+        "type": "error"
+    },
+    {
+        "inputs": [],
+        "name": "VENotAllowedReduceExpiry",
+        "type": "error"
+    },
+    {
+        "inputs": [],
+        "name": "VEZeroAmountLocked",
+        "type": "error"
+    },
+    {
+        "inputs": [],
+        "name": "YCExpired",
+        "type": "error"
+    },
+    {
+        "anonymous": false,
+        "inputs": [
+            {
+                "indexed": false,
+                "internalType": "address",
+                "name": "previousAdmin",
+                "type": "address"
+            },
+            {
+                "indexed": false,
+                "internalType": "address",
+                "name": "newAdmin",
+                "type": "address"
+            }
+        ],
+        "name": "AdminChanged",
+        "type": "event"
+    },
+    {
+        "anonymous": false,
+        "inputs": [
+            {
+                "indexed": true,
+                "internalType": "address",
+                "name": "beacon",
+                "type": "address"
+            }
+        ],
+        "name": "BeaconUpgraded",
+        "type": "event"
+    },
+    {
+        "anonymous": false,
+        "inputs": [
+            {
+                "indexed": false,
+                "internalType": "uint8",
+                "name": "version",
+                "type": "uint8"
+            }
+        ],
+        "name": "Initialized",
+        "type": "event"
+    },
+    {
+        "anonymous": false,
+        "inputs": [
+            {
+                "indexed": true,
+                "internalType": "address",
+                "name": "previousOwner",
+                "type": "address"
+            },
+            {
+                "indexed": true,
+                "internalType": "address",
+                "name": "newOwner",
+                "type": "address"
+            }
+        ],
+        "name": "OwnershipTransferred",
+        "type": "event"
+    },
+    {
+        "anonymous": false,
+        "inputs": [
+            {
+                "indexed": true,
+                "internalType": "address",
+                "name": "implementation",
+                "type": "address"
+            }
+        ],
+        "name": "Upgraded",
+        "type": "event"
+    },
+    {
+        "inputs": [],
+        "name": "MAX_LOCK_TIME",
+        "outputs": [
+            {
+                "internalType": "uint128",
+                "name": "",
+                "type": "uint128"
+            }
+        ],
+        "stateMutability": "view",
+        "type": "function"
+    },
+    {
+        "inputs": [],
+        "name": "MIN_LOCK_TIME",
+        "outputs": [
+            {
+                "internalType": "uint128",
+                "name": "",
+                "type": "uint128"
+            }
+        ],
+        "stateMutability": "view",
+        "type": "function"
+    },
+    {
+        "inputs": [
+            {
+                "internalType": "address",
+                "name": "market",
+                "type": "address"
+            },
+            {
+                "internalType": "uint256",
+                "name": "netSyDesired",
+                "type": "uint256"
+            },
+            {
+                "internalType": "uint256",
+                "name": "netPtDesired",
+                "type": "uint256"
+            }
+        ],
+        "name": "addLiquidityDualSyAndPtStatic",
+        "outputs": [
+            {
+                "internalType": "uint256",
+                "name": "netLpOut",
+                "type": "uint256"
+            },
+            {
+                "internalType": "uint256",
+                "name": "netSyUsed",
+                "type": "uint256"
+            },
+            {
+                "internalType": "uint256",
+                "name": "netPtUsed",
+                "type": "uint256"
+            }
+        ],
+        "stateMutability": "view",
+        "type": "function"
+    },
+    {
+        "inputs": [
+            {
+                "internalType": "address",
+                "name": "market",
+                "type": "address"
+            },
+            {
+                "internalType": "address",
+                "name": "tokenIn",
+                "type": "address"
+            },
+            {
+                "internalType": "uint256",
+                "name": "netTokenDesired",
+                "type": "uint256"
+            },
+            {
+                "internalType": "address",
+                "name": "bulk",
+                "type": "address"
+            },
+            {
+                "internalType": "uint256",
+                "name": "netPtDesired",
+                "type": "uint256"
+            }
+        ],
+        "name": "addLiquidityDualTokenAndPtStatic",
+        "outputs": [
+            {
+                "internalType": "uint256",
+                "name": "netLpOut",
+                "type": "uint256"
+            },
+            {
+                "internalType": "uint256",
+                "name": "netTokenUsed",
+                "type": "uint256"
+            },
+            {
+                "internalType": "uint256",
+                "name": "netPtUsed",
+                "type": "uint256"
+            }
+        ],
+        "stateMutability": "view",
+        "type": "function"
+    },
+    {
+        "inputs": [
+            {
+                "internalType": "address",
+                "name": "market",
+                "type": "address"
+            },
+            {
+                "internalType": "address",
+                "name": "baseToken",
+                "type": "address"
+            },
+            {
+                "internalType": "uint256",
+                "name": "netBaseTokenIn",
+                "type": "uint256"
+            },
+            {
+                "internalType": "address",
+                "name": "bulk",
+                "type": "address"
+            }
+        ],
+        "name": "addLiquiditySingleBaseTokenStatic",
+        "outputs": [
+            {
+                "internalType": "uint256",
+                "name": "netLpOut",
+                "type": "uint256"
+            },
+            {
+                "internalType": "uint256",
+                "name": "netPtFromSwap",
+                "type": "uint256"
+            },
+            {
+                "internalType": "uint256",
+                "name": "netSyFee",
+                "type": "uint256"
+            },
+            {
+                "internalType": "uint256",
+                "name": "priceImpact",
+                "type": "uint256"
+            }
+        ],
+        "stateMutability": "nonpayable",
+        "type": "function"
+    },
+    {
+        "inputs": [
+            {
+                "internalType": "address",
+                "name": "market",
+                "type": "address"
+            },
+            {
+                "internalType": "uint256",
+                "name": "netPtIn",
+                "type": "uint256"
+            }
+        ],
+        "name": "addLiquiditySinglePtStatic",
+        "outputs": [
+            {
+                "internalType": "uint256",
+                "name": "netLpOut",
+                "type": "uint256"
+            },
+            {
+                "internalType": "uint256",
+                "name": "netPtToSwap",
+                "type": "uint256"
+            },
+            {
+                "internalType": "uint256",
+                "name": "netSyFee",
+                "type": "uint256"
+            },
+            {
+                "internalType": "uint256",
+                "name": "priceImpact",
+                "type": "uint256"
+            }
+        ],
+        "stateMutability": "nonpayable",
+        "type": "function"
+    },
+    {
+        "inputs": [
+            {
+                "internalType": "address",
+                "name": "market",
+                "type": "address"
+            },
+            {
+                "internalType": "uint256",
+                "name": "netSyIn",
+                "type": "uint256"
+            }
+        ],
+        "name": "addLiquiditySingleSyStatic",
+        "outputs": [
+            {
+                "internalType": "uint256",
+                "name": "netLpOut",
+                "type": "uint256"
+            },
+            {
+                "internalType": "uint256",
+                "name": "netPtFromSwap",
+                "type": "uint256"
+            },
+            {
+                "internalType": "uint256",
+                "name": "netSyFee",
+                "type": "uint256"
+            },
+            {
+                "internalType": "uint256",
+                "name": "priceImpact",
+                "type": "uint256"
+            }
+        ],
+        "stateMutability": "nonpayable",
+        "type": "function"
+    },
+    {
+        "inputs": [
+            {
+                "internalType": "address",
+                "name": "market",
+                "type": "address"
+            },
+            {
+                "internalType": "int256",
+                "name": "netPtOut",
+                "type": "int256"
+            }
+        ],
+        "name": "calcPriceImpact",
+        "outputs": [
+            {
+                "internalType": "uint256",
+                "name": "priceImpact",
+                "type": "uint256"
+            }
+        ],
+        "stateMutability": "nonpayable",
+        "type": "function"
+    },
+    {
+        "inputs": [],
+        "name": "claimOwnership",
+        "outputs": [],
+        "stateMutability": "nonpayable",
+        "type": "function"
+    },
+    {
+        "inputs": [
+            {
+                "internalType": "contract IStandardizedYield",
+                "name": "SY",
+                "type": "address"
+            },
+            {
+                "internalType": "address",
+                "name": "tokenIn",
+                "type": "address"
+            },
+            {
+                "internalType": "address",
+                "name": "bulk",
+                "type": "address"
+            },
+            {
+                "internalType": "uint256",
+                "name": "netSyOut",
+                "type": "uint256"
+            }
+        ],
+        "name": "getAmountTokenToMintSy",
+        "outputs": [
+            {
+                "internalType": "uint256",
+                "name": "netTokenIn",
+                "type": "uint256"
+            }
+        ],
+        "stateMutability": "view",
+        "type": "function"
+    },
+    {
+        "inputs": [
+            {
+                "internalType": "address",
+                "name": "token",
+                "type": "address"
+            },
+            {
+                "internalType": "address",
+                "name": "SY",
+                "type": "address"
+            }
+        ],
+        "name": "getBulkSellerInfo",
+        "outputs": [
+            {
+                "internalType": "address",
+                "name": "bulk",
+                "type": "address"
+            },
+            {
+                "internalType": "uint256",
+                "name": "totalToken",
+                "type": "uint256"
+            },
+            {
+                "internalType": "uint256",
+                "name": "totalSy",
+                "type": "uint256"
+            }
+        ],
+        "stateMutability": "view",
+        "type": "function"
+    },
+    {
+        "inputs": [
+            {
+                "internalType": "address",
+                "name": "token",
+                "type": "address"
+            },
+            {
+                "internalType": "address",
+                "name": "SY",
+                "type": "address"
+            },
+            {
+                "internalType": "uint256",
+                "name": "netTokenIn",
+                "type": "uint256"
+            },
+            {
+                "internalType": "uint256",
+                "name": "netSyIn",
+                "type": "uint256"
+            }
+        ],
+        "name": "getBulkSellerInfo",
+        "outputs": [
+            {
+                "internalType": "address",
+                "name": "bulk",
+                "type": "address"
+            },
+            {
+                "internalType": "uint256",
+                "name": "totalToken",
+                "type": "uint256"
+            },
+            {
+                "internalType": "uint256",
+                "name": "totalSy",
+                "type": "uint256"
+            }
+        ],
+        "stateMutability": "view",
+        "type": "function"
+    },
+    {
+        "inputs": [],
+        "name": "getDefaultApproxParams",
+        "outputs": [
+            {
+                "components": [
+                    {
+                        "internalType": "uint256",
+                        "name": "guessMin",
+                        "type": "uint256"
+                    },
+                    {
+                        "internalType": "uint256",
+                        "name": "guessMax",
+                        "type": "uint256"
+                    },
+                    {
+                        "internalType": "uint256",
+                        "name": "guessOffchain",
+                        "type": "uint256"
+                    },
+                    {
+                        "internalType": "uint256",
+                        "name": "maxIteration",
+                        "type": "uint256"
+                    },
+                    {
+                        "internalType": "uint256",
+                        "name": "eps",
+                        "type": "uint256"
+                    }
+                ],
+                "internalType": "struct ApproxParams",
+                "name": "",
+                "type": "tuple"
+            }
+        ],
+        "stateMutability": "pure",
+        "type": "function"
+    },
+    {
+        "inputs": [
+            {
+                "internalType": "address",
+                "name": "market",
+                "type": "address"
+            }
+        ],
+        "name": "getExchangeRate",
+        "outputs": [
+            {
+                "internalType": "uint256",
+                "name": "",
+                "type": "uint256"
+            }
+        ],
+        "stateMutability": "nonpayable",
+        "type": "function"
+    },
+    {
+        "inputs": [
+            {
+                "internalType": "address",
+                "name": "market",
+                "type": "address"
+            }
+        ],
+        "name": "getMarketInfo",
+        "outputs": [
+            {
+                "internalType": "address",
+                "name": "pt",
+                "type": "address"
+            },
+            {
+                "internalType": "address",
+                "name": "sy",
+                "type": "address"
+            },
+            {
+                "components": [
+                    {
+                        "internalType": "int256",
+                        "name": "totalPt",
+                        "type": "int256"
+                    },
+                    {
+                        "internalType": "int256",
+                        "name": "totalSy",
+                        "type": "int256"
+                    },
+                    {
+                        "internalType": "int256",
+                        "name": "totalLp",
+                        "type": "int256"
+                    },
+                    {
+                        "internalType": "address",
+                        "name": "treasury",
+                        "type": "address"
+                    },
+                    {
+                        "internalType": "int256",
+                        "name": "scalarRoot",
+                        "type": "int256"
+                    },
+                    {
+                        "internalType": "uint256",
+                        "name": "expiry",
+                        "type": "uint256"
+                    },
+                    {
+                        "internalType": "uint256",
+                        "name": "lnFeeRateRoot",
+                        "type": "uint256"
+                    },
+                    {
+                        "internalType": "uint256",
+                        "name": "reserveFeePercent",
+                        "type": "uint256"
+                    },
+                    {
+                        "internalType": "uint256",
+                        "name": "lastLnImpliedRate",
+                        "type": "uint256"
+                    }
+                ],
+                "internalType": "struct MarketState",
+                "name": "state",
+                "type": "tuple"
+            },
+            {
+                "internalType": "int256",
+                "name": "impliedYield",
+                "type": "int256"
+            },
+            {
+                "internalType": "uint256",
+                "name": "exchangeRate",
+                "type": "uint256"
+            }
+        ],
+        "stateMutability": "nonpayable",
+        "type": "function"
+    },
+    {
+        "inputs": [
+            {
+                "internalType": "address",
+                "name": "py",
+                "type": "address"
+            }
+        ],
+        "name": "getPY",
+        "outputs": [
+            {
+                "internalType": "address",
+                "name": "pt",
+                "type": "address"
+            },
+            {
+                "internalType": "address",
+                "name": "yt",
+                "type": "address"
+            }
+        ],
+        "stateMutability": "view",
+        "type": "function"
+    },
+    {
+        "inputs": [
+            {
+                "internalType": "address",
+                "name": "py",
+                "type": "address"
+            }
+        ],
+        "name": "getPYInfo",
+        "outputs": [
+            {
+                "internalType": "uint256",
+                "name": "exchangeRate",
+                "type": "uint256"
+            },
+            {
+                "internalType": "uint256",
+                "name": "totalSupply",
+                "type": "uint256"
+            },
+            {
+                "components": [
+                    {
+                        "internalType": "address",
+                        "name": "rewardToken",
+                        "type": "address"
+                    },
+                    {
+                        "internalType": "uint256",
+                        "name": "index",
+                        "type": "uint256"
+                    }
+                ],
+                "internalType": "struct RouterStatic.RewardIndex[]",
+                "name": "rewardIndexes",
+                "type": "tuple[]"
+            }
+        ],
+        "stateMutability": "nonpayable",
+        "type": "function"
+    },
+    {
+        "inputs": [
+            {
+                "internalType": "address",
+                "name": "token",
+                "type": "address"
+            }
+        ],
+        "name": "getPendleTokenType",
+        "outputs": [
+            {
+                "internalType": "bool",
+                "name": "isPT",
+                "type": "bool"
+            },
+            {
+                "internalType": "bool",
+                "name": "isYT",
+                "type": "bool"
+            },
+            {
+                "internalType": "bool",
+                "name": "isMarket",
+                "type": "bool"
+            }
+        ],
+        "stateMutability": "view",
+        "type": "function"
+    },
+    {
+        "inputs": [
+            {
+                "internalType": "address",
+                "name": "market",
+                "type": "address"
+            }
+        ],
+        "name": "getPtImpliedYield",
+        "outputs": [
+            {
+                "internalType": "int256",
+                "name": "",
+                "type": "int256"
+            }
+        ],
+        "stateMutability": "view",
+        "type": "function"
+    },
+    {
+        "inputs": [
+            {
+                "internalType": "address",
+                "name": "market",
+                "type": "address"
+            }
+        ],
+        "name": "getSyMarket",
+        "outputs": [
+            {
+                "internalType": "contract IStandardizedYield",
+                "name": "",
+                "type": "address"
+            }
+        ],
+        "stateMutability": "view",
+        "type": "function"
+    },
+    {
+        "inputs": [
+            {
+                "internalType": "address",
+                "name": "pyToken",
+                "type": "address"
+            },
+            {
+                "internalType": "address",
+                "name": "market",
+                "type": "address"
+            }
+        ],
+        "name": "getTokensInOut",
+        "outputs": [
+            {
+                "internalType": "address[]",
+                "name": "tokensIn",
+                "type": "address[]"
+            },
+            {
+                "internalType": "address[]",
+                "name": "tokensOut",
+                "type": "address[]"
+            }
+        ],
+        "stateMutability": "view",
+        "type": "function"
+    },
+    {
+        "inputs": [
+            {
+                "internalType": "address",
+                "name": "market",
+                "type": "address"
+            },
+            {
+                "internalType": "int256",
+                "name": "netPtOut",
+                "type": "int256"
+            }
+        ],
+        "name": "getTradeExchangeRateIncludeFee",
+        "outputs": [
+            {
+                "internalType": "uint256",
+                "name": "",
+                "type": "uint256"
+            }
+        ],
+        "stateMutability": "nonpayable",
+        "type": "function"
+    },
+    {
+        "inputs": [
+            {
+                "internalType": "address",
+                "name": "market",
+                "type": "address"
+            },
+            {
+                "internalType": "address",
+                "name": "user",
+                "type": "address"
+            }
+        ],
+        "name": "getUserMarketInfo",
+        "outputs": [
+            {
+                "components": [
+                    {
+                        "internalType": "address",
+                        "name": "market",
+                        "type": "address"
+                    },
+                    {
+                        "internalType": "uint256",
+                        "name": "lpBalance",
+                        "type": "uint256"
+                    },
+                    {
+                        "components": [
+                            {
+                                "internalType": "address",
+                                "name": "token",
+                                "type": "address"
+                            },
+                            {
+                                "internalType": "uint256",
+                                "name": "amount",
+                                "type": "uint256"
+                            }
+                        ],
+                        "internalType": "struct RouterStatic.TokenAmount",
+                        "name": "ptBalance",
+                        "type": "tuple"
+                    },
+                    {
+                        "components": [
+                            {
+                                "internalType": "address",
+                                "name": "token",
+                                "type": "address"
+                            },
+                            {
+                                "internalType": "uint256",
+                                "name": "amount",
+                                "type": "uint256"
+                            }
+                        ],
+                        "internalType": "struct RouterStatic.TokenAmount",
+                        "name": "syBalance",
+                        "type": "tuple"
+                    },
+                    {
+                        "components": [
+                            {
+                                "internalType": "enum IStandardizedYield.AssetType",
+                                "name": "assetType",
+                                "type": "uint8"
+                            },
+                            {
+                                "internalType": "address",
+                                "name": "assetAddress",
+                                "type": "address"
+                            },
+                            {
+                                "internalType": "uint256",
+                                "name": "amount",
+                                "type": "uint256"
+                            }
+                        ],
+                        "internalType": "struct RouterStatic.AssetAmount",
+                        "name": "assetBalance",
+                        "type": "tuple"
+                    }
+                ],
+                "internalType": "struct RouterStatic.UserMarketInfo",
+                "name": "userMarketInfo",
+                "type": "tuple"
+            }
+        ],
+        "stateMutability": "view",
+        "type": "function"
+    },
+    {
+        "inputs": [
+            {
+                "internalType": "address",
+                "name": "user",
+                "type": "address"
+            },
+            {
+                "internalType": "address[]",
+                "name": "markets",
+                "type": "address[]"
+            }
+        ],
+        "name": "getUserMarketPositions",
+        "outputs": [
+            {
+                "components": [
+                    {
+                        "internalType": "address",
+                        "name": "market",
+                        "type": "address"
+                    },
+                    {
+                        "internalType": "uint256",
+                        "name": "lpBalance",
+                        "type": "uint256"
+                    },
+                    {
+                        "components": [
+                            {
+                                "internalType": "address",
+                                "name": "token",
+                                "type": "address"
+                            },
+                            {
+                                "internalType": "uint256",
+                                "name": "amount",
+                                "type": "uint256"
+                            }
+                        ],
+                        "internalType": "struct RouterStatic.TokenAmount",
+                        "name": "ptBalance",
+                        "type": "tuple"
+                    },
+                    {
+                        "components": [
+                            {
+                                "internalType": "address",
+                                "name": "token",
+                                "type": "address"
+                            },
+                            {
+                                "internalType": "uint256",
+                                "name": "amount",
+                                "type": "uint256"
+                            }
+                        ],
+                        "internalType": "struct RouterStatic.TokenAmount",
+                        "name": "syBalance",
+                        "type": "tuple"
+                    },
+                    {
+                        "components": [
+                            {
+                                "internalType": "enum IStandardizedYield.AssetType",
+                                "name": "assetType",
+                                "type": "uint8"
+                            },
+                            {
+                                "internalType": "address",
+                                "name": "assetAddress",
+                                "type": "address"
+                            },
+                            {
+                                "internalType": "uint256",
+                                "name": "amount",
+                                "type": "uint256"
+                            }
+                        ],
+                        "internalType": "struct RouterStatic.AssetAmount",
+                        "name": "assetBalance",
+                        "type": "tuple"
+                    }
+                ],
+                "internalType": "struct RouterStatic.UserMarketInfo[]",
+                "name": "userMarketPositions",
+                "type": "tuple[]"
+            }
+        ],
+        "stateMutability": "view",
+        "type": "function"
+    },
+    {
+        "inputs": [
+            {
+                "internalType": "address",
+                "name": "py",
+                "type": "address"
+            },
+            {
+                "internalType": "address",
+                "name": "user",
+                "type": "address"
+            }
+        ],
+        "name": "getUserPYInfo",
+        "outputs": [
+            {
+                "components": [
+                    {
+                        "internalType": "address",
+                        "name": "yt",
+                        "type": "address"
+                    },
+                    {
+                        "internalType": "address",
+                        "name": "pt",
+                        "type": "address"
+                    },
+                    {
+                        "internalType": "uint256",
+                        "name": "ytBalance",
+                        "type": "uint256"
+                    },
+                    {
+                        "internalType": "uint256",
+                        "name": "ptBalance",
+                        "type": "uint256"
+                    },
+                    {
+                        "components": [
+                            {
+                                "internalType": "address",
+                                "name": "token",
+                                "type": "address"
+                            },
+                            {
+                                "internalType": "uint256",
+                                "name": "amount",
+                                "type": "uint256"
+                            }
+                        ],
+                        "internalType": "struct RouterStatic.TokenAmount",
+                        "name": "unclaimedInterest",
+                        "type": "tuple"
+                    },
+                    {
+                        "components": [
+                            {
+                                "internalType": "address",
+                                "name": "token",
+                                "type": "address"
+                            },
+                            {
+                                "internalType": "uint256",
+                                "name": "amount",
+                                "type": "uint256"
+                            }
+                        ],
+                        "internalType": "struct RouterStatic.TokenAmount[]",
+                        "name": "unclaimedRewards",
+                        "type": "tuple[]"
+                    }
+                ],
+                "internalType": "struct RouterStatic.UserPYInfo",
+                "name": "userPYInfo",
+                "type": "tuple"
+            }
+        ],
+        "stateMutability": "view",
+        "type": "function"
+    },
+    {
+        "inputs": [
+            {
+                "internalType": "address",
+                "name": "user",
+                "type": "address"
+            },
+            {
+                "internalType": "address[]",
+                "name": "pys",
+                "type": "address[]"
+            }
+        ],
+        "name": "getUserPYPositionsByPYs",
+        "outputs": [
+            {
+                "components": [
+                    {
+                        "internalType": "address",
+                        "name": "yt",
+                        "type": "address"
+                    },
+                    {
+                        "internalType": "address",
+                        "name": "pt",
+                        "type": "address"
+                    },
+                    {
+                        "internalType": "uint256",
+                        "name": "ytBalance",
+                        "type": "uint256"
+                    },
+                    {
+                        "internalType": "uint256",
+                        "name": "ptBalance",
+                        "type": "uint256"
+                    },
+                    {
+                        "components": [
+                            {
+                                "internalType": "address",
+                                "name": "token",
+                                "type": "address"
+                            },
+                            {
+                                "internalType": "uint256",
+                                "name": "amount",
+                                "type": "uint256"
+                            }
+                        ],
+                        "internalType": "struct RouterStatic.TokenAmount",
+                        "name": "unclaimedInterest",
+                        "type": "tuple"
+                    },
+                    {
+                        "components": [
+                            {
+                                "internalType": "address",
+                                "name": "token",
+                                "type": "address"
+                            },
+                            {
+                                "internalType": "uint256",
+                                "name": "amount",
+                                "type": "uint256"
+                            }
+                        ],
+                        "internalType": "struct RouterStatic.TokenAmount[]",
+                        "name": "unclaimedRewards",
+                        "type": "tuple[]"
+                    }
+                ],
+                "internalType": "struct RouterStatic.UserPYInfo[]",
+                "name": "userPYPositions",
+                "type": "tuple[]"
+            }
+        ],
+        "stateMutability": "view",
+        "type": "function"
+    },
+    {
+        "inputs": [
+            {
+                "internalType": "address",
+                "name": "sy",
+                "type": "address"
+            },
+            {
+                "internalType": "address",
+                "name": "user",
+                "type": "address"
+            }
+        ],
+        "name": "getUserSYInfo",
+        "outputs": [
+            {
+                "internalType": "uint256",
+                "name": "balance",
+                "type": "uint256"
+            },
+            {
+                "components": [
+                    {
+                        "internalType": "address",
+                        "name": "token",
+                        "type": "address"
+                    },
+                    {
+                        "internalType": "uint256",
+                        "name": "amount",
+                        "type": "uint256"
+                    }
+                ],
+                "internalType": "struct RouterStatic.TokenAmount[]",
+                "name": "rewards",
+                "type": "tuple[]"
+            }
+        ],
+        "stateMutability": "view",
+        "type": "function"
+    },
+    {
+        "inputs": [
+            {
+                "components": [
+                    {
+                        "internalType": "address",
+                        "name": "yt",
+                        "type": "address"
+                    },
+                    {
+                        "internalType": "address",
+                        "name": "pt",
+                        "type": "address"
+                    },
+                    {
+                        "internalType": "uint256",
+                        "name": "ytBalance",
+                        "type": "uint256"
+                    },
+                    {
+                        "internalType": "uint256",
+                        "name": "ptBalance",
+                        "type": "uint256"
+                    },
+                    {
+                        "components": [
+                            {
+                                "internalType": "address",
+                                "name": "token",
+                                "type": "address"
+                            },
+                            {
+                                "internalType": "uint256",
+                                "name": "amount",
+                                "type": "uint256"
+                            }
+                        ],
+                        "internalType": "struct RouterStatic.TokenAmount",
+                        "name": "unclaimedInterest",
+                        "type": "tuple"
+                    },
+                    {
+                        "components": [
+                            {
+                                "internalType": "address",
+                                "name": "token",
+                                "type": "address"
+                            },
+                            {
+                                "internalType": "uint256",
+                                "name": "amount",
+                                "type": "uint256"
+                            }
+                        ],
+                        "internalType": "struct RouterStatic.TokenAmount[]",
+                        "name": "unclaimedRewards",
+                        "type": "tuple[]"
+                    }
+                ],
+                "internalType": "struct RouterStatic.UserPYInfo",
+                "name": "userPYInfo",
+                "type": "tuple"
+            }
+        ],
+        "name": "hasPYPosition",
+        "outputs": [
+            {
+                "internalType": "bool",
+                "name": "hasPosition",
+                "type": "bool"
+            }
+        ],
+        "stateMutability": "pure",
+        "type": "function"
+    },
+    {
+        "inputs": [
+            {
+                "internalType": "address",
+                "name": "user",
+                "type": "address"
+            },
+            {
+                "internalType": "uint128",
+                "name": "additionalAmountToLock",
+                "type": "uint128"
+            },
+            {
+                "internalType": "uint128",
+                "name": "newExpiry",
+                "type": "uint128"
+            }
+        ],
+        "name": "increaseLockPositionStatic",
+        "outputs": [
+            {
+                "internalType": "uint128",
+                "name": "newVeBalance",
+                "type": "uint128"
+            }
+        ],
+        "stateMutability": "view",
+        "type": "function"
+    },
+    {
+        "inputs": [],
+        "name": "initialize",
+        "outputs": [],
+        "stateMutability": "nonpayable",
+        "type": "function"
+    },
+    {
+        "inputs": [
+            {
+                "internalType": "address",
+                "name": "YT",
+                "type": "address"
+            },
+            {
+                "internalType": "address",
+                "name": "baseToken",
+                "type": "address"
+            },
+            {
+                "internalType": "uint256",
+                "name": "amountBaseToken",
+                "type": "uint256"
+            },
+            {
+                "internalType": "address",
+                "name": "bulk",
+                "type": "address"
+            }
+        ],
+        "name": "mintPYFromBaseStatic",
+        "outputs": [
+            {
+                "internalType": "uint256",
+                "name": "amountPY",
+                "type": "uint256"
+            }
+        ],
+        "stateMutability": "nonpayable",
+        "type": "function"
+    },
+    {
+        "inputs": [
+            {
+                "internalType": "address",
+                "name": "YT",
+                "type": "address"
+            },
+            {
+                "internalType": "uint256",
+                "name": "amountSyToMint",
+                "type": "uint256"
+            }
+        ],
+        "name": "mintPYFromSyStatic",
+        "outputs": [
+            {
+                "internalType": "uint256",
+                "name": "amountPY",
+                "type": "uint256"
+            }
+        ],
+        "stateMutability": "nonpayable",
+        "type": "function"
+    },
+    {
+        "inputs": [],
+        "name": "owner",
+        "outputs": [
+            {
+                "internalType": "address",
+                "name": "",
+                "type": "address"
+            }
+        ],
+        "stateMutability": "view",
+        "type": "function"
+    },
+    {
+        "inputs": [],
+        "name": "pendingOwner",
+        "outputs": [
+            {
+                "internalType": "address",
+                "name": "",
+                "type": "address"
+            }
+        ],
+        "stateMutability": "view",
+        "type": "function"
+    },
+    {
+        "inputs": [
+            {
+                "internalType": "contract IStandardizedYield",
+                "name": "SY",
+                "type": "address"
+            },
+            {
+                "internalType": "address",
+                "name": "baseToken",
+                "type": "address"
+            },
+            {
+                "internalType": "uint256",
+                "name": "amountToken",
+                "type": "uint256"
+            },
+            {
+                "internalType": "address",
+                "name": "bulk",
+                "type": "address"
+            }
+        ],
+        "name": "previewDepositStatic",
+        "outputs": [
+            {
+                "internalType": "uint256",
+                "name": "amountSy",
+                "type": "uint256"
+            }
+        ],
+        "stateMutability": "view",
+        "type": "function"
+    },
+    {
+        "inputs": [
+            {
+                "internalType": "contract IStandardizedYield",
+                "name": "SY",
+                "type": "address"
+            },
+            {
+                "internalType": "address",
+                "name": "baseToken",
+                "type": "address"
+            },
+            {
+                "internalType": "uint256",
+                "name": "amountSy",
+                "type": "uint256"
+            },
+            {
+                "internalType": "address",
+                "name": "bulk",
+                "type": "address"
+            }
+        ],
+        "name": "previewRedeemStatic",
+        "outputs": [
+            {
+                "internalType": "uint256",
+                "name": "amountBaseToken",
+                "type": "uint256"
+            }
+        ],
+        "stateMutability": "view",
+        "type": "function"
+    },
+    {
+        "inputs": [],
+        "name": "proxiableUUID",
+        "outputs": [
+            {
+                "internalType": "bytes32",
+                "name": "",
+                "type": "bytes32"
+            }
+        ],
+        "stateMutability": "view",
+        "type": "function"
+    },
+    {
+        "inputs": [
+            {
+                "internalType": "address",
+                "name": "market",
+                "type": "address"
+            }
+        ],
+        "name": "pyIndex",
+        "outputs": [
+            {
+                "internalType": "PYIndex",
+                "name": "index",
+                "type": "uint256"
+            }
+        ],
+        "stateMutability": "nonpayable",
+        "type": "function"
+    },
+    {
+        "inputs": [
+            {
+                "internalType": "address",
+                "name": "YT",
+                "type": "address"
+            },
+            {
+                "internalType": "uint256",
+                "name": "amountPYToRedeem",
+                "type": "uint256"
+            },
+            {
+                "internalType": "address",
+                "name": "baseToken",
+                "type": "address"
+            },
+            {
+                "internalType": "address",
+                "name": "bulk",
+                "type": "address"
+            }
+        ],
+        "name": "redeemPYToBaseStatic",
+        "outputs": [
+            {
+                "internalType": "uint256",
+                "name": "amountBaseToken",
+                "type": "uint256"
+            }
+        ],
+        "stateMutability": "nonpayable",
+        "type": "function"
+    },
+    {
+        "inputs": [
+            {
+                "internalType": "address",
+                "name": "YT",
+                "type": "address"
+            },
+            {
+                "internalType": "uint256",
+                "name": "amountPYToRedeem",
+                "type": "uint256"
+            }
+        ],
+        "name": "redeemPYToSyStatic",
+        "outputs": [
+            {
+                "internalType": "uint256",
+                "name": "amountPY",
+                "type": "uint256"
+            }
+        ],
+        "stateMutability": "nonpayable",
+        "type": "function"
+    },
+    {
+        "inputs": [
+            {
+                "internalType": "address",
+                "name": "market",
+                "type": "address"
+            },
+            {
+                "internalType": "uint256",
+                "name": "netLpToRemove",
+                "type": "uint256"
+            }
+        ],
+        "name": "removeLiquidityDualSyAndPtStatic",
+        "outputs": [
+            {
+                "internalType": "uint256",
+                "name": "netSyOut",
+                "type": "uint256"
+            },
+            {
+                "internalType": "uint256",
+                "name": "netPtOut",
+                "type": "uint256"
+            }
+        ],
+        "stateMutability": "view",
+        "type": "function"
+    },
+    {
+        "inputs": [
+            {
+                "internalType": "address",
+                "name": "market",
+                "type": "address"
+            },
+            {
+                "internalType": "uint256",
+                "name": "netLpToRemove",
+                "type": "uint256"
+            },
+            {
+                "internalType": "address",
+                "name": "tokenOut",
+                "type": "address"
+            },
+            {
+                "internalType": "address",
+                "name": "bulk",
+                "type": "address"
+            }
+        ],
+        "name": "removeLiquidityDualTokenAndPtStatic",
+        "outputs": [
+            {
+                "internalType": "uint256",
+                "name": "netTokenOut",
+                "type": "uint256"
+            },
+            {
+                "internalType": "uint256",
+                "name": "netPtOut",
+                "type": "uint256"
+            }
+        ],
+        "stateMutability": "view",
+        "type": "function"
+    },
+    {
+        "inputs": [
+            {
+                "internalType": "address",
+                "name": "market",
+                "type": "address"
+            },
+            {
+                "internalType": "uint256",
+                "name": "netLpToRemove",
+                "type": "uint256"
+            },
+            {
+                "internalType": "address",
+                "name": "baseToken",
+                "type": "address"
+            },
+            {
+                "internalType": "address",
+                "name": "bulk",
+                "type": "address"
+            }
+        ],
+        "name": "removeLiquiditySingleBaseTokenStatic",
+        "outputs": [
+            {
+                "internalType": "uint256",
+                "name": "netBaseTokenOut",
+                "type": "uint256"
+            },
+            {
+                "internalType": "uint256",
+                "name": "netSyFee",
+                "type": "uint256"
+            },
+            {
+                "internalType": "uint256",
+                "name": "priceImpact",
+                "type": "uint256"
+            }
+        ],
+        "stateMutability": "nonpayable",
+        "type": "function"
+    },
+    {
+        "inputs": [
+            {
+                "internalType": "address",
+                "name": "market",
+                "type": "address"
+            },
+            {
+                "internalType": "uint256",
+                "name": "netLpToRemove",
+                "type": "uint256"
+            }
+        ],
+        "name": "removeLiquiditySinglePtStatic",
+        "outputs": [
+            {
+                "internalType": "uint256",
+                "name": "netPtOut",
+                "type": "uint256"
+            },
+            {
+                "internalType": "uint256",
+                "name": "netPtFromSwap",
+                "type": "uint256"
+            },
+            {
+                "internalType": "uint256",
+                "name": "netSyFee",
+                "type": "uint256"
+            },
+            {
+                "internalType": "uint256",
+                "name": "priceImpact",
+                "type": "uint256"
+            }
+        ],
+        "stateMutability": "nonpayable",
+        "type": "function"
+    },
+    {
+        "inputs": [
+            {
+                "internalType": "address",
+                "name": "market",
+                "type": "address"
+            },
+            {
+                "internalType": "uint256",
+                "name": "netLpToRemove",
+                "type": "uint256"
+            }
+        ],
+        "name": "removeLiquiditySingleSyStatic",
+        "outputs": [
+            {
+                "internalType": "uint256",
+                "name": "netSyOut",
+                "type": "uint256"
+            },
+            {
+                "internalType": "uint256",
+                "name": "netSyFee",
+                "type": "uint256"
+            },
+            {
+                "internalType": "uint256",
+                "name": "priceImpact",
+                "type": "uint256"
+            }
+        ],
+        "stateMutability": "nonpayable",
+        "type": "function"
+    },
+    {
+        "inputs": [
+            {
+                "internalType": "address",
+                "name": "market",
+                "type": "address"
+            },
+            {
+                "internalType": "address",
+                "name": "baseToken",
+                "type": "address"
+            },
+            {
+                "internalType": "uint256",
+                "name": "amountBaseToken",
+                "type": "uint256"
+            },
+            {
+                "internalType": "address",
+                "name": "bulk",
+                "type": "address"
+            }
+        ],
+        "name": "swapExactBaseTokenForPtStatic",
+        "outputs": [
+            {
+                "internalType": "uint256",
+                "name": "netPtOut",
+                "type": "uint256"
+            },
+            {
+                "internalType": "uint256",
+                "name": "netSyFee",
+                "type": "uint256"
+            },
+            {
+                "internalType": "uint256",
+                "name": "priceImpact",
+                "type": "uint256"
+            }
+        ],
+        "stateMutability": "nonpayable",
+        "type": "function"
+    },
+    {
+        "inputs": [
+            {
+                "internalType": "address",
+                "name": "market",
+                "type": "address"
+            },
+            {
+                "internalType": "address",
+                "name": "baseToken",
+                "type": "address"
+            },
+            {
+                "internalType": "uint256",
+                "name": "amountBaseToken",
+                "type": "uint256"
+            },
+            {
+                "internalType": "address",
+                "name": "bulk",
+                "type": "address"
+            }
+        ],
+        "name": "swapExactBaseTokenForYtStatic",
+        "outputs": [
+            {
+                "internalType": "uint256",
+                "name": "netYtOut",
+                "type": "uint256"
+            },
+            {
+                "internalType": "uint256",
+                "name": "netSyFee",
+                "type": "uint256"
+            },
+            {
+                "internalType": "uint256",
+                "name": "priceImpact",
+                "type": "uint256"
+            }
+        ],
+        "stateMutability": "nonpayable",
+        "type": "function"
+    },
+    {
+        "inputs": [
+            {
+                "internalType": "address",
+                "name": "market",
+                "type": "address"
+            },
+            {
+                "internalType": "uint256",
+                "name": "exactPtIn",
+                "type": "uint256"
+            },
+            {
+                "internalType": "address",
+                "name": "baseToken",
+                "type": "address"
+            },
+            {
+                "internalType": "address",
+                "name": "bulk",
+                "type": "address"
+            }
+        ],
+        "name": "swapExactPtForBaseTokenStatic",
+        "outputs": [
+            {
+                "internalType": "uint256",
+                "name": "netBaseTokenOut",
+                "type": "uint256"
+            },
+            {
+                "internalType": "uint256",
+                "name": "netSyFee",
+                "type": "uint256"
+            },
+            {
+                "internalType": "uint256",
+                "name": "priceImpact",
+                "type": "uint256"
+            }
+        ],
+        "stateMutability": "nonpayable",
+        "type": "function"
+    },
+    {
+        "inputs": [
+            {
+                "internalType": "address",
+                "name": "market",
+                "type": "address"
+            },
+            {
+                "internalType": "uint256",
+                "name": "exactPtIn",
+                "type": "uint256"
+            }
+        ],
+        "name": "swapExactPtForSyStatic",
+        "outputs": [
+            {
+                "internalType": "uint256",
+                "name": "netSyOut",
+                "type": "uint256"
+            },
+            {
+                "internalType": "uint256",
+                "name": "netSyFee",
+                "type": "uint256"
+            },
+            {
+                "internalType": "uint256",
+                "name": "priceImpact",
+                "type": "uint256"
+            }
+        ],
+        "stateMutability": "nonpayable",
+        "type": "function"
+    },
+    {
+        "inputs": [
+            {
+                "internalType": "address",
+                "name": "market",
+                "type": "address"
+            },
+            {
+                "internalType": "uint256",
+                "name": "exactPtIn",
+                "type": "uint256"
+            }
+        ],
+        "name": "swapExactPtForYtStatic",
+        "outputs": [
+            {
+                "internalType": "uint256",
+                "name": "netYtOut",
+                "type": "uint256"
+            },
+            {
+                "internalType": "uint256",
+                "name": "totalPtToSwap",
+                "type": "uint256"
+            },
+            {
+                "internalType": "uint256",
+                "name": "netSyFee",
+                "type": "uint256"
+            },
+            {
+                "internalType": "uint256",
+                "name": "priceImpact",
+                "type": "uint256"
+            }
+        ],
+        "stateMutability": "nonpayable",
+        "type": "function"
+    },
+    {
+        "inputs": [
+            {
+                "internalType": "address",
+                "name": "market",
+                "type": "address"
+            },
+            {
+                "internalType": "uint256",
+                "name": "exactSyIn",
+                "type": "uint256"
+            }
+        ],
+        "name": "swapExactSyForPtStatic",
+        "outputs": [
+            {
+                "internalType": "uint256",
+                "name": "netPtOut",
+                "type": "uint256"
+            },
+            {
+                "internalType": "uint256",
+                "name": "netSyFee",
+                "type": "uint256"
+            },
+            {
+                "internalType": "uint256",
+                "name": "priceImpact",
+                "type": "uint256"
+            }
+        ],
+        "stateMutability": "nonpayable",
+        "type": "function"
+    },
+    {
+        "inputs": [
+            {
+                "internalType": "address",
+                "name": "market",
+                "type": "address"
+            },
+            {
+                "internalType": "uint256",
+                "name": "exactSyIn",
+                "type": "uint256"
+            }
+        ],
+        "name": "swapExactSyForYtStatic",
+        "outputs": [
+            {
+                "internalType": "uint256",
+                "name": "netYtOut",
+                "type": "uint256"
+            },
+            {
+                "internalType": "uint256",
+                "name": "netSyFee",
+                "type": "uint256"
+            },
+            {
+                "internalType": "uint256",
+                "name": "priceImpact",
+                "type": "uint256"
+            }
+        ],
+        "stateMutability": "nonpayable",
+        "type": "function"
+    },
+    {
+        "inputs": [
+            {
+                "internalType": "address",
+                "name": "market",
+                "type": "address"
+            },
+            {
+                "internalType": "uint256",
+                "name": "exactYtIn",
+                "type": "uint256"
+            },
+            {
+                "internalType": "address",
+                "name": "baseToken",
+                "type": "address"
+            },
+            {
+                "internalType": "address",
+                "name": "bulk",
+                "type": "address"
+            }
+        ],
+        "name": "swapExactYtForBaseTokenStatic",
+        "outputs": [
+            {
+                "internalType": "uint256",
+                "name": "netBaseTokenOut",
+                "type": "uint256"
+            },
+            {
+                "internalType": "uint256",
+                "name": "netSyFee",
+                "type": "uint256"
+            },
+            {
+                "internalType": "uint256",
+                "name": "priceImpact",
+                "type": "uint256"
+            }
+        ],
+        "stateMutability": "nonpayable",
+        "type": "function"
+    },
+    {
+        "inputs": [
+            {
+                "internalType": "address",
+                "name": "market",
+                "type": "address"
+            },
+            {
+                "internalType": "uint256",
+                "name": "exactYtIn",
+                "type": "uint256"
+            }
+        ],
+        "name": "swapExactYtForPtStatic",
+        "outputs": [
+            {
+                "internalType": "uint256",
+                "name": "netPtOut",
+                "type": "uint256"
+            },
+            {
+                "internalType": "uint256",
+                "name": "totalPtSwapped",
+                "type": "uint256"
+            },
+            {
+                "internalType": "uint256",
+                "name": "netSyFee",
+                "type": "uint256"
+            },
+            {
+                "internalType": "uint256",
+                "name": "priceImpact",
+                "type": "uint256"
+            }
+        ],
+        "stateMutability": "nonpayable",
+        "type": "function"
+    },
+    {
+        "inputs": [
+            {
+                "internalType": "address",
+                "name": "market",
+                "type": "address"
+            },
+            {
+                "internalType": "uint256",
+                "name": "exactYtIn",
+                "type": "uint256"
+            }
+        ],
+        "name": "swapExactYtForSyStatic",
+        "outputs": [
+            {
+                "internalType": "uint256",
+                "name": "netSyOut",
+                "type": "uint256"
+            },
+            {
+                "internalType": "uint256",
+                "name": "netSyFee",
+                "type": "uint256"
+            },
+            {
+                "internalType": "uint256",
+                "name": "priceImpact",
+                "type": "uint256"
+            }
+        ],
+        "stateMutability": "nonpayable",
+        "type": "function"
+    },
+    {
+        "inputs": [
+            {
+                "internalType": "address",
+                "name": "market",
+                "type": "address"
+            },
+            {
+                "internalType": "uint256",
+                "name": "exactSyOut",
+                "type": "uint256"
+            }
+        ],
+        "name": "swapPtForExactSyStatic",
+        "outputs": [
+            {
+                "internalType": "uint256",
+                "name": "netPtIn",
+                "type": "uint256"
+            },
+            {
+                "internalType": "uint256",
+                "name": "netSyFee",
+                "type": "uint256"
+            },
+            {
+                "internalType": "uint256",
+                "name": "priceImpact",
+                "type": "uint256"
+            }
+        ],
+        "stateMutability": "nonpayable",
+        "type": "function"
+    },
+    {
+        "inputs": [
+            {
+                "internalType": "address",
+                "name": "market",
+                "type": "address"
+            },
+            {
+                "internalType": "uint256",
+                "name": "exactPtOut",
+                "type": "uint256"
+            }
+        ],
+        "name": "swapSyForExactPtStatic",
+        "outputs": [
+            {
+                "internalType": "uint256",
+                "name": "netSyIn",
+                "type": "uint256"
+            },
+            {
+                "internalType": "uint256",
+                "name": "netSyFee",
+                "type": "uint256"
+            },
+            {
+                "internalType": "uint256",
+                "name": "priceImpact",
+                "type": "uint256"
+            }
+        ],
+        "stateMutability": "nonpayable",
+        "type": "function"
+    },
+    {
+        "inputs": [
+            {
+                "internalType": "address",
+                "name": "market",
+                "type": "address"
+            },
+            {
+                "internalType": "uint256",
+                "name": "exactYtOut",
+                "type": "uint256"
+            }
+        ],
+        "name": "swapSyForExactYtStatic",
+        "outputs": [
+            {
+                "internalType": "uint256",
+                "name": "netSyIn",
+                "type": "uint256"
+            },
+            {
+                "internalType": "uint256",
+                "name": "netSyFee",
+                "type": "uint256"
+            },
+            {
+                "internalType": "uint256",
+                "name": "priceImpact",
+                "type": "uint256"
+            }
+        ],
+        "stateMutability": "nonpayable",
+        "type": "function"
+    },
+    {
+        "inputs": [
+            {
+                "internalType": "address",
+                "name": "market",
+                "type": "address"
+            },
+            {
+                "internalType": "uint256",
+                "name": "exactSyOut",
+                "type": "uint256"
+            }
+        ],
+        "name": "swapYtForExactSyStatic",
+        "outputs": [
+            {
+                "internalType": "uint256",
+                "name": "netYtIn",
+                "type": "uint256"
+            },
+            {
+                "internalType": "uint256",
+                "name": "netSyFee",
+                "type": "uint256"
+            },
+            {
+                "internalType": "uint256",
+                "name": "priceImpact",
+                "type": "uint256"
+            }
+        ],
+        "stateMutability": "nonpayable",
+        "type": "function"
+    },
+    {
+        "inputs": [
+            {
+                "internalType": "address",
+                "name": "newOwner",
+                "type": "address"
+            },
+            {
+                "internalType": "bool",
+                "name": "direct",
+                "type": "bool"
+            },
+            {
+                "internalType": "bool",
+                "name": "renounce",
+                "type": "bool"
+            }
+        ],
+        "name": "transferOwnership",
+        "outputs": [],
+        "stateMutability": "nonpayable",
+        "type": "function"
+    },
+    {
+        "inputs": [
+            {
+                "internalType": "address",
+                "name": "newImplementation",
+                "type": "address"
+            }
+        ],
+        "name": "upgradeTo",
+        "outputs": [],
+        "stateMutability": "nonpayable",
+        "type": "function"
+    },
+    {
+        "inputs": [
+            {
+                "internalType": "address",
+                "name": "newImplementation",
+                "type": "address"
+            },
+            {
+                "internalType": "bytes",
+                "name": "data",
+                "type": "bytes"
+            }
+        ],
+        "name": "upgradeToAndCall",
+        "outputs": [],
+        "stateMutability": "payable",
+        "type": "function"
+    }
+]

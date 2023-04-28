@@ -6,6 +6,7 @@ import { LCROProcessor } from './types/eth/lcro.js'
 import { getPriceBySymbol } from '@sentio/sdk/utils'
 import { WCROProcessor, TransferEvent, WCROContext } from './types/eth/wcro.js'
 import { TectonicCoreProcessor } from './types/eth/tectoniccore.js'
+import './aave_v3.js'
 
 const MintEventHandler = async (event: any, ctx: TCROContext) => {
   const minter = event.args.minter
