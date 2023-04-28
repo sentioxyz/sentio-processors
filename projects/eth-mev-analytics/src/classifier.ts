@@ -54,6 +54,8 @@ function mergeBalance(
   }
 }
 
+const mintBurnAddr = "0x0000000000000000000000000000000000000000";
+
 function updateRewardToAddress(
   sender: string,
   receiver: string,
@@ -71,7 +73,7 @@ function updateRewardToAddress(
       if (sccMap.get(addr) === sccMap.get(from)) {
         continue;
       }
-      if (from == sender || from == receiver) {
+      if (from == sender || from == receiver || from == mintBurnAddr) {
         continue;
       }
       if (!balanceChanges.has(from)) {
@@ -118,7 +120,11 @@ export function winnerRewards(
       if (!balanceChanges.has(edge.toAddr)) {
         continue;
       }
-      if (edge.toAddr == sender || edge.toAddr == receiver) {
+      if (
+        edge.toAddr == sender ||
+        edge.toAddr == receiver ||
+        edge.toAddr == mintBurnAddr
+      ) {
         continue;
       }
       if (feeRecipent == edge.toAddr) {

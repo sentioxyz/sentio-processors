@@ -59,6 +59,15 @@ function isSandwich(
     revenue: new Map<string, bigint>(),
     costs: new Map<string, bigint>(),
   };
+  const frontRet = getRolesCount(front.addressProperty);
+  const backRet = getRolesCount(back.addressProperty);
+  if (
+    !frontRet.has(AddressProperty.Trader) ||
+    !backRet.has(AddressProperty.Trader)
+  ) {
+    return [false, ret];
+  }
+
   let revenue = front.revenue;
   let costs = front.costs;
   for (const [address, value] of back.revenue) {
