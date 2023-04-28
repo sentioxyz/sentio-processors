@@ -93,6 +93,9 @@ export function findSandwich(
   let ret = new Array<sandwichTxnResult>();
   let txnMap = new Map<string, Array<dataByTxn>>();
   for (const [_, txnData] of data) {
+    if (!arbResults.has(txnData.tx.hash)) {
+      continue;
+    }
     const from = txnData.tx.from.toLowerCase();
     if (txnData.tx.to === undefined) {
       continue;
