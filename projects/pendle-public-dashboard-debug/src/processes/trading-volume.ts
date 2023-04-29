@@ -36,6 +36,13 @@ export async function tradingVolume_handleCreateNewMarket(
     },
     ctx
   );
+  console.log(
+    "new market created on chain %s at block %s at time %s: %s",
+    ctx.getChainId(),
+    ctx.blockNumber,
+    ctx.timestamp,
+    event.args.market
+  );
 }
 
 const PendleMarketTemplate = new PendleMarketProcessorTemplate()

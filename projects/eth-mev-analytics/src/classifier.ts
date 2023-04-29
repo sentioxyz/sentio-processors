@@ -73,7 +73,7 @@ function updateRewardToAddress(
       if (sccMap.get(addr) === sccMap.get(from)) {
         continue;
       }
-      if (from == sender || from == receiver || from == mintBurnAddr) {
+      if (from == sender || from == receiver) {
         continue;
       }
       if (!balanceChanges.has(from)) {
