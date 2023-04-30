@@ -49,9 +49,10 @@ interface mevBlockResult {
   sandwichTxns: Array<sandwichTxnResult>;
 }
 
-// A few more cases to consider
+// A few more cases to solve:
 // 1. losing money sandwich: https://explorer.phalcon.xyz/tx/eth/0x8b781b88fa5fd089116706587a6b59fa7b82188cdc19ab30b099a58768442d23
 // 2. the one in the middle is not a swap: https://explorer.phalcon.xyz/tx/eth/0xc7bca6c1830300aac17ff5d7d527c464d0ee8312e6611bcf37f95ff611560af3
+// 3. the 2 senders are not the same guy. but the contract is the same.
 function isSandwich(
   front: txnResult,
   back: txnResult
