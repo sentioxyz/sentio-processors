@@ -195,15 +195,21 @@ export function isArbitrage(
     console.log("skip blacklisted address for:", data.tx.to, data.tx.hash);
     return false;
   }
-
-  const numWinner = rolesCount.get(AddressProperty.Winner);
-  const numTrader = rolesCount.get(AddressProperty.Trader);
-  if (
-    getProperty("group", revenue, true) == AddressProperty.Winner &&
-    ((numTrader !== undefined && numTrader! > 1) ||
-      (numWinner !== undefined && numWinner! > 2))
-  ) {
-    return true;
+  let numWinner = 0;
+  let numTrader = 0;
+  if (getProperty("group", revenue, true) == AddressProperty.Winner) {
+    if (rolesCount.has(AddressProperty.Winner)) {
+      numWinner = rolesCount.get(AddressProperty.Winner)!;
+    }
+    if (rolesCount.has(AddressProperty.Trader)) {
+      numTrader = rolesCount.get(AddressProperty.Trader)!;
+    }
+    if (numTrader == 0) {
+      return false;
+    }
+    if (numTrader > 1 || numWinner > 2) {
+      return true;
+    }
   }
   return false;
 }
@@ -223,6 +229,20 @@ export function txnProfitAndCost(
       addressProperty: new Map<string, AddressProperty>(),
     };
   }
+  if (data.transactionReceipts.length === 0) {
+    console.log("no transaction receipt");
+  } else if (data.transactionReceipts[0].gasUsed === undefined) {
+    console.log("gas used is undefined");
+  }
+  if (data.transactionReceipts[0].status === 0) {
+    console.log("transaction failed");
+    return {
+      txnHash: data.tx.hash,
+      revenue: rewards,
+      costs: costs,
+      addressProperty: new Map<string, AddressProperty>(),
+    };
+  }
   const sccs = graph.findStronglyConnectedComponents();
   // graph.print();
   const balances = findBalanceChanges(sccs, graph);
@@ -232,11 +252,6 @@ export function txnProfitAndCost(
 
   const receiver = data.tx.to!.toLowerCase();
   const gasPrice = data.tx.gasPrice;
-  if (data.transactionReceipts.length === 0) {
-    console.log("no transaction receipt");
-  } else if (data.transactionReceipts[0].gasUsed === undefined) {
-    console.log("gas used is undefined");
-  }
   const gasTotal = data.transactionReceipts[0].gasUsed * BigInt(gasPrice);
   [rewards, costs] = winnerRewards(
     sender,
