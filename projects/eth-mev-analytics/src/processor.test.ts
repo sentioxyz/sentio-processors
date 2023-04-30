@@ -6,6 +6,8 @@ import blockWrongRevenue from "./17128908.json";
 import block2Botsfrom from "./17134096.json";
 import blockSandwichBasic from "./17139815.json";
 import blockSandwichJared from "./17141262.json";
+import blockMissedArb from "./17153025.json";
+import blockLido from "./17148112.json";
 import { RichBlock, formatRichBlock } from "@sentio/sdk/eth";
 import { txnProfitAndCost, isArbitrage, handleBlock } from "./processor.js";
 import { dataByTxn, getDataByTxn } from "./eth_util.js";
@@ -111,5 +113,21 @@ describe("Test Processor", () => {
     const mevResults = handleBlock(formattedBlock, chainConfigs[0]);
     expect(mevResults.sandwichTxns).toHaveLength(1);
     expect(mevResults.arbTxns).toHaveLength(2);
+  });
+
+  test("missed arb", async () => {
+    const ret = compute(
+      blockMissedArb,
+      "0xa8c7466e779d19c9b441ea79310ea16bff74982255d581e3d92766c768e3e1a3"
+    );
+    expect(ret[0]).toBe(true);
+  });
+
+  test("lido shouldn't count", async () => {
+    const ret = compute(
+      blockLido,
+      "0xf89d9779021ef9247e35347d55a0332bf6927c5027ae63a54bd848cf2a9113b3"
+    );
+    expect(ret[0]).toBe(false);
   });
 });

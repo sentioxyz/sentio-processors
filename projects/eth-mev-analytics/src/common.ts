@@ -21,6 +21,7 @@ export const chainConfigs = [
       "0x36b49ebf089be8860d7fc60f2553461e9cc8e9e2".toLowerCase(), // yearngate/timeless
       "0x6753f23905f15376429e6f0c381fcc4862e48222".toLowerCase(), // pcvxzaps strategy
       "0x9a5132e149c547f254c73226da7f770d43d9ea44".toLowerCase(), // smardex
+      "0x7a250d5630b4cf539739df2c5dacb4c659f2488d".toLowerCase(), // uniswap v2 router
     ]),
   },
 ];

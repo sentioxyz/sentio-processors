@@ -195,9 +195,12 @@ export function isArbitrage(
     return false;
   }
 
+  const numWinner = rolesCount.get(AddressProperty.Winner);
+  const numTrader = rolesCount.get(AddressProperty.Trader);
   if (
     getProperty("group", revenue, true) == AddressProperty.Winner &&
-    rolesCount.get(AddressProperty.Trader)! > 1
+    ((numTrader !== undefined && numTrader! > 1) ||
+      (numWinner !== undefined && numWinner! > 2))
   ) {
     return true;
   }
@@ -220,9 +223,9 @@ export function txnProfitAndCost(
     };
   }
   const sccs = graph.findStronglyConnectedComponents();
-  //  graph.print();
+  // graph.print();
   const balances = findBalanceChanges(sccs, graph);
-  // printBalances(balances);
+  //  printBalances(balances);
   const addressProperty = getAddressProperty(balances);
   const sender = data.tx.from.toLowerCase();
 

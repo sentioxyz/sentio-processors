@@ -90,7 +90,6 @@ function updateRewardToAddress(
   }
 }
 
-// need to solve this issue: https://explorer.phalcon.xyz/tx/eth/0xf89d9779021ef9247e35347d55a0332bf6927c5027ae63a54bd848cf2a9113b3
 export function winnerRewards(
   sender: string,
   receiver: string,
