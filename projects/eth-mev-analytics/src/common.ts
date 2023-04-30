@@ -22,6 +22,7 @@ export const chainConfigs = [
       "0x6753f23905f15376429e6f0c381fcc4862e48222".toLowerCase(), // pcvxzaps strategy
       "0x9a5132e149c547f254c73226da7f770d43d9ea44".toLowerCase(), // smardex
       "0x7a250d5630b4cf539739df2c5dacb4c659f2488d".toLowerCase(), // uniswap v2 router
+      "0x71f6C4AEe7741cd7434353a98eC31B298d642Eed".toLowerCase(), // convex staking proxy
     ]),
   },
 ];
