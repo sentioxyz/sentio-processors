@@ -96,7 +96,7 @@ RouterProcessor.bind({ address: constant.ETH_ROUTER })
 FactoryProcessor.bind({ address: constant.ETH_MARKET_FACTORY })
   .onEventCreateNewMarket(async (event, ctx) => {
     ctx.meter.Counter('pool_num').add(1)
-    marketTemplate.bind({ address: event.args.market, startBlock: ctx.blockNumber })
+    marketTemplate.bind({ address: event.args.market, startBlock: ctx.blockNumber }, ctx)
   })
 
 

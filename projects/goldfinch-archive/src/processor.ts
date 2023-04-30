@@ -317,7 +317,7 @@ GoldfinchFactoryProcessor.bind({address: "0xd20508E1E971b80EE172c73517905bfFfcBD
     creditLineTemplate.bind({
       address: event.args.creditLine,
       startBlock: ctx.blockNumber
-    })
+    }, ctx)
   })
 
 CreditDeskProcessor.bind({address: "0xb2Bea2610FEEfA4868C3e094D2E44b113b6D6138", startBlock: 11370659})
@@ -325,7 +325,7 @@ CreditDeskProcessor.bind({address: "0xb2Bea2610FEEfA4868C3e094D2E44b113b6D6138",
     creditLineTemplate.bind({
       address: event.args.creditLine,
       startBlock: ctx.blockNumber
-    })
+    }, ctx)
   }).onEventDrawdownMade(drawDownMadeHandler)
 
 //senior pool processor
