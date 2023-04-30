@@ -197,7 +197,7 @@ export function isArbitrage(
   }
   let numWinner = 0;
   let numTrader = 0;
-  if (getProperty("group", revenue, true) == AddressProperty.Winner) {
+  if (getProperty("group", revenue, false) == AddressProperty.Winner) {
     if (rolesCount.has(AddressProperty.Winner)) {
       numWinner = rolesCount.get(AddressProperty.Winner)!;
     }
