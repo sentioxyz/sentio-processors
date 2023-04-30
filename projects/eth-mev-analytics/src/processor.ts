@@ -32,6 +32,7 @@ let START_BLOCK = 1000000000;
 
 interface txnResult {
   txnHash: string;
+  mevContract: string;
   revenue: Map<string, bigint>;
   costs: Map<string, bigint>;
   addressProperty: Map<string, AddressProperty>;
@@ -39,6 +40,7 @@ interface txnResult {
 
 interface sandwichTxnResult {
   frontTxnHash: string;
+  mevContract: string;
   backTxnHash: string;
   revenue: Map<string, bigint>;
   costs: Map<string, bigint>;
@@ -62,6 +64,7 @@ function isSandwich(
     backTxnHash: back.txnHash,
     revenue: new Map<string, bigint>(),
     costs: new Map<string, bigint>(),
+    mevContract: back.mevContract,
   };
   const frontRet = getRolesCount(front.addressProperty);
   const backRet = getRolesCount(back.addressProperty);
@@ -225,6 +228,7 @@ export function txnProfitAndCost(
     return {
       txnHash: data.tx.hash,
       revenue: rewards,
+      mevContract: "",
       costs: costs,
       addressProperty: new Map<string, AddressProperty>(),
     };
@@ -240,6 +244,7 @@ export function txnProfitAndCost(
       txnHash: data.tx.hash,
       revenue: rewards,
       costs: costs,
+      mevContract: "",
       addressProperty: new Map<string, AddressProperty>(),
     };
   }
@@ -264,6 +269,7 @@ export function txnProfitAndCost(
   costs.set("gas", gasTotal);
   return {
     txnHash: data.tx.hash,
+    mevContract: data.tx.to!,
     revenue: rewards,
     costs: costs,
     addressProperty: addressProperty,
@@ -388,6 +394,7 @@ for (const chainConfig of chainConfigs) {
           link: link,
           revenue: revenue,
           cost: cost,
+          mevContract: txn.mevContract,
           profit: revenue.minus(cost),
         });
       }
@@ -411,8 +418,8 @@ for (const chainConfig of chainConfigs) {
         }
         ctx.eventLogger.emit("sandwich", {
           message: `Sandwich txn detected: ${frontLink} and ${backLink}`,
-          frontLink: frontLink,
-          backLink: backLink,
+          link: frontLink,
+          secondLink: backLink,
           revenue: revenue,
           cost: cost,
           profit: revenue.minus(cost),

@@ -8,6 +8,7 @@ import blockSandwichBasic from "./17139815.json";
 import blockSandwichJared from "./17141262.json";
 import blockMissedArb from "./17153025.json";
 import blockLido from "./17148112.json";
+import blockWrongRevenue2 from "./17160609.json";
 import { RichBlock, formatRichBlock } from "@sentio/sdk/eth";
 import { txnProfitAndCost, isArbitrage, handleBlock } from "./processor.js";
 import { dataByTxn, getDataByTxn } from "./eth_util.js";
@@ -35,6 +36,7 @@ describe("Test Processor", () => {
     chainConfig: ChainConstants
   ): [boolean, Map<string, bigint>, Map<string, bigint>] {
     let ret = txnProfitAndCost(data, chainConfig);
+    console.log(ret);
     return [
       isArbitrage(data, chainConfig, ret.revenue, ret.addressProperty),
       ret.revenue,
@@ -129,5 +131,16 @@ describe("Test Processor", () => {
       "0xf89d9779021ef9247e35347d55a0332bf6927c5027ae63a54bd848cf2a9113b3"
     );
     expect(ret[0]).toBe(false);
+  });
+
+  test("wrong renevue 2", async () => {
+    const ret = compute(
+      blockWrongRevenue2,
+      "0x3135d2ffd8c7f7e6a387b0809dce37d0fabebc3055a62c425f1c2fb74dd4ae44"
+    );
+    expect(ret[0]).toBe(true);
+    expect(ret[1].get("0xc02aaa39b223fe8d0a0e5c4f27ead9083c756cc2")).toBe(
+      247338348117742464n
+    );
   });
 });
