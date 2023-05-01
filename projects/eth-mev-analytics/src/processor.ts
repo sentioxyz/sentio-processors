@@ -31,8 +31,6 @@ import { getPriceByType, token } from "@sentio/sdk/utils";
 
 import { chainConfigs, ChainConstants } from "./common.js";
 
-let START_BLOCK = 1000000000;
-
 interface mevBlockResult {
   arbTxns: Array<txnResult>;
   sandwichTxns: Array<sandwichTxnResult>;
@@ -318,6 +316,7 @@ async function computePnL(
   return [pnl, cost];
 }
 
+let START_BLOCK = 17164197;
 for (const chainConfig of chainConfigs) {
   GlobalProcessor.bind({
     startBlock: START_BLOCK,
@@ -341,10 +340,10 @@ for (const chainConfig of chainConfigs) {
           message: `Arbitrage txn detected: ${link}`,
           link: link,
           index: txn.txnIndex,
-          revenue: revenue,
-          cost: cost,
+          revenue: revenue.precision(2),
+          cost: cost.precision(2),
           mevContract: txn.mevContract,
-          profit: revenue.minus(cost),
+          profit: revenue.minus(cost).precision(2),
         });
       }
       for (const txn of mevResults.sandwichTxns) {
@@ -372,14 +371,14 @@ for (const chainConfig of chainConfigs) {
           frontLink: frontLink,
           frontIndex: txn.frontTxnIndex,
           mevContract: txn.mevContract,
-          revenue: revenue,
-          cost: cost,
-          profit: revenue.minus(cost),
+          revenue: revenue.precision(2),
+          cost: cost.precision(2),
+          profit: revenue.minus(cost).precision(2),
         });
       }
     },
     1,
-    10000,
+    1,
     {
       block: true,
       transaction: true,
