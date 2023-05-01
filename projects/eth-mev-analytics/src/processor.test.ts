@@ -12,52 +12,54 @@ import blockWrongRevenue2 from "./17160609.json";
 import blockWrongSandWich from "./17148068.json";
 import blockLosingSandwich from "./17148268.json";
 import blockUniswapSandwich from "./17163020.json";
+import blockEulerHack1 from "./16818057.json";
+import blockForTubeHack from "./17143711.json";
 import { RichBlock, formatRichBlock } from "@sentio/sdk/eth";
 import { txnProfitAndCost, isArbitrage, handleBlock } from "./processor.js";
 import { dataByTxn, getDataByTxn } from "./eth_util.js";
 import { chainConfigs, ChainConstants } from "./common.js";
 
-describe("Test Processor", () => {
+function filterByHash(b: RichBlock, hash: string): dataByTxn {
+  const allData = getDataByTxn(b);
+  for (const [txnHash, data] of allData) {
+    if (txnHash.toLowerCase() === hash.toLowerCase()) {
+      return data;
+    }
+  }
+  throw new Error(`cannot find txn ${hash}`);
+}
+
+function handleTxn(
+  data: dataByTxn,
+  chainConfig: ChainConstants
+): [boolean, Map<string, bigint>, Map<string, bigint>] {
+  let ret = txnProfitAndCost(data, chainConfig);
+  //console.log(ret);
+  return [
+    isArbitrage(data, chainConfig, ret.revenue, ret.addressProperty),
+    ret.revenue,
+    ret.costs,
+  ];
+}
+
+function compute(
+  b: any,
+  hash: string
+): [boolean, Map<string, bigint>, Map<string, bigint>] {
+  const strValue = JSON.stringify(b);
+  const block = JSON.parse(strValue) as RichBlock;
+  const formattedBlock = formatRichBlock(block);
+  //const test = await service.eth.testBlock(formattedBlock);
+  const data = filterByHash(formattedBlock, hash);
+  return handleTxn(data, chainConfigs[0]);
+}
+
+describe("Test MEV", () => {
   const service = new TestProcessorServer(() => import("./processor.js"));
 
   beforeAll(async () => {
     await service.start();
   });
-
-  function filterByHash(b: RichBlock, hash: string): dataByTxn {
-    const allData = getDataByTxn(b);
-    for (const [txnHash, data] of allData) {
-      if (txnHash.toLowerCase() === hash.toLowerCase()) {
-        return data;
-      }
-    }
-    throw new Error(`cannot find txn ${hash}`);
-  }
-
-  function handleTxn(
-    data: dataByTxn,
-    chainConfig: ChainConstants
-  ): [boolean, Map<string, bigint>, Map<string, bigint>] {
-    let ret = txnProfitAndCost(data, chainConfig);
-    console.log(ret);
-    return [
-      isArbitrage(data, chainConfig, ret.revenue, ret.addressProperty),
-      ret.revenue,
-      ret.costs,
-    ];
-  }
-
-  function compute(
-    b: any,
-    hash: string
-  ): [boolean, Map<string, bigint>, Map<string, bigint>] {
-    const strValue = JSON.stringify(b);
-    const block = JSON.parse(strValue) as RichBlock;
-    const formattedBlock = formatRichBlock(block);
-    //const test = await service.eth.testBlock(formattedBlock);
-    const data = filterByHash(formattedBlock, hash);
-    return handleTxn(data, chainConfigs[0]);
-  }
 
   test("check parse block 1", async () => {
     const ret = compute(
@@ -176,5 +178,30 @@ describe("Test Processor", () => {
     const formattedBlock = formatRichBlock(block);
     const mevResults = handleBlock(formattedBlock, chainConfigs[0]);
     expect(mevResults.sandwichTxns).toHaveLength(0);
+  });
+});
+
+// TODO(qiaokan): Currently hack is labeled as a arbitrage. All these need to be fixed.
+describe("Test hack", () => {
+  const service = new TestProcessorServer(() => import("./processor.js"));
+
+  beforeAll(async () => {
+    await service.start();
+  });
+
+  test("test fortube hack", async () => {
+    const ret = compute(
+      blockForTubeHack,
+      "0x082144b012cf4cb266569085829a12fa64fb3a4a9931289e930e14ead4a3737d"
+    );
+    expect(ret[0]).toBe(false);
+  });
+
+  test("test euler hack", async () => {
+    const ret = compute(
+      blockEulerHack1,
+      "0x71a908be0bef6174bccc3d493becdfd28395d78898e355d451cb52f7bac38617"
+    );
+    expect(ret[0]).toBe(false);
   });
 });

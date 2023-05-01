@@ -141,6 +141,9 @@ export function isArbitrage(
   }
   let numWinner = 0;
   let numTrader = 0;
+  let minerIsWinner =
+    addressProperty.has(data.feeRecipent.toLowerCase()) &&
+    getProperty("group", revenue) == AddressProperty.Winner;
   if (getProperty("group", revenue) == AddressProperty.Winner) {
     if (rolesCount.has(AddressProperty.Winner)) {
       numWinner = rolesCount.get(AddressProperty.Winner)!;
@@ -148,12 +151,7 @@ export function isArbitrage(
     if (rolesCount.has(AddressProperty.Trader)) {
       numTrader = rolesCount.get(AddressProperty.Trader)!;
     }
-    if (numTrader == 0) {
-      return false;
-    }
-    if (numTrader > 1 || numWinner > 2) {
-      return true;
-    }
+    return minerIsWinner || numTrader > 1;
   }
   return false;
 }
