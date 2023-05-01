@@ -109,6 +109,7 @@ export function winnerRewards(
     }
   }
   let cost: Map<string, bigint> = new Map();
+  let visited = new Set<string>();
   for (const [from, edges] of graph.adjList) {
     if (from !== receiver && from !== sender) {
       continue;
@@ -127,6 +128,10 @@ export function winnerRewards(
       ) {
         continue;
       }
+      if (visited.has(edge.toAddr)) {
+        continue;
+      }
+      visited.add(edge.toAddr);
       if (feeRecipent == edge.toAddr) {
         if (!cost.has(edge.tokenAddress)) {
           cost.set(edge.tokenAddress, BigInt(0));
@@ -171,37 +176,138 @@ export enum AddressProperty {
 }
 
 // Some bots treat USDT , DAI and USDC as the same token
-function normalizeToken(token: string): string {
-  if (token === "0xdac17f958d2ee523a2206206994597c13d831ec7") {
-    return "0xa0b86991c6218b36c1d19d4a2e9eb0ce3606eb48";
+function normalizeToken(token: string): [string, bigint] {
+  if (
+    token.toLowerCase() ===
+    "0xdac17f958d2ee523a2206206994597c13d831ec7".toLowerCase()
+  ) {
+    return ["0xa0b86991c6218b36c1d19d4a2e9eb0ce3606eb48", 0n];
   }
-  if (token === "0x6B175474E89094C44Da98b954EedeAC495271d0F") {
-    return "0xa0b86991c6218b36c1d19d4a2e9eb0ce3606eb48";
+  if (
+    token.toLowerCase() ===
+    "0x6B175474E89094C44Da98b954EedeAC495271d0F".toLowerCase()
+  ) {
+    return ["0xa0b86991c6218b36c1d19d4a2e9eb0ce3606eb48", 12n];
   }
-  return token;
+  return [token, 0n];
+}
+
+export interface txnResult {
+  txnHash: string;
+  txnIndex: number;
+  mevContract: string;
+  revenue: Map<string, bigint>;
+  costs: Map<string, bigint>;
+  addressProperty: Map<string, AddressProperty>;
+}
+
+export interface sandwichTxnResult {
+  frontTxnHash: string;
+  frontTxnIndex: number;
+  mevContract: string;
+  backTxnHash: string;
+  backTxnIndex: number;
+  revenue: Map<string, bigint>;
+  costs: Map<string, bigint>;
+}
+
+export function isSandwich(
+  arr: Array<txnResult>
+): [boolean, sandwichTxnResult] {
+  const front = arr[0];
+  const back = arr[arr.length - 1];
+  let ret = {
+    frontTxnHash: front.txnHash,
+    backTxnHash: back.txnHash,
+    frontTxnIndex: front.txnIndex,
+    backTxnIndex: back.txnIndex,
+    revenue: new Map<string, bigint>(),
+    costs: new Map<string, bigint>(),
+    mevContract: back.mevContract,
+  };
+  const frontRet = getRolesCount(front.addressProperty);
+  const backRet = getRolesCount(back.addressProperty);
+  if (
+    !frontRet.has(AddressProperty.Trader) ||
+    !backRet.has(AddressProperty.Trader)
+  ) {
+    return [false, ret];
+  }
+  const frontProperty = getProperty("sandwich", front.revenue);
+  if (frontProperty === AddressProperty.Winner) {
+    return [false, ret];
+  }
+
+  // The middle txns should contain at least 1 trader.
+  var containsTrader = false;
+  for (let i = 1; i < arr.length - 1; i++) {
+    const txn = arr[i];
+    const txnRet = getRolesCount(txn.addressProperty);
+    if (
+      txnRet.has(AddressProperty.Trader) &&
+      txnRet.get(AddressProperty.Trader)! > 0
+    ) {
+      containsTrader = true;
+      break;
+    }
+  }
+  if (!containsTrader) {
+    return [false, ret];
+  }
+
+  let revenue = front.revenue;
+  let costs = front.costs;
+  for (const [address, balance] of front.revenue) {
+    const [norm, factor] = normalizeToken(address);
+    const scaledBalance = balance.scaleDown(factor);
+    if (!revenue.has(norm)) {
+      revenue.set(norm, 0n);
+    }
+    if (norm !== address) {
+      revenue.set(norm, revenue.get(norm)! + BigInt(scaledBalance.toFixed(0)));
+      revenue.delete(address);
+    }
+  }
+
+  for (const [address, balance] of back.revenue) {
+    const [norm, factor] = normalizeToken(address);
+    const scaledBalance = balance.scaleDown(factor);
+    if (!revenue.has(norm)) {
+      revenue.set(norm, 0n);
+    }
+    if (revenue.has(norm)) {
+      revenue.set(norm, revenue.get(norm)! + BigInt(scaledBalance.toFixed(0)));
+    } else {
+      revenue.set(norm, BigInt(scaledBalance.toFixed(0)));
+    }
+  }
+
+  for (const [address, value] of back.costs) {
+    if (costs.has(address)) {
+      costs.set(address, costs.get(address)! + value);
+    } else {
+      costs.set(address, value);
+    }
+  }
+  const property = getProperty("sandwich", revenue);
+  if (property == AddressProperty.Winner) {
+    ret.revenue = revenue;
+    ret.costs = costs;
+
+    return [true, ret];
+  } else {
+    return [false, ret];
+  }
 }
 
 export function getProperty(
   addr: string,
-  ret: Map<string, bigint>,
-  normalize: boolean
+  ret: Map<string, bigint>
 ): AddressProperty {
   let numIncrease = 0;
   let numDecrease = 0;
-  let normalizedBalance = new Map<string, bigint>();
-  if (!normalize) {
-    normalizedBalance = ret;
-  } else {
-    for (const [tokenAddr, balance] of ret) {
-      const norm = normalizeToken(tokenAddr);
-      if (!normalizedBalance.has(norm)) {
-        normalizedBalance.set(norm, BigInt(0));
-      }
-      normalizedBalance.set(norm, normalizedBalance.get(norm)! + balance);
-    }
-  }
 
-  for (const [_, balance] of normalizedBalance) {
+  for (const [_, balance] of ret) {
     if (balance > BigInt(0)) {
       numIncrease++;
     } else if (balance < BigInt(0)) {
@@ -226,7 +332,7 @@ export function getAddressProperty(
 ): Map<string, AddressProperty> {
   let addressProperty: Map<string, AddressProperty> = new Map();
   for (const [addr, tokenBalances] of addresses) {
-    addressProperty.set(addr, getProperty(addr, tokenBalances, false));
+    addressProperty.set(addr, getProperty(addr, tokenBalances));
   }
   return addressProperty;
 }

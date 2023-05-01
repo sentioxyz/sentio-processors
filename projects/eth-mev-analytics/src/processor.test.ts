@@ -9,6 +9,9 @@ import blockSandwichJared from "./17141262.json";
 import blockMissedArb from "./17153025.json";
 import blockLido from "./17148112.json";
 import blockWrongRevenue2 from "./17160609.json";
+import blockWrongSandWich from "./17148068.json";
+import blockLosingSandwich from "./17148268.json";
+import blockUniswapSandwich from "./17163020.json";
 import { RichBlock, formatRichBlock } from "@sentio/sdk/eth";
 import { txnProfitAndCost, isArbitrage, handleBlock } from "./processor.js";
 import { dataByTxn, getDataByTxn } from "./eth_util.js";
@@ -99,24 +102,6 @@ describe("Test Processor", () => {
     );
   });
 
-  test("sandwich", async () => {
-    const strValue = JSON.stringify(blockSandwichBasic);
-    const block = JSON.parse(strValue) as RichBlock;
-    const formattedBlock = formatRichBlock(block);
-    const mevResults = handleBlock(formattedBlock, chainConfigs[0]);
-    expect(mevResults.sandwichTxns).toHaveLength(2);
-    expect(mevResults.arbTxns).toHaveLength(2);
-  });
-
-  test("sandwich jared", async () => {
-    const strValue = JSON.stringify(blockSandwichJared);
-    const block = JSON.parse(strValue) as RichBlock;
-    const formattedBlock = formatRichBlock(block);
-    const mevResults = handleBlock(formattedBlock, chainConfigs[0]);
-    expect(mevResults.sandwichTxns).toHaveLength(1);
-    expect(mevResults.arbTxns).toHaveLength(2);
-  });
-
   test("missed arb", async () => {
     const ret = compute(
       blockMissedArb,
@@ -142,5 +127,54 @@ describe("Test Processor", () => {
     expect(ret[1].get("0xc02aaa39b223fe8d0a0e5c4f27ead9083c756cc2")).toBe(
       247338348117742464n
     );
+  });
+
+  test("sandwich", async () => {
+    const strValue = JSON.stringify(blockSandwichBasic);
+    const block = JSON.parse(strValue) as RichBlock;
+    const formattedBlock = formatRichBlock(block);
+    const mevResults = handleBlock(formattedBlock, chainConfigs[0]);
+    expect(mevResults.sandwichTxns).toHaveLength(2);
+    expect(mevResults.arbTxns).toHaveLength(2);
+  });
+
+  test("sandwich jared", async () => {
+    const strValue = JSON.stringify(blockSandwichJared);
+    const block = JSON.parse(strValue) as RichBlock;
+    const formattedBlock = formatRichBlock(block);
+    const mevResults = handleBlock(formattedBlock, chainConfigs[0]);
+    expect(mevResults.sandwichTxns).toHaveLength(1);
+    expect(mevResults.arbTxns).toHaveLength(2);
+  });
+
+  // Make sure that it does not contain "0xc7bca6c1830300aac17ff5d7d527c464d0ee8312e6611bcf37f95ff611560af3"
+  test("sandwich wrong", async () => {
+    const strValue = JSON.stringify(blockWrongSandWich);
+    const block = JSON.parse(strValue) as RichBlock;
+    const formattedBlock = formatRichBlock(block);
+    const mevResults = handleBlock(formattedBlock, chainConfigs[0]);
+    expect(mevResults.sandwichTxns).toHaveLength(1);
+    expect(mevResults.sandwichTxns[0].frontTxnHash).toBe(
+      "0xe30faee2731b78d747287047e315f0c0b1c1ee31b40ddcb3ccca69dfa155bd85"
+    );
+  });
+
+  test("losing sandwich and different decimals", async () => {
+    const strValue = JSON.stringify(blockLosingSandwich);
+    const block = JSON.parse(strValue) as RichBlock;
+    const formattedBlock = formatRichBlock(block);
+    const mevResults = handleBlock(formattedBlock, chainConfigs[0]);
+    expect(mevResults.sandwichTxns).toHaveLength(3);
+    expect(mevResults.sandwichTxns[0].frontTxnHash).toBe(
+      "0x1a2d66cd1ac86b63b452ee0f2f6672e1a7605c74e1e88c034d0a0f9ec66e71ed"
+    );
+  });
+
+  test("too many uniswap sandwich", async () => {
+    const strValue = JSON.stringify(blockUniswapSandwich);
+    const block = JSON.parse(strValue) as RichBlock;
+    const formattedBlock = formatRichBlock(block);
+    const mevResults = handleBlock(formattedBlock, chainConfigs[0]);
+    expect(mevResults.sandwichTxns).toHaveLength(0);
   });
 });

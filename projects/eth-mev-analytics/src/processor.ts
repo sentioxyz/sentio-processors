@@ -22,6 +22,9 @@ import {
   winnerRewards,
   getProperty,
   printBalances,
+  txnResult,
+  sandwichTxnResult,
+  isSandwich,
 } from "./classifier.js";
 
 import { getPriceByType, token } from "@sentio/sdk/utils";
@@ -30,76 +33,9 @@ import { chainConfigs, ChainConstants } from "./common.js";
 
 let START_BLOCK = 1000000000;
 
-interface txnResult {
-  txnHash: string;
-  mevContract: string;
-  revenue: Map<string, bigint>;
-  costs: Map<string, bigint>;
-  addressProperty: Map<string, AddressProperty>;
-}
-
-interface sandwichTxnResult {
-  frontTxnHash: string;
-  mevContract: string;
-  backTxnHash: string;
-  revenue: Map<string, bigint>;
-  costs: Map<string, bigint>;
-}
-
 interface mevBlockResult {
   arbTxns: Array<txnResult>;
   sandwichTxns: Array<sandwichTxnResult>;
-}
-
-// A few more cases to solve:
-// 1. losing money sandwich: https://explorer.phalcon.xyz/tx/eth/0x8b781b88fa5fd089116706587a6b59fa7b82188cdc19ab30b099a58768442d23
-// 2. the one in the middle is not a swap: https://explorer.phalcon.xyz/tx/eth/0xc7bca6c1830300aac17ff5d7d527c464d0ee8312e6611bcf37f95ff611560af3
-// 3. the 2 senders are not the same guy. but the contract is the same.
-function isSandwich(
-  front: txnResult,
-  back: txnResult
-): [boolean, sandwichTxnResult] {
-  let ret = {
-    frontTxnHash: front.txnHash,
-    backTxnHash: back.txnHash,
-    revenue: new Map<string, bigint>(),
-    costs: new Map<string, bigint>(),
-    mevContract: back.mevContract,
-  };
-  const frontRet = getRolesCount(front.addressProperty);
-  const backRet = getRolesCount(back.addressProperty);
-  if (
-    !frontRet.has(AddressProperty.Trader) ||
-    !backRet.has(AddressProperty.Trader)
-  ) {
-    return [false, ret];
-  }
-
-  let revenue = front.revenue;
-  let costs = front.costs;
-  for (const [address, value] of back.revenue) {
-    if (revenue.has(address)) {
-      revenue.set(address, revenue.get(address)! + value);
-    } else {
-      revenue.set(address, value);
-    }
-  }
-  for (const [address, value] of back.costs) {
-    if (costs.has(address)) {
-      costs.set(address, costs.get(address)! + value);
-    } else {
-      costs.set(address, value);
-    }
-  }
-  const property = getProperty("sandwich", revenue, true);
-  if (property == AddressProperty.Winner) {
-    ret.revenue = revenue;
-    ret.costs = costs;
-
-    return [true, ret];
-  } else {
-    return [false, ret];
-  }
 }
 
 export function findSandwich(
@@ -108,22 +44,21 @@ export function findSandwich(
 ): Array<sandwichTxnResult> {
   let ret = new Array<sandwichTxnResult>();
   let txnMap = new Map<string, Array<dataByTxn>>();
+  let txnByIndex = new Map<number, dataByTxn>();
   for (const [_, txnData] of data) {
     if (!arbResults.has(txnData.tx.hash)) {
       continue;
     }
-    const from = txnData.tx.from.toLowerCase();
     if (txnData.tx.to === undefined) {
       continue;
     }
     const to = txnData.tx.to!.toLowerCase();
-    if (!txnMap.has(from + "-" + to)) {
-      txnMap.set(from + "-" + to, new Array<dataByTxn>());
+    if (!txnMap.has(to)) {
+      txnMap.set(to, new Array<dataByTxn>());
     }
-    // This is a hack to handle ethers bug.
-    // @ts-ignore
-    txnData.tx.index = parseInt(txnData.tx.transactionIndex);
-    txnMap.get(from + "-" + to)!.push(txnData);
+
+    txnMap.get(to)!.push(txnData);
+    txnByIndex.set(txnData.tx.index, txnData);
   }
   // sort array
   for (const [key, txnList] of txnMap) {
@@ -135,10 +70,19 @@ export function findSandwich(
 
     for (let i = 1; i < txnList.length; i++) {
       if (txnList[i].tx.index - txnList[targetStart].tx.index > 1) {
-        const [is, sandwichResult] = isSandwich(
-          arbResults.get(txnList[targetStart].tx.hash)!,
-          arbResults.get(txnList[i].tx.hash)!
-        );
+        const sandwichStart = txnList[targetStart].tx;
+        const sandwichEnd = txnList[i].tx;
+        var arr = new Array<txnResult>();
+        arr.push(arbResults.get(sandwichStart.hash)!);
+        for (let j = sandwichStart.index + 1; j < sandwichEnd.index; j++) {
+          if (!txnByIndex.has(j)) {
+            continue;
+          }
+          arr.push(arbResults.get(txnByIndex.get(j)!.tx.hash)!);
+        }
+        arr.push(arbResults.get(sandwichEnd.hash)!);
+
+        const [is, sandwichResult] = isSandwich(arr);
         if (is) {
           ret.push(sandwichResult);
           targetStart = i + 1;
@@ -195,12 +139,11 @@ export function isArbitrage(
 ): boolean {
   const rolesCount = getRolesCount(addressProperty);
   if (chainConfig.blackListedAddresses.has(data.tx.to!.toLowerCase())) {
-    console.log("skip blacklisted address for:", data.tx.to, data.tx.hash);
     return false;
   }
   let numWinner = 0;
   let numTrader = 0;
-  if (getProperty("group", revenue, false) == AddressProperty.Winner) {
+  if (getProperty("group", revenue) == AddressProperty.Winner) {
     if (rolesCount.has(AddressProperty.Winner)) {
       numWinner = rolesCount.get(AddressProperty.Winner)!;
     }
@@ -229,21 +172,25 @@ export function txnProfitAndCost(
       txnHash: data.tx.hash,
       revenue: rewards,
       mevContract: "",
+      txnIndex: -1,
       costs: costs,
       addressProperty: new Map<string, AddressProperty>(),
     };
   }
+  // This is a hack to handle ethers bug.
+  // @ts-ignore
+  data.tx.index = parseInt(data.tx.transactionIndex);
   if (data.transactionReceipts.length === 0) {
     console.log("no transaction receipt");
   } else if (data.transactionReceipts[0].gasUsed === undefined) {
     console.log("gas used is undefined");
   }
   if (data.transactionReceipts[0].status === 0) {
-    console.log("transaction failed");
     return {
       txnHash: data.tx.hash,
       revenue: rewards,
       costs: costs,
+      txnIndex: data.tx.index,
       mevContract: "",
       addressProperty: new Map<string, AddressProperty>(),
     };
@@ -271,6 +218,7 @@ export function txnProfitAndCost(
     txnHash: data.tx.hash,
     mevContract: data.tx.to!,
     revenue: rewards,
+    txnIndex: data.tx.index,
     costs: costs,
     addressProperty: addressProperty,
   };
@@ -392,6 +340,7 @@ for (const chainConfig of chainConfigs) {
         ctx.eventLogger.emit("arbitrage", {
           message: `Arbitrage txn detected: ${link}`,
           link: link,
+          index: txn.txnIndex,
           revenue: revenue,
           cost: cost,
           mevContract: txn.mevContract,
@@ -418,8 +367,11 @@ for (const chainConfig of chainConfigs) {
         }
         ctx.eventLogger.emit("sandwich", {
           message: `Sandwich txn detected: ${frontLink} and ${backLink}`,
-          link: frontLink,
-          secondLink: backLink,
+          link: backLink,
+          index: txn.backTxnIndex,
+          frontLink: frontLink,
+          frontIndex: txn.frontTxnIndex,
+          mevContract: txn.mevContract,
           revenue: revenue,
           cost: cost,
           profit: revenue.minus(cost),
