@@ -314,7 +314,7 @@ async function computePnL(
   return [pnl, cost];
 }
 
-let START_BLOCK = 17164197;
+let START_BLOCK = 1000000000;
 for (const chainConfig of chainConfigs) {
   GlobalProcessor.bind({
     startBlock: START_BLOCK,
