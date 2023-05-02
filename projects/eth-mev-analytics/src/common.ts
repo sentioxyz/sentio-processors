@@ -46,6 +46,7 @@ export const chainConfigs = [
     blackListedAddresses: new Set<string>([
       "0xa63D57042B2d462B8dcf1570F8288dba405Cc909".toLowerCase(), // tdex
       "0xBF65023BcF48Ad0ab5537Ea39C9242de499386c9".toLowerCase(), // yieldwolf vaults
+      "0x8F5BBB2BB8c2Ee94639E55d5F41de9b4839C1280".toLowerCase(), // synapse bridge
     ]),
     mintBurnAddr: new Set<string>([
       "0x0000000000000000000000000000000000000000",

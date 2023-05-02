@@ -318,10 +318,9 @@ async function computePnL(
   return [pnl, cost];
 }
 
-let START_BLOCK = 1000000000;
-export function Bind(chainConfig: ChainConstants) {
+export function Bind(chainConfig: ChainConstants, startBlock: number) {
   GlobalProcessor.bind({
-    startBlock: START_BLOCK,
+    startBlock: startBlock,
     network: chainConfig.chainID,
   }).onBlockInterval(
     async (b, ctx) => {
