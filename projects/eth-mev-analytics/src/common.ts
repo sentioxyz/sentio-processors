@@ -4,12 +4,14 @@ export interface ChainConstants {
   chainID: string;
   nativeTokenWrappedAddress: string;
   blackListedAddresses: Set<string>;
+  phalconChain: string;
 }
 
 export const chainConfigs = [
   {
     chainID: CHAIN_IDS.ETHEREUM,
-    nativeTokenWrappedAddress: "0xC02aaA39b223FE8D0A0e5C4F27eAD9083C756Cc2",
+    nativeTokenWrappedAddress:
+      "0xC02aaA39b223FE8D0A0e5C4F27eAD9083C756Cc2".toLowerCase(),
     blackListedAddresses: new Set<string>([
       "0xB33af361843357E05B6Df3e45ae3B5CEc8E01137".toLowerCase(), // dsproxy
       "0xE2f05BBE81Cfcb79d0D8C39F706a5416ad845EE0".toLowerCase(), // another ds proxy
@@ -26,5 +28,15 @@ export const chainConfigs = [
       "0x71f6C4AEe7741cd7434353a98eC31B298d642Eed".toLowerCase(), // convex staking proxy
       "0x6A7efa964Cf6D9Ab3BC3c47eBdDB853A8853C502".toLowerCase(), // frax price index
     ]),
+    phalconChain: "eth",
+  },
+  {
+    chainID: CHAIN_IDS.POLYGON,
+    nativeTokenWrappedAddress:
+      "0x0d500B1d8E8eF31E21C99d1Db9A6444d3ADf1270".toLowerCase(),
+    blackListedAddresses: new Set<string>([
+      "0xa63D57042B2d462B8dcf1570F8288dba405Cc909".toLowerCase(), // tdex
+    ]),
+    phalconChain: "polygon",
   },
 ];
