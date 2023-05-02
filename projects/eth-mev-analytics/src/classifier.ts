@@ -63,7 +63,8 @@ function updateRewardToAddress(
   rewards: Map<string, bigint>,
   sccMap: Map<string, number>,
   balanceChanges: Map<string, Map<string, bigint>>,
-  graph: TokenFlowGraph
+  graph: TokenFlowGraph,
+  mintBurnAddrs: Set<string>
 ) {
   for (const [from, edges] of graph.adjList) {
     for (const [_, edge] of edges) {
@@ -73,13 +74,12 @@ function updateRewardToAddress(
       if (sccMap.get(addr) === sccMap.get(from)) {
         continue;
       }
-      if (from == sender || from == receiver) {
+      if (from === sender || from === receiver || mintBurnAddrs.has(from)) {
         continue;
       }
       if (!balanceChanges.has(from)) {
         continue;
       }
-
       for (const [tokenAddr, value] of balanceChanges.get(from)!) {
         if (!rewards.has(tokenAddr)) {
           rewards.set(tokenAddr, BigInt(0));
@@ -96,6 +96,7 @@ export function winnerRewards(
   sccs: Array<Array<string>>,
   balanceChanges: Map<string, Map<string, bigint>>,
   graph: TokenFlowGraph,
+  mintBurnAddrs: Set<string>,
   feeRecipent: string
 ): [Map<string, bigint>, Map<string, bigint>] {
   let rewards: Map<string, bigint> = new Map();
@@ -124,7 +125,7 @@ export function winnerRewards(
       if (
         edge.toAddr == sender ||
         edge.toAddr == receiver ||
-        edge.toAddr == mintBurnAddr
+        mintBurnAddrs.has(edge.toAddr)
       ) {
         continue;
       }
@@ -153,7 +154,8 @@ export function winnerRewards(
     rewards,
     sccMap,
     balanceChanges,
-    graph
+    graph,
+    mintBurnAddrs
   );
   updateRewardToAddress(
     sender,
@@ -162,7 +164,8 @@ export function winnerRewards(
     rewards,
     sccMap,
     balanceChanges,
-    graph
+    graph,
+    mintBurnAddrs
   );
   return [rewards, cost];
 }
@@ -195,6 +198,7 @@ function normalizeToken(token: string): [string, bigint] {
 export interface txnResult {
   txnHash: string;
   txnIndex: number;
+  txFrom: string;
   mevContract: string;
   revenue: Map<string, bigint>;
   costs: Map<string, bigint>;
@@ -227,10 +231,27 @@ export function isSandwich(
   };
   const frontRet = getRolesCount(front.addressProperty);
   const backRet = getRolesCount(back.addressProperty);
+  let numFrontTrader = 0;
+  let numBackTrader = 0;
   if (
-    !frontRet.has(AddressProperty.Trader) ||
-    !backRet.has(AddressProperty.Trader)
+    frontRet.has(AddressProperty.Trader) &&
+    frontRet.get(AddressProperty.Trader)! > 0
   ) {
+    numFrontTrader = frontRet.get(AddressProperty.Trader)!;
+    if (front.addressProperty.get(front.txFrom) === AddressProperty.Trader) {
+      numFrontTrader -= 1;
+    }
+  }
+  if (
+    backRet.has(AddressProperty.Trader) &&
+    backRet.get(AddressProperty.Trader)! > 0
+  ) {
+    numBackTrader = frontRet.get(AddressProperty.Trader)!;
+    if (back.addressProperty.get(back.txFrom) === AddressProperty.Trader) {
+      numBackTrader -= 1;
+    }
+  }
+  if (numFrontTrader === 0 || numBackTrader === 0) {
     return [false, ret];
   }
   const frontProperty = getProperty("sandwich", front.revenue);

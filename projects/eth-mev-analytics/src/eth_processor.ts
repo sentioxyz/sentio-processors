@@ -166,6 +166,7 @@ export function txnProfitAndCost(
   if (data.tx.to === undefined || data.tx.to === null) {
     return {
       txnHash: data.tx.hash,
+      txFrom: data.tx.from,
       revenue: rewards,
       mevContract: "",
       txnIndex: -1,
@@ -184,6 +185,7 @@ export function txnProfitAndCost(
   if (data.transactionReceipts[0].status === 0) {
     return {
       txnHash: data.tx.hash,
+      txFrom: data.tx.from,
       revenue: rewards,
       costs: costs,
       txnIndex: data.tx.index,
@@ -207,11 +209,13 @@ export function txnProfitAndCost(
     sccs,
     balances,
     graph,
+    chainConfig.mintBurnAddr,
     data.feeRecipent
   );
   costs.set("gas", gasTotal);
   return {
     txnHash: data.tx.hash,
+    txFrom: data.tx.from,
     mevContract: data.tx.to!,
     revenue: rewards,
     txnIndex: data.tx.index,

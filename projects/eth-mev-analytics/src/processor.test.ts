@@ -14,8 +14,9 @@ import blockLosingSandwich from "./17148268.json";
 import blockUniswapSandwich from "./17163020.json";
 import blockEulerHack1 from "./16818057.json";
 import blockForTubeHack from "./17143711.json";
+import blockWrongArbRevenue from "./17173197.json";
 import { RichBlock, formatRichBlock } from "@sentio/sdk/eth";
-import { txnProfitAndCost, isArbitrage, handleBlock } from "./processor.js";
+import { txnProfitAndCost, isArbitrage, handleBlock } from "./eth_processor.js";
 import { dataByTxn, getDataByTxn } from "./eth_util.js";
 import { chainConfigs, ChainConstants } from "./common.js";
 
@@ -112,14 +113,6 @@ describe("Test MEV", () => {
     expect(ret[0]).toBe(true);
   });
 
-  test("lido shouldn't count", async () => {
-    const ret = compute(
-      blockLido,
-      "0xf89d9779021ef9247e35347d55a0332bf6927c5027ae63a54bd848cf2a9113b3"
-    );
-    expect(ret[0]).toBe(false);
-  });
-
   test("wrong renevue 2", async () => {
     const ret = compute(
       blockWrongRevenue2,
@@ -178,6 +171,34 @@ describe("Test MEV", () => {
     const formattedBlock = formatRichBlock(block);
     const mevResults = handleBlock(formattedBlock, chainConfigs[0]);
     expect(mevResults.sandwichTxns).toHaveLength(0);
+  });
+
+  test("wrong renevue 3", async () => {
+    const ret = compute(
+      blockWrongArbRevenue,
+      "0x8ba2aea93588d8d2977bf400148b01301dacfab47cf281a3b2345329a6158ae1"
+    );
+    console.log(ret);
+    expect(ret[0]).toBe(true);
+    expect(ret[1].get("0xc02aaa39b223fe8d0a0e5c4f27ead9083c756cc2")).toBe(
+      1056620760836823262n
+    );
+    expect(ret[1].get("0x4e3fbd56cd56c3e72c1403e103b45db9da5b9d2b")).toBe(
+      12618978090578852n
+    );
+  });
+
+  test("lido shouldn't count", async () => {
+    const ret = compute(
+      blockLido,
+      "0xf89d9779021ef9247e35347d55a0332bf6927c5027ae63a54bd848cf2a9113b3"
+    );
+    console.log(ret);
+    expect(ret[0]).toBe(true);
+    expect(ret[1].get("0xc02aaa39b223fe8d0a0e5c4f27ead9083c756cc2")).toBe(
+      17596399668493445n
+    );
+    expect(ret[1].get("0xae7ab96520de3a18e5e111b5eaab095312d7fe84")).toBe(0n);
   });
 });
 

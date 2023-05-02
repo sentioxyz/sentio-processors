@@ -4,6 +4,7 @@ export interface ChainConstants {
   chainID: string;
   nativeTokenWrappedAddress: string;
   blackListedAddresses: Set<string>;
+  mintBurnAddr: Set<string>;
   phalconChain: string;
 }
 
@@ -27,6 +28,14 @@ export const chainConfigs = [
       "0x7a250d5630b4cf539739df2c5dacb4c659f2488d".toLowerCase(), // uniswap v2 router
       "0x71f6C4AEe7741cd7434353a98eC31B298d642Eed".toLowerCase(), // convex staking proxy
       "0x6A7efa964Cf6D9Ab3BC3c47eBdDB853A8853C502".toLowerCase(), // frax price index
+      "0x541a2378589E280FDfDde6e53Fb5ECf98a853fC2".toLowerCase(), // timeless finance
+      "0x455D80a02411F8fF918D10b4e6fb23fA5c225267".toLowerCase(), // instadapp
+    ]),
+    mintBurnAddr: new Set<string>([
+      "0x0000000000000000000000000000000000000000",
+      "0x35A398425d9f1029021A92bc3d2557D42C8588D7".toLowerCase(), // pirexCvx
+      "0x7f39C581F595B53c5cb19bD0b3f8dA6c935E2Ca0".toLowerCase(), //lido
+      "0xDcEF968d416a41Cdac0ED8702fAC8128A64241A2".toLowerCase(), //curve
     ]),
     phalconChain: "eth",
   },
@@ -36,6 +45,10 @@ export const chainConfigs = [
       "0x0d500B1d8E8eF31E21C99d1Db9A6444d3ADf1270".toLowerCase(),
     blackListedAddresses: new Set<string>([
       "0xa63D57042B2d462B8dcf1570F8288dba405Cc909".toLowerCase(), // tdex
+      "0xBF65023BcF48Ad0ab5537Ea39C9242de499386c9".toLowerCase(), // yieldwolf vaults
+    ]),
+    mintBurnAddr: new Set<string>([
+      "0x0000000000000000000000000000000000000000",
     ]),
     phalconChain: "polygon",
   },
