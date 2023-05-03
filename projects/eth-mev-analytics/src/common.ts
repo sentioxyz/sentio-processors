@@ -45,6 +45,7 @@ export const chainConfigs = [
       "0xbEbc44782C7dB0a1A60Cb6fe97d0b483032FF1C7".toLowerCase(), // curve
       "0xF014FEF41cCB703975827C8569a3f0940cFD80A4".toLowerCase(), // token manager
       "0xbAFA44EFE7901E04E39Dad13167D089C559c1138".toLowerCase(), // frax minter
+      "0x0A59649758aa4d66E25f08Dd01271e891fe52199".toLowerCase(), // maker
     ]),
     phalconChain: "eth",
   },
@@ -78,7 +79,16 @@ export const chainConfigs = [
       "0xc09c12093b037866Bf68C9474EcDb5113160fBcE".toLowerCase(), // LP
       "0xb3c68d69E95B095ab4b33B4cB67dBc0fbF3Edf56".toLowerCase(), // ironbank
       "0x836648A8cE166Ba7CaFb27F0E6AD21d5C91b7774".toLowerCase(), // LP
+      "0x06f01502327De1c37076Bea4689a7e44279155e9".toLowerCase(), // LP
     ]),
     phalconChain: "avax",
+  },
+  {
+    chainID: CHAIN_IDS.MOONBEAM,
+    nativeTokenWrappedAddress:
+      "0xAcc15dC74880C9944775448304B263D191c6077F".toLowerCase(),
+    blackListedAddresses: new Set<string>([]),
+    mintBurnAddr: new Set<string>([]),
+    phalconChain: "moonbeam",
   },
 ];
