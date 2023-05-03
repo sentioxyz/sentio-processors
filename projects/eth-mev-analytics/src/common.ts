@@ -19,6 +19,7 @@ export const chainConfigs = [
       "0x67e5Dbe8b910b307Adfee1C119C63f417101300B".toLowerCase(), // another ds proxy
       "0x4000235A519e9728a9AAda6872cB8F152b7Abe47".toLowerCase(), // another ds proxy
       "0x5c42b3edb5b8f18e9937b0835912968e82db8e76".toLowerCase(), // another ds proxy
+      "0x1649805770d7e30906e3d6695b8faf226e3b5269".toLowerCase(), // another ds proxy
       "0x9008D19f58AAbD9eD0D60971565AA8510560ab41".toLowerCase(), // GPLv2
       "0xDEF171Fe48CF0115B1d80b88dc8eAB59176FEe57".toLowerCase(), // paraswap v5
       "0xb46Fb07b0c80DBC3F97cae3BFe168AcaD46dF507".toLowerCase(), // zenbull
@@ -31,6 +32,7 @@ export const chainConfigs = [
       "0x6A7efa964Cf6D9Ab3BC3c47eBdDB853A8853C502".toLowerCase(), // frax price index
       "0x541a2378589E280FDfDde6e53Fb5ECf98a853fC2".toLowerCase(), // timeless finance
       "0x455D80a02411F8fF918D10b4e6fb23fA5c225267".toLowerCase(), // instadapp
+      "0xa88800cd213da5ae406ce248380802bd53b47647".toLowerCase(), // 1inch settlement
     ]),
     mintBurnAddr: new Set<string>([
       "0x0000000000000000000000000000000000000000",
