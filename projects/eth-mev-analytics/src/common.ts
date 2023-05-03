@@ -56,4 +56,16 @@ export const chainConfigs = [
     ]),
     phalconChain: "polygon",
   },
+  {
+    chainID: CHAIN_IDS.AVALANCHE,
+    nativeTokenWrappedAddress:
+      "0xB31f66AA3C1e785363F0875A1B74E27b85FD66c7".toLowerCase(),
+    blackListedAddresses: new Set<string>([
+      "0xea63fdc25a6e177ea2bebf2ebff2a5c93a26eb9a1d2d07d32faac6311a0f791a",
+    ]),
+    mintBurnAddr: new Set<string>([
+      "0x0000000000000000000000000000000000000000",
+    ]),
+    phalconChain: "avax",
+  },
 ];
