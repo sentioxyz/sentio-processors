@@ -12,6 +12,21 @@ export class TokenFlowGraph {
     this.adjList = new Map<string, Map<string, Edge>>();
   }
 
+  numSCCs(): number {
+    return this.findStronglyConnectedComponents().length;
+  }
+
+  numNodes(): number {
+    let nodes = new Set<string>();
+    for (const [from, edges] of this.adjList) {
+      nodes.add(from);
+      for (const [_, edge] of edges) {
+        nodes.add(edge.toAddr);
+      }
+    }
+    return nodes.size;
+  }
+
   addEdge(from: string, edge: Edge, source: string): void {
     from = from.toLowerCase();
     const edgeKey =

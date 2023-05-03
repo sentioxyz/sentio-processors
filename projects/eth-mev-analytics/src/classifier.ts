@@ -203,6 +203,7 @@ export interface txnResult {
   revenue: Map<string, bigint>;
   costs: Map<string, bigint>;
   addressProperty: Map<string, AddressProperty>;
+  graph: TokenFlowGraph;
 }
 
 export interface sandwichTxnResult {

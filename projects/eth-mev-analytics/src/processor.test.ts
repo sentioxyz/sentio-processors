@@ -38,7 +38,7 @@ function handleTxn(
   let ret = txnProfitAndCost(data, chainConfig);
   //console.log(ret);
   return [
-    isArbitrage(data, chainConfig, ret.revenue, ret.addressProperty),
+    isArbitrage(data, chainConfig, ret.revenue, ret.addressProperty, ret.graph),
     ret.revenue,
     ret.costs,
   ];

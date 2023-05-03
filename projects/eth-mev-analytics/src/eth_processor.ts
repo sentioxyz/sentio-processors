@@ -30,6 +30,7 @@ import {
 import { getPriceByType, token } from "@sentio/sdk/utils";
 
 import { chainConfigs, ChainConstants } from "./common.js";
+import { TokenFlowGraph } from "./graph.js";
 
 interface mevBlockResult {
   arbTxns: Array<txnResult>;
@@ -118,7 +119,13 @@ export function handleBlock(
   for (const [hash, result] of txnResults) {
     const txn = dataByTxn.get(hash);
     if (
-      isArbitrage(txn!, chainConfig, result.revenue, result.addressProperty)
+      isArbitrage(
+        txn!,
+        chainConfig,
+        result.revenue,
+        result.addressProperty,
+        result.graph
+      )
     ) {
       arbTxnResults.push(result);
     }
@@ -133,10 +140,14 @@ export function isArbitrage(
   data: dataByTxn,
   chainConfig: ChainConstants,
   revenue: Map<string, bigint>,
-  addressProperty: Map<string, AddressProperty>
+  addressProperty: Map<string, AddressProperty>,
+  graph: TokenFlowGraph
 ): boolean {
   const rolesCount = getRolesCount(addressProperty);
   if (chainConfig.blackListedAddresses.has(data.tx.to!.toLowerCase())) {
+    return false;
+  }
+  if (graph.numNodes() === graph.numSCCs()) {
     return false;
   }
   let numWinner = 0;
@@ -172,6 +183,7 @@ export function txnProfitAndCost(
       txnIndex: -1,
       costs: costs,
       addressProperty: new Map<string, AddressProperty>(),
+      graph: graph,
     };
   }
   // This is a hack to handle ethers bug.
@@ -191,6 +203,7 @@ export function txnProfitAndCost(
       txnIndex: data.tx.index,
       mevContract: "",
       addressProperty: new Map<string, AddressProperty>(),
+      graph: graph,
     };
   }
   const sccs = graph.findStronglyConnectedComponents();
@@ -221,6 +234,7 @@ export function txnProfitAndCost(
     txnIndex: data.tx.index,
     costs: costs,
     addressProperty: addressProperty,
+    graph: graph,
   };
 }
 
