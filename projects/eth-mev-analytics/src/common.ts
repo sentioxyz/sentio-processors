@@ -20,6 +20,7 @@ export const chainConfigs = [
       "0x4000235A519e9728a9AAda6872cB8F152b7Abe47".toLowerCase(), // another ds proxy
       "0x5c42b3edb5b8f18e9937b0835912968e82db8e76".toLowerCase(), // another ds proxy
       "0x1649805770d7e30906e3d6695b8faf226e3b5269".toLowerCase(), // another ds proxy
+      "0xE2ABF5f39e0fc4075210086D7979DA3358Ea9245".toLowerCase(), // another ds proxy
       "0x9008D19f58AAbD9eD0D60971565AA8510560ab41".toLowerCase(), // GPLv2
       "0xDEF171Fe48CF0115B1d80b88dc8eAB59176FEe57".toLowerCase(), // paraswap v5
       "0xb46Fb07b0c80DBC3F97cae3BFe168AcaD46dF507".toLowerCase(), // zenbull
@@ -33,12 +34,14 @@ export const chainConfigs = [
       "0x541a2378589E280FDfDde6e53Fb5ECf98a853fC2".toLowerCase(), // timeless finance
       "0x455D80a02411F8fF918D10b4e6fb23fA5c225267".toLowerCase(), // instadapp
       "0xa88800cd213da5ae406ce248380802bd53b47647".toLowerCase(), // 1inch settlement
+      "0x81c6d7fb1dfd8fc785134c352afc94ae0849c6b8".toLowerCase(), // pendle
     ]),
     mintBurnAddr: new Set<string>([
       "0x0000000000000000000000000000000000000000",
       "0x35A398425d9f1029021A92bc3d2557D42C8588D7".toLowerCase(), // pirexCvx
       "0x7f39C581F595B53c5cb19bD0b3f8dA6c935E2Ca0".toLowerCase(), //lido
       "0xDcEF968d416a41Cdac0ED8702fAC8128A64241A2".toLowerCase(), //curve
+      "0xbEbc44782C7dB0a1A60Cb6fe97d0b483032FF1C7".toLowerCase(), // curve
     ]),
     phalconChain: "eth",
   },
@@ -65,6 +68,7 @@ export const chainConfigs = [
     ]),
     mintBurnAddr: new Set<string>([
       "0x0000000000000000000000000000000000000000",
+      "0x0974D9d3bc463Fa17497aAFc3a87535553298FbE".toLowerCase(), // curve
     ]),
     phalconChain: "avax",
   },
