@@ -6,7 +6,7 @@ import { LCROProcessor } from './types/eth/lcro.js'
 import { getPriceBySymbol } from '@sentio/sdk/utils'
 import { WCROProcessor, TransferEvent, WCROContext } from './types/eth/wcro.js'
 import { TectonicCoreProcessor } from './types/eth/tectoniccore.js'
-import './aave_v3.js'
+// import './aave_v3.js'
 
 const MintEventHandler = async (event: any, ctx: TCROContext) => {
   const minter = event.args.minter
@@ -24,6 +24,15 @@ const MintEventHandler = async (event: any, ctx: TCROContext) => {
     coin_symbol: collateralSymbol
   })
 
+  ctx.eventLogger.emit("BorrowOrSupply", {
+    distinctId: minter,
+    mintAmount,
+    mintTokens,
+    tSymbol,
+    coin_symbol: collateralSymbol
+  })
+
+  ctx.meter.Counter("borrow_or_supply_tx").add(1, { event: "Mint" })
   ctx.meter.Counter("collateral_counter").add(mintAmount, { tSymbol, coin_symbol: collateralSymbol })
   ctx.meter.Counter("tTokens_counter").add(mintTokens, { tSymbol, coin_symbol: collateralSymbol })
 }
@@ -46,6 +55,15 @@ const RedeemEventHandler = async (event: any, ctx: TCROContext) => {
     coin_symbol: collateralSymbol
   })
 
+  ctx.eventLogger.emit("BorrowOrSupply", {
+    distinctId: redeemer,
+    redeemAmount,
+    redeemTokens,
+    tSymbol,
+    coin_symbol: collateralSymbol
+  })
+
+  ctx.meter.Counter("borrow_or_supply_tx").add(1, { event: "Redeem" })
   ctx.meter.Counter("collateral_counter").sub(redeemAmount, { tSymbol, coin_symbol: collateralSymbol })
   ctx.meter.Counter("tTokens_counter").sub(redeemTokens, { tSymbol, coin_symbol: collateralSymbol })
 
@@ -69,6 +87,15 @@ const BorrowEventHandler = async (event: any, ctx: TCROContext) => {
     coin_symbol: collateralSymbol
   })
 
+  ctx.eventLogger.emit("BorrowOrSupply", {
+    distinctId: borrower,
+    borrowAmount,
+    tSymbol,
+    accountBorrows,
+    coin_symbol: collateralSymbol
+  })
+
+  ctx.meter.Counter("borrow_or_supply_tx").add(1, { event: "Borrow" })
   ctx.meter.Counter("borrow_counter").add(borrowAmount, { tSymbol, coin_symbol: collateralSymbol })
   ctx.meter.Gauge("borrow_amount_usd_gauge").record(borrowAmountUSD, { tSymbol, coin_symbol: collateralSymbol })
 }
@@ -91,6 +118,16 @@ const RepayBorrowEventHandler = async (event: any, ctx: TCROContext) => {
     coin_symbol: collateralSymbol
   })
 
+  ctx.eventLogger.emit("BorrowOrSupply", {
+    distinctId: payer,
+    borrower,
+    repayAmount,
+    accountBorrows,
+    tSymbol,
+    coin_symbol: collateralSymbol
+  })
+
+  ctx.meter.Counter("borrow_or_supply_tx").add(1, { event: "RepayBorrow" })
   ctx.meter.Counter("borrow_counter").sub(repayAmount, { tSymbol, coin_symbol: collateralSymbol })
 }
 
