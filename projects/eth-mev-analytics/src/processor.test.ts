@@ -15,6 +15,7 @@ import blockUniswapSandwich from "./17163020.json";
 import blockEulerHack1 from "./16818057.json";
 import blockForTubeHack from "./17143711.json";
 import blockWrongArbRevenue from "./17173197.json";
+import blockSandwichWrongRev1 from "./17100036.json";
 import { RichBlock, formatRichBlock } from "@sentio/sdk/eth";
 import { txnProfitAndCost, isArbitrage, handleBlock } from "./eth_processor.js";
 import { dataByTxn, getDataByTxn } from "./eth_util.js";
@@ -199,6 +200,22 @@ describe("Test MEV", () => {
       17596399668493445n
     );
     expect(ret[1].get("0xae7ab96520de3a18e5e111b5eaab095312d7fe84")).toBe(0n);
+  });
+
+  test("sandwich wrong rev", async () => {
+    const strValue = JSON.stringify(blockSandwichWrongRev1);
+    const block = JSON.parse(strValue) as RichBlock;
+    const formattedBlock = formatRichBlock(block);
+    const mevResults = handleBlock(formattedBlock, chainConfigs[0]);
+    expect(mevResults.sandwichTxns).toHaveLength(1);
+    expect(mevResults.sandwichTxns[0].frontTxnHash).toBe(
+      "0xdc567dd3b915f4fe0763d38690277a1d8e3b9967e0b113b936e0f0a11f3e5304"
+    );
+    expect(
+      mevResults.sandwichTxns[0].revenue.get(
+        "0xc02aaa39b223fe8d0a0e5c4f27ead9083c756cc2"
+      )
+    ).toBe(22971036132798645n);
   });
 });
 

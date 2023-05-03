@@ -246,7 +246,7 @@ export function isSandwich(
     backRet.has(AddressProperty.Trader) &&
     backRet.get(AddressProperty.Trader)! > 0
   ) {
-    numBackTrader = frontRet.get(AddressProperty.Trader)!;
+    numBackTrader = backRet.get(AddressProperty.Trader)!;
     if (back.addressProperty.get(back.txFrom) === AddressProperty.Trader) {
       numBackTrader -= 1;
     }

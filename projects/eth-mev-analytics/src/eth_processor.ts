@@ -101,7 +101,7 @@ export function handleBlock(
   let txnResults = new Map<string, txnResult>();
   for (const [hash, data] of dataByTxn) {
     let ret = txnProfitAndCost(data, chainConfig);
-    if (ret.revenue.size > 0) {
+    if (ret.mevContract !== "") {
       txnResults.set(hash, ret);
     }
   }
@@ -290,6 +290,7 @@ async function computePnL(
   for (const [addr, amount] of costs) {
     if (addr === "gas") {
       gasCost = gasCost + amount;
+      continue;
     }
     const tokenWithPrice = await getTokenWithPrice(
       addr,
