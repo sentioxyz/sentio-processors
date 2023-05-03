@@ -16,6 +16,7 @@ import blockEulerHack1 from "./16818057.json";
 import blockForTubeHack from "./17143711.json";
 import blockWrongArbRevenue from "./17173197.json";
 import blockSandwichWrongRev1 from "./17100036.json";
+import blockHugeGraph from "./17124947.json";
 import { RichBlock, formatRichBlock } from "@sentio/sdk/eth";
 import { txnProfitAndCost, isArbitrage, handleBlock } from "./eth_processor.js";
 import { dataByTxn, getDataByTxn } from "./eth_util.js";
@@ -179,7 +180,6 @@ describe("Test MEV", () => {
       blockWrongArbRevenue,
       "0x8ba2aea93588d8d2977bf400148b01301dacfab47cf281a3b2345329a6158ae1"
     );
-    console.log(ret);
     expect(ret[0]).toBe(true);
     expect(ret[1].get("0xc02aaa39b223fe8d0a0e5c4f27ead9083c756cc2")).toBe(
       1056620760836823262n
@@ -194,7 +194,6 @@ describe("Test MEV", () => {
       blockLido,
       "0xf89d9779021ef9247e35347d55a0332bf6927c5027ae63a54bd848cf2a9113b3"
     );
-    console.log(ret);
     expect(ret[0]).toBe(true);
     expect(ret[1].get("0xc02aaa39b223fe8d0a0e5c4f27ead9083c756cc2")).toBe(
       17596399668493445n
@@ -216,6 +215,18 @@ describe("Test MEV", () => {
         "0xc02aaa39b223fe8d0a0e5c4f27ead9083c756cc2"
       )
     ).toBe(22971036132798645n);
+  });
+
+  test("huge graph", async () => {
+    const ret = compute(
+      blockHugeGraph,
+      "0x2c434d3622428abf3e91b9a2cc491ea371d1705441ee00897c305a5adeb53068"
+    );
+    console.log(ret);
+    expect(ret[0]).toBe(true);
+    expect(ret[1].get("0xa0b86991c6218b36c1d19d4a2e9eb0ce3606eb48")).toBe(
+      1039187993n
+    );
   });
 });
 

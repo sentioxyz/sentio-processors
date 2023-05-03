@@ -35,6 +35,7 @@ export const chainConfigs = [
       "0x455D80a02411F8fF918D10b4e6fb23fA5c225267".toLowerCase(), // instadapp
       "0xa88800cd213da5ae406ce248380802bd53b47647".toLowerCase(), // 1inch settlement
       "0x81c6d7fb1dfd8fc785134c352afc94ae0849c6b8".toLowerCase(), // pendle
+      "0x580d3159ade0e95558d10a0dc9d55a9ee84f3e27".toLowerCase(), // swap proxy
     ]),
     mintBurnAddr: new Set<string>([
       "0x0000000000000000000000000000000000000000",
@@ -42,6 +43,8 @@ export const chainConfigs = [
       "0x7f39C581F595B53c5cb19bD0b3f8dA6c935E2Ca0".toLowerCase(), //lido
       "0xDcEF968d416a41Cdac0ED8702fAC8128A64241A2".toLowerCase(), //curve
       "0xbEbc44782C7dB0a1A60Cb6fe97d0b483032FF1C7".toLowerCase(), // curve
+      "0xF014FEF41cCB703975827C8569a3f0940cFD80A4".toLowerCase(), // token manager
+      "0xbAFA44EFE7901E04E39Dad13167D089C559c1138".toLowerCase(), // frax minter
     ]),
     phalconChain: "eth",
   },
@@ -64,11 +67,17 @@ export const chainConfigs = [
     nativeTokenWrappedAddress:
       "0xB31f66AA3C1e785363F0875A1B74E27b85FD66c7".toLowerCase(),
     blackListedAddresses: new Set<string>([
-      "0xea63fdc25a6e177ea2bebf2ebff2a5c93a26eb9a1d2d07d32faac6311a0f791a",
+      "0xaCd4428f8c183edA30d102Da3646C070bC7469Eb".toLowerCase(), // glacier
+      "0xC05e61d0E7a63D27546389B7aD62FdFf5A91aACE".toLowerCase(), // bridge
+      "0x2967E7Bb9DaA5711Ac332cAF874BD47ef99B3820".toLowerCase(), //sodimanod
     ]),
     mintBurnAddr: new Set<string>([
       "0x0000000000000000000000000000000000000000",
       "0x0974D9d3bc463Fa17497aAFc3a87535553298FbE".toLowerCase(), // curve
+      "0x7f90122BF0700F9E7e1F688fe926940E8839F353".toLowerCase(), // curve
+      "0xc09c12093b037866Bf68C9474EcDb5113160fBcE".toLowerCase(), // LP
+      "0xb3c68d69E95B095ab4b33B4cB67dBc0fbF3Edf56".toLowerCase(), // ironbank
+      "0x836648A8cE166Ba7CaFb27F0E6AD21d5C91b7774".toLowerCase(), // LP
     ]),
     phalconChain: "avax",
   },
