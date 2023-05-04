@@ -36,6 +36,8 @@ export const chainConfigs = [
       "0xa88800cd213da5ae406ce248380802bd53b47647".toLowerCase(), // 1inch settlement
       "0x81c6d7fb1dfd8fc785134c352afc94ae0849c6b8".toLowerCase(), // pendle
       "0x580d3159ade0e95558d10a0dc9d55a9ee84f3e27".toLowerCase(), // swap proxy
+      "0x98d785185198ef02db237471f034ac6020e3f55e".toLowerCase(), // safe
+      "0xA3e5e60B6D5f23Aebc91a062B96eA3CaD1A341f0".toLowerCase(), //instadapp
     ]),
     mintBurnAddr: new Set<string>([
       "0x0000000000000000000000000000000000000000",
@@ -71,6 +73,8 @@ export const chainConfigs = [
       "0xaCd4428f8c183edA30d102Da3646C070bC7469Eb".toLowerCase(), // glacier
       "0xC05e61d0E7a63D27546389B7aD62FdFf5A91aACE".toLowerCase(), // bridge
       "0x2967E7Bb9DaA5711Ac332cAF874BD47ef99B3820".toLowerCase(), //sodimanod
+      "0xdef171fe48cf0115b1d80b88dc8eab59176fee57".toLowerCase(), // augustusSwapper
+      "0x82147c5a7e850ea4e28155df107f2590fd4ba327".toLowerCase(), // gmx
     ]),
     mintBurnAddr: new Set<string>([
       "0x0000000000000000000000000000000000000000",
