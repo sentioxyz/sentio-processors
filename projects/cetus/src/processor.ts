@@ -63,15 +63,17 @@ import { SuiObjectProcessor } from "@sentio/sdk/sui"
 
 
 SuiObjectProcessor.bind({
-  objectId: '0xc86f55bab28b7c390a2250da436adb7fae0906e9e6565ebf67490e361e0aba4d',
+  objectId: '0xc86f55bab28b7c390a2250da436adb7fae0906e9e6565ebf67490e361e0aba4d', network: SuiNetwork.TEST_NET,
 }).onTimeInterval(async (self, _, ctx) => {
-
+  console.log("1")
+  console.log(self)
   const pool_info = await ctx.coder.decodedType(self, pool.Pool.type())
 
   const coin_a_balance = Number(pool_info?.coin_a)
   const coin_b_balance = Number(pool_info?.coin_b)
+  if (coin_a_balance) { ctx.meter.Gauge('coin_a_balance').record(coin_a_balance) }
+  else { console.log(JSON.stringify(pool_info), ctx.timestamp) }
 
-  ctx.meter.Gauge('coin_a_balance').record(coin_a_balance)
-  ctx.meter.Gauge('coin_b_balance').record(coin_b_balance)
+  // ctx.meter.Gauge('coin_b_balance').record(coin_b_balance)
 
 })
