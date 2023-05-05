@@ -29,6 +29,17 @@ export class TokenFlowGraph {
     return nodes.size;
   }
 
+  getSCCIndex(sccs: Array<Array<string>>): Map<string, number> {
+    let sccMap = new Map<string, number>();
+    for (let scc of sccs) {
+      for (let addr of scc) {
+        // set index of scc to addr
+        sccMap.set(addr, sccs.indexOf(scc));
+      }
+    }
+    return sccMap;
+  }
+
   addEdge(from: string, edge: Edge, source: string): void {
     from = from.toLowerCase();
     const edgeKey =

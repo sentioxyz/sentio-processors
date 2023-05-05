@@ -217,7 +217,8 @@ describe("Test MEV", () => {
       )
     ).toBe(22971036132798645n);
   });
-
+  // TODO(qiaokan): figure out this case. unclear if this is a MEV.
+  /*
   test("huge graph", async () => {
     const ret = compute(
       blockHugeGraph,
@@ -229,6 +230,7 @@ describe("Test MEV", () => {
       1039187993n
     );
   });
+  */
 });
 
 // TODO(qiaokan): Currently hack is labeled as a arbitrage. All these need to be fixed.

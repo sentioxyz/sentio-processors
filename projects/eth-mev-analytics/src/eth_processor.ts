@@ -147,9 +147,27 @@ export function isArbitrage(
   if (chainConfig.blackListedAddresses.has(data.tx.to!.toLowerCase())) {
     return false;
   }
-  if (graph.numNodes() === graph.numSCCs()) {
+  const sccs = graph.findStronglyConnectedComponents();
+  if (graph.numNodes() === sccs.length) {
     return false;
   }
+  if (data.tx.to !== undefined) {
+    const from = data.tx.from.toLowerCase();
+    const to = data.tx.to!.toLowerCase();
+    const sccMap = graph.getSCCIndex(sccs);
+    for (const [k, v] of addressProperty) {
+      if (k === from || k === to) {
+        continue;
+      }
+      if (
+        v === AddressProperty.Winner &&
+        (sccMap.get(k) === sccMap.get(to) || sccMap.get(k) === sccMap.get(from))
+      ) {
+        return false;
+      }
+    }
+  }
+
   let numWinner = 0;
   let numTrader = 0;
   let minerIsWinner =

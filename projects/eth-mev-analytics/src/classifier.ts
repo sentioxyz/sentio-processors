@@ -103,13 +103,7 @@ export function winnerRewards(
   let rewards: Map<string, bigint> = new Map();
   mergeBalance(sender, rewards, balanceChanges);
   mergeBalance(receiver, rewards, balanceChanges);
-  let sccMap = new Map<string, number>();
-  for (let scc of sccs) {
-    for (let addr of scc) {
-      // set index of scc to addr
-      sccMap.set(addr, sccs.indexOf(scc));
-    }
-  }
+  let sccMap = graph.getSCCIndex(sccs);
   let cost: Map<string, bigint> = new Map();
   let visited = new Set<string>();
   for (const [from, edges] of graph.adjList) {
