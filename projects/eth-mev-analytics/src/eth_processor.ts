@@ -155,14 +155,27 @@ export function isArbitrage(
     const from = data.tx.from.toLowerCase();
     const to = data.tx.to!.toLowerCase();
     const sccMap = graph.getSCCIndex(sccs);
+    let reach: Set<string> = new Set();
+    for (const [k, v] of addressProperty) {
+      if (
+        sccMap.get(k) !== sccMap.get(from) &&
+        sccMap.get(k) !== sccMap.get(to)
+      ) {
+        continue;
+      }
+      graph.connectedTo(k, reach);
+    }
+    if (
+      data.tx.hash ==
+      "0xd5695fefdc8c4e00f648fe62d8e77c7f9b4ab2b98ac1fcee5cbfd529689dcd49"
+    ) {
+      console.log(reach);
+    }
     for (const [k, v] of addressProperty) {
       if (k === from || k === to) {
         continue;
       }
-      if (
-        v === AddressProperty.Winner &&
-        (sccMap.get(k) === sccMap.get(to) || sccMap.get(k) === sccMap.get(from))
-      ) {
+      if (v === AddressProperty.Winner && !reach.has(k)) {
         return false;
       }
     }

@@ -106,6 +106,28 @@ export function winnerRewards(
   let sccMap = graph.getSCCIndex(sccs);
   let cost: Map<string, bigint> = new Map();
   let visited = new Set<string>();
+  // travse once to add blacklisted addresses
+  for (const [from, edges] of graph.adjList) {
+    if (from !== receiver && from !== sender) {
+      continue;
+    }
+    for (const [_, edge] of edges) {
+      if (sccMap.get(from) === sccMap.get(edge.toAddr)) {
+        continue;
+      }
+      if (!balanceChanges.has(edge.toAddr)) {
+        continue;
+      }
+      if (
+        edge.toAddr == sender ||
+        edge.toAddr == receiver ||
+        (edge.index !== graph.edgeIndex &&
+          edge.tokenAddress !== chainNativeToken)
+      ) {
+        visited.add(edge.toAddr);
+      }
+    }
+  }
   for (const [from, edges] of graph.adjList) {
     if (from !== receiver && from !== sender) {
       continue;

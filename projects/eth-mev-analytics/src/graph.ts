@@ -61,6 +61,16 @@ export class TokenFlowGraph {
     }
   }
 
+  connectedTo(from: string, ret: Set<string>) {
+    const edges = this.adjList.get(from.toLowerCase());
+    if (!edges) {
+      return;
+    }
+    for (const [_, edge] of edges) {
+      ret.add(edge.toAddr.toLowerCase());
+    }
+  }
+
   findStronglyConnectedComponents(): Array<Array<string>> {
     let index = 0;
     const stack: string[] = [];
