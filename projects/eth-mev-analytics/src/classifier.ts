@@ -97,6 +97,7 @@ export function winnerRewards(
   balanceChanges: Map<string, Map<string, bigint>>,
   graph: TokenFlowGraph,
   mintBurnAddrs: Set<string>,
+  chainNativeToken: string,
   feeRecipent: string
 ): [Map<string, bigint>, Map<string, bigint>] {
   let rewards: Map<string, bigint> = new Map();
@@ -125,7 +126,8 @@ export function winnerRewards(
       if (
         edge.toAddr == sender ||
         edge.toAddr == receiver ||
-        mintBurnAddrs.has(edge.toAddr)
+        (edge.index !== graph.edgeIndex &&
+          edge.tokenAddress !== chainNativeToken)
       ) {
         continue;
       }

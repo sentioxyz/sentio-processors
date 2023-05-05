@@ -3,10 +3,12 @@ interface Edge {
   readonly tokenAddress: string;
   readonly toAddr: string;
   readonly value: bigint;
+  index: number;
 }
 
 export class TokenFlowGraph {
   adjList: Map<string, Map<string, Edge>>;
+  edgeIndex = 0;
 
   constructor() {
     this.adjList = new Map<string, Map<string, Edge>>();
@@ -42,6 +44,8 @@ export class TokenFlowGraph {
         value: oldEdge.value + edge.value,
       });
     } else {
+      this.edgeIndex++;
+      edge.index = this.edgeIndex;
       this.adjList.get(from)!.set(edgeKey, edge);
     }
   }

@@ -1,7 +1,7 @@
 import { ERC20Processor } from "@sentio/sdk/eth/builtin";
 import * as weth from "./types/eth/weth9.js";
 import { TransferEvent } from "@sentio/sdk/eth/builtin/erc20";
-import { Interface } from "ethers";
+import { Interface, LogParams } from "ethers";
 import {
   TransactionReceiptParams,
   TransactionResponseParams,
@@ -38,6 +38,7 @@ function buildNativeETH(
             toAddr: trace.action.to.toLowerCase(),
             tokenAddress: chainConfig.nativeTokenWrappedAddress.toLowerCase(),
             value: BigInt(trace.action.value),
+            index: 0,
           },
           "native"
         );
@@ -46,11 +47,7 @@ function buildNativeETH(
   }
 }
 
-function buildERC20(
-  graph: TokenFlowGraph,
-  d: dataByTxn,
-  chainConfig: ChainConstants
-) {
+function decodeAsERC20Transfer(log: LogParams, graph: TokenFlowGraph): boolean {
   const iface = new Interface([
     {
       anonymous: false,
@@ -78,42 +75,35 @@ function buildERC20(
       type: "event",
     },
   ]);
-
   const fragment = iface.getEvent("Transfer")!;
-  for (const tx of d.transactionReceipts || []) {
-    try {
-      for (const log of tx.logs || []) {
-        if (log.topics[0] !== fragment.topicHash) {
-          continue;
-        }
-        let tokenAddress = log.address;
-        const parsed = iface.parseLog(log as any);
-        if (parsed) {
-          const transfer = {
-            ...log,
-            name: parsed.name,
-            args: parsed.args,
-          } as any as TransferEvent;
-          graph.addEdge(
-            transfer.args.from.toLowerCase(),
-            {
-              toAddr: transfer.args.to.toLowerCase(),
-              tokenAddress: tokenAddress.toLowerCase(),
-              value: transfer.args.value,
-            },
-            "erc20"
-          );
-        }
-      }
-    } catch (e) {}
+  if (log.topics[0] !== fragment.topicHash) {
+    return false;
   }
+  let tokenAddress = log.address;
+  const parsed = iface.parseLog(log as any);
+  if (parsed) {
+    const transfer = {
+      ...log,
+      name: parsed.name,
+      args: parsed.args,
+    } as any as TransferEvent;
+    graph.addEdge(
+      transfer.args.from.toLowerCase(),
+      {
+        toAddr: transfer.args.to.toLowerCase(),
+        tokenAddress: tokenAddress.toLowerCase(),
+        value: transfer.args.value,
+        index: 0,
+      },
+      "erc20"
+    );
+    return true;
+  }
+  return false;
 }
 
-function buildWETH(
-  graph: TokenFlowGraph,
-  d: dataByTxn,
-  chainConfig: ChainConstants
-) {
+function decodeAsWETHDeposit(log: LogParams, graph: TokenFlowGraph): boolean {
+  let tokenAddress = log.address;
   const iface = new Interface([
     {
       anonymous: false,
@@ -124,6 +114,37 @@ function buildWETH(
       name: "Deposit",
       type: "event",
     },
+  ]);
+  let fragment = iface.getEvent("Deposit")!;
+  if (log.topics[0] !== fragment.topicHash) {
+    return false;
+  }
+
+  let parsed = iface.parseLog(log as any);
+  if (parsed) {
+    const deposit = {
+      ...log,
+      name: parsed.name,
+      args: parsed.args,
+    } as any as weth.DepositEvent;
+    graph.addEdge(
+      tokenAddress.toLowerCase(),
+      {
+        toAddr: deposit.args.dst.toLowerCase(),
+        tokenAddress: tokenAddress.toLowerCase(),
+        value: deposit.args.wad,
+        index: 0,
+      },
+      "weth_deposit"
+    );
+    return true;
+  }
+  return false;
+}
+
+function decodeAsWETHWithdraw(log: LogParams, graph: TokenFlowGraph): boolean {
+  let tokenAddress = log.address;
+  const iface = new Interface([
     {
       anonymous: false,
       inputs: [
@@ -134,60 +155,49 @@ function buildWETH(
       type: "event",
     },
   ]);
-
-  let fragment = iface.getEvent("Deposit")!;
-  for (const tx of d.transactionReceipts || []) {
-    try {
-      for (const log of tx.logs || []) {
-        if (log.topics[0] !== fragment.topicHash) {
-          continue;
-        }
-        let tokenAddress = log.address;
-        const parsed = iface.parseLog(log as any);
-        if (parsed) {
-          const deposit = {
-            ...log,
-            name: parsed.name,
-            args: parsed.args,
-          } as any as weth.DepositEvent;
-          graph.addEdge(
-            tokenAddress.toLowerCase(),
-            {
-              toAddr: deposit.args.dst.toLowerCase(),
-              tokenAddress: tokenAddress.toLowerCase(),
-              value: deposit.args.wad,
-            },
-            "weth_deposit"
-          );
-        }
-      }
-    } catch (e) {}
+  let fragment = iface.getEvent("Withdrawal")!;
+  if (log.topics[0] !== fragment.topicHash) {
+    return false;
   }
 
-  fragment = iface.getEvent("Withdrawal")!;
+  let parsed = iface.parseLog(log as any);
+  if (parsed) {
+    const deposit = {
+      ...log,
+      name: parsed.name,
+      args: parsed.args,
+    } as any as weth.WithdrawalEvent;
+    graph.addEdge(
+      deposit.args.src.toLowerCase(),
+      {
+        toAddr: tokenAddress.toLowerCase(),
+        tokenAddress: tokenAddress.toLowerCase(),
+        value: deposit.args.wad,
+        index: 0,
+      },
+      "weth_withdrawal"
+    );
+    return true;
+  }
+  return false;
+}
+
+function buildERC20AndWETH(
+  graph: TokenFlowGraph,
+  d: dataByTxn,
+  chainConfig: ChainConstants
+) {
   for (const tx of d.transactionReceipts || []) {
     try {
       for (const log of tx.logs || []) {
-        if (log.topics[0] !== fragment.topicHash) {
+        if (decodeAsERC20Transfer(log, graph)) {
           continue;
         }
-        let tokenAddress = log.address;
-        const parsed = iface.parseLog(log as any);
-        if (parsed) {
-          const deposit = {
-            ...log,
-            name: parsed.name,
-            args: parsed.args,
-          } as any as weth.WithdrawalEvent;
-          graph.addEdge(
-            deposit.args.src.toLowerCase(),
-            {
-              toAddr: tokenAddress.toLowerCase(),
-              tokenAddress: tokenAddress.toLowerCase(),
-              value: deposit.args.wad,
-            },
-            "weth_withdrawal"
-          );
+        if (decodeAsWETHDeposit(log, graph)) {
+          continue;
+        }
+        if (decodeAsWETHWithdraw(log, graph)) {
+          continue;
         }
       }
     } catch (e) {}
@@ -201,8 +211,7 @@ export function buildGraph(
   let graph: TokenFlowGraph = new TokenFlowGraph();
 
   buildNativeETH(graph, d, chainConfig);
-  buildERC20(graph, d, chainConfig);
-  buildWETH(graph, d, chainConfig);
+  buildERC20AndWETH(graph, d, chainConfig);
   return graph;
 }
 

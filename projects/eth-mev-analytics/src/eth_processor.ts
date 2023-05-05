@@ -207,9 +207,9 @@ export function txnProfitAndCost(
     };
   }
   const sccs = graph.findStronglyConnectedComponents();
-  // graph.print();
+  //graph.print();
   const balances = findBalanceChanges(sccs, graph);
-  //  printBalances(balances);
+  //printBalances(balances);
   const addressProperty = getAddressProperty(balances);
   const sender = data.tx.from.toLowerCase();
 
@@ -223,6 +223,7 @@ export function txnProfitAndCost(
     balances,
     graph,
     chainConfig.mintBurnAddr,
+    chainConfig.nativeTokenWrappedAddress,
     data.feeRecipent
   );
   costs.set("gas", gasTotal);

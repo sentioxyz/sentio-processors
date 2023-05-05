@@ -112,6 +112,7 @@ describe("Test MEV", () => {
       blockMissedArb,
       "0xa8c7466e779d19c9b441ea79310ea16bff74982255d581e3d92766c768e3e1a3"
     );
+    console.log(ret);
     expect(ret[0]).toBe(true);
   });
 
