@@ -13,7 +13,11 @@ export const chainConfigs = [
     chainID: CHAIN_IDS.ETHEREUM,
     nativeTokenWrappedAddress:
       "0xC02aaA39b223FE8D0A0e5C4F27eAD9083C756Cc2".toLowerCase(),
-    blackListedAddresses: new Set<string>([]),
+    blackListedAddresses: new Set<string>([
+      "0x1D6DEdb49AF91A11B5C5F34954FD3E8cC4f03A86".toLowerCase(), // df saver recipe
+      "0x619Ad2D02dBeE6ebA3CDbDA3F98430410e892882".toLowerCase(), // insta aggregator
+      "0x9008D19f58AAbD9eD0D60971565AA8510560ab41".toLowerCase(), // CoW settlement
+    ]),
     mintBurnAddr: new Set<string>([
       "0x0000000000000000000000000000000000000000",
       "0x35A398425d9f1029021A92bc3d2557D42C8588D7".toLowerCase(), // pirexCvx

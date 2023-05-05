@@ -144,9 +144,15 @@ export function isArbitrage(
   graph: TokenFlowGraph
 ): boolean {
   const rolesCount = getRolesCount(addressProperty);
-  if (chainConfig.blackListedAddresses.has(data.tx.to!.toLowerCase())) {
-    return false;
+  for (const trace of data.traces) {
+    if (
+      trace.action.to !== undefined &&
+      chainConfig.blackListedAddresses.has(trace.action.to!)
+    ) {
+      return false;
+    }
   }
+
   const sccs = graph.findStronglyConnectedComponents();
   if (graph.numNodes() === sccs.length) {
     return false;
