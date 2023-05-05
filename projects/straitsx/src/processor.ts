@@ -53,7 +53,7 @@ XSGDProcessor.bind({ address: XSGD_ETH })
   .onEventBurn(burnEventHandler)
   .onEventMint(mintEventHandler)
   .onEventTransfer(transferEventHandler)
-  .onTimeInterval(timeIntervalHandler, 1440, 60)
+  .onTimeInterval(timeIntervalHandler, 60, 60)
 
 
 

@@ -62,18 +62,39 @@ import { SuiObjectProcessor } from "@sentio/sdk/sui"
 
 
 
+// SuiObjectProcessor.bind({
+//   objectId: '0xc86f55bab28b7c390a2250da436adb7fae0906e9e6565ebf67490e361e0aba4d', network: SuiNetwork.TEST_NET,
+// }).onTimeInterval(async (self, _, ctx) => {
+//   console.log("1")
+//   console.log(self)
+//   const pool_info = await ctx.coder.decodedType(self, pool.Pool.type())
+
+//   const coin_a_balance = Number(pool_info?.coin_a)
+//   const coin_b_balance = Number(pool_info?.coin_b)
+//   if (coin_a_balance) { ctx.meter.Gauge('coin_a_balance').record(coin_a_balance) }
+//   else { console.log(JSON.stringify(pool_info), ctx.timestamp) }
+
+//   // ctx.meter.Gauge('coin_b_balance').record(coin_b_balance)
+
+// })
+
+
+//mainnet pool test usdt-usdc
 SuiObjectProcessor.bind({
-  objectId: '0xc86f55bab28b7c390a2250da436adb7fae0906e9e6565ebf67490e361e0aba4d', network: SuiNetwork.TEST_NET,
+  objectId: '0xc8d7a1503dc2f9f5b05449a87d8733593e2f0f3e7bffd90541252782e4d2ca20',
+  network: SuiNetwork.MAIN_NET,
+  startCheckpoint: BigInt(1698922)
 }).onTimeInterval(async (self, _, ctx) => {
   console.log("1")
   console.log(self)
   const pool_info = await ctx.coder.decodedType(self, pool.Pool.type())
 
-  const coin_a_balance = Number(pool_info?.coin_a)
-  const coin_b_balance = Number(pool_info?.coin_b)
+  const coin_a_balance = Number(pool_info?.coin_a) / Math.pow(10, 6)
+  const coin_b_balance = Number(pool_info?.coin_b) / Math.pow(10, 6)
   if (coin_a_balance) { ctx.meter.Gauge('coin_a_balance').record(coin_a_balance) }
-  else { console.log(JSON.stringify(pool_info), ctx.timestamp) }
-
+  else { console.log("empty a ", JSON.stringify(pool_info), ctx.timestamp) }
+  if (coin_b_balance) { ctx.meter.Gauge('coin_b_balance').record(coin_a_balance) }
+  else { console.log("empty b ", JSON.stringify(pool_info), ctx.timestamp) }
   // ctx.meter.Gauge('coin_b_balance').record(coin_b_balance)
 
 })
