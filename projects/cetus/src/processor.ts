@@ -84,15 +84,16 @@ pool.bind({
     const amount_in = Number(event.data_decoded.amount_in) / Math.pow(10, CoinInfoMap_MAINNET[coin_a_address].decimal)
     const amount_out = Number(event.data_decoded.amount_out) / Math.pow(10, CoinInfoMap_MAINNET[coin_b_address].decimal)
     const fee_amount = Number(event.data_decoded.fee_amount)
+
     ctx.eventLogger.emit("SwapEvent", {
-      distinctId: ctx.transaction.sender,
+      distinctId: ctx.transaction.data.sender,
       pool,
       before_sqrt_price,
       after_sqrt_price,
       amount_in,
       amount_out,
       fee_amount,
-      coin_symbol: CoinInfoMap_MAINNET[coin_b_address].symbol.toLowerCase()
+      coin_symbol: CoinInfoMap_MAINNET[coin_b_address].symbol
     })
   })
 // .onEventCollectRewardEvent(async (event, ctx) => {
@@ -139,7 +140,7 @@ for (const pool_addresses in POOLS_INFO_MAINNET) {
 
     if (coin_a_balance) {
       ctx.meter.Gauge('coin_a_balance').record(coin_a_balance, {
-        coin_symbol: CoinInfoMap_MAINNET[coin_a_address].symbol.toLowerCase(),
+        coin_symbol: CoinInfoMap_MAINNET[coin_a_address].symbol,
         pairName
       })
     }
@@ -147,7 +148,7 @@ for (const pool_addresses in POOLS_INFO_MAINNET) {
 
     if (coin_b_balance) {
       ctx.meter.Gauge('coin_b_balance').record(coin_b_balance, {
-        coin_symbol: CoinInfoMap_MAINNET[coin_b_address].symbol.toLowerCase(),
+        coin_symbol: CoinInfoMap_MAINNET[coin_b_address].symbol,
         pairName
       })
     }
