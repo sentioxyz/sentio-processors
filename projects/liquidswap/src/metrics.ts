@@ -39,6 +39,11 @@ export const pancakeVolume = Gauge.register("pancake_vol", volOptions)
 export const pancakeVolumeByCoin = Gauge.register("pancake_by_coin", volOptions)
 
 // export const pancakeSingleVolume = Gauge.register("pancake_vol_single", volOptions)
+export const thalaTvlAll = Gauge.register("thala_tvl_all", commonOptions)
+export const thalaTvlByPool = Gauge.register("thala_tvl_by_pool", commonOptions)
+export const thalaTvl = Gauge.register("thala_tvl", commonOptions)
+export const thalaVolume = Gauge.register("thala_vol", volOptions)
+export const thalaVolumeByCoin = Gauge.register("thala_by_coin", volOptions)
 
 export const recordAccount = false
 

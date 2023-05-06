@@ -13,7 +13,8 @@ const tranferEventHandler = async function(event: TransferEvent, ctx: FiatTokenV
   const from = event.args.from
   ctx.meter.Counter("transfer_amount").add(amount)
   ctx.eventLogger.emit("depositors", {
-    distinctId: from
+    distinctId: from,
+    message: `${from} deposited ${amount} USDC`
   })
 }
 
