@@ -19,10 +19,12 @@ function TypeToCoinAddress(type: string) {
   return [coin_a_address, coin_b_address]
 }
 
+
+
 factory.bind({
   address: constant.CLMM_MAINNET,
   network: SuiNetwork.MAIN_NET,
-  startCheckpoint: BigInt(1787170)
+  startCheckpoint: BigInt(1500000)
 })
   .onEventCreatePoolEvent((event, ctx) => {
     ctx.meter.Counter("create_pool_counter").add(1)
@@ -30,9 +32,7 @@ factory.bind({
     const coin_type_b = event.data_decoded.coin_type_b
     const pool_id = event.data_decoded.pool_id
     const tick_spacing = event.data_decoded.tick_spacing
-    //debug
-    console.log(`ctx.transaction-- ${JSON.stringify(ctx.transaction)}`)
-    console.log(`ctx.transaction.transaction.data.sender-- ${ctx.transaction.transaction.data.sender}`)
+
     ctx.eventLogger.emit("CreatePoolEvent", {
       distinctId: ctx.transaction.transaction.data.sender,
       pool_id,
@@ -45,7 +45,7 @@ factory.bind({
 pool.bind({
   address: constant.CLMM_MAINNET,
   network: SuiNetwork.MAIN_NET,
-  startCheckpoint: BigInt(1787170)
+  startCheckpoint: BigInt(1500000)
 })
   .onEventSwapEvent(async (event, ctx) => {
     ctx.meter.Counter("swap_counter").add(1)
@@ -57,14 +57,10 @@ pool.bind({
       return
     }
 
-
-    // try {
     const obj = await ctx.client.getObject({ id: pool, options: { showType: true } })
-    // console.log(`get type--${JSON.stringify(obj)}--${obj.data.type}`)
     let [coin_a_address, coin_b_address] = ["", ""]
     if (obj.data.type) {
       [coin_a_address, coin_b_address] = TypeToCoinAddress(obj.data.type)
-      // console.log(`coin_a_address ${coin_a_address}, coin_b_address ${coin_b_address}`)
     }
 
     if (!constant.CoinInfoMap_MAINNET[coin_a_address] || !constant.CoinInfoMap_MAINNET[coin_b_address]) {
@@ -86,14 +82,22 @@ pool.bind({
     const vault_b_amount = event.data_decoded.vault_b_amount
     const symbol_a = constant.CoinInfoMap_MAINNET[coin_a_address].symbol
     const symbol_b = constant.CoinInfoMap_MAINNET[coin_b_address].symbol
+    const pairName = constant.POOLS_INFO_MAINNET[pool].pairName
 
 
-    if (symbol_a !== "USDC" && symbol_b !== "USDC") {
-      console.log("no usdc in pool" + pool)
+    const usdc_price = Number(await getPriceBySymbol("usdc", ctx.timestamp))
+    const sui_price = Number(await getPriceBySymbol("sui", ctx.timestamp))
+    let usd_volume = 0
+    if (symbol_a == "USDC" || symbol_b == "USDC") {
+      usd_volume = ((symbol_a == "USDC" && atob) || (symbol_b == "USDC" && !atob)) ? amount_in * usdc_price : amount_out * usdc_price
+    }
+    else if (symbol_a == "SUI" || symbol_b == "SUI") {
+      usd_volume = ((symbol_a == "SUI" && atob) || (symbol_b == "SUI" && !atob)) ? amount_in * sui_price : amount_out * sui_price
+    }
+    else {
+      console.log("no usdc or sui in pool" + pool)
       return
     }
-
-    let usdc_volume = ((symbol_a == "USDC" && atob) || (symbol_b == "USDC" && !atob)) ? amount_in : amount_out
 
     ctx.eventLogger.emit("SwapEvent", {
       distinctId: ctx.transaction.transaction.data.sender,
@@ -102,40 +106,77 @@ pool.bind({
       after_sqrt_price,
       amount_in,
       amount_out,
-      usdc_volume,
+      usd_volume,
       fee_amount,
       atob,
+      symbol_a,
+      symbol_b,
       partner,
       ref_amount,
       steps,
       vault_a_amount,
       vault_b_amount,
-      coin_symbol: constant.CoinInfoMap_MAINNET[coin_b_address].symbol
+      coin_symbol: constant.CoinInfoMap_MAINNET[coin_b_address].symbol,
+      pairName,
+      message: `Swap ${amount_in} ${atob ? symbol_a : symbol_b} to ${amount_out} ${atob ? symbol_b : symbol_a}. USD value: $${usd_volume} }`
     })
-    // }
-    // catch (e) {
-    //   console.log(`${e.message} error at ${ctx.transaction.digest}`)
-    // }
+
+    ctx.meter.Gauge("trading_vol_gauge").record(usd_volume, { pairName })
+
   })
-// .onEventCollectRewardEvent(async (event, ctx) => {
-//   ctx.meter.Counter("collect_reward_counter").add(1)
-//   const position = event.data_decoded.position
-//   const pool = event.data_decoded.pool
-//   const amount = event.data_decoded.amount
-//   ctx.eventLogger.emit("CollectRewardEvent", {
-//     distinctId: ctx.transaction.transaction.data.sender,
-//     position,
-//     pool,
-//     amount
-//   })
-// })
+  .onEventAddLiquidityEvent(async (event, ctx) => {
+    ctx.meter.Counter("add_liquidity_counter").add(1)
+    const pool = event.data_decoded.pool
+    const position = event.data_decoded.position
+    const tick_lower = Number(event.data_decoded.tick_lower.bits)
+    const tick_upper = Number(event.data_decoded.tick_upper.bits)
+    const liquidity = Number(event.data_decoded.liquidity)
+    const after_liquidity = Number(event.data_decoded.after_liquidity)
+    const amount_a = Number(event.data_decoded.amount_a)
+    const amount_b = Number(event.data_decoded.amount_b)
+
+    ctx.eventLogger.emit("AddLiquidityEvent", {
+      distinctId: ctx.transaction.transaction.data.sender,
+      pool,
+      position,
+      tick_lower,
+      tick_upper,
+      liquidity,
+      after_liquidity,
+      amount_a,
+      amount_b
+    })
+  })
+  .onEventRemoveLiquidityEvent(async (event, ctx) => {
+    ctx.meter.Counter("remove_liquidity_counter").add(1)
+    const pool = event.data_decoded.pool
+    const position = event.data_decoded.position
+    const tick_lower = Number(event.data_decoded.tick_lower.bits)
+    const tick_upper = Number(event.data_decoded.tick_upper.bits)
+    const liquidity = Number(event.data_decoded.liquidity)
+    const after_liquidity = Number(event.data_decoded.after_liquidity)
+    const amount_a = Number(event.data_decoded.amount_a)
+    const amount_b = Number(event.data_decoded.amount_b)
+    ctx.eventLogger.emit("RemoveLiquidityEvent", {
+      distinctId: ctx.transaction.transaction.data.sender,
+      pool,
+      position,
+      tick_lower,
+      tick_upper,
+      liquidity,
+      after_liquidity,
+      amount_a,
+      amount_b
+    })
+  })
+
 
 //mainnet pool test usdt-usdc
 for (const pool_addresses in constant.POOLS_INFO_MAINNET) {
   SuiObjectProcessor.bind({
     objectId: pool_addresses,
     network: SuiNetwork.MAIN_NET,
-    startCheckpoint: BigInt(1698922)
+    startCheckpoint: BigInt(1500000)
   }).onTimeInterval(async (self, _, ctx) => {
 
     if (!self) return
@@ -144,25 +185,17 @@ for (const pool_addresses in constant.POOLS_INFO_MAINNET) {
 
       //get coin addresses
       const type = self.type
-
-      // const obj = await ctx.client.getObject({ id: pool_addresses, options: { showType: true } })
-      // const type = obj.data.type
-
       const [coin_a_address, coin_b_address] = TypeToCoinAddress(type)
-      //debug self.type
-      console.log(`debug self.type--pool: ${pool_addresses}, pairName ${pairName}, type ${type}`)
-      return
 
       //get coin balance
-      // const pool_info = await ctx.coder.decodedType(self, pool.Pool.type())
-      // const coin_a_balance = Number(pool_info?.coin_a) / Math.pow(10, 6)
-      // const coin_b_balance = Number(pool_info?.coin_b) / Math.pow(10, 6)
       const symbol_a = constant.CoinInfoMap_MAINNET[coin_a_address].symbol
       const symbol_b = constant.CoinInfoMap_MAINNET[coin_b_address].symbol
-      console.log(`pair: ${pairName} symbol:${symbol_a} ${symbol_b} address: ${coin_a_address} ${coin_b_address} type: ${type}`)
+      const decimal_a = constant.CoinInfoMap_MAINNET[coin_a_address].decimal
+      const decimal_b = constant.CoinInfoMap_MAINNET[coin_b_address].decimal
+      // console.log(`pair: ${pairName} symbol:${symbol_a} ${symbol_b} address: ${coin_a_address} ${coin_b_address} type: ${type}`)
 
-      const coin_a_balance = Number(self.fields.coin_a) / Math.pow(10, constant.CoinInfoMap_MAINNET[coin_a_address].decimal)
-      const coin_b_balance = Number(self.fields.coin_b) / Math.pow(10, constant.CoinInfoMap_MAINNET[coin_b_address].decimal)
+      const coin_a_balance = Number(self.fields.coin_a) / Math.pow(10, decimal_a)
+      const coin_b_balance = Number(self.fields.coin_b) / Math.pow(10, decimal_b)
 
       if (coin_a_balance) {
         ctx.meter.Gauge('coin_a_balance').record(coin_a_balance, {
@@ -170,7 +203,6 @@ for (const pool_addresses in constant.POOLS_INFO_MAINNET) {
           pairName
         })
       }
-      // else { console.log("empty a ", JSON.stringify(pool_info), ctx.timestamp) }
 
       if (coin_b_balance) {
         ctx.meter.Gauge('coin_b_balance').record(coin_b_balance, {
@@ -178,19 +210,25 @@ for (const pool_addresses in constant.POOLS_INFO_MAINNET) {
           pairName
         })
       }
-      // else { console.log("empty b ", JSON.stringify(pool_info), ctx.timestamp) }
+
       const fee_rate = Number(self.fields.fee_rate)
       const liquidity = Number(self.fields.liquidity)
       const current_sqrt_price = Number(self.fields.current_sqrt_price)
-      let coin_a2b_price = Number(current_sqrt_price) ** 2 / (2 ** 192)
-      let coin_b2a_price = (1 / coin_a2b_price) * 10 ** 12
 
-      ctx.meter.Gauge("a2b_price").record(coin_a2b_price, { pairName })
+      let coin_b2a_price = 1 / (Number(current_sqrt_price) ** 2) * (2 ** 128) * 10 ** (decimal_b - decimal_a)
+      let coin_a2b_price = 1 / coin_b2a_price
+
+
+      ctx.meter.Gauge("a2b_price").record(coin_a2b_price, { pairName, symbol_a, symbol_b })
+      ctx.meter.Gauge("b2a_price").record(coin_b2a_price, { pairName, symbol_a, symbol_b })
+
       ctx.meter.Gauge("liquidity").record(liquidity, { pairName })
 
       let tvl_a = 0
       let tvl_b = 0
       const usdc_price = Number(await getPriceBySymbol("usdc", ctx.timestamp))
+      const sui_price = Number(await getPriceBySymbol("sui", ctx.timestamp))
+
 
       if (symbol_b == "USDC") {
         tvl_a = coin_a_balance * coin_a2b_price * usdc_price
@@ -200,6 +238,15 @@ for (const pool_addresses in constant.POOLS_INFO_MAINNET) {
         tvl_a = coin_a_balance * usdc_price
         tvl_b = coin_b_balance * coin_b2a_price * usdc_price
       }
+      else if (symbol_a == "SUI") {
+        tvl_a = coin_a_balance * sui_price
+        tvl_a = coin_b_balance * coin_b2a_price * sui_price
+      }
+      else if (symbol_b == "SUI") {
+        tvl_a = coin_a_balance * coin_a2b_price * sui_price
+        tvl_b = coin_b_balance * sui_price
+      }
+      else { console.log(`Pool coin no Sui or USDC at ${pool_addresses}`) }
 
       ctx.meter.Gauge("tvl_a").record(tvl_a, { coin_symbol: symbol_a, pairName })
       ctx.meter.Gauge("tvl_b").record(tvl_b, { coin_symbol: symbol_b, pairName })
@@ -209,5 +256,5 @@ for (const pool_addresses in constant.POOLS_INFO_MAINNET) {
       console.log(`${e.message} error at ${JSON.stringify(self)}`)
     }
 
-  }, 1440, 60)
+  }, 60, 60)
 }
