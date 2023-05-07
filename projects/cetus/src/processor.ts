@@ -71,20 +71,22 @@ pool.bind({
 
     const before_sqrt_price = Number(event.data_decoded.before_sqrt_price)
     const after_sqrt_price = Number(event.data_decoded.after_sqrt_price)
-    const amount_in = Number(event.data_decoded.amount_in) / Math.pow(10, constant.CoinInfoMap_MAINNET[coin_a_address].decimal)
-    const amount_out = Number(event.data_decoded.amount_out) / Math.pow(10, constant.CoinInfoMap_MAINNET[coin_b_address].decimal)
-    const fee_amount = Number(event.data_decoded.fee_amount)
     const atob = event.data_decoded.atob
+    const symbol_a = constant.CoinInfoMap_MAINNET[coin_a_address].symbol
+    const symbol_b = constant.CoinInfoMap_MAINNET[coin_b_address].symbol
+    const decimal_a = constant.CoinInfoMap_MAINNET[coin_a_address].decimal
+    const decimal_b = constant.CoinInfoMap_MAINNET[coin_b_address].decimal
+    const amount_in = Number(event.data_decoded.amount_in) / Math.pow(10, atob ? decimal_a : decimal_b)
+    const amount_out = Number(event.data_decoded.amount_out) / Math.pow(10, atob ? decimal_b : decimal_a)
+    const fee_amount = Number(event.data_decoded.fee_amount)
     const partner = event.data_decoded.partner
     const ref_amount = event.data_decoded.ref_amount
     const steps = event.data_decoded.steps
     const vault_a_amount = event.data_decoded.vault_a_amount
     const vault_b_amount = event.data_decoded.vault_b_amount
-    const symbol_a = constant.CoinInfoMap_MAINNET[coin_a_address].symbol
-    const symbol_b = constant.CoinInfoMap_MAINNET[coin_b_address].symbol
     const pairName = constant.POOLS_INFO_MAINNET[pool].pairName
 
-
+    //calculate usd vale
     const usdc_price = Number(await getPriceBySymbol("usdc", ctx.timestamp))
     const sui_price = Number(await getPriceBySymbol("sui", ctx.timestamp))
     let usd_volume = 0
