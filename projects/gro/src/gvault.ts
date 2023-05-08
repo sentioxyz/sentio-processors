@@ -1,13 +1,13 @@
 import { GVaultProcessor, GVaultContext, WithdrawEvent, DepositEvent } from "./types/eth/gvault.js";
-import { 
-    GStrategyGuardProcessor, 
+import {
+    GStrategyGuardProcessor,
     GStrategyGuardContext,
     LogStopLossEscalatedEvent,
     LogStopLossDescalatedEvent,
     LogStopLossExecutedEvent,
     LogStrategyHarvestFailureEvent
 } from "./types/eth/gstrategyguard.js";
-import {BigDecimal, CHAIN_IDS, Counter, Gauge, scaleDown} from "@sentio/sdk"
+import {BigDecimal, Counter, Gauge, scaleDown} from "@sentio/sdk"
 import { TypedEvent } from "./types/eth/internal/common.js";
 
 const DECIMAL = 18

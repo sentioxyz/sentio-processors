@@ -7,7 +7,7 @@ import { MintEvent, BurnEvent } from "./types/eth/fiattokenv2.js"
 import { FiatTokenV2Context, FiatTokenV2Processor } from "./types/eth/fiattokenv2.js"
 import { UChildAdministrableERC20Processor, UChildAdministrableERC20Context } from "./types/eth/uchildadministrableerc20.js"
 import { token } from "@sentio/sdk/utils"
-import {Gauge} from "@sentio/sdk";
+import { EthChainId, Gauge } from "@sentio/sdk";
 const DECIMAL = 6
 
 const totalSupplyHandler = async function(_:any, ctx: FiatTokenV2Context) {
@@ -54,5 +54,5 @@ FiatTokenV2Processor.bind({address: EUROC_PROXY})
   .onEventMint(mintEventHandler)
   .onEventBurn(burnEventHandler)
 
-UChildAdministrableERC20Processor.bind({address: USDC_PROXY_POLYGON, network: 137})
+UChildAdministrableERC20Processor.bind({address: USDC_PROXY_POLYGON, network: EthChainId.POLYGON})
   .onBlockInterval(totalSupplyHandlerPolygon)

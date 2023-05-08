@@ -3,6 +3,7 @@ import { ERC20Processor } from '@sentio/sdk/eth/builtin'
 import { SushiPairProcessor, SushiPairContext } from './types/eth/sushipair.js'
 import { BentoBoxV1Processor, BentoBoxV1Context} from './types/eth/bentoboxv1.js'
 import {getPriceByType, token} from "@sentio/sdk/utils";
+import { EthChainId } from "@sentio/sdk/eth";
 
 const CONTRACT_MAP = new Map<string, string>([
     ["ILV-WETH", "0x6a091a3406e0073c3cd6340122143009adac0eda"],
@@ -15,7 +16,7 @@ const CONTRACT_MAP = new Map<string, string>([
 
 async function getPriceByTokenInfo(amount: bigint, addr: string,
                                    token: token.TokenInfo,
-                                   chainID: string, timestamp: Date): Promise<BigDecimal> {
+                                   chainID: EthChainId, timestamp: Date): Promise<BigDecimal> {
     let price : any
     try {
         price = await getPriceByType(chainID, addr, timestamp)
@@ -54,16 +55,16 @@ CONTRACT_MAP.forEach((addr, name) => {
             const token1Info = await token.getERC20TokenInfo(ctx, token1)
             let price = BigDecimal(0)
             if (amount0In > BigInt(0)) {
-                price = await getPriceByTokenInfo(amount0In, token0, token0Info, ctx.chainId.toString(), ctx.timestamp)
+                price = await getPriceByTokenInfo(amount0In, token0, token0Info, ctx.chainId, ctx.timestamp)
             }
             if (amount0Out > BigInt(0)) {
-                price = await getPriceByTokenInfo(amount0Out, token0, token0Info, ctx.chainId.toString(), ctx.timestamp)
+                price = await getPriceByTokenInfo(amount0Out, token0, token0Info, ctx.chainId, ctx.timestamp)
             }
             if (amount1In > BigInt(0)) {
-                price = await getPriceByTokenInfo(amount1In, token1, token1Info, ctx.chainId.toString(), ctx.timestamp)
+                price = await getPriceByTokenInfo(amount1In, token1, token1Info, ctx.chainId, ctx.timestamp)
             }
             if (amount1Out > BigInt(0)) {
-                price = await getPriceByTokenInfo(amount1Out, token1, token1Info, ctx.chainId.toString(), ctx.timestamp)
+                price = await getPriceByTokenInfo(amount1Out, token1, token1Info, ctx.chainId, ctx.timestamp)
             }
             if (!isNaN(price.toNumber())) {
                 vol.record(ctx, price)
@@ -79,7 +80,7 @@ BentoBoxV1Processor.bind({address: "0xF5BCE5077908a1b7370B9ae04AdC565EBd643966"}
     .onEventLogFlashLoan(async (evt, ctx) => {
         const tokenInfo = await token.getERC20TokenInfo(ctx, evt.args.token)
         const amount = evt.args.amount
-        const price = await getPriceByTokenInfo(amount, evt.args.token, tokenInfo, ctx.chainId.toString(), ctx.timestamp)
+        const price = await getPriceByTokenInfo(amount, evt.args.token, tokenInfo, ctx.chainId, ctx.timestamp)
         if (!isNaN(price.toNumber())) {
             loan.record(ctx, price)
         }

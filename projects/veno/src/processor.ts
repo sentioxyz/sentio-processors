@@ -4,6 +4,7 @@ import { FountainProcessor, WithdrawEarlyEvent, ClaimVaultPenaltyEvent, Fountain
 import { ReservoirProcessor } from './types/eth/reservoir.js'
 import { VenostormProcessor } from './types/eth/venostorm.js'
 import { LiquidCroProcessor, StakeEvent, RequestUnbondEvent, UnbondEvent, AccrueRewardEvent, LiquidCroContext } from './types/eth/liquidcro.js'
+import { EthChainId } from "@sentio/sdk/eth";
 
 const DepositEventHandler = async (event: any, ctx: any) => {
   const user = event.args.user
@@ -168,22 +169,22 @@ const AccrueRewardEventHandler = async (event: AccrueRewardEvent, ctx: LiquidCro
 
 }
 
-FountainProcessor.bind({ address: '0xb4be51216f4926ab09ddf4e64bc20f499fd6ca95', network: 25 })
+FountainProcessor.bind({ address: '0xb4be51216f4926ab09ddf4e64bc20f499fd6ca95', network: EthChainId.CRONOS })
   .onEventDeposit(DepositEventHandler)
   .onEventWithdraw(WithdrawEventHandler)
   .onEventWithdrawEarly(WithdrawEarlyEventHandler)
   .onEventClaimVaultPenalty(ClaimVaultPenaltyEventHandler)
 
 
-ReservoirProcessor.bind({ address: '0x21179329c1dcfd36ffe0862cca2c7e85538cca07', network: 25 })
+ReservoirProcessor.bind({ address: '0x21179329c1dcfd36ffe0862cca2c7e85538cca07', network: EthChainId.CRONOS })
   .onEventDeposit(DepositEventHandler)
   .onEventWithdraw(WithdrawEventHandler)
 
-VenostormProcessor.bind({ address: '0x579206e4e49581ca8ada619e9e42641f61a84ac3', network: 25 })
+VenostormProcessor.bind({ address: '0x579206e4e49581ca8ada619e9e42641f61a84ac3', network: EthChainId.CRONOS })
   .onEventDeposit(DepositEventHandler)
   .onEventWithdraw(VenostormWithdrawEventHandler)
 
-LiquidCroProcessor.bind({ address: '0x9fae23a2700feecd5b93e43fdbc03c76aa7c08a6', network: 25 })
+LiquidCroProcessor.bind({ address: '0x9fae23a2700feecd5b93e43fdbc03c76aa7c08a6', network: EthChainId.CRONOS })
   .onEventStake(StakeEventHandler)
   .onEventRequestUnbond(RequestUnbondEventHandler)
   .onEventUnbond(UnbondEventHandler)

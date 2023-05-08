@@ -1,6 +1,8 @@
 import { TestProcessorServer } from '@sentio/sdk/testing'
 import { TextEncoder } from "util";
 import { HandlerType } from "@sentio/sdk";
+import { EthChainId } from "@sentio/sdk/eth";
+import { AptosNetwork } from "@sentio/sdk/aptos";
 
 describe('Test Processor', () => {
   const service = new TestProcessorServer(() => import('./processor.js'))
@@ -16,7 +18,7 @@ describe('Test Processor', () => {
 
   jest.setTimeout(1000000000)
   test('test event', async () => {
-    const res = await service.aptos.testEvent(testData3 as any, 0)
+    const res = await service.aptos.testEvent(testData3 as any, AptosNetwork.MAIN_NET)
     console.log(res)
   })
 })

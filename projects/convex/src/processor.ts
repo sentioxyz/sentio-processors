@@ -3,6 +3,7 @@ import { ERC20Processor } from '@sentio/sdk/eth/builtin'
 import {RewardProcessor, RewardContext} from './types/eth/reward.js'
 import {DepositProcessor, DepositContext} from './types/eth/deposit.js'
 import {getPriceByType, token} from "@sentio/sdk/utils";
+import { EthChainId } from "@sentio/sdk/eth";
 
 
 // Define a constant string array for reward contracts.
@@ -31,7 +32,7 @@ const rewardG = Gauge.register("reward", volOptions)
 // define map for token
 let tokenMap = new Map<string, Promise<token.TokenInfo | undefined>>()
 
-async function getTokenInfo(address: string, chainID: string): Promise<token.TokenInfo | undefined> {
+async function getTokenInfo(address: string, chainID: EthChainId): Promise<token.TokenInfo | undefined> {
     if (address !== "0x0000000000000000000000000000000000000000") {
         try {
             return await token.getERC20TokenInfo(chainID, address)
@@ -44,7 +45,7 @@ async function getTokenInfo(address: string, chainID: string): Promise<token.Tok
     }
 }
 
-async function getOrCreateToken(chainID:string, token: string) : Promise<token.TokenInfo | undefined>{
+async function getOrCreateToken(chainID:EthChainId, token: string) : Promise<token.TokenInfo | undefined>{
     let infoPromise = tokenMap.get(token)
     if (!infoPromise) {
         infoPromise = getTokenInfo(token, chainID)
@@ -109,7 +110,7 @@ DepositProcessor.bind({address: "0xF403C135812408BFbE8713b5A23a04b3D48AAE31"})
             console.log("poolInfo is undefined", poolID)
             return
         }
-        const tokenInfo = await getOrCreateToken(ctx.chainId.toString(), poolInfo.lptoken)
+        const tokenInfo = await getOrCreateToken(ctx.chainId, poolInfo.lptoken)
         if (tokenInfo === undefined) {
             console.log("tokenInfo is undefined", poolInfo.token)
             return
@@ -130,7 +131,7 @@ DepositProcessor.bind({address: "0xF403C135812408BFbE8713b5A23a04b3D48AAE31"})
             console.log("poolInfo is undefined", poolID)
             return
         }
-        const tokenInfo = await getOrCreateToken(ctx.chainId.toString(), poolInfo.lptoken)
+        const tokenInfo = await getOrCreateToken(ctx.chainId, poolInfo.lptoken)
         if (tokenInfo === undefined) {
             console.log("tokenInfo is undefined", poolInfo.token)
             return
@@ -149,7 +150,7 @@ for (const reward of rewardContracts) {
     RewardProcessor.bind({address: reward})
         .onEventRewardPaid(async (evt, ctx) => {
             const token = await ctx.contract.rewardToken()
-            const tokenInfo = await getOrCreateToken(ctx.chainId.toString(), token)
+            const tokenInfo = await getOrCreateToken(ctx.chainId, token)
             if (tokenInfo === undefined) {
                 console.log("tokenInfo is undefined", token)
                 return

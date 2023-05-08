@@ -4,6 +4,7 @@ import { CUSDCProcessor, CUSDCContext } from './types/eth/cusdc.js'
 import {RewardProcessor, RewardContext} from './types/eth/reward.js'
 import {ExtProcessor, ExtContext, getExtContract} from './types/eth/ext.js'
 import {getPriceByType, token} from "@sentio/sdk/utils";
+import { EthChainId } from "@sentio/sdk/eth";
 
 
 ExtProcessor.bind({address: "0x285617313887d43256F852cAE0Ee4de4b68D45B0"})
@@ -11,7 +12,7 @@ ExtProcessor.bind({address: "0x285617313887d43256F852cAE0Ee4de4b68D45B0"})
 // define map for token
 let tokenMap = new Map<string, Promise<token.TokenInfo | undefined>>()
 
-async function getTokenInfo(address: string, chainID: string): Promise<token.TokenInfo | undefined> {
+async function getTokenInfo(address: string, chainID: EthChainId): Promise<token.TokenInfo | undefined> {
     if (address !== "0x0000000000000000000000000000000000000000") {
         try {
             return await token.getERC20TokenInfo(chainID, address)
@@ -24,7 +25,7 @@ async function getTokenInfo(address: string, chainID: string): Promise<token.Tok
     }
 }
 
-async function getOrCreateToken(chainID:string, token: string) : Promise<token.TokenInfo | undefined>{
+async function getOrCreateToken(chainID: EthChainId, token: string) : Promise<token.TokenInfo | undefined>{
     let infoPromise = tokenMap.get(token)
     if (!infoPromise) {
         infoPromise = getTokenInfo(token, chainID)
@@ -38,7 +39,7 @@ async function getPriceByTokenInfo(amount: bigint, addr: string,
                                    ctx:CUSDCContext, type: string) {
     let price : any
     try {
-        price = await getPriceByType(ctx.chainId.toString(), addr, ctx.timestamp)
+        price = await getPriceByType(ctx.chainId, addr, ctx.timestamp)
     } catch (e) {
         console.log(e)
         console.log("get price failed", addr, ctx.chainId)
@@ -66,7 +67,7 @@ export const volOptions = {
 const stake = Gauge.register("vol", volOptions)
 CUSDCProcessor.bind({address: "0xc3d688B66703497DAA19211EEdff47f25384cdc3"})
     .onEventSupplyCollateral(async (evt, ctx)=>{
-        const token = await getOrCreateToken(ctx.chainId.toString(), evt.args.asset)
+        const token = await getOrCreateToken(ctx.chainId, evt.args.asset)
         if (token === undefined) {
             return
         }
@@ -81,7 +82,7 @@ CUSDCProcessor.bind({address: "0xc3d688B66703497DAA19211EEdff47f25384cdc3"})
             token: token.symbol})
     })
     .onEventWithdrawCollateral(async (evt, ctx)=>{
-        const token = await getOrCreateToken(ctx.chainId.toString(), evt.args.asset)
+        const token = await getOrCreateToken(ctx.chainId, evt.args.asset)
         if (token === undefined) {
             return
         }
@@ -121,7 +122,7 @@ CUSDCProcessor.bind({address: "0xc3d688B66703497DAA19211EEdff47f25384cdc3"})
     })
     .onEventTransferCollateral(async (evt, ctx)=>{
         console.log("transfer collateral")
-        const token = await getOrCreateToken(ctx.chainId.toString(), evt.args.asset)
+        const token = await getOrCreateToken(ctx.chainId, evt.args.asset)
         if (token === undefined) {
             return
         }
@@ -135,7 +136,7 @@ CUSDCProcessor.bind({address: "0xc3d688B66703497DAA19211EEdff47f25384cdc3"})
         })
     })
     .onEventBuyCollateral(async (evt, ctx)=>{
-        const token = await getOrCreateToken(ctx.chainId.toString(), evt.args.asset)
+        const token = await getOrCreateToken(ctx.chainId, evt.args.asset)
         if (token === undefined) {
             return
         }
@@ -161,7 +162,7 @@ CUSDCProcessor.bind({address: "0xc3d688B66703497DAA19211EEdff47f25384cdc3"})
 
 CUSDCProcessor.bind({address: "0xA17581A9E3356d9A858b789D68B4d866e593aE94"})
     .onEventSupplyCollateral(async (evt, ctx)=>{
-        const token = await getOrCreateToken(ctx.chainId.toString(), evt.args.asset)
+        const token = await getOrCreateToken(ctx.chainId, evt.args.asset)
         if (token === undefined) {
             return
         }
@@ -175,7 +176,7 @@ CUSDCProcessor.bind({address: "0xA17581A9E3356d9A858b789D68B4d866e593aE94"})
                 token: token.symbol})
     })
     .onEventWithdrawCollateral(async (evt, ctx)=>{
-        const token = await getOrCreateToken(ctx.chainId.toString(), evt.args.asset)
+        const token = await getOrCreateToken(ctx.chainId, evt.args.asset)
         if (token === undefined) {
             return
         }
@@ -189,7 +190,7 @@ CUSDCProcessor.bind({address: "0xA17581A9E3356d9A858b789D68B4d866e593aE94"})
                 token: token.symbol})
     })
     .onEventSupply(async (evt, ctx)=>{
-        const token = await getOrCreateToken(ctx.chainId.toString(),
+        const token = await getOrCreateToken(ctx.chainId,
             "0xC02aaA39b223FE8D0A0e5C4F27eAD9083C756Cc2")
         if (token === undefined) {
             return
@@ -205,7 +206,7 @@ CUSDCProcessor.bind({address: "0xA17581A9E3356d9A858b789D68B4d866e593aE94"})
                 token: token.symbol})
     })
     .onEventWithdraw(async (evt, ctx)=>{
-        const token = await getOrCreateToken(ctx.chainId.toString(),
+        const token = await getOrCreateToken(ctx.chainId,
             "0xC02aaA39b223FE8D0A0e5C4F27eAD9083C756Cc2")
         if (token === undefined) {
             return

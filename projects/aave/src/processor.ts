@@ -1,16 +1,16 @@
-import {BigDecimal, CHAIN_IDS, Counter, Gauge} from '@sentio/sdk'
+import {BigDecimal, EthChainId, Counter, Gauge} from '@sentio/sdk'
 import { ERC20Processor } from '@sentio/sdk/eth/builtin'
 import {PoolContext, PoolProcessor} from './types/eth/pool.js'
 import {getPriceByType, token} from "@sentio/sdk/utils";
 
 // a const map from chain name to address.
-const CHAIN_ADDRESS_MAP = new Map<string, string>([
-    [CHAIN_IDS.ETHEREUM, "0x87870Bca3F3fD6335C3F4ce8392D69350B4fA4E2"],
-    [CHAIN_IDS.OPTIMISM, "0x794a61358d6845594f94dc1db02a252b5b4814ad"],
-    [CHAIN_IDS.ARBITRUM, "0x794a61358d6845594f94dc1db02a252b5b4814ad"],
-    [CHAIN_IDS.POLYGON, "0x794a61358d6845594f94dc1db02a252b5b4814ad"],
-    [CHAIN_IDS.FANTOM, "0x794a61358d6845594f94dc1db02a252b5b4814ad"],
-    [CHAIN_IDS.AVALANCHE, "0x794a61358d6845594f94dc1db02a252b5b4814ad"],
+const CHAIN_ADDRESS_MAP = new Map<EthChainId, string>([
+    [EthChainId.ETHEREUM, "0x87870Bca3F3fD6335C3F4ce8392D69350B4fA4E2"],
+    [EthChainId.OPTIMISM, "0x794a61358d6845594f94dc1db02a252b5b4814ad"],
+    [EthChainId.ARBITRUM, "0x794a61358d6845594f94dc1db02a252b5b4814ad"],
+    [EthChainId.POLYGON, "0x794a61358d6845594f94dc1db02a252b5b4814ad"],
+    [EthChainId.FANTOM, "0x794a61358d6845594f94dc1db02a252b5b4814ad"],
+    [EthChainId.AVALANCHE, "0x794a61358d6845594f94dc1db02a252b5b4814ad"],
 ])
 
 let tokenMap = new Map<string, Promise<token.TokenInfo | undefined>>()
@@ -56,7 +56,7 @@ async function getPriceByTokenInfo(amount: bigint, addr:string,
     }
     let price : any
     try {
-        price = await getPriceByType(ctx.chainId.toString(), addr, ctx.timestamp)
+        price = await getPriceByType(ctx.chainId, addr, ctx.timestamp)
     } catch (e) {
         console.log(e)
         console.log("get price failed", addr, ctx.chainId)

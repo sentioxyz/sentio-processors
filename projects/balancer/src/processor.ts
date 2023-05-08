@@ -1,11 +1,6 @@
-import {BigDecimal, CHAIN_IDS, Counter, Gauge, toBigInteger} from '@sentio/sdk'
-import { ERC20Processor } from '@sentio/sdk/eth/builtin'
-import {VaultProcessor, VaultContext, FlashLoanCallTrace} from './types/eth/vault.js'
-import {MetaStablePoolProcessor, MetaStablePoolContext} from './types/eth/metastablepool.js'
-import {ComposableStablePoolProcessor} from './types/eth/composablestablepool.js'
-import {WeightedPool, WeightedPoolContext, WeightedPoolProcessor} from './types/eth/weightedpool.js'
-import {WeightedPoolFactoryProcessor, WeightedPoolFactoryContext} from './types/eth/weightedpoolfactory.js'
-import { getPriceByType,  token } from "@sentio/sdk/utils"
+import { BigDecimal, EthChainId } from '@sentio/sdk'
+import { VaultContext, VaultProcessor } from './types/eth/vault.js'
+import { getPriceByType, token } from "@sentio/sdk/utils"
 
 const weightedPools=[
     "0x5c6Ee304399DBdB9C8Ef030aB642B10820DB8F56",//   BAL80%    WETH20%               1%
@@ -50,7 +45,7 @@ let tokenMap = new Map<string, Promise<token.TokenInfo | undefined>>()
 async function getTokenInfo(address: string): Promise<token.TokenInfo | undefined> {
     if (address !== "0x0000000000000000000000000000000000000000") {
         try {
-            return await token.getERC20TokenInfo(1, address)
+            return await token.getERC20TokenInfo(EthChainId.ETHEREUM, address)
         } catch(e) {
             console.log(e)
             return undefined
@@ -75,7 +70,7 @@ async function getPriceByTokenInfo(amount: bigint, addr:string, ctx:VaultContext
     let token = await getOrCreateToken(ctx, addr)
     let price :any
     try {
-        price = await getPriceByType(CHAIN_IDS.ETHEREUM, addr, ctx.timestamp)
+        price = await getPriceByType(EthChainId.ETHEREUM, addr, ctx.timestamp)
     } catch (e) {
         console.log(e)
         return BigDecimal(0)

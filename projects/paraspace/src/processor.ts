@@ -1,5 +1,5 @@
 import {getPriceByType, token} from "@sentio/sdk/utils"
-import {BigDecimal, CHAIN_IDS, Counter, Gauge} from "@sentio/sdk"
+import {BigDecimal, Counter, Gauge} from "@sentio/sdk"
 import { ApeStakingContext, ApeStakingProcessor } from './types/eth/apestaking.js'
 import { DepositEvent, DepositNftEvent } from './types/eth/apestaking.js'
 import { DepositApeCoinCallTrace } from './types/eth/apestaking.js'

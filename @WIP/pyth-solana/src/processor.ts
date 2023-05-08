@@ -26,7 +26,7 @@ import { PythOracleInstructionCoder } from "@pythnetwork/client/lib/anchor/coder
 // }
 import { Counter, Gauge } from "@sentio/sdk";
 import { PRICE_MAP_SOL } from "./pyth_sol";
-import { CHAIN_IDS } from "@sentio/sdk/lib/utils/chain";
+// import { CHAIN_IDS } from "@sentio/sdk/lib/utils/chain";
 
 // PythOracleProcessor.bind({
 //   network: CHAIN_IDS.SOLANA_PYTH,
@@ -61,6 +61,6 @@ PythOracleProcessor.bind({
   ctx.meter.Counter("test").add(1, labels)
   priceUnsafeGauage.record(ctx, price, labels)
 }).onUpdPriceNoFailOnError((args, accounts, ctx) => {
-  
+
 })
 

@@ -8,7 +8,8 @@ import {
 } from './types/eth/uniswappool.js'
 import { getERC20Contract } from '@sentio/sdk/eth/builtin/erc20'
 import { getPriceByType,  token } from "@sentio/sdk/utils"
-import { BigDecimal, CHAIN_IDS, Gauge, MetricOptions } from "@sentio/sdk";
+import { BigDecimal, Gauge, MetricOptions } from "@sentio/sdk";
+import { EthChainId } from "@sentio/sdk/eth";
 
 const usdcEthAddress =[
     "0x88e6a0c2ddd26feeb64f039a2c41296fcb3f5640",  //usdc/eth 0.05%
@@ -116,7 +117,7 @@ const getOrCreatePool = async function (ctx: UniswapPoolContext) :Promise<poolIn
 async function getToken(ctx: UniswapPoolContext, info: token.TokenInfo, address :string, amount: bigint):
     Promise<[BigDecimal, BigDecimal]> {
     let scaledAmount = amount.scaleDown(info.decimal)
-    const price = await getPriceByType(CHAIN_IDS.ETHEREUM, address, ctx.timestamp) || 0
+    const price = await getPriceByType(EthChainId.ETHEREUM, address, ctx.timestamp) || 0
     return [scaledAmount, scaledAmount.multipliedBy(price)]
 }
 

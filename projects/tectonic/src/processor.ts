@@ -1,4 +1,4 @@
-import { CHAIN_IDS, Counter, Gauge, scaleDown } from '@sentio/sdk'
+import { Counter, Gauge, scaleDown } from '@sentio/sdk'
 import { ERC20Processor } from '@sentio/sdk/eth/builtin'
 import * as constant from "./constant.js"
 import { TCROContext, TCROProcessor, LiquidateBorrowEvent, AccrueInterestEvent } from './types/eth/tcro.js'
@@ -6,6 +6,7 @@ import { LCROProcessor } from './types/eth/lcro.js'
 import { getPriceBySymbol } from '@sentio/sdk/utils'
 import { WCROProcessor, TransferEvent, WCROContext } from './types/eth/wcro.js'
 import { TectonicCoreProcessor } from './types/eth/tectoniccore.js'
+import { EthChainId } from "@sentio/sdk/eth";
 // import './aave_v3.js'
 
 const MintEventHandler = async (event: any, ctx: TCROContext) => {
@@ -223,7 +224,7 @@ const AllEventHandler = async (event: any, ctx: TCROContext) => {
 //t_tokens
 for (let i = 0; i < constant.T_TOKEN_POOLS.length; i++) {
   let address = constant.T_TOKEN_POOLS[i]
-  TCROProcessor.bind({ address: address, network: CHAIN_IDS.CRONOS })
+  TCROProcessor.bind({ address: address, network: EthChainId.CRONOS })
     .onEventMint(MintEventHandler)
     .onEventBorrow(BorrowEventHandler)
     .onEventRepayBorrow(RepayBorrowEventHandler)
@@ -247,7 +248,7 @@ for (let i = 0; i < constant.T_TOKEN_POOLS.length; i++) {
 //   }, filter)
 
 //Tonic
-TectonicCoreProcessor.bind({ address: constant.SOCKET_ADDRESS, network: CHAIN_IDS.CRONOS })
+TectonicCoreProcessor.bind({ address: constant.SOCKET_ADDRESS, network: EthChainId.CRONOS })
   .onEventDistributedBorrowerTonic(async (event, ctx) => {
     const hash = event.transactionHash
     try {

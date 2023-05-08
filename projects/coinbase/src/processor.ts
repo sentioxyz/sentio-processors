@@ -1,6 +1,6 @@
 import { StakedTokenV1Context, StakedTokenV1Processor, MintEvent, BurnEvent, TransferEvent  } from './types/eth/stakedtokenv1.js'
 import {getPriceByType, token} from "@sentio/sdk/utils"
-import {BigDecimal, CHAIN_IDS, Counter, Gauge} from "@sentio/sdk"
+import {BigDecimal, EthChainId, Counter, Gauge} from "@sentio/sdk"
 import {
     CBETH_PROXY,
 } from "./constant.js"
@@ -53,7 +53,7 @@ const blockHandler = async function(_: any, ctx: StakedTokenV1Context) {
     const exchangeRate =(await ctx.contract.exchangeRate()).scaleDown(tokenInfo.decimal)
     ctx.meter.Gauge("total_supply").record(totalSupply, {token: tokenInfo.symbol})
     ctx.meter.Gauge("exchange_rate").record(exchangeRate, {token: tokenInfo.symbol})
-    const wethPrice = await getPriceByType(CHAIN_IDS.ETHEREUM,
+    const wethPrice = await getPriceByType(EthChainId.ETHEREUM,
         "0xC02aaA39b223FE8D0A0e5C4F27eAD9083C756Cc2", ctx.timestamp)
     if (!wethPrice) {
         console.warn("no price found")

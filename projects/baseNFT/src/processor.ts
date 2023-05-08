@@ -1,7 +1,7 @@
 import { Counter, Gauge } from '@sentio/sdk'
 import { ERC20Processor } from '@sentio/sdk/eth/builtin'
 import {Erc721, Erc721Processor} from './types/eth/erc721.js'
-import { BigDecimal, CHAIN_IDS, MetricOptions } from "@sentio/sdk";
+import { BigDecimal, MetricOptions } from "@sentio/sdk";
 
 const gaugeOptions: MetricOptions = {
     sparse: true,

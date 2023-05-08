@@ -1,5 +1,6 @@
 // import { Counter, Gauge, AccountEventTracker } from '@sentio/sdk'
 import { DIMORegistryProcessor } from './types/eth/dimoregistry.js'
+import { EthChainId } from "@sentio/sdk/eth";
 
 
 // export const vehicleOwnerTracker = AccountEventTracker.register('users')
@@ -7,7 +8,7 @@ import { DIMORegistryProcessor } from './types/eth/dimoregistry.js'
 
 
 
-DIMORegistryProcessor.bind({ address: '0xFA8beC73cebB9D88FF88a2f75E7D7312f2Fd39EC', network: 137 })
+DIMORegistryProcessor.bind({ address: '0xFA8beC73cebB9D88FF88a2f75E7D7312f2Fd39EC', network: EthChainId.POLYGON })
   .onEventVehicleNodeMinted(async (event, ctx) => {
     ctx.meter.Counter("test").add(1)
     const owner = event.args.owner
