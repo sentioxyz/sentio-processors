@@ -1,31 +1,30 @@
 import {
-    LOOPRING_WALLET_MODULE,
-    LOOPRING_WALLET_FACTORY1,
-    LOOPRING_WALLET_FACTORY2,
-    LOOPRING_WALLET_FACTORY3,
-    LOOPRING_WALLET_FACTORY4,
-    LOOPRING_WALLET_FACTORY5,
-    LOOPRING_EXCHANGE,
-    EVENT1,
-    EVENT,
-    EVENT2, TOKEN_ARRAY
+  EVENT,
+  EVENT1,
+  EVENT2,
+  LOOPRING_EXCHANGE,
+  LOOPRING_WALLET_FACTORY1,
+  LOOPRING_WALLET_FACTORY2,
+  LOOPRING_WALLET_FACTORY3,
+  LOOPRING_WALLET_FACTORY4,
+  LOOPRING_WALLET_FACTORY5,
+  LOOPRING_WALLET_MODULE,
+  TOKEN_ARRAY
 } from "./constant.js"
-import { ERC20Context, ERC20Processor, getERC20Contract } from '@sentio/sdk/eth/builtin/erc20'
-import { ContractContext, ContractView, BoundContractView, GenericProcessor } from "@sentio/sdk/eth"
-import { token  } from "@sentio/sdk/utils"
-import {getPriceByType} from "@sentio/sdk/utils"
+import { getERC20Contract } from '@sentio/sdk/eth/builtin/erc20'
+import { BoundContractView, ContractContext, ContractView, EthChainId, GenericProcessor } from "@sentio/sdk/eth"
+import { getPriceByType, token } from "@sentio/sdk/utils"
 import {
+  DepositRequestedEvent,
   ExchangeV3Context,
   ExchangeV3Processor,
-  WithdrawalCompletedEvent,
-  DepositRequestedEvent,
-  SubmitBlocksCallTrace
+  SubmitBlocksCallTrace,
+  WithdrawalCompletedEvent
 } from "./types/eth/exchangev3.js"
 import type { BaseContract } from 'ethers'
 import { processBlockStruct } from "./parse.js";
-import {deposit, withdraw} from "./metrics.js";
+import { deposit, withdraw } from "./metrics.js";
 // import { RichClientError } from "nice-grpc-error-details";
-import { Status, ClientError } from "nice-grpc-common";
 import { BigDecimal } from "@sentio/sdk";
 // import {INFO} from "@sentio/loopring-protocols/src/logs";
 
@@ -63,7 +62,7 @@ const tvl = async function (_: any, ctx: ExchangeV3Context) {
   for (let i = 0; i < TOKEN_ARRAY.length; i++) {
     const [tokenInfo, amount] = await getTokenDetails(ctx, TOKEN_ARRAY[i])
     const scaledAmount = amount.scaleDown(tokenInfo.decimal)
-    const price = await getPriceByType("ethereum_mainnet", TOKEN_ARRAY[i], ctx.timestamp)
+    const price = await getPriceByType(EthChainId.ETHEREUM, TOKEN_ARRAY[i], ctx.timestamp)
     if (!price) {
       continue
     }
@@ -137,7 +136,7 @@ async function withdrawGauge(event: WithdrawalCompletedEvent, ctx: ExchangeV3Con
 
 async function getTokenInfo(address: string): Promise<token.TokenInfo> {
   if (address !== "0x0000000000000000000000000000000000000000") {
-    return await token.getERC20TokenInfo(1, address)
+    return await token.getERC20TokenInfo(EthChainId.ETHEREUM, address)
   } else {
     return token.NATIVE_ETH
   }

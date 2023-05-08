@@ -1,4 +1,4 @@
-import { Counter, Gauge, CHAIN_IDS } from '@sentio/sdk'
+import { Counter, Gauge } from '@sentio/sdk'
 import { ERC20Processor } from '@sentio/sdk/eth/builtin'
 import { token, getPriceByType } from "@sentio/sdk/utils"
 import { RouterProcessor } from './types/eth/router.js'

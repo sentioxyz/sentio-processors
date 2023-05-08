@@ -12,7 +12,7 @@ import { PoolCreatedEvent, UniswapFactoryContext, UniswapFactoryProcessor } from
 import { ERC20Context, ERC20Processor, getERC20Contract } from '@sentio/sdk/eth/builtin/erc20'
 import { getPriceByType,  token } from "@sentio/sdk/utils"
 import { Status, ClientError } from "nice-grpc-common";
-import { BigDecimal, CHAIN_IDS, Gauge, MetricOptions } from "@sentio/sdk";
+import { BigDecimal, EthChainId, Gauge, MetricOptions } from "@sentio/sdk";
 
 
 const poolWatching = [
@@ -65,7 +65,7 @@ const poolWatching = [
 
 async function getTokenInfo(address: string): Promise<token.TokenInfo> {
   if (address !== "0x0000000000000000000000000000000000000000") {
-    return await token.getERC20TokenInfo(CHAIN_IDS.ETHEREUM, address)
+    return await token.getERC20TokenInfo(EthChainId.ETHEREUM, address)
   } else {
     return token.NATIVE_ETH
   }
@@ -131,7 +131,7 @@ async function getValue(ctx: UniswapContext, address: string, info: token.TokenI
 
 async function getTVL(ctx: UniswapContext, info: token.TokenInfo, token :string): Promise<BigDecimal> {
   const amount = await getValue(ctx, token, info)
-  const price = await getPriceByType("1", token, ctx.timestamp) || 0
+  const price = await getPriceByType(EthChainId.ETHEREUM, token, ctx.timestamp) || 0
   return amount.multipliedBy(price)
 }
 
@@ -164,7 +164,7 @@ const priceCalc = async function (_: any, ctx: UniswapContext) {
 async function getTokenDetails(ctx: UniswapContext, info: token.TokenInfo, address :string, amount: bigint):
     Promise<[BigDecimal, BigDecimal]> {
   let scaledAmount = amount.scaleDown(info.decimal)
-  const price = await getPriceByType(CHAIN_IDS.ETHEREUM, address, ctx.timestamp) || 0
+  const price = await getPriceByType(EthChainId.ETHEREUM, address, ctx.timestamp) || 0
   return [scaledAmount, scaledAmount.multipliedBy(price)]
 }
 

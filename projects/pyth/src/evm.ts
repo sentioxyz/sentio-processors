@@ -1,12 +1,16 @@
-import { PythEVMContext, PythEVMProcessor, PriceFeedUpdateEvent, getPythEVMContract, UpdatePriceFeedsCallTrace, UpdatePriceFeedsIfNecessaryCallTrace,
-    BatchPriceFeedUpdateEvent } from "./types/eth/pythevm.js";
+import {
+    BatchPriceFeedUpdateEvent,
+    getPythEVMContract,
+    PriceFeedUpdateEvent,
+    PythEVMContext,
+    PythEVMProcessor,
+    UpdatePriceFeedsCallTrace,
+    UpdatePriceFeedsIfNecessaryCallTrace
+} from "./types/eth/pythevm.js";
 import { PRICE_MAP } from "./pyth.js";
-import { CHAIN_IDS, Counter, Gauge } from "@sentio/sdk";
-import { getPrice } from "./aptos.js";
 // import { toBigDecimal } from "@sentio/sdk/";
 // import { BigDecimal } from "@sentio/sdk/lib/core/big-decimal";
-import { scaleDown } from '@sentio/sdk'
-
+import { EthChainId, Gauge, scaleDown } from "@sentio/sdk";
 
 const commonOptions = { sparse: true }
 const priceGauage = Gauge.register("evm_price", commonOptions)
@@ -15,36 +19,36 @@ const price_update_occur = Gauge.register("price_update_occur", commonOptions)
 const batch_price_update_occur = Gauge.register("batch_price_update_occur", commonOptions)
 const eth_balance = Gauge.register("eth_balance", commonOptions)
 
-const CHAIN_ADDRESS_MAP = new Map<number, string>([
-    [1, "0x4305FB66699C3B2702D4d05CF36551390A4c69C6"], //ETH
-    [10, "0xff1a0f4744e8582df1ae09d5611b887b6a12925c"], //Optimism
-    [56, "0x4D7E825f80bDf85e913E0DD2A2D54927e9dE1594"], //BSC
+const CHAIN_ADDRESS_MAP = new Map<EthChainId, string>([
+    [EthChainId.ETHEREUM, "0x4305FB66699C3B2702D4d05CF36551390A4c69C6"], //ETH
+    [EthChainId.OPTIMISM, "0xff1a0f4744e8582df1ae09d5611b887b6a12925c"], //Optimism
+    [EthChainId.BINANCE, "0x4D7E825f80bDf85e913E0DD2A2D54927e9dE1594"], //BSC
     // [97, "0xd7308b14bf4008e7c7196ec35610b1427c5702ea"], //BSC testnet
-    [137, "0xff1a0f4744e8582DF1aE09D5611b887B6a12925C"], //Polygon
-    [42161, "0xff1a0f4744e8582DF1aE09D5611b887B6a12925C"], //Arbitrum
-    [250, "0xff1a0f4744e8582DF1aE09D5611b887B6a12925C"], //Fantom
-    [1313161554, "0xF89C7b475821EC3fDC2dC8099032c05c6c0c9AB9"], //Aurora
-    [321, "0xE0d0e68297772Dd5a1f1D99897c581E2082dbA5B"], //KCC
-    [43114, "0x4305FB66699C3B2702D4d05CF36551390A4c69C6"], //Avalanche
-    [25, "0xE0d0e68297772Dd5a1f1D99897c581E2082dbA5B"], //Cronos
-    [1101, "0xC5E56d6b40F3e3B5fbfa266bCd35C37426537c65"], // Polygon zkEVM
-    [324, "0xf087c864AEccFb6A2Bf1Af6A0382B0d0f6c5D834"] // ZKsync
+    [EthChainId.POLYGON, "0xff1a0f4744e8582DF1aE09D5611b887B6a12925C"], //Polygon
+    [EthChainId.ARBITRUM, "0xff1a0f4744e8582DF1aE09D5611b887B6a12925C"], //Arbitrum
+    [EthChainId.FANTOM, "0xff1a0f4744e8582DF1aE09D5611b887B6a12925C"], //Fantom
+    [EthChainId.AURORA, "0xF89C7b475821EC3fDC2dC8099032c05c6c0c9AB9"], //Aurora
+    [EthChainId.KUCOIN, "0xE0d0e68297772Dd5a1f1D99897c581E2082dbA5B"], //KCC
+    [EthChainId.AVALANCHE, "0x4305FB66699C3B2702D4d05CF36551390A4c69C6"], //Avalanche
+    [EthChainId.CRONOS, "0xE0d0e68297772Dd5a1f1D99897c581E2082dbA5B"], //Cronos
+    [EthChainId.POLYGON_ZKEVM, "0xC5E56d6b40F3e3B5fbfa266bCd35C37426537c65"], // Polygon zkEVM
+    [EthChainId.ZKSYNC_ERA, "0xf087c864AEccFb6A2Bf1Af6A0382B0d0f6c5D834"] // ZKsync
 ])
 
-const CHAIN_NATIVE_MAP = new Map<number, string>([
-    [1, "Crypto.ETH/USD"], //ETH
-    [10, "Crypto.OP/USD"], //Optimism
-    [56, "Crypto.BNB/USD"], //BSC
+const CHAIN_NATIVE_MAP = new Map<EthChainId, string>([
+    [EthChainId.ETHEREUM, "Crypto.ETH/USD"], //ETH
+    [EthChainId.OPTIMISM, "Crypto.OP/USD"], //Optimism
+    [EthChainId.BINANCE, "Crypto.BNB/USD"], //BSC
     // ["0xd7308b14bf4008e7c7196ec35610b1427c5702ea".toLowerCase(), "Crypto.BNB/USD"], //BSC testnet
-    [137, "Crypto.MATIC/USD"], //Polygon
-    [42161, "Crypto.ARB/USD"],//Arbitrum
-    [250, "Crypto.FTM/USD"], //Fantom
-    [1313161554, "Crypto.AURORA/USD"], //Aurora
-    [321, "Crypto.KCS/USD"], //KCC
-    [43114, "Crypto.AVAX/USD"], //Avalanche
-    [25, "Crypto.CRO/USD"], //Cronos
-    [1101, "Crypto.MATIC/USD"], // Polygon zk
-    [324, "Crypto.ETH/USD"] // ZKsync
+    [EthChainId.POLYGON, "Crypto.MATIC/USD"], //Polygon
+    [EthChainId.ARBITRUM, "Crypto.ARB/USD"],//Arbitrum
+    [EthChainId.FANTOM, "Crypto.FTM/USD"], //Fantom
+    [EthChainId.AURORA, "Crypto.AURORA/USD"], //Aurora
+    [EthChainId.KUCOIN, "Crypto.KCS/USD"], //KCC
+    [EthChainId.AVALANCHE, "Crypto.AVAX/USD"], //Avalanche
+    [EthChainId.CRONOS, "Crypto.CRO/USD"], //Cronos
+    [EthChainId.POLYGON_ZKEVM, "Crypto.MATIC/USD"], // Polygon zk
+    [EthChainId.ZKSYNC_ERA, "Crypto.ETH/USD"] // ZKsync
 ])
 
 async function priceFeedUpdate(evt: PriceFeedUpdateEvent, ctx: PythEVMContext) {
@@ -81,10 +85,10 @@ async function batchPriceUpdate(evt: BatchPriceFeedUpdateEvent, ctx: PythEVMCont
     await recordGasUsage("batchPriceUpdate", evt.transactionHash, ctx)
     // other than onblock, also need to track this whenever batchPriceUpdate was triggered
     try {
-        if (ctx.chainId == 250) {
+        if (ctx.chainId == EthChainId.FANTOM) {
             const amount = await ctx.contract.provider!.getBalance(ctx.address, ctx.blockNumber)
-            eth_balance.record(ctx, amount)  
-        }  
+            eth_balance.record(ctx, amount)
+        }
     } catch (e) {
         console.log("chainId" + ctx.chainId)
         console.log("blockNumber" + ctx.blockNumber)
@@ -118,10 +122,10 @@ async function recordGasUsage(evt : string, hash : string, ctx: PythEVMContext) 
 
 async function blockHandler(block: any, ctx:PythEVMContext) {
     try {
-        if (ctx.chainId == 250) {
+        if (ctx.chainId == EthChainId.FANTOM) {
             const amount = await ctx.contract.provider!.getBalance(ctx.address, ctx.blockNumber)
-            eth_balance.record(ctx, amount)   
-        } 
+            eth_balance.record(ctx, amount)
+        }
     } catch (e) {
         console.log("chainId" + ctx.chainId)
         console.log("blockNumber" + ctx.blockNumber)
@@ -140,7 +144,7 @@ CHAIN_ADDRESS_MAP.forEach((addr, chainId) => {
         .onCallUpdatePriceFeedsIfNecessary(updatePriceFeedsIfNecessary)
         .onEventBatchPriceFeedUpdate(batchPriceUpdate)
         .onBlockInterval(blockHandler, 10000)
-    } 
+    }
     // else if (chainId == 250) { // TODO: individually pulling fantom eth_balance
     //     PythEVMProcessor.bind({address: addr, network: chainId})
     //     .onEventPriceFeedUpdate(priceFeedUpdate)

@@ -55,7 +55,7 @@ for (const env of [v0, v05]) {
             poolType: liquidity_pool.LiquidityPool.type()
         })
 
-    liquidity_pool.bind()
+    liquidity_pool.bind({ baseLabels: { ver } })
         .onEventPoolCreatedEvent(async (evt, ctx) => {
             ctx.meter.Counter("num_pools").add(1, {ver})
             ctx.eventLogger.emit("lp", {distinctId: ctx.transaction.sender, ver})
@@ -425,7 +425,7 @@ for (const env of [v0, v05]) {
     }
 
     // loadAllTypes(defaultMoveCoder())
-    AptosResourcesProcessor.bind({address: resourceAddress})
+    AptosResourcesProcessor.bind({address: resourceAddress, baseLabels: { ver }})
         .onTimeInterval(async (resources, ctx) =>
             syncLiquidSwapPools(resources, ctx), 60, 12 * 60)
 
