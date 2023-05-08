@@ -1,7 +1,8 @@
-import { CHAIN_IDS } from "@sentio/sdk";
+import { ChainId } from "@sentio/sdk";
+import { EthChainId } from "@sentio/sdk/eth";
 
 export interface ChainConstants {
-  chainID: string;
+  chainID: EthChainId;
   nativeTokenWrappedAddress: string;
   blackListedAddresses: Set<string>;
   mintBurnAddr: Set<string>;
@@ -10,7 +11,7 @@ export interface ChainConstants {
 
 export const chainConfigs = [
   {
-    chainID: CHAIN_IDS.ETHEREUM,
+    chainID: ChainId.ETHEREUM,
     nativeTokenWrappedAddress:
       "0xC02aaA39b223FE8D0A0e5C4F27eAD9083C756Cc2".toLowerCase(),
     blackListedAddresses: new Set<string>([
@@ -31,7 +32,7 @@ export const chainConfigs = [
     phalconChain: "eth",
   },
   {
-    chainID: CHAIN_IDS.POLYGON,
+    chainID: ChainId.POLYGON,
     nativeTokenWrappedAddress:
       "0x0d500B1d8E8eF31E21C99d1Db9A6444d3ADf1270".toLowerCase(),
     blackListedAddresses: new Set<string>([
@@ -45,7 +46,7 @@ export const chainConfigs = [
     phalconChain: "polygon",
   },
   {
-    chainID: CHAIN_IDS.AVALANCHE,
+    chainID: ChainId.AVALANCHE,
     nativeTokenWrappedAddress:
       "0xB31f66AA3C1e785363F0875A1B74E27b85FD66c7".toLowerCase(),
     blackListedAddresses: new Set<string>([
@@ -67,7 +68,7 @@ export const chainConfigs = [
     phalconChain: "avax",
   },
   {
-    chainID: CHAIN_IDS.MOONBEAM,
+    chainID: ChainId.MOONBEAM,
     nativeTokenWrappedAddress:
       "0xAcc15dC74880C9944775448304B263D191c6077F".toLowerCase(),
     blackListedAddresses: new Set<string>([]),

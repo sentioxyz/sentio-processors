@@ -2,11 +2,11 @@ import {
   Counter,
   EthFetchConfig,
   Gauge,
-  CHAIN_IDS,
-  BigDecimal,
+  BigDecimal, ChainId,
 } from "@sentio/sdk";
 
 import {
+  EthChainId,
   GlobalContext,
   GlobalProcessor,
   RichBlock,
@@ -284,7 +284,7 @@ type TokenWithPrice = {
 
 async function getTokenWithPrice(
   tokenAddr: string,
-  chainID: string,
+  chainID: EthChainId,
   timestamp: Date,
   amount: bigint
 ): Promise<TokenWithPrice | undefined> {
@@ -328,7 +328,7 @@ async function computePnL(
   for (const [addr, amount] of revenue) {
     const tokenWithPrice = await getTokenWithPrice(
       addr,
-      ctx.chainId.toString(),
+      ctx.chainId,
       ctx.timestamp,
       amount
     );
@@ -346,7 +346,7 @@ async function computePnL(
     }
     const tokenWithPrice = await getTokenWithPrice(
       addr,
-      ctx.chainId.toString(),
+      ctx.chainId,
       ctx.timestamp,
       amount
     );
@@ -359,7 +359,7 @@ async function computePnL(
   }
   const gasTotal = await getTokenWithPrice(
     config.nativeTokenWrappedAddress,
-    ctx.chainId.toString(),
+    ctx.chainId,
     ctx.timestamp,
     gasCost
   );

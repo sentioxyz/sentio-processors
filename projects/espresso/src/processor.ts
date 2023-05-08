@@ -6,6 +6,7 @@ import { Gauge, MetricOptions} from "@sentio/sdk";
 import { AbiCoder } from 'ethers/abi'
 // import type {Trace} from "@sentio/sdk";
 import { Log } from '@ethersproject/abstract-provider';
+import { EthChainId } from "@sentio/sdk/eth";
 
 // const senderTracker4 = AccountEventTracker.register("senders4", {distinctByDays: [1,7,12,30]})
 // const tokenTracker = AccountEventTracker.register("unique_tokens", {distinctByDays: [1,7,12,30]})
@@ -105,7 +106,7 @@ const handleBlockCommittedEvent = async (event: BlockCommittedEvent, ctx: CapeCo
 
 
 
-CapeProcessor.bind({address: CAPE_NEW, network: 5})
+CapeProcessor.bind({address: CAPE_NEW, network: EthChainId.GOERLI})
 .onEventAssetSponsored(handleAssetSponsored)
 .onEventBlockCommitted(handleBlockCommittedEvent)
 .onEventErc20TokensDeposited(handleErc20TokensDeposited)
@@ -116,7 +117,7 @@ CapeProcessor.bind({address: CAPE_NEW, network: 5})
 // .onCallSubmitCapeBlockWithMemos(handleCall)
 
 
-CapeProcessor.bind({address: CAPE_OLD, network: 5})
+CapeProcessor.bind({address: CAPE_OLD, network: EthChainId.GOERLI})
 .onEventAssetSponsored(handleAssetSponsored)
 .onEventBlockCommitted(handleBlockCommittedEvent)
 .onEventErc20TokensDeposited(handleErc20TokensDeposited)
@@ -126,7 +127,7 @@ CapeProcessor.bind({address: CAPE_OLD, network: 5})
 // .onCallSubmitCapeBlock(handleCall)
 // .onCallSubmitCapeBlockWithMemos(handleCall)
 
-CapeProcessor.bind({address: CAPE_ARB_GOERLI, network: 421613})
+CapeProcessor.bind({address: CAPE_ARB_GOERLI, network: EthChainId.ARBITRUM})
 .onEventAssetSponsored(handleAssetSponsored)
 .onEventBlockCommitted(handleBlockCommittedEvent)
 .onEventErc20TokensDeposited(handleErc20TokensDeposited)
