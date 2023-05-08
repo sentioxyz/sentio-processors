@@ -1,11 +1,8 @@
-import { SuiContext, SuiNetwork } from "@sentio/sdk/sui"
 import { pool, factory } from "./types/sui/testnet/clmm.js"
-import { pool_script } from "./types/sui/testnet/integrate.js"
 import { SuiObjectProcessor } from "@sentio/sdk/sui"
-import { object_ } from "@sentio/sdk/aptos/builtin/0x1"
-import { getPriceBySymbol, getPriceByType } from "@sentio/sdk/utils"
+import { getPriceByType } from "@sentio/sdk/utils"
 import * as constant from './constant.js'
-import { CHAIN_IDS } from "@sentio/sdk"
+import { SuiChainId } from "@sentio/sdk"
 
 //get coin address without suffix
 function getCoinObjectAddress(type: string) {
@@ -39,8 +36,8 @@ function getCoinFullAddress(type: string) {
 
 async function calculateTVL_USD(type: string, coin_a_balance: number, coin_b_balance: number, coin_a2b_price: number, date: Date) {
   const [coin_a_full_address, coin_b_full_address] = getCoinFullAddress(type)
-  const price_a = await getPriceByType(CHAIN_IDS.SUI_MAINNET, coin_a_full_address, date)
-  const price_b = await getPriceByType(CHAIN_IDS.SUI_MAINNET, coin_b_full_address, date)
+  const price_a = await getPriceByType(SuiChainId.SUI_MAINNET, coin_a_full_address, date)
+  const price_b = await getPriceByType(SuiChainId.SUI_MAINNET, coin_b_full_address, date)
 
   let [tvl_a, tvl_b] = [0, 0]
   if (price_a) {
@@ -61,8 +58,8 @@ async function calculateTVL_USD(type: string, coin_a_balance: number, coin_b_bal
 
 async function calculateSwapVol_USD(type: string, amount_in: number, amount_out: number, atob: Boolean, date: Date) {
   const [coin_a_full_address, coin_b_full_address] = getCoinFullAddress(type)
-  const price_a = await getPriceByType(CHAIN_IDS.SUI_MAINNET, coin_a_full_address, date)
-  const price_b = await getPriceByType(CHAIN_IDS.SUI_MAINNET, coin_b_full_address, date)
+  const price_a = await getPriceByType(SuiChainId.SUI_MAINNET, coin_a_full_address, date)
+  const price_b = await getPriceByType(SuiChainId.SUI_MAINNET, coin_b_full_address, date)
   let vol = 0
 
   if (price_a) {
@@ -83,7 +80,7 @@ async function calculateSwapVol_USD(type: string, amount_in: number, amount_out:
 
 factory.bind({
   address: constant.CLMM_MAINNET,
-  network: SuiNetwork.MAIN_NET,
+  network: SuiChainId.SUI_MAINNET,
   startCheckpoint: BigInt(1500000)
 })
   .onEventCreatePoolEvent((event, ctx) => {
@@ -108,7 +105,7 @@ factory.bind({
 
 pool.bind({
   address: constant.CLMM_MAINNET,
-  network: SuiNetwork.MAIN_NET,
+  network: SuiChainId.SUI_MAINNET,
   startCheckpoint: BigInt(1500000)
 })
   .onEventSwapEvent(async (event, ctx) => {
@@ -135,7 +132,6 @@ pool.bind({
       console.log(`coin not in map ${coin_a_address} ${coin_b_address}`)
       return
     }
-
 
     const before_sqrt_price = Number(event.data_decoded.before_sqrt_price)
     const after_sqrt_price = Number(event.data_decoded.after_sqrt_price)
@@ -234,7 +230,7 @@ for (let i = 0; i < constant.POOLS_INFO_MAINNET.length; i++) {
   const pool_address = constant.POOLS_INFO_MAINNET[i]
   SuiObjectProcessor.bind({
     objectId: pool_address,
-    network: SuiNetwork.MAIN_NET,
+    network: SuiChainId.SUI_MAINNET,
     startCheckpoint: BigInt(1500000)
   }).onTimeInterval(async (self, _, ctx) => {
 
