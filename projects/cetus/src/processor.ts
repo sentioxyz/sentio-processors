@@ -4,12 +4,12 @@ import { getPriceByType, token } from "@sentio/sdk/utils"
 import * as constant from './constant.js'
 import { SuiChainId } from "@sentio/sdk"
 import './launchpad.js'
-import * as helper from './helper.js'
+import * as helper from './helper/clmm-helper.js'
 
 factory.bind({
   address: constant.CLMM_MAINNET,
   network: SuiChainId.SUI_MAINNET,
-  startCheckpoint: BigInt(1500000)
+  startCheckpoint: 1500000n
 })
   .onEventCreatePoolEvent((event, ctx) => {
     ctx.meter.Counter("create_pool_counter").add(1)
@@ -33,7 +33,7 @@ factory.bind({
 pool.bind({
   address: constant.CLMM_MAINNET,
   network: SuiChainId.SUI_MAINNET,
-  startCheckpoint: BigInt(1500000)
+  startCheckpoint: 1500000n
 })
   .onEventSwapEvent(async (event, ctx) => {
     ctx.meter.Counter("swap_counter").add(1)
@@ -109,7 +109,7 @@ pool.bind({
       amount_b,
       value,
       pairName,
-      message: `addLiquidity value ${value} in ${pairName}`
+      message: `Add USD$${value} Liquidity in ${pairName}`
     })
     ctx.meter.Gauge("add_liquidity_gauge").record(value, { pairName })
 
@@ -143,7 +143,7 @@ pool.bind({
       amount_b,
       value,
       pairName,
-      message: `removeLiquidity value ${value} in ${pairName}`
+      message: `Remove USD$${value} Liquidity in ${pairName}`
     })
     ctx.meter.Gauge("remove_liquidity_gauge").record(value, { pairName })
 
@@ -156,7 +156,7 @@ for (let i = 0; i < constant.POOLS_INFO_MAINNET.length; i++) {
   SuiObjectProcessor.bind({
     objectId: pool_address,
     network: SuiChainId.SUI_MAINNET,
-    startCheckpoint: BigInt(1500000)
+    startCheckpoint: 1500000n
   }).onTimeInterval(async (self, _, ctx) => {
 
     if (!self) return

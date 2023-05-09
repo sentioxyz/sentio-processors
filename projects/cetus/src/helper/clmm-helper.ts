@@ -1,7 +1,7 @@
-import { pool, factory } from "./types/sui/testnet/clmm.js"
+import { pool, factory } from "../types/sui/testnet/clmm.js"
 import { SuiObjectProcessor, SuiContext, SuiObjectsContext } from "@sentio/sdk/sui"
 import { getPriceByType, token } from "@sentio/sdk/utils"
-import * as constant from './constant.js'
+import * as constant from '../constant.js'
 import { SuiChainId } from "@sentio/sdk"
 
 //get coin address without suffix
@@ -71,7 +71,7 @@ export const getOrCreateCoin = async function (ctx: SuiContext | SuiObjectsConte
 }
 
 export async function buildPoolInfo(ctx: SuiContext | SuiObjectsContext, pool: string): Promise<poolInfo> {
-    let [symbol_a, symbol_b, decimal_a, decimal_b, pairName, type] = ["", "", 0, 0, "", "", ""]
+    let [symbol_a, symbol_b, decimal_a, decimal_b, pairName, type, fee_label] = ["", "", 0, 0, "", "", "", "NaN"]
 
     //pool not in list
     if (!constant.POOLS_INFO_MAINNET.includes(pool)) {
@@ -79,7 +79,9 @@ export async function buildPoolInfo(ctx: SuiContext | SuiObjectsContext, pool: s
     }
     const obj = await ctx.client.getObject({ id: pool, options: { showType: true, showContent: true } })
     type = obj.data.type
-    const fee_label = (Number(obj.data.content.fields.fee_rate) / 10000).toFixed(2) + "%"
+    if (obj.data.content.fields.fee_rate) {
+        fee_label = (Number(obj.data.content.fields.fee_rate) / 10000).toFixed(2) + "%"
+    }
     let [coin_a_full_address, coin_b_full_address] = ["", ""]
     if (type) {
         [coin_a_full_address, coin_b_full_address] = getCoinFullAddress(type)
@@ -155,8 +157,8 @@ export async function calculateSwapVol_USD(type: string, amount_in: number, amou
     const [coin_a_full_address, coin_b_full_address] = getCoinFullAddress(type)
     const price_a = await getPriceByType(SuiChainId.SUI_MAINNET, coin_a_full_address, date)
     const price_b = await getPriceByType(SuiChainId.SUI_MAINNET, coin_b_full_address, date)
-    let vol = 0
 
+    let vol = 0
     if (price_a) {
         vol = (atob ? amount_in : amount_out) * price_a
     }
