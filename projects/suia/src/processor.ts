@@ -20,13 +20,11 @@ suia.bind({
   .onEntryClaimMedal(async (call, ctx) => {
     ctx.meter.Counter("claim_medal_counter").add(1)
     const medal = call.arguments_decoded[0]
-    const address = JSON.stringify(call.arguments_decoded[1])
     const sender = ctx.transaction.transaction.data.sender
     const balance = Number(await getSuiBalance(ctx, sender)) / Math.pow(10, 9)
     ctx.eventLogger.emit("ClaimMedal", {
       distinctId: sender,
       medal,
-      address,
       balance
     })
   })
