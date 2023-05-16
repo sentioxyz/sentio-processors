@@ -1,12 +1,12 @@
-import { AccountProcessor } from "@sentio/sdk/eth";
+import { AccountContext, AccountProcessor } from "@sentio/sdk/eth";
 import { EthChainId } from "@sentio/sdk/eth"
 import { TransferEvent } from "@sentio/sdk/eth/builtin/erc20";
 import { TransferEvent as TransferEvent721 } from "@sentio/sdk/eth/builtin/erc721";
 import { getERC721Contract } from "@sentio/sdk/eth/builtin/erc721";
-import { AccountContext } from "../node_modules/@sentio/sdk/lib/eth/context.js";
 import { token } from "@sentio/sdk/utils";
+import { EthContext } from "@sentio/sdk/eth";
 
-async function erc20In(evt: TransferEvent, ctx: AccountContext) {
+async function erc20In(evt: TransferEvent, ctx: EthContext) {
   const tokenInfo =  await token.getERC20TokenInfo(ctx, evt.address)
   const amount = evt.args.value.scaleDown(tokenInfo.decimal)
 
