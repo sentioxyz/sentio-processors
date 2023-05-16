@@ -1,7 +1,9 @@
-import { SWAP_3FER } from "./constant.js"
+import { SWAP_3FER, TEAM_ADDRESS } from "./constant.js"
 import { SwapProcessor } from "./types/eth/swap.js"
 import { AddLiquidityEvent, SwapContext } from "./types/eth/swap.js"
 import { EthChainId } from "@sentio/sdk"
+import { FerProcessor } from "./types/eth/fer.js"
+import { PoolProcessor } from "./types/eth/pool.js"
 
 SwapProcessor.bind({
   address: SWAP_3FER,
@@ -91,4 +93,22 @@ SwapProcessor.bind({
       poolName
     })
   })
+  .onEventTokenSwap(async (event, ctx) => {
+    ctx.eventLogger.emit("TokenSwap", {
+      distinctId: event.args.buyer
+    })
+  })
+
+
+FerProcessor.bind({
+  address: "0x39bC1e38c842C60775Ce37566D03B41A7A66C782",
+  network: EthChainId.CRONOS
+})
+  .onTimeInterval(async (_, ctx) => {
+    const totalSupply = Number(await ctx.contract.totalSupply()) / Math.pow(10, 18)
+    const teamBalance = Number(await ctx.contract.balanceOf(TEAM_ADDRESS)) / Math.pow(10, 18)
+    const marketcap = totalSupply - teamBalance
+    ctx.meter.Gauge("FER Marketcap").record(marketcap, { coin_symbol: "FER" })
+  })
+
 

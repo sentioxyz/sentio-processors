@@ -159,6 +159,8 @@ for (let i = 0; i < constant.POOLS_INFO_MAINNET.length; i++) {
     startCheckpoint: 1500000n
   }).onTimeInterval(async (self, _, ctx) => {
 
+
+
     if (!self) return
     try {
       // const pairName = constant.POOLS_INFO_MAINNET[pool_addresses].pairName

@@ -2,6 +2,7 @@ import { suia } from "./types/sui/suia.js";
 import { SuiChainId } from "@sentio/sdk"
 import { SuiContext, SuiObjectsContext } from "@sentio/sdk/sui";
 export const SUIA_ADDRESS = "0xbb1531504c9c3235d3cd637ed9573cbe18461255b4175a1cb1e1b07b8aa8e11b"
+import './launchpad.js'
 
 export async function getSuiBalance(ctx: SuiContext, address: string) {
   let obj
