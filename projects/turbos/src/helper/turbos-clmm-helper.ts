@@ -47,11 +47,18 @@ let poolInfoMap = new Map<string, Promise<poolInfo>>()
 let coinInfoMap = new Map<string, Promise<token.TokenInfo>>()
 
 export async function buildCoinInfo(ctx: SuiContext | SuiObjectsContext, coinAddress: string): Promise<token.TokenInfo> {
-    const metadata = await ctx.client.getCoinMetadata({ coinType: coinAddress })
-    const symbol = metadata.symbol
-    const decimal = metadata.decimals
-    const name = metadata.name
-    console.log(`build coin metadata ${symbol} ${decimal} ${name}`)
+    let [symbol, decimal, name] = ["unk", 100, "unk"]
+    try {
+        const metadata = await ctx.client.getCoinMetadata({ coinType: coinAddress })
+        symbol = metadata.symbol
+        decimal = metadata.decimals
+        name = metadata.name
+        console.log(`build coin metadata ${symbol} ${decimal} ${name}`)
+
+    }
+    catch (e) {
+        console.log(`Build coin error ${e.message} at ${JSON.stringify(ctx)}`)
+    }
     return {
         symbol,
         name,
@@ -76,22 +83,27 @@ export async function buildPoolInfo(ctx: SuiContext | SuiObjectsContext, pool: s
     }
 
     let [symbol_a, symbol_b, decimal_a, decimal_b, pairName, type, fee_label] = ["", "", 0, 0, "", "", "", "NaN"]
-    const obj = await ctx.client.getObject({ id: pool, options: { showType: true, showContent: true } })
-    type = obj.data.type
-    if (obj.data.content.fields.fee) {
-        fee_label = (Number(obj.data.content.fields.fee) / 10000).toFixed(2) + "%"
+    try {
+        const obj = await ctx.client.getObject({ id: pool, options: { showType: true, showContent: true } })
+        type = obj.data.type
+        if (obj.data.content.fields.fee) {
+            fee_label = (Number(obj.data.content.fields.fee) / 10000).toFixed(2) + "%"
+        }
+        let [coin_a_full_address, coin_b_full_address] = ["", ""]
+        if (type) {
+            [coin_a_full_address, coin_b_full_address] = getCoinFullAddress(type)
+        }
+        const coinInfo_a = await getOrCreateCoin(ctx, coin_a_full_address)
+        const coinInfo_b = await getOrCreateCoin(ctx, coin_b_full_address)
+        symbol_a = coinInfo_a.symbol
+        symbol_b = coinInfo_b.symbol
+        decimal_a = coinInfo_a.decimal
+        decimal_b = coinInfo_b.decimal
+        pairName = symbol_a + "-" + symbol_b + " " + fee_label
     }
-    let [coin_a_full_address, coin_b_full_address] = ["", ""]
-    if (type) {
-        [coin_a_full_address, coin_b_full_address] = getCoinFullAddress(type)
+    catch (e) {
+        console.log(` Build pool error ${e.message} at ${JSON.stringify(ctx)}`)
     }
-    const coinInfo_a = await getOrCreateCoin(ctx, coin_a_full_address)
-    const coinInfo_b = await getOrCreateCoin(ctx, coin_b_full_address)
-    symbol_a = coinInfo_a.symbol
-    symbol_b = coinInfo_b.symbol
-    decimal_a = coinInfo_a.decimal
-    decimal_b = coinInfo_b.decimal
-    pairName = symbol_a + "-" + symbol_b + " " + fee_label
 
     return {
         symbol_a,
@@ -114,59 +126,77 @@ export const getOrCreatePool = async function (ctx: SuiContext | SuiObjectsConte
 }
 
 export async function getPoolPrice(ctx: SuiContext | SuiObjectsContext, pool: string) {
-    const obj = await ctx.client.getObject({ id: pool, options: { showType: true, showContent: true } })
-    const current_sqrt_price = Number(obj.data.content.fields.current_sqrt_price)
-    if (!current_sqrt_price) { console.log(`get pool price error at ${ctx}`) }
-    const poolInfo = await getOrCreatePool(ctx, pool)
-    const pairName = poolInfo.pairName
-    const coin_b2a_price = 1 / (Number(current_sqrt_price) ** 2) * (2 ** 128) * 10 ** (poolInfo.decimal_b - poolInfo.decimal_a)
-    const coin_a2b_price = 1 / coin_b2a_price
-    ctx.meter.Gauge("a2b_price").record(coin_a2b_price, { pairName })
-    ctx.meter.Gauge("b2a_price").record(coin_b2a_price, { pairName })
+    let coin_a2b_price = 0
+    try {
+        const obj = await ctx.client.getObject({ id: pool, options: { showType: true, showContent: true } })
+        const sqrt_price = Number(obj.data.content.fields.sqrt_price)
+        if (!sqrt_price) { console.log(`get pool price error at ${ctx}`) }
+        const poolInfo = await getOrCreatePool(ctx, pool)
+        const pairName = poolInfo.pairName
+        const coin_b2a_price = 1 / (Number(sqrt_price) ** 2) * (2 ** 128) * 10 ** (poolInfo.decimal_b - poolInfo.decimal_a)
+        coin_a2b_price = 1 / coin_b2a_price
+        ctx.meter.Gauge("a2b_price").record(coin_a2b_price, { pairName })
+        ctx.meter.Gauge("b2a_price").record(coin_b2a_price, { pairName })
+    }
+    catch (e) {
+        console.log(` get pool price error ${e.message} at ${JSON.stringify(ctx)}`)
+    }
     return coin_a2b_price
 }
 
 
 export async function calculateValue_USD(ctx: SuiContext | SuiObjectsContext, pool: string, amount_a: number, amount_b: number, date: Date) {
-    const poolInfo = await getOrCreatePool(ctx, pool)
-    const [coin_a_full_address, coin_b_full_address] = getCoinFullAddress(poolInfo.type)
-    const price_a = await getPriceByType(SuiChainId.SUI_MAINNET, coin_a_full_address, date)
-    const price_b = await getPriceByType(SuiChainId.SUI_MAINNET, coin_b_full_address, date)
-
-    const coin_a2b_price = await getPoolPrice(ctx, pool)
-
     let [value_a, value_b] = [0, 0]
-    if (price_a) {
-        value_a = amount_a * price_a
-        value_b = amount_b / coin_a2b_price * price_a
-    }
-    else if (price_b) {
-        value_a = amount_a * coin_a2b_price * price_b
-        value_b = amount_b * price_b
-    }
-    else {
-        console.log(`price not in sui coinlist, calculate value failed at ${ctx}`)
-    }
+    try {
+        const poolInfo = await getOrCreatePool(ctx, pool)
+        const [coin_a_full_address, coin_b_full_address] = getCoinFullAddress(poolInfo.type)
+        const price_a = await getPriceByType(SuiChainId.SUI_MAINNET, coin_a_full_address, date)
+        const price_b = await getPriceByType(SuiChainId.SUI_MAINNET, coin_b_full_address, date)
+        console.log(`price_a ${price_a}, price_b ${price_b}`)
+        const coin_a2b_price = await getPoolPrice(ctx, pool)
 
+        if (price_a) {
+            value_a = amount_a * price_a
+            value_b = amount_b / coin_a2b_price * price_a
+        }
+        else if (price_b) {
+            value_a = amount_a * coin_a2b_price * price_b
+            value_b = amount_b * price_b
+        }
+        else {
+            console.log(`price not in sui coinlist, calculate value failed at ${ctx}`)
+        }
+    }
+    catch (e) {
+        console.log(` calculate value ${e.message} at ${JSON.stringify(ctx)}`)
+    }
     return value_a + value_b
+
 }
 
 
-export async function calculateSwapVol_USD(type: string, amount_in: number, amount_out: number, atob: Boolean, date: Date) {
-    const [coin_a_full_address, coin_b_full_address] = getCoinFullAddress(type)
-    const price_a = await getPriceByType(SuiChainId.SUI_MAINNET, coin_a_full_address, date)
-    const price_b = await getPriceByType(SuiChainId.SUI_MAINNET, coin_b_full_address, date)
-
+export async function calculateSwapVol_USD(type: string, amount_a: number, amount_b: number, atob: Boolean, date: Date) {
     let vol = 0
-    if (price_a) {
-        vol = (atob ? amount_in : amount_out) * price_a
-    }
-    else if (price_b) {
-        vol = (atob ? amount_out : amount_in) * price_b
-    }
-    else {
-        console.log(`price not in sui coinlist, calculate vol failed for pool w/ ${type}`)
-    }
 
+    try {
+        const [coin_a_full_address, coin_b_full_address] = getCoinFullAddress(type)
+        const price_a = await getPriceByType(SuiChainId.SUI_MAINNET, coin_a_full_address, date)
+        const price_b = await getPriceByType(SuiChainId.SUI_MAINNET, coin_b_full_address, date)
+
+        if (price_a) {
+            vol = amount_a * price_a
+        }
+        else if (price_b) {
+            vol = amount_b * price_b
+        }
+        else {
+            console.log(`price not in sui coinlist, calculate vol failed for pool w/ ${type}`)
+        }
+    }
+    catch (e) {
+        console.log(` calculate swap value ${e.message} at ${type}`)
+    }
     return vol
+
 }
+
