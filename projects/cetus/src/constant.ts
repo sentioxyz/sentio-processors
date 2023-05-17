@@ -36,7 +36,10 @@ export const POOLS_INFO_MAINNET = [
     "0x005eda99b1c87bbdcdc8dcf715f9dd1a7a3e8d8c86233b5875f84f362ee31602",
     "0x222130182a9513211023f0433ce5083167c8357edad587548741fbd8dc4f211c",
     "0x46b44725cae3e9b31b722f79adbc00acc25faa6f41881c635b55a0ee65d9d4f4",
-    "0x7379dca44bb02d69aed016fbca92e8f7bea18435bffd31d4833cd3431c8a1450"
+    "0x7379dca44bb02d69aed016fbca92e8f7bea18435bffd31d4833cd3431c8a1450",
+    "0xf7050dbf36ea21993c16c7b901d054baa1a4ca6fe27f20f615116332c12e8098",
+    "0x81f6bdb7f443b2a55de8554d2d694b7666069a481526a1ff0c91775265ac0fc1",
+    "0x9b2a5da1310657a622f22c2fb54e7be2eb0a858a511b8c4987c9dd5df96d11f3"
 ]
 
 export const CoinInfoMap_MAINNET: { [address: string]: { symbol: string, decimal: number } } = {

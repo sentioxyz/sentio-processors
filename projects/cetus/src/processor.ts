@@ -79,6 +79,8 @@ pool.bind({
     })
 
     ctx.meter.Gauge("trading_vol_gauge").record(usd_volume, { pairName })
+    ctx.meter.Counter("trading_vol_counter").add(usd_volume, { pairName })
+
 
   })
   .onEventAddLiquidityEvent(async (event, ctx) => {
