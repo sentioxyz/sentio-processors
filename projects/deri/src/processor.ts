@@ -1,6 +1,9 @@
 import { DTokenContext, DTokenProcessor, TransferEvent } from "./types/eth/dtoken.js";
 import { PoolContext, PoolProcessor, NewImplementationEvent, getPoolContract } from "./types/eth/pool.js";
-import { getPoolImplementationContract } from "./types/eth/poolimplementation.js";
+import {
+  getPoolImplementationContract,
+  getPoolImplementationContractOnContext
+} from "./types/eth/poolimplementation.js";
 import { EthChainId, BigDecimal, Gauge } from "@sentio/sdk"
 
 async function onTransfer(evt: TransferEvent, ctx: DTokenContext) {
@@ -16,29 +19,29 @@ async function onTransfer(evt: TransferEvent, ctx: DTokenContext) {
 
 async function onImplementation(evt: NewImplementationEvent, ctx: PoolContext) {
   const address = evt.args.newImplementation
-  const newContract = getPoolImplementationContract(ctx, ctx.address)
-  const vaultTemplate = await newContract.vaultTemplate({blockTag: ctx.blockNumber})
-  const tokenWETH = await newContract.tokenWETH({blockTag: ctx.blockNumber})
-  const lToken = await newContract.lToken({blockTag: ctx.blockNumber})
-  const pToken = await newContract.pToken({blockTag: ctx.blockNumber})
-  const oracleManager = await newContract.oracleManager({blockTag: ctx.blockNumber})
-  const swapper = await newContract.swapper({blockTag: ctx.blockNumber})
-  const privileger = await newContract.privileger({blockTag: ctx.blockNumber})
-  const rewardVault = await newContract.rewardVault({blockTag: ctx.blockNumber})
-  const decimalsB0 = await newContract.decimalsB0({blockTag: ctx.blockNumber})
-  const reserveRatioB0 = await newContract.reserveRatioB0({blockTag: ctx.blockNumber})
-  const minRatioB0 = await newContract.minRatioB0({blockTag: ctx.blockNumber})
-  const poolInitialMarginMultiplier = await newContract.poolInitialMarginMultiplier({blockTag: ctx.blockNumber})
-  const protocolFeeCollectRatio = await newContract.protocolFeeCollectRatio({blockTag: ctx.blockNumber})
-  const minLiquidationReward = await newContract.minLiquidationReward({blockTag: ctx.blockNumber})
-  const maxLiquidationReward = await newContract.maxLiquidationReward({blockTag: ctx.blockNumber})
-  const liquidationRewardCutRatio = await newContract.liquidationRewardCutRatio({blockTag: ctx.blockNumber})
-  const tokenB0 = await newContract.tokenB0({blockTag: ctx.blockNumber})
-  const vTokenB0 = await newContract.vTokenB0({blockTag: ctx.blockNumber})
-  const vTokenETH = await newContract.vTokenETH({blockTag: ctx.blockNumber})
-  const vaultImplementation = await newContract.vaultImplementation({blockTag: ctx.blockNumber})
+  const newContract = getPoolImplementationContractOnContext(ctx, ctx.address)
+  const vaultTemplate = await newContract.vaultTemplate()
+  const tokenWETH = await newContract.tokenWETH()
+  const lToken = await newContract.lToken()
+  const pToken = await newContract.pToken()
+  const oracleManager = await newContract.oracleManager()
+  const swapper = await newContract.swapper()
+  const privileger = await newContract.privileger()
+  const rewardVault = await newContract.rewardVault()
+  const decimalsB0 = await newContract.decimalsB0()
+  const reserveRatioB0 = await newContract.reserveRatioB0()
+  const minRatioB0 = await newContract.minRatioB0()
+  const poolInitialMarginMultiplier = await newContract.poolInitialMarginMultiplier()
+  const protocolFeeCollectRatio = await newContract.protocolFeeCollectRatio()
+  const minLiquidationReward = await newContract.minLiquidationReward()
+  const maxLiquidationReward = await newContract.maxLiquidationReward()
+  const liquidationRewardCutRatio = await newContract.liquidationRewardCutRatio()
+  const tokenB0 = await newContract.tokenB0()
+  const vTokenB0 = await newContract.vTokenB0()
+  const vTokenETH = await newContract.vTokenETH()
+  const vaultImplementation = await newContract.vaultImplementation()
   // await newContract.vaultImplementation.comptroller() need ABI
-  const symbolManager = await newContract.symbolManager({blockTag: ctx.blockNumber})
+  const symbolManager = await newContract.symbolManager()
 
   ctx.eventLogger.emit("NewImplementation", {
     vaultTemplate,
