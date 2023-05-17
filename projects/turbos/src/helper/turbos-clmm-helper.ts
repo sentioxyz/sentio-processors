@@ -168,7 +168,7 @@ export async function calculateValue_USD(ctx: SuiContext | SuiObjectsContext, po
         }
     }
     catch (e) {
-        console.log(` calculate value ${e.message} at ${JSON.stringify(ctx)}`)
+        console.log(` calculate value error ${e.message} at ${JSON.stringify(ctx)}`)
     }
     return value_a + value_b
 
@@ -194,7 +194,7 @@ export async function calculateSwapVol_USD(type: string, amount_a: number, amoun
         }
     }
     catch (e) {
-        console.log(` calculate swap value ${e.message} at ${type}`)
+        console.log(` calculate swap value error ${e.message} at ${type}`)
     }
     return vol
 
