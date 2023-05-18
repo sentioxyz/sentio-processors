@@ -1,4 +1,4 @@
-import {AptosDex, getCoinInfo, getPair, getPairValue} from "@sentio/sdk/aptos/ext"
+import {AptosDex, getCoinInfo,  getPairValue} from "@sentio/sdk/aptos/ext"
 
 import {amm} from "./types/aptos/auxexchange.js";
 import {
@@ -31,7 +31,7 @@ amm.bind()
     .onEventAddLiquidityEvent(async (evt, ctx) => {
         if (recordAccount) {
             const value = await getPairValue(ctx, evt.data_decoded.x_coin_type, evt.data_decoded.y_coin_type, evt.data_decoded.x_added_au, evt.data_decoded.y_added_au)
-            const pair = await getPair(evt.data_decoded.x_coin_type, evt.data_decoded.y_coin_type)
+            const pair = await AUX_EXCHANGE.getPair(evt.data_decoded.x_coin_type, evt.data_decoded.y_coin_type)
             ctx.meter.Counter("token_amount_by_pool").add(evt.data_decoded.x_added_au, {"pair": pair, "coin": evt.data_decoded.x_coin_type})
             ctx.meter.Counter("token_amount_by_pool").add(evt.data_decoded.x_added_au, {"pair": pair, "coin": evt.data_decoded.y_coin_type})
             if (value.isGreaterThan(10)) {
@@ -84,7 +84,7 @@ amm.bind()
         // ctx.logger.info("LiquidityAdded", { user: ctx.transaction.sender })
     })
     .onEventRemoveLiquidityEvent(async (evt, ctx) => {
-        const pair = await getPair(evt.data_decoded.x_coin_type, evt.data_decoded.y_coin_type)
+        const pair = await AUX_EXCHANGE.getPair(evt.data_decoded.x_coin_type, evt.data_decoded.y_coin_type)
         ctx.meter.Counter("event_liquidity_removed").add(1)
 
         ctx.meter.Counter("token_amount_by_pool").sub(evt.data_decoded.x_removed_au, {"pair": pair, "coin": evt.data_decoded.x_coin_type})
