@@ -1,7 +1,7 @@
 import { pool } from "./types/sui/launchpad.js"
 import * as constant from './constant.js'
 import * as helper from './helper/cetus-clmm.js'
-import { getPoolMetadata } from "./helper/launchpad-helper.js"
+import { getPoolMetadata } from "./helper/cetus-launchpad.js"
 import { SuiChainId } from "@sentio/sdk"
 
 pool.bind({
