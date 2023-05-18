@@ -12,7 +12,7 @@ Market.bind({
   startCheckpoint: 1500000n
 })
   .onEventBuyEvent(async (event, ctx) => {
-    ctx.meter.Counter("order_filled_counter").add(1, { project: "souffl3" })
+    ctx.meter.Counter("order_filled_tx").add(1, { project: "souffl3" })
     ctx.meter.Counter("total_tx").add(1, { project: "souffl3" })
     const listing_id = event.data_decoded.listing_id
     const price = Number(event.data_decoded.price) / Math.pow(10, 9)
@@ -71,8 +71,8 @@ Market.bind({
   })
 
 
-port.bind({
-  address: SOUFFL3_LAUNCHPAD,
-  network: SuiNetwork.MAIN_NET,
-  startCheckpoint: 1500000n
-})
+// port.bind({
+//   address: SOUFFL3_LAUNCHPAD,
+//   network: SuiNetwork.MAIN_NET,
+//   startCheckpoint: 1500000n
+// })

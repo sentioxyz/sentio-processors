@@ -35,7 +35,7 @@ marketplace.bind({
     })
   })
   .onEventBuyEvent(async (event, ctx) => {
-    ctx.meter.Counter("order_filled_counter").add(1, { project: "bluemove" })
+    ctx.meter.Counter("order_filled_tx").add(1, { project: "bluemove" })
     ctx.meter.Counter("total_tx").add(1, { project: "bluemove" })
     const item_id = event.data_decoded.item_id
     const price = Number(event.data_decoded.amount) / Math.pow(10, 9)
