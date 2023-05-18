@@ -17,7 +17,8 @@ marketplace.bind({
       distinctId: event.data_decoded.seller,
       amount: Number(event.data_decoded.amount) / Math.pow(10, 9),
       item_id: event.data_decoded.item_id,
-      nft_type: event.data_decoded.nft_type
+      nft_type: event.data_decoded.nft_type,
+      project: "bluemove"
     })
 
   })
@@ -26,7 +27,8 @@ marketplace.bind({
     ctx.eventLogger.emit("Delist", {
       distinctId: event.data_decoded.seller,
       item_id: event.data_decoded.item_id,
-      nft_type: event.data_decoded.nft_type
+      nft_type: event.data_decoded.nft_type,
+      project: "bluemove"
     })
   })
   .onEventBuyEvent(async (event, ctx) => {
@@ -45,12 +47,13 @@ marketplace.bind({
       collectionName,
       nftName,
       coin_symbol: "SUI",
+      project: "bluemove",
       message: `buy ${nftName} ${collectionName} for ${amount}, to ${buyer}`
     })
 
 
-    ctx.meter.Gauge("order_filled_gauge").record(amount, { coin_symbol: "SUI" })
-    ctx.meter.Counter("order_filled_counter").add(amount, { coin_symbol: "SUI" })
+    ctx.meter.Gauge("order_filled_gauge").record(amount, { coin_symbol: "SUI", project: "bluemove" })
+    ctx.meter.Counter("order_filled_counter").add(amount, { coin_symbol: "SUI", project: "bluemove" })
 
 
   })
@@ -62,13 +65,14 @@ bluemove_launchpad.bind({
   startCheckpoint: 1500000n
 })
   .onEventMintNFTEvent(async (event, ctx) => {
-    ctx.meter.Counter("mint_counter").add(1)
+    ctx.meter.Counter("mint_counter").add(1, { project: "bluemove" })
     const name = event.data_decoded.name
     const object_id = event.data_decoded.object_id
     ctx.eventLogger.emit("MintEvent", {
       distinctId: event.data_decoded.creator,
       name,
-      object_id
+      object_id,
+      project: "bluemove"
     })
   })
   .onEventBurnEvent(async (event, ctx) => {
@@ -78,6 +82,7 @@ bluemove_launchpad.bind({
     ctx.eventLogger.emit("BurnEvent", {
       distinctId: event.data_decoded.sender,
       nft_name,
-      object_id
+      object_id,
+      project: "bluemove"
     })
   })

@@ -4,7 +4,7 @@ import { getPriceByType, token } from "@sentio/sdk/utils"
 import * as constant from './constant.js'
 import { SuiChainId } from "@sentio/sdk"
 import './launchpad.js'
-import * as helper from './helper/clmm-helper.js'
+import * as helper from './helper/cetus-clmm.js'
 
 factory.bind({
   address: constant.CLMM_MAINNET,
@@ -12,7 +12,7 @@ factory.bind({
   startCheckpoint: 1500000n
 })
   .onEventCreatePoolEvent((event, ctx) => {
-    ctx.meter.Counter("create_pool_counter").add(1)
+    ctx.meter.Counter("create_pool_counter").add(1, { project: "cetus" })
     const coin_type_a = event.data_decoded.coin_type_a
     const coin_type_b = event.data_decoded.coin_type_b
     const pool_id = event.data_decoded.pool_id
@@ -23,7 +23,8 @@ factory.bind({
       pool_id,
       coin_type_a,
       coin_type_b,
-      tick_spacing
+      tick_spacing,
+      project: "cetus"
     })
 
     helper.getOrCreatePool(ctx, pool_id)
@@ -36,7 +37,7 @@ pool.bind({
   startCheckpoint: 1500000n
 })
   .onEventSwapEvent(async (event, ctx) => {
-    ctx.meter.Counter("swap_counter").add(1)
+    ctx.meter.Counter("swap_counter").add(1, { project: "cetus" })
     const pool = event.data_decoded.pool
     const poolInfo = await helper.getOrCreatePool(ctx, pool)
     const before_sqrt_price = Number(event.data_decoded.before_sqrt_price)
@@ -75,16 +76,17 @@ pool.bind({
       vault_b_amount,
       coin_symbol: atob ? symbol_a : symbol_b, //for amount_in
       pairName,
+      project: "cetus",
       message: `Swap ${amount_in} ${atob ? symbol_a : symbol_b} to ${amount_out} ${atob ? symbol_b : symbol_a}. USD value: ${usd_volume} in Pool ${pairName} `
     })
 
-    ctx.meter.Gauge("trading_vol_gauge").record(usd_volume, { pairName })
-    ctx.meter.Counter("trading_vol_counter").add(usd_volume, { pairName })
+    ctx.meter.Gauge("trading_vol_gauge").record(usd_volume, { pairName, project: "cetus" })
+    ctx.meter.Counter("trading_vol_counter").add(usd_volume, { pairName, project: "cetus" })
 
 
   })
   .onEventAddLiquidityEvent(async (event, ctx) => {
-    ctx.meter.Counter("add_liquidity_counter").add(1)
+    ctx.meter.Counter("add_liquidity_counter").add(1, { project: "cetus" })
     const pool = event.data_decoded.pool
     const poolInfo = await helper.getOrCreatePool(ctx, pool)
     const pairName = poolInfo.pairName
@@ -111,13 +113,14 @@ pool.bind({
       amount_b,
       value,
       pairName,
+      project: "cetus",
       message: `Add USD$${value} Liquidity in ${pairName}`
     })
     ctx.meter.Gauge("add_liquidity_gauge").record(value, { pairName })
 
   })
   .onEventRemoveLiquidityEvent(async (event, ctx) => {
-    ctx.meter.Counter("remove_liquidity_counter").add(1)
+    ctx.meter.Counter("remove_liquidity_counter").add(1, { project: "cetus" })
     const pool = event.data_decoded.pool
     const poolInfo = await helper.getOrCreatePool(ctx, pool)
     const pairName = poolInfo.pairName
@@ -145,6 +148,7 @@ pool.bind({
       amount_b,
       value,
       pairName,
+      project: "cetus",
       message: `Remove USD$${value} Liquidity in ${pairName}`
     })
     ctx.meter.Gauge("remove_liquidity_gauge").record(value, { pairName })
@@ -181,27 +185,27 @@ for (let i = 0; i < constant.POOLS_INFO_MAINNET.length; i++) {
       const coin_b_balance = Number(self.fields.coin_b) / Math.pow(10, decimal_b)
 
       if (coin_a_balance) {
-        ctx.meter.Gauge('coin_a_balance').record(coin_a_balance, { coin_symbol: symbol_a, pairName })
+        ctx.meter.Gauge('coin_a_balance').record(coin_a_balance, { coin_symbol: symbol_a, pairName, project: "cetus" })
       }
 
       if (coin_b_balance) {
-        ctx.meter.Gauge('coin_b_balance').record(coin_b_balance, { coin_symbol: symbol_b, pairName })
+        ctx.meter.Gauge('coin_b_balance').record(coin_b_balance, { coin_symbol: symbol_b, pairName, project: "cetus" })
       }
 
       //record liquidity
       const liquidity = Number(self.fields.liquidity)
-      ctx.meter.Gauge("liquidity").record(liquidity, { pairName })
+      ctx.meter.Gauge("liquidity").record(liquidity, { pairName, project: "cetus" })
 
       //record price
       const current_sqrt_price = Number(self.fields.current_sqrt_price)
       let coin_b2a_price = 1 / (Number(current_sqrt_price) ** 2) * (2 ** 128) * 10 ** (decimal_b - decimal_a)
       let coin_a2b_price = 1 / coin_b2a_price
-      ctx.meter.Gauge("a2b_price").record(coin_a2b_price, { pairName })
-      ctx.meter.Gauge("b2a_price").record(coin_b2a_price, { pairName })
+      ctx.meter.Gauge("a2b_price").record(coin_a2b_price, { pairName, project: "cetus" })
+      ctx.meter.Gauge("b2a_price").record(coin_b2a_price, { pairName, project: "cetus" })
 
       //record tvl
       const tvl = await helper.calculateValue_USD(ctx, pool_address, coin_a_balance, coin_b_balance, ctx.timestamp)
-      ctx.meter.Gauge("tvl").record(tvl, { pairName })
+      ctx.meter.Gauge("tvl").record(tvl, { pairName, project: "cetus" })
     }
     catch (e) {
       console.log(`${e.message} error at ${JSON.stringify(self)}`)
