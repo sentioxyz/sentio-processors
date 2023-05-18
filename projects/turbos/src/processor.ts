@@ -4,32 +4,32 @@ import * as constant from './constant.js'
 import { SuiChainId } from "@sentio/sdk"
 import * as helper from './helper/turbos-clmm-helper.js'
 
-// pool_factory.bind({
-//   address: constant.CLMM_MAINNET,
-//   network: SuiChainId.SUI_MAINNET,
-//   startCheckpoint: 1500000n
-// })
-//   .onEventPoolCreatedEvent((event, ctx) => {
-//     ctx.meter.Counter("create_pool_counter").add(1)
-//     const account = event.data_decoded.account
-//     const fee_protocol = event.data_decoded.fee_protocol
-//     const pool = event.data_decoded.pool
-//     const tick_spacing = event.data_decoded.tick_spacing
-//     const fee = event.data_decoded.fee
-//     const sqrt_price = event.data_decoded.sqrt_price
+pool_factory.bind({
+  address: constant.CLMM_MAINNET,
+  network: SuiChainId.SUI_MAINNET,
+  startCheckpoint: 1500000n
+})
+  .onEventPoolCreatedEvent((event, ctx) => {
+    ctx.meter.Counter("create_pool_counter").add(1)
+    const account = event.data_decoded.account
+    const fee_protocol = event.data_decoded.fee_protocol
+    const pool = event.data_decoded.pool
+    const tick_spacing = event.data_decoded.tick_spacing
+    const fee = event.data_decoded.fee
+    const sqrt_price = event.data_decoded.sqrt_price
 
-//     ctx.eventLogger.emit("CreatePoolEvent", {
-//       distinctId: account,
-//       account,
-//       fee_protocol,
-//       pool,
-//       tick_spacing,
-//       fee,
-//       sqrt_price
-//     })
+    ctx.eventLogger.emit("CreatePoolEvent", {
+      distinctId: account,
+      account,
+      fee_protocol,
+      pool,
+      tick_spacing,
+      fee,
+      sqrt_price
+    })
 
-//     helper.getOrCreatePool(ctx, pool)
-//   })
+    helper.getOrCreatePool(ctx, pool)
+  })
 
 
 // pool.bind({
@@ -151,52 +151,52 @@ import * as helper from './helper/turbos-clmm-helper.js'
 
 
 //pool object 
-for (let i = 0; i < constant.POOLS_INFO_MAINNET.length; i++) {
-  const pool_address = constant.POOLS_INFO_MAINNET[i]
-  SuiObjectProcessor.bind({
-    objectId: pool_address,
-    network: SuiChainId.SUI_MAINNET,
-    startCheckpoint: 2000000n
-  }).onTimeInterval(async (self, _, ctx) => {
-    if (self) {
-      try {
-        //get coin addresses
-        const poolInfo = await helper.getOrCreatePool(ctx, pool_address)
-        const symbol_a = poolInfo.symbol_a
-        const symbol_b = poolInfo.symbol_b
-        const decimal_a = poolInfo.decimal_a
-        const decimal_b = poolInfo.decimal_b
-        const pairName = poolInfo.pairName
+// for (let i = 0; i < constant.POOLS_INFO_MAINNET.length; i++) {
+//   const pool_address = constant.POOLS_INFO_MAINNET[i]
+//   SuiObjectProcessor.bind({
+//     objectId: pool_address,
+//     network: SuiChainId.SUI_MAINNET,
+//     startCheckpoint: 2000000n
+//   }).onTimeInterval(async (self, _, ctx) => {
+//     if (self) {
+//       try {
+//         //get coin addresses
+//         const poolInfo = await helper.getOrCreatePool(ctx, pool_address)
+//         const symbol_a = poolInfo.symbol_a
+//         const symbol_b = poolInfo.symbol_b
+//         const decimal_a = poolInfo.decimal_a
+//         const decimal_b = poolInfo.decimal_b
+//         const pairName = poolInfo.pairName
 
 
-        const coin_a_balance = Number(self.fields.coin_a) / Math.pow(10, decimal_a)
-        const coin_b_balance = Number(self.fields.coin_b) / Math.pow(10, decimal_b)
-        console.log(`pair: ${pairName} \nsymbol:${symbol_a} ${symbol_b}, \ncoin_a_balance ${coin_a_balance} coin_b_balance ${coin_b_balance}, \npool ${pool_address}`)
-        if (coin_a_balance) {
-          ctx.meter.Gauge('coin_a_balance').record(coin_a_balance, { coin_symbol: symbol_a, pairName })
-        }
+//         const coin_a_balance = Number(self.fields.coin_a) / Math.pow(10, decimal_a)
+//         const coin_b_balance = Number(self.fields.coin_b) / Math.pow(10, decimal_b)
+//         console.log(`pair: ${pairName} \nsymbol:${symbol_a} ${symbol_b}, \ncoin_a_balance ${coin_a_balance} coin_b_balance ${coin_b_balance}, \npool ${pool_address}`)
+//         if (coin_a_balance) {
+//           ctx.meter.Gauge('coin_a_balance').record(coin_a_balance, { coin_symbol: symbol_a, pairName })
+//         }
 
-        if (coin_b_balance) {
-          ctx.meter.Gauge('coin_b_balance').record(coin_b_balance, { coin_symbol: symbol_b, pairName })
-        }
+//         if (coin_b_balance) {
+//           ctx.meter.Gauge('coin_b_balance').record(coin_b_balance, { coin_symbol: symbol_b, pairName })
+//         }
 
-        //record liquidity
-        const liquidity = Number(self.fields.liquidity)
-        ctx.meter.Gauge("liquidity").record(liquidity, { pairName })
+//         //record liquidity
+//         const liquidity = Number(self.fields.liquidity)
+//         ctx.meter.Gauge("liquidity").record(liquidity, { pairName })
 
-        //record price
-        const coin_a2b_price = await helper.getPoolPrice(ctx, pool_address)
+//         //record price
+//         const coin_a2b_price = await helper.getPoolPrice(ctx, pool_address)
 
-        //record tvl
-        const tvl = await helper.calculateValue_USD(ctx, pool_address, coin_a_balance, coin_b_balance, ctx.timestamp)
-        ctx.meter.Gauge("tvl").record(tvl, { pairName })
-        console.log(`pair: ${pairName} \nsymbol:${symbol_a} ${symbol_b}, \ncoin_a_balance ${coin_a_balance} coin_b_balance ${coin_b_balance}, \npool ${pool_address} \nliquidity: ${liquidity} \ntvl: ${tvl} `)
+//         //record tvl
+//         const tvl = await helper.calculateValue_USD(ctx, pool_address, coin_a_balance, coin_b_balance, ctx.timestamp)
+//         ctx.meter.Gauge("tvl").record(tvl, { pairName })
+//         console.log(`pair: ${pairName} \nsymbol:${symbol_a} ${symbol_b}, \ncoin_a_balance ${coin_a_balance} coin_b_balance ${coin_b_balance}, \npool ${pool_address} \nliquidity: ${liquidity} \ntvl: ${tvl} `)
 
-      }
-      catch (e) {
-        console.log(`${e.message} error at ${JSON.stringify(self)}`)
-      }
-    }
+//       }
+//       catch (e) {
+//         console.log(`${e.message} error at ${JSON.stringify(self)}`)
+//       }
+//     }
 
-  }, 60, 10)
-}
+//   }, 60, 10)
+// }
