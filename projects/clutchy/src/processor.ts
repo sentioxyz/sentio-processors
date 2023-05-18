@@ -1,9 +1,11 @@
 import { SuiNetwork } from "@sentio/sdk/sui";
 import { orderbook } from "./types/sui/clutchy.js";
 import { mint_event } from "./types/sui/mint.js";
+import { listing } from "./types/sui/list.js";
 import { getCollectionName, getNftName } from "./helper/nft-helper.js";
 export const CLUTCHY_ORDER = "0x4e0629fa51a62b0c1d7c7b9fc89237ec5b6f630d7798ad3f06d820afb93a995a"
 export const CLUTCHY_MINT = "0xbc3df36be17f27ac98e3c839b2589db8475fa07b20657b08e8891e3aaf5ee5f9"
+export const CLUTCHY_LIST = "0xc74531639fadfb02d30f05f37de4cf1e1149ed8d23658edd089004830068180b"
 
 orderbook.bind({
   address: CLUTCHY_ORDER,
@@ -71,5 +73,49 @@ mint_event.bind({
       distinctId: ctx.transaction.transaction.data.sender,
       collection_id,
       object
+    })
+  })
+
+
+listing.bind({
+  address: CLUTCHY_LIST,
+  network: SuiNetwork.MAIN_NET,
+  startCheckpoint: 1500000n
+})
+  .onEventCreateListingEvent(async (event, ctx) => {
+    ctx.meter.Counter("create_listing_counter").add(1)
+    const listing_id = event.data_decoded.listing_id
+    ctx.eventLogger.emit("CreateListing", {
+      distinctId: ctx.transaction.transaction.data.sender,
+      listing_id
+    })
+  })
+  .onEventDeleteListingEvent(async (event, ctx) => {
+    ctx.meter.Counter("delete_listing_counter").add(1)
+    const listing_id = event.data_decoded.listing_id
+    ctx.eventLogger.emit("DeleteListing", {
+      distinctId: ctx.transaction.transaction.data.sender,
+      listing_id
+    })
+  })
+  .onEventNftSoldEvent(async (event, ctx) => {
+    ctx.meter.Counter("nft_sold_counter").add(1)
+    const nft = event.data_decoded.nft
+    const price = Number(event.data_decoded.price) / Math.pow(10, 9)
+    const ft_type = event.data_decoded.ft_type
+    const nft_type = event.data_decoded.nft_type
+    const buyer = event.data_decoded.buyer
+    const collectionName = getCollectionName(nft_type)
+    const nftName = await getNftName(ctx, nft)
+
+    ctx.eventLogger.emit("NftSold", {
+      distinctId: buyer,
+      nft,
+      price,
+      ft_type,
+      nft_type,
+      collectionName,
+      nftName,
+      message: `${nftName} ${collectionName} sold for ${price}, to ${buyer}`
     })
   })
