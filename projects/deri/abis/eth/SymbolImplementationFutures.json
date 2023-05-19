@@ -1,0 +1,799 @@
+[
+  {
+    "inputs": [
+      {
+        "internalType": "address",
+        "name": "manager_",
+        "type": "address"
+      },
+      {
+        "internalType": "address",
+        "name": "oracleManager_",
+        "type": "address"
+      },
+      {
+        "internalType": "string",
+        "name": "symbol_",
+        "type": "string"
+      },
+      {
+        "internalType": "int256[9]",
+        "name": "parameters_",
+        "type": "int256[9]"
+      },
+      {
+        "internalType": "bool",
+        "name": "isCloseOnly_",
+        "type": "bool"
+      }
+    ],
+    "stateMutability": "nonpayable",
+    "type": "constructor"
+  },
+  {
+    "anonymous": false,
+    "inputs": [
+      {
+        "indexed": true,
+        "internalType": "address",
+        "name": "newAdmin",
+        "type": "address"
+      }
+    ],
+    "name": "NewAdmin",
+    "type": "event"
+  },
+  {
+    "anonymous": false,
+    "inputs": [
+      {
+        "indexed": false,
+        "internalType": "address",
+        "name": "newImplementation",
+        "type": "address"
+      }
+    ],
+    "name": "NewImplementation",
+    "type": "event"
+  },
+  {
+    "inputs": [],
+    "name": "admin",
+    "outputs": [
+      {
+        "internalType": "address",
+        "name": "",
+        "type": "address"
+      }
+    ],
+    "stateMutability": "view",
+    "type": "function"
+  },
+  {
+    "inputs": [],
+    "name": "alpha",
+    "outputs": [
+      {
+        "internalType": "int256",
+        "name": "",
+        "type": "int256"
+      }
+    ],
+    "stateMutability": "view",
+    "type": "function"
+  },
+  {
+    "inputs": [],
+    "name": "cumulativeFundingPerVolume",
+    "outputs": [
+      {
+        "internalType": "int256",
+        "name": "",
+        "type": "int256"
+      }
+    ],
+    "stateMutability": "view",
+    "type": "function"
+  },
+  {
+    "inputs": [],
+    "name": "feeRatio",
+    "outputs": [
+      {
+        "internalType": "int256",
+        "name": "",
+        "type": "int256"
+      }
+    ],
+    "stateMutability": "view",
+    "type": "function"
+  },
+  {
+    "inputs": [],
+    "name": "fundingPeriod",
+    "outputs": [
+      {
+        "internalType": "int256",
+        "name": "",
+        "type": "int256"
+      }
+    ],
+    "stateMutability": "view",
+    "type": "function"
+  },
+  {
+    "inputs": [],
+    "name": "fundingTimestamp",
+    "outputs": [
+      {
+        "internalType": "uint256",
+        "name": "",
+        "type": "uint256"
+      }
+    ],
+    "stateMutability": "view",
+    "type": "function"
+  },
+  {
+    "inputs": [
+      {
+        "internalType": "uint256",
+        "name": "pTokenId",
+        "type": "uint256"
+      }
+    ],
+    "name": "hasPosition",
+    "outputs": [
+      {
+        "internalType": "bool",
+        "name": "",
+        "type": "bool"
+      }
+    ],
+    "stateMutability": "view",
+    "type": "function"
+  },
+  {
+    "inputs": [],
+    "name": "implementation",
+    "outputs": [
+      {
+        "internalType": "address",
+        "name": "",
+        "type": "address"
+      }
+    ],
+    "stateMutability": "view",
+    "type": "function"
+  },
+  {
+    "inputs": [],
+    "name": "indexPrice",
+    "outputs": [
+      {
+        "internalType": "int256",
+        "name": "",
+        "type": "int256"
+      }
+    ],
+    "stateMutability": "view",
+    "type": "function"
+  },
+  {
+    "inputs": [],
+    "name": "initialMarginRatio",
+    "outputs": [
+      {
+        "internalType": "int256",
+        "name": "",
+        "type": "int256"
+      }
+    ],
+    "stateMutability": "view",
+    "type": "function"
+  },
+  {
+    "inputs": [],
+    "name": "initialMarginRequired",
+    "outputs": [
+      {
+        "internalType": "int256",
+        "name": "",
+        "type": "int256"
+      }
+    ],
+    "stateMutability": "view",
+    "type": "function"
+  },
+  {
+    "inputs": [],
+    "name": "isCloseOnly",
+    "outputs": [
+      {
+        "internalType": "bool",
+        "name": "",
+        "type": "bool"
+      }
+    ],
+    "stateMutability": "view",
+    "type": "function"
+  },
+  {
+    "inputs": [],
+    "name": "lastNetVolume",
+    "outputs": [
+      {
+        "internalType": "int256",
+        "name": "",
+        "type": "int256"
+      }
+    ],
+    "stateMutability": "view",
+    "type": "function"
+  },
+  {
+    "inputs": [],
+    "name": "lastNetVolumeBlock",
+    "outputs": [
+      {
+        "internalType": "uint256",
+        "name": "",
+        "type": "uint256"
+      }
+    ],
+    "stateMutability": "view",
+    "type": "function"
+  },
+  {
+    "inputs": [],
+    "name": "maintenanceMarginRatio",
+    "outputs": [
+      {
+        "internalType": "int256",
+        "name": "",
+        "type": "int256"
+      }
+    ],
+    "stateMutability": "view",
+    "type": "function"
+  },
+  {
+    "inputs": [],
+    "name": "manager",
+    "outputs": [
+      {
+        "internalType": "address",
+        "name": "",
+        "type": "address"
+      }
+    ],
+    "stateMutability": "view",
+    "type": "function"
+  },
+  {
+    "inputs": [],
+    "name": "minTradeVolume",
+    "outputs": [
+      {
+        "internalType": "int256",
+        "name": "",
+        "type": "int256"
+      }
+    ],
+    "stateMutability": "view",
+    "type": "function"
+  },
+  {
+    "inputs": [],
+    "name": "nPositionHolders",
+    "outputs": [
+      {
+        "internalType": "uint256",
+        "name": "",
+        "type": "uint256"
+      }
+    ],
+    "stateMutability": "view",
+    "type": "function"
+  },
+  {
+    "inputs": [],
+    "name": "nameId",
+    "outputs": [
+      {
+        "internalType": "bytes32",
+        "name": "",
+        "type": "bytes32"
+      }
+    ],
+    "stateMutability": "view",
+    "type": "function"
+  },
+  {
+    "inputs": [],
+    "name": "netCost",
+    "outputs": [
+      {
+        "internalType": "int256",
+        "name": "",
+        "type": "int256"
+      }
+    ],
+    "stateMutability": "view",
+    "type": "function"
+  },
+  {
+    "inputs": [],
+    "name": "netVolume",
+    "outputs": [
+      {
+        "internalType": "int256",
+        "name": "",
+        "type": "int256"
+      }
+    ],
+    "stateMutability": "view",
+    "type": "function"
+  },
+  {
+    "inputs": [],
+    "name": "oracleManager",
+    "outputs": [
+      {
+        "internalType": "address",
+        "name": "",
+        "type": "address"
+      }
+    ],
+    "stateMutability": "view",
+    "type": "function"
+  },
+  {
+    "inputs": [
+      {
+        "internalType": "uint256",
+        "name": "",
+        "type": "uint256"
+      }
+    ],
+    "name": "positions",
+    "outputs": [
+      {
+        "internalType": "int256",
+        "name": "volume",
+        "type": "int256"
+      },
+      {
+        "internalType": "int256",
+        "name": "cost",
+        "type": "int256"
+      },
+      {
+        "internalType": "int256",
+        "name": "cumulativeFundingPerVolume",
+        "type": "int256"
+      }
+    ],
+    "stateMutability": "view",
+    "type": "function"
+  },
+  {
+    "inputs": [],
+    "name": "pricePercentThreshold",
+    "outputs": [
+      {
+        "internalType": "int256",
+        "name": "",
+        "type": "int256"
+      }
+    ],
+    "stateMutability": "view",
+    "type": "function"
+  },
+  {
+    "inputs": [
+      {
+        "internalType": "address",
+        "name": "newAdmin",
+        "type": "address"
+      }
+    ],
+    "name": "setAdmin",
+    "outputs": [],
+    "stateMutability": "nonpayable",
+    "type": "function"
+  },
+  {
+    "inputs": [
+      {
+        "internalType": "int256",
+        "name": "liquidity",
+        "type": "int256"
+      }
+    ],
+    "name": "settleOnAddLiquidity",
+    "outputs": [
+      {
+        "components": [
+          {
+            "internalType": "bool",
+            "name": "settled",
+            "type": "bool"
+          },
+          {
+            "internalType": "int256",
+            "name": "funding",
+            "type": "int256"
+          },
+          {
+            "internalType": "int256",
+            "name": "deltaTradersPnl",
+            "type": "int256"
+          },
+          {
+            "internalType": "int256",
+            "name": "deltaInitialMarginRequired",
+            "type": "int256"
+          }
+        ],
+        "internalType": "struct ISymbol.SettlementOnAddLiquidity",
+        "name": "s",
+        "type": "tuple"
+      }
+    ],
+    "stateMutability": "nonpayable",
+    "type": "function"
+  },
+  {
+    "inputs": [
+      {
+        "internalType": "uint256",
+        "name": "pTokenId",
+        "type": "uint256"
+      },
+      {
+        "internalType": "int256",
+        "name": "liquidity",
+        "type": "int256"
+      }
+    ],
+    "name": "settleOnLiquidate",
+    "outputs": [
+      {
+        "components": [
+          {
+            "internalType": "int256",
+            "name": "funding",
+            "type": "int256"
+          },
+          {
+            "internalType": "int256",
+            "name": "deltaTradersPnl",
+            "type": "int256"
+          },
+          {
+            "internalType": "int256",
+            "name": "deltaInitialMarginRequired",
+            "type": "int256"
+          },
+          {
+            "internalType": "int256",
+            "name": "indexPrice",
+            "type": "int256"
+          },
+          {
+            "internalType": "int256",
+            "name": "traderFunding",
+            "type": "int256"
+          },
+          {
+            "internalType": "int256",
+            "name": "traderPnl",
+            "type": "int256"
+          },
+          {
+            "internalType": "int256",
+            "name": "traderMaintenanceMarginRequired",
+            "type": "int256"
+          },
+          {
+            "internalType": "int256",
+            "name": "tradeVolume",
+            "type": "int256"
+          },
+          {
+            "internalType": "int256",
+            "name": "tradeCost",
+            "type": "int256"
+          },
+          {
+            "internalType": "int256",
+            "name": "tradeRealizedCost",
+            "type": "int256"
+          }
+        ],
+        "internalType": "struct ISymbol.SettlementOnLiquidate",
+        "name": "s",
+        "type": "tuple"
+      }
+    ],
+    "stateMutability": "nonpayable",
+    "type": "function"
+  },
+  {
+    "inputs": [
+      {
+        "internalType": "int256",
+        "name": "liquidity",
+        "type": "int256"
+      },
+      {
+        "internalType": "int256",
+        "name": "removedLiquidity",
+        "type": "int256"
+      }
+    ],
+    "name": "settleOnRemoveLiquidity",
+    "outputs": [
+      {
+        "components": [
+          {
+            "internalType": "bool",
+            "name": "settled",
+            "type": "bool"
+          },
+          {
+            "internalType": "int256",
+            "name": "funding",
+            "type": "int256"
+          },
+          {
+            "internalType": "int256",
+            "name": "deltaTradersPnl",
+            "type": "int256"
+          },
+          {
+            "internalType": "int256",
+            "name": "deltaInitialMarginRequired",
+            "type": "int256"
+          },
+          {
+            "internalType": "int256",
+            "name": "removeLiquidityPenalty",
+            "type": "int256"
+          }
+        ],
+        "internalType": "struct ISymbol.SettlementOnRemoveLiquidity",
+        "name": "s",
+        "type": "tuple"
+      }
+    ],
+    "stateMutability": "nonpayable",
+    "type": "function"
+  },
+  {
+    "inputs": [
+      {
+        "internalType": "uint256",
+        "name": "pTokenId",
+        "type": "uint256"
+      },
+      {
+        "internalType": "int256",
+        "name": "tradeVolume",
+        "type": "int256"
+      },
+      {
+        "internalType": "int256",
+        "name": "liquidity",
+        "type": "int256"
+      },
+      {
+        "internalType": "int256",
+        "name": "priceLimit",
+        "type": "int256"
+      }
+    ],
+    "name": "settleOnTrade",
+    "outputs": [
+      {
+        "components": [
+          {
+            "internalType": "int256",
+            "name": "funding",
+            "type": "int256"
+          },
+          {
+            "internalType": "int256",
+            "name": "deltaTradersPnl",
+            "type": "int256"
+          },
+          {
+            "internalType": "int256",
+            "name": "deltaInitialMarginRequired",
+            "type": "int256"
+          },
+          {
+            "internalType": "int256",
+            "name": "indexPrice",
+            "type": "int256"
+          },
+          {
+            "internalType": "int256",
+            "name": "traderFunding",
+            "type": "int256"
+          },
+          {
+            "internalType": "int256",
+            "name": "traderPnl",
+            "type": "int256"
+          },
+          {
+            "internalType": "int256",
+            "name": "traderInitialMarginRequired",
+            "type": "int256"
+          },
+          {
+            "internalType": "int256",
+            "name": "tradeCost",
+            "type": "int256"
+          },
+          {
+            "internalType": "int256",
+            "name": "tradeFee",
+            "type": "int256"
+          },
+          {
+            "internalType": "int256",
+            "name": "tradeRealizedCost",
+            "type": "int256"
+          },
+          {
+            "internalType": "int256",
+            "name": "positionChangeStatus",
+            "type": "int256"
+          }
+        ],
+        "internalType": "struct ISymbol.SettlementOnTrade",
+        "name": "s",
+        "type": "tuple"
+      }
+    ],
+    "stateMutability": "nonpayable",
+    "type": "function"
+  },
+  {
+    "inputs": [
+      {
+        "internalType": "uint256",
+        "name": "pTokenId",
+        "type": "uint256"
+      },
+      {
+        "internalType": "int256",
+        "name": "liquidity",
+        "type": "int256"
+      }
+    ],
+    "name": "settleOnTraderWithPosition",
+    "outputs": [
+      {
+        "components": [
+          {
+            "internalType": "int256",
+            "name": "funding",
+            "type": "int256"
+          },
+          {
+            "internalType": "int256",
+            "name": "deltaTradersPnl",
+            "type": "int256"
+          },
+          {
+            "internalType": "int256",
+            "name": "deltaInitialMarginRequired",
+            "type": "int256"
+          },
+          {
+            "internalType": "int256",
+            "name": "traderFunding",
+            "type": "int256"
+          },
+          {
+            "internalType": "int256",
+            "name": "traderPnl",
+            "type": "int256"
+          },
+          {
+            "internalType": "int256",
+            "name": "traderInitialMarginRequired",
+            "type": "int256"
+          }
+        ],
+        "internalType": "struct ISymbol.SettlementOnTraderWithPosition",
+        "name": "s",
+        "type": "tuple"
+      }
+    ],
+    "stateMutability": "nonpayable",
+    "type": "function"
+  },
+  {
+    "inputs": [],
+    "name": "startingPriceShiftLimit",
+    "outputs": [
+      {
+        "internalType": "int256",
+        "name": "",
+        "type": "int256"
+      }
+    ],
+    "stateMutability": "view",
+    "type": "function"
+  },
+  {
+    "inputs": [],
+    "name": "symbol",
+    "outputs": [
+      {
+        "internalType": "string",
+        "name": "",
+        "type": "string"
+      }
+    ],
+    "stateMutability": "view",
+    "type": "function"
+  },
+  {
+    "inputs": [],
+    "name": "symbolId",
+    "outputs": [
+      {
+        "internalType": "bytes32",
+        "name": "",
+        "type": "bytes32"
+      }
+    ],
+    "stateMutability": "view",
+    "type": "function"
+  },
+  {
+    "inputs": [],
+    "name": "timeThreshold",
+    "outputs": [
+      {
+        "internalType": "uint256",
+        "name": "",
+        "type": "uint256"
+      }
+    ],
+    "stateMutability": "view",
+    "type": "function"
+  },
+  {
+    "inputs": [],
+    "name": "tradersPnl",
+    "outputs": [
+      {
+        "internalType": "int256",
+        "name": "",
+        "type": "int256"
+      }
+    ],
+    "stateMutability": "view",
+    "type": "function"
+  },
+  {
+    "inputs": [],
+    "name": "versionId",
+    "outputs": [
+      {
+        "internalType": "bytes32",
+        "name": "",
+        "type": "bytes32"
+      }
+    ],
+    "stateMutability": "view",
+    "type": "function"
+  }
+]
