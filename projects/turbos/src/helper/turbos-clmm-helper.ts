@@ -1,4 +1,4 @@
-import { SuiObjectProcessor, SuiContext, SuiObjectsContext } from "@sentio/sdk/sui"
+import { SuiObjectProcessor, SuiContext, SuiObjectContext } from "@sentio/sdk/sui"
 import { getPriceByType, token } from "@sentio/sdk/utils"
 import * as constant from '../constant.js'
 import { SuiChainId } from "@sentio/sdk"
@@ -46,7 +46,7 @@ interface poolInfo {
 let poolInfoMap = new Map<string, Promise<poolInfo>>()
 let coinInfoMap = new Map<string, Promise<token.TokenInfo>>()
 
-export async function buildCoinInfo(ctx: SuiContext | SuiObjectsContext, coinAddress: string): Promise<token.TokenInfo> {
+export async function buildCoinInfo(ctx: SuiContext | SuiObjectContext, coinAddress: string): Promise<token.TokenInfo> {
     let [symbol, decimal, name] = ["unk", 100, "unk"]
     try {
         const metadata = await ctx.client.getCoinMetadata({ coinType: coinAddress })
@@ -66,7 +66,7 @@ export async function buildCoinInfo(ctx: SuiContext | SuiObjectsContext, coinAdd
     }
 }
 
-export const getOrCreateCoin = async function (ctx: SuiContext | SuiObjectsContext, coinAddress: string): Promise<token.TokenInfo> {
+export const getOrCreateCoin = async function (ctx: SuiContext | SuiObjectContext, coinAddress: string): Promise<token.TokenInfo> {
     let coinInfo = coinInfoMap.get(coinAddress)
     if (!coinInfo) {
         coinInfo = buildCoinInfo(ctx, coinAddress)
@@ -76,7 +76,7 @@ export const getOrCreateCoin = async function (ctx: SuiContext | SuiObjectsConte
     return await coinInfo
 }
 
-export async function buildPoolInfo(ctx: SuiContext | SuiObjectsContext, pool: string): Promise<poolInfo> {
+export async function buildPoolInfo(ctx: SuiContext | SuiObjectContext, pool: string): Promise<poolInfo> {
     //pool not in list
     if (!constant.POOLS_INFO_MAINNET.includes(pool)) {
         console.log(`Pool not in array ${pool}`)
@@ -115,7 +115,7 @@ export async function buildPoolInfo(ctx: SuiContext | SuiObjectsContext, pool: s
     }
 }
 
-export const getOrCreatePool = async function (ctx: SuiContext | SuiObjectsContext, pool: string): Promise<poolInfo> {
+export const getOrCreatePool = async function (ctx: SuiContext | SuiObjectContext, pool: string): Promise<poolInfo> {
     let infoPromise = poolInfoMap.get(pool)
     if (!infoPromise) {
         infoPromise = buildPoolInfo(ctx, pool)
@@ -125,7 +125,7 @@ export const getOrCreatePool = async function (ctx: SuiContext | SuiObjectsConte
     return await infoPromise
 }
 
-export async function getPoolPrice(ctx: SuiContext | SuiObjectsContext, pool: string) {
+export async function getPoolPrice(ctx: SuiContext | SuiObjectContext, pool: string) {
     let coin_a2b_price = 0
     try {
         const obj = await ctx.client.getObject({ id: pool, options: { showType: true, showContent: true } })
@@ -145,7 +145,7 @@ export async function getPoolPrice(ctx: SuiContext | SuiObjectsContext, pool: st
 }
 
 
-export async function calculateValue_USD(ctx: SuiContext | SuiObjectsContext, pool: string, amount_a: number, amount_b: number, date: Date) {
+export async function calculateValue_USD(ctx: SuiContext | SuiObjectContext, pool: string, amount_a: number, amount_b: number, date: Date) {
     let [value_a, value_b] = [0, 0]
     try {
         const poolInfo = await getOrCreatePool(ctx, pool)

@@ -32,3 +32,4 @@ export const FerroBoost = "0xCf3e157E2491F7D739f8923f6CeaA4656E64C92e".toLowerCa
 export const FerroMaker = "0xA26A0105C269B6ddaAE8B343C9fD789a9034F72E".toLowerCase()
 export const TEAM_VESTING = "0xB5c745f15A31Ea431360A71c75490CdcBae67b86 ".toLowerCase()
 
+export const FerroToken = "0x39bC1e38c842C60775Ce37566D03B41A7A66C782".toLowerCase()
