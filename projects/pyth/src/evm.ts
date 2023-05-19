@@ -66,7 +66,7 @@ async function priceFeedUpdate(evt: PriceFeedUpdateEvent, ctx: PythEVMContext) {
     }
     try {
         const labels = {priceId, symbol, isNative}
-        const pythContract = getPythEVMContract(ctx, ctx.address)
+        const pythContract = getPythEVMContract(ctx.chainId, ctx.address)
         const priceUnsafeStruct = await pythContract.getPriceUnsafe(priceId, {blockTag: evt.blockNumber})
         const priceUnsafe = scaleDown(priceUnsafeStruct.price, -priceUnsafeStruct.expo)
         priceGauage.record(ctx, price, labels)
