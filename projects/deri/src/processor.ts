@@ -60,27 +60,52 @@ async function recordMarketsIn(ctx: EthContext, marketsIn: string[], eventName: 
 
 async function recordSymbols(ctx: EthContext, symbolManagerContract: SymbolManagerImplementationBoundContractView, eventName: String) {
       //symbols
-      // const symbolsLength = await symbolManagerContract.getSymbolsLength()
-      // for (var i = 0; i < symbolsLength; i++) {
-      //   const symbol = await symbolManagerContract.indexedSymbols(i)
-      //   const symbolContract = getSymbolContractOnContext(ctx, symbol)
-      //   const symbolName = await symbolContract.symbol()
-      //   const indexPrice = await symbolContract.indexPrice()
-      //   const fundingTimestamp = await symbolContract.fundingTimestamp()
-      //   const cumulativeFundingPerVolume = await symbolContract.cumulativeFundingPerVolume()
-      //   const tradersPnl = await symbolContract.tradersPnl()
-      //   const initialMarginRequired = await symbolContract.initialMarginRequired()
-      //   const cumulativeFundingPerRealFuturesVolume = await symbolContract.initialMarginRequired()
-      //   ctx.eventLogger.emit(eventName + "_Symbol", {
-      //     indexPrice, 
-      //     fundingTimestamp,
-      //     cumulativeFundingPerVolume,
-      //     tradersPnl,
-      //     initialMarginRequired,
-      //     cumulativeFundingPerRealFuturesVolume,
-      //     symbol
-      //   })
-      // }
+    const symbolsLength = await symbolManagerContract.getSymbolsLength()
+    for (var i = 0; i < symbolsLength; i++) {
+      const symbol = await symbolManagerContract.indexedSymbols(i)
+      const symbolContract = getSymbolContractOnContext(ctx, symbol)
+      const symbolName = await symbolContract.symbol()
+      const indexPrice = await symbolContract.indexPrice()
+      const fundingTimestamp = await symbolContract.fundingTimestamp()
+      const cumulativeFundingPerVolume = await symbolContract.cumulativeFundingPerVolume()
+      const tradersPnl = await symbolContract.tradersPnl()
+      const initialMarginRequired = await symbolContract.initialMarginRequired()
+      const cumulativeFundingPerRealFuturesVolume = await symbolContract.initialMarginRequired()
+      ctx.eventLogger.emit(eventName + "_Symbol", {
+        indexPrice, 
+        fundingTimestamp,
+        cumulativeFundingPerVolume,
+        tradersPnl,
+        initialMarginRequired,
+        cumulativeFundingPerRealFuturesVolume,
+        symbol
+      })
+    }
+}
+
+async function recordSymbolsForTrade(ctx: EthContext, symbolManagerContract: SymbolManagerImplementationBoundContractView, eventName: String) {
+  //symbols
+const symbolsLength = await symbolManagerContract.getSymbolsLength()
+for (var i = 0; i < symbolsLength; i++) {
+  const symbol = await symbolManagerContract.indexedSymbols(i)
+  const symbolContract = getSymbolContractOnContext(ctx, symbol)
+  const symbolName = await symbolContract.symbol()
+  const indexPrice = await symbolContract.indexPrice()
+  const fundingTimestamp = await symbolContract.fundingTimestamp()
+  const cumulativeFundingPerVolume = await symbolContract.cumulativeFundingPerVolume()
+  const tradersPnl = await symbolContract.tradersPnl()
+  const initialMarginRequired = await symbolContract.initialMarginRequired()
+  const cumulativeFundingPerRealFuturesVolume = await symbolContract.initialMarginRequired()
+  ctx.eventLogger.emit(eventName + "_Symbol", {
+    indexPrice, 
+    fundingTimestamp,
+    cumulativeFundingPerVolume,
+    tradersPnl,
+    initialMarginRequired,
+    cumulativeFundingPerRealFuturesVolume,
+    symbol
+  })
+}
 }
 
 async function onTransfer(evt: TransferEvent, ctx: DTokenContext) {
@@ -268,6 +293,7 @@ async function onChangeMargin(evt: AddMarginEvent | RemoveMarginEvent, ctx: Pool
 
 async function onTrade(evt: TradeEvent, ctx: SymbolManagerImplementationContext) {
   const pTokenId = evt.args.pTokenId
+  const symbolId = evt.args.symbolId
   const symbolManagerContract = getSymbolManagerImplementationContractOnContext(ctx, ctx.address)
   const pool = await symbolManagerContract.pool()
   const poolContract = getPoolImplementationContractOnContext(ctx, pool)
@@ -294,6 +320,8 @@ async function onTrade(evt: TradeEvent, ctx: SymbolManagerImplementationContext)
     vaultLiquidity,
     symbols: (await symbols).join("-")
   })
+
+
 }
 
 async function onChangeSymbol(evt: AddSymbolEvent | RemoveSymbolEvent, ctx: SymbolManagerImplementationContext) {
@@ -353,14 +381,14 @@ async function onSymbolImplementation(evt: NewImplementationEvent, ctx: SymbolCo
     console.log(e)
   }
 }
-// DTokenProcessor.bind({address: "0xc5b1dE3769921E8b43222e3C221ab495193440C0", network: EthChainId.BINANCE})
-// .onEventTransfer(onTransfer)
+DTokenProcessor.bind({address: "0xc5b1dE3769921E8b43222e3C221ab495193440C0", network: EthChainId.BINANCE})
+.onEventTransfer(onTransfer)
 
-// DTokenProcessor.bind({address: "0x25d5aD687068799739FF7B0e18C7cbff403AcB64", network: EthChainId.BINANCE})
-// .onEventTransfer(onTransfer)
+DTokenProcessor.bind({address: "0x25d5aD687068799739FF7B0e18C7cbff403AcB64", network: EthChainId.BINANCE})
+.onEventTransfer(onTransfer)
 
-// PoolProcessor.bind({address: "0x243681B8Cd79E3823fF574e07B2378B8Ab292c1E", network: EthChainId.BINANCE})
-// .onEventNewImplementation(onImplementation)
+PoolProcessor.bind({address: "0x243681B8Cd79E3823fF574e07B2378B8Ab292c1E", network: EthChainId.BINANCE})
+.onEventNewImplementation(onImplementation)
 
 PoolImplementationProcessor.bind({address: "0x243681B8Cd79E3823fF574e07B2378B8Ab292c1E", network: EthChainId.BINANCE})
 .onEventAddMarket(onAddMarket)
