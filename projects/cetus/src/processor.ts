@@ -1,5 +1,5 @@
 import { pool, factory } from "./types/sui/testnet/clmm.js"
-import { SuiObjectProcessor, SuiContext, SuiObjectsContext } from "@sentio/sdk/sui"
+import { SuiObjectProcessor, SuiContext, SuiObjectContext, SuiObjectProcessorTemplate } from "@sentio/sdk/sui"
 import { getPriceByType, token } from "@sentio/sdk/utils"
 import * as constant from './constant.js'
 import { SuiChainId } from "@sentio/sdk"
@@ -11,7 +11,7 @@ factory.bind({
   network: SuiChainId.SUI_MAINNET,
   startCheckpoint: 1500000n
 })
-  .onEventCreatePoolEvent((event, ctx) => {
+  .onEventCreatePoolEvent(async (event, ctx) => {
     ctx.meter.Counter("create_pool_counter").add(1, { project: "cetus" })
     const coin_type_a = event.data_decoded.coin_type_a
     const coin_type_b = event.data_decoded.coin_type_b
@@ -27,8 +27,11 @@ factory.bind({
       project: "cetus"
     })
 
-    helper.getOrCreatePool(ctx, pool_id)
+    await helper.getOrCreatePool(ctx, pool_id)
 
+    template.bind({
+      objectId: pool_id
+    }, ctx)
   })
 
 pool.bind({
@@ -156,24 +159,24 @@ pool.bind({
   })
 
 
-//pool object 
-for (let i = 0; i < constant.POOLS_INFO_MAINNET.length; i++) {
-  const pool_address = constant.POOLS_INFO_MAINNET[i]
-  SuiObjectProcessor.bind({
-    objectId: pool_address,
-    network: SuiChainId.SUI_MAINNET,
-    startCheckpoint: 1500000n
-  }).onTimeInterval(async (self, _, ctx) => {
+//pool object
+// for (let i = 0; i < constant.POOLS_INFO_MAINNET.length; i++) {
+//   const pool_address = constant.POOLS_INFO_MAINNET[i]
 
-
-
+// bind({
+//   objectId: pool_address,
+//   network: SuiChainId.SUI_MAINNET,
+//   startCheckpoint: 1500000n
+// })
+const template = new SuiObjectProcessorTemplate()
+  .onTimeInterval(async (self, _, ctx) => {
     if (!self) return
     try {
       // const pairName = constant.POOLS_INFO_MAINNET[pool_addresses].pairName
 
       //get coin addresses
       const type = self.type
-      const poolInfo = await helper.getOrCreatePool(ctx, pool_address)
+      const poolInfo = await helper.getOrCreatePool(ctx, ctx.objectId)
       const symbol_a = poolInfo.symbol_a
       const symbol_b = poolInfo.symbol_b
       const decimal_a = poolInfo.decimal_a
@@ -204,7 +207,7 @@ for (let i = 0; i < constant.POOLS_INFO_MAINNET.length; i++) {
       ctx.meter.Gauge("b2a_price").record(coin_b2a_price, { pairName, project: "cetus" })
 
       //record tvl
-      const tvl = await helper.calculateValue_USD(ctx, pool_address, coin_a_balance, coin_b_balance, ctx.timestamp)
+      const tvl = await helper.calculateValue_USD(ctx, ctx.objectId, coin_a_balance, coin_b_balance, ctx.timestamp)
       ctx.meter.Gauge("tvl").record(tvl, { pairName, project: "cetus" })
     }
     catch (e) {
@@ -212,7 +215,7 @@ for (let i = 0; i < constant.POOLS_INFO_MAINNET.length; i++) {
     }
 
   }, 60, 10)
-}
+// }
 
 
 
