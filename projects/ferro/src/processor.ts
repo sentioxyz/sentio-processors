@@ -9,7 +9,11 @@ import { FerroBoostProcessor } from "./types/eth/ferroboost.js"
 import { FerroBarProcessor } from "./types/eth/ferrobar.js"
 import { FerContext, TransferEvent } from "./types/eth/fer.js"
 import { FerroBarContext } from "./types/eth/ferrobar.js"
+import { getERC20Contract } from '@sentio/sdk/eth/builtin/erc20';
 import { PoolProcessor } from "./types/eth/pool.js"
+import { Gauge_3FER_TVL, Gauge_2FER_TVL, Gauge_LCRO_WCRO_TVL } from './helper/gaugeTVL.js'
+
+
 
 SwapProcessor.bind({
   address: constant.SWAP_3FER,
@@ -22,57 +26,41 @@ SwapProcessor.bind({
     const poolName = "Ferro DAI/USDC/USDT"
     const invariant = event.args.invariant
     const lpTokenSupply = event.args.lpTokenSupply
+
+    const DAI_amount = Number(tokenAmounts[0]) / Math.pow(10, 18)
+    ctx.meter.Counter("add_liquidity_amount").add(DAI_amount, { coin_symbol: "DAI", poolName })
+    const USDC_amount = Number(tokenAmounts[1]) / Math.pow(10, 6)
+    ctx.meter.Counter("add_liquidity_amount").add(USDC_amount, { coin_symbol: "USDC", poolName })
+    const USDT_amount = Number(tokenAmounts[2]) / Math.pow(10, 6)
+    ctx.meter.Counter("add_liquidity_amount").add(USDT_amount, { coin_symbol: "USDT", poolName })
+
     ctx.eventLogger.emit("AddLiquidity", {
       distinctId: provider,
       invariant,
       lpTokenSupply,
-      tokenAmounts: JSON.stringify(tokenAmounts),
-      coin_symbol: "DAI",
+      DAI_amount,
+      USDC_amount,
+      USDT_amount,
       poolName
     })
-    for (let i = 0; i < 3; i++) {
-      switch (i) {
-        case 0:
-          const DAI_amount = Number(tokenAmounts[i]) / Math.pow(10, 18)
-          ctx.meter.Counter("add_liquidity_amount").add(DAI_amount, { coin_symbol: "DAI", poolName })
-          break
-        case 1:
-          const USDC_amount = Number(tokenAmounts[i]) / Math.pow(10, 6)
-          ctx.meter.Counter("add_liquidity_amount").add(USDC_amount, { coin_symbol: "USDC", poolName })
-          break
-        case 2:
-          const USDT_amount = Number(tokenAmounts[i]) / Math.pow(10, 6)
-          ctx.meter.Counter("add_liquidity_amount").add(USDT_amount, { coin_symbol: "USDT", poolName })
-          break
-      }
-    }
   })
   .onEventRemoveLiquidity(async (event, ctx) => {
     const provider = event.args.provider
     const tokenAmounts = event.args.tokenAmounts
     const poolName = "Ferro DAI/USDC/USDT"
 
-    for (let i = 0; i < 3; i++) {
-      switch (i) {
-        case 0:
-          const DAI_amount = Number(tokenAmounts[i]) / Math.pow(10, 18)
-          ctx.meter.Counter("remove_liquidity_amount").add(DAI_amount, { coin_symbol: "DAI", poolName })
-          break
-        case 1:
-          const USDC_amount = Number(tokenAmounts[i]) / Math.pow(10, 6)
-          ctx.meter.Counter("remove_liquidity_amount").add(USDC_amount, { coin_symbol: "USDC", poolName })
-          break
-        case 2:
-          const USDT_amount = Number(tokenAmounts[i]) / Math.pow(10, 6)
-          ctx.meter.Counter("remove_liquidity_amount").add(USDT_amount, { coin_symbol: "USDT", poolName })
-          break
-      }
-    }
+    const DAI_amount = Number(tokenAmounts[0]) / Math.pow(10, 18)
+    ctx.meter.Counter("remove_liquidity_amount").add(DAI_amount, { coin_symbol: "DAI", poolName })
+    const USDC_amount = Number(tokenAmounts[1]) / Math.pow(10, 6)
+    ctx.meter.Counter("remove_liquidity_amount").add(USDC_amount, { coin_symbol: "USDC", poolName })
+    const USDT_amount = Number(tokenAmounts[2]) / Math.pow(10, 6)
+    ctx.meter.Counter("remove_liquidity_amount").add(USDT_amount, { coin_symbol: "USDT", poolName })
 
     ctx.eventLogger.emit("RemoveLiquidity", {
       distinctId: provider,
-      tokenAmounts: JSON.stringify(tokenAmounts),
-      coin_symbol: "DAI",
+      DAI_amount,
+      USDC_amount,
+      USDT_amount,
       poolName
     })
   })
@@ -101,7 +89,7 @@ SwapProcessor.bind({
     ctx.eventLogger.emit("RemoveLiquidityOne", {
       distinctId: provider,
       amount,
-      coin_symbol: "DAI",
+      coin_symbol: boughtId == 0 ? "DAI" : (boughtId == 1 ? "USDC" : "USDT"),
       poolName
     })
   })
@@ -125,8 +113,12 @@ SwapProcessor.bind({
     })
     ctx.meter.Counter("swap_vol_counter").add(volume, { coin_symbol, poolName })
     ctx.meter.Gauge("swap_vol_gauge").record(volume, { coin_symbol, poolName })
+    ctx.meter.Gauge("swap_fee_gauge").record(0.0004 * volume, { coin_symbol, poolName })
+    ctx.meter.Gauge("admin_fee_gauge").record(0.0004 * 0.5 * volume, { coin_symbol, poolName })
+
 
   })
+  .onTimeInterval(Gauge_3FER_TVL, 60, 10)
 
 
 SwapProcessor.bind({
@@ -140,47 +132,35 @@ SwapProcessor.bind({
     const poolName = "Ferro USDC/USDT"
     const invariant = event.args.invariant
     const lpTokenSupply = event.args.lpTokenSupply
+
+    const USDC_amount = Number(tokenAmounts[0]) / Math.pow(10, 6)
+    ctx.meter.Counter("add_liquidity_amount").add(USDC_amount, { coin_symbol: "USDC", poolName })
+    const USDT_amount = Number(tokenAmounts[1]) / Math.pow(10, 6)
+    ctx.meter.Counter("add_liquidity_amount").add(USDT_amount, { coin_symbol: "USDT", poolName })
+
     ctx.eventLogger.emit("AddLiquidity", {
       distinctId: provider,
       invariant,
       lpTokenSupply,
-      tokenAmounts: JSON.stringify(tokenAmounts),
+      USDC_amount,
+      USDT_amount,
       poolName
     })
-    for (let i = 0; i < 2; i++) {
-      switch (i) {
-        case 0:
-          const USDC_amount = Number(tokenAmounts[i]) / Math.pow(10, 6)
-          ctx.meter.Counter("add_liquidity_amount").add(USDC_amount, { coin_symbol: "USDC", poolName })
-          break
-        case 1:
-          const USDT_amount = Number(tokenAmounts[i]) / Math.pow(10, 6)
-          ctx.meter.Counter("add_liquidity_amount").add(USDT_amount, { coin_symbol: "USDT", poolName })
-          break
-      }
-    }
   })
   .onEventRemoveLiquidity(async (event, ctx) => {
     const provider = event.args.provider
     const tokenAmounts = event.args.tokenAmounts
     const poolName = "Ferro USDC/USDT"
+    const USDC_amount = Number(tokenAmounts[0]) / Math.pow(10, 6)
+    ctx.meter.Counter("remove_liquidity_amount").add(USDC_amount, { coin_symbol: "USDC", poolName })
+    const USDT_amount = Number(tokenAmounts[1]) / Math.pow(10, 6)
+    ctx.meter.Counter("remove_liquidity_amount").add(USDT_amount, { coin_symbol: "USDT", poolName })
 
-    for (let i = 0; i < 2; i++) {
-      switch (i) {
-        case 0:
-          const USDC_amount = Number(tokenAmounts[i]) / Math.pow(10, 6)
-          ctx.meter.Counter("remove_liquidity_amount").add(USDC_amount, { coin_symbol: "USDC", poolName })
-          break
-        case 1:
-          const USDT_amount = Number(tokenAmounts[i]) / Math.pow(10, 6)
-          ctx.meter.Counter("remove_liquidity_amount").add(USDT_amount, { coin_symbol: "USDT", poolName })
-          break
-      }
-    }
 
     ctx.eventLogger.emit("RemoveLiquidity", {
       distinctId: provider,
-      tokenAmounts: JSON.stringify(tokenAmounts),
+      USDC_amount,
+      USDT_amount,
       poolName
     })
   })
@@ -205,6 +185,7 @@ SwapProcessor.bind({
     ctx.eventLogger.emit("RemoveLiquidityOne", {
       distinctId: provider,
       amount,
+      coin_symbol: boughtId == 0 ? "USDC" : "USDT",
       poolName
     })
   })
@@ -229,8 +210,10 @@ SwapProcessor.bind({
 
     ctx.meter.Counter("swap_vol_counter").add(volume, { coin_symbol, poolName })
     ctx.meter.Gauge("swap_vol_gauge").record(volume, { coin_symbol, poolName })
-
+    ctx.meter.Gauge("swap_fee_gauge").record(0.0004 * volume, { coin_symbol, poolName })
+    ctx.meter.Gauge("admin_fee_gauge").record(0.0004 * 0.5 * volume, { coin_symbol, poolName })
   })
+  .onTimeInterval(Gauge_2FER_TVL, 60, 10)
 
 
 SwapProcessor.bind({
@@ -244,47 +227,33 @@ SwapProcessor.bind({
     const poolName = "Ferro LCRO/WCRO"
     const invariant = event.args.invariant
     const lpTokenSupply = event.args.lpTokenSupply
+    const USDC_amount = Number(tokenAmounts[0]) / Math.pow(10, 18)
+    ctx.meter.Counter("add_liquidity_amount").add(USDC_amount, { coin_symbol: "LCRO", poolName })
+    const USDT_amount = Number(tokenAmounts[1]) / Math.pow(10, 18)
+    ctx.meter.Counter("add_liquidity_amount").add(USDT_amount, { coin_symbol: "CRO", poolName })
+
     ctx.eventLogger.emit("AddLiquidity", {
       distinctId: provider,
       invariant,
       lpTokenSupply,
-      tokenAmounts: JSON.stringify(tokenAmounts),
+      USDC_amount,
+      USDT_amount,
       poolName
     })
-    for (let i = 0; i < 2; i++) {
-      switch (i) {
-        case 0:
-          const USDC_amount = Number(tokenAmounts[i]) / Math.pow(10, 18)
-          ctx.meter.Counter("add_liquidity_amount").add(USDC_amount, { coin_symbol: "LCRO", poolName })
-          break
-        case 1:
-          const USDT_amount = Number(tokenAmounts[i]) / Math.pow(10, 18)
-          ctx.meter.Counter("add_liquidity_amount").add(USDT_amount, { coin_symbol: "WCRO", poolName })
-          break
-      }
-    }
   })
   .onEventRemoveLiquidity(async (event, ctx) => {
     const provider = event.args.provider
     const tokenAmounts = event.args.tokenAmounts
     const poolName = "Ferro LCRO/WCRO"
-
-    for (let i = 0; i < 2; i++) {
-      switch (i) {
-        case 0:
-          const USDC_amount = Number(tokenAmounts[i]) / Math.pow(10, 18)
-          ctx.meter.Counter("remove_liquidity_amount").add(USDC_amount, { coin_symbol: "LCRO", poolName })
-          break
-        case 1:
-          const USDT_amount = Number(tokenAmounts[i]) / Math.pow(10, 18)
-          ctx.meter.Counter("remove_liquidity_amount").add(USDT_amount, { coin_symbol: "WCRO", poolName })
-          break
-      }
-    }
+    const USDC_amount = Number(tokenAmounts[0]) / Math.pow(10, 18)
+    ctx.meter.Counter("remove_liquidity_amount").add(USDC_amount, { coin_symbol: "LCRO", poolName })
+    const USDT_amount = Number(tokenAmounts[1]) / Math.pow(10, 18)
+    ctx.meter.Counter("remove_liquidity_amount").add(USDT_amount, { coin_symbol: "CRO", poolName })
 
     ctx.eventLogger.emit("RemoveLiquidity", {
       distinctId: provider,
-      tokenAmounts: JSON.stringify(tokenAmounts),
+      USDC_amount,
+      USDT_amount,
       poolName
     })
   })
@@ -302,13 +271,14 @@ SwapProcessor.bind({
         break
       case 1:
         amount = Number(tokensBought) / Math.pow(10, 18)
-        ctx.meter.Counter("remove_liquidity_amount").add(amount, { coin_symbol: "WCRO", poolName })
+        ctx.meter.Counter("remove_liquidity_amount").add(amount, { coin_symbol: "CRO", poolName })
         break
 
     }
     ctx.eventLogger.emit("RemoveLiquidityOne", {
       distinctId: provider,
       amount,
+      coin_symbol: boughtId == 0 ? "LCRO" : "WCRO",
       poolName
     })
   })
@@ -333,18 +303,15 @@ SwapProcessor.bind({
     })
     ctx.meter.Counter("swap_vol_counter").add(volume, { coin_symbol, poolName })
     ctx.meter.Gauge("swap_vol_gauge").record(volume, { coin_symbol, poolName })
-
+    ctx.meter.Gauge("swap_fee_gauge").record(0.0004 * volume, { coin_symbol, poolName })
+    ctx.meter.Gauge("admin_fee_gauge").record(0.0004 * 0.5 * volume, { coin_symbol, poolName })
 
   })
+  .onTimeInterval(Gauge_LCRO_WCRO_TVL, 60, 10)
 
 
 
-
-
-
-
-
-
+//pool
 FerroFarmProcessor.bind({
   address: constant.FerroFarm,
   network: EthChainId.CRONOS
@@ -373,7 +340,7 @@ FerroFarmProcessor.bind({
 
   })
 
-
+//vault
 FerroBoostProcessor.bind({
   address: constant.FerroBoost,
   network: EthChainId.CRONOS
@@ -408,6 +375,8 @@ FerroBoostProcessor.bind({
       amount,
       weightedAmount
     })
+
+    //TODO(ye): get pid
     ctx.meter.Counter("vault_counter").sub(amount, {})
 
   })
@@ -416,11 +385,11 @@ FerroBoostProcessor.bind({
 
 const transferEventHandler = async (event: TransferEvent, ctx: FerContext | FerroBarContext) => {
   ctx.eventLogger.emit("TransferFrom", {
-    address: event.args.from.toLowerCase(),
+    user_address: event.args.from.toLowerCase(),
     amount: - Number(event.args.value) / Math.pow(10, 18)
   })
   ctx.eventLogger.emit("TransferTo", {
-    address: event.args.to.toLowerCase(),
+    user_address: event.args.to.toLowerCase(),
     amount: Number(event.args.value) / Math.pow(10, 18)
   })
 }

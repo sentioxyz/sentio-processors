@@ -5,18 +5,6 @@ export const INCENTIVE_LIQUIDITY_ADDRESS = "0xDeBe511Ee37DbC8eC57d39B69F5b28d1Cb
 export const TREASURY_ADDRESS = "0xe13570350a704774AC5f04728E2E631589B4740C".toLowerCase()
 
 
-// export const SWAP_MAP: { [address: string]: { name: string } } = {
-//     SWAP_3FER: {
-//         name: "3FER_USDT"
-//     },
-//     SWAP_2FER: {
-//         name: "2FER_USDT"
-//     },
-//     SWAP_3FER: {
-//         name: "3FER_USDT"
-//     },
-// }
-
 export const SWAP_3FER = "0xe8d13664a42B338F009812Fa5A75199A865dA5cD".toLowerCase()
 export const SWAP_2FER = "0xa34C0fE36541fB085677c36B4ff0CCF5fa2B32d6".toLowerCase()
 export const SWAP_LCRO_WCRO = "0x1578C5CF4f8f6064deb167d1eeAD15dF43185afa".toLowerCase()
@@ -33,3 +21,17 @@ export const FerroMaker = "0xA26A0105C269B6ddaAE8B343C9fD789a9034F72E".toLowerCa
 export const TEAM_VESTING = "0xB5c745f15A31Ea431360A71c75490CdcBae67b86 ".toLowerCase()
 
 export const FerroToken = "0x39bC1e38c842C60775Ce37566D03B41A7A66C782".toLowerCase()
+
+
+
+// export const SWAP_MAP: { [address: string]: { name: string } } = {
+//     SWAP_3FER: {
+//         name: "3FER_USDT"
+//     },
+//     SWAP_2FER: {
+//         name: "2FER_USDT"
+//     },
+//     SWAP_3FER: {
+//         name: "3FER_USDT"
+//     },
+// }
