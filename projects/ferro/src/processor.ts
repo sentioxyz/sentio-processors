@@ -14,10 +14,11 @@ import { PoolProcessor } from "./types/eth/pool.js"
 import { Gauge_3FER_TVL, Gauge_2FER_TVL, Gauge_LCRO_WCRO_TVL } from './helper/gaugeTVL.js'
 
 
-
+//Ferro DAI/USDC/USDT Swap
 SwapProcessor.bind({
   address: constant.SWAP_3FER,
-  network: EthChainId.CRONOS
+  network: EthChainId.CRONOS,
+  //startBlock: 8400000
 })
   .onEventAddLiquidity(async (event: AddLiquidityEvent, ctx: SwapContext) => {
     const provider = event.args.provider
@@ -120,10 +121,11 @@ SwapProcessor.bind({
   })
   .onTimeInterval(Gauge_3FER_TVL, 60, 10)
 
-
+//Ferro USDC/USDT Swap
 SwapProcessor.bind({
   address: constant.SWAP_2FER,
-  network: EthChainId.CRONOS
+  network: EthChainId.CRONOS,
+  //startBlock: 8400000
 })
   .onEventAddLiquidity(async (event: AddLiquidityEvent, ctx: SwapContext) => {
     const provider = event.args.provider
@@ -215,10 +217,11 @@ SwapProcessor.bind({
   })
   .onTimeInterval(Gauge_2FER_TVL, 60, 10)
 
-
+//LCRO-WCRO Swap
 SwapProcessor.bind({
   address: constant.SWAP_LCRO_WCRO,
-  network: EthChainId.CRONOS
+  network: EthChainId.CRONOS,
+  //startBlock: 8400000
 })
   .onEventAddLiquidity(async (event: AddLiquidityEvent, ctx: SwapContext) => {
     const provider = event.args.provider
@@ -227,17 +230,17 @@ SwapProcessor.bind({
     const poolName = "Ferro LCRO/WCRO"
     const invariant = event.args.invariant
     const lpTokenSupply = event.args.lpTokenSupply
-    const USDC_amount = Number(tokenAmounts[0]) / Math.pow(10, 18)
-    ctx.meter.Counter("add_liquidity_amount").add(USDC_amount, { coin_symbol: "LCRO", poolName })
-    const USDT_amount = Number(tokenAmounts[1]) / Math.pow(10, 18)
-    ctx.meter.Counter("add_liquidity_amount").add(USDT_amount, { coin_symbol: "CRO", poolName })
+    const LCRO_amount = Number(tokenAmounts[0]) / Math.pow(10, 18)
+    ctx.meter.Counter("add_liquidity_amount").add(LCRO_amount, { coin_symbol: "LCRO", poolName })
+    const WCRO_amount = Number(tokenAmounts[1]) / Math.pow(10, 18)
+    ctx.meter.Counter("add_liquidity_amount").add(WCRO_amount, { coin_symbol: "CRO", poolName })
 
     ctx.eventLogger.emit("AddLiquidity", {
       distinctId: provider,
       invariant,
       lpTokenSupply,
-      USDC_amount,
-      USDT_amount,
+      LCRO_amount,
+      WCRO_amount,
       poolName
     })
   })
@@ -245,15 +248,15 @@ SwapProcessor.bind({
     const provider = event.args.provider
     const tokenAmounts = event.args.tokenAmounts
     const poolName = "Ferro LCRO/WCRO"
-    const USDC_amount = Number(tokenAmounts[0]) / Math.pow(10, 18)
-    ctx.meter.Counter("remove_liquidity_amount").add(USDC_amount, { coin_symbol: "LCRO", poolName })
-    const USDT_amount = Number(tokenAmounts[1]) / Math.pow(10, 18)
-    ctx.meter.Counter("remove_liquidity_amount").add(USDT_amount, { coin_symbol: "CRO", poolName })
+    const LCRO_amount = Number(tokenAmounts[0]) / Math.pow(10, 18)
+    ctx.meter.Counter("remove_liquidity_amount").add(LCRO_amount, { coin_symbol: "LCRO", poolName })
+    const WCRO_amount = Number(tokenAmounts[1]) / Math.pow(10, 18)
+    ctx.meter.Counter("remove_liquidity_amount").add(WCRO_amount, { coin_symbol: "CRO", poolName })
 
     ctx.eventLogger.emit("RemoveLiquidity", {
       distinctId: provider,
-      USDC_amount,
-      USDT_amount,
+      LCRO_amount,
+      WCRO_amount,
       poolName
     })
   })
@@ -278,7 +281,7 @@ SwapProcessor.bind({
     ctx.eventLogger.emit("RemoveLiquidityOne", {
       distinctId: provider,
       amount,
-      coin_symbol: boughtId == 0 ? "LCRO" : "WCRO",
+      coin_symbol: boughtId == 0 ? "LCRO" : "CRO",
       poolName
     })
   })
@@ -287,7 +290,7 @@ SwapProcessor.bind({
     const soldId = Number(event.args.soldId)
     const tokensSold = Number(event.args.tokensSold) / Math.pow(10, 18)
     const tokensBought = Number(event.args.tokensBought) / Math.pow(10, 18)
-    const coin_symbol = soldId == 0 ? "LCRO" : "WCRO"
+    const coin_symbol = soldId == 0 ? "LCRO" : "CRO"
     const cro_price = Number(await getPriceBySymbol("CRO", ctx.timestamp))
     const volume = soldId == 1 ? tokensSold * cro_price : tokensBought & cro_price
 
@@ -314,12 +317,13 @@ SwapProcessor.bind({
 //pool
 FerroFarmProcessor.bind({
   address: constant.FerroFarm,
-  network: EthChainId.CRONOS
+  network: EthChainId.CRONOS,
+  //startBlock: 8400000
 })
   .onEventDeposit(async (event, ctx) => {
     const user = event.args.user
     const pid = Number(event.args.pid)
-    const amount = Number(event.args.amount)
+    const amount = Number(event.args.amount) / Math.pow(10, 18)
     ctx.eventLogger.emit("PoolDeposit", {
       distinctId: user,
       pid,
@@ -330,7 +334,7 @@ FerroFarmProcessor.bind({
   .onEventWithdraw(async (event, ctx) => {
     const user = event.args.user
     const pid = Number(event.args.pid)
-    const amount = Number(event.args.amount)
+    const amount = Number(event.args.amount) / Math.pow(10, 18)
     ctx.eventLogger.emit("PoolWithdraw", {
       distinctId: user,
       pid,
@@ -343,14 +347,15 @@ FerroFarmProcessor.bind({
 //vault
 FerroBoostProcessor.bind({
   address: constant.FerroBoost,
-  network: EthChainId.CRONOS
+  network: EthChainId.CRONOS,
+  //startBlock: 8400000
 })
   .onEventDeposit(async (event, ctx) => {
     const user = event.args.user
     const pid = Number(event.args.pid)
-    const amount = Number(event.args.amount)
+    const amount = Number(event.args.amount) / Math.pow(10, 18)
     const stakeId = Number(event.args.stakeId)
-    const weightedAmount = Number(event.args.weightedAmount)
+    const weightedAmount = Number(event.args.weightedAmount) / Math.pow(10, 18)
     const unlockTimestamp = Number(event.args.unlockTimestamp)
     ctx.eventLogger.emit("VaultDeposit", {
       distinctId: user,
@@ -365,9 +370,9 @@ FerroBoostProcessor.bind({
   })
   .onEventWithdraw(async (event, ctx) => {
     const user = event.args.user
-    const amount = Number(event.args.amount)
+    const amount = Number(event.args.amount) / Math.pow(10, 18)
     const stakeId = Number(event.args.stakeId)
-    const weightedAmount = Number(event.args.weightedAmount)
+    const weightedAmount = Number(event.args.weightedAmount) / Math.pow(10, 18)
 
     ctx.eventLogger.emit("VaultWithdraw", {
       distinctId: user,
@@ -398,29 +403,42 @@ const transferEventHandler = async (event: TransferEvent, ctx: FerContext | Ferr
 //$FER
 FerProcessor.bind({
   address: constant.FerroToken,
-  network: EthChainId.CRONOS
+  network: EthChainId.CRONOS,
+  //startBlock: 8400000
 })
-  .onEventTransfer(transferEventHandler)
+  // .onEventTransfer(transferEventHandler)
   .onTimeInterval(async (_, ctx) => {
-    const totalSupply = Number(await ctx.contract.totalSupply()) / Math.pow(10, 18)
-    const teamBalance = Number(await ctx.contract.balanceOf(constant.TEAM_ADDRESS)) / Math.pow(10, 18)
-    const marketCap = totalSupply - teamBalance
-    ctx.meter.Gauge("FER_marketCap").record(marketCap, { coin_symbol: "FER" })
-    ctx.meter.Gauge("FER_totalSupply").record(totalSupply, { coin_symbol: "FER" })
-
+    try {
+      const totalSupply = Number(await ctx.contract.totalSupply()) / Math.pow(10, 18)
+      let teamBalance = 0
+      for (let i = 0; i < constant.TEAM_WALLETS.length; i++) {
+        teamBalance += Number(await ctx.contract.balanceOf(constant.TEAM_WALLETS[i])) / Math.pow(10, 18)
+      }
+      const marketCap = totalSupply - teamBalance
+      ctx.meter.Gauge("FER_marketCap").record(marketCap, { coin_symbol: "FER" })
+      ctx.meter.Gauge("FER_totalSupply").record(totalSupply, { coin_symbol: "FER" })
+    }
+    catch (e) { console.log(`gauge FER error at ${ctx.transactionHash}`) }
   }, 60, 10)
 //$xFER
 FerroBarProcessor.bind({
   address: constant.FerroBar,
-  network: EthChainId.CRONOS
+  network: EthChainId.CRONOS,
+  //startBlock: 8400000
 })
-  .onEventTransfer(transferEventHandler)
+  // .onEventTransfer(transferEventHandler)
   .onTimeInterval(async (_, ctx) => {
-    const totalSupply = Number(await ctx.contract.totalSupply()) / Math.pow(10, 18)
-    const teamBalance = Number(await ctx.contract.balanceOf(constant.TEAM_ADDRESS)) / Math.pow(10, 18)
-    const marketCap = totalSupply - teamBalance
-    ctx.meter.Gauge("xFER_marketCap").record(marketCap, { coin_symbol: "xFER" })
-    ctx.meter.Gauge("xFER_totalSupply").record(totalSupply, { coin_symbol: "xFER" })
+    try {
+      const totalSupply = Number(await ctx.contract.totalSupply()) / Math.pow(10, 18)
+      ctx.meter.Gauge("xFER_totalSupply").record(totalSupply, { coin_symbol: "xFER" })
+      let teamBalance = 0
+      for (let i = 0; i < constant.TEAM_WALLETS.length; i++) {
+        teamBalance += Number(await ctx.contract.balanceOf(constant.TEAM_WALLETS[i])) / Math.pow(10, 18)
+      }
+      const marketCap = totalSupply - teamBalance
+      ctx.meter.Gauge("xFER_marketCap").record(marketCap, { coin_symbol: "xFER" })
+    }
+    catch (e) { console.log(`gauge xFER error at ${ctx.transactionHash}`) }
   }, 60, 10)
 
 
