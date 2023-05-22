@@ -374,15 +374,18 @@ FerroBoostProcessor.bind({
     const stakeId = Number(event.args.stakeId)
     const weightedAmount = Number(event.args.weightedAmount) / Math.pow(10, 18)
 
+    const stake = await ctx.contract.getUserStake(user, stakeId)
+    const pid = Number(stake[1])
     ctx.eventLogger.emit("VaultWithdraw", {
       distinctId: user,
       stakeId,
+      pid,
       amount,
       weightedAmount
     })
 
     //TODO(ye): get pid
-    ctx.meter.Counter("vault_counter").sub(amount, {})
+    ctx.meter.Counter("vault_counter").sub(amount, { pid: pid.toString() })
 
   })
 
@@ -390,10 +393,12 @@ FerroBoostProcessor.bind({
 
 const transferEventHandler = async (event: TransferEvent, ctx: FerContext | FerroBarContext) => {
   ctx.eventLogger.emit("Transfer", {
+    distinctId: event.args.from.toLowerCase(),
     user_address: event.args.from.toLowerCase(),
     amount: - Number(event.args.value) / Math.pow(10, 18)
   })
   ctx.eventLogger.emit("Transfer", {
+    distinctId: event.args.to.toLowerCase(),
     user_address: event.args.to.toLowerCase(),
     amount: Number(event.args.value) / Math.pow(10, 18)
   })
