@@ -73,9 +73,7 @@ export async function buildPoolInfo(ctx: SuiContext | SuiObjectContext, pool: st
     let [symbol_a, symbol_b, decimal_a, decimal_b, pairName, type, fee_label] = ["", "", 0, 0, "", "", "", "NaN"]
 
     //pool not in list
-    if (!constant.POOLS_INFO_MAINNET.includes(pool)) {
-        console.log(`Pool not in array ${pool}`)
-    }
+
     const obj = await ctx.client.getObject({ id: pool, options: { showType: true, showContent: true } })
     type = obj.data.type
     if (obj.data.content.fields.fee_rate) {
@@ -121,8 +119,8 @@ export async function getPoolPrice(ctx: SuiContext | SuiObjectContext, pool: str
     const pairName = poolInfo.pairName
     const coin_b2a_price = 1 / (Number(current_sqrt_price) ** 2) * (2 ** 128) * 10 ** (poolInfo.decimal_b - poolInfo.decimal_a)
     const coin_a2b_price = 1 / coin_b2a_price
-    ctx.meter.Gauge("a2b_price").record(coin_a2b_price, { pairName })
-    ctx.meter.Gauge("b2a_price").record(coin_b2a_price, { pairName })
+    ctx.meter.Gauge("a2b_price").record(coin_a2b_price, { pairName, vertical: "dex", project: "cetus" })
+    ctx.meter.Gauge("b2a_price").record(coin_b2a_price, { pairName, vertical: "dex", project: "cetus" })
     return coin_a2b_price
 }
 

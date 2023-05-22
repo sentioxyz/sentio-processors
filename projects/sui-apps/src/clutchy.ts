@@ -13,8 +13,8 @@ orderbook.bind({
   startCheckpoint: 1500000n
 })
   .onEventTradeFilledEvent(async (event, ctx) => {
-    ctx.meter.Counter("order_filled_tx").add(1, { project: "clutchy" })
-    ctx.meter.Counter("total_tx").add(1, { project: "clutchy" })
+    ctx.meter.Counter("order_filled_tx").add(1, { vertical: "nft", project: "clutchy" })
+    ctx.meter.Counter("total_tx").add(1, { vertical: "nft", project: "clutchy" })
 
     const buyer_kiosk = event.data_decoded.buyer_kiosk
     const buyer = event.data_decoded.buyer
@@ -29,8 +29,8 @@ orderbook.bind({
     const collectionName = getCollectionName(nft_type)
     const nftName = await getNftName(ctx, nft)
 
-    ctx.meter.Gauge("order_filled_gauge").record(price, { coin_symbol: "SUI", project: "clutchy" })
-    ctx.meter.Counter("order_filled_counter").add(price, { coin_symbol: "SUI", project: "clutchy" })
+    ctx.meter.Gauge("order_filled_gauge").record(price, { coin_symbol: "SUI", vertical: "nft", project: "clutchy" })
+    ctx.meter.Counter("order_filled_counter").add(price, { coin_symbol: "SUI", vertical: "nft", project: "clutchy" })
 
     ctx.eventLogger.emit("OrderFilled", {
       distinctId: buyer,
@@ -46,7 +46,7 @@ orderbook.bind({
       ft_type,
       nftName,
       coin_symbol: "SUI",
-      project: "clutchy",
+      vertical: "nft", project: "clutchy",
       message: `${nftName} order filled for ${price}, to ${buyer} from ${seller}`
     })
   })
@@ -58,8 +58,8 @@ mint_event.bind({
   startCheckpoint: 1500000n
 })
   .onEventMintEvent(async (event, ctx) => {
-    ctx.meter.Counter("mint_counter").add(1, { project: "clutchy" })
-    ctx.meter.Counter("total_tx").add(1, { project: "clutchy" })
+    ctx.meter.Counter("mint_counter").add(1, { vertical: "nft", project: "clutchy" })
+    ctx.meter.Counter("total_tx").add(1, { vertical: "nft", project: "clutchy" })
 
     const collection_id = event.data_decoded.collection_id
     const object = event.data_decoded.object
@@ -67,12 +67,12 @@ mint_event.bind({
       distinctId: ctx.transaction.transaction.data.sender,
       collection_id,
       object,
-      project: "clutchy"
+      vertical: "nft", project: "clutchy"
     })
   })
   .onEventBurnEvent(async (event, ctx) => {
-    ctx.meter.Counter("burn_counter").add(1, { project: "clutchy" })
-    ctx.meter.Counter("total_tx").add(1, { project: "clutchy" })
+    ctx.meter.Counter("burn_counter").add(1, { vertical: "nft", project: "clutchy" })
+    ctx.meter.Counter("total_tx").add(1, { vertical: "nft", project: "clutchy" })
 
     const collection_id = event.data_decoded.collection_id
     const object = event.data_decoded.object
@@ -80,7 +80,7 @@ mint_event.bind({
       distinctId: ctx.transaction.transaction.data.sender,
       collection_id,
       object,
-      project: "clutchy"
+      vertical: "nft", project: "clutchy"
     })
   })
 
@@ -91,30 +91,30 @@ listing.bind({
   startCheckpoint: 1500000n
 })
   .onEventCreateListingEvent(async (event, ctx) => {
-    ctx.meter.Counter("create_listing_counter").add(1, { project: "clutchy" })
-    ctx.meter.Counter("total_tx").add(1, { project: "clutchy" })
+    ctx.meter.Counter("create_listing_counter").add(1, { vertical: "nft", project: "clutchy" })
+    ctx.meter.Counter("total_tx").add(1, { vertical: "nft", project: "clutchy" })
 
     const listing_id = event.data_decoded.listing_id
     ctx.eventLogger.emit("CreateListing", {
       distinctId: ctx.transaction.transaction.data.sender,
       listing_id,
-      project: "clutchy"
+      vertical: "nft", project: "clutchy"
     })
   })
   .onEventDeleteListingEvent(async (event, ctx) => {
-    ctx.meter.Counter("delete_listing_counter").add(1, { project: "clutchy" })
-    ctx.meter.Counter("total_tx").add(1, { project: "clutchy" })
+    ctx.meter.Counter("delete_listing_counter").add(1, { vertical: "nft", project: "clutchy" })
+    ctx.meter.Counter("total_tx").add(1, { vertical: "nft", project: "clutchy" })
 
     const listing_id = event.data_decoded.listing_id
     ctx.eventLogger.emit("DeleteListing", {
       distinctId: ctx.transaction.transaction.data.sender,
       listing_id,
-      project: "clutchy"
+      vertical: "nft", project: "clutchy"
     })
   })
   .onEventNftSoldEvent(async (event, ctx) => {
-    ctx.meter.Counter("nft_sold_counter").add(1, { project: "clutchy" })
-    ctx.meter.Counter("total_tx").add(1, { project: "clutchy" })
+    ctx.meter.Counter("nft_sold_counter").add(1, { vertical: "nft", project: "clutchy" })
+    ctx.meter.Counter("total_tx").add(1, { vertical: "nft", project: "clutchy" })
 
     const nft = event.data_decoded.nft
     const price = Number(event.data_decoded.price) / Math.pow(10, 9)
@@ -132,7 +132,7 @@ listing.bind({
       nft_type,
       collectionName,
       nftName,
-      project: "clutchy",
+      vertical: "nft", project: "clutchy",
       message: `${nftName} ${collectionName} sold for ${price}, to ${buyer}`
     })
   })

@@ -12,31 +12,31 @@ marketplace.bind({
   startCheckpoint: 1500000n
 })
   .onEventListingEvent(async (event, ctx) => {
-    ctx.meter.Counter("listing_counter").add(1, { project: "bluemove" })
-    ctx.meter.Counter("total_tx").add(1, { project: "bluemove" })
+    ctx.meter.Counter("listing_counter").add(1, { vertical: "nft", project: "bluemove" })
+    ctx.meter.Counter("total_tx").add(1, { vertical: "nft", project: "bluemove" })
 
     ctx.eventLogger.emit("Listing", {
       distinctId: event.data_decoded.seller,
       amount: Number(event.data_decoded.amount) / Math.pow(10, 9),
       item_id: event.data_decoded.item_id,
       nft_type: event.data_decoded.nft_type,
-      project: "bluemove"
+      vertical: "nft", project: "bluemove"
     })
 
   })
   .onEventDeListEvent(async (event, ctx) => {
-    ctx.meter.Counter("delist_counter").add(1, { project: "bluemove" })
-    ctx.meter.Counter("total_tx").add(1, { project: "bluemove" })
+    ctx.meter.Counter("delist_counter").add(1, { vertical: "nft", project: "bluemove" })
+    ctx.meter.Counter("total_tx").add(1, { vertical: "nft", project: "bluemove" })
     ctx.eventLogger.emit("Delist", {
       distinctId: event.data_decoded.seller,
       item_id: event.data_decoded.item_id,
       nft_type: event.data_decoded.nft_type,
-      project: "bluemove"
+      vertical: "nft", project: "bluemove"
     })
   })
   .onEventBuyEvent(async (event, ctx) => {
-    ctx.meter.Counter("order_filled_tx").add(1, { project: "bluemove" })
-    ctx.meter.Counter("total_tx").add(1, { project: "bluemove" })
+    ctx.meter.Counter("order_filled_tx").add(1, { vertical: "nft", project: "bluemove" })
+    ctx.meter.Counter("total_tx").add(1, { vertical: "nft", project: "bluemove" })
     const item_id = event.data_decoded.item_id
     const price = Number(event.data_decoded.amount) / Math.pow(10, 9)
     const buyer = event.data_decoded.buyer
@@ -51,13 +51,13 @@ marketplace.bind({
       collectionName,
       nftName,
       coin_symbol: "SUI",
-      project: "bluemove",
+      vertical: "nft", project: "bluemove",
       message: `buy ${nftName} ${collectionName} for ${price}, to ${buyer}`
     })
 
 
-    ctx.meter.Gauge("order_filled_gauge").record(price, { coin_symbol: "SUI", project: "bluemove" })
-    ctx.meter.Counter("order_filled_counter").add(price, { coin_symbol: "SUI", project: "bluemove" })
+    ctx.meter.Gauge("order_filled_gauge").record(price, { coin_symbol: "SUI", vertical: "nft", project: "bluemove" })
+    ctx.meter.Counter("order_filled_counter").add(price, { coin_symbol: "SUI", vertical: "nft", project: "bluemove" })
 
 
   })
@@ -69,26 +69,26 @@ bluemove_launchpad.bind({
   startCheckpoint: 1500000n
 })
   .onEventMintNFTEvent(async (event, ctx) => {
-    ctx.meter.Counter("mint_counter").add(1, { project: "bluemove" })
-    ctx.meter.Counter("total_tx").add(1, { project: "bluemove" })
+    ctx.meter.Counter("mint_counter").add(1, { vertical: "nft", project: "bluemove" })
+    ctx.meter.Counter("total_tx").add(1, { vertical: "nft", project: "bluemove" })
     const name = event.data_decoded.name
     const object_id = event.data_decoded.object_id
     ctx.eventLogger.emit("MintEvent", {
       distinctId: event.data_decoded.creator,
       name,
       object_id,
-      project: "bluemove"
+      vertical: "nft", project: "bluemove"
     })
   })
   .onEventBurnEvent(async (event, ctx) => {
     ctx.meter.Counter("burn_counter").add(1)
-    ctx.meter.Counter("total_tx").add(1, { project: "bluemove" })
+    ctx.meter.Counter("total_tx").add(1, { vertical: "nft", project: "bluemove" })
     const nft_name = event.data_decoded.nft_name
     const object_id = event.data_decoded.object_id
     ctx.eventLogger.emit("BurnEvent", {
       distinctId: event.data_decoded.sender,
       nft_name,
       object_id,
-      project: "bluemove"
+      vertical: "nft", project: "bluemove"
     })
   })

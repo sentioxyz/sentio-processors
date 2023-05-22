@@ -1,5 +1,5 @@
 import { pool } from "./types/sui/launchpad.js"
-import * as constant from './constant.js'
+import * as constant from './constant-cetus.js'
 import * as helper from './helper/cetus-clmm.js'
 import { getPoolMetadata } from "./helper/cetus-launchpad.js"
 import { SuiChainId } from "@sentio/sdk"
@@ -15,8 +15,8 @@ pool.bind({
         const pairName = poolInfo.symbol_a + "-" + poolInfo.symbol_b
         //sui amount
         const amount = Number(event.data_decoded.amount) / Math.pow(10, poolInfo.decimal_b)
-        ctx.meter.Counter("purchase_tx_counter").add(1, { pairName })
-        ctx.meter.Gauge("purchase_amt_gauge").record(amount, { pairName })
+        ctx.meter.Counter("purchase_tx_counter").add(1, { pairName, vertical: "dex", project: "cetus" })
+        ctx.meter.Gauge("purchase_amt_gauge").record(amount, { pairName, vertical: "dex", project: "cetus" })
 
         const metadata = await getPoolMetadata(ctx, pool_id)
         const softcap = metadata.softcap / Math.pow(10, poolInfo.decimal_b)

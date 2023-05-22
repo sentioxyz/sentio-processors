@@ -389,11 +389,11 @@ FerroBoostProcessor.bind({
 
 
 const transferEventHandler = async (event: TransferEvent, ctx: FerContext | FerroBarContext) => {
-  ctx.eventLogger.emit("TransferFrom", {
+  ctx.eventLogger.emit("Transfer", {
     user_address: event.args.from.toLowerCase(),
     amount: - Number(event.args.value) / Math.pow(10, 18)
   })
-  ctx.eventLogger.emit("TransferTo", {
+  ctx.eventLogger.emit("Transfer", {
     user_address: event.args.to.toLowerCase(),
     amount: Number(event.args.value) / Math.pow(10, 18)
   })
@@ -406,7 +406,7 @@ FerProcessor.bind({
   network: EthChainId.CRONOS,
   //startBlock: 8400000
 })
-  // .onEventTransfer(transferEventHandler)
+  .onEventTransfer(transferEventHandler)
   .onTimeInterval(async (_, ctx) => {
     try {
       const totalSupply = Number(await ctx.contract.totalSupply()) / Math.pow(10, 18)
@@ -426,7 +426,7 @@ FerroBarProcessor.bind({
   network: EthChainId.CRONOS,
   //startBlock: 8400000
 })
-  // .onEventTransfer(transferEventHandler)
+  .onEventTransfer(transferEventHandler)
   .onTimeInterval(async (_, ctx) => {
     try {
       const totalSupply = Number(await ctx.contract.totalSupply()) / Math.pow(10, 18)

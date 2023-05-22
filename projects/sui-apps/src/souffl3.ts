@@ -12,8 +12,8 @@ Market.bind({
   startCheckpoint: 1500000n
 })
   .onEventBuyEvent(async (event, ctx) => {
-    ctx.meter.Counter("order_filled_tx").add(1, { project: "souffl3" })
-    ctx.meter.Counter("total_tx").add(1, { project: "souffl3" })
+    ctx.meter.Counter("order_filled_tx").add(1, { vertical: "nft", project: "souffl3" })
+    ctx.meter.Counter("total_tx").add(1, { vertical: "nft", project: "souffl3" })
     const listing_id = event.data_decoded.listing_id
     const price = Number(event.data_decoded.price) / Math.pow(10, 9)
     const buyer = event.data_decoded.buyer
@@ -34,17 +34,17 @@ Market.bind({
       nftName,
       marketplace,
       coin_symbol: "SUI",
-      project: "souffl3",
+      vertical: "nft", project: "souffl3",
       message: `buy ${nftName} ${collectionName} for ${price}, to ${buyer} from ${seller}`
     })
 
 
-    ctx.meter.Gauge("order_filled_gauge").record(price, { coin_symbol: "SUI", project: "souffl3" })
-    ctx.meter.Counter("order_filled_counter").add(price, { coin_symbol: "SUI", project: "souffl3" })
+    ctx.meter.Gauge("order_filled_gauge").record(price, { coin_symbol: "SUI", vertical: "nft", project: "souffl3" })
+    ctx.meter.Counter("order_filled_counter").add(price, { coin_symbol: "SUI", vertical: "nft", project: "souffl3" })
   })
   .onEventListEvent(async (event, ctx) => {
-    ctx.meter.Counter("listing_counter").add(1, { project: "souffl3" })
-    ctx.meter.Counter("total_tx").add(1, { project: "souffl3" })
+    ctx.meter.Counter("listing_counter").add(1, { vertical: "nft", project: "souffl3" })
+    ctx.meter.Counter("total_tx").add(1, { vertical: "nft", project: "souffl3" })
 
     ctx.eventLogger.emit("Listing", {
       distinctId: event.data_decoded.seller,
@@ -53,20 +53,20 @@ Market.bind({
       nft_id: event.data_decoded.nft_id,
       marketplace: event.data_decoded.marketplace,
       does_royalty: event.data_decoded.does_royalty,
-      project: "souffl3"
+      vertical: "nft", project: "souffl3"
     })
 
   })
   .onEventDelistEvent(async (event, ctx) => {
-    ctx.meter.Counter("delist_counter").add(1, { project: "souffl3" })
-    ctx.meter.Counter("total_tx").add(1, { project: "souffl3" })
+    ctx.meter.Counter("delist_counter").add(1, { vertical: "nft", project: "souffl3" })
+    ctx.meter.Counter("total_tx").add(1, { vertical: "nft", project: "souffl3" })
 
     ctx.eventLogger.emit("Delist", {
       distinctId: event.data_decoded.seller,
       listing_id: event.data_decoded.listing_id,
       nft_id: event.data_decoded.nft_id,
       marketplace: event.data_decoded.marketplace,
-      project: "souffl3"
+      vertical: "nft", project: "souffl3"
     })
   })
 
