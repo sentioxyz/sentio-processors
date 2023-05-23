@@ -84,6 +84,7 @@ async function recordSymbols(ctx: EthContext, symbolManagerContract: SymbolManag
       })
     }
   } catch (e) {
+    console.log("symbol" + eventName + ctx.blockNumber)
     console.log(e)
   }
 }
@@ -102,7 +103,7 @@ async function recordSymbolsForTrade(
     const symbolContract = getSymbolImplementationFuturesContractOnContext(ctx, symbol)
     const symbolId = await symbolContract.symbolId()
     const symbolName = await symbolContract.symbol()
-    if (isSettled(evt, symbolId,activeSymbols)) {
+    if (isSettled(evt, symbolId, activeSymbols)) {
       const type = symbolType(symbolName)
       if (type == "futures" || type == "option" || type == "power") {
         const netVolume = await symbolContract.netVolume()
@@ -115,7 +116,14 @@ async function recordSymbolsForTrade(
         const nPositionHolders = await symbolContract.nPositionHolders()
         const lastNetVolume = await symbolContract.lastNetVolume()
         const lastNetVolumeBlock = await symbolContract.lastNetVolumeBlock()
-        const openVolume = await symbolContract.openVolume()
+        var openVolume
+        try {
+         openVolume = await symbolContract.openVolume()
+        } catch (e) {
+          console.log("error fetching openVolume")
+          console.log(e)
+        }
+
         const positions = await symbolContract.positions(pTokenId)
         
         ctx.eventLogger.emit(evt.name + "_Symbol", {
@@ -131,7 +139,9 @@ async function recordSymbolsForTrade(
           lastNetVolumeBlock,
           openVolume,
           symbol,
-          positions
+          volume: positions.volume,
+          cost: positions.cost,
+          "popositions-cumulativeFundingPerVolume": positions.cumulativeFundingPerVolume
         })
       } else {
         const symbolGammaContract = getSymbolImplementationGammaContractOnContext(ctx, symbol)
@@ -159,12 +169,18 @@ async function recordSymbolsForTrade(
           netCost,
           nPositionHolders,
           symbol,
-          positions
+          powerVolume: positions.powerVolume,
+          realFuturesVolume: positions.realFuturesVolume,
+          cost: positions.cost,
+          "positions-cumulaitveFundingPerPowerVolume": positions.cumulaitveFundingPerPowerVolume,
+          "positions-cumulativeFundingPerRealFuturesVolume": positions.cumulativeFundingPerRealFuturesVolume
         })
       }
     }
   }
 } catch (e) {
+  console.log(evt)
+  console.log("symbol" + evt.name + ctx.blockNumber)
   console.log(e)
 }
 }
@@ -264,6 +280,7 @@ async function onImplementation(evt: NewImplementationEvent, ctx: PoolContext) {
       message: "new implementation deployed"
     })
   } catch (e) {
+    console.log(evt.name)
     console.log(e)
   }
 }
@@ -308,14 +325,14 @@ async function onChangeLiquidity(evt: AddLiquidityEvent | RemoveLiquidityEvent, 
 
     // markets in
     const marketsIn = await vaultContract.getMarketsIn()
-    recordMarketsIn(ctx, marketsIn, evt.name, vault, oracleContract)
+    await recordMarketsIn(ctx, marketsIn, evt.name, vault, oracleContract)
 
     //symbol manager
     const symbolManager = await poolContract.symbolManager()
     const symbolManagerContract = await getSymbolManagerImplementationContractOnContext(ctx, symbolManager)
     const initialMarginRequired = await symbolManagerContract.initialMarginRequired()
 
-    recordSymbols(ctx, symbolManagerContract, evt.name) 
+    await recordSymbols(ctx, symbolManagerContract, evt.name) 
 
     ctx.eventLogger.emit(evt.name, {
       pool_liquidity,
@@ -339,6 +356,7 @@ async function onChangeLiquidity(evt: AddLiquidityEvent | RemoveLiquidityEvent, 
 }
 
 async function onChangeMargin(evt: AddMarginEvent | RemoveMarginEvent, ctx: PoolImplementationContext) {
+  try {
   const pTokenId = evt.args.pTokenId
   const poolContract = getPoolImplementationContractOnContext(ctx, evt.address)
   const lToken = await poolContract.lToken()
@@ -357,13 +375,13 @@ async function onChangeMargin(evt: AddMarginEvent | RemoveMarginEvent, ctx: Pool
   const marketsIn = await vaultContract.getMarketsIn()
 
 
-  recordMarketsIn(ctx, marketsIn, evt.name, vault, oracleContract)
+  await recordMarketsIn(ctx, marketsIn, evt.name, vault, oracleContract)
   //symbol manager
   const symbolManager = await poolContract.symbolManager()
   const symbolManagerContract = await getSymbolManagerImplementationContractOnContext(ctx, symbolManager)
   const initialMarginRequired = await symbolManagerContract.initialMarginRequired()
   
-  recordSymbols(ctx, symbolManagerContract, evt.name) 
+  await recordSymbols(ctx, symbolManagerContract, evt.name) 
 
   ctx.eventLogger.emit(evt.name, {
     vault,
@@ -375,6 +393,10 @@ async function onChangeMargin(evt: AddMarginEvent | RemoveMarginEvent, ctx: Pool
     initialMarginRequired,
     message: evt.name + ` for ${pTokenId}`
   })
+} catch (e) {
+  console.log(e)
+  console.log(evt)
+}
 }
 
 async function onTrade(evt: TradeEvent, ctx: SymbolManagerImplementationContext) {
@@ -396,7 +418,7 @@ async function onTrade(evt: TradeEvent, ctx: SymbolManagerImplementationContext)
   const vaultLiquidity = await vaultContract.getVaultLiquidity()
   const activeSymbols = await symbolManagerContract.getActiveSymbols(pTokenId)
 
-  recordSymbolsForTrade(ctx, symbolManagerContract, evt, activeSymbols)
+  await recordSymbolsForTrade(ctx, symbolManagerContract, evt, activeSymbols)
 
   ctx.eventLogger.emit("Trade",  {
     lpsPnl,
@@ -410,6 +432,7 @@ async function onTrade(evt: TradeEvent, ctx: SymbolManagerImplementationContext)
     symbols: activeSymbols.join("-")
   })
 } catch (e) {
+  console.log(evt)
   console.log(e)
 }
 }
@@ -468,6 +491,7 @@ async function onSymbolImplementation(evt: NewImplementationEvent, ctx: SymbolMa
       isCloseOnly
     })
   } catch (e) {
+    console.log(evt)
     console.log(e)
   }
 }
@@ -480,14 +504,14 @@ DTokenProcessor.bind({address: "0x25d5aD687068799739FF7B0e18C7cbff403AcB64", net
 PoolProcessor.bind({address: "0x243681B8Cd79E3823fF574e07B2378B8Ab292c1E", network: EthChainId.BINANCE})
 .onEventNewImplementation(onImplementation)
 
-PoolImplementationProcessor.bind({address: "0x243681B8Cd79E3823fF574e07B2378B8Ab292c1E", network: EthChainId.BINANCE})
+PoolImplementationProcessor.bind({address: "0x243681B8Cd79E3823fF574e07B2378B8Ab292c1E", network: EthChainId.BINANCE, startBlock: 25007586})
 .onEventAddMarket(onAddMarket)
 .onEventAddLiquidity(onChangeLiquidity)
 .onEventRemoveLiquidity(onChangeLiquidity)
 .onEventAddMargin(onChangeMargin)
 .onEventRemoveMargin(onChangeMargin)
 
-SymbolManagerImplementationProcessor.bind({address: "0x543A9FA25ba9a16612274DD707Ac4462eD6988FA", network: EthChainId.BINANCE})
+SymbolManagerImplementationProcessor.bind({address: "0x543A9FA25ba9a16612274DD707Ac4462eD6988FA", network: EthChainId.BINANCE, startBlock: 25007586})
 .onEventTrade(onTrade)
 .onEventAddSymbol(onChangeSymbol)
 .onEventNewImplementation(onSymbolImplementation)
