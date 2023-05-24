@@ -5,6 +5,7 @@ import { ReservoirProcessor } from './types/eth/reservoir.js'
 import { VenostormProcessor } from './types/eth/venostorm.js'
 import { LiquidCroProcessor, StakeEvent, RequestUnbondEvent, UnbondEvent, AccrueRewardEvent, LiquidCroContext } from './types/eth/liquidcro.js'
 import { EthChainId } from "@sentio/sdk/eth";
+import './liquidatom.js'
 
 const DepositEventHandler = async (event: any, ctx: any) => {
   const user = event.args.user
@@ -54,7 +55,7 @@ const WithdrawEventHandler = async (event: any, ctx: any) => {
   try {
     const stake = await ctx.contract.getUserStake(user, stakeId)
     pid = Number(stake[1])
-    console.log("get pid from view function ", pid)
+    // console.log("get pid from view function ", pid)
   }
   catch (e) {
     console.log(e.message, "Get pid failure, tx ", hash)
@@ -150,7 +151,7 @@ const UnbondEventHandler = async (event: UnbondEvent, ctx: LiquidCroContext) => 
   ctx.meter.Counter(`lcro_withdrawal_fees`).add(croFeeAmount)
 
 
-  ctx.eventLogger.emit("StakeLcro", {
+  ctx.eventLogger.emit("Unbond", {
     distinctId: receiver,
     tokenId,
     croAmount,
@@ -165,9 +166,9 @@ const AccrueRewardEventHandler = async (event: AccrueRewardEvent, ctx: LiquidCro
     amount,
     txnHash
   })
-
-
 }
+
+
 
 FountainProcessor.bind({ address: '0xb4be51216f4926ab09ddf4e64bc20f499fd6ca95', network: EthChainId.CRONOS })
   .onEventDeposit(DepositEventHandler)
@@ -189,3 +190,5 @@ LiquidCroProcessor.bind({ address: '0x9fae23a2700feecd5b93e43fdbc03c76aa7c08a6',
   .onEventRequestUnbond(RequestUnbondEventHandler)
   .onEventUnbond(UnbondEventHandler)
   .onEventAccrueReward(AccrueRewardEventHandler)
+
+

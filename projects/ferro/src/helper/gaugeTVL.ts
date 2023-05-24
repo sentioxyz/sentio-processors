@@ -59,3 +59,22 @@ export const Gauge_LCRO_WCRO_TVL = async (_: any, ctx: SwapContext) => {
     }
     catch (e) { console.log(`gauge lcro-wcro tvl error at ${ctx.transactionHash}`) }
 }
+
+export const Gauge_LATOM_ATOM_TVL = async (_: any, ctx: SwapContext) => {
+    try {
+        const poolName = "Ferro LATOM/ATOM"
+        const LATOM_balance = Number(await getERC20Contract(EthChainId.CRONOS, "0xAC974ee7fc5d083112c809cCb3FCe4a4F385750D").balanceOf(constant.SWAP_LATOM_ATOM, { blockTag: Number(ctx.blockNumber) })) / Math.pow(10, 6)
+        const ATOM_balance = Number(await getERC20Contract(EthChainId.CRONOS, "0xB888d8Dd1733d72681b30c00ee76BDE93ae7aa93").balanceOf(constant.SWAP_LATOM_ATOM, { blockTag: Number(ctx.blockNumber) })) / Math.pow(10, 6)
+        const LATOM_price = Number(await getPriceBySymbol("LATOM", ctx.timestamp))
+        const ATOM_price = Number(await getPriceBySymbol("ATOM", ctx.timestamp))
+        const tvl_LATOM = LATOM_balance * LATOM_price
+        const tvl_AOTM = ATOM_balance * ATOM_price
+        const tvl = tvl_LATOM + tvl_AOTM
+        ctx.meter.Gauge("tvl").record(tvl_LATOM, { poolName, coin_symbol: "LATOM" })
+        ctx.meter.Gauge("tvl").record(tvl_AOTM, { poolName, coin_symbol: "ATOM" })
+        ctx.meter.Gauge("totalTVL").record(tvl, { poolName })
+    }
+    catch (e) { console.log(`gauge latom-atom tvl error at ${ctx.transactionHash}`) }
+}
+
+

@@ -11,7 +11,7 @@ import { FerContext, TransferEvent } from "./types/eth/fer.js"
 import { FerroBarContext } from "./types/eth/ferrobar.js"
 import { getERC20Contract } from '@sentio/sdk/eth/builtin/erc20';
 import { PoolProcessor } from "./types/eth/pool.js"
-import { Gauge_3FER_TVL, Gauge_2FER_TVL, Gauge_LCRO_WCRO_TVL } from './helper/gaugeTVL.js'
+import { Gauge_3FER_TVL, Gauge_2FER_TVL, Gauge_LCRO_WCRO_TVL, Gauge_LATOM_ATOM_TVL } from './helper/gaugeTVL.js'
 
 
 //Ferro DAI/USDC/USDT Swap
@@ -292,7 +292,7 @@ SwapProcessor.bind({
     const tokensBought = Number(event.args.tokensBought) / Math.pow(10, 18)
     const coin_symbol = soldId == 0 ? "LCRO" : "CRO"
     const cro_price = Number(await getPriceBySymbol("CRO", ctx.timestamp))
-    const volume = soldId == 1 ? tokensSold * cro_price : tokensBought & cro_price
+    const volume = soldId == 1 ? tokensSold * cro_price : tokensBought * cro_price
 
     ctx.eventLogger.emit("TokenSwap", {
       distinctId: event.args.buyer,
@@ -311,6 +311,104 @@ SwapProcessor.bind({
 
   })
   .onTimeInterval(Gauge_LCRO_WCRO_TVL, 60, 10)
+
+
+
+//LATOM-ATOM
+SwapProcessor.bind({
+  address: constant.SWAP_LATOM_ATOM,
+  network: EthChainId.CRONOS,
+  //startBlock: 8400000
+})
+  .onEventAddLiquidity(async (event: AddLiquidityEvent, ctx: SwapContext) => {
+    const provider = event.args.provider
+    const fees = event.args.fees
+    const tokenAmounts = event.args.tokenAmounts
+    const poolName = "Ferro LATOM/ATOM"
+    const invariant = event.args.invariant
+    const lpTokenSupply = event.args.lpTokenSupply
+    const LATOM_amount = Number(tokenAmounts[0]) / Math.pow(10, 6)
+    ctx.meter.Counter("add_liquidity_amount").add(LATOM_amount, { coin_symbol: "LATOM", poolName })
+    const ATOM_amount = Number(tokenAmounts[1]) / Math.pow(10, 6)
+    ctx.meter.Counter("add_liquidity_amount").add(ATOM_amount, { coin_symbol: "ATOM", poolName })
+
+    ctx.eventLogger.emit("AddLiquidity", {
+      distinctId: provider,
+      invariant,
+      lpTokenSupply,
+      LATOM_amount,
+      ATOM_amount,
+      poolName
+    })
+  })
+  .onEventRemoveLiquidity(async (event, ctx) => {
+    const provider = event.args.provider
+    const tokenAmounts = event.args.tokenAmounts
+    const poolName = "Ferro LATOM/ATOM"
+    const LATOM_amount = Number(tokenAmounts[0]) / Math.pow(10, 6)
+    ctx.meter.Counter("remove_liquidity_amount").add(LATOM_amount, { coin_symbol: "LATOM", poolName })
+    const ATOM_amount = Number(tokenAmounts[1]) / Math.pow(10, 6)
+    ctx.meter.Counter("remove_liquidity_amount").add(ATOM_amount, { coin_symbol: "ATOM", poolName })
+
+    ctx.eventLogger.emit("RemoveLiquidity", {
+      distinctId: provider,
+      LATOM_amount,
+      ATOM_amount,
+      poolName
+    })
+  })
+  .onEventRemoveLiquidityOne(async (event, ctx) => {
+    const provider = event.args.provider
+    const tokensBought = event.args.tokensBought
+    const boughtId = Number(event.args.boughtId)
+    const poolName = "Ferro LATOM/ATOM"
+
+    let amount = 0
+    switch (boughtId) {
+      case 0:
+        amount = Number(tokensBought) / Math.pow(10, 6)
+        ctx.meter.Counter("remove_liquidity_amount").add(amount, { coin_symbol: "LATOM", poolName })
+        break
+      case 1:
+        amount = Number(tokensBought) / Math.pow(10, 6)
+        ctx.meter.Counter("remove_liquidity_amount").add(amount, { coin_symbol: "ATOM", poolName })
+        break
+
+    }
+    ctx.eventLogger.emit("RemoveLiquidityOne", {
+      distinctId: provider,
+      amount,
+      coin_symbol: boughtId == 0 ? "LATOM" : "ATOM",
+      poolName
+    })
+  })
+  .onEventTokenSwap(async (event, ctx) => {
+    const poolName = "Ferro LATOM/ATOM"
+    const soldId = Number(event.args.soldId)
+    const tokensSold = Number(event.args.tokensSold) / Math.pow(10, 6)
+    const tokensBought = Number(event.args.tokensBought) / Math.pow(10, 6)
+    const coin_symbol = soldId == 0 ? "LATOM" : "ATOM"
+    const atom_price = Number(await getPriceBySymbol("ATOM", ctx.timestamp))
+    const volume = soldId == 1 ? tokensSold * atom_price : tokensBought * atom_price
+
+    ctx.eventLogger.emit("TokenSwap", {
+      distinctId: event.args.buyer,
+      tokensSold,
+      tokensBought,
+      soldId,
+      boughtId: Number(event.args.boughtId),
+      volume,
+      coin_symbol,
+      poolName
+    })
+    ctx.meter.Counter("swap_vol_counter").add(volume, { coin_symbol, poolName })
+    ctx.meter.Gauge("swap_vol_gauge").record(volume, { coin_symbol, poolName })
+    ctx.meter.Gauge("swap_fee_gauge").record(0.0004 * volume, { coin_symbol, poolName })
+    ctx.meter.Gauge("admin_fee_gauge").record(0.0004 * 0.5 * volume, { coin_symbol, poolName })
+
+  })
+  .onTimeInterval(Gauge_LATOM_ATOM_TVL, 60, 10)
+
 
 
 
@@ -373,20 +471,20 @@ FerroBoostProcessor.bind({
     const amount = Number(event.args.amount) / Math.pow(10, 18)
     const stakeId = Number(event.args.stakeId)
     const weightedAmount = Number(event.args.weightedAmount) / Math.pow(10, 18)
-
-    const stake = await ctx.contract.getUserStake(user, stakeId)
-    const pid = Number(stake[1])
-    ctx.eventLogger.emit("VaultWithdraw", {
-      distinctId: user,
-      stakeId,
-      pid,
-      amount,
-      weightedAmount
-    })
-
-    //TODO(ye): get pid
-    ctx.meter.Counter("vault_counter").sub(amount, { pid: pid.toString() })
-
+    let pid = -1
+    try {
+      const stake = await ctx.contract.getUserStake(user, stakeId)
+      pid = Number(stake[1])
+      ctx.eventLogger.emit("VaultWithdraw", {
+        distinctId: user,
+        stakeId,
+        pid,
+        amount,
+        weightedAmount
+      })
+      ctx.meter.Counter("vault_counter").sub(amount, { pid: pid.toString() })
+    }
+    catch (e) { console.log(`get pid failed at ${ctx.transactionHash}`) }
   })
 
 

@@ -15,11 +15,12 @@ export const TEAM_WALLETS = [
 export const SWAP_3FER = "0xe8d13664a42B338F009812Fa5A75199A865dA5cD".toLowerCase()
 export const SWAP_2FER = "0xa34C0fE36541fB085677c36B4ff0CCF5fa2B32d6".toLowerCase()
 export const SWAP_LCRO_WCRO = "0x1578C5CF4f8f6064deb167d1eeAD15dF43185afa".toLowerCase()
+export const SWAP_LATOM_ATOM = "0x5FA9412C2563c0B13CD9F96F0bd1A971F8eBdF96".toLowerCase()
 
 export const POOL_3FER = "0x71923713685770D04d69d103008aafFeeBC31BDe".toLowerCase()
 export const POOL_2FER = "0xD05a67bB1e9684E8DDD19D0Bb6A713b4BEFC2C03".toLowerCase()
 export const POOL_LCRO_WCRO = "0xC73B40a6a57cC8203462397F64527fD46766Dd85".toLowerCase()
-
+export const POOL_LATOM_ATOM = "0x260481aD807C95Ea30AcEaB5D01Afe0a76f41929".toLowerCase()
 
 export const FerroFarm = "0xAB50FB1117778f293cc33aC044b5579fb03029D0".toLowerCase()
 export const FerroBar = "0x6b82eAce10F782487B61C616B623A78c965Fdd88".toLowerCase()

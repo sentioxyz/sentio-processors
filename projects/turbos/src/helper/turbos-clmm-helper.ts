@@ -164,7 +164,7 @@ export async function calculateValue_USD(ctx: SuiContext | SuiObjectContext, poo
             value_b = amount_b * price_b
         }
         else {
-            console.log(`price not in sui coinlist, calculate value failed at ${ctx}`)
+            console.log(`price not in sui coinlist, calculate value failed at coin_a: ${coin_a_full_address},coin_b: ${coin_b_full_address} at ${JSON.stringify(ctx)}`)
         }
     }
     catch (e) {
