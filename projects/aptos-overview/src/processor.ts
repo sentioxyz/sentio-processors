@@ -1,25 +1,26 @@
 import { Counter, Gauge, MetricOptions } from "@sentio/sdk";
 import { aptos_coin, coin, managed_coin, resource_account, aptos_account } from "@sentio/sdk/aptos/builtin/0x1";
 
-import { DEFAULT_MAINNET_LIST, RawCoinInfo } from "@manahippo/coin-list";
+// import { DEFAULT_MAINNET_LIST, RawCoinInfo } from "@manahippo/coin-list";
 import * as liquidswap from "./types/aptos/liquidswap.js";
 import { amm } from "./types/aptos/auxexchange.js";
 // import { TransactionPayload_EntryFunctionPayload } from "aptos-sdk/src/generated";
 import { router, swap } from "./types/aptos/pancake-swap.js";
 // import { token, token_transfers } from "@sentio/sdk/lib/builtin/aptos/0x3";
-import { getChainQueryClient } from "@sentio/sdk/aptos";
+import { AptosModulesProcessor, getChainQueryClient } from "@sentio/sdk/aptos";
 import * as soffle3 from "./types/aptos/soffle3.js";
 import * as topaz from "./types/aptos/topaz.js";
 import * as bluemoves from "./types/aptos/bluemoves.js";
 import { AptosResourcesContext, AptosResourcesProcessor } from "@sentio/sdk/aptos";
+import { whitelistCoins } from "@sentio/sdk/aptos/ext";
 
 const txnCounter = Counter.register("txn_counter")
 
-const coinInfoMap = new Map<string, RawCoinInfo>()
-
-for (const x of DEFAULT_MAINNET_LIST) {
-  coinInfoMap.set(x.token_type.type, x)
-}
+// const coinInfoMap = new Map<string, RawCoinInfo>()
+//
+// for (const x of DEFAULT_MAINNET_LIST) {
+//   coinInfoMap.set(x.token_type.type, x)
+// }
 
 // resource_account.bind()
 //   .onEntryCreateResourceAccount((call, ctx) => {
@@ -39,7 +40,8 @@ managed_coin.bind()
 
 coin.bind()
   .onEntryTransfer((call, ctx) => {
-    const info = coinInfoMap.get(call.type_arguments[0])
+
+    const info =  whitelistCoins().get(call.type_arguments[0])
     let symbol = info ? info.symbol : "others"
     txnCounter.add(ctx, 1, { kind: "transfer", symbol})
   })
@@ -72,7 +74,10 @@ for (const s of [liquidswap.scripts_v3, liquidswap.scripts_v2, liquidswap.script
 }
 
 // for (const s of []) {}
-amm.bind()
+// amm.bind()
+
+
+AptosModulesProcessor.bind({address: amm.DEFAULT_OPTIONS.address})
   .onTransaction((tx, ctx) => {
     txnCounter.add(ctx, 1, { kind: "swap", protocol: "aux"})
   })
@@ -83,27 +88,42 @@ router.bind()
   })
 
 // nft
-for (const m of [soffle3.Aggregator, soffle3.token_coin_swap, soffle3.FixedPriceMarket, soffle3.FixedPriceMarketScript]) {
-  m.bind()
+// for (const m of [soffle3.Aggregator, soffle3.token_coin_swap, soffle3.FixedPriceMarket, soffle3.FixedPriceMarketScript]) {
+//   m.bind()
+//       .onTransaction((tx, ctx) => {
+//         txnCounter.add(ctx, 1, { kind: "nft", protocol: "souffl3"})
+//       })
+// }
+
+AptosModulesProcessor.bind({address: soffle3.Aggregator.DEFAULT_OPTIONS.address})
     .onTransaction((tx, ctx) => {
       txnCounter.add(ctx, 1, { kind: "nft", protocol: "souffl3"})
     })
-}
 
-for (const m of [topaz.fees, topaz.inbox, topaz.events, topaz.bid_any, topaz.marketplace, topaz.marketplace_v2,
-    topaz.collection_marketplace, topaz.token_coin_swap]) {
-  m.bind()
+// for (const m of [topaz.fees, topaz.inbox, topaz.events, topaz.bid_any, topaz.marketplace, topaz.marketplace_v2,
+//     topaz.collection_marketplace, topaz.token_coin_swap]) {
+//   m.bind()
+//     .onTransaction((tx, ctx) => {
+//       txnCounter.add(ctx, 1, { kind: "nft", protocol: "topaz"})
+//     })
+// }
+
+AptosModulesProcessor.bind({address: topaz.marketplace_v2.DEFAULT_OPTIONS.address})
     .onTransaction((tx, ctx) => {
       txnCounter.add(ctx, 1, { kind: "nft", protocol: "topaz"})
     })
-}
 
-for (const m of [bluemoves.marketplaceV2, bluemoves.offer_lib]) {
-  m.bind()
+// for (const m of [bluemoves.marketplaceV2, bluemoves.offer_lib]) {
+//   m.bind()
+//     .onTransaction((tx, ctx) => {
+//       txnCounter.add(ctx, 1, { kind: "nft", protocol: "bluemoves"})
+//     })
+// }
+
+AptosModulesProcessor.bind({address: bluemoves.marketplaceV2.DEFAULT_OPTIONS.address})
     .onTransaction((tx, ctx) => {
       txnCounter.add(ctx, 1, { kind: "nft", protocol: "bluemoves"})
     })
-}
 
 export const volOptions: MetricOptions = {
     sparse: true,
