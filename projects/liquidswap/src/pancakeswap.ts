@@ -18,14 +18,12 @@ swap.bind()
         ctx.meter.Counter("event_liquidity_add").add(1)
         if (recordAccount) {
             const value = await getPairValue(ctx, evt.type_arguments[0], evt.type_arguments[1], evt.data_decoded.amount_x, evt.data_decoded.amount_y)
-            if (value.isGreaterThan(10)) {
-                ctx.eventLogger.emit("liquidity", {
-                    distinctId: ctx.transaction.sender,
-                    "account": ctx.transaction.sender,
-                    "value": value.toNumber(),
-                    "formula_value": value.toNumber() * 2,
-                })
-            }
+            ctx.eventLogger.emit("liquidity", {
+                distinctId: ctx.transaction.sender,
+                "account": ctx.transaction.sender,
+                "value": value.toNumber(),
+                "formula_value": value.toNumber() * 2,
+            })
         }
     })
     .onEventRemoveLiquidityEvent(async (evt, ctx) => {
@@ -36,7 +34,7 @@ swap.bind()
             evt.type_arguments[0], evt.type_arguments[1],
             evt.data_decoded.amount_x_in + evt.data_decoded.amount_x_out,
             evt.data_decoded.amount_y_in + evt.data_decoded.amount_y_out)
-        if (recordAccount && value.isGreaterThan(10)) {
+        if (recordAccount) {
             ctx.eventLogger.emit("vol", {
                 distinctId: ctx.transaction.sender,
                 "account": ctx.transaction.sender,

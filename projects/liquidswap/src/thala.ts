@@ -69,6 +69,8 @@ export async function onEventSwapEvent(
     type,
   };
 
+  ctx.eventLogger.emit("swap", swapAttributes)
+
   thalaVolume.record(ctx, volumeUsd, { poolType, pairTag });
 }
 
@@ -130,24 +132,24 @@ function getCoins(
     const coins = [];
     coins.push(event.type_arguments[0]);
     coins.push(event.type_arguments[1]);
-  
+
     const coin2 = event.type_arguments[2];
     if (!isNullType(coin2)) {
       coins.push(coin2);
     }
-  
+
     const coin3 = event.type_arguments[3];
     if (!isNullType(coin3)) {
       coins.push(coin3);
     }
-  
+
     return coins;
   }
-  
+
   function isNullType(typeArg: string): boolean {
     return typeArg === NULL_TYPE;
   }
-  
+
   // get complete pool type name. notice: there's a space after ", ". example:
   // 0xf727908689c999b8aa9ad6bd2d73b964bcc65a700dbbcc234d02827e2fc71d56::stable_pool::StablePool<0x347b2ef2a5509414630d939e6cedb0c7fae5e1a295bf93587fec19cac34ba5b::mod_coin::MOD, 0x3c27315fb69ba6e4b960f1507d1cefcc9a4247869f26a8d59d6b7869d23782c::test_coins::USDC, 0xf727908689c999b8aa9ad6bd2d73b964bcc65a700dbbcc234d02827e2fc71d56::base_pool::Null, 0xf727908689c999b8aa9ad6bd2d73b964bcc65a700dbbcc234d02827e2fc71d56::base_pool::Null>
   function getPoolType(
@@ -177,25 +179,25 @@ function getCoins(
     const weights = [];
     coins.push(event.type_arguments[0]);
     coins.push(event.type_arguments[1]);
-  
+
     weights.push(parseWeight(event.type_arguments[4]));
     weights.push(parseWeight(event.type_arguments[5]));
-  
+
     const coin2 = event.type_arguments[2];
     if (!isNullType(coin2)) {
       coins.push(coin2);
       weights.push(parseWeight(event.type_arguments[6]));
     }
-  
+
     const coin3 = event.type_arguments[3];
     if (!isNullType(coin3)) {
       coins.push(coin3);
       weights.push(parseWeight(event.type_arguments[7]));
     }
-  
+
     return { coins, weights };
   }
-  
+
   // weight typeArg format is like "0x1234::weighted_pool::Weight_5"
   // returns the floating point number e.g. 0.05
   function parseWeight(typeArg: string): number {
@@ -265,13 +267,13 @@ AptosResourcesProcessor.bind({
         weighted_pool.WeightedPool<any, any, any, any, any, any, any, any>
       >(weighted_pool.WeightedPool.TYPE_QNAME, resources);
       console.log("number of weighted pools:", pools.length);
-  
+
       for (const pool of pools) {
         const nullIndex = pool.type_arguments
           .slice(0, 4)
           .indexOf(base_pool.Null.TYPE_QNAME);
         const numCoins = nullIndex === -1 ? 4 : nullIndex;
-  
+
         const coinTypes = pool.type_arguments.slice(0, numCoins);
         const coinPrices = await Promise.all(
           coinTypes.map((coinType) => getPrice(coinType, ctx.timestampInMicros))
@@ -286,7 +288,7 @@ AptosResourcesProcessor.bind({
           (acc, amount, i) => acc.plus(amount.times(coinPrices[i])),
           BigDecimal(0)
         );
-  
+
         thalaTvl.record(ctx, tvl, { poolType: pool.type });
       }
     },
@@ -303,11 +305,11 @@ AptosResourcesProcessor.bind({
         stable_pool.StablePool<any, any, any, any>
       >(stable_pool.StablePool.TYPE_QNAME, resources);
       console.log("number of stable pools:", pools.length);
-  
+
       for (const pool of pools) {
         const nullIndex = pool.type_arguments.indexOf(base_pool.Null.TYPE_QNAME);
         const numCoins = nullIndex === -1 ? 4 : nullIndex;
-  
+
         const coinTypes = pool.type_arguments.slice(0, numCoins);
         const coinPrices = await Promise.all(
           coinTypes.map((coinType) => getPrice(coinType, ctx.timestampInMicros))
@@ -322,7 +324,7 @@ AptosResourcesProcessor.bind({
           (acc, amount, i) => acc.plus(amount.times(coinPrices[i])),
           BigDecimal(0)
         );
-  
+
         thalaTvl.record(ctx, tvl, { poolType: pool.type });
       }
     },

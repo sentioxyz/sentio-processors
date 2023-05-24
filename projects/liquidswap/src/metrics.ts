@@ -45,5 +45,5 @@ export const thalaTvl = Gauge.register("thala_tvl", commonOptions)
 export const thalaVolume = Gauge.register("thala_vol", volOptions)
 export const thalaVolumeByCoin = Gauge.register("thala_by_coin", volOptions)
 
-export const recordAccount = false
+export const recordAccount = true
 

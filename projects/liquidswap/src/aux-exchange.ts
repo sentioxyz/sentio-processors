@@ -34,37 +34,25 @@ amm.bind()
             const pair = await AUX_EXCHANGE.getPair(evt.data_decoded.x_coin_type, evt.data_decoded.y_coin_type)
             ctx.meter.Counter("token_amount_by_pool").add(evt.data_decoded.x_added_au, {"pair": pair, "coin": evt.data_decoded.x_coin_type})
             ctx.meter.Counter("token_amount_by_pool").add(evt.data_decoded.x_added_au, {"pair": pair, "coin": evt.data_decoded.y_coin_type})
-            if (value.isGreaterThan(10)) {
-                ctx.eventLogger.emit("liquidity", {
-                    distinctId: ctx.transaction.sender,
-                    "account": ctx.transaction.sender,
-                    "value": value.toNumber(),
-                    "formula_value": value.toNumber() * 2,
-                })
-                ctx.eventLogger.emit("net_liquidity", {
-                    distinctId: ctx.transaction.sender,
-                    "account": ctx.transaction.sender,
-                    "value": value.toNumber(),
-                    "formula_value": value.toNumber() * 2,
-                })
-            } else {
-                ctx.eventLogger.emit("liquidity", {
-                    distinctId: ctx.transaction.sender,
-                    "account": "Others",
-                    "value": value.toNumber(),
-                    "formula_value": value.toNumber() * 2,
-                })
-                ctx.eventLogger.emit("net_liquidity", {
-                    distinctId: ctx.transaction.sender,
-                    "account": ctx.transaction.sender,
-                    "value": value.toNumber(),
-                    "formula_value": value.toNumber() * 2,
-                })
-            }
+            // if (value.isGreaterThan(10)) {
+            //     ctx.eventLogger.emit("liquidity", {
+            //         distinctId: ctx.transaction.sender,
+            //         "account": ctx.transaction.sender,
+            //         "value": value.toNumber(),
+            //         "formula_value": value.toNumber() * 2,
+            //     })
+                // ctx.eventLogger.emit("net_liquidity", {
+                //     distinctId: ctx.transaction.sender,
+                //     "account": ctx.transaction.sender,
+                //     "value": value.toNumber(),
+                //     "formula_value": value.toNumber() * 2,
+                // })
+            // }
             const coinXInfo = getCoinInfo(evt.data_decoded.x_coin_type)
             const coinYInfo = getCoinInfo(evt.data_decoded.y_coin_type)
             ctx.eventLogger.emit("add liquidity for " + pair, {
                 symbol: coinXInfo.symbol,
+                "account": ctx.transaction.sender,
                 user: ctx.transaction.sender,
                 value: value,
                 amount: evt.data_decoded.x_added_au,
@@ -72,6 +60,7 @@ amm.bind()
                 coin: evt.data_decoded.x_coin_type
             })
             ctx.eventLogger.emit("add liquidity for " + pair, {
+                "account": ctx.transaction.sender,
                 symbol: coinYInfo.symbol,
                 user: ctx.transaction.sender,
                 value: value,
@@ -92,29 +81,19 @@ amm.bind()
 
         if (recordAccount) {
             const value = await getPairValue(ctx, evt.data_decoded.x_coin_type, evt.data_decoded.y_coin_type, evt.data_decoded.x_removed_au, evt.data_decoded.y_removed_au)
-            if (value.isGreaterThan(10)) {
-                ctx.eventLogger.emit("net_liquidity", {
-                    distinctId: ctx.transaction.sender,
-                    "account": ctx.transaction.sender,
-                    "value": -value.toNumber(),
-                    "formula_value": (-value.toNumber()) * 2,
-                })
-            } else {
-                ctx.eventLogger.emit("net_liquidity", {
-                    distinctId: ctx.transaction.sender,
-                    "account": "Others",
-                    "value": -value.toNumber(),
-                    "formula_value": (-value.toNumber()) * 2,
-                })
-            }
+            ctx.eventLogger.emit("net_liquidity", {
+                distinctId: ctx.transaction.sender,
+                account: ctx.transaction.sender,
+                "value": -value.toNumber(),
+                "formula_value": (-value.toNumber()) * 2,
+            })
         }
     })
     .onEventSwapEvent(async (evt, ctx) => {
         const value = await AUX_EXCHANGE.recordTradingVolume(ctx, evt.data_decoded.in_coin_type, evt.data_decoded.out_coin_type, evt.data_decoded.in_au, evt.data_decoded.out_au)
-        if (recordAccount && value.isGreaterThan(10)) {
+        if (recordAccount) {
             ctx.eventLogger.emit("vol", {
                 distinctId: ctx.transaction.sender,
-                "account": ctx.transaction.sender,
                 "value": value.toNumber(),
             })
         }

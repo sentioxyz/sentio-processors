@@ -67,7 +67,6 @@ for (const env of [v0, v05]) {
 
             if (recordAccount) {
                 const value = await getPairValue(ctx, evt.type_arguments[0], evt.type_arguments[1], evt.data_decoded.added_x_val, evt.data_decoded.added_y_val)
-                if (value.isGreaterThan(10)) {
                     ctx.eventLogger.emit("liquidity", {
                         distinctId: ctx.transaction.sender,
                         "account": ctx.transaction.sender,
@@ -82,22 +81,6 @@ for (const env of [v0, v05]) {
                         "formula_value": value.toNumber() * 2,
                         ver
                     })
-                } else {
-                    ctx.eventLogger.emit("liquidity", {
-                        distinctId: ctx.transaction.sender,
-                        "account": "Others",
-                        "value": value.toNumber(),
-                        "formula_value": value.toNumber() * 2,
-                        ver
-                    })
-                    ctx.eventLogger.emit("net_liquidity", {
-                        distinctId: ctx.transaction.sender,
-                        "account": ctx.transaction.sender,
-                        "value": value.toNumber(),
-                        "formula_value": value.toNumber() * 2,
-                        ver
-                    })
-                }
             }
         })
         .onEventLiquidityRemovedEvent(async (evt, ctx) => {
@@ -132,7 +115,7 @@ for (const env of [v0, v05]) {
                 evt.data_decoded.x_in + evt.data_decoded.x_out,
                 evt.data_decoded.y_in + evt.data_decoded.y_out,
                 {curve: getCurve(evt.type_arguments[2]), ver})
-            if (recordAccount && value.isGreaterThan(10)) {
+            if (recordAccount) {
                 ctx.eventLogger.emit("vol", {
                     distinctId: ctx.transaction.sender,
                     "account": ctx.transaction.sender,
@@ -148,10 +131,10 @@ for (const env of [v0, v05]) {
             ctx.meter.Counter("event_swap_by_bridge").add(1, {bridge: coinXInfo.bridge, ver})
             ctx.meter.Counter("event_swap_by_bridge").add(1, {bridge: coinYInfo.bridge, ver})
 
-            ctx.eventLogger.emit("account", {
-                distinctId: ctx.transaction.sender,
-                "event": "swap",
-            })
+            // ctx.eventLogger.emit("account", {
+            //     distinctId: ctx.transaction.sender,
+            //     "event": "swap",
+            // })
         })
         .onEventFlashloanEvent(async (evt, ctx) => {
             accountTracker.trackEvent(ctx, {distinctId: ctx.transaction.sender})
