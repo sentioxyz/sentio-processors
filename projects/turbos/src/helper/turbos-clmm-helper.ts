@@ -78,9 +78,9 @@ export const getOrCreateCoin = async function (ctx: SuiContext | SuiObjectContex
 
 export async function buildPoolInfo(ctx: SuiContext | SuiObjectContext, pool: string): Promise<poolInfo> {
     //pool not in list
-    if (!constant.POOLS_INFO_MAINNET.includes(pool)) {
-        console.log(`Pool not in array ${pool}`)
-    }
+    // if (!constant.POOLS_INFO_MAINNET.includes(pool)) {
+    //     console.log(`Pool not in array ${pool}`)
+    // }
 
     let [symbol_a, symbol_b, decimal_a, decimal_b, pairName, type, fee_label] = ["", "", 0, 0, "", "", "", "NaN"]
     try {

@@ -11,7 +11,10 @@ export const T_TOKEN_POOLS = [
     "0xa683fdfd9286eedfea81cf6da14703da683c44e5",
     "0x4bd41f188f6a05f02b46bb2a1f8ba776e528f9d2",
     "0xe1c4c56f772686909c28c319079d41adfd6ec89b",
-    "0xfe6934fdf050854749945921faa83191bccf20ad"
+    "0xfe6934fdf050854749945921faa83191bccf20ad",
+    "0x0d9706531b517d24623118934de69108968ba266",
+    "0x29984c47b0bac5a59290ef082e1f651a7019ec4a",
+    "0xb075a3590c9ffc8332c47db49f5c6ee1dbcdf804"
 ]
 
 export const T_TOKEN_SYMBOL: Map<string, string> = new Map([
@@ -22,7 +25,10 @@ export const T_TOKEN_SYMBOL: Map<string, string> = new Map([
     ["0xa683fdfd9286eedfea81cf6da14703da683c44e5", "tUSDT"],
     ["0x4bd41f188f6a05f02b46bb2a1f8ba776e528f9d2", "tTUSD"],
     ["0xe1c4c56f772686909c28c319079d41adfd6ec89b", "tDAI"],
-    ["0xfe6934fdf050854749945921faa83191bccf20ad", "tTONIC"]
+    ["0xfe6934fdf050854749945921faa83191bccf20ad", "tTONIC"],
+    ["0x0d9706531b517d24623118934de69108968ba266", "tATOM"],
+    ["0x29984c47b0bac5a59290ef082e1f651a7019ec4a", "tADA"],
+    ["0xb075a3590c9ffc8332c47db49f5c6ee1dbcdf804", "tVVS"]
 ])
 
 
@@ -34,7 +40,24 @@ export const COLLATERAL_TOKENS: Map<string, string> = new Map([
     ["tUSDT", "usdt"],
     ["tTUSD", "tusd"],
     ["tDAI", "dai"],
-    ["tTONIC", "tonic"]
+    ["tTONIC", "tonic"],
+    ["tATOM", "atom"],
+    ["tADA", "ada"],
+    ["tVVS", "vvs"]
+])
+
+export const COLLATERAL_ADDRESSES: Map<string, string> = new Map([
+    ["cro", "0x5c7f8a570d578ed84e63fdfa7b1ee72deae1ae23"],
+    ["eth", "0xe44fd7fcb2b1581822d0c862b68222998a0c299a"],
+    ["wbtc", "0x062e66477faf219f25d27dced647bf57c3107d52"],
+    ["usdc", "0xc21223249ca28397b4b6541dffaecc539bff0c59"],
+    ["usdt", "0x66e428c3f67a68878562e79a0234c1f83c208770"],
+    ["tusd", "0x87efb3ec1576dec8ed47e58b832bedcd86ee186e"],
+    ["dai", "0xf2001b145b43032aaf5ee2884e456ccd805f677d"],
+    ["tonic", "0xdd73dea10abc2bff99c60882ec5b2b81bb1dc5b2"],
+    ["atom", "0xb888d8dd1733d72681b30c00ee76bde93ae7aa93"],
+    ["ada", "0x0e517979c2c1c1522ddb0c73905e0d39b3f990c0"],
+    ["vvs", "0x2d03bece6747adc00e1a131bba1469c15fd11e03"]
 ])
 
 export const COLLATERAL_DECIMAL: Map<string, number> = new Map([
@@ -45,16 +68,19 @@ export const COLLATERAL_DECIMAL: Map<string, number> = new Map([
     ["usdt", 6],
     ["tusd", 18],
     ["dai", 18],
-    ["tonic", 18]
+    ["tonic", 18],
+    ["atom", 6],
+    ["ada", 6],
+    ["vvs", 18]
 ])
 
 
-export const L_CRO_POOLS = [
-    "0x972173afb7eefb80a0815831b318a643442ad0c1",
-    "0xcd8f4147a4f9452e027f5203bfc5b7a786055138",
-    "0x498bd0cbdf3ba43c02fe768f8e993d4bf21d011d",
-    "0x3c920600e049a128b01d2ef0b932108687196502",
-]
+// export const L_CRO_POOLS = [
+//     "0x972173afb7eefb80a0815831b318a643442ad0c1",
+//     "0xcd8f4147a4f9452e027f5203bfc5b7a786055138",
+//     "0x498bd0cbdf3ba43c02fe768f8e993d4bf21d011d",
+//     "0x3c920600e049a128b01d2ef0b932108687196502",
+// ]
 
 // tCRO (LCRO) - Smart Contract - 0x972173AfB7Eefb80a0815831B318A643442ad0C1
 // tLCRO (LCRO) - Smart Contract - 0xCd8F4147A4F9452e027f5203bfc5B7A786055138

@@ -7,6 +7,7 @@ import { getPriceBySymbol } from '@sentio/sdk/utils'
 import { WCROProcessor, TransferEvent, WCROContext } from './types/eth/wcro.js'
 import { TectonicCoreProcessor } from './types/eth/tectoniccore.js'
 import { EthChainId } from "@sentio/sdk/eth";
+import { getERC20Contract } from '@sentio/sdk/eth/builtin/erc20'
 // import './aave_v3.js'
 
 const MintEventHandler = async (event: any, ctx: TCROContext) => {
@@ -159,6 +160,8 @@ const LiquidateBorrowHandler = async (event: LiquidateBorrowEvent, ctx: TCROCont
 }
 
 const AccrueInterestHandler = async (event: AccrueInterestEvent, ctx: TCROContext) => {
+  // console.log(`ADDRESS ${ctx.address.toLowerCase()} `)
+
   const tSymbol = constant.T_TOKEN_SYMBOL.get(ctx.address.toLowerCase())!
   const collateralSymbol = (constant.COLLATERAL_TOKENS.get(tSymbol))!
   const collateralDecimal = (constant.COLLATERAL_DECIMAL.get(collateralSymbol))!
@@ -166,6 +169,7 @@ const AccrueInterestHandler = async (event: AccrueInterestEvent, ctx: TCROContex
   try {
     const reserveFactor = Number(scaleDown(await ctx.contract.reserveFactorMantissa(), 18))
     const protocolInterestRevenue = interestAccumulated * reserveFactor
+    // console.log(`reserveFactor ${reserveFactor} ${protocolInterestRevenue} ${interestAccumulated}`)
 
     ctx.meter.Gauge("protocolInterestRevenue").record(protocolInterestRevenue, { tSymbol, coin_symbol: collateralSymbol })
     ctx.meter.Counter("protocolInterestRevenue_counter").add(protocolInterestRevenue, { tSymbol, coin_symbol: collateralSymbol })
@@ -197,42 +201,43 @@ const ReservesAddedHandler = async (event: any, ctx: TCROContext) => {
 
 }
 
-const AllEventHandler = async (event: any, ctx: TCROContext) => {
-  if (event.name == "RepayBorrow" || "Mint" || "Borrow" || "Redeem") {
-    const totalBorrows = Number(await ctx.contract.totalBorrows()) / Math.pow(10, 8)
-    const totalSupply = Number(await ctx.contract.totalSupply()) / Math.pow(10, 8)
-    const tSymbol = constant.T_TOKEN_SYMBOL.get(ctx.address.toLowerCase())!
-    const collateralSymbol = (constant.COLLATERAL_TOKENS.get(tSymbol))!
-    const collateralDecimal = (constant.COLLATERAL_DECIMAL.get(collateralSymbol))!
-    const totalReserves = Number(await ctx.contract.totalReserves()) / Math.pow(10, collateralDecimal)
+const OnTimeIntervalHandler = async (_: any, ctx: TCROContext) => {
+  const tSymbol = constant.T_TOKEN_SYMBOL.get(ctx.address.toLowerCase())!
+  const collateralSymbol = (constant.COLLATERAL_TOKENS.get(tSymbol))!
+  const collateralDecimal = (constant.COLLATERAL_DECIMAL.get(collateralSymbol))!
 
+  const totalBorrows = Number(await ctx.contract.totalBorrows()) / Math.pow(10, collateralDecimal)
+  const totalSupply = Number(await ctx.contract.totalSupply()) / Math.pow(10, 8)
+  const totalReserves = Number(await ctx.contract.totalReserves()) / Math.pow(10, collateralDecimal)
+  ctx.meter.Gauge("totalBorrows").record(totalBorrows, { tSymbol, coin_symbol: collateralSymbol })
+  ctx.meter.Gauge("totalSupply").record(totalSupply, { tSymbol, coin_symbol: collateralSymbol })
+  ctx.meter.Gauge("totalReserves").record(totalReserves, { tSymbol, coin_symbol: collateralSymbol })
 
-    ctx.meter.Gauge("totalBorrows").record(totalBorrows, { tSymbol, coin_symbol: collateralSymbol })
-    ctx.meter.Gauge("totalSupply").record(totalSupply, { tSymbol, coin_symbol: collateralSymbol })
-    ctx.meter.Gauge("totalReserves").record(totalReserves, { tSymbol, coin_symbol: collateralSymbol })
-  }
-  else {
-    const tSymbol = constant.T_TOKEN_SYMBOL.get(ctx.address.toLowerCase())!
-    ctx.eventLogger.emit(event.name, {
-      tSymbol
-    })
-  }
-
+  // const collateralAddress = (constant.COLLATERAL_ADDRESSES.get(collateralSymbol))!
+  try {
+    // const tvl = Number(await getERC20Contract(ctx.chainId, collateralAddress).balanceOf(ctx.address)) / Math.pow(10, collateralDecimal)
+    const tvl = Number(await ctx.contract.getCash()) / Math.pow(10, collateralDecimal)
+    ctx.meter.Gauge("tvl").record(tvl, { tSymbol, coin_symbol: collateralSymbol })
+  } catch (e) { console.log(`get tvl error at ${ctx.address}, ${ctx.transactionHash}`) }
 }
 
 
 //t_tokens
 for (let i = 0; i < constant.T_TOKEN_POOLS.length; i++) {
   let address = constant.T_TOKEN_POOLS[i]
-  TCROProcessor.bind({ address: address, network: EthChainId.CRONOS })
+  TCROProcessor.bind({
+    address: address,
+    network: EthChainId.CRONOS,
+    // startBlock: 8000000
+  })
     .onEventMint(MintEventHandler)
     .onEventBorrow(BorrowEventHandler)
     .onEventRepayBorrow(RepayBorrowEventHandler)
     .onEventRedeem(RedeemEventHandler)
-    //.onEventLiquidateBorrow(LiquidateBorrowHandler)
+    .onEventLiquidateBorrow(LiquidateBorrowHandler)
     .onEventReservesAdded(ReservesAddedHandler)
     .onEventAccrueInterest(AccrueInterestHandler)
-    .onAllEvents(AllEventHandler)
+    .onTimeInterval(OnTimeIntervalHandler, 60, 10)
 }
 
 
@@ -248,7 +253,11 @@ for (let i = 0; i < constant.T_TOKEN_POOLS.length; i++) {
 //   }, filter)
 
 //Tonic
-TectonicCoreProcessor.bind({ address: constant.SOCKET_ADDRESS, network: EthChainId.CRONOS })
+TectonicCoreProcessor.bind({
+  address: constant.SOCKET_ADDRESS,
+  network: EthChainId.CRONOS,
+  // startBlock: 8000000
+})
   .onEventDistributedBorrowerTonic(async (event, ctx) => {
     const hash = event.transactionHash
     try {
