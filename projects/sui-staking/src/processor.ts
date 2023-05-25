@@ -38,7 +38,7 @@ validator.bind({
     ctx.meter.Gauge("unstaking_gauge").record(principal_amount, { validator: validator_address })
 
     ctx.meter.Counter("reward_counter").add(reward_amount, { validator: validator_address })
-    ctx.meter.Gauge("reward_counter").record(reward_amount, { validator: validator_address })
+    ctx.meter.Gauge("reward_gauge").record(reward_amount, { validator: validator_address })
 
     ctx.eventLogger.emit("UnstakingRequest", {
       distinctId: staker_address,
