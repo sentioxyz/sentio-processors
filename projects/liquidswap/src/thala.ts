@@ -59,6 +59,7 @@ export async function onEventSwapEvent(
   const feeUsd = fee_amount.scaleDown(coinIn.decimals).multipliedBy(priceIn);
 
   const swapAttributes = {
+    distinctId: ctx.transaction.sender,
     pair: pairTag,
     coin_address_in: coin_in,
     coin_address_out: coin_out,
@@ -67,6 +68,7 @@ export async function onEventSwapEvent(
     volume: volumeUsd,
     fee: feeUsd,
     type,
+    protocol: "thala"
   };
 
   ctx.eventLogger.emit("swap", swapAttributes)
