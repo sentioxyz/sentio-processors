@@ -2,7 +2,8 @@ import {
   Counter,
   EthFetchConfig,
   Gauge,
-  BigDecimal, ChainId,
+  BigDecimal,
+  ChainId,
 } from "@sentio/sdk";
 
 import {
@@ -390,12 +391,18 @@ export function Bind(chainConfig: ChainConstants, startBlock: number) {
           console.log("revenue is 0, likely not a popular token", txn.txnHash);
           continue;
         }
+        let traders = "";
+        for (const [addr, property] of txn.addressProperty) {
+          if (property === AddressProperty.Trader) {
+            traders += addr + ",";
+          }
+        }
         ctx.eventLogger.emit("arbitrage", {
-          message: `Arbitrage txn detected: ${link}`,
           distinctId: txn.mevContract,
           mevContract: txn.mevContract,
           link: link,
           index: txn.txnIndex,
+          traders: traders,
           revenue: BigDecimal(revenue.toFixed(2)),
           cost: BigDecimal(cost.toFixed(2)),
           profit: BigDecimal(revenue.minus(cost).toFixed(2)),
@@ -420,7 +427,6 @@ export function Bind(chainConfig: ChainConstants, startBlock: number) {
           continue;
         }
         ctx.eventLogger.emit("sandwich", {
-          message: `Sandwich txn detected: ${frontLink} and ${backLink}`,
           distinctId: txn.mevContract,
           mevContract: txn.mevContract,
           link: backLink,
