@@ -75,22 +75,22 @@ RouterProcessor.bind({ address: constant.ETH_ROUTER })
     //TODO: write processor code for this event
   })
   //onEventXXX: handle other events to track
-  .onAllEvents(async (event, ctx) => {
-    let from
-    try {
-      let tx = (await ctx.contract.provider.getTransaction(event.transactionHash))!
-      from = tx.from
-    }
-    catch (e) {
-      if (e instanceof Error) {
-        console.log(e.message)
-      }
-    }
-    ctx.eventLogger.emit("Any_Event", {
-      distinctId: from,
-      eventName: event.name
-    })
-  })
+  // .onAllEvents(async (event, ctx) => {
+  //   let from
+  //   try {
+  //     let tx = (await ctx.contract.provider.getTransaction(event.transactionHash))!
+  //     from = tx.from
+  //   }
+  //   catch (e) {
+  //     if (e instanceof Error) {
+  //       console.log(e.message)
+  //     }
+  //   }
+  //   ctx.eventLogger.emit("Any_Event", {
+  //     distinctId: from,
+  //     eventName: event.name
+  //   })
+  // })
 
 
 FactoryProcessor.bind({ address: constant.ETH_MARKET_FACTORY })
