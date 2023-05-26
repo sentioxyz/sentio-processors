@@ -14,7 +14,7 @@ import {
 import { getVBep20DelegatorContractOnContext } from "./types/eth/vbep20delegator.js";
 import { EventLogger } from "@sentio/sdk";
 import { EthChainId, BigDecimal, Gauge } from "@sentio/sdk"
-import { token } from "@sentio/sdk/utils"
+import { ignoreEthCallException, token } from "@sentio/sdk/utils"
 import { getVaultImplementationContractOnContext } from "./types/eth/vaultimplementation.js";
 import { AddSymbolEvent, getSymbolManagerImplementationContractOnContext, RemoveSymbolEvent, SymbolManagerImplementationBoundContractView, SymbolManagerImplementationContext, SymbolManagerImplementationProcessor, TradeEvent } from "./types/eth/symbolmanagerimplementation.js";
 import { getComptrollerContractOnContext } from "./types/eth/comptroller.js";
@@ -111,7 +111,7 @@ async function recordSymbols(ctx: EthContext, symbolManagerContract: SymbolManag
             pool: event.address,
             symbolAddress: symbol,
             symbol: symbolName,
-            indexPrice, 
+            indexPrice,
             fundingTimestamp,
             cumulativeFundingPerVolume,
             tradersPnl,
@@ -129,7 +129,7 @@ async function recordSymbols(ctx: EthContext, symbolManagerContract: SymbolManag
             pool: event.address,
             symbol: symbolName,
             symbolAddress: symbol,
-            indexPrice, 
+            indexPrice,
             fundingTimestamp,
             cumulaitveFundingPerPowerVolume,
             cumulativeFundingPerRealFuturesVolume,
@@ -147,7 +147,7 @@ async function recordSymbols(ctx: EthContext, symbolManagerContract: SymbolManag
 }
 
 async function recordSymbolsForMargin(ctx: EthContext, symbolManagerContract: SymbolManagerImplementationBoundContractView, event: AddMarginEvent | RemoveMarginEvent) {
-  try {  
+  try {
   //symbols
     const symbolsLength = await symbolManagerContract.getSymbolsLength()
     for (var i = 0; i < symbolsLength; i++) {
@@ -166,7 +166,7 @@ async function recordSymbolsForMargin(ctx: EthContext, symbolManagerContract: Sy
           pool: event.address,
           symbolAddress: symbol,
           symbol: symbolName,
-          indexPrice, 
+          indexPrice,
           fundingTimestamp,
           cumulativeFundingPerVolume,
           tradersPnl,
@@ -180,7 +180,7 @@ async function recordSymbolsForMargin(ctx: EthContext, symbolManagerContract: Sy
             pool: event.address,
             symbol: symbolName,
             symbolAddress: symbol,
-            indexPrice, 
+            indexPrice,
             fundingTimestamp,
             cumulaitveFundingPerPowerVolume,
             cumulativeFundingPerRealFuturesVolume,
@@ -198,10 +198,10 @@ async function recordSymbolsForMargin(ctx: EthContext, symbolManagerContract: Sy
 
 
 async function recordSymbolsForTrade(
-  ctx: EthContext, 
-  symbolManagerContract: SymbolManagerImplementationBoundContractView, 
+  ctx: EthContext,
+  symbolManagerContract: SymbolManagerImplementationBoundContractView,
   pool: string,
-  evt: TradeEvent, 
+  evt: TradeEvent,
   activeSymbols: Set<string>) {
   try {
   //symbols
@@ -232,11 +232,11 @@ async function recordSymbolsForTrade(
         // }
 
         const position = await symbolContract.positions(pTokenId)
-        
+
         symbolState.emit(ctx, {
           pool,
           symbol: symbolName,
-          symbolAddress: symbol, 
+          symbolAddress: symbol,
           netVolume,
           netCost,
           indexPrice,
@@ -271,7 +271,7 @@ async function recordSymbolsForTrade(
         // const netCost = await symbolGammaContract.netCost()
         // const nPositionHolders = await symbolGammaContract.nPositionHolders()
         const position = await symbolGammaContract.positions(pTokenId)
-          
+
         positionState.emit(ctx, {
           pool,
           symbol: symbolName,
@@ -309,7 +309,7 @@ function symbolType(symbol: string) {
   }
   if (symbol.endsWith('^2')) {
     return 'power'
-  } 
+  }
   if (symbol.endsWith('-Gamma')) {
     return 'gamma'
   }
@@ -342,15 +342,16 @@ async function onImplementation(evt: NewImplementationEvent, ctx: PoolContext) {
     const pToken = await newContract.pToken()
     const oracleManager = await newContract.oracleManager()
     const swapper = await newContract.swapper()
-    var privileger
-    var rewardVault
-    try {
-      privileger = await newContract.privileger()
-      rewardVault = await newContract.rewardVault()
-    } catch (e) {
-      console.log("error fetching privileger or rewardVault")
-      console.log(e)
-    }
+    const privileger = await ignoreEthCallException(newContract.privileger(), false)
+    const rewardVault = await ignoreEthCallException(newContract.rewardVault())
+
+    // try {
+    //   privileger = await newContract.privileger()
+    //   rewardVault = await newContract.rewardVault()
+    // } catch (e) {
+    //   console.log("error fetching privileger or rewardVault")
+    //   console.log(e)
+    // }
     const decimalsB0 = await newContract.decimalsB0()
     const reserveRatioB0 = await newContract.reserveRatioB0()
     const minRatioB0 = await newContract.minRatioB0()
@@ -435,7 +436,7 @@ async function onChangeLiquidity(evt: AddLiquidityEvent | RemoveLiquidityEvent, 
       cumulativePnlPerLiquidity
     })
 
-    //vault 
+    //vault
     const vault = lpInfo.vault
 
     const vaultContract = getVaultImplementationContractOnContext(ctx, vault)
@@ -484,7 +485,7 @@ async function onChangeLiquidity(evt: AddLiquidityEvent | RemoveLiquidityEvent, 
       initialMarginRequired
     })
 
-    await recordSymbols(ctx, symbolManagerContract, evt) 
+    await recordSymbols(ctx, symbolManagerContract, evt)
 
     // ctx.eventLogger.emit(evt.name, {
     //   pool_liquidity,
@@ -564,7 +565,7 @@ async function onChangeMargin(evt: AddMarginEvent | RemoveMarginEvent, ctx: Pool
       lpsPnl,
       cumulativePnlPerLiquidity
     })
-    await recordSymbolsForMargin(ctx, symbolManagerContract, evt) 
+    await recordSymbolsForMargin(ctx, symbolManagerContract, evt)
 
   }
 } catch (e) {
