@@ -702,12 +702,25 @@ async function recordSymbolInfo(symbolAddress: string, ctx: EthContext) {
       isCloseOnly
     })
   } else if (symbolName.includes('^2')) {
+    // Power
     const powerSymbolContract = getSymbolImplementationPowerContractOnContext(ctx, symbolAddress)
     const alpha = await symbolContract.alpha()
     const volatilityId = await powerSymbolContract.volatilityId()
     const startingPriceShiftLimit = await powerSymbolContract.startingPriceShiftLimit()
-    const jumpLimitRatio = await powerSymbolContract.jumpLimitRatio()
-    const initialOpenVolume = await powerSymbolContract.initialOpenVolume()
+    var jumpLimitRatio
+    try {
+      jumpLimitRatio = await symbolContract.jumpLimitRatio()
+    } catch(e) {
+      console.log(e)
+      console.log("error fetching jumpLimitRatio")
+    }
+    var initialOpenVolume
+    try {
+      initialOpenVolume = await symbolContract.initialOpenVolume()
+    } catch(e) {
+      console.log(e)
+      console.log("error fetching initialOpenVolume")
+    }
     const pricePercentThreshold = await symbolContract.pricePercentThreshold()
     const timeThreshold = await symbolContract.timeThreshold()
 
@@ -734,6 +747,7 @@ async function recordSymbolInfo(symbolAddress: string, ctx: EthContext) {
       isCloseOnly
     })
   } else if (symbolName.endsWith('-Gamma')) {
+    // Gamma
     const gammaContract = getSymbolImplementationGammaContractOnContext(ctx, symbolAddress)
     const powerAlpha = await gammaContract.powerAlpha()
     const futuresAlpha = await gammaContract.futuresAlpha()
@@ -758,17 +772,24 @@ async function recordSymbolInfo(symbolAddress: string, ctx: EthContext) {
       isCloseOnly
     })
   } else {
+    // Futures
     const optionSymbolContract = getSymbolImplementationOptionContractOnContext(ctx, symbolAddress)
     const alpha = await symbolContract.alpha()
     const startingPriceShiftLimit = await symbolContract.startingPriceShiftLimit()
     var jumpLimitRatio
     try {
-      const jumpLimitRatio = await symbolContract.jumpLimitRatio()
+      jumpLimitRatio = await symbolContract.jumpLimitRatio()
     } catch(e) {
       console.log(e)
       console.log("error fetching jumpLimitRatio")
     }
-    const initialOpenVolume = await symbolContract.initialOpenVolume()
+    var initialOpenVolume
+    try {
+      initialOpenVolume = await symbolContract.initialOpenVolume()
+    } catch(e) {
+      console.log(e)
+      console.log("error fetching initialOpenVolume")
+    }
     const pricePercentThreshold = await symbolContract.pricePercentThreshold()
     const timeThreshold = await symbolContract.timeThreshold()
 
@@ -851,6 +872,6 @@ SymbolManagerImplementationProcessor.bind({address: "0x543A9FA25ba9a16612274DD70
 })
 .onEventTrade(onTrade)
 .onEventAddSymbol(onChangeSymbol)
-// .onEventNewImplementation(onSymbolImplementation)
+.onEventNewImplementation(onSymbolImplementation)
 
 
