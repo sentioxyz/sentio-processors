@@ -12,7 +12,7 @@ import { FerroBarContext } from "./types/eth/ferrobar.js"
 import { getERC20Contract } from '@sentio/sdk/eth/builtin/erc20';
 import { PoolProcessor } from "./types/eth/pool.js"
 import { Gauge_3FER_TVL, Gauge_2FER_TVL, Gauge_LCRO_WCRO_TVL, Gauge_LATOM_ATOM_TVL } from './helper/gaugeTVL.js'
-
+import './pancake.js'
 
 //Ferro DAI/USDC/USDT Swap
 SwapProcessor.bind({
@@ -42,7 +42,8 @@ SwapProcessor.bind({
       DAI_amount,
       USDC_amount,
       USDT_amount,
-      poolName
+      poolName,
+      project: "ferro",
     })
   })
   .onEventRemoveLiquidity(async (event, ctx) => {
@@ -62,7 +63,8 @@ SwapProcessor.bind({
       DAI_amount,
       USDC_amount,
       USDT_amount,
-      poolName
+      poolName,
+      project: "ferro"
     })
   })
   .onEventRemoveLiquidityOne(async (event, ctx) => {
@@ -91,7 +93,8 @@ SwapProcessor.bind({
       distinctId: provider,
       amount,
       coin_symbol: boughtId == 0 ? "DAI" : (boughtId == 1 ? "USDC" : "USDT"),
-      poolName
+      poolName,
+      project: "ferro"
     })
   })
   .onEventTokenSwap(async (event, ctx) => {
@@ -110,10 +113,11 @@ SwapProcessor.bind({
       boughtId,
       coin_symbol,
       volume,
-      poolName
+      poolName,
+      project: "ferro"
     })
-    ctx.meter.Counter("swap_vol_counter").add(volume, { coin_symbol, poolName })
-    ctx.meter.Gauge("swap_vol_gauge").record(volume, { coin_symbol, poolName })
+    ctx.meter.Counter("swap_vol_counter").add(volume, { coin_symbol, poolName, project: "ferro" })
+    ctx.meter.Gauge("swap_vol_gauge").record(volume, { coin_symbol, poolName, project: "ferro" })
     // ctx.meter.Gauge("swap_fee_gauge").record(0.0004 * volume, { coin_symbol, poolName })
     // ctx.meter.Gauge("admin_fee_gauge").record(0.0004 * 0.5 * volume, { coin_symbol, poolName })
 
@@ -146,7 +150,8 @@ SwapProcessor.bind({
       lpTokenSupply,
       USDC_amount,
       USDT_amount,
-      poolName
+      poolName,
+      project: "ferro"
     })
   })
   .onEventRemoveLiquidity(async (event, ctx) => {
@@ -163,7 +168,8 @@ SwapProcessor.bind({
       distinctId: provider,
       USDC_amount,
       USDT_amount,
-      poolName
+      poolName,
+      project: "ferro"
     })
   })
   .onEventRemoveLiquidityOne(async (event, ctx) => {
@@ -176,11 +182,11 @@ SwapProcessor.bind({
     switch (boughtId) {
       case 0:
         amount = Number(tokensBought) / Math.pow(10, 6)
-        ctx.meter.Counter("remove_liquidity_amount").add(amount, { coin_symbol: "USDC", poolName })
+        ctx.meter.Counter("remove_liquidity_amount").add(amount, { coin_symbol: "USDC", poolName, project: "ferro" })
         break
       case 1:
         amount = Number(tokensBought) / Math.pow(10, 6)
-        ctx.meter.Counter("remove_liquidity_amount").add(amount, { coin_symbol: "USDT", poolName })
+        ctx.meter.Counter("remove_liquidity_amount").add(amount, { coin_symbol: "USDT", poolName, project: "ferro" })
         break
 
     }
@@ -188,7 +194,8 @@ SwapProcessor.bind({
       distinctId: provider,
       amount,
       coin_symbol: boughtId == 0 ? "USDC" : "USDT",
-      poolName
+      poolName,
+      project: "ferro"
     })
   })
   .onEventTokenSwap(async (event, ctx) => {
@@ -207,11 +214,12 @@ SwapProcessor.bind({
       boughtId: Number(event.args.boughtId),
       coin_symbol,
       volume,
-      poolName
+      poolName,
+      project: "ferro"
     })
 
-    ctx.meter.Counter("swap_vol_counter").add(volume, { coin_symbol, poolName })
-    ctx.meter.Gauge("swap_vol_gauge").record(volume, { coin_symbol, poolName })
+    ctx.meter.Counter("swap_vol_counter").add(volume, { coin_symbol, poolName, project: "ferro" })
+    ctx.meter.Gauge("swap_vol_gauge").record(volume, { coin_symbol, poolName, project: "ferro" })
     // ctx.meter.Gauge("swap_fee_gauge").record(0.0004 * volume, { coin_symbol, poolName })
     // ctx.meter.Gauge("admin_fee_gauge").record(0.0004 * 0.5 * volume, { coin_symbol, poolName })
   })
@@ -241,7 +249,8 @@ SwapProcessor.bind({
       lpTokenSupply,
       LCRO_amount,
       WCRO_amount,
-      poolName
+      poolName,
+      project: "ferro"
     })
   })
   .onEventRemoveLiquidity(async (event, ctx) => {
@@ -257,7 +266,8 @@ SwapProcessor.bind({
       distinctId: provider,
       LCRO_amount,
       WCRO_amount,
-      poolName
+      poolName,
+      project: "ferro"
     })
   })
   .onEventRemoveLiquidityOne(async (event, ctx) => {
@@ -282,7 +292,8 @@ SwapProcessor.bind({
       distinctId: provider,
       amount,
       coin_symbol: boughtId == 0 ? "LCRO" : "CRO",
-      poolName
+      poolName,
+      project: "ferro"
     })
   })
   .onEventTokenSwap(async (event, ctx) => {
@@ -302,10 +313,11 @@ SwapProcessor.bind({
       boughtId: Number(event.args.boughtId),
       volume,
       coin_symbol,
-      poolName
+      poolName,
+      project: "ferro"
     })
-    ctx.meter.Counter("swap_vol_counter").add(volume, { coin_symbol, poolName })
-    ctx.meter.Gauge("swap_vol_gauge").record(volume, { coin_symbol, poolName })
+    ctx.meter.Counter("swap_vol_counter").add(volume, { coin_symbol, poolName, project: "ferro" })
+    ctx.meter.Gauge("swap_vol_gauge").record(volume, { coin_symbol, poolName, project: "ferro" })
     // ctx.meter.Gauge("swap_fee_gauge").record(0.0004 * volume, { coin_symbol, poolName })
     // ctx.meter.Gauge("admin_fee_gauge").record(0.0004 * 0.5 * volume, { coin_symbol, poolName })
 
@@ -338,7 +350,7 @@ SwapProcessor.bind({
       lpTokenSupply,
       LATOM_amount,
       ATOM_amount,
-      poolName
+      poolName, project: "ferro"
     })
   })
   .onEventRemoveLiquidity(async (event, ctx) => {
@@ -354,7 +366,7 @@ SwapProcessor.bind({
       distinctId: provider,
       LATOM_amount,
       ATOM_amount,
-      poolName
+      poolName, project: "ferro"
     })
   })
   .onEventRemoveLiquidityOne(async (event, ctx) => {
@@ -379,7 +391,7 @@ SwapProcessor.bind({
       distinctId: provider,
       amount,
       coin_symbol: boughtId == 0 ? "LATOM" : "ATOM",
-      poolName
+      poolName, project: "ferro"
     })
   })
   .onEventTokenSwap(async (event, ctx) => {
@@ -399,7 +411,7 @@ SwapProcessor.bind({
       boughtId: Number(event.args.boughtId),
       volume,
       coin_symbol,
-      poolName
+      poolName, project: "ferro"
     })
     ctx.meter.Counter("swap_vol_counter").add(volume, { coin_symbol, poolName })
     ctx.meter.Gauge("swap_vol_gauge").record(volume, { coin_symbol, poolName })
@@ -425,9 +437,9 @@ FerroFarmProcessor.bind({
     ctx.eventLogger.emit("PoolDeposit", {
       distinctId: user,
       pid,
-      amount
+      amount, project: "ferro"
     })
-    ctx.meter.Counter("pool_counter").add(amount, { pid: pid.toString() })
+    ctx.meter.Counter("pool_counter").add(amount, { pid: pid.toString(), project: "ferro" })
   })
   .onEventWithdraw(async (event, ctx) => {
     const user = event.args.user
@@ -436,9 +448,9 @@ FerroFarmProcessor.bind({
     ctx.eventLogger.emit("PoolWithdraw", {
       distinctId: user,
       pid,
-      amount
+      amount, project: "ferro"
     })
-    ctx.meter.Counter("pool_counter").sub(amount, { pid: pid.toString() })
+    ctx.meter.Counter("pool_counter").sub(amount, { pid: pid.toString(), project: "ferro" })
 
   })
 
@@ -461,9 +473,9 @@ FerroBoostProcessor.bind({
       amount,
       stakeId,
       weightedAmount,
-      unlockTimestamp
+      unlockTimestamp, project: "ferro"
     })
-    ctx.meter.Counter("vault_counter").add(amount, { pid: pid.toString() })
+    ctx.meter.Counter("vault_counter").add(amount, { pid: pid.toString(), project: "ferro" })
 
   })
   .onEventWithdraw(async (event, ctx) => {
@@ -480,9 +492,9 @@ FerroBoostProcessor.bind({
         stakeId,
         pid,
         amount,
-        weightedAmount
+        weightedAmount, project: "ferro"
       })
-      ctx.meter.Counter("vault_counter").sub(amount, { pid: pid.toString() })
+      ctx.meter.Counter("vault_counter").sub(amount, { pid: pid.toString(), project: "ferro" })
     }
     catch (e) { console.log(`get pid failed at ${ctx.transactionHash}`) }
   })
@@ -518,8 +530,8 @@ FerProcessor.bind({
         teamBalance += Number(await ctx.contract.balanceOf(constant.TEAM_WALLETS[i])) / Math.pow(10, 18)
       }
       const marketCap = totalSupply - teamBalance
-      ctx.meter.Gauge("FER_marketCap").record(marketCap, { coin_symbol: "FER" })
-      ctx.meter.Gauge("FER_totalSupply").record(totalSupply, { coin_symbol: "FER" })
+      ctx.meter.Gauge("FER_marketCap").record(marketCap, { coin_symbol: "FER", project: "ferro" })
+      ctx.meter.Gauge("FER_totalSupply").record(totalSupply, { coin_symbol: "FER", project: "ferro" })
     }
     catch (e) { console.log(`gauge FER error at ${ctx.transactionHash}`) }
   }, 60, 120)
@@ -533,13 +545,13 @@ FerroBarProcessor.bind({
   .onTimeInterval(async (_, ctx) => {
     try {
       const totalSupply = Number(await ctx.contract.totalSupply()) / Math.pow(10, 18)
-      ctx.meter.Gauge("xFER_totalSupply").record(totalSupply, { coin_symbol: "xFER" })
+      ctx.meter.Gauge("xFER_totalSupply").record(totalSupply, { coin_symbol: "xFER", project: "ferro" })
       let teamBalance = 0
       for (let i = 0; i < constant.TEAM_WALLETS.length; i++) {
         teamBalance += Number(await ctx.contract.balanceOf(constant.TEAM_WALLETS[i])) / Math.pow(10, 18)
       }
       const marketCap = totalSupply - teamBalance
-      ctx.meter.Gauge("xFER_marketCap").record(marketCap, { coin_symbol: "xFER" })
+      ctx.meter.Gauge("xFER_marketCap").record(marketCap, { coin_symbol: "xFER", project: "ferro" })
     }
     catch (e) { console.log(`gauge xFER error at ${ctx.transactionHash}`) }
   }, 60, 120)
