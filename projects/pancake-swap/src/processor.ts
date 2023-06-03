@@ -1,7 +1,7 @@
 import { swap } from './types/aptos/pancake-swap.js'
 import { Gauge } from "@sentio/sdk";
 
-import { AptosDex, getCoinInfo, getPair, getPairValue }
+import { AptosDex, getCoinInfo, getPairValue }
   from "@sentio/sdk/aptos/ext"
   // from "@sentio-processor/common/aptos"
 
@@ -46,7 +46,7 @@ swap.bind({startVersion: 10463608})
     ctx.meter.Counter("num_pools").add(1)
     const coinx = evt.data_decoded.token_x
     const coiny = evt.data_decoded.token_y
-    const pair = await getPair(coinx, coiny)
+    const pair = await PANCAKE_SWAP_APTOS.getPair(coinx, coiny)
     ctx.eventLogger.emit("Create Pair", {
       distinctId: ctx.transaction.sender,
       pair,
@@ -60,7 +60,7 @@ swap.bind({startVersion: 10463608})
     const value = await getPairValue(ctx, coinx, coiny, evt.data_decoded.amount_x, evt.data_decoded.amount_y)
     ctx.eventLogger.emit("Add Liquidity", {
       distinctId: ctx.transaction.sender,
-      pair: await getPair(coinx, coiny),
+      pair: await PANCAKE_SWAP_APTOS.getPair(coinx, coiny),
       value,
     })
   })
@@ -71,7 +71,7 @@ swap.bind({startVersion: 10463608})
     const value = await getPairValue(ctx, coinx, coiny, evt.data_decoded.amount_x, evt.data_decoded.amount_y)
     ctx.eventLogger.emit("Remove Liquidity", {
       distinctId: ctx.transaction.sender,
-      pair: await getPair(coinx, coiny),
+      pair: await PANCAKE_SWAP_APTOS.getPair(coinx, coiny),
       value
     })
   })
@@ -101,7 +101,7 @@ swap.bind({startVersion: 10463608})
 
     ctx.eventLogger.emit("Swap", {
       distinctId: ctx.transaction.sender,
-      pair: await getPair(coinx, coiny),
+      pair: await PANCAKE_SWAP_APTOS.getPair(coinx, coiny),
       value: value,
       message
     })
