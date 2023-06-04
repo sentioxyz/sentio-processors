@@ -8,7 +8,7 @@ import { WCROProcessor, TransferEvent, WCROContext } from './types/eth/wcro.js'
 import { TectonicCoreProcessor } from './types/eth/tectoniccore.js'
 import { EthChainId } from "@sentio/sdk/eth";
 import { getERC20Contract } from '@sentio/sdk/eth/builtin/erc20'
-// import './aave_v3.js'
+import './aave_v3.js'
 
 const MintEventHandler = async (event: any, ctx: TCROContext) => {
   const minter = event.args.minter
@@ -23,6 +23,7 @@ const MintEventHandler = async (event: any, ctx: TCROContext) => {
     mintAmount,
     mintTokens,
     tSymbol,
+    project: "tectonic",
     coin_symbol: collateralSymbol
   })
 
@@ -31,12 +32,13 @@ const MintEventHandler = async (event: any, ctx: TCROContext) => {
     mintAmount,
     mintTokens,
     tSymbol,
+    project: "tectonic",
     coin_symbol: collateralSymbol
   })
 
-  ctx.meter.Counter("borrow_or_supply_tx").add(1, { event: "Mint" })
-  ctx.meter.Counter("collateral_counter").add(mintAmount, { tSymbol, coin_symbol: collateralSymbol })
-  ctx.meter.Counter("tTokens_counter").add(mintTokens, { tSymbol, coin_symbol: collateralSymbol })
+  ctx.meter.Counter("borrow_or_supply_tx").add(1, { event: "Mint", project: "tectonic" })
+  ctx.meter.Counter("collateral_counter").add(mintAmount, { tSymbol, coin_symbol: collateralSymbol, project: "tectonic" })
+  ctx.meter.Counter("tTokens_counter").add(mintTokens, { tSymbol, coin_symbol: collateralSymbol, project: "tectonic" })
 }
 
 const RedeemEventHandler = async (event: any, ctx: TCROContext) => {
@@ -54,6 +56,7 @@ const RedeemEventHandler = async (event: any, ctx: TCROContext) => {
     redeemAmount,
     redeemTokens,
     tSymbol,
+    project: "tectonic",
     coin_symbol: collateralSymbol
   })
 
@@ -62,12 +65,12 @@ const RedeemEventHandler = async (event: any, ctx: TCROContext) => {
     redeemAmount,
     redeemTokens,
     tSymbol,
-    coin_symbol: collateralSymbol
+    coin_symbol: collateralSymbol, project: "tectonic"
   })
 
-  ctx.meter.Counter("borrow_or_supply_tx").add(1, { event: "Redeem" })
-  ctx.meter.Counter("collateral_counter").sub(redeemAmount, { tSymbol, coin_symbol: collateralSymbol })
-  ctx.meter.Counter("tTokens_counter").sub(redeemTokens, { tSymbol, coin_symbol: collateralSymbol })
+  ctx.meter.Counter("borrow_or_supply_tx").add(1, { event: "Redeem", project: "tectonic" })
+  ctx.meter.Counter("collateral_counter").sub(redeemAmount, { tSymbol, coin_symbol: collateralSymbol, project: "tectonic" })
+  ctx.meter.Counter("tTokens_counter").sub(redeemTokens, { tSymbol, coin_symbol: collateralSymbol, project: "tectonic" })
 
 }
 
@@ -86,7 +89,7 @@ const BorrowEventHandler = async (event: any, ctx: TCROContext) => {
     borrowAmount,
     tSymbol,
     accountBorrows,
-    coin_symbol: collateralSymbol
+    coin_symbol: collateralSymbol, project: "tectonic"
   })
 
   ctx.eventLogger.emit("BorrowOrSupply", {
@@ -94,12 +97,12 @@ const BorrowEventHandler = async (event: any, ctx: TCROContext) => {
     borrowAmount,
     tSymbol,
     accountBorrows,
-    coin_symbol: collateralSymbol
+    coin_symbol: collateralSymbol, project: "tectonic"
   })
 
-  ctx.meter.Counter("borrow_or_supply_tx").add(1, { event: "Borrow" })
-  ctx.meter.Counter("borrow_counter").add(borrowAmount, { tSymbol, coin_symbol: collateralSymbol })
-  ctx.meter.Gauge("borrow_amount_usd_gauge").record(borrowAmountUSD, { tSymbol, coin_symbol: collateralSymbol })
+  ctx.meter.Counter("borrow_or_supply_tx").add(1, { event: "Borrow", project: "tectonic" })
+  ctx.meter.Counter("borrow_counter").add(borrowAmount, { tSymbol, coin_symbol: collateralSymbol, project: "tectonic" })
+  ctx.meter.Gauge("borrow_amount_usd_gauge").record(borrowAmountUSD, { tSymbol, coin_symbol: collateralSymbol, project: "tectonic" })
 }
 
 const RepayBorrowEventHandler = async (event: any, ctx: TCROContext) => {
@@ -117,7 +120,7 @@ const RepayBorrowEventHandler = async (event: any, ctx: TCROContext) => {
     repayAmount,
     accountBorrows,
     tSymbol,
-    coin_symbol: collateralSymbol
+    coin_symbol: collateralSymbol, project: "tectonic"
   })
 
   ctx.eventLogger.emit("BorrowOrSupply", {
@@ -126,11 +129,11 @@ const RepayBorrowEventHandler = async (event: any, ctx: TCROContext) => {
     repayAmount,
     accountBorrows,
     tSymbol,
-    coin_symbol: collateralSymbol
+    coin_symbol: collateralSymbol, project: "tectonic"
   })
 
-  ctx.meter.Counter("borrow_or_supply_tx").add(1, { event: "RepayBorrow" })
-  ctx.meter.Counter("borrow_counter").sub(repayAmount, { tSymbol, coin_symbol: collateralSymbol })
+  ctx.meter.Counter("borrow_or_supply_tx").add(1, { event: "RepayBorrow", project: "tectonic" })
+  ctx.meter.Counter("borrow_counter").sub(repayAmount, { tSymbol, coin_symbol: collateralSymbol, project: "tectonic" })
 }
 
 const LiquidateBorrowHandler = async (event: LiquidateBorrowEvent, ctx: TCROContext) => {
@@ -153,10 +156,10 @@ const LiquidateBorrowHandler = async (event: LiquidateBorrowEvent, ctx: TCROCont
     repayAmount,
     seizeTokens,
     tSymbol,
-    coin_symbol: collateralSymbol
+    coin_symbol: collateralSymbol, project: "tectonic"
   })
 
-  ctx.meter.Counter("liquidation_amount_counter").add(repayAmount, { tSymbol, coin_symbol: collateralSymbol })
+  ctx.meter.Counter("liquidation_amount_counter").add(repayAmount, { tSymbol, coin_symbol: collateralSymbol, project: "tectonic" })
 }
 
 const AccrueInterestHandler = async (event: AccrueInterestEvent, ctx: TCROContext) => {
@@ -171,13 +174,13 @@ const AccrueInterestHandler = async (event: AccrueInterestEvent, ctx: TCROContex
     const protocolInterestRevenue = interestAccumulated * reserveFactor
     // console.log(`reserveFactor ${reserveFactor} ${protocolInterestRevenue} ${interestAccumulated}`)
 
-    ctx.meter.Gauge("protocolInterestRevenue").record(protocolInterestRevenue, { tSymbol, coin_symbol: collateralSymbol })
-    ctx.meter.Counter("protocolInterestRevenue_counter").add(protocolInterestRevenue, { tSymbol, coin_symbol: collateralSymbol })
+    ctx.meter.Gauge("protocolInterestRevenue").record(protocolInterestRevenue, { tSymbol, coin_symbol: collateralSymbol, project: "tectonic" })
+    ctx.meter.Counter("protocolInterestRevenue_counter").add(protocolInterestRevenue, { tSymbol, coin_symbol: collateralSymbol, project: "tectonic" })
 
     ctx.eventLogger.emit("AccrueInterest", {
       tSymbol,
       protocolInterestRevenue,
-      coin_symbol: collateralSymbol
+      coin_symbol: collateralSymbol, project: "tectonic"
     })
   }
   catch (e) {
@@ -190,13 +193,13 @@ const ReservesAddedHandler = async (event: any, ctx: TCROContext) => {
   const collateralSymbol = (constant.COLLATERAL_TOKENS.get(tSymbol))!
   const collateralDecimal = (constant.COLLATERAL_DECIMAL.get(collateralSymbol))!
   const protocolLiquidationRevenue = Number(scaleDown(event.args.addAmount, collateralDecimal))
-  ctx.meter.Gauge("protocolLiquidationRevenue").record(protocolLiquidationRevenue, { tSymbol, coin_symbol: collateralSymbol })
-  ctx.meter.Counter("protocolLiquidationRevenue_counter").add(protocolLiquidationRevenue, { tSymbol, coin_symbol: collateralSymbol })
+  ctx.meter.Gauge("protocolLiquidationRevenue").record(protocolLiquidationRevenue, { tSymbol, coin_symbol: collateralSymbol, project: "tectonic" })
+  ctx.meter.Counter("protocolLiquidationRevenue_counter").add(protocolLiquidationRevenue, { tSymbol, coin_symbol: collateralSymbol, project: "tectonic" })
 
   ctx.eventLogger.emit("ReservesAdded", {
     tSymbol,
     protocolLiquidationRevenue,
-    coin_symbol: collateralSymbol
+    coin_symbol: collateralSymbol, project: "tectonic"
   })
 
 }
@@ -209,15 +212,15 @@ const OnTimeIntervalHandler = async (_: any, ctx: TCROContext) => {
   const totalBorrows = Number(await ctx.contract.totalBorrows()) / Math.pow(10, collateralDecimal)
   const totalSupply = Number(await ctx.contract.totalSupply()) / Math.pow(10, 8)
   const totalReserves = Number(await ctx.contract.totalReserves()) / Math.pow(10, collateralDecimal)
-  ctx.meter.Gauge("totalBorrows").record(totalBorrows, { tSymbol, coin_symbol: collateralSymbol })
-  ctx.meter.Gauge("totalSupply").record(totalSupply, { tSymbol, coin_symbol: collateralSymbol })
-  ctx.meter.Gauge("totalReserves").record(totalReserves, { tSymbol, coin_symbol: collateralSymbol })
+  ctx.meter.Gauge("totalBorrows").record(totalBorrows, { tSymbol, coin_symbol: collateralSymbol, project: "tectonic" })
+  ctx.meter.Gauge("totalSupply").record(totalSupply, { tSymbol, coin_symbol: collateralSymbol, project: "tectonic" })
+  ctx.meter.Gauge("totalReserves").record(totalReserves, { tSymbol, coin_symbol: collateralSymbol, project: "tectonic" })
 
   // const collateralAddress = (constant.COLLATERAL_ADDRESSES.get(collateralSymbol))!
   try {
     // const tvl = Number(await getERC20Contract(ctx.chainId, collateralAddress).balanceOf(ctx.address)) / Math.pow(10, collateralDecimal)
     const tvl = Number(await ctx.contract.getCash()) / Math.pow(10, collateralDecimal)
-    ctx.meter.Gauge("tvl").record(tvl, { tSymbol, coin_symbol: collateralSymbol })
+    ctx.meter.Gauge("tvl").record(tvl, { tSymbol, coin_symbol: collateralSymbol, project: "tectonic" })
   } catch (e) { console.log(`get tvl error at ${ctx.address}, ${ctx.transactionHash}`) }
 }
 
@@ -272,10 +275,10 @@ TectonicCoreProcessor.bind({
         tSymbol,
         tonicDelta,
         tonicBorrowIndex,
-        coin_symbol: "tonic",
+        coin_symbol: "tonic", project: "tectonic"
       })
 
-      ctx.meter.Counter("tonic_counter").add(tonicDelta, { tSymbol, coin_symbol: "tonic", event: "DistributedBorrowerTonic" })
+      ctx.meter.Counter("tonic_counter").add(tonicDelta, { tSymbol, coin_symbol: "tonic", event: "DistributedBorrowerTonic", project: "tectonic" })
     } catch (error) {
       console.log(error.message, hash)
     }
@@ -297,10 +300,10 @@ TectonicCoreProcessor.bind({
         tSymbol,
         tonicDelta,
         tonicSupplyIndex,
-        coin_symbol: "tonic",
+        coin_symbol: "tonic", project: "tectonic"
       })
 
-      ctx.meter.Counter("tonic_counter").add(tonicDelta, { tSymbol, coin_symbol: "tonic", event: "DistributedSupplierTonic" })
+      ctx.meter.Counter("tonic_counter").add(tonicDelta, { tSymbol, coin_symbol: "tonic", event: "DistributedSupplierTonic", project: "tectonic" })
 
     } catch (error) {
       console.log(error.message, hash)
