@@ -23,14 +23,9 @@ import {
 import { DystPairProcessor } from "./types/eth/dystpair.js";
 
 // a constant string array
-const ALGEBRA_ADDRESSES = [
-  "0x7b925e617aefd7fb3a93abe3a701135d7a1ba710",
-  "0x5b41eedcfc8e0ae47493d4945aa1ae4fe05430ff",
-  "0x384d2094D0Df788192043a1CBd200308DD60b068",
-  "0x5d1e23160ED81F33dfaE40Ed72dd4377c198ddAf",
-];
+const ALGEBRA_ADDRESSES = ["0x7b925e617aefd7fb3a93abe3a701135d7a1ba710"];
 
-const START_BLOCK = 43099700;
+const START_BLOCK = 43266060;
 
 for (const address of ALGEBRA_ADDRESSES) {
   AlgebraPoolProcessor.bind({
@@ -45,10 +40,7 @@ for (const address of ALGEBRA_ADDRESSES) {
   });
 }
 
-const V3_ADDRESSES = [
-  "0xefa98fdf168f372e5e9e9b910fcdfd65856f3986",
-  "0x45dda9cb7c25131df268515131f647d726f50608",
-];
+const V3_ADDRESSES = ["0x9b08288c3be4f62bbf8d1c20ac9c5e6f9467d8b7"];
 
 for (const address of V3_ADDRESSES) {
   UniswapV3PoolProcessor.bind({
@@ -64,10 +56,8 @@ for (const address of V3_ADDRESSES) {
 }
 
 const V2_ADDRESSES = [
-  "0x4B1F1e2435A9C96f7330FAea190Ef6A7C8D70001",
-  "0x34965ba0ac2451a34a0471f04cca3f990b8dea27",
-  "0xcd279eb30046f0efafee57a0fa898c1f70d26529",
-  "0xadbF1854e5883eB8aa7BAf50705338739e558E5b",
+  "0x2ff463fee34a15dc2fce02209ae65c6bfc9a96dc",
+  "0xc1e49d1afacc0da4ff74a9a1ea7b2469dffc5659",
 ];
 
 for (const address of V2_ADDRESSES) {
@@ -109,20 +99,6 @@ for (const address of DYS_ADDRESSES) {
     startBlock: START_BLOCK,
   }).onEventSwap(async (evt, ctx) => {
     ctx.eventLogger.emit("DystSwapEvent", {
-      sender: evt.args.sender,
-      index: evt.transactionIndex,
-    });
-  });
-}
-
-const QUICK_ADDRESSES = ["0x8b80417D92571720949fC22404200AB8FAf7775f"];
-for (const address of QUICK_ADDRESSES) {
-  UniswapV2PairProcessor.bind({
-    address: address,
-    network: EthChainId.POLYGON,
-    startBlock: START_BLOCK,
-  }).onEventSwap(async (evt, ctx) => {
-    ctx.eventLogger.emit("QuickSwapEvent", {
       sender: evt.args.sender,
       index: evt.transactionIndex,
     });

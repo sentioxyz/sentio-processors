@@ -380,7 +380,10 @@ export function Bind(chainConfig: ChainConstants, startBlock: number) {
     async (b, ctx) => {
       const mevResults = handleBlock(b, chainConfig);
       for (const txn of mevResults.arbTxns) {
-        const link = `https://explorer.phalcon.xyz/tx/${chainConfig.phalconChain}/${txn.txnHash}`;
+        let link = `https://explorer.phalcon.xyz/tx/${chainConfig.phalconChain}/${txn.txnHash}`;
+        if (chainConfig.phalconChain === "eth") {
+          link = `https://app.sentio.xyz/qiaokan/eth-mev-analytics/transaction/${txn.txnHash}`;
+        }
         const [revenue, cost] = await computePnL(
           txn.revenue,
           txn.costs,
@@ -409,8 +412,12 @@ export function Bind(chainConfig: ChainConstants, startBlock: number) {
         });
       }
       for (const txn of mevResults.sandwichTxns) {
-        const frontLink = `https://explorer.phalcon.xyz/tx/${chainConfig.phalconChain}/${txn.frontTxnHash}`;
-        const backLink = `https://explorer.phalcon.xyz/tx/${chainConfig.phalconChain}/${txn.backTxnHash}`;
+        let frontLink = `https://explorer.phalcon.xyz/tx/${chainConfig.phalconChain}/${txn.frontTxnHash}`;
+        let backLink = `https://explorer.phalcon.xyz/tx/${chainConfig.phalconChain}/${txn.backTxnHash}`;
+        if (chainConfig.phalconChain === "eth") {
+          frontLink = `https://app.sentio.xyz/qiaokan/eth-mev-analytics/transaction/${txn.frontTxnHash}`;
+          backLink = `https://app.sentio.xyz/qiaokan/eth-mev-analytics/transaction/${txn.backTxnHash}`;
+        }
 
         const [revenue, cost] = await computePnL(
           txn.revenue,
