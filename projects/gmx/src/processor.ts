@@ -1,11 +1,12 @@
 import { ERC20Processor } from '@sentio/sdk/eth/builtin'
-import { VaultProcessor, VaultContext } from './types/eth/vault.js'
-import { GMXProcessor, GMXContext } from './types/eth/gmx.js'
+import { VaultProcessor } from './types/eth/vault.js'
+import { GMXProcessor } from './types/eth/gmx.js'
 import { GlpManagerProcessor } from './types/eth/glpmanager.js'
+import { RewardRouterProcessor } from './types/eth/rewardrouter.js'
 import { RewardTrackerProcessor, RewardTrackerContext } from './types/eth/rewardtracker.js'
 import { EthChainId } from "@sentio/sdk/eth";
 import { getOrCreateToken } from './helper/gmx-helper.js';
-import { glpmanager } from './types/eth/index.js'
+import { getERC20ContractOnContext } from '@sentio/sdk/eth/builtin/erc20'
 
 VaultProcessor.bind({ address: "0x489ee077994B6658eAfA855C308275EAd8097C4A", network: EthChainId.ARBITRUM })
     .onEventIncreasePosition(async (evt, ctx) => {
@@ -93,4 +94,59 @@ GlpManagerProcessor.bind({ address: "0x3963ffc9dff443c2a94f21b129d429891e32ec18"
             glpAmount: Number(evt.args.glpAmount) / Math.pow(10, tokenInfo.decimal),
             amountOut: Number(evt.args.amountOut) / Math.pow(10, 18)
         })
+    })
+    .onTimeInterval(async (_, ctx) => {
+        //record aum of pool assets
+        const aum = Number(await ctx.contract.getAum(true, { blockTag: ctx.blockNumber })) / Math.pow(10, 18)
+        ctx.meter.Gauge("aum_pool").record(aum)
+        //record sGLP amount
+        const stakedGlp = Number(await getERC20ContractOnContext(ctx, "0x5402B5F40310bDED796c7D0F3FF6683f5C0cFfdf").totalSupply()) / Math.pow(10, 18)
+        ctx.meter.Gauge("stakeGlp").record(stakedGlp)
+    }, 240, 1440)
+
+//FUL 
+RewardRouterProcessor.bind({ address: "0xB95DB5B167D75e6d04227CfFFA61069348d271F5", network: EthChainId.ARBITRUM })
+    .onEventStakeGlp(async (evt, ctx) => {
+        ctx.eventLogger.emit("rewardRouter.stakeGlp", {
+            distinctId: evt.args.account,
+            amount: Number(evt.args.amount) / Math.pow(10, 18)
+        })
+    })
+    .onEventUnstakeGlp(async (evt, ctx) => {
+        ctx.eventLogger.emit("rewardRouter.unstakeGlp", {
+            distinctId: evt.args.account,
+            amount: Number(evt.args.amount) / Math.pow(10, 18)
+        })
+    })
+    .onEventStakeGmx(async (evt, ctx) => {
+        //token==GMX
+        if (evt.args.token.toLowerCase() == "0xfc5a1a6eb076a2c7ad06ed22c90d7e710e35ad0a") {
+            ctx.eventLogger.emit("rewardRouter.stakeGmx", {
+                distinctId: evt.args.account,
+                amount: Number(evt.args.amount) / Math.pow(10, 18)
+            })
+        }
+        //token==esGMX
+        else if (evt.args.token.toLowerCase() == "0xf42ae1d54fd613c9bb14810b0588faaa09a426ca") {
+            ctx.eventLogger.emit("rewardRouter.stakeEsGmx", {
+                distinctId: evt.args.account,
+                amount: Number(evt.args.amount) / Math.pow(10, 18)
+            })
+        }
+    })
+    .onEventUnstakeGmx(async (evt, ctx) => {
+        //token==GMX
+        if (evt.args.token.toLowerCase() == "0xfc5a1a6eb076a2c7ad06ed22c90d7e710e35ad0a") {
+            ctx.eventLogger.emit("rewardRouter.unstakeGmx", {
+                distinctId: evt.args.account,
+                amount: Number(evt.args.amount) / Math.pow(10, 18)
+            })
+        }
+        //token==esGMX
+        else if (evt.args.token.toLowerCase() == "0xf42ae1d54fd613c9bb14810b0588faaa09a426ca") {
+            ctx.eventLogger.emit("rewardRouter.unstakeEsGmx", {
+                distinctId: evt.args.account,
+                amount: Number(evt.args.amount) / Math.pow(10, 18)
+            })
+        }
     })
