@@ -25,7 +25,7 @@ import { DystPairProcessor } from "./types/eth/dystpair.js";
 // a constant string array
 const ALGEBRA_ADDRESSES = ["0x7b925e617aefd7fb3a93abe3a701135d7a1ba710"];
 
-const START_BLOCK = 43266060;
+const START_BLOCK = 43580807;
 
 for (const address of ALGEBRA_ADDRESSES) {
   AlgebraPoolProcessor.bind({
@@ -40,7 +40,7 @@ for (const address of ALGEBRA_ADDRESSES) {
   });
 }
 
-const V3_ADDRESSES = ["0x9b08288c3be4f62bbf8d1c20ac9c5e6f9467d8b7"];
+const V3_ADDRESSES = ["0x45dDa9cb7c25131DF268515131f647d726f50608"];
 
 for (const address of V3_ADDRESSES) {
   UniswapV3PoolProcessor.bind({
@@ -55,10 +55,7 @@ for (const address of V3_ADDRESSES) {
   });
 }
 
-const V2_ADDRESSES = [
-  "0x2ff463fee34a15dc2fce02209ae65c6bfc9a96dc",
-  "0xc1e49d1afacc0da4ff74a9a1ea7b2469dffc5659",
-];
+const V2_ADDRESSES = ["0x853Ee4b2A13f8a742d64C8F088bE7bA2131f670d"];
 
 for (const address of V2_ADDRESSES) {
   UniswapV2PairProcessor.bind({

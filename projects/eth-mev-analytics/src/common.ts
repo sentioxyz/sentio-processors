@@ -18,6 +18,7 @@ export const chainConfigs = [
       "0x1D6DEdb49AF91A11B5C5F34954FD3E8cC4f03A86".toLowerCase(), // df saver recipe
       "0x619Ad2D02dBeE6ebA3CDbDA3F98430410e892882".toLowerCase(), // insta aggregator
       "0x9008D19f58AAbD9eD0D60971565AA8510560ab41".toLowerCase(), // CoW settlement
+      "0x3D6f08ae8C2931E27e95811E42F5d70164759a94".toLocaleLowerCase(), // DefiEdge
     ]),
     mintBurnAddr: new Set<string>([
       "0x0000000000000000000000000000000000000000",

@@ -221,6 +221,7 @@ export interface txnResult {
   revenue: Map<string, bigint>;
   costs: Map<string, bigint>;
   addressProperty: Map<string, AddressProperty>;
+  minerPayment: string;
   graph: TokenFlowGraph;
 }
 
@@ -232,6 +233,7 @@ export interface sandwichTxnResult {
   backTxnIndex: number;
   revenue: Map<string, bigint>;
   costs: Map<string, bigint>;
+  minerPayment: string;
 }
 
 export function isSandwich(
@@ -239,6 +241,10 @@ export function isSandwich(
 ): [boolean, sandwichTxnResult] {
   const front = arr[0];
   const back = arr[arr.length - 1];
+  let minerPayment = front.minerPayment;
+  if (minerPayment === "") {
+    minerPayment = back.minerPayment;
+  }
   let ret = {
     frontTxnHash: front.txnHash,
     backTxnHash: back.txnHash,
@@ -247,6 +253,7 @@ export function isSandwich(
     revenue: new Map<string, bigint>(),
     costs: new Map<string, bigint>(),
     mevContract: back.mevContract,
+    minerPayment: minerPayment,
   };
   const frontRet = getRolesCount(front.addressProperty);
   const backRet = getRolesCount(back.addressProperty);

@@ -209,6 +209,7 @@ export function txnProfitAndCost(
   data: dataByTxn,
   chainConfig: ChainConstants
 ): txnResult {
+  let minerPayment = "";
   const graph = buildGraph(data, chainConfig);
   let rewards = new Map<string, bigint>();
   let costs = new Map<string, bigint>();
@@ -222,6 +223,7 @@ export function txnProfitAndCost(
       costs: costs,
       addressProperty: new Map<string, AddressProperty>(),
       graph: graph,
+      minerPayment: minerPayment,
     };
   }
   // This is a hack to handle ethers bug.
@@ -242,6 +244,7 @@ export function txnProfitAndCost(
       mevContract: "",
       addressProperty: new Map<string, AddressProperty>(),
       graph: graph,
+      minerPayment: minerPayment,
     };
   }
   const sccs = graph.findStronglyConnectedComponents();
@@ -264,7 +267,15 @@ export function txnProfitAndCost(
     chainConfig.nativeTokenWrappedAddress,
     data.feeRecipent
   );
+
   costs.set("gas", gasTotal);
+  if (
+    addressProperty.has(data.feeRecipent.toLowerCase()) &&
+    addressProperty.get(data.feeRecipent.toLowerCase()) ===
+      AddressProperty.Winner
+  ) {
+    minerPayment = data.feeRecipent.toLowerCase();
+  }
   return {
     txnHash: data.tx.hash,
     txFrom: data.tx.from,
@@ -274,6 +285,7 @@ export function txnProfitAndCost(
     costs: costs,
     addressProperty: addressProperty,
     graph: graph,
+    minerPayment: minerPayment,
   };
 }
 
