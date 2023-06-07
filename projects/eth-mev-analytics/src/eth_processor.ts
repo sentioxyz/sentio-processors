@@ -421,6 +421,7 @@ export function Bind(chainConfig: ChainConstants, startBlock: number) {
           revenue: BigDecimal(revenue.toFixed(2)),
           cost: BigDecimal(cost.toFixed(2)),
           profit: BigDecimal(revenue.minus(cost).toFixed(2)),
+          paidBuilder: txn.minerPayment,
         });
       }
       for (const txn of mevResults.sandwichTxns) {
@@ -455,6 +456,7 @@ export function Bind(chainConfig: ChainConstants, startBlock: number) {
           revenue: BigDecimal(revenue.toFixed(2)),
           cost: BigDecimal(cost.toFixed(2)),
           profit: BigDecimal(revenue.minus(cost).toFixed(2)),
+          paidBuilder: txn.minerPayment,
         });
       }
     },
