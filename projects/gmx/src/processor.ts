@@ -5,18 +5,20 @@ import { GlpManagerProcessor } from './types/eth/glpmanager.js'
 import { RewardRouterProcessor } from './types/eth/rewardrouter.js'
 import { RewardTrackerProcessor, RewardTrackerContext } from './types/eth/rewardtracker.js'
 import { EthChainId } from "@sentio/sdk/eth";
-import { getOrCreateToken } from './helper/gmx-helper.js';
+import { gaugeTokenAum } from './helper/gmx-helper.js';
 import { getERC20ContractOnContext } from '@sentio/sdk/eth/builtin/erc20'
+import { WhitelistTokenMap } from './helper/constant.js'
 
 VaultProcessor.bind({ address: "0x489ee077994B6658eAfA855C308275EAd8097C4A", network: EthChainId.ARBITRUM })
     .onEventIncreasePosition(async (evt, ctx) => {
-        const collateralTokenInfo = await getOrCreateToken(ctx, evt.args.collateralToken)
-        const collateralDelta = Number(evt.args.collateralDelta) / Math.pow(10, collateralTokenInfo.decimal)
+        const collateral = WhitelistTokenMap[evt.args.collateralToken.toLowerCase()]
+        const collateralDelta = Number(evt.args.collateralDelta) / Math.pow(10, collateral.decimal)
         const token = evt.args.indexToken
-        const sizeDelta = Number(evt.args.sizeDelta) / Math.pow(10, collateralTokenInfo.decimal)
+        const sizeDelta = Number(evt.args.sizeDelta) / Math.pow(10, collateral.decimal)
         ctx.eventLogger.emit("vault.increasePosition", {
             distinctId: evt.args.account,
-            collateralToken: collateralTokenInfo.symbol,
+            collateralToken: collateral.symbol,
+            coin_symbol: collateral.symbol,
             collateralDelta: collateralDelta,
             token,
             sizeDelta,
@@ -24,13 +26,14 @@ VaultProcessor.bind({ address: "0x489ee077994B6658eAfA855C308275EAd8097C4A", net
         })
     })
     .onEventDecreasePosition(async (evt, ctx) => {
-        const collateralTokenInfo = await getOrCreateToken(ctx, evt.args.collateralToken)
-        const collateralDelta = Number(evt.args.collateralDelta) / Math.pow(10, collateralTokenInfo.decimal)
+        const collateral = WhitelistTokenMap[evt.args.collateralToken.toLowerCase()]
+        const collateralDelta = Number(evt.args.collateralDelta) / Math.pow(10, collateral.decimal)
         const token = evt.args.indexToken
-        const sizeDelta = Number(evt.args.sizeDelta) / Math.pow(10, collateralTokenInfo.decimal)
+        const sizeDelta = Number(evt.args.sizeDelta) / Math.pow(10, collateral.decimal)
         ctx.eventLogger.emit("vault.decreasePosition", {
             distinctId: evt.args.account,
-            collateralToken: collateralTokenInfo.symbol,
+            collateralToken: collateral.symbol,
+            coin_symbol: collateral.symbol,
             collateralDelta: collateralDelta,
             token,
             sizeDelta,
@@ -53,15 +56,17 @@ VaultProcessor.bind({ address: "0x489ee077994B6658eAfA855C308275EAd8097C4A", net
         })
     })
     .onEventLiquidatePosition(async (evt, ctx) => {
-        const collateralTokenInfo = await getOrCreateToken(ctx, evt.args.collateralToken)
+        const collateral = WhitelistTokenMap[evt.args.collateralToken.toLowerCase()]
         ctx.eventLogger.emit("vault.liquidatePostion", {
             distinctId: evt.args.account,
-            collateralToken: collateralTokenInfo.symbol,
+            collateralToken: collateral.symbol,
+            coin_symbol: collateral.symbol,
             isLong: evt.args.isLong,
-            size: Number(evt.args.size) / Math.pow(10, collateralTokenInfo.decimal),
-            collateral: Number(evt.args.collateral) / Math.pow(10, collateralTokenInfo.decimal)
+            size: Number(evt.args.size) / Math.pow(10, collateral.decimal),
+            collateral: Number(evt.args.collateral) / Math.pow(10, collateral.decimal)
         })
     })
+    .onTimeInterval(gaugeTokenAum, 240, 1440)
 
 
 RewardTrackerProcessor.bind({ address: "0xd2D1162512F927a7e282Ef43a362659E4F2a728F", network: EthChainId.ARBITRUM })
@@ -78,33 +83,55 @@ GMXProcessor.bind({ address: "0xfc5A1A6EB076a2C7aD06eD22C90d7E710E35ad0a", netwo
 
 GlpManagerProcessor.bind({ address: "0x3963ffc9dff443c2a94f21b129d429891e32ec18", network: EthChainId.ARBITRUM })
     .onEventAddLiquidity(async (evt, ctx) => {
-        const tokenInfo = await getOrCreateToken(ctx, evt.args.token)
+        const collateral = WhitelistTokenMap[evt.args.token.toLowerCase()]
         ctx.eventLogger.emit("glpManager.addLiquidity", {
             distinctId: evt.args.account,
-            token: tokenInfo.symbol,
-            amount: Number(evt.args.amount) / Math.pow(10, tokenInfo.decimal),
+            token: collateral.symbol,
+            coin_symbol: collateral.symbol,
+            amount: Number(evt.args.amount) / Math.pow(10, collateral.decimal),
             mintAmount: Number(evt.args.mintAmount) / Math.pow(10, 18)
         })
     })
     .onEventRemoveLiquidity(async (evt, ctx) => {
-        const tokenInfo = await getOrCreateToken(ctx, evt.args.token)
+        const collateral = WhitelistTokenMap[evt.args.token.toLowerCase()]
         ctx.eventLogger.emit("glpManager.removeLiquidity", {
             distinctId: evt.args.account,
-            token: tokenInfo.symbol,
-            glpAmount: Number(evt.args.glpAmount) / Math.pow(10, tokenInfo.decimal),
+            token: collateral.symbol,
+            coin_symbol: collateral.symbol,
+            glpAmount: Number(evt.args.glpAmount) / Math.pow(10, collateral.decimal),
             amountOut: Number(evt.args.amountOut) / Math.pow(10, 18)
         })
     })
     .onTimeInterval(async (_, ctx) => {
         //record aum of pool assets
-        const aum = Number(await ctx.contract.getAum(true, { blockTag: ctx.blockNumber })) / Math.pow(10, 18)
-        ctx.meter.Gauge("aum_pool").record(aum)
-        //record sGLP amount
-        const stakedGlp = Number(await getERC20ContractOnContext(ctx, "0x5402B5F40310bDED796c7D0F3FF6683f5C0cFfdf").totalSupply()) / Math.pow(10, 18)
-        ctx.meter.Gauge("stakeGlp").record(stakedGlp)
+        try {
+            const aum = Number(await ctx.contract.getAum(true, { blockTag: ctx.blockNumber })) / Math.pow(10, 18)
+            ctx.meter.Gauge("aum_pool").record(aum)
+        } catch (e) { console.log(`error 1 ${ctx.timestamp}`) }
+        //record staked gmx amount using gmx.balanceOf(sGMX)
+        try {
+            const stakedGmx = Number(await getERC20ContractOnContext(ctx, "0xfc5A1A6EB076a2C7aD06eD22C90d7E710E35ad0a").balanceOf("0x908c4d94d34924765f1edc22a1dd098397c59dd4")) / Math.pow(10, 18)
+            ctx.meter.Gauge("stakedGmx").record(stakedGmx)
+        } catch (e) { console.log(`error 2 ${ctx.timestamp}`) }
+        //record staked esGMX
+        try {
+            const stakedEsGmx = Number(await getERC20ContractOnContext(ctx, "0xf42ae1d54fd613c9bb14810b0588faaa09a426ca").balanceOf("0x908c4d94d34924765f1edc22a1dd098397c59dd4")) / Math.pow(10, 18)
+            ctx.meter.Gauge("stakedEsGmx").record(stakedEsGmx)
+        } catch (e) { console.log(`error 3 ${ctx.timestamp}`) }
+        //record vested esGMX in vGLP
+        try {
+            const vGLP = Number(await getERC20ContractOnContext(ctx, "0xf42ae1d54fd613c9bb14810b0588faaa09a426ca").balanceOf("0xa75287d2f8b217273e7fcd7e86ef07d33972042e")) / Math.pow(10, 18)
+            ctx.meter.Gauge("vGLP").record(vGLP)
+        } catch (e) { console.log(`error 5 ${ctx.timestamp}`) }
+        //record vested esGMX in vGMX
+        try {
+            const vGMX = Number(await getERC20ContractOnContext(ctx, "0xf42ae1d54fd613c9bb14810b0588faaa09a426ca").balanceOf("0x199070ddfd1cfb69173aa2f7e20906f26b363004")) / Math.pow(10, 18)
+            ctx.meter.Gauge("vGMX").record(vGMX)
+        } catch (e) { console.log(`error 6 ${ctx.timestamp}`) }
+
     }, 240, 1440)
 
-//FUL 
+//GMX GLP stake
 RewardRouterProcessor.bind({ address: "0xB95DB5B167D75e6d04227CfFFA61069348d271F5", network: EthChainId.ARBITRUM })
     .onEventStakeGlp(async (evt, ctx) => {
         ctx.eventLogger.emit("rewardRouter.stakeGlp", {
