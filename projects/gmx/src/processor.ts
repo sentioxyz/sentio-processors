@@ -41,12 +41,14 @@ VaultProcessor.bind({ address: "0x489ee077994B6658eAfA855C308275EAd8097C4A", net
         })
     })
     .onEventSwap(async (evt, ctx) => {
+        const tokenIn = WhitelistTokenMap[evt.args.tokenIn.toLowerCase()]
+        const tokenOut = WhitelistTokenMap[evt.args.tokenOut.toLowerCase()]
         ctx.eventLogger.emit("vault.swap", {
             distinctId: evt.args.account,
-            tokenIn: evt.args.tokenIn,
-            tokenOut: evt.args.tokenOut,
-            amountIn: evt.args.amountIn,
-            amountOut: evt.args.amountOut,
+            tokenIn: tokenIn.symbol,
+            tokenOut: tokenOut.symbol,
+            amountIn: Number(evt.args.amountIn) / Math.pow(10, tokenIn.decimal),
+            amountOut: Number(evt.args.amountOut) / Math.pow(10, tokenOut.decimal)
         })
     })
     .onEventDirectPoolDeposit(async (evt, ctx) => {
@@ -128,7 +130,6 @@ GlpManagerProcessor.bind({ address: "0x3963ffc9dff443c2a94f21b129d429891e32ec18"
             const vGMX = Number(await getERC20ContractOnContext(ctx, "0xf42ae1d54fd613c9bb14810b0588faaa09a426ca").balanceOf("0x199070ddfd1cfb69173aa2f7e20906f26b363004")) / Math.pow(10, 18)
             ctx.meter.Gauge("vGMX").record(vGMX)
         } catch (e) { console.log(`error 6 ${ctx.timestamp}`) }
-
     }, 240, 1440)
 
 //GMX GLP stake
