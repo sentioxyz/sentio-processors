@@ -103,7 +103,8 @@ pool.bind({
     const after_liquidity = Number(event.data_decoded.after_liquidity)
     const amount_a = Number(event.data_decoded.amount_a) / Math.pow(10, decimal_a)
     const amount_b = Number(event.data_decoded.amount_b) / Math.pow(10, decimal_b)
-    const value = await helper.calculateValue_USD(ctx, pool, amount_a, amount_b, ctx.timestamp)
+    const [value_a, value_b] = await helper.calculateValue_USD(ctx, pool, amount_a, amount_b, ctx.timestamp)
+    const value = value_a + value_b
     ctx.eventLogger.emit("AddLiquidityEvent", {
       distinctId: ctx.transaction.transaction.data.sender,
       pool,
@@ -137,8 +138,8 @@ pool.bind({
     const after_liquidity = Number(event.data_decoded.after_liquidity)
     const amount_a = Number(event.data_decoded.amount_a) / Math.pow(10, decimal_a)
     const amount_b = Number(event.data_decoded.amount_b) / Math.pow(10, decimal_b)
-    const value = await helper.calculateValue_USD(ctx, pool, amount_a, amount_b, ctx.timestamp)
-
+    const [value_a, value_b] = await helper.calculateValue_USD(ctx, pool, amount_a, amount_b, ctx.timestamp)
+    const value = value_a + value_b
     ctx.eventLogger.emit("RemoveLiquidityEvent", {
       distinctId: ctx.transaction.transaction.data.sender,
       pool,
@@ -180,6 +181,9 @@ const template = new SuiObjectProcessorTemplate()
       const decimal_a = poolInfo.decimal_a
       const decimal_b = poolInfo.decimal_b
       const pairName = poolInfo.pairName
+      const [coin_a_address, coin_b_address] = helper.getCoinObjectAddress(poolInfo.type)
+      const coin_a_bridge = helper.getBridgeInfo(coin_a_address)
+      const coin_b_bridge = helper.getBridgeInfo(coin_b_address)
       // console.log(`pair: ${pairName} symbol:${symbol_a} ${symbol_b} address: ${coin_a_address} ${coin_b_address} type: ${type}`)
 
       const coin_a_balance = Number(self.fields.coin_a) / Math.pow(10, decimal_a)
@@ -205,8 +209,11 @@ const template = new SuiObjectProcessorTemplate()
       ctx.meter.Gauge("b2a_price").record(coin_b2a_price, { pairName, vertical: "dex", project: "cetus" })
 
       //record tvl
-      const tvl = await helper.calculateValue_USD(ctx, ctx.objectId, coin_a_balance, coin_b_balance, ctx.timestamp)
+      const [tvl_a, tvl_b] = await helper.calculateValue_USD(ctx, ctx.objectId, coin_a_balance, coin_b_balance, ctx.timestamp)
+      const tvl = tvl_a + tvl_b           
       ctx.meter.Gauge("tvl").record(tvl, { pairName, vertical: "dex", project: "cetus" })
+      ctx.meter.Gauge("tvl_oneside").record(tvl_a, { pairName, bridge: coin_a_bridge, coin: coin_a_address, vertical: "dex", project: "cetus" })
+      ctx.meter.Gauge("tvl_oneside").record(tvl_b, { pairName, bridge: coin_b_bridge, coin: coin_b_address, vertical: "dex", project: "cetus"  })
     }
     catch (e) {
       console.log(`${e.message} error at ${JSON.stringify(self)}`)
