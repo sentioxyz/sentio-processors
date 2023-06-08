@@ -32,7 +32,9 @@ const CHAIN_ADDRESS_MAP = new Map<EthChainId, string>([
     [EthChainId.AVALANCHE, "0x4305FB66699C3B2702D4d05CF36551390A4c69C6"], //Avalanche
     [EthChainId.CRONOS, "0xE0d0e68297772Dd5a1f1D99897c581E2082dbA5B"], //Cronos
     [EthChainId.POLYGON_ZKEVM, "0xC5E56d6b40F3e3B5fbfa266bCd35C37426537c65"], // Polygon zkEVM
-    [EthChainId.ZKSYNC_ERA, "0xf087c864AEccFb6A2Bf1Af6A0382B0d0f6c5D834"] // ZKsync
+    [EthChainId.ZKSYNC_ERA, "0xf087c864AEccFb6A2Bf1Af6A0382B0d0f6c5D834"], // ZKsync
+    [EthChainId.CONFLUX, "0xe9d69CdD6Fe41e7B621B4A688C5D1a68cB5c8ADc"] // Conflux
+
 ])
 
 const CHAIN_NATIVE_MAP = new Map<EthChainId, string>([
@@ -48,7 +50,9 @@ const CHAIN_NATIVE_MAP = new Map<EthChainId, string>([
     [EthChainId.AVALANCHE, "Crypto.AVAX/USD"], //Avalanche
     [EthChainId.CRONOS, "Crypto.CRO/USD"], //Cronos
     [EthChainId.POLYGON_ZKEVM, "Crypto.MATIC/USD"], // Polygon zk
-    [EthChainId.ZKSYNC_ERA, "Crypto.ETH/USD"] // ZKsync
+    [EthChainId.ZKSYNC_ERA, "Crypto.ETH/USD"], // ZKsync
+    [EthChainId.CONFLUX, "Crypto.CFX/USD"] // Conflux
+
 ])
 
 async function priceFeedUpdate(evt: PriceFeedUpdateEvent, ctx: PythEVMContext) {
