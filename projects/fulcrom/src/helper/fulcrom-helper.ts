@@ -9,7 +9,7 @@ export const gaugeTokenAum = async (_: any, ctx: VaultContext) => {
     for (let address in WhitelistTokenMap) {
         try {
             const tokenAum = Number(await getERC20ContractOnContext(ctx, address).balanceOf(VAULT)) / Math.pow(10, WhitelistTokenMap[address].decimal)
-            console.log("tokenAum", tokenAum, WhitelistTokenMap[address].decimal, WhitelistTokenMap[address].symbol, ctx.timestamp)
+            // console.log("tokenAum", tokenAum, WhitelistTokenMap[address].decimal, WhitelistTokenMap[address].symbol, ctx.timestamp)
             ctx.meter.Gauge("tokenAum").record(tokenAum, { coin_symbol: WhitelistTokenMap[address].symbol })
         } catch (e) { console.log(`gauge token aum error ${WhitelistTokenMap[address].symbol} ${ctx.timestamp}`) }
     }

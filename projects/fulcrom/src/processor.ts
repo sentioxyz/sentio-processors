@@ -11,9 +11,9 @@ import { WhitelistTokenMap, FUL, sFUL, esFUL, vFLP, vFUL, VAULT, FUL_MANAGER, RE
 VaultProcessor.bind({ address: VAULT, network: EthChainId.CRONOS })
   .onEventIncreasePosition(async (evt, ctx) => {
     const collateral = WhitelistTokenMap[evt.args.collateralToken.toLowerCase()]
-    const collateralDelta = Number(evt.args.collateralDelta) / Math.pow(10, collateral.decimal)
+    const collateralDelta = Number(evt.args.collateralDelta) / Math.pow(10, 30)
     const token = evt.args.indexToken
-    const sizeDelta = Number(evt.args.sizeDelta) / Math.pow(10, collateral.decimal)
+    const sizeDelta = Number(evt.args.sizeDelta) / Math.pow(10, 30)
     ctx.eventLogger.emit("vault.increasePosition", {
       distinctId: evt.args.account,
       collateralToken: collateral.symbol,
@@ -26,9 +26,9 @@ VaultProcessor.bind({ address: VAULT, network: EthChainId.CRONOS })
   })
   .onEventDecreasePosition(async (evt, ctx) => {
     const collateral = WhitelistTokenMap[evt.args.collateralToken.toLowerCase()]
-    const collateralDelta = Number(evt.args.collateralDelta) / Math.pow(10, collateral.decimal)
+    const collateralDelta = Number(evt.args.collateralDelta) / Math.pow(10, 30)
     const token = evt.args.indexToken
-    const sizeDelta = Number(evt.args.sizeDelta) / Math.pow(10, collateral.decimal)
+    const sizeDelta = Number(evt.args.sizeDelta) / Math.pow(10, 30)
     ctx.eventLogger.emit("vault.decreasePosition", {
       distinctId: evt.args.account,
       collateralToken: collateral.symbol,
@@ -45,6 +45,7 @@ VaultProcessor.bind({ address: VAULT, network: EthChainId.CRONOS })
     ctx.eventLogger.emit("vault.swap", {
       distinctId: evt.args.account,
       tokenIn: tokenIn.symbol,
+      coin_symbol: tokenIn.symbol,
       tokenOut: tokenOut.symbol,
       amountIn: Number(evt.args.amountIn) / Math.pow(10, tokenIn.decimal),
       amountOut: Number(evt.args.amountOut) / Math.pow(10, tokenOut.decimal)
@@ -63,8 +64,45 @@ VaultProcessor.bind({ address: VAULT, network: EthChainId.CRONOS })
       collateralToken: collateral.symbol,
       coin_symbol: collateral.symbol,
       isLong: evt.args.isLong,
-      size: Number(evt.args.size) / Math.pow(10, collateral.decimal),
-      collateral: Number(evt.args.collateral) / Math.pow(10, collateral.decimal)
+      size: Number(evt.args.size) / Math.pow(10, 30),
+      collateral: Number(evt.args.collateral) / Math.pow(10, 30)
+    })
+  })
+  .onEventClosePosition(async (evt, ctx) => {
+    let from = ""
+    try {
+      const tx = (await ctx.contract.provider.getTransaction(ctx.transactionHash!))!
+      from = tx.from
+    }
+    catch (e) { console.log(`get tx from error at ${ctx.transactionHash}`) }
+
+    ctx.eventLogger.emit("vault.closePostion", {
+      distinctId: from,
+      key: evt.args.key,
+      size: Number(evt.args.size) / 10 ** 30,
+      collateral: Number(evt.args.collateral) / 10 ** 30,
+      averagePrice: evt.args.averagePrice,
+      entryFundingRate: evt.args.entryFundingRate,
+      reserveAmount: evt.args.reserveAmount,
+      realisedPnl: Number(evt.args.realisedPnl) / 10 ** 30
+    })
+  })
+  .onEventCollectMarginFees(async (evt, ctx) => {
+    //todo: check decimal of other tokens
+    const token = WhitelistTokenMap[evt.args.token.toLowerCase()]
+    ctx.eventLogger.emit("vault.collectMarginFees", {
+      token: token.symbol,
+      feeUsd: Number(evt.args.feeUsd) / Math.pow(10, 30),
+      feeTokens: evt.args.feeTokens
+    })
+  })
+  .onEventCollectSwapFees(async (evt, ctx) => {
+    //todo: check decimal of other tokens
+    const token = WhitelistTokenMap[evt.args.token.toLowerCase()]
+    ctx.eventLogger.emit("vault.collectSwapFees", {
+      token: token.symbol,
+      feeUsd: Number(evt.args.feeUsd) / Math.pow(10, 30),
+      feeTokens: Number(evt.args.feeTokens) / 10 ** token.decimal
     })
   })
   .onTimeInterval(gaugeTokenAum, 240, 1440)
@@ -81,7 +119,7 @@ FulProcessor.bind({ address: FUL, network: EthChainId.CRONOS })
 FlpManagerProcessor.bind({ address: FUL_MANAGER, network: EthChainId.CRONOS })
   .onEventAddLiquidity(async (evt, ctx) => {
     const collateral = WhitelistTokenMap[evt.args.token.toLowerCase()]
-    ctx.eventLogger.emit("glpManager.addLiquidity", {
+    ctx.eventLogger.emit("flpManager.addLiquidity", {
       distinctId: evt.args.account,
       token: collateral.symbol,
       coin_symbol: collateral.symbol,
@@ -95,14 +133,14 @@ FlpManagerProcessor.bind({ address: FUL_MANAGER, network: EthChainId.CRONOS })
       distinctId: evt.args.account,
       token: collateral.symbol,
       coin_symbol: collateral.symbol,
-      flpAmount: Number(evt.args.flpAmount) / Math.pow(10, collateral.decimal),
-      amountOut: Number(evt.args.amountOut) / Math.pow(10, 18)
+      flpAmount: Number(evt.args.flpAmount) / Math.pow(10, 18),
+      amountOut: Number(evt.args.amountOut) / Math.pow(10, collateral.decimal)
     })
   })
   .onTimeInterval(async (_, ctx) => {
     //record aum of pool assets
     try {
-      const aum = Number(await ctx.contract.getAum(true, { blockTag: ctx.blockNumber })) / Math.pow(10, 18)
+      const aum = Number(await ctx.contract.getAum(true, { blockTag: ctx.blockNumber })) / Math.pow(10, 30)
       ctx.meter.Gauge("aum_pool").record(aum)
     } catch (e) { console.log(`get aum error ${ctx.timestamp}`) }
   }, 240, 1440)

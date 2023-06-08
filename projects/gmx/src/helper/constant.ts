@@ -27,3 +27,13 @@ export const WhitelistTokenMap: { [address: string]: { symbol: string, decimal: 
         symbol: "WBTC", decimal: 8
     }
 }
+
+export const REWARD_ROUTER = "0xA906F338CB21815cBc4Bc87ace9e68c87eF8d8F1"
+export const GMX_ADDRESS = "0xfc5a1a6eb076a2c7ad06ed22c90d7e710e35ad0a"
+export const esGMX_ADDRESS = "0xf42ae1d54fd613c9bb14810b0588faaa09a426ca"
+export const sGMX_ADDRESS = "0x908c4d94d34924765f1edc22a1dd098397c59dd4"
+export const GLP_MANAGER_ADDRESS = "0x3963ffc9dff443c2a94f21b129d429891e32ec18"
+export const vGLP_ADDRESS = "0xa75287d2f8b217273e7fcd7e86ef07d33972042e"
+export const vGMX_ADDRESS = "0x199070ddfd1cfb69173aa2f7e20906f26b363004"
+export const VAULT_ADDRESS = "0x489ee077994B6658eAfA855C308275EAd8097C4A"
+export const REWARD_TRACKER_ADDRESS = "0xd2D1162512F927a7e282Ef43a362659E4F2a728F"
