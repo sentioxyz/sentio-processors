@@ -21,11 +21,12 @@ import {
 } from "./types/eth/constantproductpool.js";
 
 import { DystPairProcessor } from "./types/eth/dystpair.js";
+import { ApePairProcessor } from "./types/eth/apepair.js";
 
 // a constant string array
-const ALGEBRA_ADDRESSES = ["0x7b925e617aefd7fb3a93abe3a701135d7a1ba710"];
+const ALGEBRA_ADDRESSES = ["0x55CAaBB0d2b704FD0eF8192A7E35D8837e678207"];
 
-const START_BLOCK = 43818000;
+const START_BLOCK = 43737705;
 
 for (const address of ALGEBRA_ADDRESSES) {
   AlgebraPoolProcessor.bind({
@@ -40,7 +41,22 @@ for (const address of ALGEBRA_ADDRESSES) {
   });
 }
 
-const V3_ADDRESSES = ["0xa374094527e1673a86de625aa59517c5de346d32"];
+const APE_ADDRESSES = ["0xd32f3139A214034A0f9777c87eE0a064c1FF6AE2"];
+
+for (const address of APE_ADDRESSES) {
+  ApePairProcessor.bind({
+    address: address,
+    network: EthChainId.POLYGON,
+    startBlock: START_BLOCK,
+  }).onEventSwap(async (evt, ctx) => {
+    ctx.eventLogger.emit("ApeSwapEvent", {
+      sender: evt.args.sender,
+      index: evt.transactionIndex,
+    });
+  });
+}
+
+const V3_ADDRESSES = ["0x5645dcb64c059aa11212707fbf4e7f984440a8cf"];
 
 for (const address of V3_ADDRESSES) {
   UniswapV3PoolProcessor.bind({
@@ -55,7 +71,7 @@ for (const address of V3_ADDRESSES) {
   });
 }
 
-const V2_ADDRESSES = ["0x4ef715bd838546a967a60e004b52b00407f3b59b"];
+const V2_ADDRESSES = ["0x6e7a5fafcec6bb1e78bae2a1f0b612012bf14827"];
 
 for (const address of V2_ADDRESSES) {
   UniswapV2PairProcessor.bind({
