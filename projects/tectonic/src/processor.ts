@@ -8,9 +8,9 @@ import { WCROProcessor, TransferEvent, WCROContext } from './types/eth/wcro.js'
 import { TectonicCoreProcessor } from './types/eth/tectoniccore.js'
 import { EthChainId } from "@sentio/sdk/eth";
 import { getERC20Contract } from '@sentio/sdk/eth/builtin/erc20'
-import './aave_v3.js'
+// import './aave_v3.js'
 import { TectonicStakingPoolV3Context, TectonicStakingPoolV3Processor, TonicReleasedEvent, TonicStakedEvent, TonicUnstakedEvent } from './types/eth/tectonicstakingpoolv3.js'
-import { DepositEvent, TONICVaultContext, TONICVaultProcessor, UpgradeEvent, WithdrawEvent } from './types/eth/tonicvault.js'
+import { DepositEvent, ReplaceNftsBurnTokenEvent, ReplaceNftsMintTokenEvent, StakeNftEvent, TONICVaultContext, TONICVaultProcessor, UnStakeNftEvent, UpgradeEvent, WithdrawEvent } from './types/eth/tonicvault.js'
 import { DeferLiquidityCheckAdapterContext, DeferLiquidityCheckAdapterProcessor, SwapAndRepayCallTrace } from './types/eth/deferliquiditycheckadapter.js'
 
 const MintEventHandler = async (event: any, ctx: TCROContext | LCROContext) => {
@@ -262,7 +262,7 @@ for (let i = 0; i < constant.MAIN_POOLS.length; i++) {
   TCROProcessor.bind({
     address: address,
     network: EthChainId.CRONOS,
-    // startBlock: 8000000
+    // startBlock: 570286
   })
     .onEventMint(MintEventHandler)
     .onEventBorrow(BorrowEventHandler)
@@ -280,7 +280,7 @@ for (let i = 0; i < constant.LCRO_POOLS.length; i++) {
   LCROProcessor.bind({
     address: address,
     network: EthChainId.CRONOS,
-    // startBlock: 8000000
+    // startBlock: 570286
   })
     .onEventMint(MintEventHandler)
     .onEventBorrow(BorrowEventHandler)
@@ -296,7 +296,7 @@ for (let i = 0; i < constant.LCRO_POOLS.length; i++) {
 TectonicCoreProcessor.bind({
   address: constant.SOCKET_ADDRESS,
   network: EthChainId.CRONOS,
-  // startBlock: 8000000
+  // startBlock: 570286
 })
   .onEventDistributedBorrowerTonic(async (event, ctx) => {
     const hash = event.transactionHash
@@ -377,12 +377,14 @@ const TonicReleasedEventHandler = async (event: TonicReleasedEvent, ctx: Tectoni
     coin_symbol: "tonic"
   })
   ctx.meter.Counter("tonic_staked_counter").sub(Number(event.args.tonicReleased) / 10 ** 18)
+  ctx.meter.Counter("tonic_released_counter").add(Number(event.args.tonicReleased) / 10 ** 18)
+
 }
 
 TectonicStakingPoolV3Processor.bind({
   address: constant.TONIC_STAKING_ADDRESS,
   network: EthChainId.CRONOS,
-  // startBlock: 8000000
+  // startBlock: 570286
 })
   .onEventTonicStaked(TonicStakedHandler)
   .onEventTonicUnstaked(TonicUnstakedEventHandler)
@@ -391,7 +393,7 @@ TectonicStakingPoolV3Processor.bind({
 
 //Tonic Vault
 const DepositHandler = async (event: DepositEvent, ctx: TONICVaultContext) => {
-  const pid = event.args.pid.toString()
+  const pid = event.args.pid.toString() || "no pid"
   const amount = Number(event.args.amount) / Math.pow(10, 18)
   ctx.meter.Counter(`vault_deposit_counter`).add(amount, {
     pid
@@ -435,6 +437,7 @@ const UpgradeHandler = async (event: UpgradeEvent, ctx: TONICVaultContext) => {
 const VaultWithdrawHandler = async (event: WithdrawEvent, ctx: TONICVaultContext) => {
   try {
     const userStake = await ctx.contract.getUserStake(event.args.user, event.args.stakeId, { blockTag: Number(ctx.blockNumber) - 1 })
+    console.log(`user stake ${userStake[0]}, ${userStake[1]}`)
     const pid = userStake[1].toString()
     ctx.eventLogger.emit("VaultWithdraw", {
       distinctId: event.args.user,
@@ -442,21 +445,93 @@ const VaultWithdrawHandler = async (event: WithdrawEvent, ctx: TONICVaultContext
       stakeId: event.args.stakeId,
       pid
     })
-    ctx.meter.Counter(`vault_withdraw_counter`).sub(Number(event.args.amount) / Math.pow(10, 18), {
+    ctx.meter.Counter(`vault_withdraw_counter`).add(Number(event.args.amount) / Math.pow(10, 18), {
+      pid
+    })
+    ctx.meter.Counter(`vault_deposit_counter`).sub(Number(event.args.amount) / Math.pow(10, 18), {
       pid
     })
   }
   catch (e) { console.log(`get userStake error 2 at ${ctx.transactionHash}`) }
 }
 
+const StakeNftHandler = async (event: StakeNftEvent, ctx: TONICVaultContext) => {
+  const tokenNumbers = event.args.tokenIds.length
+  ctx.eventLogger.emit("StakeNft", {
+    distinctId: event.args.user,
+    pid: event.args.pid.toString(),
+    tokenContract: event.args.tokenContract,
+    tokenNumbers
+  })
+  ctx.meter.Counter(`vault_staked_nft_counter`).add(tokenNumbers, {
+    pid: event.args.pid.toString(),
+    tokenContract: event.args.tokenContract
+  })
+}
+
+const UnstakeNftHandler = async (event: UnStakeNftEvent, ctx: TONICVaultContext) => {
+  const tokenNumbers = event.args.tokenIds.length
+  ctx.eventLogger.emit("UnstakeNft", {
+    distinctId: event.args.user,
+    pid: event.args.pid.toString(),
+    tokenContract: event.args.tokenContract,
+    tokenNumbers
+  })
+  ctx.meter.Counter(`vault_staked_nft_counter`).sub(tokenNumbers, {
+    pid: event.args.pid.toString(),
+    tokenContract: event.args.tokenContract
+  })
+}
+
+const ReplaceNftsMintTokenHandler = async (event: ReplaceNftsMintTokenEvent, ctx: TONICVaultContext) => {
+  const stakeTokenNumbers = event.args.stakeTokenIds.length
+  const unstakeTokenNumbers = event.args.unstakeTokenIds.length
+  const deltaBoostAmount = event.args.deltaBoostAmount
+  ctx.eventLogger.emit("ReplaceNftMintToken", {
+    distinctId: event.args.user,
+    pid: event.args.pid.toString(),
+    tokenContract: event.args.tokenContract,
+    stakeTokenNumbers,
+    unstakeTokenNumbers,
+    deltaBoostAmount
+  })
+  ctx.meter.Counter(`vault_staked_nft_counter`).add(stakeTokenNumbers - unstakeTokenNumbers, {
+    pid: event.args.pid.toString(),
+    tokenContract: event.args.tokenContract
+  })
+}
+
+const ReplaceNftsBurnTokenHandler = async (event: ReplaceNftsBurnTokenEvent, ctx: TONICVaultContext) => {
+  const stakeTokenNumbers = event.args.stakeTokenIds.length
+  const unstakeTokenNumbers = event.args.unstakeTokenIds.length
+  const deltaBoostAmount = event.args.deltaBoostAmount
+  ctx.eventLogger.emit("ReplaceNftBurnToken", {
+    distinctId: event.args.user,
+    pid: event.args.pid.toString(),
+    tokenContract: event.args.tokenContract,
+    stakeTokenNumbers,
+    unstakeTokenNumbers,
+    deltaBoostAmount
+  })
+  ctx.meter.Counter(`vault_staked_nft_counter`).add(stakeTokenNumbers - unstakeTokenNumbers, {
+    pid: event.args.pid.toString(),
+    tokenContract: event.args.tokenContract
+  })
+}
+
 TONICVaultProcessor.bind({
   address: constant.TONIC_VAULT_ADDRESS,
   network: EthChainId.CRONOS,
-  // startBlock: 8000000
+  // startBlock: 570286
 })
   .onEventDeposit(DepositHandler)
   .onEventUpgrade(UpgradeHandler)
   .onEventWithdraw(VaultWithdrawHandler)
+  .onEventStakeNft(StakeNftHandler)
+  .onEventUnStakeNft(UnstakeNftHandler)
+  .onEventReplaceNftsMintToken(ReplaceNftsMintTokenHandler)
+  .onEventReplaceNftsBurnToken(ReplaceNftsBurnTokenHandler)
+
 
 
 //repay with collateral
@@ -486,9 +561,9 @@ const SwapAndRepayHandler = async (call: SwapAndRepayCallTrace,
   })
 }
 
-DeferLiquidityCheckAdapterProcessor.bind({
-  address: constant.REPAY_WITH_COLLATERAL,
-  network: EthChainId.CRONOS,
-  // startBlock: 8000000
-})
-  .onCallSwapAndRepay(SwapAndRepayHandler)
+// DeferLiquidityCheckAdapterProcessor.bind({
+//   address: constant.REPAY_WITH_COLLATERAL,
+//   network: EthChainId.CRONOS,
+//   // startBlock: 570286
+// })
+//   .onCallSwapAndRepay(SwapAndRepayHandler)
