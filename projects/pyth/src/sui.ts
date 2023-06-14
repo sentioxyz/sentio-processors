@@ -40,7 +40,7 @@ event.bind({
       const symbol = PRICE_MAP.get(priceId) || "not listed"
       var isNative
   
-      if (priceId == "0x03ae4db29ed4ae33d323568895aa00337e658e348b37509f5372ae51f0af00d5") {
+      if (priceId == "0x23d7315113f5b1d3ba7a83604c44b94d79f4fd69af77f804fc7f920a6dc65744") {
         isNative = "true"
       } else {
         isNative = "false"
