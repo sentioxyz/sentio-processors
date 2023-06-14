@@ -422,13 +422,13 @@ const UpgradeHandler = async (event: UpgradeEvent, ctx: TONICVaultContext) => {
       newWeightedAmount: event.args.newWeightedAmount
     })
     ctx.meter.Counter(`vault_deposit_counter`).sub(amount, {
-      previousPid
+      pid: previousPid
     })
     ctx.meter.Counter(`vault_deposit_counter`).add(amount, {
-      newPid: event.args.newPid.toString()
+      pid: event.args.newPid.toString()
     })
     ctx.meter.Counter(`vault_upgrade_counter`).add(amount, {
-      newPid: event.args.newPid.toString()
+      pid: event.args.newPid.toString()
     })
   }
   catch (e) { console.log(`get userStake error at ${ctx.transactionHash}`) }
