@@ -223,6 +223,7 @@ export function txnProfitAndCost(
       costs: costs,
       addressProperty: new Map<string, AddressProperty>(),
       graph: graph,
+      usedTokens: new Set<string>(),
       minerPayment: minerPayment,
     };
   }
@@ -244,6 +245,7 @@ export function txnProfitAndCost(
       mevContract: "",
       addressProperty: new Map<string, AddressProperty>(),
       graph: graph,
+      usedTokens: new Set<string>(),
       minerPayment: minerPayment,
     };
   }
@@ -276,6 +278,12 @@ export function txnProfitAndCost(
   ) {
     minerPayment = data.feeRecipent.toLowerCase();
   }
+  let tokens = new Set<string>();
+  for (const [_, individualBalances] of balances) {
+    for (const [token, _] of individualBalances) {
+      tokens.add(token);
+    }
+  }
   return {
     txnHash: data.tx.hash,
     txFrom: data.tx.from,
@@ -285,6 +293,7 @@ export function txnProfitAndCost(
     costs: costs,
     addressProperty: addressProperty,
     graph: graph,
+    usedTokens: tokens,
     minerPayment: minerPayment,
   };
 }
@@ -412,6 +421,10 @@ export function Bind(chainConfig: ChainConstants, startBlock: number) {
             traders += addr + ",";
           }
         }
+        let tokens = "";
+        for (const token of txn.usedTokens) {
+          tokens += token + ",";
+        }
         ctx.eventLogger.emit("arbitrage", {
           distinctId: txn.mevContract,
           mevContract: txn.mevContract,
@@ -422,6 +435,7 @@ export function Bind(chainConfig: ChainConstants, startBlock: number) {
           cost: BigDecimal(cost.toFixed(2)),
           profit: BigDecimal(revenue.minus(cost).toFixed(2)),
           paidBuilder: txn.minerPayment,
+          tokens: tokens,
         });
       }
       for (const txn of mevResults.sandwichTxns) {

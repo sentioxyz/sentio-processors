@@ -221,6 +221,7 @@ export interface txnResult {
   revenue: Map<string, bigint>;
   costs: Map<string, bigint>;
   addressProperty: Map<string, AddressProperty>;
+  usedTokens: Set<string>;
   minerPayment: string;
   graph: TokenFlowGraph;
 }
