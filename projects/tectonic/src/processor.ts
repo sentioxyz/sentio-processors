@@ -8,7 +8,7 @@ import { WCROProcessor, TransferEvent, WCROContext } from './types/eth/wcro.js'
 import { TectonicCoreProcessor } from './types/eth/tectoniccore.js'
 import { EthChainId } from "@sentio/sdk/eth";
 import { getERC20Contract } from '@sentio/sdk/eth/builtin/erc20'
-// import './aave_v3.js'
+import './aave_v3.js'
 import { TectonicStakingPoolV3Context, TectonicStakingPoolV3Processor, TonicReleasedEvent, TonicStakedEvent, TonicUnstakedEvent } from './types/eth/tectonicstakingpoolv3.js'
 import { DepositEvent, ReplaceNftsBurnTokenEvent, ReplaceNftsMintTokenEvent, StakeNftEvent, TONICVaultContext, TONICVaultProcessor, UnStakeNftEvent, UpgradeEvent, WithdrawEvent } from './types/eth/tonicvault.js'
 import { DeferLiquidityCheckAdapterContext, DeferLiquidityCheckAdapterProcessor, SwapAndRepayCallTrace } from './types/eth/deferliquiditycheckadapter.js'

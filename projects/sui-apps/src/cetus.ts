@@ -91,6 +91,8 @@ pool.bind({
   .onEventAddLiquidityEvent(async (event, ctx) => {
     ctx.meter.Counter("add_liquidity_counter").add(1, { vertical: "dex", project: "cetus" })
     const pool = event.data_decoded.pool
+    if (constant.POOLS_TVL_BLACK_LIST.includes(pool)) { return }
+
     const poolInfo = await helper.getOrCreatePool(ctx, pool)
     const pairName = poolInfo.pairName
     const decimal_a = poolInfo.decimal_a
@@ -126,6 +128,8 @@ pool.bind({
   .onEventRemoveLiquidityEvent(async (event, ctx) => {
     ctx.meter.Counter("remove_liquidity_counter").add(1, { vertical: "dex", project: "cetus" })
     const pool = event.data_decoded.pool
+    if (constant.POOLS_TVL_BLACK_LIST.includes(pool)) { return }
+
     const poolInfo = await helper.getOrCreatePool(ctx, pool)
     const pairName = poolInfo.pairName
     const decimal_a = poolInfo.decimal_a
@@ -171,7 +175,7 @@ pool.bind({
 // })
 const template = new SuiObjectProcessorTemplate()
   .onTimeInterval(async (self, _, ctx) => {
-    if (!self) return
+    if (!self || constant.POOLS_TVL_BLACK_LIST.includes(ctx.objectId)) return
     try {
       //get coin addresses
       const type = self.type
@@ -210,10 +214,10 @@ const template = new SuiObjectProcessorTemplate()
 
       //record tvl
       const [tvl_a, tvl_b] = await helper.calculateValue_USD(ctx, ctx.objectId, coin_a_balance, coin_b_balance, ctx.timestamp)
-      const tvl = tvl_a + tvl_b           
+      const tvl = tvl_a + tvl_b
       ctx.meter.Gauge("tvl").record(tvl, { pairName, vertical: "dex", project: "cetus" })
       ctx.meter.Gauge("tvl_oneside").record(tvl_a, { pairName, bridge: coin_a_bridge, coin: coin_a_address, vertical: "dex", project: "cetus" })
-      ctx.meter.Gauge("tvl_oneside").record(tvl_b, { pairName, bridge: coin_b_bridge, coin: coin_b_address, vertical: "dex", project: "cetus"  })
+      ctx.meter.Gauge("tvl_oneside").record(tvl_b, { pairName, bridge: coin_b_bridge, coin: coin_b_address, vertical: "dex", project: "cetus" })
     }
     catch (e) {
       console.log(`${e.message} error at ${JSON.stringify(self)}`)

@@ -72,10 +72,6 @@ export const getOrCreateCoin = async function (ctx: SuiContext | SuiObjectContex
 export async function buildPoolInfo(ctx: SuiContext | SuiObjectContext, pool: string): Promise<poolInfo> {
     let [symbol_a, symbol_b, decimal_a, decimal_b, pairName, type, fee_label] = ["", "", 0, 0, "", "", "", "NaN"]
 
-    //pool not in list
-    if (!constant.POOLS_INFO_MAINNET.includes(pool)) {
-        console.log(`Pool not in array ${pool}`)
-    }
     const obj = await ctx.client.getObject({ id: pool, options: { showType: true, showContent: true } })
     type = obj.data.type
     if (obj.data.content.fields.fee_rate) {

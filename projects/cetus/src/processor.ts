@@ -91,6 +91,8 @@ pool.bind({
   .onEventAddLiquidityEvent(async (event, ctx) => {
     ctx.meter.Counter("add_liquidity_counter").add(1, { project: "cetus" })
     const pool = event.data_decoded.pool
+    if (constant.POOLS_TVL_BLACK_LIST.includes(pool)) { return }
+
     const poolInfo = await helper.getOrCreatePool(ctx, pool)
     const pairName = poolInfo.pairName
     const decimal_a = poolInfo.decimal_a
@@ -103,7 +105,9 @@ pool.bind({
     const after_liquidity = Number(event.data_decoded.after_liquidity)
     const amount_a = Number(event.data_decoded.amount_a) / Math.pow(10, decimal_a)
     const amount_b = Number(event.data_decoded.amount_b) / Math.pow(10, decimal_b)
+
     const value = await helper.calculateValue_USD(ctx, pool, amount_a, amount_b, ctx.timestamp)
+
     ctx.eventLogger.emit("AddLiquidityEvent", {
       distinctId: ctx.transaction.transaction.data.sender,
       pool,
@@ -125,6 +129,8 @@ pool.bind({
   .onEventRemoveLiquidityEvent(async (event, ctx) => {
     ctx.meter.Counter("remove_liquidity_counter").add(1, { project: "cetus" })
     const pool = event.data_decoded.pool
+    if (constant.POOLS_TVL_BLACK_LIST.includes(pool)) { return }
+
     const poolInfo = await helper.getOrCreatePool(ctx, pool)
     const pairName = poolInfo.pairName
     const decimal_a = poolInfo.decimal_a
@@ -137,6 +143,7 @@ pool.bind({
     const after_liquidity = Number(event.data_decoded.after_liquidity)
     const amount_a = Number(event.data_decoded.amount_a) / Math.pow(10, decimal_a)
     const amount_b = Number(event.data_decoded.amount_b) / Math.pow(10, decimal_b)
+
     const value = await helper.calculateValue_USD(ctx, pool, amount_a, amount_b, ctx.timestamp)
 
     ctx.eventLogger.emit("RemoveLiquidityEvent", {
@@ -170,10 +177,9 @@ pool.bind({
 // })
 const template = new SuiObjectProcessorTemplate()
   .onTimeInterval(async (self, _, ctx) => {
-    if (!self) return
+    if (!self || constant.POOLS_TVL_BLACK_LIST.includes(ctx.objectId)) return
     try {
       //get coin addresses
-      const type = self.type
       const poolInfo = await helper.getOrCreatePool(ctx, ctx.objectId)
       const symbol_a = poolInfo.symbol_a
       const symbol_b = poolInfo.symbol_b
