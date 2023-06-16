@@ -26,7 +26,7 @@ import { ApePairProcessor } from "./types/eth/apepair.js";
 // a constant string array
 const ALGEBRA_ADDRESSES = ["0x55CAaBB0d2b704FD0eF8192A7E35D8837e678207"];
 
-const START_BLOCK = 43737705;
+const START_BLOCK = 43967210;
 
 for (const address of ALGEBRA_ADDRESSES) {
   AlgebraPoolProcessor.bind({
@@ -56,7 +56,11 @@ for (const address of APE_ADDRESSES) {
   });
 }
 
-const V3_ADDRESSES = ["0x5645dcb64c059aa11212707fbf4e7f984440a8cf"];
+const V3_ADDRESSES = [
+  "0x0a28c2f5e0e8463e047c203f00f649812ae67e4f",
+  "0xae1633ef14cf0a74cd0a0ec6e8e0531df429e5e8",
+  "0x0260c206d80381445b38321361fe9ca0cf13190f",
+];
 
 for (const address of V3_ADDRESSES) {
   UniswapV3PoolProcessor.bind({
