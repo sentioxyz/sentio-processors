@@ -28,8 +28,8 @@ const cache = new LRU<bigint, any>({
 })
 
 event.bind({
-    address: "0x00b53b0f4174108627fbee72e2498b58d6a2714cded53fac537034c220d26302",
-    network: SuiChainId.SUI_MAINNET,
+    // address: "0x00b53b0f4174108627fbee72e2498b58d6a2714cded53fac537034c220d26302",
+    // network: SuiChainId.SUI_MAINNET,
 }).onEventPriceFeedUpdateEvent((evt, ctx) => {
     // if (!cache.has(ctx.version)) {
     //     message.add(ctx, 1)
@@ -70,7 +70,5 @@ export function getPrice(p: price.Price) {
   }
 
 function decodeBytesArray(bytes: number[]): string {
-    let uint8Array = new Uint8Array(bytes);
-    let decoder = new TextDecoder();
-    return decoder.decode(uint8Array);
+  return "0x" + Buffer.from(bytes).toString("hex")
 }

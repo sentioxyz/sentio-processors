@@ -93,16 +93,16 @@ const PRICE_ID_LIST =
     "PriceID": "0x93da3352f9f1d105fdfe4971cfa80e9dd777bfc5d0f683ebb6e1294b92137bb7"
   },
   {
+    "Symbol": "Crypto.AXL/USD",
+    "PriceID": "0x60144b1d5c9e9851732ad1d9760e3485ef80be39b984f6bf60f82b28a2b7f126"
+  },
+  {
     "Symbol": "Crypto.AXS/USD",
     "PriceID": "0xb7e3904c08ddd9c0c10c6d207d390fd19e87eb6aab96304f571ed94caebdefa0"
   },
   {
     "Symbol": "Crypto.BAL/USD",
     "PriceID": "0x07ad7b4a7662d19a6bc675f6b467172d2f3947fa653ca97555a9b20236406628"
-  },
-  {
-    "Symbol": "Crypto.BANANA/USD",
-    "PriceID": "0x909062e999977099a38fe13f6b691cc541d5378e49ca31880add229570506be2"
   },
   {
     "Symbol": "Crypto.BAR/USD",
@@ -145,6 +145,10 @@ const PRICE_ID_LIST =
     "PriceID": "0x72b021217ca3fe68922a19aaf990109cb9d84e9ad004b4d2025ad6f529314419"
   },
   {
+    "Symbol": "Crypto.BOO/USD",
+    "PriceID": "0x46a89b09e545ad5ccebee43198e70876c22a0621ff9f1dc8525aef2cffc52d2b"
+  },
+  {
     "Symbol": "Crypto.BRZ/USD",
     "PriceID": "0x1ce9069708fb49e2f1b062fa4f1be0bb151475ca506939d6d8c14386d49f43dc"
   },
@@ -181,8 +185,16 @@ const PRICE_ID_LIST =
     "PriceID": "0x15ecddd26d49e1a8f1de9376ebebc03916ede873447c1255d2d5891b92ce5717"
   },
   {
+    "Symbol": "Crypto.CEL/USD",
+    "PriceID": "0x43d353c44e2e273d3e2480ff5538eb80f7c2857d7645926b2c845d7c188a9143"
+  },
+  {
     "Symbol": "Crypto.CELO/USD",
     "PriceID": "0x7d669ddcdd23d9ef1fa9a9cc022ba055ec900e91c4cb960f3c20429d4447a411"
+  },
+  {
+    "Symbol": "Crypto.CETUS/USD",
+    "PriceID": "0xe5b274b2611143df055d6e7cd8d93fe1961716bcd4dca1cad87a83bc1e78c1ef"
   },
   {
     "Symbol": "Crypto.CFX/USD",
@@ -245,6 +257,10 @@ const PRICE_ID_LIST =
     "PriceID": "0xff61491a931112ddf1bd8147cd1b641375f79f5825126d665480874634fd0ace"
   },
   {
+    "Symbol": "Crypto.EUROC/USD",
+    "PriceID": "0xd052e6f54fe29355d6a3c06592fdefe49fae7840df6d8655bf6d6bfb789b56e4"
+  },
+  {
     "Symbol": "Crypto.EVMOS/USD",
     "PriceID": "0xc19405e4c8bdcbf2a66c37ae05a27d385c8309e9d648ed20dc6ee717e7d30e17"
   },
@@ -293,6 +309,10 @@ const PRICE_ID_LIST =
     "PriceID": "0x0781209c28fda797616212b7f94d77af3a01f3e94a5d421760aef020cf2bcb51"
   },
   {
+    "Symbol": "Crypto.GF/USD",
+    "PriceID": "0xc358405df462d0eb57db14ebe01b917383ff81f2234ca99f8a57d7fb599cb83b"
+  },
+  {
     "Symbol": "Crypto.GMT/USD",
     "PriceID": "0xbaa284eaf23edf975b371ba2818772f93dbae72836bbdea28b07d40f3cf8b485"
   },
@@ -307,6 +327,10 @@ const PRICE_ID_LIST =
   {
     "Symbol": "Crypto.GOFX/USD",
     "PriceID": "0x6034b1f68b9363dff2cf9d53b1a88fb4d0929c65f34d532db53738853efc00ad"
+  },
+  {
+    "Symbol": "Crypto.GRAIL/USD",
+    "PriceID": "0x48f3736d94693aa73c11214c4176ba7f997a8329f4dbc3854c4b2686861132ce"
   },
   {
     "Symbol": "Crypto.HADES/USD",
@@ -337,6 +361,10 @@ const PRICE_ID_LIST =
     "PriceID": "0xa4702f0f5818258783a1e47f453cb20b0fbec32ca67260e1d19dfcdd6a4d0ebb"
   },
   {
+    "Symbol": "Crypto.IOT/USD",
+    "PriceID": "0x6b701e292e0836d18a5904a08fe94534f9ab5c3d4ff37dc02c74dd0f4901944d"
+  },
+  {
     "Symbol": "Crypto.IOTA/USD",
     "PriceID": "0xc7b72e5d860034288c9335d4d325da4272fe50c92ab72249d58f6cbba30e4c44"
   },
@@ -359,6 +387,10 @@ const PRICE_ID_LIST =
   {
     "Symbol": "Crypto.JUV/USD",
     "PriceID": "0xabe4f2b264560a397f38eec024369356e5c1ea4f7aab94729369f144b3d97779"
+  },
+  {
+    "Symbol": "Crypto.KAVA/USD",
+    "PriceID": "0xa6e905d4e85ab66046def2ef0ce66a7ea2a60871e68ae54aed50ec2fd96d8584"
   },
   {
     "Symbol": "Crypto.KCS/USD",
@@ -409,8 +441,16 @@ const PRICE_ID_LIST =
     "PriceID": "0x0b46c1c04e9c914037cc4e0561a7e6787f6db0b89b7b65281f0f6fea1ce45a74"
   },
   {
+    "Symbol": "Crypto.MNDE/USD",
+    "PriceID": "0x3607bf4d7b78666bd3736c7aacaf2fd2bc56caa8667d3224971ebe3c0623292a"
+  },
+  {
     "Symbol": "Crypto.MNGO/USD",
     "PriceID": "0x5b70af49d639eefe11f20df47a0c0760123291bb5bc55053faf797d1ff905983"
+  },
+  {
+    "Symbol": "Crypto.MOBILE/USD",
+    "PriceID": "0xff4c53361e36a9b837433c87d290c229e1f01aec5ef98d9f3f70953a20a629ce"
   },
   {
     "Symbol": "Crypto.MSOL/USD",
@@ -457,12 +497,16 @@ const PRICE_ID_LIST =
     "PriceID": "0x5867f5683c757393a0670ef0f701490950fe93fdb006d181c8265a831ac0c5c6"
   },
   {
-    "Symbol": "Crypto.PERP/USD",
-    "PriceID": "0x944f2f908c5166e0732ea5b610599116cd8e1c41f47452697c1e84138b7184d6"
+    "Symbol": "Crypto.OUSD/USD",
+    "PriceID": "0xbfaf61069ca9164aba41935fa16488ce7c39b313e7faaa02fb4655b99caada05"
   },
   {
-    "Symbol": "Crypto.PINKSALE/USD",
-    "PriceID": "0x5f1b1a2920f29635157c1733163f832e35ea5ebaf27552e5106b2f5596f5dd26"
+    "Symbol": "Crypto.PEPE/USD",
+    "PriceID": "0xd69731a2e74ac1ce884fc3890f7ee324b6deb66147055249568869ed700882e4"
+  },
+  {
+    "Symbol": "Crypto.PERP/USD",
+    "PriceID": "0x944f2f908c5166e0732ea5b610599116cd8e1c41f47452697c1e84138b7184d6"
   },
   {
     "Symbol": "Crypto.POR/USD",
@@ -475,6 +519,10 @@ const PRICE_ID_LIST =
   {
     "Symbol": "Crypto.PORTO/USD",
     "PriceID": "0x88e2d5cbd2474766abffb2a67a58755a2cc19beb3b309e1ded1e357253aa3623"
+  },
+  {
+    "Symbol": "Crypto.PRIME/USD",
+    "PriceID": "0xe417fb7d1edcfe70283c608fa9f14d11ebf4d1b3ecf2e97e42a110f7fb649843"
   },
   {
     "Symbol": "Crypto.PSG/USD",
@@ -497,8 +545,16 @@ const PRICE_ID_LIST =
     "PriceID": "0x2f2d17abbc1e781bd87b4a5d52c8b2856886f5c482fa3593cebf6795040ab0b6"
   },
   {
+    "Symbol": "Crypto.RNDR/USD",
+    "PriceID": "0xab7347771135fc733f8f38db462ba085ed3309955f42554a14fa13e855ac0e2f"
+  },
+  {
     "Symbol": "Crypto.SAMO/USD",
     "PriceID": "0x49601625e1a342c1f90c3fe6a03ae0251991a1d76e480d2741524c29037be28a"
+  },
+  {
+    "Symbol": "Crypto.SAND/USD",
+    "PriceID": "0xcb7a1d45139117f8d3da0a4b67264579aa905e3b124efede272634f094e1e9d1"
   },
   {
     "Symbol": "Crypto.SANTOS/USD",
@@ -541,6 +597,10 @@ const PRICE_ID_LIST =
     "PriceID": "0xef0d8b6fda2ceba41da15d4095d1da392a0d2f8ed0c6c7bc0f4cfac8c280b56d"
   },
   {
+    "Symbol": "Crypto.SPA/USD",
+    "PriceID": "0xcdaf63079d7abee0f54344fb19bf4e23d1e6c8ff7d8e820c86ce119b0ddc14cd"
+  },
+  {
     "Symbol": "Crypto.SPELL/USD",
     "PriceID": "0x1dcf38b0206d27849b0fcb8d2df21aff4f95873cce223f49d7c1ea3c5145ec63"
   },
@@ -557,12 +617,20 @@ const PRICE_ID_LIST =
     "PriceID": "0x956740a4e169e90bb141abfe93652ae3434693bc7ca43cbcea6471408f19ab90"
   },
   {
-    "Symbol": "Crypto.STRK/USD",
-    "PriceID": "0xaaebacfd60ca9d621ff304b79e7d6c7c392a66617479c4898f1f8543d2531331"
+    "Symbol": "Crypto.STRD/USD",
+    "PriceID": "0x1ae76ce538326a90bf3b4f7e37082ce605585e30932e82d112b023ce8c33e01c"
   },
   {
     "Symbol": "Crypto.STSOL/USD",
     "PriceID": "0xa1a6465f4c2ebf244c31d80bc95c27345a3424e428c2def33eced9e90d3f701b"
+  },
+  {
+    "Symbol": "Crypto.STX/USD",
+    "PriceID": "0xec7a775f46379b5e943c3526b1c8d54cd49749176b0b98e02dde68d1bd335c17"
+  },
+  {
+    "Symbol": "Crypto.SUI/USD",
+    "PriceID": "0x23d7315113f5b1d3ba7a83604c44b94d79f4fd69af77f804fc7f920a6dc65744"
   },
   {
     "Symbol": "Crypto.SUN/USD",
@@ -587,6 +655,18 @@ const PRICE_ID_LIST =
   {
     "Symbol": "Crypto.TLM/USD",
     "PriceID": "0x4457960559b812558bb0f8cb7912f8bcb843eb801a3133ef45be998630ff8c05"
+  },
+  {
+    "Symbol": "Crypto.TON/USD",
+    "PriceID": "0x8963217838ab4cf5cadc172203c1f0b763fbaa45f346d8ee50ba994bbcac3026"
+  },
+  {
+    "Symbol": "Crypto.TRX/USD",
+    "PriceID": "0x67aed5a24fdad045475e7195c98a98aea119c763f272d4523f5bac93a4f33c2b"
+  },
+  {
+    "Symbol": "Crypto.TURBOS/USD",
+    "PriceID": "0xf9c2e890443dd995d0baafc08eea3358be1ffb874f93f99c30b3816c460bbac3"
   },
   {
     "Symbol": "Crypto.TUSD/USD",
@@ -621,8 +701,20 @@ const PRICE_ID_LIST =
     "PriceID": "0x7507a4629ad0143550666bce2e7cae0b961a0f624f821feaab642fe1be632f5c"
   },
   {
+    "Symbol": "Crypto.VELA/USD",
+    "PriceID": "0x4b1ddc065d08214eb06878d6130a66665febc3fd201733e9bb481094b5de8a32"
+  },
+  {
+    "Symbol": "Crypto.WAVES/USD",
+    "PriceID": "0x70dddcb074263ce201ea9a1be5b3537e59ed5b9060d309e12d61762cfe59fb7e"
+  },
+  {
     "Symbol": "Crypto.WIN/USD",
     "PriceID": "0xb216f7ca372b318985903866e0b6dc44a14564828c49f36d0d363805aa76335c"
+  },
+  {
+    "Symbol": "Crypto.WOJAK/USD",
+    "PriceID": "0x6e89dbed2351e3c85a9ce1c782ca1e34b6ef2c4775f1cb691739bbe6d0697e86"
   },
   {
     "Symbol": "Crypto.WOM/USD",
@@ -635,6 +727,10 @@ const PRICE_ID_LIST =
   {
     "Symbol": "Crypto.XMR/USD",
     "PriceID": "0x46b8cc9347f04391764a0361e0b17c3ba394b001e7c304f7650f6376e37c321d"
+  },
+  {
+    "Symbol": "Crypto.XPRT/USD",
+    "PriceID": "0x9f520bbc39aad043e3bbb46b05079222d63bd94c150205f2a8889b6b36a0f376"
   },
   {
     "Symbol": "Crypto.XRP/USD",
@@ -669,6 +765,10 @@ const PRICE_ID_LIST =
     "PriceID": "0x49f6b65cb1de6b10eaf75e7c03ca029c306d0357e91b5311b175084a5ad55688"
   },
   {
+    "Symbol": "Equity.US.AI/USD",
+    "PriceID": "0xafb12c5ccf50495c7a7b04447410d7feb4b3218a663ecbd96aa82e676d3c4f1e"
+  },
+  {
     "Symbol": "Equity.US.AMC/USD",
     "PriceID": "0x5b1703d7eb9dc8662a61556a2ca2f9861747c3fc803e01ba5a8ce35cb50a13a1"
   },
@@ -681,6 +781,10 @@ const PRICE_ID_LIST =
     "PriceID": "0xb5d0e0fa58a1f8b81498ae670ce93c872d14434b72c364885d4fa1b257cbb07a"
   },
   {
+    "Symbol": "Equity.US.ARKK/USD",
+    "PriceID": "0xb2fe0af6c828efefda3ffda664f919825a535aa28a0f19fc238945c7aff540b1"
+  },
+  {
     "Symbol": "Equity.US.AXP/USD",
     "PriceID": "0x9ff7b9a93df40f6d7edc8184173c50f4ae72152c6142f001e8202a26f951d710"
   },
@@ -689,12 +793,20 @@ const PRICE_ID_LIST =
     "PriceID": "0x8419416ba640c8bbbcf2d464561ed7dd860db1e38e51cec9baf1e34c4be839ae"
   },
   {
+    "Symbol": "Equity.US.BLK/USD",
+    "PriceID": "0x68d038affb5895f357d7b3527a6d3cd6a54edd0fe754a1248fb3462e47828b08"
+  },
+  {
     "Symbol": "Equity.US.CAT/USD",
     "PriceID": "0xad04597ba688c350a97265fcb60585d6a80ebd37e147b817c94f101a32e58b4c"
   },
   {
     "Symbol": "Equity.US.COIN/USD",
     "PriceID": "0xfee33f2a978bf32dd6b662b65ba8083c6773b494f8401194ec1870c640860245"
+  },
+  {
+    "Symbol": "Equity.US.CPNG/USD",
+    "PriceID": "0x5557d206aa0dd037fc082f03bbd78653f01465d280ea930bc93251f0eb60c707"
   },
   {
     "Symbol": "Equity.US.CRM/USD",
@@ -717,12 +829,20 @@ const PRICE_ID_LIST =
     "PriceID": "0xf3b50961ff387a3d68217e2715637d0add6013e7ecb83c36ae8062f97c46929e"
   },
   {
+    "Symbol": "Equity.US.EEM/USD",
+    "PriceID": "0xd407e68cec58205be82a6140a668dc42f8d9079bcf3be4aa4b41f41f7b983035"
+  },
+  {
     "Symbol": "Equity.US.EFA/USD",
     "PriceID": "0x3b7ef6c95ceedbffbb66bff3d6135a200c5d0a0466b0c90812510ceaedebaf04"
   },
   {
     "Symbol": "Equity.US.GE/USD",
     "PriceID": "0xe1d3115c6e7ac649faca875b3102f1000ab5e06b03f6903e0d699f0f5315ba86"
+  },
+  {
+    "Symbol": "Equity.US.GLD/USD",
+    "PriceID": "0xe190f467043db04548200354889dfe0d9d314c08b8d4e62fabf4d5a3140fecca"
   },
   {
     "Symbol": "Equity.US.GME/USD",
@@ -805,12 +925,20 @@ const PRICE_ID_LIST =
     "PriceID": "0xd0ca23c1cc005e004ccf1db5bf76aeb6a49218f43dac3d4b275e92de12ded4d1"
   },
   {
+    "Symbol": "Equity.US.MSTR/USD",
+    "PriceID": "0xe1e80251e5f5184f2195008382538e847fafc36f751896889dd3d1b1f6111f09"
+  },
+  {
     "Symbol": "Equity.US.NFLX/USD",
     "PriceID": "0x8376cfd7ca8bcdf372ced05307b24dced1f15b1afafdeff715664598f15a3dd2"
   },
   {
     "Symbol": "Equity.US.NKE/USD",
     "PriceID": "0x67649450b4ca4bfff97cbaf96d2fd9e40f6db148cb65999140154415e4378e14"
+  },
+  {
+    "Symbol": "Equity.US.NVDA/USD",
+    "PriceID": "0xb1073854ed24cbc755dc527418f52b7d271f6cc967bbf8d8129112b18860a593"
   },
   {
     "Symbol": "Equity.US.PG/USD",
@@ -917,10 +1045,6 @@ const PRICE_ID_LIST =
     "PriceID": "0x235ddea9f40e9af5814dbcc83a418b98e3ee8df1e34e1ae4d45cf5de596023a3"
   },
   {
-    "Symbol": "FX.USD/RUB",
-    "PriceID": "0x2f6144bae52851efb91082911cb6b83f9d8d08cb6ace5625eaac26f638af710b"
-  },
-  {
     "Symbol": "FX.USD/SEK",
     "PriceID": "0x8ccb376aa871517e807358d4e3cf0bc7fe4950474dbe6c9ffc21ef64e43fc676"
   },
@@ -939,6 +1063,38 @@ const PRICE_ID_LIST =
   {
     "Symbol": "Metal.XAU/USD",
     "PriceID": "0x765d2ba906dbc32ca17cc11f5310a89e9ee1f6420508c63861f2f8ba4ee34bb2"
+  },
+  {
+    "Symbol": "Rates.US10Y",
+    "PriceID": "0x9c196541230ba421baa2a499214564312a46bb47fb6b61ef63db2f70d3ce34c1"
+  },
+  {
+    "Symbol": "Rates.US1M",
+    "PriceID": "0x60076f4fc0dfd634a88b5c3f41e7f8af80b403ca365442b81e582ceb8fc421a2"
+  },
+  {
+    "Symbol": "Rates.US2Y",
+    "PriceID": "0x7d01ec0cb9d38918cd497f97b24cb6cea5552993f5da05863886e6a2d33ee0aa"
+  },
+  {
+    "Symbol": "Rates.US30Y",
+    "PriceID": "0x424c69939fc52a459f6dde758d80f74a3628c0e9b48bfc142df1270c9b9131be"
+  },
+  {
+    "Symbol": "Rates.US3M",
+    "PriceID": "0x5f112a41dc65a8d2b37c533a2fc6f5efed3a385a03c1fb33e534a3857a90c97b"
+  },
+  {
+    "Symbol": "Rates.US5Y",
+    "PriceID": "0x7d220b081152db0d74a93d3ce383c61d0ec5250c6dd2b2cdb2d1e4b8919e1a6e"
+  },
+  {
+    "Symbol": "Rates.US6M",
+    "PriceID": "0x2400f68d24f1320272d82dd4ac99395166ed7ce172c6c5cd6cf775a697f2dacc"
+  },
+  {
+    "Symbol": "Rates.US7Y",
+    "PriceID": "0x2087a47ebf7bb31aee61ffd003a71efe2bed0dda16746ddde63f498f68ece6ce"
   }
 ]
 
