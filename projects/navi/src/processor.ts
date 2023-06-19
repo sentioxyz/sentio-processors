@@ -20,6 +20,7 @@ SuiObjectProcessor.bind({
       ctx.meter.Gauge("total_supply").record(totalSupply)
 
     } catch(e) {
+      console.log(self)
       console.log(e)
     }
   }
