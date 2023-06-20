@@ -69,6 +69,7 @@ pool.bind({
     const decimal_a = poolInfo.decimal_a
     const decimal_b = poolInfo.decimal_b
     const pairName = poolInfo.pairName
+    const pairFullName = poolInfo.pairFullName
 
     const amount_a = Number(event.data_decoded.amount_a) / Math.pow(10, decimal_a)
     const amount_b = Number(event.data_decoded.amount_b) / Math.pow(10, decimal_b)
@@ -106,16 +107,17 @@ pool.bind({
       symbol_b,
       coin_symbol: atob ? symbol_a : symbol_b, //for amount_in
       pairName,
-      message: `Swap ${atob ? amount_a : amount_b} ${atob ? symbol_a : symbol_b} to ${atob ? amount_b : amount_a} ${atob ? symbol_b : symbol_a}. USD value: ${usd_volume} in Pool ${pairName} `
+      pairFullName,
+      message: `Swap ${atob ? amount_a : amount_b} ${atob ? symbol_a : symbol_b} to ${atob ? amount_b : amount_a} ${atob ? symbol_b : symbol_a}. USD value: ${usd_volume} in Pool ${pairFullName} `
     })
 
-    ctx.meter.Gauge("trading_vol_gauge").record(usd_volume!, { pairName })
-    ctx.meter.Counter("trading_vol_counter").add(usd_volume!, { pairName })
+    ctx.meter.Gauge("trading_vol_gauge").record(usd_volume!, { pairName, pairFullName })
+    ctx.meter.Counter("trading_vol_counter").add(usd_volume!, { pairName, pairFullName })
     if (price_a) {
-      price_a_gauge.record(ctx, price_a, {pairName, symbol_a})
+      price_a_gauge.record(ctx, price_a, { pairName, pairFullName, symbol_a })
     }
-    if (price_b){
-      price_b_gauge.record(ctx, price_b, {pairName, symbol_b})
+    if (price_b) {
+      price_b_gauge.record(ctx, price_b, { pairName, pairFullName, symbol_b })
     }
 
   })
@@ -124,6 +126,8 @@ pool.bind({
     const pool = event.data_decoded.pool
     const poolInfo = await helper.getOrCreatePool(ctx, pool)
     const pairName = poolInfo.pairName
+    const pairFullName = poolInfo.pairFullName
+
     const decimal_a = poolInfo.decimal_a
     const decimal_b = poolInfo.decimal_b
 
@@ -145,9 +149,10 @@ pool.bind({
       amount_b,
       value,
       pairName,
-      message: `Add USD$${value} Liquidity in ${pairName}`
+      pairFullName,
+      message: `Add USD$${value} Liquidity in ${pairFullName}`
     })
-    ctx.meter.Gauge("add_liquidity_gauge").record(value, { pairName })
+    ctx.meter.Gauge("add_liquidity_gauge").record(value, { pairName, pairFullName })
 
   })
   .onEventBurnEvent(async (event, ctx) => {
@@ -155,6 +160,7 @@ pool.bind({
     const pool = event.data_decoded.pool
     const poolInfo = await helper.getOrCreatePool(ctx, pool)
     const pairName = poolInfo.pairName
+    const pairFullName = poolInfo.pairFullName
     const decimal_a = poolInfo.decimal_a
     const decimal_b = poolInfo.decimal_b
 
@@ -177,9 +183,10 @@ pool.bind({
       amount_b,
       value,
       pairName,
-      message: `Remove USD$${value} Liquidity in ${pairName}`
+      pairFullName,
+      message: `Remove USD$${value} Liquidity in ${pairFullName}`
     })
-    ctx.meter.Gauge("remove_liquidity_gauge").record(value, { pairName })
+    ctx.meter.Gauge("remove_liquidity_gauge").record(value, { pairName, pairFullName })
 
   })
 
@@ -204,6 +211,8 @@ const template = new SuiObjectProcessorTemplate()
         const decimal_a = poolInfo.decimal_a
         const decimal_b = poolInfo.decimal_b
         const pairName = poolInfo.pairName
+        const pairFullName = poolInfo.pairFullName
+
         const [coin_a_address, coin_b_address] = helper.getCoinObjectAddress(poolInfo.type)
         const coin_a_bridge = helper.getBridgeInfo(coin_a_address)
         const coin_b_bridge = helper.getBridgeInfo(coin_b_address)
@@ -212,18 +221,18 @@ const template = new SuiObjectProcessorTemplate()
 
         const coin_a_balance = Number(self.fields.coin_a) / Math.pow(10, decimal_a)
         const coin_b_balance = Number(self.fields.coin_b) / Math.pow(10, decimal_b)
-        console.log(`pair: ${pairName} \nsymbol:${symbol_a} ${symbol_b}, \ncoin_a_balance ${coin_a_balance} coin_b_balance ${coin_b_balance}, \npool ${ctx.objectId}`)
+        console.log(`pair: ${pairFullName} \nsymbol:${symbol_a} ${symbol_b}, \ncoin_a_balance ${coin_a_balance} coin_b_balance ${coin_b_balance}, \npool ${ctx.objectId}`)
         if (coin_a_balance) {
-          ctx.meter.Gauge('coin_a_balance').record(coin_a_balance, { coin_symbol: symbol_a, pairName })
+          ctx.meter.Gauge('coin_a_balance').record(coin_a_balance, { coin_symbol: symbol_a, pairName, pairFullName })
         }
 
         if (coin_b_balance) {
-          ctx.meter.Gauge('coin_b_balance').record(coin_b_balance, { coin_symbol: symbol_b, pairName })
+          ctx.meter.Gauge('coin_b_balance').record(coin_b_balance, { coin_symbol: symbol_b, pairName, pairFullName })
         }
 
         //record liquidity
         const liquidity = Number(self.fields.liquidity)
-        ctx.meter.Gauge("liquidity").record(liquidity, { pairName })
+        ctx.meter.Gauge("liquidity").record(liquidity, { pairName, pairFullName })
 
         //record price
         const coin_a2b_price = await helper.getPoolPrice(ctx, ctx.objectId)
@@ -231,12 +240,12 @@ const template = new SuiObjectProcessorTemplate()
         //record tvl
         const [tvl_a, tvl_b] = await helper.calculateValue_USD(ctx, ctx.objectId, coin_a_balance, coin_b_balance, ctx.timestamp)
         const tvl = tvl_a + tvl_b
-        ctx.meter.Gauge("tvl").record(tvl, { pairName })
-        ctx.meter.Gauge("tvl_oneside").record(tvl_a, { pairName, bridge: coin_a_bridge, coin: coin_a_address })
-        ctx.meter.Gauge("tvl_oneside").record(tvl_b, { pairName, bridge: coin_b_bridge, coin: coin_b_address  })
+        ctx.meter.Gauge("tvl").record(tvl, { pairName, pairFullName })
+        ctx.meter.Gauge("tvl_oneside").record(tvl_a, { pairName, pairFullName, bridge: coin_a_bridge, coin: coin_a_address })
+        ctx.meter.Gauge("tvl_oneside").record(tvl_b, { pairName, pairFullName, bridge: coin_b_bridge, coin: coin_b_address })
 
 
-        console.log(`pair: ${pairName} \nsymbol:${symbol_a} ${symbol_b}, \ncoin_a_balance ${coin_a_balance} coin_b_balance ${coin_b_balance}, \npool ${ctx.objectId} \nliquidity: ${liquidity} \ntvl: ${tvl} `)
+        console.log(`pair: ${pairFullName} \nsymbol:${symbol_a} ${symbol_b}, \ncoin_a_balance ${coin_a_balance} coin_b_balance ${coin_b_balance}, \npool ${ctx.objectId} \nliquidity: ${liquidity} \ntvl: ${tvl} `)
 
       }
       catch (e) {

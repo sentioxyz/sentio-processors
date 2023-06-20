@@ -65,7 +65,8 @@ interface poolInfo {
     symbol_b: string,
     decimal_a: number,
     decimal_b: number,
-    pairName: string,
+    pairName: string,//symbol_a + symbol_b + fee
+    pairFullName: string, //name_a + name_b + fee
     type: string
 }
 
@@ -109,7 +110,7 @@ export async function buildPoolInfo(ctx: SuiContext | SuiObjectContext, pool: st
     //     console.log(`Pool not in array ${pool}`)
     // }
 
-    let [symbol_a, symbol_b, decimal_a, decimal_b, pairName, type, fee_label] = ["", "", 0, 0, "", "", "", "NaN"]
+    let [symbol_a, symbol_b, decimal_a, decimal_b, pairName, pairFullName, type, fee_label] = ["", "", 0, 0, "", "", "", "", "NaN"]
     try {
         const obj = await ctx.client.getObject({ id: pool, options: { showType: true, showContent: true } })
         type = obj.data.type
@@ -127,9 +128,10 @@ export async function buildPoolInfo(ctx: SuiContext | SuiObjectContext, pool: st
         decimal_a = coinInfo_a.decimal
         decimal_b = coinInfo_b.decimal
         pairName = symbol_a + "-" + symbol_b + " " + fee_label
+        pairFullName = coinInfo_a.name + "-" + coinInfo_b.name + " " + fee_label
     }
     catch (e) {
-        console.log(` Build pool error ${e.message} at ${JSON.stringify(ctx)}`)
+        console.log(`Build pool error ${e.message} at ${JSON.stringify(ctx)}`)
     }
 
     return {
@@ -138,6 +140,7 @@ export async function buildPoolInfo(ctx: SuiContext | SuiObjectContext, pool: st
         decimal_a,
         decimal_b,
         pairName,
+        pairFullName,
         type
     }
 }
@@ -160,13 +163,14 @@ export async function getPoolPrice(ctx: SuiContext | SuiObjectContext, pool: str
         if (!sqrt_price) { console.log(`get pool price error at ${ctx}`) }
         const poolInfo = await getOrCreatePool(ctx, pool)
         const pairName = poolInfo.pairName
+        const pairFullName = poolInfo.pairFullName
         const coin_b2a_price = 1 / (Number(sqrt_price) ** 2) * (2 ** 128) * 10 ** (poolInfo.decimal_b - poolInfo.decimal_a)
         coin_a2b_price = 1 / coin_b2a_price
-        ctx.meter.Gauge("a2b_price").record(coin_a2b_price, { pairName })
-        ctx.meter.Gauge("b2a_price").record(coin_b2a_price, { pairName })
+        ctx.meter.Gauge("a2b_price").record(coin_a2b_price, { pairName, pairFullName })
+        ctx.meter.Gauge("b2a_price").record(coin_b2a_price, { pairName, pairFullName })
     }
     catch (e) {
-        console.log(` get pool price error ${e.message} at ${JSON.stringify(ctx)}`)
+        console.log(`get pool price error ${e.message} at ${JSON.stringify(ctx)}`)
     }
     return coin_a2b_price
 }
@@ -225,7 +229,7 @@ export async function calculateSwapVol_USD(type: string, amount_a: number, amoun
         else {
             console.log(`price not in sui coinlist, calculate vol failed for pool w/ ${type}`)
         }
-        
+
     }
     catch (e) {
         console.log(` calculate swap value error ${e.message} at ${type}`)
