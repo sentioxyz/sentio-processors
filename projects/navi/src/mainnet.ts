@@ -1,6 +1,12 @@
 // import { pool, pool_factory } from "./types/sui/turbos.js";
-import { SuiObjectProcessor, SuiContext, SuiObjectContext, SuiObjectProcessorTemplate } from "@sentio/sdk/sui"
-import * as constant from './constant-turbos.js'
+import {
+  SuiObjectProcessor,
+  SuiContext,
+  SuiObjectContext,
+  SuiObjectProcessorTemplate,
+  SuiWrappedObjectProcessor
+} from "@sentio/sdk/sui"
+// import * as constant from './constant-turbos.js'
 import { ChainId } from "@sentio/chain"
 import { BUILTIN_TYPES } from "@sentio/sdk/move"
 import { BigDecimal, Gauge } from "@sentio/sdk";
@@ -78,7 +84,7 @@ for (let i = 0; i < reserves.length; i++) {
         const treasuryBalance = Number(self.fields.value.fields.treasury_balance)
 
         ctx.meter.Gauge("total_supply").record(totalSupply, {env: "mainnet", id, type, coin_symbol})
-        
+
         ctx.meter.Gauge("ltv").record(ltv, {env: "mainnet", id, type, coin_symbol})
         ctx.meter.Gauge("currentBorrowIndex").record(currentBorrowIndex, {env: "mainnet", id, type, coin_symbol})
         ctx.meter.Gauge("borrowCapCeiling").record(borrowCapCeiling, {env: "mainnet", id, type, coin_symbol})
@@ -91,18 +97,19 @@ for (let i = 0; i < reserves.length; i++) {
   })
 }
 
-SuiObjectProcessor.bind({
+SuiWrappedObjectProcessor.bind({
   network: ChainId.SUI_MAINNET,
   objectId: '0xbbc729d3dcdaf8239d9c3c1459b2386fb70874eaba32d794e874c9d3573c025e',
-}).onTimeInterval(async (self, objects, ctx) => {
-  ctx.meter.Gauge('num_portfolio_vault').record(objects.length)
+}).onTimeInterval(async (objects, ctx) => {
+  // ctx.meter.Gauge('num_portfolio_vault').record(objects.length)
+  // console.log(objects)
 
   const decodedObjects = await ctx.coder.getDynamicFields(
       objects,
-      BUILTIN_TYPES.U64_TYPE,
+      BUILTIN_TYPES.U8_TYPE,
       oracle.Price.type()
   )
-  console.log(decodedObjects)
+  // console.log(decodedObjects)
   decodedObjects.forEach((entry) => {
     const id = entry.id.toString()
     const name = entry.name.toString()

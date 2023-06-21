@@ -1,6 +1,6 @@
 // import { pool, pool_factory } from "./types/sui/turbos.js";
 import { SuiObjectProcessor, SuiContext, SuiObjectContext, SuiObjectProcessorTemplate } from "@sentio/sdk/sui"
-import * as constant from './constant-turbos.js'
+// import * as constant from './constant-turbos.js'
 import { ChainId } from "@sentio/chain"
 import { BUILTIN_TYPES } from "@sentio/sdk/move"
 import { Gauge } from "@sentio/sdk";
