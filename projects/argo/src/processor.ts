@@ -12,7 +12,7 @@ import { ArgonautsProcessor } from './types/eth/argonauts.js'
 import { GoldProcessor } from './types/eth/gold.js'
 import { StardustProcessor } from './types/eth/stardust.js'
 import { scaleDown } from '@sentio/sdk'
-import { EthChainId } from '@sentio/sdk'
+import { EthChainId } from '@sentio/sdk/eth'
 import * as config from './constant.js'
 
 
@@ -103,6 +103,32 @@ AtlantisRacingProcessor.bind({ address: config.ATLANTIS_SPACESHIP_RACING, networ
     ctx.meter.Counter("allCoreEventsCounter").add(1, { event: event.name })
 
   })
+  .onEventStartSeason(async (event, ctx) => {
+    const startTime = event.args.startTime
+    ctx.eventLogger.emit("StartSeason",
+      {
+        startTime
+      })
+  })
+  .onTimeInterval(async (_, ctx) => {
+    for (let i = 0; i < 4; i++) {
+      //gold produced
+      const poolInfo = await ctx.contract.poolInfo(i, { blockTag: ctx.blockNumber })
+      const totalRewardPerSecond = Number(await ctx.contract.totalRewardPerSecond({ blockTag: ctx.blockNumber }))
+      const ACC_TOKEN_PRECISION = Number(await ctx.contract.ACC_TOKEN_PRECISION({ blockTag: ctx.blockNumber }))
+      const gold_produced_racing_day = totalRewardPerSecond / ACC_TOKEN_PRECISION * Number(poolInfo.goldWeightage) * 100 / 86400
+      console.log(`\ni=${i} \ngoldWeightage=${Number(poolInfo.goldWeightage)} \ntotalRewardPerSecond=${totalRewardPerSecond} \nACC_TOKEN_PRECISION=${ACC_TOKEN_PRECISION} \ngold_produced_racing_day=${gold_produced_racing_day}`)
+      ctx.meter.Gauge("gold_produced_racing_day").record(gold_produced_racing_day, { pool: i.toString() })
+
+      //stardust produced
+      const stardust_produced_racing_day = totalRewardPerSecond / ACC_TOKEN_PRECISION * Number(poolInfo.stardustWeightage) * 100 / 86400
+      console.log(`\ni=${i} \ngoldWeightage=${Number(poolInfo.goldWeightage)} \nstardustWeightage=${Number(poolInfo.stardustWeightage)} \ntotalRewardPerSecond=${totalRewardPerSecond} \nACC_TOKEN_PRECISION=${ACC_TOKEN_PRECISION} \ngold_produced_racing_day=${gold_produced_racing_day} \nstardust_produced_racing_day=${stardust_produced_racing_day}`)
+      ctx.meter.Gauge("stardust_produced_racing_day").record(stardust_produced_racing_day, { pool: i.toString() })
+
+    }
+
+
+  }, 1440, 1440)
 //  .onEvent(AllEventsHandler)
 
 
@@ -112,12 +138,16 @@ AtlantisGemstonesProcessor.bind({ address: config.ATLANTIS_GEMSTONE, network: Et
     const id = Number(event.args._id)
     const amount = Number(event.args._amount)
     const totalSupply = Number(event.args._totalSupply)
+    const fusion_cost = Number(await ctx.contract.FUSION_COST({ blockTag: ctx.blockNumber }))
+    const stardust_burnt = amount * fusion_cost / 10 ** 18
     ctx.eventLogger.emit("FuseGemstone", {
       distinctId: from,
       id,
       amount,
+      stardust_burnt,
       totalSupply
     })
+    ctx.meter.Gauge("stardust_burnt").record(stardust_burnt, { source: "gemstone" })
     ctx.meter.Counter("allCoreEventsCounter").add(1, { event: event.name })
   })
   //  .onEvent(AllEventsHandler)
@@ -171,6 +201,7 @@ AtlantisPlanetExpeditionProcessor.bind({ address: config.ATLANTIS_PLANET_EXPEDIT
       startTime,
       endTime
     })
+    ctx.meter.Gauge("stardust_produced_expedition")
     ctx.meter.Counter("allCoreEventsCounter").add(1, { event: event.name })
   })
 //  .onEvent(AllEventsHandler)
@@ -193,7 +224,7 @@ AtlantisPlanetsProcessor.bind({ address: config.ATLANTIS_PLANET, network: EthCha
   //  .onEvent(AllEventsHandler)
   .onTimeInterval(async (_, ctx) => {
     try {
-      const planetNFTStakedPlanetExpedition = Number(await ctx.contract.balanceOf(config.ATLANTIS_PLANET_EXPEDITION))
+      const planetNFTStakedPlanetExpedition = Number(await ctx.contract.balanceOf(config.ATLANTIS_PLANET_EXPEDITION, { blockTag: ctx.blockNumber }))
       ctx.meter.Gauge("planetNFTStakedPlanetExpedition").record(planetNFTStakedPlanetExpedition)
     }
     catch (e) {
@@ -225,7 +256,7 @@ AtlantisSpaceshipsProcessor.bind({ address: config.ATLANTIS_SPACESHIP, network: 
   //  .onEvent(AllEventsHandler)
   .onTimeInterval(async (_, ctx) => {
     try {
-      const spaceshipNFTStakedSpaceshipRacing = Number(await ctx.contract.balanceOf(config.ATLANTIS_SPACESHIP_RACING))
+      const spaceshipNFTStakedSpaceshipRacing = Number(await ctx.contract.balanceOf(config.ATLANTIS_SPACESHIP_RACING, { blockTag: ctx.blockNumber }))
       ctx.meter.Gauge("spaceshipNFTStakedSpaceshipRacing").record(spaceshipNFTStakedSpaceshipRacing)
     }
     catch (e) {
@@ -235,6 +266,9 @@ AtlantisSpaceshipsProcessor.bind({ address: config.ATLANTIS_SPACESHIP, network: 
 
 
 
+// const filter_equipment_mint = AtlantisEquipmentsProcessor.filters.TransferSingle(
+//   '0x0000000000000000000000000000000000000000'
+// )
 
 AtlantisEquipmentsProcessor.bind({ address: config.ATLANTIS_EQUIPMENT, network: EthChainId.CRONOS })
   .onEventFuseEquipment(async (event, ctx) => {
@@ -242,28 +276,30 @@ AtlantisEquipmentsProcessor.bind({ address: config.ATLANTIS_EQUIPMENT, network: 
     const id = Number(event.args._id)
     const amount = Number(event.args._amount)
     const totalSupply = Number(event.args._totalSupply)
+    const calculateFusionCost = Number(await ctx.contract.calculateFusionCost(id, amount, { blockTag: ctx.blockNumber })) / 10 ** 18
     ctx.eventLogger.emit("FuseEquipment", {
       distinctId: from,
       id,
       amount,
+      calculateFusionCost,
       totalSupply
     })
+    ctx.meter.Gauge("stardust_burnt").record(calculateFusionCost, { source: "equipment" })
     ctx.meter.Counter("allCoreEventsCounter").add(1, { event: event.name })
   })
   .onEventTransferSingle(async (event, ctx) => {
-    if (event.args.from == "0x0000000000000000000000000000000000000000") {
-      const operator = event.args.operator
-      const to = event.args.to
-      const id = Number(event.args.id)
-      const value = Number(event.args.value)
-      ctx.eventLogger.emit("TransferSingle", {
-        distinctId: to,
-        operator,
-        id,
-        value
-      })
-      ctx.meter.Counter("allCoreEventsCounter").add(1, { event: event.name })
-    }
+    const operator = event.args.operator
+    const to = event.args.to
+    const id = Number(event.args.id)
+    const value = Number(event.args.value)
+    ctx.eventLogger.emit("TransferSingle", {
+      distinctId: to,
+      operator,
+      id,
+      value
+    })
+    ctx.meter.Counter("allCoreEventsCounter").add(1, { event: event.name })
+
   })
   //  .onEvent(AllEventsHandler)
   .onTimeInterval(async (_, ctx) => {
@@ -310,7 +346,7 @@ AtlantisMarketplaceProcessor.bind({ address: config.ATLANTIS_MARKETPLACE, networ
     const paymentToken = event.args.paymentToken
     let gold_volume = 0
     if (paymentToken.toLowerCase() == config.GOLD_TOKEN) {
-      gold_volume = quantity * pricePerItem
+      gold_volume = quantity * pricePerItem / 10 ** 18
     }
 
     ctx.eventLogger.emit("ItemSold", {
@@ -330,18 +366,20 @@ AtlantisMarketplaceProcessor.bind({ address: config.ATLANTIS_MARKETPLACE, networ
     ctx.meter.Counter("allCoreEventsCounter").add(1, { event: event.name })
 
   })
+
 //  .onEvent(AllEventsHandler)
 
 GoldStardustStakingProcessor.bind({ address: config.GOLD_STARDUST_STAKING, network: EthChainId.CRONOS })
   .onEventLogStake(async (event, ctx) => {
     const staker = event.args.staker
-    const goldAmount = Number(event.args.goldAmount)
+    const goldAmount = Number(event.args.goldAmount) / 10 ** 18
     const timestamp_logStake = Number(event.args.timestamp)
     ctx.eventLogger.emit("LogStake", {
       distinctId: staker,
       goldAmount,
       timestamp_logStake
     })
+    ctx.meter.Gauge("gold_locked").record(goldAmount)
     ctx.meter.Counter("allCoreEventsCounter").add(1, { event: event.name })
   })
   .onEventLogUnstake(async (event, ctx) => {
@@ -358,6 +396,7 @@ GoldStardustStakingProcessor.bind({ address: config.GOLD_STARDUST_STAKING, netwo
       unstakeStart,
       unstakeUnlocked
     })
+    ctx.meter.Gauge("stardust_burnt").record(stardustAmount, { source: "for gold" })
     ctx.meter.Counter("allCoreEventsCounter").add(1, { event: event.name })
 
     if (difference > 0) {
@@ -390,31 +429,46 @@ GoldStardustStakingProcessor.bind({ address: config.GOLD_STARDUST_STAKING, netwo
   })
   .onEventLogClaimed(async (event, ctx) => {
     const staker = event.args.staker
-    const claimedAmount = Number(event.args.claimedAmount)
+    const claimedAmount = Number(event.args.claimedAmount) / 10 ** 18
     const timestamp_logClaimed = Number(event.args.timestamp)
     ctx.eventLogger.emit("LogClaimed", {
       distinctId: staker,
       claimedAmount,
       timestamp_logClaimed
     })
+    ctx.meter.Gauge("gold_unlocked").record(claimedAmount)
     ctx.meter.Counter("allCoreEventsCounter").add(1, { event: event.name })
   })
+
+const filter_gold_burnt = GoldProcessor.filters.Transfer(
+  null,
+  '0x0000000000000000000000000000000000000000'
+)
+const filter_gold_mint = GoldProcessor.filters.Transfer(
+  '0x0000000000000000000000000000000000000000',
+  null
+)
 
 GoldProcessor.bind({ address: config.GOLD_TOKEN, network: EthChainId.CRONOS })
   .onTimeInterval(async (_, ctx) => {
     try {
       const totalSupply = Number(scaleDown(await ctx.contract.totalSupply(), 18))
-      let teamDeployerBal = 0
-      for (let address of config.TEAM_DEPLOYER_ADDRESSES) {
-        teamDeployerBal += Number(scaleDown(await ctx.contract.balanceOf(address), 18))
+
+      let nonCirculatingWalletBal = 0
+      for (let address of config.NON_CIRCULATING_WALLETS) {
+        nonCirculatingWalletBal += Number(scaleDown(await ctx.contract.balanceOf(address), 18))
       }
-      let factoryBal = 0
-      for (let address of config.FACTORY_ADDRESS) {
-        factoryBal += Number(scaleDown(await ctx.contract.balanceOf(address), 18))
-      }
+      const factoryBal = Number(scaleDown(await ctx.contract.balanceOf(config.FACTORY_ADDRESS), 18))
       const racingBal = Number(scaleDown(await ctx.contract.balanceOf(config.ATLANTIS_SPACESHIP_RACING), 18))
-      const goldCirculating = totalSupply - teamDeployerBal - factoryBal - racingBal
+      const goldCirculating = totalSupply - factoryBal - nonCirculatingWalletBal - racingBal
+      //debug
+      // ctx.meter.Gauge("totalSupply").record(totalSupply)
+      // ctx.meter.Gauge("factoryBal").record(factoryBal)
+      // ctx.meter.Gauge("racingBal").record(racingBal)
+      // ctx.meter.Gauge("nonCirculatingWalletBal").record(nonCirculatingWalletBal)
+      //debug end
       ctx.meter.Gauge("goldCirculating").record(goldCirculating)
+
     }
     catch (e) {
       const hash = ctx.transactionHash
@@ -432,7 +486,7 @@ GoldProcessor.bind({ address: config.GOLD_TOKEN, network: EthChainId.CRONOS })
       })
       ctx.meter.Counter("gold_burnt_total").add(value)
     }
-  })
+  }, [filter_gold_burnt, filter_gold_mint])
 
 StardustProcessor.bind({ address: config.STARDUST_TOKEN, network: EthChainId.CRONOS })
   .onTimeInterval(async (_, ctx) => {
@@ -440,7 +494,11 @@ StardustProcessor.bind({ address: config.STARDUST_TOKEN, network: EthChainId.CRO
       const totalSupply = Number(scaleDown(await ctx.contract.totalSupply(), 18))
       const planetExpeditionBal = Number(scaleDown(await ctx.contract.balanceOf(config.ATLANTIS_PLANET_EXPEDITION), 18))
       const racingBal = Number(scaleDown(await ctx.contract.balanceOf(config.ATLANTIS_SPACESHIP_RACING), 18))
-      const stardustCirculating = totalSupply - planetExpeditionBal - racingBal
+      let nonCirculatingWalletBal = 0
+      for (let address of config.NON_CIRCULATING_WALLETS) {
+        nonCirculatingWalletBal += Number(scaleDown(await ctx.contract.balanceOf(address), 18))
+      }
+      const stardustCirculating = totalSupply - planetExpeditionBal - racingBal - nonCirculatingWalletBal
       ctx.meter.Gauge("stardustCirculating").record(stardustCirculating)
     }
     catch (e) {
