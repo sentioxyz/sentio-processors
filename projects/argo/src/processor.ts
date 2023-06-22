@@ -114,20 +114,17 @@ AtlantisRacingProcessor.bind({ address: config.ATLANTIS_SPACESHIP_RACING, networ
     for (let i = 0; i < 4; i++) {
       //gold produced
       const poolInfo = await ctx.contract.poolInfo(i, { blockTag: ctx.blockNumber })
-      const totalRewardPerSecond = Number(await ctx.contract.totalRewardPerSecond({ blockTag: ctx.blockNumber }))
+      const rewardPerSecond = Number(poolInfo.rewardPerSecond)
       const ACC_TOKEN_PRECISION = Number(await ctx.contract.ACC_TOKEN_PRECISION({ blockTag: ctx.blockNumber }))
-      const gold_produced_racing_day = totalRewardPerSecond / ACC_TOKEN_PRECISION * Number(poolInfo.goldWeightage) * 100 / 86400
-      console.log(`\ni=${i} \ngoldWeightage=${Number(poolInfo.goldWeightage)} \ntotalRewardPerSecond=${totalRewardPerSecond} \nACC_TOKEN_PRECISION=${ACC_TOKEN_PRECISION} \ngold_produced_racing_day=${gold_produced_racing_day}`)
+      const gold_produced_racing_day = rewardPerSecond / ACC_TOKEN_PRECISION * Number(poolInfo.goldWeightage) / 100 * 86400
+      console.log(`\ni=${i} \ngoldWeightage=${Number(poolInfo.goldWeightage)} \nrewardPerSecond=${rewardPerSecond} \nACC_TOKEN_PRECISION=${ACC_TOKEN_PRECISION} \ngold_produced_racing_day=${gold_produced_racing_day}`)
       ctx.meter.Gauge("gold_produced_racing_day").record(gold_produced_racing_day, { pool: i.toString() })
 
       //stardust produced
-      const stardust_produced_racing_day = totalRewardPerSecond / ACC_TOKEN_PRECISION * Number(poolInfo.stardustWeightage) * 100 / 86400
-      console.log(`\ni=${i} \ngoldWeightage=${Number(poolInfo.goldWeightage)} \nstardustWeightage=${Number(poolInfo.stardustWeightage)} \ntotalRewardPerSecond=${totalRewardPerSecond} \nACC_TOKEN_PRECISION=${ACC_TOKEN_PRECISION} \ngold_produced_racing_day=${gold_produced_racing_day} \nstardust_produced_racing_day=${stardust_produced_racing_day}`)
+      const stardust_produced_racing_day = rewardPerSecond / ACC_TOKEN_PRECISION * Number(poolInfo.stardustWeightage) / 100 * 86400
+      console.log(`\ni=${i} \ngoldWeightage=${Number(poolInfo.goldWeightage)} \nstardustWeightage=${Number(poolInfo.stardustWeightage)} \nrewardPerSecond=${rewardPerSecond} \nACC_TOKEN_PRECISION=${ACC_TOKEN_PRECISION} \ngold_produced_racing_day=${gold_produced_racing_day} \nstardust_produced_racing_day=${stardust_produced_racing_day}`)
       ctx.meter.Gauge("stardust_produced_racing_day").record(stardust_produced_racing_day, { pool: i.toString() })
-
     }
-
-
   }, 1440, 1440)
 //  .onEvent(AllEventsHandler)
 
@@ -276,7 +273,8 @@ AtlantisEquipmentsProcessor.bind({ address: config.ATLANTIS_EQUIPMENT, network: 
     const id = Number(event.args._id)
     const amount = Number(event.args._amount)
     const totalSupply = Number(event.args._totalSupply)
-    const calculateFusionCost = Number(await ctx.contract.calculateFusionCost(id, amount, { blockTag: ctx.blockNumber })) / 10 ** 18
+    const calculateFusionCost = Number(await ctx.contract.calculateFusionCost(id - 3, amount, { blockTag: ctx.blockNumber })) /// 10 ** 18
+    console.log(`calculateFusionCost(${id - 3},${amount}): ${calculateFusionCost}`)
     ctx.eventLogger.emit("FuseEquipment", {
       distinctId: from,
       id,
@@ -289,17 +287,47 @@ AtlantisEquipmentsProcessor.bind({ address: config.ATLANTIS_EQUIPMENT, network: 
   })
   .onEventTransferSingle(async (event, ctx) => {
     const operator = event.args.operator
+    const from = event.args.from
     const to = event.args.to
     const id = Number(event.args.id)
     const value = Number(event.args.value)
     ctx.eventLogger.emit("TransferSingle", {
       distinctId: to,
       operator,
+      from,
       id,
       value
     })
+    //debug
+    // if (from.toLowerCase() !== operator.toLowerCase()) {
+    //   ctx.eventLogger.emit("transferFromNotEqualOperator", {
+    //     distinctId: to,
+    //     operator,
+    //     from,
+    //     id,
+    //     value
+    //   })
+    // }
+    // if (to.toLowerCase() == operator.toLowerCase()) {
+    //   ctx.eventLogger.emit("transferToEqualOperator", {
+    //     distinctId: to,
+    //     operator,
+    //     from,
+    //     id,
+    //     value
+    //   })
+    // }
+    // if (from.toLowerCase() == operator.toLowerCase()) {
+    //   ctx.eventLogger.emit("transferFromEqualOperator", {
+    //     distinctId: to,
+    //     operator,
+    //     from,
+    //     id,
+    //     value
+    //   })
+    // }
+    //debug end
     ctx.meter.Counter("allCoreEventsCounter").add(1, { event: event.name })
-
   })
   //  .onEvent(AllEventsHandler)
   .onTimeInterval(async (_, ctx) => {
