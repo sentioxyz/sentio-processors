@@ -1,12 +1,12 @@
 import { pool, pool_factory } from "./types/sui/turbos.js";
 import { SuiObjectProcessor, SuiContext, SuiObjectContext, SuiObjectProcessorTemplate } from "@sentio/sdk/sui"
 import * as constant from './constant-turbos.js'
-import { SuiChainId } from "@sentio/sdk"
+import { SuiNetwork } from "@sentio/sdk/sui"
 import * as helper from './helper/turbos-clmm-helper.js'
 
 pool_factory.bind({
   address: constant.CLMM_MAINNET,
-  network: SuiChainId.SUI_MAINNET,
+  network: SuiNetwork.MAIN_NET,
   startCheckpoint: 1500000n
 })
   .onEventPoolCreatedEvent(async (event, ctx) => {
@@ -39,7 +39,7 @@ pool_factory.bind({
 
 pool.bind({
   address: constant.CLMM_MAINNET,
-  network: SuiChainId.SUI_MAINNET,
+  network: SuiNetwork.MAIN_NET,
   startCheckpoint: 1500000n
 })
   .onEventSwapEvent(async (event, ctx) => {
@@ -165,7 +165,7 @@ pool.bind({
 //   const pool_address = constant.POOLS_INFO_MAINNET[i]
 //   SuiObjectProcessor.bind({
 //     objectId: pool_address,
-//     network: SuiChainId.SUI_MAINNET,
+//     network: SuiNetwork.MAIN_NET,
 //     startCheckpoint: 2000000n
 //   })
 const template = new SuiObjectProcessorTemplate()
@@ -204,10 +204,10 @@ const template = new SuiObjectProcessorTemplate()
 
         //record tvl
         const [tvl_a, tvl_b] = await helper.calculateValue_USD(ctx, ctx.objectId, coin_a_balance, coin_b_balance, ctx.timestamp)
-        const tvl = tvl_a + tvl_b        
+        const tvl = tvl_a + tvl_b
         ctx.meter.Gauge("tvl").record(tvl, { pairName, vertical: "dex", project: "turbos" })
         ctx.meter.Gauge("tvl_oneside").record(tvl_a, { pairName, bridge: coin_a_bridge, coin: coin_a_address, vertical: "dex", project: "turbos" })
-        ctx.meter.Gauge("tvl_oneside").record(tvl_b, { pairName, bridge: coin_b_bridge, coin: coin_b_address, vertical: "dex", project: "turbos"  })
+        ctx.meter.Gauge("tvl_oneside").record(tvl_b, { pairName, bridge: coin_b_bridge, coin: coin_b_address, vertical: "dex", project: "turbos" })
 
         // console.log(`pair: ${pairName} \nsymbol:${symbol_a} ${symbol_b}, \ncoin_a_balance ${coin_a_balance} coin_b_balance ${coin_b_balance}, \npool ${ctx.objectId} \nliquidity: ${liquidity} \ntvl: ${tvl} `)
 
@@ -217,5 +217,5 @@ const template = new SuiObjectProcessorTemplate()
       }
     }
 
-  }, 60, 10, undefined, { owned: false })
+  }, 240, 60, undefined, { owned: false })
 // }

@@ -1,7 +1,7 @@
 import { SuiObjectProcessor, SuiContext, SuiObjectContext } from "@sentio/sdk/sui"
 import { getPriceByType, token } from "@sentio/sdk/utils"
 import * as constant from '../constant-turbos.js'
-import { SuiChainId } from "@sentio/sdk"
+import { SuiNetwork } from "@sentio/sdk/sui"
 
 const wormholeTokens = new Set([
     "0xa198f3be41cda8c07b3bf3fee02263526e535d682499806979a111e88a5a8d0f",
@@ -100,7 +100,7 @@ export const getOrCreateCoin = async function (ctx: SuiContext | SuiObjectContex
         coinInfoMap.set(coinAddress, coinInfo)
         console.log("set coinInfoMap for " + coinAddress)
     }
-    return await coinInfo
+    return coinInfo
 }
 
 export async function buildPoolInfo(ctx: SuiContext | SuiObjectContext, pool: string): Promise<poolInfo> {
@@ -146,7 +146,7 @@ export const getOrCreatePool = async function (ctx: SuiContext | SuiObjectContex
         poolInfoMap.set(pool, infoPromise)
         console.log("set poolInfoMap for " + pool)
     }
-    return await infoPromise
+    return infoPromise
 }
 
 export async function getPoolPrice(ctx: SuiContext | SuiObjectContext, pool: string) {
@@ -174,8 +174,8 @@ export async function calculateValue_USD(ctx: SuiContext | SuiObjectContext, poo
     try {
         const poolInfo = await getOrCreatePool(ctx, pool)
         const [coin_a_full_address, coin_b_full_address] = getCoinFullAddress(poolInfo.type)
-        const price_a = await getPriceByType(SuiChainId.SUI_MAINNET, coin_a_full_address, date)
-        const price_b = await getPriceByType(SuiChainId.SUI_MAINNET, coin_b_full_address, date)
+        const price_a = await getPriceByType(SuiNetwork.MAIN_NET, coin_a_full_address, date)
+        const price_b = await getPriceByType(SuiNetwork.MAIN_NET, coin_b_full_address, date)
         console.log(`price_a ${price_a}, price_b ${price_b}`)
         const coin_a2b_price = await getPoolPrice(ctx, pool)
 
@@ -204,8 +204,8 @@ export async function calculateSwapVol_USD(type: string, amount_a: number, amoun
 
     try {
         const [coin_a_full_address, coin_b_full_address] = getCoinFullAddress(type)
-        const price_a = await getPriceByType(SuiChainId.SUI_MAINNET, coin_a_full_address, date)
-        const price_b = await getPriceByType(SuiChainId.SUI_MAINNET, coin_b_full_address, date)
+        const price_a = await getPriceByType(SuiNetwork.MAIN_NET, coin_a_full_address, date)
+        const price_b = await getPriceByType(SuiNetwork.MAIN_NET, coin_b_full_address, date)
 
         if (price_a) {
             vol = amount_a * price_a

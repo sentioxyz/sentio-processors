@@ -2,13 +2,13 @@ import { pool, factory } from "./types/sui/testnet/clmm.js"
 import { SuiObjectProcessor, SuiContext, SuiObjectContext, SuiObjectProcessorTemplate } from "@sentio/sdk/sui"
 import { getPriceByType, token } from "@sentio/sdk/utils"
 import * as constant from './constant-cetus.js'
-import { SuiChainId } from "@sentio/sdk"
+import { SuiNetwork } from "@sentio/sdk/sui"
 import './cetus-launchpad.js'
 import * as helper from './helper/cetus-clmm.js'
 
 factory.bind({
   address: constant.CLMM_MAINNET,
-  network: SuiChainId.SUI_MAINNET,
+  network: SuiNetwork.MAIN_NET,
   startCheckpoint: 1500000n
 })
   .onEventCreatePoolEvent(async (event, ctx) => {
@@ -27,7 +27,7 @@ factory.bind({
       vertical: "dex", project: "cetus"
     })
 
-    await helper.getOrCreatePool(ctx, pool_id)
+    helper.getOrCreatePool(ctx, pool_id)
 
     template.bind({
       objectId: pool_id
@@ -36,7 +36,7 @@ factory.bind({
 
 pool.bind({
   address: constant.CLMM_MAINNET,
-  network: SuiChainId.SUI_MAINNET,
+  network: SuiNetwork.MAIN_NET,
   startCheckpoint: 1500000n
 })
   .onEventSwapEvent(async (event, ctx) => {
@@ -170,12 +170,13 @@ pool.bind({
 
 // bind({
 //   objectId: pool_address,
-//   network: SuiChainId.SUI_MAINNET,
+//   network: SuiNetwork.MAIN_NET,
 //   startCheckpoint: 1500000n
 // })
+
 const template = new SuiObjectProcessorTemplate()
   .onTimeInterval(async (self, _, ctx) => {
-    if (!self || constant.POOLS_TVL_BLACK_LIST.includes(ctx.objectId)) return
+    if (!self || constant.POOLS_TVL_BLACK_LIST.includes(ctx.objectId)) { return }
     try {
       //get coin addresses
       const type = self.type
@@ -223,7 +224,7 @@ const template = new SuiObjectProcessorTemplate()
       console.log(`${e.message} error at ${JSON.stringify(self)}`)
     }
 
-  }, 60, 10)
+  }, 240, 60, undefined, { owned: false })
 // }
 
 

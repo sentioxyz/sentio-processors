@@ -220,7 +220,7 @@ const template = new SuiObjectProcessorTemplate()
     catch (e) {
       console.log(`${e.message} error at ${JSON.stringify(self)}`)
     }
-  }, 240, 60)
+  }, 240, 60, undefined, { owned: false })
 
 
 

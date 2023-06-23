@@ -176,7 +176,7 @@ export const getOrCreatIDOPool = async function (ctx: SuiContext | SuiObjectCont
         IDOPoolInfoMap.set(pool, infoPromise)
         // console.log("set poolInfoMap for " + pool)
         let i = 0
-        let msg = `set IDOPoolInfoMap for ${(await infoPromise).pairName}`
+        let msg = `set IDO PoolInfoMap for ${(await infoPromise).pairName}`
         for (const key of IDOPoolInfoMap.keys()) {
             const poolInfo = await IDOPoolInfoMap.get(key)
             msg += `\n${i}:${poolInfo?.pairName} `
