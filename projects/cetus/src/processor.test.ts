@@ -1,6 +1,8 @@
 import { TestProcessorServer, firstCounterValue } from '@sentio/sdk/testing'
 // import { mockTransferLog } from '@sentio/sdk/eth/builtin/erc20'
-import { SuiChainId } from '@sentio/sdk'
+
+import { SuiNetwork } from "@sentio/sdk/sui"
+
 import { getPriceByType, getPriceBySymbol } from '@sentio/sdk/utils'
 
 describe('Test Processor', () => {
@@ -17,7 +19,7 @@ describe('Test Processor', () => {
 
   test('getPriceByType', async () => {
     const date = new Date('2023-05-08T04:39:59')
-    const price = await getPriceByType(SuiChainId.SUI_MAINNET, "0x2::sui::SUI", date)
+    const price = await getPriceByType(SuiNetwork.MAIN_NET, "0x2::sui::SUI", date)
     console.log(`price of sui: ${price}`)
   })
 

@@ -143,7 +143,7 @@ export const getOrCreatePool = async function (ctx: SuiContext | SuiObjectContex
     let infoPromise = poolInfoMap.get(pool)
     if (!infoPromise) {
         infoPromise = buildPoolInfo(ctx, pool)
-        poolInfoMap.set(ctx.address, infoPromise)
+        poolInfoMap.set(pool, infoPromise)
         console.log("set poolInfoMap for " + pool)
     }
     return await infoPromise

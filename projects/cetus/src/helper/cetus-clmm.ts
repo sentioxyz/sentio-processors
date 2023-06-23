@@ -1,7 +1,7 @@
 import { SuiObjectProcessor, SuiContext, SuiObjectContext } from "@sentio/sdk/sui"
 import { getPriceByType, token } from "@sentio/sdk/utils"
 import * as constant from '../constant-cetus.js'
-import { SuiChainId } from "@sentio/sdk"
+import { SuiNetwork } from "@sentio/sdk/sui"
 
 //get coin address without suffix
 export function getCoinObjectAddress(type: string) {
@@ -44,14 +44,22 @@ interface poolInfo {
 
 
 let poolInfoMap = new Map<string, Promise<poolInfo>>()
+let IDOPoolInfoMap = new Map<string, Promise<poolInfo>>()
 let coinInfoMap = new Map<string, Promise<token.TokenInfo>>()
 
 export async function buildCoinInfo(ctx: SuiContext | SuiObjectContext, coinAddress: string): Promise<token.TokenInfo> {
-    const metadata = await ctx.client.getCoinMetadata({ coinType: coinAddress })
-    const symbol = metadata.symbol
-    const decimal = metadata.decimals
-    const name = metadata.name
-    console.log(`build coin metadata ${symbol} ${decimal} ${name}`)
+    let [symbol, name, decimal] = ["unk", "unk", 0]
+    try {
+        const metadata = await ctx.client.getCoinMetadata({ coinType: coinAddress })
+        symbol = metadata.symbol
+        decimal = metadata.decimals
+        name = metadata.name
+        console.log(`build coin metadata ${symbol} ${decimal} ${name}`)
+    }
+    catch (e) {
+        console.log(`${e.message} get coin metadata error ${coinAddress}`)
+    }
+
     return {
         symbol,
         name,
@@ -64,31 +72,45 @@ export const getOrCreateCoin = async function (ctx: SuiContext | SuiObjectContex
     if (!coinInfo) {
         coinInfo = buildCoinInfo(ctx, coinAddress)
         coinInfoMap.set(coinAddress, coinInfo)
-        console.log("set coinInfoMap for " + coinAddress)
+        // console.log("set coinInfoMap for " + coinAddress)
+        let i = 0
+        let msg = `set coinInfoMap for ${(await coinInfo).name}`
+        for (const key of coinInfoMap.keys()) {
+            const coinInfo = await coinInfoMap.get(key)
+            msg += `\n${i}:${coinInfo?.name},${coinInfo?.decimal} `
+            i++
+        }
+        console.log(msg)
     }
-    return await coinInfo
+    return coinInfo
 }
 
 export async function buildPoolInfo(ctx: SuiContext | SuiObjectContext, pool: string): Promise<poolInfo> {
     let [symbol_a, symbol_b, decimal_a, decimal_b, pairName, type, fee_label] = ["", "", 0, 0, "", "", "", "NaN"]
-
-    const obj = await ctx.client.getObject({ id: pool, options: { showType: true, showContent: true } })
-    type = obj.data.type
-    if (obj.data.content.fields.fee_rate) {
-        fee_label = (Number(obj.data.content.fields.fee_rate) / 10000).toFixed(2) + "%"
+    try {
+        const obj = await ctx.client.getObject({ id: pool, options: { showType: true, showContent: true } })
+        type = obj.data.type
+        if (obj.data.content.fields.fee_rate) {
+            fee_label = (Number(obj.data.content.fields.fee_rate) / 10000).toFixed(2) + "%"
+        }
+        else {
+            console.log(`no fee label ${pool}`)
+        }
+        let [coin_a_full_address, coin_b_full_address] = ["", ""]
+        if (type) {
+            [coin_a_full_address, coin_b_full_address] = getCoinFullAddress(type)
+        }
+        const coinInfo_a = await getOrCreateCoin(ctx, coin_a_full_address)
+        const coinInfo_b = await getOrCreateCoin(ctx, coin_b_full_address)
+        symbol_a = coinInfo_a.symbol
+        symbol_b = coinInfo_b.symbol
+        decimal_a = coinInfo_a.decimal
+        decimal_b = coinInfo_b.decimal
+        pairName = symbol_a + "-" + symbol_b + " " + fee_label
+        console.log(`build pool ${pairName}`)
+    } catch (e) {
+        console.log(`${e.message} get pool object error ${pool}`)
     }
-    let [coin_a_full_address, coin_b_full_address] = ["", ""]
-    if (type) {
-        [coin_a_full_address, coin_b_full_address] = getCoinFullAddress(type)
-    }
-    const coinInfo_a = await getOrCreateCoin(ctx, coin_a_full_address)
-    const coinInfo_b = await getOrCreateCoin(ctx, coin_b_full_address)
-    symbol_a = coinInfo_a.symbol
-    symbol_b = coinInfo_b.symbol
-    decimal_a = coinInfo_a.decimal
-    decimal_b = coinInfo_b.decimal
-    pairName = symbol_a + "-" + symbol_b + " " + fee_label
-
     return {
         symbol_a,
         symbol_b,
@@ -103,11 +125,69 @@ export const getOrCreatePool = async function (ctx: SuiContext | SuiObjectContex
     let infoPromise = poolInfoMap.get(pool)
     if (!infoPromise) {
         infoPromise = buildPoolInfo(ctx, pool)
-        poolInfoMap.set(ctx.address, infoPromise)
-        console.log("set poolInfoMap for " + pool)
+        poolInfoMap.set(pool, infoPromise)
+        // console.log("set poolInfoMap for " + pool)
+        let i = 0
+        let msg = `set poolInfoMap for ${(await infoPromise).pairName}`
+        for (const key of poolInfoMap.keys()) {
+            const poolInfo = await poolInfoMap.get(key)
+            msg += `\n${i}:${poolInfo?.pairName} `
+            i++
+        }
+        console.log(msg)
     }
-    return await infoPromise
+    return infoPromise
 }
+
+export async function buildIDOPoolInfo(ctx: SuiContext | SuiObjectContext, pool: string): Promise<poolInfo> {
+    let [symbol_a, symbol_b, decimal_a, decimal_b, pairName, type] = ["", "", 0, 0, "", "", ""]
+    try {
+        const obj = await ctx.client.getObject({ id: pool, options: { showType: true, showContent: true } })
+        type = obj.data.type
+
+        let [coin_a_full_address, coin_b_full_address] = ["", ""]
+        if (type) {
+            [coin_a_full_address, coin_b_full_address] = getCoinFullAddress(type)
+        }
+        const coinInfo_a = await getOrCreateCoin(ctx, coin_a_full_address)
+        const coinInfo_b = await getOrCreateCoin(ctx, coin_b_full_address)
+        symbol_a = coinInfo_a.symbol
+        symbol_b = coinInfo_b.symbol
+        decimal_a = coinInfo_a.decimal
+        decimal_b = coinInfo_b.decimal
+        pairName = symbol_a + "-" + symbol_b + " IDO"
+        console.log(`build IDO pool ${pairName}`)
+    } catch (e) {
+        console.log(`${e.message} get IDO pool object error ${pool}`)
+    }
+    return {
+        symbol_a,
+        symbol_b,
+        decimal_a,
+        decimal_b,
+        pairName,
+        type
+    }
+}
+export const getOrCreatIDOPool = async function (ctx: SuiContext | SuiObjectContext, pool: string): Promise<poolInfo> {
+    let infoPromise = IDOPoolInfoMap.get(pool)
+    if (!infoPromise) {
+        infoPromise = buildIDOPoolInfo(ctx, pool)
+        IDOPoolInfoMap.set(pool, infoPromise)
+        // console.log("set poolInfoMap for " + pool)
+        let i = 0
+        let msg = `set IDOPoolInfoMap for ${(await infoPromise).pairName}`
+        for (const key of IDOPoolInfoMap.keys()) {
+            const poolInfo = await IDOPoolInfoMap.get(key)
+            msg += `\n${i}:${poolInfo?.pairName} `
+            i++
+        }
+        console.log(msg)
+    }
+    return infoPromise
+}
+
+
 
 export async function getPoolPrice(ctx: SuiContext | SuiObjectContext, pool: string) {
     const obj = await ctx.client.getObject({ id: pool, options: { showType: true, showContent: true } })
@@ -126,8 +206,8 @@ export async function getPoolPrice(ctx: SuiContext | SuiObjectContext, pool: str
 export async function calculateValue_USD(ctx: SuiContext | SuiObjectContext, pool: string, amount_a: number, amount_b: number, date: Date) {
     const poolInfo = await getOrCreatePool(ctx, pool)
     const [coin_a_full_address, coin_b_full_address] = getCoinFullAddress(poolInfo.type)
-    const price_a = await getPriceByType(SuiChainId.SUI_MAINNET, coin_a_full_address, date)
-    const price_b = await getPriceByType(SuiChainId.SUI_MAINNET, coin_b_full_address, date)
+    const price_a = await getPriceByType(SuiNetwork.MAIN_NET, coin_a_full_address, date)
+    const price_b = await getPriceByType(SuiNetwork.MAIN_NET, coin_b_full_address, date)
 
     const coin_a2b_price = await getPoolPrice(ctx, pool)
 
@@ -150,8 +230,8 @@ export async function calculateValue_USD(ctx: SuiContext | SuiObjectContext, poo
 
 export async function calculateSwapVol_USD(type: string, amount_in: number, amount_out: number, atob: Boolean, date: Date) {
     const [coin_a_full_address, coin_b_full_address] = getCoinFullAddress(type)
-    const price_a = await getPriceByType(SuiChainId.SUI_MAINNET, coin_a_full_address, date)
-    const price_b = await getPriceByType(SuiChainId.SUI_MAINNET, coin_b_full_address, date)
+    const price_a = await getPriceByType(SuiNetwork.MAIN_NET, coin_a_full_address, date)
+    const price_b = await getPriceByType(SuiNetwork.MAIN_NET, coin_b_full_address, date)
 
     let vol = 0
     if (price_a) {

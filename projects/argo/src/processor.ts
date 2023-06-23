@@ -298,36 +298,40 @@ AtlantisEquipmentsProcessor.bind({ address: config.ATLANTIS_EQUIPMENT, network: 
       id,
       value
     })
-    //debug
-    // if (from.toLowerCase() !== operator.toLowerCase()) {
-    //   ctx.eventLogger.emit("transferFromNotEqualOperator", {
-    //     distinctId: to,
-    //     operator,
-    //     from,
-    //     id,
-    //     value
-    //   })
-    // }
-    // if (to.toLowerCase() == operator.toLowerCase()) {
-    //   ctx.eventLogger.emit("transferToEqualOperator", {
-    //     distinctId: to,
-    //     operator,
-    //     from,
-    //     id,
-    //     value
-    //   })
-    // }
-    // if (from.toLowerCase() == operator.toLowerCase()) {
-    //   ctx.eventLogger.emit("transferFromEqualOperator", {
-    //     distinctId: to,
-    //     operator,
-    //     from,
-    //     id,
-    //     value
-    //   })
-    // }
-    //debug end
+
     ctx.meter.Counter("allCoreEventsCounter").add(1, { event: event.name })
+
+    //get input data
+    const hash = event.transactionHash
+    let inputDataPrefix = ""
+    try {
+      const tx = (await ctx.contract.provider.getTransaction(hash))!
+      inputDataPrefix = tx.data.toString().slice(2, 10)
+    }
+    catch (e) {
+      if (e instanceof Error) {
+        console.log(e.message, " retrieve transaction input data failed")
+      }
+    }
+    if (inputDataPrefix == "533eb22d") {
+      ctx.eventLogger.emit("FuseEquipmentTransferSingle", {
+        distinctId: to,
+        operator,
+        from,
+        id,
+        value
+      })
+    }
+    else {
+      ctx.eventLogger.emit("NonFuseEquipmentTransferSingle", {
+        distinctId: to,
+        operator,
+        from,
+        id,
+        value,
+        inputDataPrefix
+      })
+    }
   })
   //  .onEvent(AllEventsHandler)
   .onTimeInterval(async (_, ctx) => {
