@@ -395,6 +395,19 @@ export function Bind(chainConfig: ChainConstants, startBlock: number) {
   }).onBlockInterval(
     async (b, ctx) => {
       const mevResults = handleBlock(b, chainConfig);
+      let validator = "";
+      console.log(chainConfig.phalconChain);
+      if (chainConfig.phalconChain === "polygon") {
+        const contract = getBorContractOnContext(
+          ctx,
+          "0x0000000000000000000000000000000000001000"
+        );
+        const validatorAddr = await contract.getBorValidators(ctx.blockNumber);
+        validator = validatorAddr.toString();
+      }
+      ctx.eventLogger.emit("mev", {
+        validator: validator,
+      });
       for (const txn of mevResults.arbTxns) {
         let link = `https://explorer.phalcon.xyz/tx/${chainConfig.phalconChain}/${txn.txnHash}`;
         if (chainConfig.phalconChain === "eth") {
@@ -420,18 +433,6 @@ export function Bind(chainConfig: ChainConstants, startBlock: number) {
         for (const token of txn.usedTokens) {
           tokens += token + ",";
         }
-        let validator = "";
-        console.log(chainConfig.phalconChain);
-        if (chainConfig.phalconChain === "polygon") {
-          const contract = getBorContractOnContext(
-            ctx,
-            "0x0000000000000000000000000000000000001000"
-          );
-          const validatorAddr = await contract.getBorValidators(
-            ctx.blockNumber
-          );
-          validator = validatorAddr.toString();
-        }
         ctx.eventLogger.emit("arbitrage", {
           distinctId: txn.mevContract,
           mevContract: txn.mevContract,
@@ -443,7 +444,6 @@ export function Bind(chainConfig: ChainConstants, startBlock: number) {
           profit: BigDecimal(revenue.minus(cost).toFixed(2)),
           paidBuilder: txn.minerPayment,
           tokens: tokens,
-          validator: validator,
         });
       }
       for (const txn of mevResults.sandwichTxns) {
