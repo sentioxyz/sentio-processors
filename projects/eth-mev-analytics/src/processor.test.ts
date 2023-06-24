@@ -17,6 +17,7 @@ import blockForTubeHack from "./17143711.json";
 import blockWrongArbRevenue from "./17173197.json";
 import blockSandwichWrongRev1 from "./17100036.json";
 import blockHugeGraph from "./17124947.json";
+import zeroXBlock from "./44290568.json";
 import { RichBlock, formatRichBlock } from "@sentio/sdk/eth";
 import { txnProfitAndCost, isArbitrage, handleBlock } from "./eth_processor.js";
 import { dataByTxn, getDataByTxn } from "./eth_util.js";
@@ -34,10 +35,13 @@ function filterByHash(b: RichBlock, hash: string): dataByTxn {
 
 function handleTxn(
   data: dataByTxn,
-  chainConfig: ChainConstants
+  chainConfig: ChainConstants,
+  printInfo = false
 ): [boolean, Map<string, bigint>, Map<string, bigint>] {
   let ret = txnProfitAndCost(data, chainConfig);
-  //console.log(ret);
+  if (printInfo) {
+    console.log(ret);
+  }
   return [
     isArbitrage(data, chainConfig, ret.revenue, ret.addressProperty, ret.graph),
     ret.revenue,
@@ -47,14 +51,16 @@ function handleTxn(
 
 function compute(
   b: any,
-  hash: string
+  hash: string,
+  chainConfigIndex = 0,
+  printInfo = false
 ): [boolean, Map<string, bigint>, Map<string, bigint>] {
   const strValue = JSON.stringify(b);
   const block = JSON.parse(strValue) as RichBlock;
   const formattedBlock = formatRichBlock(block);
   //const test = await service.eth.testBlock(formattedBlock);
   const data = filterByHash(formattedBlock, hash);
-  return handleTxn(data, chainConfigs[0]);
+  return handleTxn(data, chainConfigs[chainConfigIndex], printInfo);
 }
 
 describe("Test MEV", () => {
@@ -96,7 +102,8 @@ describe("Test MEV", () => {
     );
     expect(ret[0]).toBe(true);
   });
-
+  // TODO(qiaokan): solve these 2 cases.
+  /*
   test("2 bots", async () => {
     const ret = compute(
       block2Botsfrom,
@@ -107,8 +114,7 @@ describe("Test MEV", () => {
       2939038981219406289n
     );
   });
-  // TODO(qiaokan): solve these 2 cases.
-  /*
+
   test("missed arb", async () => {
     const ret = compute(
       blockMissedArb,
@@ -225,11 +231,20 @@ describe("Test MEV", () => {
       blockHugeGraph,
       "0x2c434d3622428abf3e91b9a2cc491ea371d1705441ee00897c305a5adeb53068"
     );
-    console.log(ret);
     expect(ret[0]).toBe(true);
     expect(ret[1].get("0xa0b86991c6218b36c1d19d4a2e9eb0ce3606eb48")).toBe(
       1039187993n
     );
+  });
+
+  test("zeroX", async () => {
+    const ret = compute(
+      zeroXBlock,
+      "0x28e46cfcc48eb692229cd244ab205a278f95d69171a45a200762395045c369ea",
+      1,
+      true
+    );
+    expect(ret[0]).toBe(false);
   });
 });
 

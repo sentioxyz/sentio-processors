@@ -167,12 +167,6 @@ export function isArbitrage(
       }
       graph.connectedTo(k, reach);
     }
-    if (
-      data.tx.hash ==
-      "0xd5695fefdc8c4e00f648fe62d8e77c7f9b4ab2b98ac1fcee5cbfd529689dcd49"
-    ) {
-      console.log(reach);
-    }
     for (const [k, v] of addressProperty) {
       if (k === from || k === to) {
         continue;
@@ -322,15 +316,14 @@ async function getTokenWithPrice(
     price = await getPriceByType(chainID, tokenAddr, timestamp);
     if (isNaN(price)) {
       console.log("price is NaN", tokenAddr, chainID, timestamp);
-      return undefined;
+      return ret;
     }
     ret.price = BigDecimal(price);
     ret.scaledAmount = amount.scaleDown(tokenInfo.decimal);
     return ret;
   } catch (e) {
-    console.log("get price failed", e, tokenAddr, chainID);
+    return ret;
   }
-  return undefined;
 }
 
 async function computePnL(
@@ -338,10 +331,11 @@ async function computePnL(
   costs: Map<string, bigint>,
   ctx: GlobalContext,
   config: ChainConstants
-): Promise<[BigDecimal, BigDecimal]> {
+): Promise<[BigDecimal, BigDecimal, string]> {
   let pnl = BigDecimal(0);
   let gasCost = BigInt(0);
   let cost = BigDecimal(0);
+  var keptTokens = new Set<string>();
   for (const [addr, amount] of revenue) {
     const tokenWithPrice = await getTokenWithPrice(
       addr,
@@ -352,9 +346,16 @@ async function computePnL(
     if (tokenWithPrice === undefined) {
       continue;
     }
+    if (amount > 0) {
+      keptTokens.add(addr);
+    }
     pnl = pnl.plus(
       tokenWithPrice.price.multipliedBy(tokenWithPrice.scaledAmount)
     );
+  }
+  let tokens = "";
+  for (const token of keptTokens) {
+    tokens = tokens + token + ",";
   }
   for (const [addr, amount] of costs) {
     if (addr === "gas") {
@@ -381,11 +382,11 @@ async function computePnL(
     gasCost
   );
   if (gasTotal === undefined) {
-    return [pnl, cost];
+    return [pnl, cost, tokens];
   }
   cost = cost.plus(gasTotal!.price.multipliedBy(gasTotal!.scaledAmount));
 
-  return [pnl, cost];
+  return [pnl, cost, tokens];
 }
 
 export function Bind(chainConfig: ChainConstants, startBlock: number) {
@@ -405,7 +406,7 @@ export function Bind(chainConfig: ChainConstants, startBlock: number) {
         const validatorAddr = await contract.getBorValidators(ctx.blockNumber);
         validator = validatorAddr.toString();
       }
-      ctx.eventLogger.emit("mev", {
+      ctx.eventLogger.emit("validatorSet", {
         validator: validator,
       });
       for (const txn of mevResults.arbTxns) {
@@ -413,7 +414,7 @@ export function Bind(chainConfig: ChainConstants, startBlock: number) {
         if (chainConfig.phalconChain === "eth") {
           link = `https://app.sentio.xyz/qiaokan/eth-mev-analytics/transaction/${txn.txnHash}`;
         }
-        const [revenue, cost] = await computePnL(
+        const [revenue, cost, profitTokens] = await computePnL(
           txn.revenue,
           txn.costs,
           ctx,
@@ -444,6 +445,7 @@ export function Bind(chainConfig: ChainConstants, startBlock: number) {
           profit: BigDecimal(revenue.minus(cost).toFixed(2)),
           paidBuilder: txn.minerPayment,
           tokens: tokens,
+          profitTokens: profitTokens,
         });
       }
       for (const txn of mevResults.sandwichTxns) {
@@ -454,7 +456,7 @@ export function Bind(chainConfig: ChainConstants, startBlock: number) {
           backLink = `https://app.sentio.xyz/qiaokan/eth-mev-analytics/transaction/${txn.backTxnHash}`;
         }
 
-        const [revenue, cost] = await computePnL(
+        const [revenue, cost, profitTokens] = await computePnL(
           txn.revenue,
           txn.costs,
           ctx,
@@ -479,6 +481,7 @@ export function Bind(chainConfig: ChainConstants, startBlock: number) {
           cost: BigDecimal(cost.toFixed(2)),
           profit: BigDecimal(revenue.minus(cost).toFixed(2)),
           paidBuilder: txn.minerPayment,
+          profitTokens: profitTokens,
         });
       }
     },
