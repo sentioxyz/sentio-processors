@@ -24,10 +24,12 @@ import {
 import { DystPairProcessor } from "./types/eth/dystpair.js";
 import { ApePairProcessor } from "./types/eth/apepair.js";
 
-// a constant string array
-const ALGEBRA_ADDRESSES = ["0xa5cd8351cbf30b531c7b11b0d9d3ff38ea2e280f"];
+import { RouterImplProcessor } from "./types/eth/routerimpl.js";
 
-const START_BLOCK = 44299155;
+// a constant string array
+const ALGEBRA_ADDRESSES = ["0x9ceff2f5138fc59eb925d270b8a7a9c02a1810f2"];
+
+const START_BLOCK = 44308205;
 
 for (const address of ALGEBRA_ADDRESSES) {
   AlgebraPoolProcessor.bind({
@@ -57,7 +59,10 @@ for (const address of APE_ADDRESSES) {
   });
 }
 
-const V3_ADDRESSES = ["0x56fcb902bee19a645f9607cd1e1c0737b6358feb"];
+const V3_ADDRESSES = [
+  "0x3d0acd52ee4a9271a0ffe75f9b91049152bac64b",
+  "0x21988c9cfd08db3b5793c2c6782271dc94749251",
+];
 
 for (const address of V3_ADDRESSES) {
   UniswapV3PoolProcessor.bind({
@@ -72,7 +77,7 @@ for (const address of V3_ADDRESSES) {
   });
 }
 
-const V2_ADDRESSES = ["0x38fe052f0ce76a2239115589098d2fb5aba01d80"];
+const V2_ADDRESSES = ["0x90bc3e68ba8393a3bf2d79309365089975341a43"];
 
 for (const address of V2_ADDRESSES) {
   UniswapV2PairProcessor.bind({
@@ -121,3 +126,23 @@ for (const address of DYS_ADDRESSES) {
     });
   });
 }
+
+const MESHSWAP_ROUTER = "0x10f4A785F458Bc144e3706575924889954946639";
+
+RouterImplProcessor.bind({
+  address: MESHSWAP_ROUTER,
+  network: EthChainId.POLYGON,
+  startBlock: START_BLOCK,
+})
+  .onEventExchangePos(async (evt, ctx) => {
+    ctx.eventLogger.emit("exchangePos", {
+      token0: evt.args.token0,
+      token1: evt.args.token1,
+    });
+  })
+  .onEventExchangeNeg(async (evt, ctx) => {
+    ctx.eventLogger.emit("exchangeNeg", {
+      token0: evt.args.token0,
+      token1: evt.args.token1,
+    });
+  });

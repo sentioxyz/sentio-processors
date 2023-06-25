@@ -7,7 +7,7 @@ export interface ChainConstants {
   phalconChain: string;
 }
 
-export const chainConfigs = [
+export const wchainConfigs = [
   {
     chainID: EthChainId.ETHEREUM,
     nativeTokenWrappedAddress:
