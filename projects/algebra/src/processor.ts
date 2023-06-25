@@ -25,9 +25,9 @@ import { DystPairProcessor } from "./types/eth/dystpair.js";
 import { ApePairProcessor } from "./types/eth/apepair.js";
 
 // a constant string array
-const ALGEBRA_ADDRESSES = ["0x55CAaBB0d2b704FD0eF8192A7E35D8837e678207"];
+const ALGEBRA_ADDRESSES = ["0xa5cd8351cbf30b531c7b11b0d9d3ff38ea2e280f"];
 
-const START_BLOCK = 44275169;
+const START_BLOCK = 44299155;
 
 for (const address of ALGEBRA_ADDRESSES) {
   AlgebraPoolProcessor.bind({
