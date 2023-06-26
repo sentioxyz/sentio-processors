@@ -312,13 +312,13 @@ AtlantisEquipmentsProcessor.bind({
     const to = event.args.to
     const id = Number(event.args.id)
     const value = Number(event.args.value)
-    ctx.eventLogger.emit("TransferSingle", {
-      distinctId: to,
-      operator,
-      from,
-      id,
-      value
-    })
+    // ctx.eventLogger.emit("TransferSingle", {
+    //   distinctId: to,
+    //   operator,
+    //   from,
+    //   id,
+    //   value
+    // })
 
     ctx.meter.Counter("allCoreEventsCounter").add(1, { event: event.name })
 

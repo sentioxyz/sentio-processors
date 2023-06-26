@@ -23,6 +23,7 @@ VaultProcessor.bind({ address: VAULT, network: EthChainId.CRONOS })
       sizeDelta,
       isLong: evt.args.isLong,
     })
+    ctx.meter.Gauge("vault_increase_position_gauge").record(sizeDelta, { coin_symbol: collateral.symbol })
   })
   .onEventDecreasePosition(async (evt, ctx) => {
     const collateral = WhitelistTokenMap[evt.args.collateralToken.toLowerCase()]
@@ -38,6 +39,8 @@ VaultProcessor.bind({ address: VAULT, network: EthChainId.CRONOS })
       sizeDelta,
       isLong: evt.args.isLong,
     })
+    ctx.meter.Gauge("vault_decrease_position_gauge").record(sizeDelta, { coin_symbol: collateral.symbol })
+
   })
   .onEventSwap(async (evt, ctx) => {
     const tokenIn = WhitelistTokenMap[evt.args.tokenIn.toLowerCase()]
@@ -50,13 +53,9 @@ VaultProcessor.bind({ address: VAULT, network: EthChainId.CRONOS })
       amountIn: Number(evt.args.amountIn) / Math.pow(10, tokenIn.decimal),
       amountOut: Number(evt.args.amountOut) / Math.pow(10, tokenOut.decimal)
     })
+    ctx.meter.Gauge("swap_gauge").record(Number(evt.args.amountIn) / Math.pow(10, tokenIn.decimal), { coin_symbol: tokenIn.symbol })
+
   })
-  // .onEventDirectPoolDeposit(async (evt, ctx) => {
-  //   ctx.eventLogger.emit("vault.directPoolDeposit", {
-  //     token: evt.args.token,
-  //     amount: evt.args.amount,
-  //   })
-  // })
   .onEventLiquidatePosition(async (evt, ctx) => {
     const collateral = WhitelistTokenMap[evt.args.collateralToken.toLowerCase()]
     ctx.eventLogger.emit("vault.liquidatePostion", {
@@ -67,6 +66,8 @@ VaultProcessor.bind({ address: VAULT, network: EthChainId.CRONOS })
       size: Number(evt.args.size) / Math.pow(10, 30),
       collateral: Number(evt.args.collateral) / Math.pow(10, 30)
     })
+    ctx.meter.Gauge("swap_gauge").record(Number(evt.args.size) / Math.pow(10, 30), { coin_symbol: collateral.symbol })
+
   })
   .onEventClosePosition(async (evt, ctx) => {
     let from = ""
@@ -86,6 +87,7 @@ VaultProcessor.bind({ address: VAULT, network: EthChainId.CRONOS })
       reserveAmount: evt.args.reserveAmount,
       realisedPnl: Number(evt.args.realisedPnl) / 10 ** 30
     })
+
   })
   .onEventCollectMarginFees(async (evt, ctx) => {
     //todo: check decimal of other tokens
@@ -95,6 +97,8 @@ VaultProcessor.bind({ address: VAULT, network: EthChainId.CRONOS })
       feeUsd: Number(evt.args.feeUsd) / Math.pow(10, 30),
       feeTokens: evt.args.feeTokens
     })
+    ctx.meter.Gauge("vault_collect_margin_fee_gauge").record(Number(evt.args.feeUsd) / Math.pow(10, 30), { coin_symbol: token.symbol })
+
   })
   .onEventCollectSwapFees(async (evt, ctx) => {
     //todo: check decimal of other tokens
@@ -104,6 +108,8 @@ VaultProcessor.bind({ address: VAULT, network: EthChainId.CRONOS })
       feeUsd: Number(evt.args.feeUsd) / Math.pow(10, 30),
       feeTokens: Number(evt.args.feeTokens) / 10 ** token.decimal
     })
+    ctx.meter.Gauge("vault_collect_swap_fee_gauge").record(Number(evt.args.feeUsd) / Math.pow(10, 30), { coin_symbol: token.symbol })
+
   })
   .onTimeInterval(gaugeTokenAum, 240, 1440)
 
@@ -126,6 +132,8 @@ FlpManagerProcessor.bind({ address: FUL_MANAGER, network: EthChainId.CRONOS })
       amount: Number(evt.args.amount) / Math.pow(10, collateral.decimal),
       mintAmount: Number(evt.args.mintAmount) / Math.pow(10, 18)
     })
+    ctx.meter.Gauge("flp_add_liquidity_gauge").record(Number(evt.args.amount) / Math.pow(10, collateral.decimal), { coin_symbol: collateral.symbol })
+
   })
   .onEventRemoveLiquidity(async (evt, ctx) => {
     const collateral = WhitelistTokenMap[evt.args.token.toLowerCase()]
@@ -136,6 +144,8 @@ FlpManagerProcessor.bind({ address: FUL_MANAGER, network: EthChainId.CRONOS })
       flpAmount: Number(evt.args.flpAmount) / Math.pow(10, 18),
       amountOut: Number(evt.args.amountOut) / Math.pow(10, collateral.decimal)
     })
+    ctx.meter.Gauge("flp_remove_liquidity_gauge").record(Number(evt.args.amountOut) / Math.pow(10, collateral.decimal), { coin_symbol: collateral.symbol })
+
   })
   .onTimeInterval(async (_, ctx) => {
     //record aum of pool assets
@@ -152,12 +162,15 @@ RewardRouterProcessor.bind({ address: REWARD_ROUTER, network: EthChainId.CRONOS 
       distinctId: evt.args.account,
       amount: Number(evt.args.amount) / Math.pow(10, 18)
     })
+    ctx.meter.Gauge("stake_flp_gauge").record(Number(evt.args.amount) / Math.pow(10, 18))
+
   })
   .onEventUnstakeFlp(async (evt, ctx) => {
     ctx.eventLogger.emit("rewardRouter.unstakeFlp", {
       distinctId: evt.args.account,
       amount: Number(evt.args.amount) / Math.pow(10, 18)
     })
+    ctx.meter.Gauge("unstake_flp_gauge").record(Number(evt.args.amount) / Math.pow(10, 18))
   })
   .onEventStakeFul(async (evt, ctx) => {
     //token==FUL
@@ -166,6 +179,8 @@ RewardRouterProcessor.bind({ address: REWARD_ROUTER, network: EthChainId.CRONOS 
         distinctId: evt.args.account,
         amount: Number(evt.args.amount) / Math.pow(10, 18)
       })
+      ctx.meter.Gauge("stake_ful_gauge").record(Number(evt.args.amount) / Math.pow(10, 18))
+
     }
     //token==esFUL
     else if (evt.args.token.toLowerCase() == esFUL) {
@@ -173,6 +188,7 @@ RewardRouterProcessor.bind({ address: REWARD_ROUTER, network: EthChainId.CRONOS 
         distinctId: evt.args.account,
         amount: Number(evt.args.amount) / Math.pow(10, 18)
       })
+      ctx.meter.Gauge("stake_esful_gauge").record(Number(evt.args.amount) / Math.pow(10, 18))
     }
   })
   .onEventUnstakeFul(async (evt, ctx) => {
@@ -182,6 +198,8 @@ RewardRouterProcessor.bind({ address: REWARD_ROUTER, network: EthChainId.CRONOS 
         distinctId: evt.args.account,
         amount: Number(evt.args.amount) / Math.pow(10, 18)
       })
+      ctx.meter.Gauge("unstake_ful_gauge").record(Number(evt.args.amount) / Math.pow(10, 18))
+
     }
     //token==esFUL
     else if (evt.args.token.toLowerCase() == esFUL) {
@@ -189,5 +207,6 @@ RewardRouterProcessor.bind({ address: REWARD_ROUTER, network: EthChainId.CRONOS 
         distinctId: evt.args.account,
         amount: Number(evt.args.amount) / Math.pow(10, 18)
       })
+      ctx.meter.Gauge("unstake_esful_gauge").record(Number(evt.args.amount) / Math.pow(10, 18))
     }
   })
