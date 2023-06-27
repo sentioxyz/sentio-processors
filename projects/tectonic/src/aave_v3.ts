@@ -1,4 +1,5 @@
-import { BigDecimal, EthChainId, Counter, Gauge } from '@sentio/sdk'
+import { BigDecimal, Counter, Gauge } from '@sentio/sdk'
+import { EthChainId } from '@sentio/sdk/eth';
 import { ERC20Processor } from '@sentio/sdk/eth/builtin'
 import { AaveV3PoolProcessor, AaveV3PoolContext } from './types/eth/aavev3pool.js';
 import { getPriceByType, token } from "@sentio/sdk/utils";

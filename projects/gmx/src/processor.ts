@@ -106,7 +106,7 @@ VaultProcessor.bind({ address: VAULT_ADDRESS, network: EthChainId.ARBITRUM })
             feeTokens: evt.args.feeTokens
         })
     })
-    .onTimeInterval(gaugeTokenAum, 240, 1440)
+    .onTimeInterval(gaugeTokenAum, 240, 240)
 
 
 RewardTrackerProcessor.bind({ address: REWARD_TRACKER_ADDRESS, network: EthChainId.ARBITRUM })
@@ -120,7 +120,7 @@ GMXProcessor.bind({ address: GMX_ADDRESS, network: EthChainId.ARBITRUM })
         const total = await ctx.contract.totalSupply()
         ctx.meter.Gauge("gmx_totalSupply").record(total.scaleDown(18))
     }, 1000, 10000)
-    .onTimeInterval(gaugeStakedAssets, 240, 1440)
+    .onTimeInterval(gaugeStakedAssets, 240, 240)
 
 GlpManagerProcessor.bind({ address: GLP_MANAGER_ADDRESS, network: EthChainId.ARBITRUM })
     .onEventAddLiquidity(async (evt, ctx) => {
@@ -149,7 +149,7 @@ GlpManagerProcessor.bind({ address: GLP_MANAGER_ADDRESS, network: EthChainId.ARB
             const aum = Number(await ctx.contract.getAum(true, { blockTag: ctx.blockNumber })) / Math.pow(10, 18)
             ctx.meter.Gauge("aum_pool").record(aum)
         } catch (e) { console.log(`error 1 ${ctx.timestamp}`) }
-    }, 240, 1440)
+    }, 240, 240)
 
 //GMX GLP stake
 RewardRouterProcessor.bind({ address: REWARD_ROUTER, network: EthChainId.ARBITRUM })

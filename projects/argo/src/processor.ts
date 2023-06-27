@@ -126,7 +126,7 @@ AtlantisRacingProcessor.bind({
       //stardust produced
       const stardust_produced_racing_day = rewardPerSecond / ACC_TOKEN_PRECISION * Number(poolInfo.stardustWeightage) / 100 * 86400
       console.log(`\ni=${i} \ngoldWeightage=${Number(poolInfo.goldWeightage)} \nstardustWeightage=${Number(poolInfo.stardustWeightage)} \nrewardPerSecond=${rewardPerSecond} \nACC_TOKEN_PRECISION=${ACC_TOKEN_PRECISION} \ngold_produced_racing_day=${gold_produced_racing_day} \nstardust_produced_racing_day=${stardust_produced_racing_day}`)
-      ctx.meter.Gauge("stardust_produced_racing_day").record(stardust_produced_racing_day, { pool: i.toString() })
+      ctx.meter.Gauge("stardust_produced").record(stardust_produced_racing_day, { pool: i.toString(), source: "racing" })
     }
   }, 1440, 1440)
 
@@ -149,9 +149,12 @@ AtlantisGemstonesProcessor.bind({
       id,
       amount,
       stardust_burnt,
+      gold_burnt: stardust_burnt,//same amt as stardust
       totalSupply
     })
-    ctx.meter.Gauge("stardust_burnt").record(stardust_burnt, { source: "gemstone" })
+    // ctx.meter.Gauge("stardust_burnt").record(stardust_burnt, { source: "gemstone" })
+    // ctx.meter.Gauge("gold_burnt").record(stardust_burnt, { source: "gemstone" })
+
     ctx.meter.Counter("allCoreEventsCounter").add(1, { event: event.name })
   })
 
@@ -209,7 +212,6 @@ AtlantisPlanetExpeditionProcessor.bind({
       startTime,
       endTime
     })
-    ctx.meter.Gauge("stardust_produced_expedition")
     ctx.meter.Counter("allCoreEventsCounter").add(1, { event: event.name })
   })
 
@@ -232,7 +234,20 @@ AtlantisPlanetsProcessor.bind({
     })
     ctx.meter.Counter("allCoreEventsCounter").add(1, { event: event.name })
   })
-
+  .onEventTransfer(async (event, ctx) => {
+    ctx.eventLogger.emit("testLog", {
+      distinctId: event.args.from,
+      to: event.args.to,
+      value: Number(event.args.tokenId)
+    })
+    if (event.args.to.toLowerCase() == "0x7abe95e802885e51464cef43cc5367528bbd2029") {
+      ctx.eventLogger.emit("xArgoTransfer", {
+        distinctId: event.args.from,
+        to: event.args.to,
+        value: Number(event.args.tokenId)
+      })
+    }
+  })
   .onTimeInterval(async (_, ctx) => {
     try {
       const planetNFTStakedPlanetExpedition = Number(await ctx.contract.balanceOf(config.ATLANTIS_PLANET_EXPEDITION, { blockTag: ctx.blockNumber }))
@@ -303,7 +318,7 @@ AtlantisEquipmentsProcessor.bind({
       calculateFusionCost,
       totalSupply
     })
-    ctx.meter.Gauge("stardust_burnt").record(calculateFusionCost, { source: "equipment" })
+    // ctx.meter.Gauge("stardust_burnt").record(calculateFusionCost, { source: "equipment_fuse" })
     ctx.meter.Counter("allCoreEventsCounter").add(1, { event: event.name })
   })
   .onEventTransferSingle(async (event, ctx) => {
@@ -352,6 +367,7 @@ AtlantisEquipmentsProcessor.bind({
         value,
         inputDataPrefix
       })
+      // ctx.meter.Gauge("stardust_burnt").record(200, { source: "equipment_mint" })
     }
   })
 
@@ -417,6 +433,8 @@ AtlantisMarketplaceProcessor.bind({
     })
     ctx.meter.Counter("gold_volume_total").add(gold_volume)
 
+    // ctx.meter.Gauge("gold_burnt").record(gold_volume * 0.1, { source: "marketplace" })
+
     ctx.meter.Counter("marketplace_transactions_cumulative").add(1)
 
     ctx.meter.Counter("allCoreEventsCounter").add(1, { event: event.name })
@@ -439,6 +457,7 @@ GoldStardustStakingProcessor.bind({
       timestamp_logStake
     })
     ctx.meter.Gauge("gold_locked").record(goldAmount)
+    // ctx.meter.Gauge("stardust_produced").record(goldAmount, { source: "mint_factory" })
     ctx.meter.Counter("allCoreEventsCounter").add(1, { event: event.name })
   })
   .onEventLogUnstake(async (event, ctx) => {
@@ -455,7 +474,7 @@ GoldStardustStakingProcessor.bind({
       unstakeStart,
       unstakeUnlocked
     })
-    ctx.meter.Gauge("stardust_burnt").record(stardustAmount, { source: "for gold" })
+    // ctx.meter.Gauge("stardust_burnt").record(stardustAmount, { source: "for_gold" })
     ctx.meter.Counter("allCoreEventsCounter").add(1, { event: event.name })
 
     if (difference > 0) {
