@@ -11,6 +11,7 @@ import { GoldStardustStakingProcessor } from './types/eth/goldstarduststaking.js
 import { ArgonautsProcessor } from './types/eth/argonauts.js'
 import { GoldProcessor } from './types/eth/gold.js'
 import { StardustProcessor } from './types/eth/stardust.js'
+import { XARGOProcessor } from './types/eth/xargo.js'
 import { scaleDown } from '@sentio/sdk'
 import { EthChainId } from '@sentio/sdk/eth'
 import * as config from './constant.js'
@@ -132,6 +133,7 @@ AtlantisRacingProcessor.bind({
 
 
 
+
 AtlantisGemstonesProcessor.bind({
   address: config.ATLANTIS_GEMSTONE,
   network: EthChainId.CRONOS,
@@ -233,20 +235,6 @@ AtlantisPlanetsProcessor.bind({
       level
     })
     ctx.meter.Counter("allCoreEventsCounter").add(1, { event: event.name })
-  })
-  .onEventTransfer(async (event, ctx) => {
-    ctx.eventLogger.emit("testLog", {
-      distinctId: event.args.from,
-      to: event.args.to,
-      value: Number(event.args.tokenId)
-    })
-    if (event.args.to.toLowerCase() == "0x7abe95e802885e51464cef43cc5367528bbd2029") {
-      ctx.eventLogger.emit("xArgoTransfer", {
-        distinctId: event.args.from,
-        to: event.args.to,
-        value: Number(event.args.tokenId)
-      })
-    }
   })
   .onTimeInterval(async (_, ctx) => {
     try {
@@ -549,7 +537,6 @@ GoldProcessor.bind({
       // ctx.meter.Gauge("nonCirculatingWalletBal").record(nonCirculatingWalletBal)
       //debug end
       ctx.meter.Gauge("goldCirculating").record(goldCirculating)
-
     }
     catch (e) {
       const hash = ctx.transactionHash
@@ -566,8 +553,30 @@ GoldProcessor.bind({
         value
       })
       ctx.meter.Counter("gold_burnt_total").add(value)
+
+      //PlanetUpgradeCost
+      const hash = event.transactionHash
+      let inputDataPrefix = ""
+      try {
+        const tx = (await ctx.contract.provider.getTransaction(hash))!
+        inputDataPrefix = tx.data.toString().slice(2, 10)
+      }
+      catch (e) {
+        console.log(e.message, " retrieve gold transfer transaction input data failed")
+      }
+      if (inputDataPrefix == "3305048f") {
+        ctx.eventLogger.emit("PlanetUpgradeTransfer", {
+          distinctId: from,
+          value
+        })
+      }
     }
   }, [filter_gold_burnt, filter_gold_mint])
+
+const stardust_filter_from_atlantis = StardustProcessor.filters.Transfer(
+  '0x073a282bc85891627300106f8d7986899d9eeb40',
+  null
+)
 
 StardustProcessor.bind({
   address: config.STARDUST_TOKEN, network: EthChainId.CRONOS,
@@ -590,6 +599,30 @@ StardustProcessor.bind({
       console.log(e.message, `Get balanceOf error at ${ctx.transactionHash}, txHash ${hash}`)
     }
   }, 60)
+  .onEventTransfer(async (event, ctx) => {
+    //planet expedition reward
+    const hash = event.transactionHash
+    let inputDataPrefix = ""
+    try {
+      const tx = (await ctx.contract.provider.getTransaction(hash))!
+      inputDataPrefix = tx.data.toString().slice(2, 10)
+    }
+    catch (e) {
+      console.log(e.message, " retrieve stardust transfer transaction input data failed")
+    }
+    if (inputDataPrefix == "5eac6239") {
+      ctx.eventLogger.emit("ClaimRewards", {
+        distinctId: event.args.from,
+        value: Number(event.args.value) / 10 ** 18
+      })
+    }
+    else if (inputDataPrefix == "9763af1a") {
+      ctx.eventLogger.emit("EndExpeditions", {
+        distinctId: event.args.from,
+        value: Number(event.args.value) / 10 ** 18
+      })
+    }
+  }, stardust_filter_from_atlantis)
 
 
 ArgonautsProcessor.bind({
@@ -608,3 +641,17 @@ ArgonautsProcessor.bind({
     }
   }, 60)
 
+XARGOProcessor.bind({
+  address: config.XARGO_TOKEN,
+  network: EthChainId.CRONOS,
+  //  startBlock: 8942000
+})
+  .onEventTransfer(async (event, ctx) => {
+    if (event.args.to.toLowerCase() == "0x3a19a693a29b43bae23f32b498d1a24d09f19878") {
+      ctx.eventLogger.emit("xArgoTransfer", {
+        distinctId: event.args.from,
+        to: event.args.to,
+        value: Number(event.args.value)
+      })
+    }
+  })
