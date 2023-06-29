@@ -1,6 +1,6 @@
 import * as liquidswap from "./types/aptos/liquidswap.js";
 import { AptosBaseProcessor, AptosModulesProcessor } from "@sentio/sdk/aptos";
-import { SuiGlobalProcessor, SuiNetwork } from "@sentio/sdk/sui";
+import { SuiAddressProcessorTemplate, SuiContext, SuiGlobalProcessor, SuiNetwork } from "@sentio/sdk/sui";
 import { decodeMultiSig } from "@mysten/sui.js"
 // import { SuiModulesProcessor } from "@sentio/sdk/sui";
 
@@ -35,7 +35,6 @@ SuiGlobalProcessor.bind({ network: SuiNetwork.MAIN_NET, startCheckpoint: 1603788
       ctx.eventLogger.emit("multisig", {
         message: txSig
       })
-
     } else {
       console.log("No sig found")
     }
@@ -43,3 +42,16 @@ SuiGlobalProcessor.bind({ network: SuiNetwork.MAIN_NET, startCheckpoint: 1603788
   {
     publicKeyPrefix: "0x5ae220b4b2f65e977c12ede61579ff5170b6c22c006168c37b5e7c61af018083"
   })
+
+//
+
+const addrTemplate = new SuiAddressProcessorTemplate().onTimeInterval(async (_, ctx) => {
+  // do query
+  console.log(ctx.address)
+}, 60, 240, undefined, {
+  owned: false
+})
+
+function handlerEvent(address: string,ctx: SuiContext) {
+  addrTemplate.bind({ address}, ctx)
+}
