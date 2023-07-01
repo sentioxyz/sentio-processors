@@ -5,9 +5,10 @@ export interface ChainConstants {
   blackListedAddresses: Set<string>;
   mintBurnAddr: Set<string>;
   phalconChain: string;
+  watchSpam: Set<string>;
 }
 
-export const wchainConfigs = [
+export const chainConfigs = [
   {
     chainID: EthChainId.ETHEREUM,
     nativeTokenWrappedAddress:
@@ -29,6 +30,7 @@ export const wchainConfigs = [
       "0x0A59649758aa4d66E25f08Dd01271e891fe52199".toLowerCase(), // maker
     ]),
     phalconChain: "eth",
+    watchSpam: new Set<string>([]),
   },
   {
     chainID: EthChainId.POLYGON,
@@ -44,6 +46,16 @@ export const wchainConfigs = [
       "0x0000000000000000000000000000000000000000",
     ]),
     phalconChain: "polygon",
+    watchSpam: new Set<string>([
+      "0xEbE3A29afB5E1bC576407b29446bFcee3DFa2b8C".toLowerCase(),
+      "0x7fA6377F78b587C71f7E24176D7a65C12fba76b2".toLowerCase(),
+      "0xefA413DE95fD661346C6dE01342b4779Df2dd517".toLowerCase(),
+      "0x8eca22800465e74a0fd00e7fcbc180e0990ddf9f".toLowerCase(),
+      "0xED8dD4384c309bD57aAD10789740F865B1CAea91".toLowerCase(),
+      "0x458df878cae2174a294b907df6d4235fa59eaa44".toLowerCase(),
+      "0xad3b67BCA8935Cb510C8D18bD45F0b94F54A968f".toLowerCase(),
+      "0xade541a5ccdbbca9d0c45e1dc1e7be3f5978e33b".toLowerCase(),
+    ]),
   },
   {
     chainID: EthChainId.AVALANCHE,
@@ -66,6 +78,7 @@ export const wchainConfigs = [
       "0x06f01502327De1c37076Bea4689a7e44279155e9".toLowerCase(), // LP
     ]),
     phalconChain: "avax",
+    watchSpam: new Set<string>([]),
   },
   {
     chainID: EthChainId.MOONBEAM,
@@ -74,5 +87,6 @@ export const wchainConfigs = [
     blackListedAddresses: new Set<string>([]),
     mintBurnAddr: new Set<string>([]),
     phalconChain: "moonbeam",
+    watchSpam: new Set<string>([]),
   },
 ];

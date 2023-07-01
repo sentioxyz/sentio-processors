@@ -28,9 +28,17 @@ import { getPriceByType, token } from "@sentio/sdk/utils";
 import { chainConfigs, ChainConstants } from "./common.js";
 import { TokenFlowGraph } from "./graph.js";
 
+type spamInfo = {
+  minIndex: number;
+  maxIndex: number;
+  count: number;
+  distinctInput: Set<string>;
+};
+
 interface mevBlockResult {
   arbTxns: Array<txnResult>;
   sandwichTxns: Array<sandwichTxnResult>;
+  spamInfo: Map<bigint, Map<string, spamInfo>>;
 }
 
 export function findSandwich(
@@ -126,9 +134,42 @@ export function handleBlock(
       arbTxnResults.push(result);
     }
   }
+  let spamInfo = new Map<bigint, Map<string, spamInfo>>();
+  if (chainConfig.watchSpam.size > 0) {
+    for (const [hash, data] of dataByTxn) {
+      if (data.tx.to === undefined || data.tx.to === null) {
+        continue;
+      }
+      if (!chainConfig.watchSpam.has(data.tx.to.toLowerCase())) {
+        continue;
+      }
+      if (data.transactionReceipts.length === 0) {
+        continue;
+      }
+      const gas = data.tx.gasPrice;
+      if (!spamInfo.has(gas)) {
+        spamInfo.set(gas, new Map<string, spamInfo>());
+      }
+      const to = data.tx.to.toLowerCase();
+      if (!spamInfo.get(gas)!.has(to)) {
+        spamInfo.get(gas)!.set(to, {
+          minIndex: data.tx.index,
+          maxIndex: data.tx.index,
+          count: 0,
+          distinctInput: new Set<string>(),
+        });
+      }
+      const info = spamInfo.get(gas!)!.get(to)!;
+      info.minIndex = Math.min(info.minIndex, data.tx.index);
+      info.maxIndex = Math.max(info.maxIndex, data.tx.index);
+      info.count += 1;
+      info.distinctInput.add(data.tx.data);
+    }
+  }
   return {
     arbTxns: arbTxnResults,
     sandwichTxns: sandwichResults,
+    spamInfo: spamInfo,
   };
 }
 
@@ -398,6 +439,7 @@ export function Bind(chainConfig: ChainConstants, startBlock: number) {
       const mevResults = handleBlock(b, chainConfig);
       let validator = "";
       console.log(chainConfig.phalconChain);
+      /*
       if (chainConfig.phalconChain === "polygon") {
         const contract = getBorContractOnContext(
           ctx,
@@ -405,10 +447,11 @@ export function Bind(chainConfig: ChainConstants, startBlock: number) {
         );
         const validatorAddr = await contract.getBorValidators(ctx.blockNumber);
         validator = validatorAddr.toString();
-      }
-      ctx.eventLogger.emit("validatorSet", {
+        ctx.eventLogger.emit("validatorSet", {
         validator: validator,
       });
+      }
+      */
       for (const txn of mevResults.arbTxns) {
         let link = `https://explorer.phalcon.xyz/tx/${chainConfig.phalconChain}/${txn.txnHash}`;
         if (chainConfig.phalconChain === "eth") {
@@ -483,6 +526,19 @@ export function Bind(chainConfig: ChainConstants, startBlock: number) {
           paidBuilder: txn.minerPayment,
           profitTokens: profitTokens,
         });
+      }
+      for (const [gas, perGas] of mevResults.spamInfo) {
+        for (const [mevContract, info] of perGas) {
+          ctx.eventLogger.emit("spamRange", {
+            distinctId: mevContract,
+            mevContract: mevContract,
+            gas: Number(gas) / 1e9,
+            count: info.count,
+            minIndex: info.minIndex,
+            maxIndex: info.maxIndex,
+            distinctInput: info.distinctInput.size,
+          });
+        }
       }
     },
     1,
