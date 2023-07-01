@@ -123,7 +123,7 @@ export function handleBlock(
         // If prev does not make a trade, skip.
         if (
           !rolesCount.has(AddressProperty.Trader) ||
-          rolesCount.get(AddressProperty.Trader)! <= 2
+          rolesCount.get(AddressProperty.Trader)! < 2
         ) {
           continue;
         }
