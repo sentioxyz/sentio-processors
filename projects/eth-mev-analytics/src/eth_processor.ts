@@ -104,12 +104,35 @@ export function handleBlock(
   const dataByTxn = getDataByTxn(b);
   console.log(`block ${b.number} has ${dataByTxn.size} txns`);
   let txnResults = new Map<string, txnResult>();
+  let txnByIndex = new Map<number, txnResult>();
+
   for (const [hash, data] of dataByTxn) {
     let ret = txnProfitAndCost(data, chainConfig);
+    const index = data.tx.index;
     if (ret.mevContract !== "") {
       txnResults.set(hash, ret);
+      txnByIndex.set(index, ret);
     }
   }
+  for (const [hash, result] of txnResults) {
+    const index = result.txnIndex;
+    if (index > 0) {
+      if (txnByIndex.has(index - 1)) {
+        const prev = txnByIndex.get(index - 1)!;
+        const rolesCount = getRolesCount(prev.addressProperty);
+        // If prev does not make a trade, skip.
+        if (
+          !rolesCount.has(AddressProperty.Trader) ||
+          rolesCount.get(AddressProperty.Trader)! <= 2
+        ) {
+          continue;
+        }
+        result.targetTxnHash = prev.txnHash;
+        result.targetTxnContract = prev.mevContract;
+      }
+    }
+  }
+
   let sandwichResults = findSandwich(dataByTxn, txnResults);
   for (const result of sandwichResults) {
     if (txnResults.has(result.frontTxnHash)) {
@@ -243,19 +266,22 @@ export function txnProfitAndCost(
   const graph = buildGraph(data, chainConfig);
   let rewards = new Map<string, bigint>();
   let costs = new Map<string, bigint>();
+  let ret: txnResult = {
+    txnHash: data.tx.hash,
+    txFrom: data.tx.from,
+    revenue: rewards,
+    mevContract: "",
+    txnIndex: -1,
+    costs: costs,
+    addressProperty: new Map<string, AddressProperty>(),
+    graph: graph,
+    usedTokens: new Set<string>(),
+    minerPayment: minerPayment,
+    targetTxnContract: "",
+    targetTxnHash: "",
+  };
   if (data.tx.to === undefined || data.tx.to === null) {
-    return {
-      txnHash: data.tx.hash,
-      txFrom: data.tx.from,
-      revenue: rewards,
-      mevContract: "",
-      txnIndex: -1,
-      costs: costs,
-      addressProperty: new Map<string, AddressProperty>(),
-      graph: graph,
-      usedTokens: new Set<string>(),
-      minerPayment: minerPayment,
-    };
+    return ret;
   }
   // This is a hack to handle ethers bug.
   // @ts-ignore
@@ -266,18 +292,7 @@ export function txnProfitAndCost(
     console.log("gas used is undefined");
   }
   if (data.transactionReceipts[0].status === 0) {
-    return {
-      txnHash: data.tx.hash,
-      txFrom: data.tx.from,
-      revenue: rewards,
-      costs: costs,
-      txnIndex: data.tx.index,
-      mevContract: "",
-      addressProperty: new Map<string, AddressProperty>(),
-      graph: graph,
-      usedTokens: new Set<string>(),
-      minerPayment: minerPayment,
-    };
+    return ret;
   }
   const sccs = graph.findStronglyConnectedComponents();
   //graph.print();
@@ -314,7 +329,7 @@ export function txnProfitAndCost(
       tokens.add(token);
     }
   }
-  return {
+  ret = {
     txnHash: data.tx.hash,
     txFrom: data.tx.from,
     mevContract: data.tx.to!,
@@ -325,7 +340,10 @@ export function txnProfitAndCost(
     graph: graph,
     usedTokens: tokens,
     minerPayment: minerPayment,
+    targetTxnContract: "",
+    targetTxnHash: "",
   };
+  return ret;
 }
 
 type TokenWithPrice = {
@@ -489,6 +507,8 @@ export function Bind(chainConfig: ChainConstants, startBlock: number) {
           paidBuilder: txn.minerPayment,
           tokens: tokens,
           profitTokens: profitTokens,
+          targetTxnHash: txn.targetTxnHash,
+          targetTxnContract: txn.targetTxnContract,
         });
       }
       for (const txn of mevResults.sandwichTxns) {

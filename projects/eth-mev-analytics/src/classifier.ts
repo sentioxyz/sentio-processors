@@ -224,6 +224,8 @@ export interface txnResult {
   usedTokens: Set<string>;
   minerPayment: string;
   graph: TokenFlowGraph;
+  targetTxnHash: string;
+  targetTxnContract: string;
 }
 
 export interface sandwichTxnResult {
