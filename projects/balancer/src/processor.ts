@@ -169,6 +169,7 @@ VaultProcessor.bind({
   startBlock: startBlock,
   network: EthChainId.POLYGON,
 }).onEventSwap(async (evt, ctx) => {
+  // console.log("has event", ctx.blockNumber)
   try {
     let [tokens, reserves, lastChangeBlock] = await ctx.contract.getPoolTokens(
       evt.args.poolId,
@@ -285,6 +286,8 @@ VaultProcessor.bind({
       amountOut: evt.args.amountOut.scaleDown(decimalOut),
     });
   } catch (e) {
-    console.log(e);
+    // ctx.contract.provider.
+    console.log(ctx.blockNumber, e);
+    throw e
   }
 });
