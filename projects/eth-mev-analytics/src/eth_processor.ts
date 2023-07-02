@@ -166,9 +166,6 @@ export function handleBlock(
       if (!chainConfig.watchSpam.has(data.tx.to.toLowerCase())) {
         continue;
       }
-      if (data.transactionReceipts.length === 0) {
-        continue;
-      }
       const gas = data.tx.gasPrice;
       if (!spamInfo.has(gas)) {
         spamInfo.set(gas, new Map<string, spamInfo>());
