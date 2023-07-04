@@ -29,7 +29,7 @@ import { RouterImplProcessor } from "./types/eth/routerimpl.js";
 // a constant string array
 const ALGEBRA_ADDRESSES = ["0x9ceff2f5138fc59eb925d270b8a7a9c02a1810f2"];
 
-const START_BLOCK = 44522500;
+const START_BLOCK = 44642190;
 
 for (const address of ALGEBRA_ADDRESSES) {
   AlgebraPoolProcessor.bind({
@@ -44,7 +44,7 @@ for (const address of ALGEBRA_ADDRESSES) {
   });
 }
 
-const APE_ADDRESSES = ["0x20d4c6f341a7c87b1944d456d8674849ca1001ae"];
+const APE_ADDRESSES = ["0x5b13b583d4317ab15186ed660a1e4c65c10da659"];
 
 for (const address of APE_ADDRESSES) {
   ApePairProcessor.bind({
@@ -77,7 +77,11 @@ for (const address of V3_ADDRESSES) {
   });
 }
 
-const V2_ADDRESSES = ["0x10e14e23686826915efcb23ed9b128750831bf4c"];
+const V2_ADDRESSES = [
+  "0x93ef405225ad5c7be2ba115617611dece2a68a97",
+  "0x43f8b2bb5b24a339d9eec2ea8889d33d189ac217",
+  "0xbe40f7fff5a2235af9a8cb79a17373162efefa9c",
+];
 
 for (const address of V2_ADDRESSES) {
   UniswapV2PairProcessor.bind({
