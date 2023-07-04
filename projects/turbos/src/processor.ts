@@ -1,7 +1,7 @@
 import { pool, pool_factory } from "./types/sui/turbos.js";
 import { SuiObjectProcessor, SuiContext, SuiObjectContext, SuiObjectProcessorTemplate } from "@sentio/sdk/sui"
 import * as constant from './constant-turbos.js'
-import { SuiChainId } from "@sentio/sdk"
+import { SuiNetwork } from "@sentio/sdk/sui"
 import * as helper from './helper/turbos-clmm-helper.js'
 import { Gauge } from "@sentio/sdk";
 
@@ -15,7 +15,7 @@ const price_b_gauge = Gauge.register("price_b", volOptions)
 
 pool_factory.bind({
   address: constant.CLMM_MAINNET,
-  network: SuiChainId.SUI_MAINNET,
+  network: SuiNetwork.MAIN_NET,
   startCheckpoint: 1500000n
 })
   .onEventPoolCreatedEvent(async (event, ctx) => {
@@ -47,7 +47,7 @@ pool_factory.bind({
 
 pool.bind({
   address: constant.CLMM_MAINNET,
-  network: SuiChainId.SUI_MAINNET,
+  network: SuiNetwork.MAIN_NET,
   startCheckpoint: 1500000n
 })
   .onEventSwapEvent(async (event, ctx) => {
@@ -197,7 +197,7 @@ pool.bind({
 //   const pool_address = constant.POOLS_INFO_MAINNET[i]
 //   SuiObjectProcessor.bind({
 //     objectId: pool_address,
-//     network: SuiChainId.SUI_MAINNET,
+//     network: SuiNetwork.MAIN_NET,
 //     startCheckpoint: 2000000n
 //   })
 const template = new SuiObjectProcessorTemplate()

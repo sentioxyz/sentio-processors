@@ -1,7 +1,7 @@
 import { SuiObjectProcessor, SuiContext, SuiObjectContext } from "@sentio/sdk/sui"
 import { getPriceByType, token } from "@sentio/sdk/utils"
 import * as constant from '../constant-turbos.js'
-import { SuiChainId } from "@sentio/sdk"
+import { SuiNetwork } from "@sentio/sdk/sui"
 
 const wormholeTokens = new Set([
     "0xa198f3be41cda8c07b3bf3fee02263526e535d682499806979a111e88a5a8d0f",
@@ -181,14 +181,20 @@ export async function calculateValue_USD(ctx: SuiContext | SuiObjectContext, poo
     try {
         const poolInfo = await getOrCreatePool(ctx, pool)
         const [coin_a_full_address, coin_b_full_address] = getCoinFullAddress(poolInfo.type)
-        const price_a = await getPriceByType(SuiChainId.SUI_MAINNET, coin_a_full_address, date)
-        const price_b = await getPriceByType(SuiChainId.SUI_MAINNET, coin_b_full_address, date)
+        const price_a = await getPriceByType(SuiNetwork.MAIN_NET, coin_a_full_address, date)
+        const price_b = await getPriceByType(SuiNetwork.MAIN_NET, coin_b_full_address, date)
         console.log(`price_a ${price_a}, price_b ${price_b}`)
         const coin_a2b_price = await getPoolPrice(ctx, pool)
 
         if (price_a) {
             value_a = amount_a * price_a
-            value_b = amount_b / coin_a2b_price * price_a
+            //handle the case of low liquidity
+            if (price_b) {
+                value_b = amount_b * price_b
+            }
+            else {
+                value_b = amount_b / coin_a2b_price * price_a
+            }
         }
         else if (price_b) {
             value_a = amount_a * coin_a2b_price * price_b
@@ -213,8 +219,8 @@ export async function calculateSwapVol_USD(type: string, amount_a: number, amoun
 
     try {
         const [coin_a_full_address, coin_b_full_address] = getCoinFullAddress(type)
-        price_a = await getPriceByType(SuiChainId.SUI_MAINNET, coin_a_full_address, date)
-        price_b = await getPriceByType(SuiChainId.SUI_MAINNET, coin_b_full_address, date)
+        price_a = await getPriceByType(SuiNetwork.MAIN_NET, coin_a_full_address, date)
+        price_b = await getPriceByType(SuiNetwork.MAIN_NET, coin_b_full_address, date)
 
         if (price_a) {
             vol = amount_a * price_a
