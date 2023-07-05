@@ -1,4 +1,3 @@
-import { SuiChainId } from "@sentio/sdk";
 import { event, price } from "./types/sui/0x00b53b0f4174108627fbee72e2498b58d6a2714cded53fac537034c220d26302.js";
 import { PRICE_MAP } from "./pyth.js";
 import { Counter, Gauge } from "@sentio/sdk";
@@ -35,18 +34,18 @@ event.bind({
     //     message.add(ctx, 1)
     //     cache.set(ctx.version, {})
     //   }
-  
+
       const priceId = decodeBytesArray(evt.data_decoded.price_feed.price_identifier.bytes)
       const symbol = PRICE_MAP.get(priceId) || "not listed"
       var isNative
-  
+
       if (priceId == "0x23d7315113f5b1d3ba7a83604c44b94d79f4fd69af77f804fc7f920a6dc65744") {
         isNative = "true"
       } else {
         isNative = "false"
       }
       const labels = { priceId, symbol, isNative }
-  
+
       priceGauage.record(ctx, getPrice(evt.data_decoded.price_feed.price), labels)
       // migration
       evmPriceGauage.record(ctx, getPrice(evt.data_decoded.price_feed.price), labels)

@@ -10,7 +10,8 @@ import {
 import { PRICE_MAP } from "./pyth.js";
 // import { toBigDecimal } from "@sentio/sdk/";
 // import { BigDecimal } from "@sentio/sdk/lib/core/big-decimal";
-import { EthChainId, Gauge, scaleDown } from "@sentio/sdk";
+import { Gauge, scaleDown } from "@sentio/sdk";
+import { EthChainId  } from "@sentio/sdk/eth"
 
 const commonOptions = { sparse: true }
 const priceGauage = Gauge.register("evm_price", commonOptions)
