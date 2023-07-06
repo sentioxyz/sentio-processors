@@ -1,2 +1,2 @@
 import "./mainnet.js"
-// import "./testnet.js"
+import "./testnet.js"

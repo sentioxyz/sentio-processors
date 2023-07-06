@@ -82,6 +82,7 @@ for (let i = 0; i < reserves.length; i++) {
         const currentBorrowIndex = BigDecimal(self.fields.value.fields.current_borrow_index).div(Math.pow(10, DECIMAL2))
         const borrowCapCeiling = BigDecimal(self.fields.value.fields.borrow_cap_ceiling).div(Math.pow(10, DECIMAL2))
         const treasuryBalance = Number(self.fields.value.fields.treasury_balance)
+        const currentSupplyIndex = BigDecimal(self.fields.value.fields.current_supply_index).div(Math.pow(10, DECIMAL2))
 
         ctx.meter.Gauge("total_supply").record(totalSupply, {env: "mainnet", id, type, coin_symbol})
 
@@ -89,6 +90,7 @@ for (let i = 0; i < reserves.length; i++) {
         ctx.meter.Gauge("currentBorrowIndex").record(currentBorrowIndex, {env: "mainnet", id, type, coin_symbol})
         ctx.meter.Gauge("borrowCapCeiling").record(borrowCapCeiling, {env: "mainnet", id, type, coin_symbol})
         ctx.meter.Gauge("treasuryBalance").record(treasuryBalance, {env: "mainnet", id, type, coin_symbol})
+        ctx.meter.Gauge("currentSupplyIndex").record(currentSupplyIndex, {env: "mainnet", id, type, coin_symbol})
 
       } catch(e) {
         console.log(e)
@@ -117,9 +119,14 @@ SuiWrappedObjectProcessor.bind({
     const value = priceObject.value
     const decimal = priceObject.decimal
     const result = value.asBigDecimal().div(Math.pow(10, Number(decimal)))
+    const coin_symbol = coin[Number(name)]
     // price.value
-
-    ctx.meter.Gauge("oracle").record(result, {id, name})
+    try {
+    ctx.meter.Gauge("oracle").record(result, {id: name, name, coin_symbol})
+    } catch(e) {
+      console.log(e)
+      console.log(entry)
+    }
 })
 })
 
@@ -142,8 +149,8 @@ async function onEvent(event: LendingEvent, ctx: SuiContext) {
   })
 }
 
-// lending.bind()
-// .onEventBorrowEvent(onEvent)
-// .onEventDepositEvent(onEvent)
-// .onEventRepayEvent(onEvent)
-// .onEventWithdrawEvent(onEvent)
+lending.bind()
+.onEventBorrowEvent(onEvent)
+.onEventDepositEvent(onEvent)
+.onEventRepayEvent(onEvent)
+.onEventWithdrawEvent(onEvent)
