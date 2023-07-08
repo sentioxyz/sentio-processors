@@ -470,7 +470,7 @@ export function Bind(chainConfig: ChainConstants, startBlock: number) {
       for (const txn of mevResults.arbTxns) {
         let link = `https://explorer.phalcon.xyz/tx/${chainConfig.phalconChain}/${txn.txnHash}`;
         if (chainConfig.phalconChain === "eth") {
-          link = `https://app.sentio.xyz/qiaokan/eth-mev-analytics/transaction/${txn.txnHash}`;
+          link = `https://app.sentio.xyz/qiaokan/eth-mev-analytics/transaction/1/${txn.txnHash}`;
         }
         const [revenue, cost, profitTokens] = await computePnL(
           txn.revenue,
@@ -492,6 +492,8 @@ export function Bind(chainConfig: ChainConstants, startBlock: number) {
         for (const token of txn.usedTokens) {
           tokens += token + ",";
         }
+        // @ts-ignore
+        ctx.transactionHash = txn.txnHash;
         ctx.eventLogger.emit("arbitrage", {
           distinctId: txn.mevContract,
           mevContract: txn.mevContract,

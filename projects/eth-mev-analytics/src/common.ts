@@ -42,6 +42,7 @@ export const chainConfigs = [
       "0x8F5BBB2BB8c2Ee94639E55d5F41de9b4839C1280".toLowerCase(), // synapse bridge
       "0x2967E7Bb9DaA5711Ac332cAF874BD47ef99B3820".toLowerCase(), // sodimanod
       "0xDef1C0ded9bec7F1a1670819833240f027b25EfF".toLowerCase(), // 0xproxy
+      "0xB77EC71C90A533719df75bc6a209f7fB3e936EEd".toLowerCase(), //strategy
     ]),
     mintBurnAddr: new Set<string>([
       "0x0000000000000000000000000000000000000000",
