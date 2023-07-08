@@ -29,7 +29,7 @@ import { RouterImplProcessor } from "./types/eth/routerimpl.js";
 // a constant string array
 const ALGEBRA_ADDRESSES = ["0x9ceff2f5138fc59eb925d270b8a7a9c02a1810f2"];
 
-const START_BLOCK = 44642190;
+const START_BLOCK = 44753480;
 
 for (const address of ALGEBRA_ADDRESSES) {
   AlgebraPoolProcessor.bind({
@@ -60,8 +60,8 @@ for (const address of APE_ADDRESSES) {
 }
 
 const V3_ADDRESSES = [
-  "0x3d0acd52ee4a9271a0ffe75f9b91049152bac64b",
-  "0x21988c9cfd08db3b5793c2c6782271dc94749251",
+  "0xca4c5a5d1988be88c33208001e4ef7ea3898404f",
+  "0xd438e4da60a786d78b793f2c834b843673145f2e",
 ];
 
 for (const address of V3_ADDRESSES) {
