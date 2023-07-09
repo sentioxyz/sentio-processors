@@ -1,7 +1,7 @@
 import { SuiGlobalProcessor, SuiNetwork } from '@sentio/sdk/sui';
 import { Exporter } from '@sentio/sdk';
 
-const MAVEN_PREFIX = '0x6d6176656e';
+const MAVEN_PREFIX = '6d6176656e';
 const ExecuteTransaction = Exporter.register('ExecuteTransaction', 'ExecuteTransaction');
 
 SuiGlobalProcessor.bind({ network: SuiNetwork.TEST_NET, startCheckpoint: 4928686n }).onTransactionBlock(

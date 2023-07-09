@@ -1,5 +1,5 @@
 import * as liquidswap from "./types/aptos/liquidswap.js";
-import { AptosBaseProcessor, AptosModulesProcessor } from "@sentio/sdk/aptos";
+import { AptosBaseProcessor, AptosModulesProcessor, AptosResourceProcessorTemplate } from "@sentio/sdk/aptos";
 import { SuiAddressProcessorTemplate, SuiContext, SuiGlobalProcessor, SuiNetwork } from "@sentio/sdk/sui";
 import { decodeMultiSig } from "@mysten/sui.js"
 // import { SuiModulesProcessor } from "@sentio/sdk/sui";
@@ -52,6 +52,8 @@ const addrTemplate = new SuiAddressProcessorTemplate().onTimeInterval(async (_, 
   owned: false
 })
 
-function handlerEvent(address: string,ctx: SuiContext) {
-  addrTemplate.bind({ address}, ctx)
-}
+const resourceTemplate = new AptosResourceProcessorTemplate().onVersionInterval(
+    (resources, ctx) => {
+      //
+    }
+)
