@@ -9,7 +9,9 @@ UniswapV2FactoryProcessor.bind({address: '*', startBlock: 10000835})
 
       ctx.eventLogger.emit("PoolCreated", {
         poolType: "UniswapV2",
-        address: evt.args.pair
+        poolAddress: evt.args.pair,
+        token0: evt.args.token0,
+        token1: evt.args.token1,
       })
     })
 
@@ -21,7 +23,9 @@ UniswapV3FactoryProcessor.bind({address: '*', startBlock: 12369621})
 
       ctx.eventLogger.emit("PoolCreated", {
         poolType: "UniswapV3",
-        address: evt.args.pool
+        poolAddress: evt.args.pool,
+        token0: evt.args.token0,
+        token1: evt.args.token1,
       })
     })
 
