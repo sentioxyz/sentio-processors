@@ -16,11 +16,11 @@ UniswapV2FactoryProcessor.bind({address: '*', startBlock: 10000835})
 UniswapV3FactoryProcessor.bind({address: '*', startBlock: 12369621})
     .onEventPoolCreated((evt, ctx) => {
       ctx.meter.Counter("pool").add(1, {
-        poolType: "UniswapV2",
+        poolType: "UniswapV3",
       })
 
       ctx.eventLogger.emit("PoolCreated", {
-        poolType: "UniswapV2",
+        poolType: "UniswapV3",
         address: evt.args.pool
       })
     })
