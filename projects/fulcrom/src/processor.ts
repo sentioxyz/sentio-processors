@@ -111,7 +111,7 @@ VaultProcessor.bind({ address: VAULT, network: EthChainId.CRONOS })
     ctx.meter.Gauge("vault_collect_swap_fee_gauge").record(Number(evt.args.feeUsd) / Math.pow(10, 30), { coin_symbol: token.symbol })
 
   })
-  .onTimeInterval(gaugeTokenAum, 240, 1440)
+  .onTimeInterval(gaugeTokenAum, 240, 240)
 
 
 FulProcessor.bind({ address: FUL, network: EthChainId.CRONOS })
@@ -119,7 +119,7 @@ FulProcessor.bind({ address: FUL, network: EthChainId.CRONOS })
     const total = await ctx.contract.totalSupply()
     ctx.meter.Gauge("ful_totalSupply").record(total.scaleDown(18))
   }, 1000, 10000)
-  .onTimeInterval(gaugeStakedAssets, 240, 1440)
+  .onTimeInterval(gaugeStakedAssets, 240, 240)
 
 
 FlpManagerProcessor.bind({ address: FUL_MANAGER, network: EthChainId.CRONOS })
@@ -153,7 +153,7 @@ FlpManagerProcessor.bind({ address: FUL_MANAGER, network: EthChainId.CRONOS })
       const aum = Number(await ctx.contract.getAum(true, { blockTag: ctx.blockNumber })) / Math.pow(10, 30)
       ctx.meter.Gauge("aum_pool").record(aum)
     } catch (e) { console.log(`get aum error ${ctx.timestamp}`) }
-  }, 240, 1440)
+  }, 240, 240)
 
 //FUL FLP stake
 RewardRouterProcessor.bind({ address: REWARD_ROUTER, network: EthChainId.CRONOS })
