@@ -280,6 +280,7 @@ export function txnProfitAndCost(
   if (data.tx.to === undefined || data.tx.to === null) {
     return ret;
   }
+  ret.mevContract = data.tx.to.toLowerCase();
   // This is a hack to handle ethers bug.
   // @ts-ignore
   data.tx.index = parseInt(data.tx.transactionIndex);
