@@ -27,9 +27,10 @@ import { ApePairProcessor } from "./types/eth/apepair.js";
 import { RouterImplProcessor } from "./types/eth/routerimpl.js";
 
 // a constant string array
-const ALGEBRA_ADDRESSES = ["0x9ceff2f5138fc59eb925d270b8a7a9c02a1810f2"];
+const ALGEBRA_ADDRESSES = ["0x80deece4befd9f27d2df88064cf75f080d3ce1b2"];
 
-const START_BLOCK = 44841900;
+// target tx is 0xc988bfb51d44f6e5162e6a860a9aa75f7fd087f7e1b816f7a50d422bcbe6e712
+const START_BLOCK = 44980460;
 
 for (const address of ALGEBRA_ADDRESSES) {
   AlgebraPoolProcessor.bind({
@@ -59,7 +60,7 @@ for (const address of APE_ADDRESSES) {
   });
 }
 
-const V3_ADDRESSES = ["0x45dda9cb7c25131df268515131f647d726f50608"];
+const V3_ADDRESSES = ["0x86f1d8390222a3691c28938ec7404a1661e618e0"];
 
 for (const address of V3_ADDRESSES) {
   UniswapV3PoolProcessor.bind({
@@ -74,7 +75,7 @@ for (const address of V3_ADDRESSES) {
   });
 }
 
-const V2_ADDRESSES = ["0xadbf1854e5883eb8aa7baf50705338739e558e5b"];
+const V2_ADDRESSES = ["0xccb9d2100037f1253e6c1682adf7dc9944498aff"];
 
 for (const address of V2_ADDRESSES) {
   UniswapV2PairProcessor.bind({
