@@ -1,5 +1,5 @@
 import { token } from "@sentio/sdk/utils"
-import { EthChainId } from "@sentio/sdk"
+import { EthChainId } from "@sentio/sdk/eth";
 import { VaultContext } from "../types/eth/vault.js"
 import { GlpManagerContext } from "../types/eth/glpmanager.js"
 import { GMX_ADDRESS, REWARD_ROUTER, VAULT_ADDRESS, WhitelistTokenMap, esGMX_ADDRESS, sGMX_ADDRESS, GLP_MANAGER_ADDRESS, vGLP_ADDRESS, vGMX_ADDRESS, REWARD_TRACKER_ADDRESS } from './constant.js'

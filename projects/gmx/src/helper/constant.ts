@@ -25,7 +25,11 @@ export const WhitelistTokenMap: { [address: string]: { symbol: string, decimal: 
     },
     "0x2f2a2543b76a4166549f7aab2e75bef0aefc5b0f": {
         symbol: "WBTC", decimal: 8
-    }
+    },
+    "0xaf88d065e77c8cc2239327c5edb3a432268e5831": {
+        symbol: "USDC.e", decimal: 6
+    },
+
 }
 
 export const REWARD_ROUTER = "0xA906F338CB21815cBc4Bc87ace9e68c87eF8d8F1"
