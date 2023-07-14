@@ -15,7 +15,6 @@ const GaugeStakedFortune = async (_: any, ctx: FortuneContext) => {
   const stakedAtBank = Number(await ctx.contract.balanceOf(BANK_ADDR)) / 10 ** 18
   const stakedAtBarracks = Number(await ctx.contract.balanceOf(BARRACKS_ADDR)) / 10 ** 18
   ctx.meter.Gauge("staked").record(stakedAtBank, { at: "Bank" })
-  ctx.meter.Gauge("staked").record(stakedAtBarracks, { at: "Barracks" })
 }
 
 
@@ -83,9 +82,23 @@ PlatformRewardsProcessor.bind({
   .onEventCompounded(UserEventHandler)
 
 BarracksProcessor.bind({
-  address: PLATFORM_REWARDS_ADDR,
+  address: BARRACKS_ADDR,
   network: EthChainId.CRONOS,
   //startBlock: 9247000
 })
-  .onEventStaked(UserEventHandler)
-  .onEventUnstaked(UserEventHandler)
+  .onEventStaked(async (event, ctx) => {
+    ctx.eventLogger.emit(event.name, {
+      distinctId: event.args.user,
+      contractAddress: event.args.contractAddress,
+      tokenId: event.args.tokenId,
+      amount: event.args.amount
+    })
+  })
+  .onEventUnstaked(async (event, ctx) => {
+    ctx.eventLogger.emit(event.name, {
+      distinctId: event.args.user,
+      contractAddress: event.args.contractAddress,
+      tokenId: event.args.tokenId,
+      amount: event.args.amount
+    })
+  })
