@@ -515,8 +515,8 @@ export function Bind(chainConfig: ChainConstants, startBlock: number) {
         let frontLink = `https://explorer.phalcon.xyz/tx/${chainConfig.phalconChain}/${txn.frontTxnHash}`;
         let backLink = `https://explorer.phalcon.xyz/tx/${chainConfig.phalconChain}/${txn.backTxnHash}`;
         if (chainConfig.phalconChain === "eth") {
-          frontLink = `https://app.sentio.xyz/qiaokan/eth-mev-analytics/transaction/${txn.frontTxnHash}`;
-          backLink = `https://app.sentio.xyz/qiaokan/eth-mev-analytics/transaction/${txn.backTxnHash}`;
+          frontLink = `https://app.sentio.xyz/qiaokan/eth-mev-analytics/transaction/1/${txn.frontTxnHash}`;
+          backLink = `https://app.sentio.xyz/qiaokan/eth-mev-analytics/transaction/1/${txn.backTxnHash}`;
         }
 
         const [revenue, cost, profitTokens] = await computePnL(
