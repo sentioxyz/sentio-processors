@@ -19,6 +19,9 @@ export const WhitelistTokenMap: { [address: string]: { symbol: string, decimal: 
     },
     "0xb9ce0dd29c91e02d4620f57a66700fc5e41d6d15": {
         symbol: "XRP", decimal: 6
+    },
+    "0x9d97be214b68c7051215bb61059b4e299cd792c3": {
+        symbol: "LTC", decimal: 8
     }
 }
 
