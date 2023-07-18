@@ -1,5 +1,6 @@
 import { VVSPairContext, VVSPairProcessor, SwapEvent, VVSPairProcessorTemplate, getVVSPairContractOnContext, TransferEvent } from "./types/eth/vvspair.js";
-import { EthChainId, BigDecimal, Gauge } from "@sentio/sdk"
+import { BigDecimal, Gauge } from "@sentio/sdk"
+import { EthChainId } from "@sentio/sdk/eth";
 import { getPriceByType,  token } from "@sentio/sdk/utils"
 import { ERC20Context, ERC20Processor, getERC20Contract } from "@sentio/sdk/eth/builtin/erc20";
 import { VVSFactoryProcessor, VVSFactoryContext, PairCreatedEvent } from "./types/eth/vvsfactory.js";
@@ -182,7 +183,9 @@ async function onSwap(evt: SwapEvent, ctx: VVSPairContext) {
     amount1: amount1,
     exchangePrice: exchangePrice,
     exchangePriceGeicko: exchangePriceGeicko,
-    priceDiff: priceDiff
+    priceDiff: priceDiff,
+    usd0,
+    poolName: poolInfo.poolName,
   })
 } catch (e) {
   console.log(e)
@@ -345,7 +348,7 @@ async function xvvsBalanceHandler(_: any, ctx: ERC20Context) {
 for (var i = 0; i < CORE_POOLS.length; i++) {
   const pool = CORE_POOLS[i]
   VVSPairProcessor.bind({address: pool, network: EthChainId.CRONOS
-    , startBlock: 5636187
+    , startBlock: 9000000
   })
   .onEventSwap(onSwap)
   .onBlockInterval(blockHandler, 4000, 40000)

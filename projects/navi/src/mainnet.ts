@@ -14,7 +14,7 @@ import { pool } from "./types/sui/testnet/0x8ba6cdd02f5d1b9ff9970690681c21957d9a
 import { lending } from "./types/sui/0xe17e8d461129585fdd83dd891b1b5858f51984acbb308daa7ad8627c13f31c9d.js";
 import { getPriceByType, token } from "@sentio/sdk/utils"
 import { scaleDown } from "@sentio/sdk";
-import { oracle } from "./types/sui/0xccdf4385016f20c784e68376359ddc2f6a9e050ec431ca5c85f1bc81024d4427.js";
+import { oracle } from "./types/sui/0xca441b44943c16be0e6e23c5a955bb971537ea3289ae8016fbf33fffe1fd210f.js";
 
 import { storage } from "./types/sui/testnet/0x6850914af4d097f53be63182675334fb41a6782e4e702a5d605a61969750e777.js";
 
@@ -24,15 +24,22 @@ let coinInfoMap = new Map<string, Promise<token.TokenInfo>>()
 const DECIMAL1 = 9
 const DECIMAL2 = 27
 
+// const reserves = [
+//   "0xab644b5fd11aa11e930d1c7bc903ef609a9feaf9ffe1b23532ad8441854fbfaf",
+//   "0xeb3903f7748ace73429bd52a70fff278aac1725d3b58afa781f25ce3450ac203",
+//   "0x9342cc1ca3f48ba5d5acfbdf36d7efafcf48f8af9951515d971253c551d3395c",
+//   "0x145ee09c7b74b2470c90d55b9ba9b99684f9d81d03f52968bbaf3a95501f17c6",
+//   "0xb78d4cf370d983e1bafd47252fb32355bd12e3a76194c736bb56024694f39308"
+// ]
+
+// const coin = ["SUI", "USDC", "USDT", "ETH", "BTC"]
+
 const reserves = [
-  "0xf1b1f1c8ae866b12225e4cbe14d93f0b5d7d8b324bb6df1777ad9d55b22ccc45",
-  "0x725c4dcc42071f148e07c8cac7dfbcbf48f176b62caa282b7170fd10c6eb4138",
-  "0x198fc6028c73cb482c80a10d719f57bfdd247e84e4af7c942aa4c5aa6d3e23c3",
-  "0x38d63f7c83d06b39d1f5bad4bef11081d69c33adc3ff9daa4719f35c2868685f",
-  "0x3c42b5bef6ce0565530d0419930994a92952677da7f2dd35d5bf1709a83b266c"
+  "0xab644b5fd11aa11e930d1c7bc903ef609a9feaf9ffe1b23532ad8441854fbfaf",
+  "0xeb3903f7748ace73429bd52a70fff278aac1725d3b58afa781f25ce3450ac203"
 ]
 
-const coin = ["SUI", "USDC", "USDT", "ETH", "BTC"]
+const coin = ["SUI", "USDC"]
 
 
 export const getOrCreateCoin = async function (ctx: SuiContext | SuiObjectContext, coinAddress: string): Promise<token.TokenInfo> {
@@ -81,7 +88,7 @@ for (let i = 0; i < reserves.length; i++) {
         const totalSupply = BigDecimal(self.fields.value.fields.supply_balance.fields.total_supply).div(Math.pow(10, DECIMAL1))
         const currentBorrowIndex = BigDecimal(self.fields.value.fields.current_borrow_index).div(Math.pow(10, DECIMAL2))
         const borrowCapCeiling = BigDecimal(self.fields.value.fields.borrow_cap_ceiling).div(Math.pow(10, DECIMAL2))
-        const treasuryBalance = Number(self.fields.value.fields.treasury_balance)
+        const treasuryBalance = BigDecimal(self.fields.value.fields.treasury_balance).div(Math.pow(10, DECIMAL1))
         const currentSupplyIndex = BigDecimal(self.fields.value.fields.current_supply_index).div(Math.pow(10, DECIMAL2))
 
         ctx.meter.Gauge("total_supply").record(totalSupply, {env: "mainnet", id, type, coin_symbol})
@@ -101,17 +108,17 @@ for (let i = 0; i < reserves.length; i++) {
 
 SuiWrappedObjectProcessor.bind({
   network: ChainId.SUI_MAINNET,
-  objectId: '0xbbc729d3dcdaf8239d9c3c1459b2386fb70874eaba32d794e874c9d3573c025e',
+  objectId: '0xc0601facd3b98d1e82905e660bf9f5998097dedcf86ed802cf485865e3e3667c',
 }).onTimeInterval(async (objects, ctx) => {
   // ctx.meter.Gauge('num_portfolio_vault').record(objects.length)
-  // console.log(objects)
+  // console.log(JSON.stringify(objects))
 
   const decodedObjects = await ctx.coder.getDynamicFields(
       objects,
       BUILTIN_TYPES.U8_TYPE,
       oracle.Price.type()
   )
-  // console.log(decodedObjects)
+  // console.log(JSON.stringify(decodedObjects))
   decodedObjects.forEach((entry) => {
     const id = entry.id.toString()
     const name = entry.name.toString()
@@ -149,8 +156,30 @@ async function onEvent(event: LendingEvent, ctx: SuiContext) {
   })
 }
 
+async function onLiquidationEvent(event: lending.LiquidationCallEventInstance, ctx: SuiContext) {
+  const sender = event.data_decoded.sender
+  const liquidation_amount = event.data_decoded.liquidate_amount
+  const liquidate_user = event.data_decoded.liquidate_user
+  const reserve = event.data_decoded.reserve
+
+  const typeArray = event.type.split("::")
+  const type = typeArray[typeArray.length - 1]
+
+  ctx.eventLogger.emit("UserInteraction", {
+    distinctId: sender,
+    sender,
+    liquidation_amount,
+    liquidate_user,
+    reserve,
+    type,
+    env: "mainnet"
+  })
+}
+
+
 lending.bind()
 .onEventBorrowEvent(onEvent)
 .onEventDepositEvent(onEvent)
 .onEventRepayEvent(onEvent)
 .onEventWithdrawEvent(onEvent)
+.onEventLiquidationCallEvent(onLiquidationEvent)
