@@ -36,10 +36,11 @@ const DECIMAL2 = 27
 
 const reserves = [
   "0xab644b5fd11aa11e930d1c7bc903ef609a9feaf9ffe1b23532ad8441854fbfaf",
-  "0xeb3903f7748ace73429bd52a70fff278aac1725d3b58afa781f25ce3450ac203"
+  "0xeb3903f7748ace73429bd52a70fff278aac1725d3b58afa781f25ce3450ac203",
+  "0xc060006111016b8a020ad5b33834984a437aaa7d3c74c18e09a95d48aceab08c"
 ]
 
-const coin = ["SUI", "USDC"]
+const coin = ["SUI", "USDC", "USDT"]
 
 
 export const getOrCreateCoin = async function (ctx: SuiContext | SuiObjectContext, coinAddress: string): Promise<token.TokenInfo> {
