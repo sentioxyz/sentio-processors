@@ -38,7 +38,8 @@ const CHAIN_ADDRESS_MAP = new Map<EthChainId, string>([
   [EthChainId.POLYGON_ZKEVM, "0xC5E56d6b40F3e3B5fbfa266bCd35C37426537c65"], // Polygon zkEVM
   [EthChainId.ZKSYNC_ERA, "0xf087c864AEccFb6A2Bf1Af6A0382B0d0f6c5D834"], // ZKsync
   [EthChainId.CONFLUX, "0xe9d69CdD6Fe41e7B621B4A688C5D1a68cB5c8ADc"], // Conflux
-  [EthChainId.MANTLE, "0xA2aa501b19aff244D90cc15a4Cf739D2725B5729"],
+  [EthChainId.MANTLE, "0xA2aa501b19aff244D90cc15a4Cf739D2725B5729"], // mantle
+  [EthChainId.LINEA, "0xA2aa501b19aff244D90cc15a4Cf739D2725B5729"], // linea
 ]);
 
 const CHAIN_NATIVE_MAP = new Map<EthChainId, string>([
@@ -56,7 +57,8 @@ const CHAIN_NATIVE_MAP = new Map<EthChainId, string>([
   [EthChainId.POLYGON_ZKEVM, "Crypto.MATIC/USD"], // Polygon zk
   [EthChainId.ZKSYNC_ERA, "Crypto.ETH/USD"], // ZKsync
   [EthChainId.CONFLUX, "Crypto.CFX/USD"], // Conflux
-  [EthChainId.MANTLE, "Crypto.MNT/USD"],
+  [EthChainId.MANTLE, "Crypto.MNT/USD"], // mantle
+  [EthChainId.LINEA, "Crypto.ETH/USD"], // linea
 ]);
 
 async function priceFeedUpdate(evt: PriceFeedUpdateEvent, ctx: PythEVMContext) {
