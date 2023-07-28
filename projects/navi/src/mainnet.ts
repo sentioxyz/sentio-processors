@@ -11,7 +11,7 @@ import { ChainId } from "@sentio/chain"
 import { BUILTIN_TYPES } from "@sentio/sdk/move"
 import { BigDecimal, Gauge } from "@sentio/sdk";
 import { pool } from "./types/sui/testnet/0x8ba6cdd02f5d1b9ff9970690681c21957d9a6a6fbb74546b2f0cfb16dbff4c25.js"
-import { lending } from "./types/sui/0xe17e8d461129585fdd83dd891b1b5858f51984acbb308daa7ad8627c13f31c9d.js";
+import { lending } from "./types/sui/0xd899cf7d2b5db716bd2cf55599fb0d5ee38a3061e7b6bb6eebf73fa5bc4c81ca.js";
 import { getPriceByType, token } from "@sentio/sdk/utils"
 import { scaleDown } from "@sentio/sdk";
 import { oracle } from "./types/sui/0xca441b44943c16be0e6e23c5a955bb971537ea3289ae8016fbf33fffe1fd210f.js";

@@ -73,7 +73,7 @@ export async function onEventSwapEvent(
 
   ctx.eventLogger.emit("swap", swapAttributes)
 
-  thalaVolume.record(ctx, volumeUsd, { poolType, pairTag });
+  thalaVolume.record(ctx, volumeUsd, { poolType, type, pairTag });
 }
 
 // get usd prices based on the first asset with known price (which is available via price API)

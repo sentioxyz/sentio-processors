@@ -88,7 +88,7 @@ async function priceFeedUpdate(evt: PriceFeedUpdateEvent, ctx: PythEVMContext) {
     priceUnsafeGauage.record(ctx, priceUnsafe, labels);
     ctx.meter.Counter("price_update_counter").add(1, labels);
     price_update_occur.record(ctx, 1, labels);
-    // await recordGasUsage("priceFeedUpdate", evt.transactionHash, ctx)
+    await recordGasUsage("priceFeedUpdate", evt.transactionHash, ctx)
   } catch (e) {
     console.log(ctx.chainId, priceId, ctx.address, evt.blockNumber, e);
   }
@@ -100,7 +100,7 @@ async function batchPriceUpdate(
 ) {
   ctx.meter.Counter("batch_price_update_counter").add(1);
   batch_price_update_occur.record(ctx, 1);
-  // await recordGasUsage("batchPriceUpdate", evt.transactionHash, ctx)
+  await recordGasUsage("batchPriceUpdate", evt.transactionHash, ctx)
   // other than onblock, also need to track this whenever batchPriceUpdate was triggered
   try {
     if (ctx.chainId == EthChainId.FANTOM) {
