@@ -2,7 +2,6 @@ import { NonfungiblePositionManagerContext, NonfungiblePositionManagerProcessor,
 import fs from 'fs'
 import {getPriceByType, token} from "@sentio/sdk/utils";
 import { ChainId } from "@sentio/chain";
-import { getERC20TokenInfo } from "../../../node_modules/@sentio/sdk/lib/utils/token.js";
 import { BigDecimal } from "@sentio/sdk";
 import { PoolContext, PoolProcessor } from "./types/eth/pool.js";
 import { EthChainId, EthContext, TypedEvent } from "@sentio/sdk/eth";
@@ -192,25 +191,6 @@ async function handleApprovalForAll(evt: ApprovalForAllEvent, ctx: NonfungiblePo
         removeAddressMap(owner, ctx.blockNumber)
     }
 
-    // const contract = getNonfungiblePositionManagerContractOnContext(ctx, NonFungibleManager)
-    // const balance = await contract.balanceOf(owner)
-    // for (let i = 0; i < balance; i++) {
-
-    //         const tokenId = await contract.tokenOfOwnerByIndex(owner, i)
-    //         ctx.eventLogger.emit("Approval", {
-    //             message: `${owner} approves ${operator} for ${tokenId}`,
-    //             approved: operator,
-    //             tokenId,
-    //             owner,
-    //             source: evt.name
-    //         })
-    //         if (operator.toLowerCase() == "0xF849de01B080aDC3A814FaBE1E2087475cF2E354".toLowerCase()) {
-    //             addIdMap(tokenId, ctx.blockNumber)
-    //             console.log(`adding ${tokenId} to set from approval for all`)
-    //         }
-
-    // }
-
     ctx.eventLogger.emit("ApprovalForAll", {
         message: `${owner} changes setting as ${approvedStatus} for ${operator} `,
         approvedStatus,
@@ -238,7 +218,6 @@ async function handleBlock(blk: any, ctx: NonfungiblePositionManagerContext) {
     }
 
     for (const entry of idMap) {
-        // TODO: to get rid of this try, need to record block number when approve is emited, then check here if ctx.blockNumber is greater than the event block
         // try {
             //skip if this tokenId has already been processed in afaMap
             if (afaMap.has(entry[0])) {
@@ -266,8 +245,8 @@ async function emitPositionInfo(position: PositionInfo, tokenId: number | bigint
     let token0, token1
 
     try {
-        token0 = await getERC20TokenInfo(ctx.chainId, position.token0)
-        token1 = await getERC20TokenInfo(ctx.chainId, position.token1)
+        token0 = await token.getERC20TokenInfo(ctx.chainId, position.token0)
+        token1 = await token.getERC20TokenInfo(ctx.chainId, position.token1)
     } catch (e) {
         console.log("error retrieving token info")
         console.log(position)
@@ -329,14 +308,6 @@ const approvalForAllFilter = NonfungiblePositionManagerProcessor.filters.Approva
 
 const approvalFilterArb = NonfungiblePositionManagerProcessor.filters.Approval(null, approvedArb, null)
 const approvalForAllFilterArb = NonfungiblePositionManagerProcessor.filters.ApprovalForAll(null, approvedArb, null)
-
-
-// NonfungiblePositionManagerProcessor.bind({ address: NonFungibleManager
-// , startBlock: 16000000
-// })
-// .onEventApproval(handleApproval)
-// .onEventApprovalForAll(handleApprovalForAll)
-// .onTimeInterval(handleBlock)
 
 PoolProcessor.bind({address: USDC_WETH_POOL
 , startBlock: 17000000

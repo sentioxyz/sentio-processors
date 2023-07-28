@@ -110,6 +110,7 @@ for (let i = 0; i < reserves.length; i++) {
 SuiWrappedObjectProcessor.bind({
   network: ChainId.SUI_MAINNET,
   objectId: '0xc0601facd3b98d1e82905e660bf9f5998097dedcf86ed802cf485865e3e3667c',
+  startCheckpoint: 8823684n
 }).onTimeInterval(async (objects, ctx) => {
   // ctx.meter.Gauge('num_portfolio_vault').record(objects.length)
   // console.log(JSON.stringify(objects))

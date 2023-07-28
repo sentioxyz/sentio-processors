@@ -119,6 +119,14 @@ async function getUsdValue(ctx: VVSPairContext | CraftsmanContext, info: token.T
   return amount.multipliedBy(price)
 }
 
+async function getTokenAmount(ctx: VVSPairContext | CraftsmanContext, info: token.TokenInfo, token :string, balance: BigDecimal): Promise<BigDecimal> {	
+  const price = await getPriceByType(EthChainId.CRONOS, token, ctx.timestamp) || 0	
+  if (price != 0) {	
+    return balance.div(price)	
+  }	
+  return BigDecimal(0)	
+}
+
 function maxBigInt(a: BigInt, b: BigInt): BigInt {
   return a > b ? a : b;
 }
@@ -150,7 +158,6 @@ async function onSwap(evt: SwapEvent, ctx: VVSPairContext) {
   if (exchangePriceGeicko > 0 && exchangePrice.gt(0)) {
     priceDiff = exchangePrice.div(exchangePriceGeicko).minus(1).abs()
   }
-  
   vol.record(ctx, usd0, {
     poolName: poolInfo.poolName,
     token0: poolInfo.token0.symbol,
@@ -198,6 +205,65 @@ async function onTransfer(evt: TransferEvent, ctx: VVSPairContext) {
 
 }
 
+	
+async function priceSlippageHandler(_:any, ctx: VVSPairContext) {	
+  try {	
+  const poolInfo = await getOrCreatePool(ctx)	
+  const reserves = await ctx.contract.getReserves()	
+  // const balance0 = (await getERC20Contract(ctx.chainId, poolInfo.token0Address).balanceOf(ctx.address, {blockTag: ctx.blockNumber})).scaleDown(poolInfo.token0.decimal)	
+  // const balance1 = (await getERC20Contract(ctx.chainId, poolInfo.token1Address).balanceOf(ctx.address, {blockTag: ctx.blockNumber})).scaleDown(poolInfo.token1.decimal)	
+  for (let i = 2; i < 5 ; i++) {	
+    const usdAmount = Math.pow(10, i)	
+    const price0 = await getPriceByType(EthChainId.CRONOS, poolInfo.token0Address, ctx.timestamp) || 0	
+    const price1 = await getPriceByType(EthChainId.CRONOS, poolInfo.token1Address, ctx.timestamp) || 0	
+    if (price0 == 0) return	
+    const amount0 = BigDecimal(usdAmount/price0).multipliedBy(Math.pow(10, poolInfo.token0.decimal))	
+    const amount1 = getAmountOut(amount0, reserves._reserve0.asBigDecimal(), reserves._reserve1.asBigDecimal())	
+    let exchangePrice: BigDecimal	
+    if (amount1.eq(0)) {	
+      exchangePrice = BigDecimal(-1)	
+    } else {	
+      exchangePrice = amount0.div(Math.pow(10, poolInfo.token0.decimal)).div(amount1.div(Math.pow(10, poolInfo.token1.decimal)))	
+    }	
+    let exchangePriceGeicko: number	
+    let priceDiff = BigDecimal(-1)	
+    if (price0 == 0) {	
+      exchangePriceGeicko = -1	
+    } else {	
+      exchangePriceGeicko = price1/price0	
+    }	
+  	
+    if (exchangePriceGeicko > 0 && exchangePrice.gt(0)) {	
+      priceDiff = exchangePrice.div(exchangePriceGeicko).minus(1).abs()	
+    }	
+    ctx.eventLogger.emit("priceSlippage", {	
+      priceDiff,	
+      amount0,	
+      amount1,	
+      usdAmount,	
+      exchangePriceGeicko,	
+      exchangePrice,	
+      reserve0: reserves._reserve0,	
+      reserve1: reserves._reserve1,	
+      token0: poolInfo.token0.symbol,	
+      token1: poolInfo.token1.symbol,	
+      pairName: poolInfo.token0.symbol+"-"+poolInfo.token1.symbol	
+    })	
+  }	
+} catch (e) {	
+  console.log(e)	
+}	
+}	
+// recreate the following logic with fee	
+function getAmountOut(amountIn: BigDecimal, reserveIn: BigDecimal, reserveOut: BigDecimal) {	
+  if (amountIn.lte(0) || reserveIn.lte(0)) {	
+    return BigDecimal(0)	
+  }	
+  const numerator = reserveOut.multipliedBy(amountIn)	
+  const denominator = reserveIn.plus(amountIn)	
+  return numerator.div(denominator)	
+}	
+
 async function blockHandler(_:any, ctx: VVSPairContext) {
   try {
   const poolInfo = await getOrCreatePool(ctx)
@@ -235,8 +301,9 @@ async function craftsmanHandler(_:any, ctx: CraftsmanContext) {
     const poolInfo = await craftsmanContract.poolInfo(i)
     const poolAddress = poolInfo.lpToken.toLowerCase()
     const allocPoint = poolInfo.allocPoint
+    const pool = await getOrCreatePoolForCraftsman(poolAddress, ctx)
     const vvsPerBlock = vvsPerBlockTotal.multipliedBy(allocPoint.asBigDecimal()).div(totalAllocPoint.asBigDecimal())
-    ctx.meter.Gauge("vvsPerBlock").record(vvsPerBlock, {id: i.toString(), pool: poolAddress, coin_symbol: "VVS"})
+    ctx.meter.Gauge("vvsPerBlock").record(vvsPerBlock, {id: i.toString(), pool: poolAddress, poolName: pool.poolName, coin_symbol: "VVS"})
   }
 } catch (e) {
   console.log(e)
@@ -352,6 +419,7 @@ for (var i = 0; i < CORE_POOLS.length; i++) {
   })
   .onEventSwap(onSwap)
   .onBlockInterval(blockHandler, 4000, 40000)
+  .onTimeInterval(priceSlippageHandler, 6*60, 6*60*10)	
 }
 
 CraftsmanProcessor.bind({address: "0xdccd6455ae04b03d785f12196b492b18129564bc", network: EthChainId.CRONOS
