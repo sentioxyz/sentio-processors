@@ -2,14 +2,14 @@ import { SuiContext } from "@sentio/sdk/sui";
 import { SuiNetwork } from "@sentio/sdk/sui";
 import {
   app,
-  borrow,
-} from "./types/sui/0xefe8b36d5b2e43728cc323298626b83177803521d195cfb11e15b910e892fddf.js";
+  borrow
+} from "./types/sui/0xefe8b36d5b2e43728cc323298626b83177803521d195cfb11e15b910e892fddf.js"
+
 
 const borrowEventHandler = async (
   event: borrow.BorrowEventInstance,
   ctx: SuiContext
 ) => {
-  console.log("entering")
   const sender = event.data_decoded.borrower;
   const obligation = event.data_decoded.obligation;
   const coinType = event.data_decoded.asset;
@@ -27,10 +27,10 @@ const borrowEventHandler = async (
   });
 }
 
-borrow.bind()
-  .onEventBorrowEvent(async (event, ctx) => {
-    console.log("entering")
-  })
+borrow.bind({
+  startCheckpoint: 750000n
+})
+  .onEventBorrowEvent(borrowEventHandler)
 
 
 
