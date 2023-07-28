@@ -1,0 +1,2617 @@
+[
+	{
+		"fileFormatVersion": 6,
+		"address": "0x779b5c547976899f5474f3a5bc0db36ddf4697ad7e5a901db0415c2281d28162",
+		"name": "ac_table",
+		"friends": [],
+		"structs": {
+			"AcTable": {
+				"abilities": {
+					"abilities": [
+						"Store",
+						"Key"
+					]
+				},
+				"typeParameters": [
+					{
+						"constraints": {
+							"abilities": [
+								"Drop"
+							]
+						},
+						"isPhantom": true
+					},
+					{
+						"constraints": {
+							"abilities": [
+								"Copy",
+								"Drop",
+								"Store"
+							]
+						},
+						"isPhantom": false
+					},
+					{
+						"constraints": {
+							"abilities": [
+								"Store"
+							]
+						},
+						"isPhantom": true
+					}
+				],
+				"fields": [
+					{
+						"name": "id",
+						"type": {
+							"Struct": {
+								"address": "0x2",
+								"module": "object",
+								"name": "UID",
+								"typeArguments": []
+							}
+						}
+					},
+					{
+						"name": "table",
+						"type": {
+							"Struct": {
+								"address": "0x2",
+								"module": "table",
+								"name": "Table",
+								"typeArguments": [
+									{
+										"TypeParameter": 1
+									},
+									{
+										"TypeParameter": 2
+									}
+								]
+							}
+						}
+					},
+					{
+						"name": "keys",
+						"type": {
+							"Struct": {
+								"address": "0x1",
+								"module": "option",
+								"name": "Option",
+								"typeArguments": [
+									{
+										"Struct": {
+											"address": "0x2",
+											"module": "vec_set",
+											"name": "VecSet",
+											"typeArguments": [
+												{
+													"TypeParameter": 1
+												}
+											]
+										}
+									}
+								]
+							}
+						}
+					},
+					{
+						"name": "with_keys",
+						"type": "Bool"
+					}
+				]
+			},
+			"AcTableCap": {
+				"abilities": {
+					"abilities": [
+						"Store",
+						"Key"
+					]
+				},
+				"typeParameters": [
+					{
+						"constraints": {
+							"abilities": []
+						},
+						"isPhantom": true
+					}
+				],
+				"fields": [
+					{
+						"name": "id",
+						"type": {
+							"Struct": {
+								"address": "0x2",
+								"module": "object",
+								"name": "UID",
+								"typeArguments": []
+							}
+						}
+					},
+					{
+						"name": "ownership",
+						"type": {
+							"Struct": {
+								"address": "0x779b5c547976899f5474f3a5bc0db36ddf4697ad7e5a901db0415c2281d28162",
+								"module": "ownership",
+								"name": "Ownership",
+								"typeArguments": [
+									{
+										"Struct": {
+											"address": "0x779b5c547976899f5474f3a5bc0db36ddf4697ad7e5a901db0415c2281d28162",
+											"module": "ac_table",
+											"name": "AcTableOwnership",
+											"typeArguments": []
+										}
+									}
+								]
+							}
+						}
+					}
+				]
+			},
+			"AcTableOwnership": {
+				"abilities": {
+					"abilities": [
+						"Drop"
+					]
+				},
+				"typeParameters": [],
+				"fields": [
+					{
+						"name": "dummy_field",
+						"type": "Bool"
+					}
+				]
+			}
+		},
+		"exposedFunctions": {
+			"add": {
+				"visibility": "Public",
+				"isEntry": false,
+				"typeParameters": [
+					{
+						"abilities": [
+							"Drop"
+						]
+					},
+					{
+						"abilities": [
+							"Copy",
+							"Drop",
+							"Store"
+						]
+					},
+					{
+						"abilities": [
+							"Store"
+						]
+					}
+				],
+				"parameters": [
+					{
+						"MutableReference": {
+							"Struct": {
+								"address": "0x779b5c547976899f5474f3a5bc0db36ddf4697ad7e5a901db0415c2281d28162",
+								"module": "ac_table",
+								"name": "AcTable",
+								"typeArguments": [
+									{
+										"TypeParameter": 0
+									},
+									{
+										"TypeParameter": 1
+									},
+									{
+										"TypeParameter": 2
+									}
+								]
+							}
+						}
+					},
+					{
+						"Reference": {
+							"Struct": {
+								"address": "0x779b5c547976899f5474f3a5bc0db36ddf4697ad7e5a901db0415c2281d28162",
+								"module": "ac_table",
+								"name": "AcTableCap",
+								"typeArguments": [
+									{
+										"TypeParameter": 0
+									}
+								]
+							}
+						}
+					},
+					{
+						"TypeParameter": 1
+					},
+					{
+						"TypeParameter": 2
+					}
+				],
+				"return": []
+			},
+			"borrow": {
+				"visibility": "Public",
+				"isEntry": false,
+				"typeParameters": [
+					{
+						"abilities": [
+							"Drop"
+						]
+					},
+					{
+						"abilities": [
+							"Copy",
+							"Drop",
+							"Store"
+						]
+					},
+					{
+						"abilities": [
+							"Store"
+						]
+					}
+				],
+				"parameters": [
+					{
+						"Reference": {
+							"Struct": {
+								"address": "0x779b5c547976899f5474f3a5bc0db36ddf4697ad7e5a901db0415c2281d28162",
+								"module": "ac_table",
+								"name": "AcTable",
+								"typeArguments": [
+									{
+										"TypeParameter": 0
+									},
+									{
+										"TypeParameter": 1
+									},
+									{
+										"TypeParameter": 2
+									}
+								]
+							}
+						}
+					},
+					{
+						"TypeParameter": 1
+					}
+				],
+				"return": [
+					{
+						"Reference": {
+							"TypeParameter": 2
+						}
+					}
+				]
+			},
+			"borrow_mut": {
+				"visibility": "Public",
+				"isEntry": false,
+				"typeParameters": [
+					{
+						"abilities": [
+							"Drop"
+						]
+					},
+					{
+						"abilities": [
+							"Copy",
+							"Drop",
+							"Store"
+						]
+					},
+					{
+						"abilities": [
+							"Store"
+						]
+					}
+				],
+				"parameters": [
+					{
+						"MutableReference": {
+							"Struct": {
+								"address": "0x779b5c547976899f5474f3a5bc0db36ddf4697ad7e5a901db0415c2281d28162",
+								"module": "ac_table",
+								"name": "AcTable",
+								"typeArguments": [
+									{
+										"TypeParameter": 0
+									},
+									{
+										"TypeParameter": 1
+									},
+									{
+										"TypeParameter": 2
+									}
+								]
+							}
+						}
+					},
+					{
+						"Reference": {
+							"Struct": {
+								"address": "0x779b5c547976899f5474f3a5bc0db36ddf4697ad7e5a901db0415c2281d28162",
+								"module": "ac_table",
+								"name": "AcTableCap",
+								"typeArguments": [
+									{
+										"TypeParameter": 0
+									}
+								]
+							}
+						}
+					},
+					{
+						"TypeParameter": 1
+					}
+				],
+				"return": [
+					{
+						"MutableReference": {
+							"TypeParameter": 2
+						}
+					}
+				]
+			},
+			"contains": {
+				"visibility": "Public",
+				"isEntry": false,
+				"typeParameters": [
+					{
+						"abilities": [
+							"Drop"
+						]
+					},
+					{
+						"abilities": [
+							"Copy",
+							"Drop",
+							"Store"
+						]
+					},
+					{
+						"abilities": [
+							"Store"
+						]
+					}
+				],
+				"parameters": [
+					{
+						"Reference": {
+							"Struct": {
+								"address": "0x779b5c547976899f5474f3a5bc0db36ddf4697ad7e5a901db0415c2281d28162",
+								"module": "ac_table",
+								"name": "AcTable",
+								"typeArguments": [
+									{
+										"TypeParameter": 0
+									},
+									{
+										"TypeParameter": 1
+									},
+									{
+										"TypeParameter": 2
+									}
+								]
+							}
+						}
+					},
+					{
+						"TypeParameter": 1
+					}
+				],
+				"return": [
+					"Bool"
+				]
+			},
+			"destroy_empty": {
+				"visibility": "Public",
+				"isEntry": false,
+				"typeParameters": [
+					{
+						"abilities": [
+							"Drop"
+						]
+					},
+					{
+						"abilities": [
+							"Copy",
+							"Drop",
+							"Store"
+						]
+					},
+					{
+						"abilities": [
+							"Store"
+						]
+					}
+				],
+				"parameters": [
+					{
+						"Struct": {
+							"address": "0x779b5c547976899f5474f3a5bc0db36ddf4697ad7e5a901db0415c2281d28162",
+							"module": "ac_table",
+							"name": "AcTable",
+							"typeArguments": [
+								{
+									"TypeParameter": 0
+								},
+								{
+									"TypeParameter": 1
+								},
+								{
+									"TypeParameter": 2
+								}
+							]
+						}
+					},
+					{
+						"Reference": {
+							"Struct": {
+								"address": "0x779b5c547976899f5474f3a5bc0db36ddf4697ad7e5a901db0415c2281d28162",
+								"module": "ac_table",
+								"name": "AcTableCap",
+								"typeArguments": [
+									{
+										"TypeParameter": 0
+									}
+								]
+							}
+						}
+					}
+				],
+				"return": []
+			},
+			"drop": {
+				"visibility": "Public",
+				"isEntry": false,
+				"typeParameters": [
+					{
+						"abilities": [
+							"Drop"
+						]
+					},
+					{
+						"abilities": [
+							"Copy",
+							"Drop",
+							"Store"
+						]
+					},
+					{
+						"abilities": [
+							"Drop",
+							"Store"
+						]
+					}
+				],
+				"parameters": [
+					{
+						"Struct": {
+							"address": "0x779b5c547976899f5474f3a5bc0db36ddf4697ad7e5a901db0415c2281d28162",
+							"module": "ac_table",
+							"name": "AcTable",
+							"typeArguments": [
+								{
+									"TypeParameter": 0
+								},
+								{
+									"TypeParameter": 1
+								},
+								{
+									"TypeParameter": 2
+								}
+							]
+						}
+					},
+					{
+						"Reference": {
+							"Struct": {
+								"address": "0x779b5c547976899f5474f3a5bc0db36ddf4697ad7e5a901db0415c2281d28162",
+								"module": "ac_table",
+								"name": "AcTableCap",
+								"typeArguments": [
+									{
+										"TypeParameter": 0
+									}
+								]
+							}
+						}
+					}
+				],
+				"return": []
+			},
+			"is_empty": {
+				"visibility": "Public",
+				"isEntry": false,
+				"typeParameters": [
+					{
+						"abilities": [
+							"Drop"
+						]
+					},
+					{
+						"abilities": [
+							"Copy",
+							"Drop",
+							"Store"
+						]
+					},
+					{
+						"abilities": [
+							"Store"
+						]
+					}
+				],
+				"parameters": [
+					{
+						"Reference": {
+							"Struct": {
+								"address": "0x779b5c547976899f5474f3a5bc0db36ddf4697ad7e5a901db0415c2281d28162",
+								"module": "ac_table",
+								"name": "AcTable",
+								"typeArguments": [
+									{
+										"TypeParameter": 0
+									},
+									{
+										"TypeParameter": 1
+									},
+									{
+										"TypeParameter": 2
+									}
+								]
+							}
+						}
+					}
+				],
+				"return": [
+					"Bool"
+				]
+			},
+			"keys": {
+				"visibility": "Public",
+				"isEntry": false,
+				"typeParameters": [
+					{
+						"abilities": [
+							"Drop"
+						]
+					},
+					{
+						"abilities": [
+							"Copy",
+							"Drop",
+							"Store"
+						]
+					},
+					{
+						"abilities": [
+							"Store"
+						]
+					}
+				],
+				"parameters": [
+					{
+						"Reference": {
+							"Struct": {
+								"address": "0x779b5c547976899f5474f3a5bc0db36ddf4697ad7e5a901db0415c2281d28162",
+								"module": "ac_table",
+								"name": "AcTable",
+								"typeArguments": [
+									{
+										"TypeParameter": 0
+									},
+									{
+										"TypeParameter": 1
+									},
+									{
+										"TypeParameter": 2
+									}
+								]
+							}
+						}
+					}
+				],
+				"return": [
+					{
+						"Vector": {
+							"TypeParameter": 1
+						}
+					}
+				]
+			},
+			"length": {
+				"visibility": "Public",
+				"isEntry": false,
+				"typeParameters": [
+					{
+						"abilities": [
+							"Drop"
+						]
+					},
+					{
+						"abilities": [
+							"Copy",
+							"Drop",
+							"Store"
+						]
+					},
+					{
+						"abilities": [
+							"Store"
+						]
+					}
+				],
+				"parameters": [
+					{
+						"Reference": {
+							"Struct": {
+								"address": "0x779b5c547976899f5474f3a5bc0db36ddf4697ad7e5a901db0415c2281d28162",
+								"module": "ac_table",
+								"name": "AcTable",
+								"typeArguments": [
+									{
+										"TypeParameter": 0
+									},
+									{
+										"TypeParameter": 1
+									},
+									{
+										"TypeParameter": 2
+									}
+								]
+							}
+						}
+					}
+				],
+				"return": [
+					"U64"
+				]
+			},
+			"new": {
+				"visibility": "Public",
+				"isEntry": false,
+				"typeParameters": [
+					{
+						"abilities": [
+							"Drop"
+						]
+					},
+					{
+						"abilities": [
+							"Copy",
+							"Drop",
+							"Store"
+						]
+					},
+					{
+						"abilities": [
+							"Store"
+						]
+					}
+				],
+				"parameters": [
+					{
+						"TypeParameter": 0
+					},
+					"Bool",
+					{
+						"MutableReference": {
+							"Struct": {
+								"address": "0x2",
+								"module": "tx_context",
+								"name": "TxContext",
+								"typeArguments": []
+							}
+						}
+					}
+				],
+				"return": [
+					{
+						"Struct": {
+							"address": "0x779b5c547976899f5474f3a5bc0db36ddf4697ad7e5a901db0415c2281d28162",
+							"module": "ac_table",
+							"name": "AcTable",
+							"typeArguments": [
+								{
+									"TypeParameter": 0
+								},
+								{
+									"TypeParameter": 1
+								},
+								{
+									"TypeParameter": 2
+								}
+							]
+						}
+					},
+					{
+						"Struct": {
+							"address": "0x779b5c547976899f5474f3a5bc0db36ddf4697ad7e5a901db0415c2281d28162",
+							"module": "ac_table",
+							"name": "AcTableCap",
+							"typeArguments": [
+								{
+									"TypeParameter": 0
+								}
+							]
+						}
+					}
+				]
+			},
+			"remove": {
+				"visibility": "Public",
+				"isEntry": false,
+				"typeParameters": [
+					{
+						"abilities": [
+							"Drop"
+						]
+					},
+					{
+						"abilities": [
+							"Copy",
+							"Drop",
+							"Store"
+						]
+					},
+					{
+						"abilities": [
+							"Store"
+						]
+					}
+				],
+				"parameters": [
+					{
+						"MutableReference": {
+							"Struct": {
+								"address": "0x779b5c547976899f5474f3a5bc0db36ddf4697ad7e5a901db0415c2281d28162",
+								"module": "ac_table",
+								"name": "AcTable",
+								"typeArguments": [
+									{
+										"TypeParameter": 0
+									},
+									{
+										"TypeParameter": 1
+									},
+									{
+										"TypeParameter": 2
+									}
+								]
+							}
+						}
+					},
+					{
+						"Reference": {
+							"Struct": {
+								"address": "0x779b5c547976899f5474f3a5bc0db36ddf4697ad7e5a901db0415c2281d28162",
+								"module": "ac_table",
+								"name": "AcTableCap",
+								"typeArguments": [
+									{
+										"TypeParameter": 0
+									}
+								]
+							}
+						}
+					},
+					{
+						"TypeParameter": 1
+					}
+				],
+				"return": [
+					{
+						"TypeParameter": 2
+					}
+				]
+			}
+		}
+	},
+	{
+		"fileFormatVersion": 6,
+		"address": "0x779b5c547976899f5474f3a5bc0db36ddf4697ad7e5a901db0415c2281d28162",
+		"name": "balance_bag",
+		"friends": [],
+		"structs": {
+			"BalanceBag": {
+				"abilities": {
+					"abilities": [
+						"Store"
+					]
+				},
+				"typeParameters": [],
+				"fields": [
+					{
+						"name": "id",
+						"type": {
+							"Struct": {
+								"address": "0x2",
+								"module": "object",
+								"name": "UID",
+								"typeArguments": []
+							}
+						}
+					},
+					{
+						"name": "bag",
+						"type": {
+							"Struct": {
+								"address": "0x2",
+								"module": "bag",
+								"name": "Bag",
+								"typeArguments": []
+							}
+						}
+					}
+				]
+			}
+		},
+		"exposedFunctions": {
+			"bag": {
+				"visibility": "Public",
+				"isEntry": false,
+				"typeParameters": [],
+				"parameters": [
+					{
+						"Reference": {
+							"Struct": {
+								"address": "0x779b5c547976899f5474f3a5bc0db36ddf4697ad7e5a901db0415c2281d28162",
+								"module": "balance_bag",
+								"name": "BalanceBag",
+								"typeArguments": []
+							}
+						}
+					}
+				],
+				"return": [
+					{
+						"Reference": {
+							"Struct": {
+								"address": "0x2",
+								"module": "bag",
+								"name": "Bag",
+								"typeArguments": []
+							}
+						}
+					}
+				]
+			},
+			"contains": {
+				"visibility": "Public",
+				"isEntry": false,
+				"typeParameters": [
+					{
+						"abilities": []
+					}
+				],
+				"parameters": [
+					{
+						"Reference": {
+							"Struct": {
+								"address": "0x779b5c547976899f5474f3a5bc0db36ddf4697ad7e5a901db0415c2281d28162",
+								"module": "balance_bag",
+								"name": "BalanceBag",
+								"typeArguments": []
+							}
+						}
+					}
+				],
+				"return": [
+					"Bool"
+				]
+			},
+			"destroy_empty": {
+				"visibility": "Public",
+				"isEntry": false,
+				"typeParameters": [],
+				"parameters": [
+					{
+						"Struct": {
+							"address": "0x779b5c547976899f5474f3a5bc0db36ddf4697ad7e5a901db0415c2281d28162",
+							"module": "balance_bag",
+							"name": "BalanceBag",
+							"typeArguments": []
+						}
+					}
+				],
+				"return": []
+			},
+			"init_balance": {
+				"visibility": "Public",
+				"isEntry": false,
+				"typeParameters": [
+					{
+						"abilities": []
+					}
+				],
+				"parameters": [
+					{
+						"MutableReference": {
+							"Struct": {
+								"address": "0x779b5c547976899f5474f3a5bc0db36ddf4697ad7e5a901db0415c2281d28162",
+								"module": "balance_bag",
+								"name": "BalanceBag",
+								"typeArguments": []
+							}
+						}
+					}
+				],
+				"return": []
+			},
+			"join": {
+				"visibility": "Public",
+				"isEntry": false,
+				"typeParameters": [
+					{
+						"abilities": []
+					}
+				],
+				"parameters": [
+					{
+						"MutableReference": {
+							"Struct": {
+								"address": "0x779b5c547976899f5474f3a5bc0db36ddf4697ad7e5a901db0415c2281d28162",
+								"module": "balance_bag",
+								"name": "BalanceBag",
+								"typeArguments": []
+							}
+						}
+					},
+					{
+						"Struct": {
+							"address": "0x2",
+							"module": "balance",
+							"name": "Balance",
+							"typeArguments": [
+								{
+									"TypeParameter": 0
+								}
+							]
+						}
+					}
+				],
+				"return": []
+			},
+			"new": {
+				"visibility": "Public",
+				"isEntry": false,
+				"typeParameters": [],
+				"parameters": [
+					{
+						"MutableReference": {
+							"Struct": {
+								"address": "0x2",
+								"module": "tx_context",
+								"name": "TxContext",
+								"typeArguments": []
+							}
+						}
+					}
+				],
+				"return": [
+					{
+						"Struct": {
+							"address": "0x779b5c547976899f5474f3a5bc0db36ddf4697ad7e5a901db0415c2281d28162",
+							"module": "balance_bag",
+							"name": "BalanceBag",
+							"typeArguments": []
+						}
+					}
+				]
+			},
+			"split": {
+				"visibility": "Public",
+				"isEntry": false,
+				"typeParameters": [
+					{
+						"abilities": []
+					}
+				],
+				"parameters": [
+					{
+						"MutableReference": {
+							"Struct": {
+								"address": "0x779b5c547976899f5474f3a5bc0db36ddf4697ad7e5a901db0415c2281d28162",
+								"module": "balance_bag",
+								"name": "BalanceBag",
+								"typeArguments": []
+							}
+						}
+					},
+					"U64"
+				],
+				"return": [
+					{
+						"Struct": {
+							"address": "0x2",
+							"module": "balance",
+							"name": "Balance",
+							"typeArguments": [
+								{
+									"TypeParameter": 0
+								}
+							]
+						}
+					}
+				]
+			},
+			"value": {
+				"visibility": "Public",
+				"isEntry": false,
+				"typeParameters": [
+					{
+						"abilities": []
+					}
+				],
+				"parameters": [
+					{
+						"Reference": {
+							"Struct": {
+								"address": "0x779b5c547976899f5474f3a5bc0db36ddf4697ad7e5a901db0415c2281d28162",
+								"module": "balance_bag",
+								"name": "BalanceBag",
+								"typeArguments": []
+							}
+						}
+					}
+				],
+				"return": [
+					"U64"
+				]
+			}
+		}
+	},
+	{
+		"fileFormatVersion": 6,
+		"address": "0x779b5c547976899f5474f3a5bc0db36ddf4697ad7e5a901db0415c2281d28162",
+		"name": "one_time_lock_value",
+		"friends": [],
+		"structs": {
+			"OneTimeLockValue": {
+				"abilities": {
+					"abilities": [
+						"Store",
+						"Key"
+					]
+				},
+				"typeParameters": [
+					{
+						"constraints": {
+							"abilities": [
+								"Copy",
+								"Drop",
+								"Store"
+							]
+						},
+						"isPhantom": false
+					}
+				],
+				"fields": [
+					{
+						"name": "id",
+						"type": {
+							"Struct": {
+								"address": "0x2",
+								"module": "object",
+								"name": "UID",
+								"typeArguments": []
+							}
+						}
+					},
+					{
+						"name": "value",
+						"type": {
+							"TypeParameter": 0
+						}
+					},
+					{
+						"name": "lock_until_epoch",
+						"type": "U64"
+					},
+					{
+						"name": "valid_before_epoch",
+						"type": "U64"
+					}
+				]
+			}
+		},
+		"exposedFunctions": {
+			"destroy": {
+				"visibility": "Public",
+				"isEntry": false,
+				"typeParameters": [
+					{
+						"abilities": [
+							"Copy",
+							"Drop",
+							"Store"
+						]
+					}
+				],
+				"parameters": [
+					{
+						"Struct": {
+							"address": "0x779b5c547976899f5474f3a5bc0db36ddf4697ad7e5a901db0415c2281d28162",
+							"module": "one_time_lock_value",
+							"name": "OneTimeLockValue",
+							"typeArguments": [
+								{
+									"TypeParameter": 0
+								}
+							]
+						}
+					},
+					{
+						"MutableReference": {
+							"Struct": {
+								"address": "0x2",
+								"module": "tx_context",
+								"name": "TxContext",
+								"typeArguments": []
+							}
+						}
+					}
+				],
+				"return": []
+			},
+			"get_value": {
+				"visibility": "Public",
+				"isEntry": false,
+				"typeParameters": [
+					{
+						"abilities": [
+							"Copy",
+							"Drop",
+							"Store"
+						]
+					}
+				],
+				"parameters": [
+					{
+						"Struct": {
+							"address": "0x779b5c547976899f5474f3a5bc0db36ddf4697ad7e5a901db0415c2281d28162",
+							"module": "one_time_lock_value",
+							"name": "OneTimeLockValue",
+							"typeArguments": [
+								{
+									"TypeParameter": 0
+								}
+							]
+						}
+					},
+					{
+						"MutableReference": {
+							"Struct": {
+								"address": "0x2",
+								"module": "tx_context",
+								"name": "TxContext",
+								"typeArguments": []
+							}
+						}
+					}
+				],
+				"return": [
+					{
+						"TypeParameter": 0
+					}
+				]
+			},
+			"lock_until_epoch": {
+				"visibility": "Public",
+				"isEntry": false,
+				"typeParameters": [
+					{
+						"abilities": [
+							"Copy",
+							"Drop",
+							"Store"
+						]
+					}
+				],
+				"parameters": [
+					{
+						"Reference": {
+							"Struct": {
+								"address": "0x779b5c547976899f5474f3a5bc0db36ddf4697ad7e5a901db0415c2281d28162",
+								"module": "one_time_lock_value",
+								"name": "OneTimeLockValue",
+								"typeArguments": [
+									{
+										"TypeParameter": 0
+									}
+								]
+							}
+						}
+					}
+				],
+				"return": [
+					"U64"
+				]
+			},
+			"new": {
+				"visibility": "Public",
+				"isEntry": false,
+				"typeParameters": [
+					{
+						"abilities": [
+							"Copy",
+							"Drop",
+							"Store"
+						]
+					}
+				],
+				"parameters": [
+					{
+						"TypeParameter": 0
+					},
+					"U64",
+					"U64",
+					{
+						"MutableReference": {
+							"Struct": {
+								"address": "0x2",
+								"module": "tx_context",
+								"name": "TxContext",
+								"typeArguments": []
+							}
+						}
+					}
+				],
+				"return": [
+					{
+						"Struct": {
+							"address": "0x779b5c547976899f5474f3a5bc0db36ddf4697ad7e5a901db0415c2281d28162",
+							"module": "one_time_lock_value",
+							"name": "OneTimeLockValue",
+							"typeArguments": [
+								{
+									"TypeParameter": 0
+								}
+							]
+						}
+					}
+				]
+			},
+			"valid_before_epoch": {
+				"visibility": "Public",
+				"isEntry": false,
+				"typeParameters": [
+					{
+						"abilities": [
+							"Copy",
+							"Drop",
+							"Store"
+						]
+					}
+				],
+				"parameters": [
+					{
+						"Reference": {
+							"Struct": {
+								"address": "0x779b5c547976899f5474f3a5bc0db36ddf4697ad7e5a901db0415c2281d28162",
+								"module": "one_time_lock_value",
+								"name": "OneTimeLockValue",
+								"typeArguments": [
+									{
+										"TypeParameter": 0
+									}
+								]
+							}
+						}
+					}
+				],
+				"return": [
+					"U64"
+				]
+			}
+		}
+	},
+	{
+		"fileFormatVersion": 6,
+		"address": "0x779b5c547976899f5474f3a5bc0db36ddf4697ad7e5a901db0415c2281d28162",
+		"name": "ownership",
+		"friends": [],
+		"structs": {
+			"Ownership": {
+				"abilities": {
+					"abilities": [
+						"Store",
+						"Key"
+					]
+				},
+				"typeParameters": [
+					{
+						"constraints": {
+							"abilities": [
+								"Drop"
+							]
+						},
+						"isPhantom": true
+					}
+				],
+				"fields": [
+					{
+						"name": "id",
+						"type": {
+							"Struct": {
+								"address": "0x2",
+								"module": "object",
+								"name": "UID",
+								"typeArguments": []
+							}
+						}
+					},
+					{
+						"name": "of",
+						"type": {
+							"Struct": {
+								"address": "0x2",
+								"module": "object",
+								"name": "ID",
+								"typeArguments": []
+							}
+						}
+					}
+				]
+			}
+		},
+		"exposedFunctions": {
+			"assert_owner": {
+				"visibility": "Public",
+				"isEntry": false,
+				"typeParameters": [
+					{
+						"abilities": [
+							"Drop"
+						]
+					},
+					{
+						"abilities": [
+							"Key"
+						]
+					}
+				],
+				"parameters": [
+					{
+						"Reference": {
+							"Struct": {
+								"address": "0x779b5c547976899f5474f3a5bc0db36ddf4697ad7e5a901db0415c2281d28162",
+								"module": "ownership",
+								"name": "Ownership",
+								"typeArguments": [
+									{
+										"TypeParameter": 0
+									}
+								]
+							}
+						}
+					},
+					{
+						"Reference": {
+							"TypeParameter": 1
+						}
+					}
+				],
+				"return": []
+			},
+			"create_ownership": {
+				"visibility": "Public",
+				"isEntry": false,
+				"typeParameters": [
+					{
+						"abilities": [
+							"Drop"
+						]
+					}
+				],
+				"parameters": [
+					{
+						"TypeParameter": 0
+					},
+					{
+						"Struct": {
+							"address": "0x2",
+							"module": "object",
+							"name": "ID",
+							"typeArguments": []
+						}
+					},
+					{
+						"MutableReference": {
+							"Struct": {
+								"address": "0x2",
+								"module": "tx_context",
+								"name": "TxContext",
+								"typeArguments": []
+							}
+						}
+					}
+				],
+				"return": [
+					{
+						"Struct": {
+							"address": "0x779b5c547976899f5474f3a5bc0db36ddf4697ad7e5a901db0415c2281d28162",
+							"module": "ownership",
+							"name": "Ownership",
+							"typeArguments": [
+								{
+									"TypeParameter": 0
+								}
+							]
+						}
+					}
+				]
+			},
+			"is_owner": {
+				"visibility": "Public",
+				"isEntry": false,
+				"typeParameters": [
+					{
+						"abilities": [
+							"Drop"
+						]
+					},
+					{
+						"abilities": [
+							"Key"
+						]
+					}
+				],
+				"parameters": [
+					{
+						"Reference": {
+							"Struct": {
+								"address": "0x779b5c547976899f5474f3a5bc0db36ddf4697ad7e5a901db0415c2281d28162",
+								"module": "ownership",
+								"name": "Ownership",
+								"typeArguments": [
+									{
+										"TypeParameter": 0
+									}
+								]
+							}
+						}
+					},
+					{
+						"Reference": {
+							"TypeParameter": 1
+						}
+					}
+				],
+				"return": [
+					"Bool"
+				]
+			}
+		}
+	},
+	{
+		"fileFormatVersion": 6,
+		"address": "0x779b5c547976899f5474f3a5bc0db36ddf4697ad7e5a901db0415c2281d28162",
+		"name": "supply_bag",
+		"friends": [],
+		"structs": {
+			"SupplyBag": {
+				"abilities": {
+					"abilities": [
+						"Store"
+					]
+				},
+				"typeParameters": [],
+				"fields": [
+					{
+						"name": "id",
+						"type": {
+							"Struct": {
+								"address": "0x2",
+								"module": "object",
+								"name": "UID",
+								"typeArguments": []
+							}
+						}
+					},
+					{
+						"name": "bag",
+						"type": {
+							"Struct": {
+								"address": "0x2",
+								"module": "bag",
+								"name": "Bag",
+								"typeArguments": []
+							}
+						}
+					}
+				]
+			}
+		},
+		"exposedFunctions": {
+			"bag": {
+				"visibility": "Public",
+				"isEntry": false,
+				"typeParameters": [],
+				"parameters": [
+					{
+						"Reference": {
+							"Struct": {
+								"address": "0x779b5c547976899f5474f3a5bc0db36ddf4697ad7e5a901db0415c2281d28162",
+								"module": "supply_bag",
+								"name": "SupplyBag",
+								"typeArguments": []
+							}
+						}
+					}
+				],
+				"return": [
+					{
+						"Reference": {
+							"Struct": {
+								"address": "0x2",
+								"module": "bag",
+								"name": "Bag",
+								"typeArguments": []
+							}
+						}
+					}
+				]
+			},
+			"contains": {
+				"visibility": "Public",
+				"isEntry": false,
+				"typeParameters": [
+					{
+						"abilities": []
+					}
+				],
+				"parameters": [
+					{
+						"Reference": {
+							"Struct": {
+								"address": "0x779b5c547976899f5474f3a5bc0db36ddf4697ad7e5a901db0415c2281d28162",
+								"module": "supply_bag",
+								"name": "SupplyBag",
+								"typeArguments": []
+							}
+						}
+					}
+				],
+				"return": [
+					"Bool"
+				]
+			},
+			"decrease_supply": {
+				"visibility": "Public",
+				"isEntry": false,
+				"typeParameters": [
+					{
+						"abilities": []
+					}
+				],
+				"parameters": [
+					{
+						"MutableReference": {
+							"Struct": {
+								"address": "0x779b5c547976899f5474f3a5bc0db36ddf4697ad7e5a901db0415c2281d28162",
+								"module": "supply_bag",
+								"name": "SupplyBag",
+								"typeArguments": []
+							}
+						}
+					},
+					{
+						"Struct": {
+							"address": "0x2",
+							"module": "balance",
+							"name": "Balance",
+							"typeArguments": [
+								{
+									"TypeParameter": 0
+								}
+							]
+						}
+					}
+				],
+				"return": [
+					"U64"
+				]
+			},
+			"destroy_empty": {
+				"visibility": "Public",
+				"isEntry": false,
+				"typeParameters": [],
+				"parameters": [
+					{
+						"Struct": {
+							"address": "0x779b5c547976899f5474f3a5bc0db36ddf4697ad7e5a901db0415c2281d28162",
+							"module": "supply_bag",
+							"name": "SupplyBag",
+							"typeArguments": []
+						}
+					}
+				],
+				"return": []
+			},
+			"increase_supply": {
+				"visibility": "Public",
+				"isEntry": false,
+				"typeParameters": [
+					{
+						"abilities": []
+					}
+				],
+				"parameters": [
+					{
+						"MutableReference": {
+							"Struct": {
+								"address": "0x779b5c547976899f5474f3a5bc0db36ddf4697ad7e5a901db0415c2281d28162",
+								"module": "supply_bag",
+								"name": "SupplyBag",
+								"typeArguments": []
+							}
+						}
+					},
+					"U64"
+				],
+				"return": [
+					{
+						"Struct": {
+							"address": "0x2",
+							"module": "balance",
+							"name": "Balance",
+							"typeArguments": [
+								{
+									"TypeParameter": 0
+								}
+							]
+						}
+					}
+				]
+			},
+			"init_supply": {
+				"visibility": "Public",
+				"isEntry": false,
+				"typeParameters": [
+					{
+						"abilities": [
+							"Drop"
+						]
+					}
+				],
+				"parameters": [
+					{
+						"TypeParameter": 0
+					},
+					{
+						"MutableReference": {
+							"Struct": {
+								"address": "0x779b5c547976899f5474f3a5bc0db36ddf4697ad7e5a901db0415c2281d28162",
+								"module": "supply_bag",
+								"name": "SupplyBag",
+								"typeArguments": []
+							}
+						}
+					}
+				],
+				"return": []
+			},
+			"new": {
+				"visibility": "Public",
+				"isEntry": false,
+				"typeParameters": [],
+				"parameters": [
+					{
+						"MutableReference": {
+							"Struct": {
+								"address": "0x2",
+								"module": "tx_context",
+								"name": "TxContext",
+								"typeArguments": []
+							}
+						}
+					}
+				],
+				"return": [
+					{
+						"Struct": {
+							"address": "0x779b5c547976899f5474f3a5bc0db36ddf4697ad7e5a901db0415c2281d28162",
+							"module": "supply_bag",
+							"name": "SupplyBag",
+							"typeArguments": []
+						}
+					}
+				]
+			},
+			"supply_value": {
+				"visibility": "Public",
+				"isEntry": false,
+				"typeParameters": [
+					{
+						"abilities": []
+					}
+				],
+				"parameters": [
+					{
+						"Reference": {
+							"Struct": {
+								"address": "0x779b5c547976899f5474f3a5bc0db36ddf4697ad7e5a901db0415c2281d28162",
+								"module": "supply_bag",
+								"name": "SupplyBag",
+								"typeArguments": []
+							}
+						}
+					}
+				],
+				"return": [
+					"U64"
+				]
+			}
+		}
+	},
+	{
+		"fileFormatVersion": 6,
+		"address": "0x779b5c547976899f5474f3a5bc0db36ddf4697ad7e5a901db0415c2281d28162",
+		"name": "wit_table",
+		"friends": [],
+		"structs": {
+			"WitTable": {
+				"abilities": {
+					"abilities": [
+						"Store",
+						"Key"
+					]
+				},
+				"typeParameters": [
+					{
+						"constraints": {
+							"abilities": [
+								"Drop"
+							]
+						},
+						"isPhantom": true
+					},
+					{
+						"constraints": {
+							"abilities": [
+								"Copy",
+								"Drop",
+								"Store"
+							]
+						},
+						"isPhantom": false
+					},
+					{
+						"constraints": {
+							"abilities": [
+								"Store"
+							]
+						},
+						"isPhantom": true
+					}
+				],
+				"fields": [
+					{
+						"name": "id",
+						"type": {
+							"Struct": {
+								"address": "0x2",
+								"module": "object",
+								"name": "UID",
+								"typeArguments": []
+							}
+						}
+					},
+					{
+						"name": "table",
+						"type": {
+							"Struct": {
+								"address": "0x2",
+								"module": "table",
+								"name": "Table",
+								"typeArguments": [
+									{
+										"TypeParameter": 1
+									},
+									{
+										"TypeParameter": 2
+									}
+								]
+							}
+						}
+					},
+					{
+						"name": "keys",
+						"type": {
+							"Struct": {
+								"address": "0x1",
+								"module": "option",
+								"name": "Option",
+								"typeArguments": [
+									{
+										"Struct": {
+											"address": "0x2",
+											"module": "vec_set",
+											"name": "VecSet",
+											"typeArguments": [
+												{
+													"TypeParameter": 1
+												}
+											]
+										}
+									}
+								]
+							}
+						}
+					},
+					{
+						"name": "with_keys",
+						"type": "Bool"
+					}
+				]
+			}
+		},
+		"exposedFunctions": {
+			"add": {
+				"visibility": "Public",
+				"isEntry": false,
+				"typeParameters": [
+					{
+						"abilities": [
+							"Drop"
+						]
+					},
+					{
+						"abilities": [
+							"Copy",
+							"Drop",
+							"Store"
+						]
+					},
+					{
+						"abilities": [
+							"Store"
+						]
+					}
+				],
+				"parameters": [
+					{
+						"TypeParameter": 0
+					},
+					{
+						"MutableReference": {
+							"Struct": {
+								"address": "0x779b5c547976899f5474f3a5bc0db36ddf4697ad7e5a901db0415c2281d28162",
+								"module": "wit_table",
+								"name": "WitTable",
+								"typeArguments": [
+									{
+										"TypeParameter": 0
+									},
+									{
+										"TypeParameter": 1
+									},
+									{
+										"TypeParameter": 2
+									}
+								]
+							}
+						}
+					},
+					{
+						"TypeParameter": 1
+					},
+					{
+						"TypeParameter": 2
+					}
+				],
+				"return": []
+			},
+			"borrow": {
+				"visibility": "Public",
+				"isEntry": false,
+				"typeParameters": [
+					{
+						"abilities": [
+							"Drop"
+						]
+					},
+					{
+						"abilities": [
+							"Copy",
+							"Drop",
+							"Store"
+						]
+					},
+					{
+						"abilities": [
+							"Store"
+						]
+					}
+				],
+				"parameters": [
+					{
+						"Reference": {
+							"Struct": {
+								"address": "0x779b5c547976899f5474f3a5bc0db36ddf4697ad7e5a901db0415c2281d28162",
+								"module": "wit_table",
+								"name": "WitTable",
+								"typeArguments": [
+									{
+										"TypeParameter": 0
+									},
+									{
+										"TypeParameter": 1
+									},
+									{
+										"TypeParameter": 2
+									}
+								]
+							}
+						}
+					},
+					{
+						"TypeParameter": 1
+					}
+				],
+				"return": [
+					{
+						"Reference": {
+							"TypeParameter": 2
+						}
+					}
+				]
+			},
+			"borrow_mut": {
+				"visibility": "Public",
+				"isEntry": false,
+				"typeParameters": [
+					{
+						"abilities": [
+							"Drop"
+						]
+					},
+					{
+						"abilities": [
+							"Copy",
+							"Drop",
+							"Store"
+						]
+					},
+					{
+						"abilities": [
+							"Store"
+						]
+					}
+				],
+				"parameters": [
+					{
+						"TypeParameter": 0
+					},
+					{
+						"MutableReference": {
+							"Struct": {
+								"address": "0x779b5c547976899f5474f3a5bc0db36ddf4697ad7e5a901db0415c2281d28162",
+								"module": "wit_table",
+								"name": "WitTable",
+								"typeArguments": [
+									{
+										"TypeParameter": 0
+									},
+									{
+										"TypeParameter": 1
+									},
+									{
+										"TypeParameter": 2
+									}
+								]
+							}
+						}
+					},
+					{
+						"TypeParameter": 1
+					}
+				],
+				"return": [
+					{
+						"MutableReference": {
+							"TypeParameter": 2
+						}
+					}
+				]
+			},
+			"contains": {
+				"visibility": "Public",
+				"isEntry": false,
+				"typeParameters": [
+					{
+						"abilities": [
+							"Drop"
+						]
+					},
+					{
+						"abilities": [
+							"Copy",
+							"Drop",
+							"Store"
+						]
+					},
+					{
+						"abilities": [
+							"Store"
+						]
+					}
+				],
+				"parameters": [
+					{
+						"Reference": {
+							"Struct": {
+								"address": "0x779b5c547976899f5474f3a5bc0db36ddf4697ad7e5a901db0415c2281d28162",
+								"module": "wit_table",
+								"name": "WitTable",
+								"typeArguments": [
+									{
+										"TypeParameter": 0
+									},
+									{
+										"TypeParameter": 1
+									},
+									{
+										"TypeParameter": 2
+									}
+								]
+							}
+						}
+					},
+					{
+						"TypeParameter": 1
+					}
+				],
+				"return": [
+					"Bool"
+				]
+			},
+			"destroy_empty": {
+				"visibility": "Public",
+				"isEntry": false,
+				"typeParameters": [
+					{
+						"abilities": [
+							"Drop"
+						]
+					},
+					{
+						"abilities": [
+							"Copy",
+							"Drop",
+							"Store"
+						]
+					},
+					{
+						"abilities": [
+							"Store"
+						]
+					}
+				],
+				"parameters": [
+					{
+						"TypeParameter": 0
+					},
+					{
+						"Struct": {
+							"address": "0x779b5c547976899f5474f3a5bc0db36ddf4697ad7e5a901db0415c2281d28162",
+							"module": "wit_table",
+							"name": "WitTable",
+							"typeArguments": [
+								{
+									"TypeParameter": 0
+								},
+								{
+									"TypeParameter": 1
+								},
+								{
+									"TypeParameter": 2
+								}
+							]
+						}
+					}
+				],
+				"return": []
+			},
+			"drop": {
+				"visibility": "Public",
+				"isEntry": false,
+				"typeParameters": [
+					{
+						"abilities": [
+							"Drop"
+						]
+					},
+					{
+						"abilities": [
+							"Copy",
+							"Drop",
+							"Store"
+						]
+					},
+					{
+						"abilities": [
+							"Drop",
+							"Store"
+						]
+					}
+				],
+				"parameters": [
+					{
+						"TypeParameter": 0
+					},
+					{
+						"Struct": {
+							"address": "0x779b5c547976899f5474f3a5bc0db36ddf4697ad7e5a901db0415c2281d28162",
+							"module": "wit_table",
+							"name": "WitTable",
+							"typeArguments": [
+								{
+									"TypeParameter": 0
+								},
+								{
+									"TypeParameter": 1
+								},
+								{
+									"TypeParameter": 2
+								}
+							]
+						}
+					}
+				],
+				"return": []
+			},
+			"is_empty": {
+				"visibility": "Public",
+				"isEntry": false,
+				"typeParameters": [
+					{
+						"abilities": [
+							"Drop"
+						]
+					},
+					{
+						"abilities": [
+							"Copy",
+							"Drop",
+							"Store"
+						]
+					},
+					{
+						"abilities": [
+							"Store"
+						]
+					}
+				],
+				"parameters": [
+					{
+						"Reference": {
+							"Struct": {
+								"address": "0x779b5c547976899f5474f3a5bc0db36ddf4697ad7e5a901db0415c2281d28162",
+								"module": "wit_table",
+								"name": "WitTable",
+								"typeArguments": [
+									{
+										"TypeParameter": 0
+									},
+									{
+										"TypeParameter": 1
+									},
+									{
+										"TypeParameter": 2
+									}
+								]
+							}
+						}
+					}
+				],
+				"return": [
+					"Bool"
+				]
+			},
+			"keys": {
+				"visibility": "Public",
+				"isEntry": false,
+				"typeParameters": [
+					{
+						"abilities": [
+							"Drop"
+						]
+					},
+					{
+						"abilities": [
+							"Copy",
+							"Drop",
+							"Store"
+						]
+					},
+					{
+						"abilities": [
+							"Store"
+						]
+					}
+				],
+				"parameters": [
+					{
+						"Reference": {
+							"Struct": {
+								"address": "0x779b5c547976899f5474f3a5bc0db36ddf4697ad7e5a901db0415c2281d28162",
+								"module": "wit_table",
+								"name": "WitTable",
+								"typeArguments": [
+									{
+										"TypeParameter": 0
+									},
+									{
+										"TypeParameter": 1
+									},
+									{
+										"TypeParameter": 2
+									}
+								]
+							}
+						}
+					}
+				],
+				"return": [
+					{
+						"Vector": {
+							"TypeParameter": 1
+						}
+					}
+				]
+			},
+			"length": {
+				"visibility": "Public",
+				"isEntry": false,
+				"typeParameters": [
+					{
+						"abilities": [
+							"Drop"
+						]
+					},
+					{
+						"abilities": [
+							"Copy",
+							"Drop",
+							"Store"
+						]
+					},
+					{
+						"abilities": [
+							"Store"
+						]
+					}
+				],
+				"parameters": [
+					{
+						"Reference": {
+							"Struct": {
+								"address": "0x779b5c547976899f5474f3a5bc0db36ddf4697ad7e5a901db0415c2281d28162",
+								"module": "wit_table",
+								"name": "WitTable",
+								"typeArguments": [
+									{
+										"TypeParameter": 0
+									},
+									{
+										"TypeParameter": 1
+									},
+									{
+										"TypeParameter": 2
+									}
+								]
+							}
+						}
+					}
+				],
+				"return": [
+					"U64"
+				]
+			},
+			"new": {
+				"visibility": "Public",
+				"isEntry": false,
+				"typeParameters": [
+					{
+						"abilities": [
+							"Drop"
+						]
+					},
+					{
+						"abilities": [
+							"Copy",
+							"Drop",
+							"Store"
+						]
+					},
+					{
+						"abilities": [
+							"Store"
+						]
+					}
+				],
+				"parameters": [
+					{
+						"TypeParameter": 0
+					},
+					"Bool",
+					{
+						"MutableReference": {
+							"Struct": {
+								"address": "0x2",
+								"module": "tx_context",
+								"name": "TxContext",
+								"typeArguments": []
+							}
+						}
+					}
+				],
+				"return": [
+					{
+						"Struct": {
+							"address": "0x779b5c547976899f5474f3a5bc0db36ddf4697ad7e5a901db0415c2281d28162",
+							"module": "wit_table",
+							"name": "WitTable",
+							"typeArguments": [
+								{
+									"TypeParameter": 0
+								},
+								{
+									"TypeParameter": 1
+								},
+								{
+									"TypeParameter": 2
+								}
+							]
+						}
+					}
+				]
+			},
+			"remove": {
+				"visibility": "Public",
+				"isEntry": false,
+				"typeParameters": [
+					{
+						"abilities": [
+							"Drop"
+						]
+					},
+					{
+						"abilities": [
+							"Copy",
+							"Drop",
+							"Store"
+						]
+					},
+					{
+						"abilities": [
+							"Store"
+						]
+					}
+				],
+				"parameters": [
+					{
+						"TypeParameter": 0
+					},
+					{
+						"MutableReference": {
+							"Struct": {
+								"address": "0x779b5c547976899f5474f3a5bc0db36ddf4697ad7e5a901db0415c2281d28162",
+								"module": "wit_table",
+								"name": "WitTable",
+								"typeArguments": [
+									{
+										"TypeParameter": 0
+									},
+									{
+										"TypeParameter": 1
+									},
+									{
+										"TypeParameter": 2
+									}
+								]
+							}
+						}
+					},
+					{
+						"TypeParameter": 1
+					}
+				],
+				"return": [
+					{
+						"TypeParameter": 2
+					}
+				]
+			}
+		}
+	},
+	{
+		"fileFormatVersion": 6,
+		"address": "0x779b5c547976899f5474f3a5bc0db36ddf4697ad7e5a901db0415c2281d28162",
+		"name": "witness",
+		"friends": [],
+		"structs": {
+			"Witness": {
+				"abilities": {
+					"abilities": [
+						"Drop"
+					]
+				},
+				"typeParameters": [
+					{
+						"constraints": {
+							"abilities": []
+						},
+						"isPhantom": true
+					}
+				],
+				"fields": [
+					{
+						"name": "dummy_field",
+						"type": "Bool"
+					}
+				]
+			},
+			"WitnessGenerator": {
+				"abilities": {
+					"abilities": [
+						"Store"
+					]
+				},
+				"typeParameters": [
+					{
+						"constraints": {
+							"abilities": []
+						},
+						"isPhantom": true
+					}
+				],
+				"fields": [
+					{
+						"name": "dummy_field",
+						"type": "Bool"
+					}
+				]
+			}
+		},
+		"exposedFunctions": {
+			"assert_publisher": {
+				"visibility": "Public",
+				"isEntry": false,
+				"typeParameters": [
+					{
+						"abilities": []
+					}
+				],
+				"parameters": [
+					{
+						"Reference": {
+							"Struct": {
+								"address": "0x2",
+								"module": "package",
+								"name": "Publisher",
+								"typeArguments": []
+							}
+						}
+					}
+				],
+				"return": []
+			},
+			"from_generator": {
+				"visibility": "Public",
+				"isEntry": false,
+				"typeParameters": [
+					{
+						"abilities": []
+					}
+				],
+				"parameters": [
+					{
+						"Struct": {
+							"address": "0x779b5c547976899f5474f3a5bc0db36ddf4697ad7e5a901db0415c2281d28162",
+							"module": "witness",
+							"name": "WitnessGenerator",
+							"typeArguments": [
+								{
+									"TypeParameter": 0
+								}
+							]
+						}
+					}
+				],
+				"return": [
+					{
+						"Struct": {
+							"address": "0x779b5c547976899f5474f3a5bc0db36ddf4697ad7e5a901db0415c2281d28162",
+							"module": "witness",
+							"name": "Witness",
+							"typeArguments": [
+								{
+									"TypeParameter": 0
+								}
+							]
+						}
+					}
+				]
+			},
+			"from_publisher": {
+				"visibility": "Public",
+				"isEntry": false,
+				"typeParameters": [
+					{
+						"abilities": []
+					}
+				],
+				"parameters": [
+					{
+						"Reference": {
+							"Struct": {
+								"address": "0x2",
+								"module": "package",
+								"name": "Publisher",
+								"typeArguments": []
+							}
+						}
+					}
+				],
+				"return": [
+					{
+						"Struct": {
+							"address": "0x779b5c547976899f5474f3a5bc0db36ddf4697ad7e5a901db0415c2281d28162",
+							"module": "witness",
+							"name": "Witness",
+							"typeArguments": [
+								{
+									"TypeParameter": 0
+								}
+							]
+						}
+					}
+				]
+			},
+			"to_generator": {
+				"visibility": "Public",
+				"isEntry": false,
+				"typeParameters": [
+					{
+						"abilities": []
+					}
+				],
+				"parameters": [
+					{
+						"Struct": {
+							"address": "0x779b5c547976899f5474f3a5bc0db36ddf4697ad7e5a901db0415c2281d28162",
+							"module": "witness",
+							"name": "Witness",
+							"typeArguments": [
+								{
+									"TypeParameter": 0
+								}
+							]
+						}
+					}
+				],
+				"return": [
+					{
+						"Struct": {
+							"address": "0x779b5c547976899f5474f3a5bc0db36ddf4697ad7e5a901db0415c2281d28162",
+							"module": "witness",
+							"name": "WitnessGenerator",
+							"typeArguments": [
+								{
+									"TypeParameter": 0
+								}
+							]
+						}
+					}
+				]
+			}
+		}
+	}
+]

@@ -30,5 +30,4 @@ export const NFT_COLLECTIONS = [
     "0xb985fb61c0ba04407165366342937218eb0d3ad2",
     "0x4b8a8091889e00bac5f411de026f5a17fbae1e49",
     "0x1a7b46c660603ebb5fbe3ae51e80ad21df00bdd1",
-    "0xa9d89db621ce93102c1e8a7ae6261023b1258361",
 ]
