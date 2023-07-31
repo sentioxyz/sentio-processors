@@ -33,6 +33,6 @@ const mintEventHandler = async (
 }
 
 mint.bind({
-    startCheckpoint: 8500000n
+    // startCheckpoint: 8500000n
 })
     .onEventMintEvent(mintEventHandler)
