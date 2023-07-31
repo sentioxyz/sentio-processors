@@ -1,5 +1,5 @@
 import './cetus.js'
-// import '.movex/js'
+import './movex.js'
 import './navi.js'
-// import '.scallop/js'
-// import '.typus/js'
+import './scallop.js'
+import './typus.js'

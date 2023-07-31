@@ -1,0 +1,3145 @@
+[
+	{
+		"fileFormatVersion": 6,
+		"address": "0x8d79f4d920b03d88faca1e421af023a87fbb1e4a6fd200248e6e9998d09e470",
+		"name": "aggregator",
+		"friends": [],
+		"structs": {
+			"Aggregator": {
+				"abilities": {
+					"abilities": [
+						"Key"
+					]
+				},
+				"typeParameters": [],
+				"fields": [
+					{
+						"name": "id",
+						"type": {
+							"Struct": {
+								"address": "0x2",
+								"module": "object",
+								"name": "UID",
+								"typeArguments": []
+							}
+						}
+					},
+					{
+						"name": "authority",
+						"type": "Address"
+					},
+					{
+						"name": "queue_addr",
+						"type": "Address"
+					},
+					{
+						"name": "token_addr",
+						"type": "Address"
+					},
+					{
+						"name": "batch_size",
+						"type": "U64"
+					},
+					{
+						"name": "min_oracle_results",
+						"type": "U64"
+					},
+					{
+						"name": "min_update_delay_seconds",
+						"type": "U64"
+					},
+					{
+						"name": "name",
+						"type": {
+							"Vector": "U8"
+						}
+					},
+					{
+						"name": "history_limit",
+						"type": "U64"
+					},
+					{
+						"name": "variance_threshold",
+						"type": {
+							"Struct": {
+								"address": "0x8d79f4d920b03d88faca1e421af023a87fbb1e4a6fd200248e6e9998d09e470",
+								"module": "math",
+								"name": "SwitchboardDecimal",
+								"typeArguments": []
+							}
+						}
+					},
+					{
+						"name": "force_report_period",
+						"type": "U64"
+					},
+					{
+						"name": "min_job_results",
+						"type": "U64"
+					},
+					{
+						"name": "crank_disabled",
+						"type": "Bool"
+					},
+					{
+						"name": "crank_row_count",
+						"type": "U8"
+					},
+					{
+						"name": "next_allowed_update_time",
+						"type": "U64"
+					},
+					{
+						"name": "created_at",
+						"type": "U64"
+					},
+					{
+						"name": "read_charge",
+						"type": "U64"
+					},
+					{
+						"name": "reward_escrow",
+						"type": "Address"
+					},
+					{
+						"name": "read_whitelist",
+						"type": {
+							"Struct": {
+								"address": "0x2",
+								"module": "bag",
+								"name": "Bag",
+								"typeArguments": []
+							}
+						}
+					},
+					{
+						"name": "limit_reads_to_whitelist",
+						"type": "Bool"
+					},
+					{
+						"name": "update_data",
+						"type": {
+							"Struct": {
+								"address": "0x8d79f4d920b03d88faca1e421af023a87fbb1e4a6fd200248e6e9998d09e470",
+								"module": "aggregator",
+								"name": "SlidingWindow",
+								"typeArguments": []
+							}
+						}
+					},
+					{
+						"name": "interval_id",
+						"type": "U64"
+					},
+					{
+						"name": "curr_interval_payouts",
+						"type": "U64"
+					},
+					{
+						"name": "next_interval_refresh_time",
+						"type": "U64"
+					},
+					{
+						"name": "escrows",
+						"type": {
+							"Struct": {
+								"address": "0x2",
+								"module": "bag",
+								"name": "Bag",
+								"typeArguments": []
+							}
+						}
+					},
+					{
+						"name": "friend_key",
+						"type": {
+							"Vector": "U8"
+						}
+					},
+					{
+						"name": "version",
+						"type": "U64"
+					}
+				]
+			},
+			"AggregatorHistoryData": {
+				"abilities": {
+					"abilities": [
+						"Store",
+						"Key"
+					]
+				},
+				"typeParameters": [],
+				"fields": [
+					{
+						"name": "id",
+						"type": {
+							"Struct": {
+								"address": "0x2",
+								"module": "object",
+								"name": "UID",
+								"typeArguments": []
+							}
+						}
+					},
+					{
+						"name": "data",
+						"type": {
+							"Vector": {
+								"Struct": {
+									"address": "0x8d79f4d920b03d88faca1e421af023a87fbb1e4a6fd200248e6e9998d09e470",
+									"module": "aggregator",
+									"name": "AggregatorHistoryRow",
+									"typeArguments": []
+								}
+							}
+						}
+					},
+					{
+						"name": "history_write_idx",
+						"type": "U64"
+					}
+				]
+			},
+			"AggregatorHistoryRow": {
+				"abilities": {
+					"abilities": [
+						"Copy",
+						"Drop",
+						"Store"
+					]
+				},
+				"typeParameters": [],
+				"fields": [
+					{
+						"name": "value",
+						"type": {
+							"Struct": {
+								"address": "0x8d79f4d920b03d88faca1e421af023a87fbb1e4a6fd200248e6e9998d09e470",
+								"module": "math",
+								"name": "SwitchboardDecimal",
+								"typeArguments": []
+							}
+						}
+					},
+					{
+						"name": "timestamp",
+						"type": "U64"
+					}
+				]
+			},
+			"AggregatorJobData": {
+				"abilities": {
+					"abilities": [
+						"Store",
+						"Key"
+					]
+				},
+				"typeParameters": [],
+				"fields": [
+					{
+						"name": "id",
+						"type": {
+							"Struct": {
+								"address": "0x2",
+								"module": "object",
+								"name": "UID",
+								"typeArguments": []
+							}
+						}
+					},
+					{
+						"name": "job_keys",
+						"type": {
+							"Vector": "Address"
+						}
+					},
+					{
+						"name": "job_weights",
+						"type": {
+							"Vector": "U8"
+						}
+					},
+					{
+						"name": "jobs_checksum",
+						"type": {
+							"Vector": "U8"
+						}
+					}
+				]
+			},
+			"SlidingWindow": {
+				"abilities": {
+					"abilities": [
+						"Copy",
+						"Store"
+					]
+				},
+				"typeParameters": [],
+				"fields": [
+					{
+						"name": "data",
+						"type": {
+							"Vector": {
+								"Struct": {
+									"address": "0x8d79f4d920b03d88faca1e421af023a87fbb1e4a6fd200248e6e9998d09e470",
+									"module": "aggregator",
+									"name": "SlidingWindowElement",
+									"typeArguments": []
+								}
+							}
+						}
+					},
+					{
+						"name": "latest_result",
+						"type": {
+							"Struct": {
+								"address": "0x8d79f4d920b03d88faca1e421af023a87fbb1e4a6fd200248e6e9998d09e470",
+								"module": "math",
+								"name": "SwitchboardDecimal",
+								"typeArguments": []
+							}
+						}
+					},
+					{
+						"name": "latest_timestamp",
+						"type": "U64"
+					}
+				]
+			},
+			"SlidingWindowElement": {
+				"abilities": {
+					"abilities": [
+						"Copy",
+						"Drop",
+						"Store"
+					]
+				},
+				"typeParameters": [],
+				"fields": [
+					{
+						"name": "oracle_addr",
+						"type": "Address"
+					},
+					{
+						"name": "value",
+						"type": {
+							"Struct": {
+								"address": "0x8d79f4d920b03d88faca1e421af023a87fbb1e4a6fd200248e6e9998d09e470",
+								"module": "math",
+								"name": "SwitchboardDecimal",
+								"typeArguments": []
+							}
+						}
+					},
+					{
+						"name": "timestamp",
+						"type": "U64"
+					}
+				]
+			}
+		},
+		"exposedFunctions": {
+			"add_crank_row_count": {
+				"visibility": "Public",
+				"isEntry": false,
+				"typeParameters": [
+					{
+						"abilities": []
+					}
+				],
+				"parameters": [
+					{
+						"MutableReference": {
+							"Struct": {
+								"address": "0x8d79f4d920b03d88faca1e421af023a87fbb1e4a6fd200248e6e9998d09e470",
+								"module": "aggregator",
+								"name": "Aggregator",
+								"typeArguments": []
+							}
+						}
+					},
+					{
+						"Reference": {
+							"TypeParameter": 0
+						}
+					}
+				],
+				"return": []
+			},
+			"add_job": {
+				"visibility": "Public",
+				"isEntry": false,
+				"typeParameters": [],
+				"parameters": [
+					{
+						"MutableReference": {
+							"Struct": {
+								"address": "0x8d79f4d920b03d88faca1e421af023a87fbb1e4a6fd200248e6e9998d09e470",
+								"module": "aggregator",
+								"name": "Aggregator",
+								"typeArguments": []
+							}
+						}
+					},
+					{
+						"Reference": {
+							"Struct": {
+								"address": "0x8d79f4d920b03d88faca1e421af023a87fbb1e4a6fd200248e6e9998d09e470",
+								"module": "job",
+								"name": "Job",
+								"typeArguments": []
+							}
+						}
+					},
+					"U8",
+					{
+						"MutableReference": {
+							"Struct": {
+								"address": "0x2",
+								"module": "tx_context",
+								"name": "TxContext",
+								"typeArguments": []
+							}
+						}
+					}
+				],
+				"return": []
+			},
+			"add_to_sliding_window": {
+				"visibility": "Public",
+				"isEntry": false,
+				"typeParameters": [],
+				"parameters": [
+					{
+						"MutableReference": {
+							"Struct": {
+								"address": "0x8d79f4d920b03d88faca1e421af023a87fbb1e4a6fd200248e6e9998d09e470",
+								"module": "aggregator",
+								"name": "SlidingWindow",
+								"typeArguments": []
+							}
+						}
+					},
+					"Address",
+					{
+						"Struct": {
+							"address": "0x8d79f4d920b03d88faca1e421af023a87fbb1e4a6fd200248e6e9998d09e470",
+							"module": "math",
+							"name": "SwitchboardDecimal",
+							"typeArguments": []
+						}
+					},
+					"U64",
+					"U64",
+					"U64"
+				],
+				"return": [
+					"Bool",
+					{
+						"Struct": {
+							"address": "0x8d79f4d920b03d88faca1e421af023a87fbb1e4a6fd200248e6e9998d09e470",
+							"module": "math",
+							"name": "SwitchboardDecimal",
+							"typeArguments": []
+						}
+					}
+				]
+			},
+			"aggregator_address": {
+				"visibility": "Public",
+				"isEntry": false,
+				"typeParameters": [],
+				"parameters": [
+					{
+						"Reference": {
+							"Struct": {
+								"address": "0x8d79f4d920b03d88faca1e421af023a87fbb1e4a6fd200248e6e9998d09e470",
+								"module": "aggregator",
+								"name": "Aggregator",
+								"typeArguments": []
+							}
+						}
+					}
+				],
+				"return": [
+					"Address"
+				]
+			},
+			"authority": {
+				"visibility": "Public",
+				"isEntry": false,
+				"typeParameters": [],
+				"parameters": [
+					{
+						"Reference": {
+							"Struct": {
+								"address": "0x8d79f4d920b03d88faca1e421af023a87fbb1e4a6fd200248e6e9998d09e470",
+								"module": "aggregator",
+								"name": "Aggregator",
+								"typeArguments": []
+							}
+						}
+					}
+				],
+				"return": [
+					"Address"
+				]
+			},
+			"batch_size": {
+				"visibility": "Public",
+				"isEntry": false,
+				"typeParameters": [],
+				"parameters": [
+					{
+						"Reference": {
+							"Struct": {
+								"address": "0x8d79f4d920b03d88faca1e421af023a87fbb1e4a6fd200248e6e9998d09e470",
+								"module": "aggregator",
+								"name": "Aggregator",
+								"typeArguments": []
+							}
+						}
+					}
+				],
+				"return": [
+					"U64"
+				]
+			},
+			"can_open_round": {
+				"visibility": "Public",
+				"isEntry": false,
+				"typeParameters": [],
+				"parameters": [
+					{
+						"Reference": {
+							"Struct": {
+								"address": "0x8d79f4d920b03d88faca1e421af023a87fbb1e4a6fd200248e6e9998d09e470",
+								"module": "aggregator",
+								"name": "Aggregator",
+								"typeArguments": []
+							}
+						}
+					},
+					"U64"
+				],
+				"return": [
+					"Bool"
+				]
+			},
+			"crank_disabled": {
+				"visibility": "Public",
+				"isEntry": false,
+				"typeParameters": [],
+				"parameters": [
+					{
+						"Reference": {
+							"Struct": {
+								"address": "0x8d79f4d920b03d88faca1e421af023a87fbb1e4a6fd200248e6e9998d09e470",
+								"module": "aggregator",
+								"name": "Aggregator",
+								"typeArguments": []
+							}
+						}
+					}
+				],
+				"return": [
+					"Bool"
+				]
+			},
+			"crank_row_count": {
+				"visibility": "Public",
+				"isEntry": false,
+				"typeParameters": [],
+				"parameters": [
+					{
+						"Reference": {
+							"Struct": {
+								"address": "0x8d79f4d920b03d88faca1e421af023a87fbb1e4a6fd200248e6e9998d09e470",
+								"module": "aggregator",
+								"name": "Aggregator",
+								"typeArguments": []
+							}
+						}
+					}
+				],
+				"return": [
+					"U8"
+				]
+			},
+			"created_at": {
+				"visibility": "Public",
+				"isEntry": false,
+				"typeParameters": [],
+				"parameters": [
+					{
+						"Reference": {
+							"Struct": {
+								"address": "0x8d79f4d920b03d88faca1e421af023a87fbb1e4a6fd200248e6e9998d09e470",
+								"module": "aggregator",
+								"name": "Aggregator",
+								"typeArguments": []
+							}
+						}
+					}
+				],
+				"return": [
+					"U64"
+				]
+			},
+			"curr_interval_payouts": {
+				"visibility": "Public",
+				"isEntry": false,
+				"typeParameters": [],
+				"parameters": [
+					{
+						"Reference": {
+							"Struct": {
+								"address": "0x8d79f4d920b03d88faca1e421af023a87fbb1e4a6fd200248e6e9998d09e470",
+								"module": "aggregator",
+								"name": "Aggregator",
+								"typeArguments": []
+							}
+						}
+					}
+				],
+				"return": [
+					"U64"
+				]
+			},
+			"escrow_balance": {
+				"visibility": "Public",
+				"isEntry": false,
+				"typeParameters": [
+					{
+						"abilities": []
+					}
+				],
+				"parameters": [
+					{
+						"Reference": {
+							"Struct": {
+								"address": "0x8d79f4d920b03d88faca1e421af023a87fbb1e4a6fd200248e6e9998d09e470",
+								"module": "aggregator",
+								"name": "Aggregator",
+								"typeArguments": []
+							}
+						}
+					},
+					"Address"
+				],
+				"return": [
+					"U64"
+				]
+			},
+			"escrow_deposit": {
+				"visibility": "Public",
+				"isEntry": false,
+				"typeParameters": [
+					{
+						"abilities": []
+					},
+					{
+						"abilities": []
+					}
+				],
+				"parameters": [
+					{
+						"MutableReference": {
+							"Struct": {
+								"address": "0x8d79f4d920b03d88faca1e421af023a87fbb1e4a6fd200248e6e9998d09e470",
+								"module": "aggregator",
+								"name": "Aggregator",
+								"typeArguments": []
+							}
+						}
+					},
+					"Address",
+					{
+						"Struct": {
+							"address": "0x2",
+							"module": "coin",
+							"name": "Coin",
+							"typeArguments": [
+								{
+									"TypeParameter": 0
+								}
+							]
+						}
+					},
+					{
+						"Reference": {
+							"TypeParameter": 1
+						}
+					}
+				],
+				"return": []
+			},
+			"escrow_withdraw": {
+				"visibility": "Public",
+				"isEntry": false,
+				"typeParameters": [
+					{
+						"abilities": []
+					},
+					{
+						"abilities": []
+					}
+				],
+				"parameters": [
+					{
+						"MutableReference": {
+							"Struct": {
+								"address": "0x8d79f4d920b03d88faca1e421af023a87fbb1e4a6fd200248e6e9998d09e470",
+								"module": "aggregator",
+								"name": "Aggregator",
+								"typeArguments": []
+							}
+						}
+					},
+					"Address",
+					"U64",
+					{
+						"Reference": {
+							"TypeParameter": 1
+						}
+					},
+					{
+						"MutableReference": {
+							"Struct": {
+								"address": "0x2",
+								"module": "tx_context",
+								"name": "TxContext",
+								"typeArguments": []
+							}
+						}
+					}
+				],
+				"return": [
+					{
+						"Struct": {
+							"address": "0x2",
+							"module": "coin",
+							"name": "Coin",
+							"typeArguments": [
+								{
+									"TypeParameter": 0
+								}
+							]
+						}
+					}
+				]
+			},
+			"has_authority": {
+				"visibility": "Public",
+				"isEntry": false,
+				"typeParameters": [],
+				"parameters": [
+					{
+						"Reference": {
+							"Struct": {
+								"address": "0x8d79f4d920b03d88faca1e421af023a87fbb1e4a6fd200248e6e9998d09e470",
+								"module": "aggregator",
+								"name": "Aggregator",
+								"typeArguments": []
+							}
+						}
+					},
+					{
+						"Reference": {
+							"Struct": {
+								"address": "0x2",
+								"module": "tx_context",
+								"name": "TxContext",
+								"typeArguments": []
+							}
+						}
+					}
+				],
+				"return": [
+					"Bool"
+				]
+			},
+			"increment_curr_interval_payouts": {
+				"visibility": "Public",
+				"isEntry": false,
+				"typeParameters": [
+					{
+						"abilities": []
+					}
+				],
+				"parameters": [
+					{
+						"MutableReference": {
+							"Struct": {
+								"address": "0x8d79f4d920b03d88faca1e421af023a87fbb1e4a6fd200248e6e9998d09e470",
+								"module": "aggregator",
+								"name": "Aggregator",
+								"typeArguments": []
+							}
+						}
+					},
+					{
+						"Reference": {
+							"TypeParameter": 0
+						}
+					}
+				],
+				"return": []
+			},
+			"interval_id": {
+				"visibility": "Public",
+				"isEntry": false,
+				"typeParameters": [],
+				"parameters": [
+					{
+						"Reference": {
+							"Struct": {
+								"address": "0x8d79f4d920b03d88faca1e421af023a87fbb1e4a6fd200248e6e9998d09e470",
+								"module": "aggregator",
+								"name": "Aggregator",
+								"typeArguments": []
+							}
+						}
+					}
+				],
+				"return": [
+					"U64"
+				]
+			},
+			"is_locked": {
+				"visibility": "Public",
+				"isEntry": false,
+				"typeParameters": [],
+				"parameters": [
+					{
+						"Reference": {
+							"Struct": {
+								"address": "0x8d79f4d920b03d88faca1e421af023a87fbb1e4a6fd200248e6e9998d09e470",
+								"module": "aggregator",
+								"name": "Aggregator",
+								"typeArguments": []
+							}
+						}
+					}
+				],
+				"return": [
+					"Bool"
+				]
+			},
+			"job_keys": {
+				"visibility": "Public",
+				"isEntry": false,
+				"typeParameters": [],
+				"parameters": [
+					{
+						"Reference": {
+							"Struct": {
+								"address": "0x8d79f4d920b03d88faca1e421af023a87fbb1e4a6fd200248e6e9998d09e470",
+								"module": "aggregator",
+								"name": "Aggregator",
+								"typeArguments": []
+							}
+						}
+					}
+				],
+				"return": [
+					{
+						"Vector": "Address"
+					}
+				]
+			},
+			"latest_value": {
+				"visibility": "Public",
+				"isEntry": false,
+				"typeParameters": [],
+				"parameters": [
+					{
+						"Reference": {
+							"Struct": {
+								"address": "0x8d79f4d920b03d88faca1e421af023a87fbb1e4a6fd200248e6e9998d09e470",
+								"module": "aggregator",
+								"name": "Aggregator",
+								"typeArguments": []
+							}
+						}
+					}
+				],
+				"return": [
+					{
+						"Struct": {
+							"address": "0x8d79f4d920b03d88faca1e421af023a87fbb1e4a6fd200248e6e9998d09e470",
+							"module": "math",
+							"name": "SwitchboardDecimal",
+							"typeArguments": []
+						}
+					},
+					"U64"
+				]
+			},
+			"migrate": {
+				"visibility": "Private",
+				"isEntry": true,
+				"typeParameters": [],
+				"parameters": [
+					{
+						"MutableReference": {
+							"Struct": {
+								"address": "0x8d79f4d920b03d88faca1e421af023a87fbb1e4a6fd200248e6e9998d09e470",
+								"module": "aggregator",
+								"name": "Aggregator",
+								"typeArguments": []
+							}
+						}
+					},
+					{
+						"Reference": {
+							"Struct": {
+								"address": "0x8d79f4d920b03d88faca1e421af023a87fbb1e4a6fd200248e6e9998d09e470",
+								"module": "switchboard",
+								"name": "AdminCap",
+								"typeArguments": []
+							}
+						}
+					}
+				],
+				"return": []
+			},
+			"migrate_package": {
+				"visibility": "Public",
+				"isEntry": false,
+				"typeParameters": [
+					{
+						"abilities": []
+					},
+					{
+						"abilities": []
+					}
+				],
+				"parameters": [
+					{
+						"MutableReference": {
+							"Struct": {
+								"address": "0x8d79f4d920b03d88faca1e421af023a87fbb1e4a6fd200248e6e9998d09e470",
+								"module": "aggregator",
+								"name": "Aggregator",
+								"typeArguments": []
+							}
+						}
+					},
+					{
+						"Reference": {
+							"TypeParameter": 0
+						}
+					},
+					{
+						"Reference": {
+							"TypeParameter": 1
+						}
+					}
+				],
+				"return": []
+			},
+			"min_oracle_results": {
+				"visibility": "Public",
+				"isEntry": false,
+				"typeParameters": [],
+				"parameters": [
+					{
+						"Reference": {
+							"Struct": {
+								"address": "0x8d79f4d920b03d88faca1e421af023a87fbb1e4a6fd200248e6e9998d09e470",
+								"module": "aggregator",
+								"name": "Aggregator",
+								"typeArguments": []
+							}
+						}
+					}
+				],
+				"return": [
+					"U64"
+				]
+			},
+			"new": {
+				"visibility": "Public",
+				"isEntry": false,
+				"typeParameters": [
+					{
+						"abilities": [
+							"Drop"
+						]
+					}
+				],
+				"parameters": [
+					{
+						"Vector": "U8"
+					},
+					"Address",
+					"U64",
+					"U64",
+					"U64",
+					"U64",
+					{
+						"Struct": {
+							"address": "0x8d79f4d920b03d88faca1e421af023a87fbb1e4a6fd200248e6e9998d09e470",
+							"module": "math",
+							"name": "SwitchboardDecimal",
+							"typeArguments": []
+						}
+					},
+					"U64",
+					"Bool",
+					"U64",
+					"U64",
+					"Address",
+					{
+						"Vector": "Address"
+					},
+					"Bool",
+					"U64",
+					"Address",
+					{
+						"Reference": {
+							"TypeParameter": 0
+						}
+					},
+					{
+						"MutableReference": {
+							"Struct": {
+								"address": "0x2",
+								"module": "tx_context",
+								"name": "TxContext",
+								"typeArguments": []
+							}
+						}
+					}
+				],
+				"return": [
+					{
+						"Struct": {
+							"address": "0x8d79f4d920b03d88faca1e421af023a87fbb1e4a6fd200248e6e9998d09e470",
+							"module": "aggregator",
+							"name": "Aggregator",
+							"typeArguments": []
+						}
+					}
+				]
+			},
+			"new_sliding_window": {
+				"visibility": "Public",
+				"isEntry": false,
+				"typeParameters": [],
+				"parameters": [],
+				"return": [
+					{
+						"Struct": {
+							"address": "0x8d79f4d920b03d88faca1e421af023a87fbb1e4a6fd200248e6e9998d09e470",
+							"module": "aggregator",
+							"name": "SlidingWindow",
+							"typeArguments": []
+						}
+					}
+				]
+			},
+			"next_payment_interval": {
+				"visibility": "Public",
+				"isEntry": false,
+				"typeParameters": [
+					{
+						"abilities": []
+					}
+				],
+				"parameters": [
+					{
+						"MutableReference": {
+							"Struct": {
+								"address": "0x8d79f4d920b03d88faca1e421af023a87fbb1e4a6fd200248e6e9998d09e470",
+								"module": "aggregator",
+								"name": "Aggregator",
+								"typeArguments": []
+							}
+						}
+					},
+					{
+						"Reference": {
+							"TypeParameter": 0
+						}
+					}
+				],
+				"return": []
+			},
+			"push_update": {
+				"visibility": "Public",
+				"isEntry": false,
+				"typeParameters": [
+					{
+						"abilities": []
+					}
+				],
+				"parameters": [
+					{
+						"MutableReference": {
+							"Struct": {
+								"address": "0x8d79f4d920b03d88faca1e421af023a87fbb1e4a6fd200248e6e9998d09e470",
+								"module": "aggregator",
+								"name": "Aggregator",
+								"typeArguments": []
+							}
+						}
+					},
+					"Address",
+					{
+						"Struct": {
+							"address": "0x8d79f4d920b03d88faca1e421af023a87fbb1e4a6fd200248e6e9998d09e470",
+							"module": "math",
+							"name": "SwitchboardDecimal",
+							"typeArguments": []
+						}
+					},
+					"U64",
+					{
+						"Reference": {
+							"TypeParameter": 0
+						}
+					}
+				],
+				"return": [
+					"Bool",
+					{
+						"Struct": {
+							"address": "0x8d79f4d920b03d88faca1e421af023a87fbb1e4a6fd200248e6e9998d09e470",
+							"module": "math",
+							"name": "SwitchboardDecimal",
+							"typeArguments": []
+						}
+					}
+				]
+			},
+			"queue_address": {
+				"visibility": "Public",
+				"isEntry": false,
+				"typeParameters": [],
+				"parameters": [
+					{
+						"Reference": {
+							"Struct": {
+								"address": "0x8d79f4d920b03d88faca1e421af023a87fbb1e4a6fd200248e6e9998d09e470",
+								"module": "aggregator",
+								"name": "Aggregator",
+								"typeArguments": []
+							}
+						}
+					}
+				],
+				"return": [
+					"Address"
+				]
+			},
+			"remove_job": {
+				"visibility": "Public",
+				"isEntry": false,
+				"typeParameters": [],
+				"parameters": [
+					{
+						"MutableReference": {
+							"Struct": {
+								"address": "0x8d79f4d920b03d88faca1e421af023a87fbb1e4a6fd200248e6e9998d09e470",
+								"module": "aggregator",
+								"name": "Aggregator",
+								"typeArguments": []
+							}
+						}
+					},
+					"Address",
+					{
+						"MutableReference": {
+							"Struct": {
+								"address": "0x2",
+								"module": "tx_context",
+								"name": "TxContext",
+								"typeArguments": []
+							}
+						}
+					}
+				],
+				"return": []
+			},
+			"results_older_than": {
+				"visibility": "Public",
+				"isEntry": false,
+				"typeParameters": [],
+				"parameters": [
+					{
+						"Reference": {
+							"Struct": {
+								"address": "0x8d79f4d920b03d88faca1e421af023a87fbb1e4a6fd200248e6e9998d09e470",
+								"module": "aggregator",
+								"name": "SlidingWindow",
+								"typeArguments": []
+							}
+						}
+					},
+					{
+						"Reference": {
+							"Struct": {
+								"address": "0x2",
+								"module": "clock",
+								"name": "Clock",
+								"typeArguments": []
+							}
+						}
+					},
+					"U64"
+				],
+				"return": [
+					"Bool"
+				]
+			},
+			"set_aggregator_token": {
+				"visibility": "Public",
+				"isEntry": false,
+				"typeParameters": [],
+				"parameters": [
+					{
+						"MutableReference": {
+							"Struct": {
+								"address": "0x8d79f4d920b03d88faca1e421af023a87fbb1e4a6fd200248e6e9998d09e470",
+								"module": "aggregator",
+								"name": "Aggregator",
+								"typeArguments": []
+							}
+						}
+					},
+					"Address",
+					{
+						"MutableReference": {
+							"Struct": {
+								"address": "0x2",
+								"module": "tx_context",
+								"name": "TxContext",
+								"typeArguments": []
+							}
+						}
+					}
+				],
+				"return": []
+			},
+			"set_authority": {
+				"visibility": "Public",
+				"isEntry": false,
+				"typeParameters": [],
+				"parameters": [
+					{
+						"MutableReference": {
+							"Struct": {
+								"address": "0x8d79f4d920b03d88faca1e421af023a87fbb1e4a6fd200248e6e9998d09e470",
+								"module": "aggregator",
+								"name": "Aggregator",
+								"typeArguments": []
+							}
+						}
+					},
+					"Address",
+					{
+						"MutableReference": {
+							"Struct": {
+								"address": "0x2",
+								"module": "tx_context",
+								"name": "TxContext",
+								"typeArguments": []
+							}
+						}
+					}
+				],
+				"return": []
+			},
+			"set_config": {
+				"visibility": "Public",
+				"isEntry": false,
+				"typeParameters": [],
+				"parameters": [
+					{
+						"MutableReference": {
+							"Struct": {
+								"address": "0x8d79f4d920b03d88faca1e421af023a87fbb1e4a6fd200248e6e9998d09e470",
+								"module": "aggregator",
+								"name": "Aggregator",
+								"typeArguments": []
+							}
+						}
+					},
+					{
+						"Vector": "U8"
+					},
+					"Address",
+					"U64",
+					"U64",
+					"U64",
+					"U64",
+					{
+						"Struct": {
+							"address": "0x8d79f4d920b03d88faca1e421af023a87fbb1e4a6fd200248e6e9998d09e470",
+							"module": "math",
+							"name": "SwitchboardDecimal",
+							"typeArguments": []
+						}
+					},
+					"U64",
+					"Bool",
+					"U64",
+					"U64",
+					"Address",
+					{
+						"Vector": "Address"
+					},
+					{
+						"Vector": "Address"
+					},
+					"Bool",
+					{
+						"MutableReference": {
+							"Struct": {
+								"address": "0x2",
+								"module": "tx_context",
+								"name": "TxContext",
+								"typeArguments": []
+							}
+						}
+					}
+				],
+				"return": []
+			},
+			"share_aggregator": {
+				"visibility": "Public",
+				"isEntry": false,
+				"typeParameters": [],
+				"parameters": [
+					{
+						"Struct": {
+							"address": "0x8d79f4d920b03d88faca1e421af023a87fbb1e4a6fd200248e6e9998d09e470",
+							"module": "aggregator",
+							"name": "Aggregator",
+							"typeArguments": []
+						}
+					}
+				],
+				"return": []
+			},
+			"sliding_window_latest_result": {
+				"visibility": "Public",
+				"isEntry": false,
+				"typeParameters": [],
+				"parameters": [
+					{
+						"Reference": {
+							"Struct": {
+								"address": "0x8d79f4d920b03d88faca1e421af023a87fbb1e4a6fd200248e6e9998d09e470",
+								"module": "aggregator",
+								"name": "SlidingWindow",
+								"typeArguments": []
+							}
+						}
+					}
+				],
+				"return": [
+					{
+						"Struct": {
+							"address": "0x8d79f4d920b03d88faca1e421af023a87fbb1e4a6fd200248e6e9998d09e470",
+							"module": "math",
+							"name": "SwitchboardDecimal",
+							"typeArguments": []
+						}
+					},
+					"U64"
+				]
+			},
+			"sub_crank_row_count": {
+				"visibility": "Public",
+				"isEntry": false,
+				"typeParameters": [
+					{
+						"abilities": []
+					}
+				],
+				"parameters": [
+					{
+						"MutableReference": {
+							"Struct": {
+								"address": "0x8d79f4d920b03d88faca1e421af023a87fbb1e4a6fd200248e6e9998d09e470",
+								"module": "aggregator",
+								"name": "Aggregator",
+								"typeArguments": []
+							}
+						}
+					},
+					{
+						"Reference": {
+							"TypeParameter": 0
+						}
+					}
+				],
+				"return": []
+			}
+		}
+	},
+	{
+		"fileFormatVersion": 6,
+		"address": "0x8d79f4d920b03d88faca1e421af023a87fbb1e4a6fd200248e6e9998d09e470",
+		"name": "errors",
+		"friends": [],
+		"structs": {},
+		"exposedFunctions": {
+			"AggregatorIllegalRoundOpenCall": {
+				"visibility": "Public",
+				"isEntry": false,
+				"typeParameters": [],
+				"parameters": [],
+				"return": [
+					"U64"
+				]
+			},
+			"AggregatorInvalidBatchSize": {
+				"visibility": "Public",
+				"isEntry": false,
+				"typeParameters": [],
+				"parameters": [],
+				"return": [
+					"U64"
+				]
+			},
+			"AggregatorInvalidMinJobs": {
+				"visibility": "Public",
+				"isEntry": false,
+				"typeParameters": [],
+				"parameters": [],
+				"return": [
+					"U64"
+				]
+			},
+			"AggregatorInvalidMinOracleResults": {
+				"visibility": "Public",
+				"isEntry": false,
+				"typeParameters": [],
+				"parameters": [],
+				"return": [
+					"U64"
+				]
+			},
+			"AggregatorInvalidUpdateDelay": {
+				"visibility": "Public",
+				"isEntry": false,
+				"typeParameters": [],
+				"parameters": [],
+				"return": [
+					"U64"
+				]
+			},
+			"AggregatorLocked": {
+				"visibility": "Public",
+				"isEntry": false,
+				"typeParameters": [],
+				"parameters": [],
+				"return": [
+					"U64"
+				]
+			},
+			"CrankDisabled": {
+				"visibility": "Public",
+				"isEntry": false,
+				"typeParameters": [],
+				"parameters": [],
+				"return": [
+					"U64"
+				]
+			},
+			"Generic": {
+				"visibility": "Public",
+				"isEntry": false,
+				"typeParameters": [],
+				"parameters": [],
+				"return": [
+					"U64"
+				]
+			},
+			"InsufficientCoin": {
+				"visibility": "Public",
+				"isEntry": false,
+				"typeParameters": [],
+				"parameters": [],
+				"return": [
+					"U64"
+				]
+			},
+			"InsufficientQueueError": {
+				"visibility": "Public",
+				"isEntry": false,
+				"typeParameters": [],
+				"parameters": [],
+				"return": [
+					"U64"
+				]
+			},
+			"InvalidArgument": {
+				"visibility": "Public",
+				"isEntry": false,
+				"typeParameters": [],
+				"parameters": [],
+				"return": [
+					"U64"
+				]
+			},
+			"InvalidAuthority": {
+				"visibility": "Public",
+				"isEntry": false,
+				"typeParameters": [],
+				"parameters": [],
+				"return": [
+					"U64"
+				]
+			},
+			"InvalidConstraint": {
+				"visibility": "Public",
+				"isEntry": false,
+				"typeParameters": [],
+				"parameters": [],
+				"return": [
+					"U64"
+				]
+			},
+			"InvalidNodeError": {
+				"visibility": "Public",
+				"isEntry": false,
+				"typeParameters": [],
+				"parameters": [],
+				"return": [
+					"U64"
+				]
+			},
+			"InvalidPackage": {
+				"visibility": "Public",
+				"isEntry": false,
+				"typeParameters": [],
+				"parameters": [],
+				"return": [
+					"U64"
+				]
+			},
+			"InvalidQuoteError": {
+				"visibility": "Public",
+				"isEntry": false,
+				"typeParameters": [],
+				"parameters": [],
+				"return": [
+					"U64"
+				]
+			},
+			"InvalidTimestamp": {
+				"visibility": "Public",
+				"isEntry": false,
+				"typeParameters": [],
+				"parameters": [],
+				"return": [
+					"U64"
+				]
+			},
+			"InvalidVersion": {
+				"visibility": "Public",
+				"isEntry": false,
+				"typeParameters": [],
+				"parameters": [],
+				"return": [
+					"U64"
+				]
+			},
+			"JobsChecksumMismatch": {
+				"visibility": "Public",
+				"isEntry": false,
+				"typeParameters": [],
+				"parameters": [],
+				"return": [
+					"U64"
+				]
+			},
+			"MrEnclaveAlreadyExists": {
+				"visibility": "Public",
+				"isEntry": false,
+				"typeParameters": [],
+				"parameters": [],
+				"return": [
+					"U64"
+				]
+			},
+			"MrEnclaveAtCapacity": {
+				"visibility": "Public",
+				"isEntry": false,
+				"typeParameters": [],
+				"parameters": [],
+				"return": [
+					"U64"
+				]
+			},
+			"MrEnclaveDoesNotExist": {
+				"visibility": "Public",
+				"isEntry": false,
+				"typeParameters": [],
+				"parameters": [],
+				"return": [
+					"U64"
+				]
+			},
+			"PermissionDenied": {
+				"visibility": "Public",
+				"isEntry": false,
+				"typeParameters": [],
+				"parameters": [],
+				"return": [
+					"U64"
+				]
+			},
+			"QueueFullError": {
+				"visibility": "Public",
+				"isEntry": false,
+				"typeParameters": [],
+				"parameters": [],
+				"return": [
+					"U64"
+				]
+			},
+			"QuoteExpiredError": {
+				"visibility": "Public",
+				"isEntry": false,
+				"typeParameters": [],
+				"parameters": [],
+				"return": [
+					"U64"
+				]
+			}
+		}
+	},
+	{
+		"fileFormatVersion": 6,
+		"address": "0x8d79f4d920b03d88faca1e421af023a87fbb1e4a6fd200248e6e9998d09e470",
+		"name": "job",
+		"friends": [],
+		"structs": {
+			"Job": {
+				"abilities": {
+					"abilities": [
+						"Key"
+					]
+				},
+				"typeParameters": [],
+				"fields": [
+					{
+						"name": "id",
+						"type": {
+							"Struct": {
+								"address": "0x2",
+								"module": "object",
+								"name": "UID",
+								"typeArguments": []
+							}
+						}
+					},
+					{
+						"name": "name",
+						"type": {
+							"Vector": "U8"
+						}
+					},
+					{
+						"name": "hash",
+						"type": {
+							"Vector": "U8"
+						}
+					},
+					{
+						"name": "data",
+						"type": {
+							"Vector": "U8"
+						}
+					},
+					{
+						"name": "created_at",
+						"type": "U64"
+					}
+				]
+			}
+		},
+		"exposedFunctions": {
+			"freeze_job": {
+				"visibility": "Public",
+				"isEntry": false,
+				"typeParameters": [],
+				"parameters": [
+					{
+						"Struct": {
+							"address": "0x8d79f4d920b03d88faca1e421af023a87fbb1e4a6fd200248e6e9998d09e470",
+							"module": "job",
+							"name": "Job",
+							"typeArguments": []
+						}
+					}
+				],
+				"return": []
+			},
+			"hash": {
+				"visibility": "Public",
+				"isEntry": false,
+				"typeParameters": [],
+				"parameters": [
+					{
+						"Reference": {
+							"Struct": {
+								"address": "0x8d79f4d920b03d88faca1e421af023a87fbb1e4a6fd200248e6e9998d09e470",
+								"module": "job",
+								"name": "Job",
+								"typeArguments": []
+							}
+						}
+					}
+				],
+				"return": [
+					{
+						"Vector": "U8"
+					}
+				]
+			},
+			"job_address": {
+				"visibility": "Public",
+				"isEntry": false,
+				"typeParameters": [],
+				"parameters": [
+					{
+						"Reference": {
+							"Struct": {
+								"address": "0x8d79f4d920b03d88faca1e421af023a87fbb1e4a6fd200248e6e9998d09e470",
+								"module": "job",
+								"name": "Job",
+								"typeArguments": []
+							}
+						}
+					}
+				],
+				"return": [
+					"Address"
+				]
+			},
+			"new": {
+				"visibility": "Public",
+				"isEntry": false,
+				"typeParameters": [],
+				"parameters": [
+					{
+						"Vector": "U8"
+					},
+					{
+						"Vector": "U8"
+					},
+					"U64",
+					{
+						"MutableReference": {
+							"Struct": {
+								"address": "0x2",
+								"module": "tx_context",
+								"name": "TxContext",
+								"typeArguments": []
+							}
+						}
+					}
+				],
+				"return": [
+					{
+						"Struct": {
+							"address": "0x8d79f4d920b03d88faca1e421af023a87fbb1e4a6fd200248e6e9998d09e470",
+							"module": "job",
+							"name": "Job",
+							"typeArguments": []
+						}
+					}
+				]
+			}
+		}
+	},
+	{
+		"fileFormatVersion": 6,
+		"address": "0x8d79f4d920b03d88faca1e421af023a87fbb1e4a6fd200248e6e9998d09e470",
+		"name": "math",
+		"friends": [],
+		"structs": {
+			"SwitchboardDecimal": {
+				"abilities": {
+					"abilities": [
+						"Copy",
+						"Drop",
+						"Store"
+					]
+				},
+				"typeParameters": [],
+				"fields": [
+					{
+						"name": "value",
+						"type": "U128"
+					},
+					{
+						"name": "dec",
+						"type": "U8"
+					},
+					{
+						"name": "neg",
+						"type": "Bool"
+					}
+				]
+			}
+		},
+		"exposedFunctions": {
+			"add": {
+				"visibility": "Public",
+				"isEntry": false,
+				"typeParameters": [],
+				"parameters": [
+					{
+						"Reference": {
+							"Struct": {
+								"address": "0x8d79f4d920b03d88faca1e421af023a87fbb1e4a6fd200248e6e9998d09e470",
+								"module": "math",
+								"name": "SwitchboardDecimal",
+								"typeArguments": []
+							}
+						}
+					},
+					{
+						"Reference": {
+							"Struct": {
+								"address": "0x8d79f4d920b03d88faca1e421af023a87fbb1e4a6fd200248e6e9998d09e470",
+								"module": "math",
+								"name": "SwitchboardDecimal",
+								"typeArguments": []
+							}
+						}
+					}
+				],
+				"return": [
+					{
+						"Struct": {
+							"address": "0x8d79f4d920b03d88faca1e421af023a87fbb1e4a6fd200248e6e9998d09e470",
+							"module": "math",
+							"name": "SwitchboardDecimal",
+							"typeArguments": []
+						}
+					}
+				]
+			},
+			"add_u64": {
+				"visibility": "Public",
+				"isEntry": false,
+				"typeParameters": [],
+				"parameters": [
+					"U64",
+					"Bool",
+					"U64",
+					"Bool"
+				],
+				"return": [
+					"Bool",
+					"U64"
+				]
+			},
+			"div": {
+				"visibility": "Public",
+				"isEntry": false,
+				"typeParameters": [],
+				"parameters": [
+					{
+						"Reference": {
+							"Struct": {
+								"address": "0x8d79f4d920b03d88faca1e421af023a87fbb1e4a6fd200248e6e9998d09e470",
+								"module": "math",
+								"name": "SwitchboardDecimal",
+								"typeArguments": []
+							}
+						}
+					},
+					{
+						"Reference": {
+							"Struct": {
+								"address": "0x8d79f4d920b03d88faca1e421af023a87fbb1e4a6fd200248e6e9998d09e470",
+								"module": "math",
+								"name": "SwitchboardDecimal",
+								"typeArguments": []
+							}
+						}
+					},
+					{
+						"MutableReference": {
+							"Struct": {
+								"address": "0x8d79f4d920b03d88faca1e421af023a87fbb1e4a6fd200248e6e9998d09e470",
+								"module": "math",
+								"name": "SwitchboardDecimal",
+								"typeArguments": []
+							}
+						}
+					}
+				],
+				"return": []
+			},
+			"equals": {
+				"visibility": "Public",
+				"isEntry": false,
+				"typeParameters": [],
+				"parameters": [
+					{
+						"Reference": {
+							"Struct": {
+								"address": "0x8d79f4d920b03d88faca1e421af023a87fbb1e4a6fd200248e6e9998d09e470",
+								"module": "math",
+								"name": "SwitchboardDecimal",
+								"typeArguments": []
+							}
+						}
+					},
+					{
+						"Reference": {
+							"Struct": {
+								"address": "0x8d79f4d920b03d88faca1e421af023a87fbb1e4a6fd200248e6e9998d09e470",
+								"module": "math",
+								"name": "SwitchboardDecimal",
+								"typeArguments": []
+							}
+						}
+					}
+				],
+				"return": [
+					"Bool"
+				]
+			},
+			"gt": {
+				"visibility": "Public",
+				"isEntry": false,
+				"typeParameters": [],
+				"parameters": [
+					{
+						"Reference": {
+							"Struct": {
+								"address": "0x8d79f4d920b03d88faca1e421af023a87fbb1e4a6fd200248e6e9998d09e470",
+								"module": "math",
+								"name": "SwitchboardDecimal",
+								"typeArguments": []
+							}
+						}
+					},
+					{
+						"Reference": {
+							"Struct": {
+								"address": "0x8d79f4d920b03d88faca1e421af023a87fbb1e4a6fd200248e6e9998d09e470",
+								"module": "math",
+								"name": "SwitchboardDecimal",
+								"typeArguments": []
+							}
+						}
+					}
+				],
+				"return": [
+					"Bool"
+				]
+			},
+			"gte": {
+				"visibility": "Public",
+				"isEntry": false,
+				"typeParameters": [],
+				"parameters": [
+					{
+						"Reference": {
+							"Struct": {
+								"address": "0x8d79f4d920b03d88faca1e421af023a87fbb1e4a6fd200248e6e9998d09e470",
+								"module": "math",
+								"name": "SwitchboardDecimal",
+								"typeArguments": []
+							}
+						}
+					},
+					{
+						"Reference": {
+							"Struct": {
+								"address": "0x8d79f4d920b03d88faca1e421af023a87fbb1e4a6fd200248e6e9998d09e470",
+								"module": "math",
+								"name": "SwitchboardDecimal",
+								"typeArguments": []
+							}
+						}
+					}
+				],
+				"return": [
+					"Bool"
+				]
+			},
+			"lt": {
+				"visibility": "Public",
+				"isEntry": false,
+				"typeParameters": [],
+				"parameters": [
+					{
+						"Reference": {
+							"Struct": {
+								"address": "0x8d79f4d920b03d88faca1e421af023a87fbb1e4a6fd200248e6e9998d09e470",
+								"module": "math",
+								"name": "SwitchboardDecimal",
+								"typeArguments": []
+							}
+						}
+					},
+					{
+						"Reference": {
+							"Struct": {
+								"address": "0x8d79f4d920b03d88faca1e421af023a87fbb1e4a6fd200248e6e9998d09e470",
+								"module": "math",
+								"name": "SwitchboardDecimal",
+								"typeArguments": []
+							}
+						}
+					}
+				],
+				"return": [
+					"Bool"
+				]
+			},
+			"lt_u64": {
+				"visibility": "Public",
+				"isEntry": false,
+				"typeParameters": [],
+				"parameters": [
+					"U64",
+					"Bool",
+					"U64",
+					"Bool"
+				],
+				"return": [
+					"Bool"
+				]
+			},
+			"lte": {
+				"visibility": "Public",
+				"isEntry": false,
+				"typeParameters": [],
+				"parameters": [
+					{
+						"Reference": {
+							"Struct": {
+								"address": "0x8d79f4d920b03d88faca1e421af023a87fbb1e4a6fd200248e6e9998d09e470",
+								"module": "math",
+								"name": "SwitchboardDecimal",
+								"typeArguments": []
+							}
+						}
+					},
+					{
+						"Reference": {
+							"Struct": {
+								"address": "0x8d79f4d920b03d88faca1e421af023a87fbb1e4a6fd200248e6e9998d09e470",
+								"module": "math",
+								"name": "SwitchboardDecimal",
+								"typeArguments": []
+							}
+						}
+					}
+				],
+				"return": [
+					"Bool"
+				]
+			},
+			"max_u128": {
+				"visibility": "Public",
+				"isEntry": false,
+				"typeParameters": [],
+				"parameters": [],
+				"return": [
+					"U128"
+				]
+			},
+			"median": {
+				"visibility": "Public",
+				"isEntry": false,
+				"typeParameters": [],
+				"parameters": [
+					{
+						"MutableReference": {
+							"Vector": {
+								"Struct": {
+									"address": "0x8d79f4d920b03d88faca1e421af023a87fbb1e4a6fd200248e6e9998d09e470",
+									"module": "math",
+									"name": "SwitchboardDecimal",
+									"typeArguments": []
+								}
+							}
+						}
+					}
+				],
+				"return": [
+					{
+						"Struct": {
+							"address": "0x8d79f4d920b03d88faca1e421af023a87fbb1e4a6fd200248e6e9998d09e470",
+							"module": "math",
+							"name": "SwitchboardDecimal",
+							"typeArguments": []
+						}
+					}
+				]
+			},
+			"mul": {
+				"visibility": "Public",
+				"isEntry": false,
+				"typeParameters": [],
+				"parameters": [
+					{
+						"Reference": {
+							"Struct": {
+								"address": "0x8d79f4d920b03d88faca1e421af023a87fbb1e4a6fd200248e6e9998d09e470",
+								"module": "math",
+								"name": "SwitchboardDecimal",
+								"typeArguments": []
+							}
+						}
+					},
+					{
+						"Reference": {
+							"Struct": {
+								"address": "0x8d79f4d920b03d88faca1e421af023a87fbb1e4a6fd200248e6e9998d09e470",
+								"module": "math",
+								"name": "SwitchboardDecimal",
+								"typeArguments": []
+							}
+						}
+					},
+					{
+						"MutableReference": {
+							"Struct": {
+								"address": "0x8d79f4d920b03d88faca1e421af023a87fbb1e4a6fd200248e6e9998d09e470",
+								"module": "math",
+								"name": "SwitchboardDecimal",
+								"typeArguments": []
+							}
+						}
+					}
+				],
+				"return": []
+			},
+			"new": {
+				"visibility": "Public",
+				"isEntry": false,
+				"typeParameters": [],
+				"parameters": [
+					"U128",
+					"U8",
+					"Bool"
+				],
+				"return": [
+					{
+						"Struct": {
+							"address": "0x8d79f4d920b03d88faca1e421af023a87fbb1e4a6fd200248e6e9998d09e470",
+							"module": "math",
+							"name": "SwitchboardDecimal",
+							"typeArguments": []
+						}
+					}
+				]
+			},
+			"pow": {
+				"visibility": "Public",
+				"isEntry": false,
+				"typeParameters": [],
+				"parameters": [
+					"U64",
+					"U8"
+				],
+				"return": [
+					"U128"
+				]
+			},
+			"quick_sort": {
+				"visibility": "Public",
+				"isEntry": false,
+				"typeParameters": [],
+				"parameters": [
+					{
+						"MutableReference": {
+							"Vector": {
+								"Struct": {
+									"address": "0x8d79f4d920b03d88faca1e421af023a87fbb1e4a6fd200248e6e9998d09e470",
+									"module": "math",
+									"name": "SwitchboardDecimal",
+									"typeArguments": []
+								}
+							}
+						}
+					},
+					"U64",
+					"Bool",
+					"U64",
+					"Bool"
+				],
+				"return": []
+			},
+			"scale_to_decimals": {
+				"visibility": "Public",
+				"isEntry": false,
+				"typeParameters": [],
+				"parameters": [
+					{
+						"Reference": {
+							"Struct": {
+								"address": "0x8d79f4d920b03d88faca1e421af023a87fbb1e4a6fd200248e6e9998d09e470",
+								"module": "math",
+								"name": "SwitchboardDecimal",
+								"typeArguments": []
+							}
+						}
+					},
+					"U8"
+				],
+				"return": [
+					"U128"
+				]
+			},
+			"sort_results": {
+				"visibility": "Public",
+				"isEntry": false,
+				"typeParameters": [],
+				"parameters": [
+					{
+						"MutableReference": {
+							"Vector": {
+								"Struct": {
+									"address": "0x8d79f4d920b03d88faca1e421af023a87fbb1e4a6fd200248e6e9998d09e470",
+									"module": "math",
+									"name": "SwitchboardDecimal",
+									"typeArguments": []
+								}
+							}
+						}
+					}
+				],
+				"return": []
+			},
+			"sub": {
+				"visibility": "Public",
+				"isEntry": false,
+				"typeParameters": [],
+				"parameters": [
+					{
+						"Reference": {
+							"Struct": {
+								"address": "0x8d79f4d920b03d88faca1e421af023a87fbb1e4a6fd200248e6e9998d09e470",
+								"module": "math",
+								"name": "SwitchboardDecimal",
+								"typeArguments": []
+							}
+						}
+					},
+					{
+						"Reference": {
+							"Struct": {
+								"address": "0x8d79f4d920b03d88faca1e421af023a87fbb1e4a6fd200248e6e9998d09e470",
+								"module": "math",
+								"name": "SwitchboardDecimal",
+								"typeArguments": []
+							}
+						}
+					}
+				],
+				"return": [
+					{
+						"Struct": {
+							"address": "0x8d79f4d920b03d88faca1e421af023a87fbb1e4a6fd200248e6e9998d09e470",
+							"module": "math",
+							"name": "SwitchboardDecimal",
+							"typeArguments": []
+						}
+					}
+				]
+			},
+			"sub_u64": {
+				"visibility": "Public",
+				"isEntry": false,
+				"typeParameters": [],
+				"parameters": [
+					"U64",
+					"Bool",
+					"U64",
+					"Bool"
+				],
+				"return": [
+					"Bool",
+					"U64"
+				]
+			},
+			"unpack": {
+				"visibility": "Public",
+				"isEntry": false,
+				"typeParameters": [],
+				"parameters": [
+					{
+						"Struct": {
+							"address": "0x8d79f4d920b03d88faca1e421af023a87fbb1e4a6fd200248e6e9998d09e470",
+							"module": "math",
+							"name": "SwitchboardDecimal",
+							"typeArguments": []
+						}
+					}
+				],
+				"return": [
+					"U128",
+					"U8",
+					"Bool"
+				]
+			},
+			"zero": {
+				"visibility": "Public",
+				"isEntry": false,
+				"typeParameters": [],
+				"parameters": [],
+				"return": [
+					{
+						"Struct": {
+							"address": "0x8d79f4d920b03d88faca1e421af023a87fbb1e4a6fd200248e6e9998d09e470",
+							"module": "math",
+							"name": "SwitchboardDecimal",
+							"typeArguments": []
+						}
+					}
+				]
+			}
+		}
+	},
+	{
+		"fileFormatVersion": 6,
+		"address": "0x8d79f4d920b03d88faca1e421af023a87fbb1e4a6fd200248e6e9998d09e470",
+		"name": "quote",
+		"friends": [],
+		"structs": {
+			"Quote": {
+				"abilities": {
+					"abilities": [
+						"Key"
+					]
+				},
+				"typeParameters": [],
+				"fields": [
+					{
+						"name": "id",
+						"type": {
+							"Struct": {
+								"address": "0x2",
+								"module": "object",
+								"name": "UID",
+								"typeArguments": []
+							}
+						}
+					},
+					{
+						"name": "node_addr",
+						"type": "Address"
+					},
+					{
+						"name": "node_authority",
+						"type": "Address"
+					},
+					{
+						"name": "queue_addr",
+						"type": "Address"
+					},
+					{
+						"name": "quote_buffer",
+						"type": {
+							"Vector": "U8"
+						}
+					},
+					{
+						"name": "verification_status",
+						"type": "U8"
+					},
+					{
+						"name": "verification_timestamp",
+						"type": "U64"
+					},
+					{
+						"name": "valid_until",
+						"type": "U64"
+					},
+					{
+						"name": "content_hash_enabled",
+						"type": "Bool"
+					},
+					{
+						"name": "friend_key",
+						"type": {
+							"Vector": "U8"
+						}
+					},
+					{
+						"name": "version",
+						"type": "U64"
+					}
+				]
+			}
+		},
+		"exposedFunctions": {
+			"VERIFICATION_FAILURE": {
+				"visibility": "Public",
+				"isEntry": false,
+				"typeParameters": [],
+				"parameters": [],
+				"return": [
+					"U8"
+				]
+			},
+			"VERIFICATION_OVERRIDE": {
+				"visibility": "Public",
+				"isEntry": false,
+				"typeParameters": [],
+				"parameters": [],
+				"return": [
+					"U8"
+				]
+			},
+			"VERIFICATION_PENDING": {
+				"visibility": "Public",
+				"isEntry": false,
+				"typeParameters": [],
+				"parameters": [],
+				"return": [
+					"U8"
+				]
+			},
+			"VERIFICATION_SUCCESS": {
+				"visibility": "Public",
+				"isEntry": false,
+				"typeParameters": [],
+				"parameters": [],
+				"return": [
+					"U8"
+				]
+			},
+			"fail": {
+				"visibility": "Public",
+				"isEntry": false,
+				"typeParameters": [
+					{
+						"abilities": []
+					}
+				],
+				"parameters": [
+					{
+						"MutableReference": {
+							"Struct": {
+								"address": "0x8d79f4d920b03d88faca1e421af023a87fbb1e4a6fd200248e6e9998d09e470",
+								"module": "quote",
+								"name": "Quote",
+								"typeArguments": []
+							}
+						}
+					},
+					{
+						"Reference": {
+							"TypeParameter": 0
+						}
+					}
+				],
+				"return": []
+			},
+			"force_override": {
+				"visibility": "Public",
+				"isEntry": false,
+				"typeParameters": [
+					{
+						"abilities": []
+					}
+				],
+				"parameters": [
+					{
+						"MutableReference": {
+							"Struct": {
+								"address": "0x8d79f4d920b03d88faca1e421af023a87fbb1e4a6fd200248e6e9998d09e470",
+								"module": "quote",
+								"name": "Quote",
+								"typeArguments": []
+							}
+						}
+					},
+					"U64",
+					"U64",
+					{
+						"Reference": {
+							"TypeParameter": 0
+						}
+					}
+				],
+				"return": []
+			},
+			"is_valid": {
+				"visibility": "Public",
+				"isEntry": false,
+				"typeParameters": [],
+				"parameters": [
+					{
+						"Reference": {
+							"Struct": {
+								"address": "0x8d79f4d920b03d88faca1e421af023a87fbb1e4a6fd200248e6e9998d09e470",
+								"module": "quote",
+								"name": "Quote",
+								"typeArguments": []
+							}
+						}
+					},
+					"U64"
+				],
+				"return": [
+					"Bool"
+				]
+			},
+			"migrate": {
+				"visibility": "Private",
+				"isEntry": true,
+				"typeParameters": [],
+				"parameters": [
+					{
+						"MutableReference": {
+							"Struct": {
+								"address": "0x8d79f4d920b03d88faca1e421af023a87fbb1e4a6fd200248e6e9998d09e470",
+								"module": "quote",
+								"name": "Quote",
+								"typeArguments": []
+							}
+						}
+					},
+					{
+						"Reference": {
+							"Struct": {
+								"address": "0x8d79f4d920b03d88faca1e421af023a87fbb1e4a6fd200248e6e9998d09e470",
+								"module": "switchboard",
+								"name": "AdminCap",
+								"typeArguments": []
+							}
+						}
+					}
+				],
+				"return": []
+			},
+			"migrate_package": {
+				"visibility": "Public",
+				"isEntry": false,
+				"typeParameters": [
+					{
+						"abilities": []
+					},
+					{
+						"abilities": []
+					}
+				],
+				"parameters": [
+					{
+						"MutableReference": {
+							"Struct": {
+								"address": "0x8d79f4d920b03d88faca1e421af023a87fbb1e4a6fd200248e6e9998d09e470",
+								"module": "quote",
+								"name": "Quote",
+								"typeArguments": []
+							}
+						}
+					},
+					{
+						"Reference": {
+							"TypeParameter": 0
+						}
+					},
+					{
+						"Reference": {
+							"TypeParameter": 1
+						}
+					}
+				],
+				"return": []
+			},
+			"new": {
+				"visibility": "Public",
+				"isEntry": false,
+				"typeParameters": [
+					{
+						"abilities": []
+					}
+				],
+				"parameters": [
+					"Address",
+					"Address",
+					"Address",
+					{
+						"Vector": "U8"
+					},
+					"Bool",
+					{
+						"Reference": {
+							"TypeParameter": 0
+						}
+					},
+					{
+						"MutableReference": {
+							"Struct": {
+								"address": "0x2",
+								"module": "tx_context",
+								"name": "TxContext",
+								"typeArguments": []
+							}
+						}
+					}
+				],
+				"return": [
+					{
+						"Struct": {
+							"address": "0x8d79f4d920b03d88faca1e421af023a87fbb1e4a6fd200248e6e9998d09e470",
+							"module": "quote",
+							"name": "Quote",
+							"typeArguments": []
+						}
+					}
+				]
+			},
+			"node_addr": {
+				"visibility": "Public",
+				"isEntry": false,
+				"typeParameters": [],
+				"parameters": [
+					{
+						"Reference": {
+							"Struct": {
+								"address": "0x8d79f4d920b03d88faca1e421af023a87fbb1e4a6fd200248e6e9998d09e470",
+								"module": "quote",
+								"name": "Quote",
+								"typeArguments": []
+							}
+						}
+					}
+				],
+				"return": [
+					"Address"
+				]
+			},
+			"node_authority": {
+				"visibility": "Public",
+				"isEntry": false,
+				"typeParameters": [],
+				"parameters": [
+					{
+						"Reference": {
+							"Struct": {
+								"address": "0x8d79f4d920b03d88faca1e421af023a87fbb1e4a6fd200248e6e9998d09e470",
+								"module": "quote",
+								"name": "Quote",
+								"typeArguments": []
+							}
+						}
+					}
+				],
+				"return": [
+					"Address"
+				]
+			},
+			"queue_addr": {
+				"visibility": "Public",
+				"isEntry": false,
+				"typeParameters": [],
+				"parameters": [
+					{
+						"Reference": {
+							"Struct": {
+								"address": "0x8d79f4d920b03d88faca1e421af023a87fbb1e4a6fd200248e6e9998d09e470",
+								"module": "quote",
+								"name": "Quote",
+								"typeArguments": []
+							}
+						}
+					}
+				],
+				"return": [
+					"Address"
+				]
+			},
+			"quote_address": {
+				"visibility": "Public",
+				"isEntry": false,
+				"typeParameters": [],
+				"parameters": [
+					{
+						"Reference": {
+							"Struct": {
+								"address": "0x8d79f4d920b03d88faca1e421af023a87fbb1e4a6fd200248e6e9998d09e470",
+								"module": "quote",
+								"name": "Quote",
+								"typeArguments": []
+							}
+						}
+					}
+				],
+				"return": [
+					"Address"
+				]
+			},
+			"quote_buffer": {
+				"visibility": "Public",
+				"isEntry": false,
+				"typeParameters": [],
+				"parameters": [
+					{
+						"Reference": {
+							"Struct": {
+								"address": "0x8d79f4d920b03d88faca1e421af023a87fbb1e4a6fd200248e6e9998d09e470",
+								"module": "quote",
+								"name": "Quote",
+								"typeArguments": []
+							}
+						}
+					}
+				],
+				"return": [
+					{
+						"Reference": {
+							"Vector": "U8"
+						}
+					}
+				]
+			},
+			"set_configs": {
+				"visibility": "Public",
+				"isEntry": false,
+				"typeParameters": [
+					{
+						"abilities": []
+					}
+				],
+				"parameters": [
+					{
+						"MutableReference": {
+							"Struct": {
+								"address": "0x8d79f4d920b03d88faca1e421af023a87fbb1e4a6fd200248e6e9998d09e470",
+								"module": "quote",
+								"name": "Quote",
+								"typeArguments": []
+							}
+						}
+					},
+					"Address",
+					"Address",
+					"Address",
+					{
+						"Vector": "U8"
+					},
+					"U8",
+					"U64",
+					"U64",
+					{
+						"Reference": {
+							"TypeParameter": 0
+						}
+					}
+				],
+				"return": []
+			},
+			"share_quote": {
+				"visibility": "Public",
+				"isEntry": false,
+				"typeParameters": [],
+				"parameters": [
+					{
+						"Struct": {
+							"address": "0x8d79f4d920b03d88faca1e421af023a87fbb1e4a6fd200248e6e9998d09e470",
+							"module": "quote",
+							"name": "Quote",
+							"typeArguments": []
+						}
+					}
+				],
+				"return": []
+			},
+			"valid_until": {
+				"visibility": "Public",
+				"isEntry": false,
+				"typeParameters": [],
+				"parameters": [
+					{
+						"Reference": {
+							"Struct": {
+								"address": "0x8d79f4d920b03d88faca1e421af023a87fbb1e4a6fd200248e6e9998d09e470",
+								"module": "quote",
+								"name": "Quote",
+								"typeArguments": []
+							}
+						}
+					}
+				],
+				"return": [
+					"U64"
+				]
+			},
+			"verification_status": {
+				"visibility": "Public",
+				"isEntry": false,
+				"typeParameters": [],
+				"parameters": [
+					{
+						"Reference": {
+							"Struct": {
+								"address": "0x8d79f4d920b03d88faca1e421af023a87fbb1e4a6fd200248e6e9998d09e470",
+								"module": "quote",
+								"name": "Quote",
+								"typeArguments": []
+							}
+						}
+					}
+				],
+				"return": [
+					"U8"
+				]
+			},
+			"verification_timestamp": {
+				"visibility": "Public",
+				"isEntry": false,
+				"typeParameters": [],
+				"parameters": [
+					{
+						"Reference": {
+							"Struct": {
+								"address": "0x8d79f4d920b03d88faca1e421af023a87fbb1e4a6fd200248e6e9998d09e470",
+								"module": "quote",
+								"name": "Quote",
+								"typeArguments": []
+							}
+						}
+					}
+				],
+				"return": [
+					"U64"
+				]
+			},
+			"verify": {
+				"visibility": "Public",
+				"isEntry": false,
+				"typeParameters": [
+					{
+						"abilities": []
+					}
+				],
+				"parameters": [
+					{
+						"MutableReference": {
+							"Struct": {
+								"address": "0x8d79f4d920b03d88faca1e421af023a87fbb1e4a6fd200248e6e9998d09e470",
+								"module": "quote",
+								"name": "Quote",
+								"typeArguments": []
+							}
+						}
+					},
+					"U64",
+					"U64",
+					{
+						"Reference": {
+							"TypeParameter": 0
+						}
+					}
+				],
+				"return": []
+			},
+			"verify_quote_data": {
+				"visibility": "Public",
+				"isEntry": false,
+				"typeParameters": [],
+				"parameters": [
+					{
+						"Reference": {
+							"Struct": {
+								"address": "0x8d79f4d920b03d88faca1e421af023a87fbb1e4a6fd200248e6e9998d09e470",
+								"module": "quote",
+								"name": "Quote",
+								"typeArguments": []
+							}
+						}
+					}
+				],
+				"return": [
+					"Bool",
+					{
+						"Vector": "U8"
+					}
+				]
+			}
+		}
+	},
+	{
+		"fileFormatVersion": 6,
+		"address": "0x8d79f4d920b03d88faca1e421af023a87fbb1e4a6fd200248e6e9998d09e470",
+		"name": "switchboard",
+		"friends": [],
+		"structs": {
+			"AdminCap": {
+				"abilities": {
+					"abilities": [
+						"Key"
+					]
+				},
+				"typeParameters": [],
+				"fields": [
+					{
+						"name": "id",
+						"type": {
+							"Struct": {
+								"address": "0x2",
+								"module": "object",
+								"name": "UID",
+								"typeArguments": []
+							}
+						}
+					}
+				]
+			}
+		},
+		"exposedFunctions": {
+			"version": {
+				"visibility": "Public",
+				"isEntry": false,
+				"typeParameters": [],
+				"parameters": [],
+				"return": [
+					"U64"
+				]
+			}
+		}
+	},
+	{
+		"fileFormatVersion": 6,
+		"address": "0x8d79f4d920b03d88faca1e421af023a87fbb1e4a6fd200248e6e9998d09e470",
+		"name": "utils",
+		"friends": [],
+		"structs": {},
+		"exposedFunctions": {
+			"escrow_balance": {
+				"visibility": "Public",
+				"isEntry": false,
+				"typeParameters": [
+					{
+						"abilities": []
+					}
+				],
+				"parameters": [
+					{
+						"Reference": {
+							"Struct": {
+								"address": "0x2",
+								"module": "bag",
+								"name": "Bag",
+								"typeArguments": []
+							}
+						}
+					},
+					"Address"
+				],
+				"return": [
+					"U64"
+				]
+			},
+			"escrow_deposit": {
+				"visibility": "Public",
+				"isEntry": false,
+				"typeParameters": [
+					{
+						"abilities": []
+					}
+				],
+				"parameters": [
+					{
+						"MutableReference": {
+							"Struct": {
+								"address": "0x2",
+								"module": "bag",
+								"name": "Bag",
+								"typeArguments": []
+							}
+						}
+					},
+					"Address",
+					{
+						"Struct": {
+							"address": "0x2",
+							"module": "coin",
+							"name": "Coin",
+							"typeArguments": [
+								{
+									"TypeParameter": 0
+								}
+							]
+						}
+					}
+				],
+				"return": []
+			},
+			"escrow_withdraw": {
+				"visibility": "Public",
+				"isEntry": false,
+				"typeParameters": [
+					{
+						"abilities": []
+					}
+				],
+				"parameters": [
+					{
+						"MutableReference": {
+							"Struct": {
+								"address": "0x2",
+								"module": "bag",
+								"name": "Bag",
+								"typeArguments": []
+							}
+						}
+					},
+					"Address",
+					"U64",
+					{
+						"MutableReference": {
+							"Struct": {
+								"address": "0x2",
+								"module": "tx_context",
+								"name": "TxContext",
+								"typeArguments": []
+							}
+						}
+					}
+				],
+				"return": [
+					{
+						"Struct": {
+							"address": "0x2",
+							"module": "coin",
+							"name": "Coin",
+							"typeArguments": [
+								{
+									"TypeParameter": 0
+								}
+							]
+						}
+					}
+				]
+			},
+			"parse_sgx_quote": {
+				"visibility": "Public",
+				"isEntry": false,
+				"typeParameters": [],
+				"parameters": [
+					{
+						"Reference": {
+							"Vector": "U8"
+						}
+					}
+				],
+				"return": [
+					{
+						"Vector": "U8"
+					},
+					{
+						"Vector": "U8"
+					}
+				]
+			},
+			"slice": {
+				"visibility": "Public",
+				"isEntry": false,
+				"typeParameters": [],
+				"parameters": [
+					{
+						"Reference": {
+							"Vector": "U8"
+						}
+					},
+					"U64",
+					"U64"
+				],
+				"return": [
+					{
+						"Vector": "U8"
+					}
+				]
+			},
+			"swap_remove": {
+				"visibility": "Public",
+				"isEntry": false,
+				"typeParameters": [
+					{
+						"abilities": [
+							"Drop",
+							"Store"
+						]
+					}
+				],
+				"parameters": [
+					{
+						"MutableReference": {
+							"Struct": {
+								"address": "0x2",
+								"module": "table_vec",
+								"name": "TableVec",
+								"typeArguments": [
+									{
+										"TypeParameter": 0
+									}
+								]
+							}
+						}
+					},
+					"U64"
+				],
+				"return": []
+			},
+			"type_of": {
+				"visibility": "Public",
+				"isEntry": false,
+				"typeParameters": [
+					{
+						"abilities": []
+					}
+				],
+				"parameters": [],
+				"return": [
+					{
+						"Vector": "U8"
+					}
+				]
+			},
+			"u16_from_le_bytes": {
+				"visibility": "Public",
+				"isEntry": false,
+				"typeParameters": [],
+				"parameters": [
+					{
+						"Reference": {
+							"Vector": "U8"
+						}
+					}
+				],
+				"return": [
+					"U16"
+				]
+			},
+			"u32_from_le_bytes": {
+				"visibility": "Public",
+				"isEntry": false,
+				"typeParameters": [],
+				"parameters": [
+					{
+						"Reference": {
+							"Vector": "U8"
+						}
+					}
+				],
+				"return": [
+					"U32"
+				]
+			}
+		}
+	}
+]

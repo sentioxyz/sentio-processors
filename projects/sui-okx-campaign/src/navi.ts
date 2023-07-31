@@ -26,7 +26,7 @@ const reserves = [
 ]
 
 const coin = ["sui", "usdc", "usdt"]
-const DECIMAL = [9, 6, 6]
+const DECIMAL = [9, 8, 8]
 
 export type LendingEvent = lending.BorrowEventInstance | lending.DepositEventInstance | lending.WithdrawEventInstance | lending.RepayEventInstance
 
@@ -35,14 +35,16 @@ async function DepositHandler(event: LendingEvent, ctx: SuiContext) {
     const reserve = Number(event.data_decoded.reserve)
     const amount = Number(event.data_decoded.amount) / 10 ** DECIMAL[reserve]
 
-    const price = (await getPriceBySymbol(coin[reserve], ctx.timestamp))!
-    const usd_amount = amount * price
-    if (usd_amount >= 5) {
+    // const price = (await getPriceBySymbol(coin[reserve], ctx.timestamp))!
+    // const usd_amount = amount * price
+
+    //only checks sui reserve
+    if (amount >= 5 && reserve == 0) {
         ctx.eventLogger.emit("Deposit", {
             distinctId: sender,
             sender,
             amount,
-            usd_amount,
+            // usd_amount,
             coin: coin[reserve],
             reserve,
             project: "navi"
