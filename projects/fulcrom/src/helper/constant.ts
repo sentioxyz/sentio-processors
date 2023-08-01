@@ -1,3 +1,4 @@
+//TODO handles new token additions automatically
 export const WhitelistTokenMap: { [address: string]: { symbol: string, decimal: number } } = {
     "0xc21223249ca28397b4b6541dffaecc539bff0c59": {
         symbol: "USDC", decimal: 6
@@ -22,6 +23,9 @@ export const WhitelistTokenMap: { [address: string]: { symbol: string, decimal: 
     },
     "0x9d97be214b68c7051215bb61059b4e299cd792c3": {
         symbol: "LTC", decimal: 8
+    },
+    "0x7589b70abb83427bb7049e08ee9fc6479ccb7a23": {
+        symbol: "BCH", decimal: 8
     }
 }
 
