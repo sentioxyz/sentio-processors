@@ -1,17 +1,58 @@
 import { FulContext } from "../types/eth/ful.js"
 import { VaultContext } from "../types/eth/vault.js"
-import { WhitelistTokenMap, FUL, sFUL, esFUL, vFLP, vFUL, VAULT, FUL_MANAGER, REWARD_ROUTER } from './constant.js'
+import { EthContext } from "@sentio/sdk/eth"
+import { FUL, sFUL, esFUL, vFLP, vFUL, VAULT, FUL_MANAGER, REWARD_ROUTER } from './constant.js'
 import { getERC20ContractOnContext } from "@sentio/sdk/eth/builtin/erc20"
+import { token } from "@sentio/sdk/utils"
+
+
+
+//create coin map
+let coinInfoMap = new Map<string, Promise<token.TokenInfo>>()
+
+export async function buildCoinInfo(ctx: EthContext, coinAddress: string): Promise<token.TokenInfo> {
+    let [symbol, name, decimal] = ["unk", "unk", 0]
+    // console.log(`building ${ctx.getChainId()} ${coinAddress}`)
+    try {
+        symbol = await getERC20ContractOnContext(ctx, coinAddress).symbol()
+        decimal = Number(await getERC20ContractOnContext(ctx, coinAddress).decimals())
+        name = await getERC20ContractOnContext(ctx, coinAddress).name()
+        console.log(`build coin metadata ${symbol} ${decimal} ${name}`)
+    }
+    catch (e) {
+        console.log(`${e.message} get coin metadata error ${coinAddress}`)
+    }
+    return {
+        symbol,
+        name,
+        decimal
+    }
+}
+
+export const getOrCreateCoin = async function (ctx: EthContext, coinAddress: string): Promise<token.TokenInfo> {
+    let coinInfo = coinInfoMap.get(coinAddress)
+    if (!coinInfo) {
+        coinInfo = buildCoinInfo(ctx, coinAddress)
+        coinInfoMap.set(coinAddress, coinInfo)
+        console.log(`set coinInfoMap for ${(await coinInfo).name}`)
+    }
+    return coinInfo
+}
+
 
 
 //gauge each asset in pool
 export const gaugeTokenAum = async (_: any, ctx: VaultContext) => {
-    for (let address in WhitelistTokenMap) {
+    const whitelistedTokenCount = await ctx.contract.whitelistedTokenCount({ blockTag: ctx.blockNumber })
+    let address = ""
+    for (let i = 0; i < whitelistedTokenCount; i++) {
+        address = (await ctx.contract.whitelistedTokens(i, { blockTag: ctx.blockNumber })).toLowerCase()
+        const token = await getOrCreateCoin(ctx, address)
         try {
-            const tokenAum = Number(await getERC20ContractOnContext(ctx, address).balanceOf(VAULT)) / Math.pow(10, WhitelistTokenMap[address].decimal)
+            const tokenAum = Number(await getERC20ContractOnContext(ctx, address).balanceOf(VAULT)) / Math.pow(10, token.decimal)
             // console.log("tokenAum", tokenAum, WhitelistTokenMap[address].decimal, WhitelistTokenMap[address].symbol, ctx.timestamp)
-            ctx.meter.Gauge("tokenAum").record(tokenAum, { coin_symbol: WhitelistTokenMap[address].symbol })
-        } catch (e) { console.log(`gauge token aum error ${WhitelistTokenMap[address].symbol} ${ctx.timestamp}`) }
+            ctx.meter.Gauge("tokenAum").record(tokenAum, { coin_symbol: token.symbol })
+        } catch (e) { console.log(`gauge token aum error ${token.symbol} ${ctx.timestamp}`) }
     }
 }
 

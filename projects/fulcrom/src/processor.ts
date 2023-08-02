@@ -5,12 +5,12 @@ import { FulProcessor } from './types/eth/ful.js'
 import { RewardRouterProcessor } from './types/eth/rewardrouter.js'
 import { gaugeTokenAum, gaugeStakedAssets } from './helper/fulcrom-helper.js';
 import { getERC20ContractOnContext } from '@sentio/sdk/eth/builtin/erc20'
-import { WhitelistTokenMap, FUL, sFUL, esFUL, vFLP, vFUL, VAULT, FUL_MANAGER, REWARD_ROUTER } from './helper/constant.js'
-
+import { FUL, sFUL, esFUL, vFLP, vFUL, VAULT, FUL_MANAGER, REWARD_ROUTER } from './helper/constant.js'
+import { getOrCreateCoin } from './helper/fulcrom-helper.js';
 
 VaultProcessor.bind({ address: VAULT, network: EthChainId.CRONOS })
   .onEventIncreasePosition(async (evt, ctx) => {
-    const collateral = WhitelistTokenMap[evt.args.collateralToken.toLowerCase()]
+    const collateral = await getOrCreateCoin(ctx, evt.args.collateralToken.toLowerCase())
     const collateralDelta = Number(evt.args.collateralDelta) / Math.pow(10, 30)
     const token = evt.args.indexToken
     const sizeDelta = Number(evt.args.sizeDelta) / Math.pow(10, 30)
@@ -26,7 +26,7 @@ VaultProcessor.bind({ address: VAULT, network: EthChainId.CRONOS })
     ctx.meter.Gauge("vault_increase_position_gauge").record(sizeDelta, { coin_symbol: collateral.symbol })
   })
   .onEventDecreasePosition(async (evt, ctx) => {
-    const collateral = WhitelistTokenMap[evt.args.collateralToken.toLowerCase()]
+    const collateral = await getOrCreateCoin(ctx, evt.args.collateralToken.toLowerCase())
     const collateralDelta = Number(evt.args.collateralDelta) / Math.pow(10, 30)
     const token = evt.args.indexToken
     const sizeDelta = Number(evt.args.sizeDelta) / Math.pow(10, 30)
@@ -43,8 +43,8 @@ VaultProcessor.bind({ address: VAULT, network: EthChainId.CRONOS })
 
   })
   .onEventSwap(async (evt, ctx) => {
-    const tokenIn = WhitelistTokenMap[evt.args.tokenIn.toLowerCase()]
-    const tokenOut = WhitelistTokenMap[evt.args.tokenOut.toLowerCase()]
+    const tokenIn = await getOrCreateCoin(ctx, evt.args.tokenIn.toLowerCase())
+    const tokenOut = await getOrCreateCoin(ctx, evt.args.tokenOut.toLowerCase())
     ctx.eventLogger.emit("vault.swap", {
       distinctId: evt.args.account,
       tokenIn: tokenIn.symbol,
@@ -57,7 +57,7 @@ VaultProcessor.bind({ address: VAULT, network: EthChainId.CRONOS })
 
   })
   .onEventLiquidatePosition(async (evt, ctx) => {
-    const collateral = WhitelistTokenMap[evt.args.collateralToken.toLowerCase()]
+    const collateral = await getOrCreateCoin(ctx, evt.args.collateralToken.toLowerCase())
     ctx.eventLogger.emit("vault.liquidatePostion", {
       distinctId: evt.args.account,
       collateralToken: collateral.symbol,
@@ -91,7 +91,7 @@ VaultProcessor.bind({ address: VAULT, network: EthChainId.CRONOS })
   })
   .onEventCollectMarginFees(async (evt, ctx) => {
     //todo: check decimal of other tokens
-    const token = WhitelistTokenMap[evt.args.token.toLowerCase()]
+    const token = await getOrCreateCoin(ctx, evt.args.token.toLowerCase())
     ctx.eventLogger.emit("vault.collectMarginFees", {
       token: token.symbol,
       feeUsd: Number(evt.args.feeUsd) / Math.pow(10, 30),
@@ -102,7 +102,7 @@ VaultProcessor.bind({ address: VAULT, network: EthChainId.CRONOS })
   })
   .onEventCollectSwapFees(async (evt, ctx) => {
     //todo: check decimal of other tokens
-    const token = WhitelistTokenMap[evt.args.token.toLowerCase()]
+    const token = await getOrCreateCoin(ctx, evt.args.token.toLowerCase())
     ctx.eventLogger.emit("vault.collectSwapFees", {
       token: token.symbol,
       feeUsd: Number(evt.args.feeUsd) / Math.pow(10, 30),
@@ -124,7 +124,7 @@ FulProcessor.bind({ address: FUL, network: EthChainId.CRONOS })
 
 FlpManagerProcessor.bind({ address: FUL_MANAGER, network: EthChainId.CRONOS })
   .onEventAddLiquidity(async (evt, ctx) => {
-    const collateral = WhitelistTokenMap[evt.args.token.toLowerCase()]
+    const collateral = await getOrCreateCoin(ctx, evt.args.token.toLowerCase())
     ctx.eventLogger.emit("flpManager.addLiquidity", {
       distinctId: evt.args.account,
       token: collateral.symbol,
@@ -136,7 +136,7 @@ FlpManagerProcessor.bind({ address: FUL_MANAGER, network: EthChainId.CRONOS })
 
   })
   .onEventRemoveLiquidity(async (evt, ctx) => {
-    const collateral = WhitelistTokenMap[evt.args.token.toLowerCase()]
+    const collateral = await getOrCreateCoin(ctx, evt.args.token.toLowerCase())
     ctx.eventLogger.emit("flpManager.removeLiquidity", {
       distinctId: evt.args.account,
       token: collateral.symbol,
