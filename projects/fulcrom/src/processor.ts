@@ -51,7 +51,8 @@ VaultProcessor.bind({ address: VAULT, network: EthChainId.CRONOS })
       coin_symbol: tokenIn.symbol,
       tokenOut: tokenOut.symbol,
       amountIn: Number(evt.args.amountIn) / Math.pow(10, tokenIn.decimal),
-      amountOut: Number(evt.args.amountOut) / Math.pow(10, tokenOut.decimal)
+      amountOut: Number(evt.args.amountOut) / Math.pow(10, tokenOut.decimal),
+      pairName: (tokenIn.symbol < tokenOut.symbol) ? tokenIn.symbol + "-" + tokenOut.symbol : tokenOut.symbol + "-" + tokenIn.symbol
     })
     ctx.meter.Gauge("swap_gauge").record(Number(evt.args.amountIn) / Math.pow(10, tokenIn.decimal), { coin_symbol: tokenIn.symbol })
 

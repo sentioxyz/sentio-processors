@@ -7,11 +7,12 @@ import { RewardTrackerProcessor, RewardTrackerContext } from './types/eth/reward
 import { EthChainId } from "@sentio/sdk/eth";
 import { gaugeTokenAum, gaugeStakedAssets } from './helper/gmx-helper.js';
 import { getERC20ContractOnContext } from '@sentio/sdk/eth/builtin/erc20'
-import { GMX_ADDRESS, REWARD_ROUTER, VAULT_ADDRESS, WhitelistTokenMap, esGMX_ADDRESS, sGMX_ADDRESS, GLP_MANAGER_ADDRESS, vGLP_ADDRESS, vGMX_ADDRESS, REWARD_TRACKER_ADDRESS } from './helper/constant.js'
+import { GMX_ADDRESS, REWARD_ROUTER, VAULT_ADDRESS, esGMX_ADDRESS, sGMX_ADDRESS, GLP_MANAGER_ADDRESS, vGLP_ADDRESS, vGMX_ADDRESS, REWARD_TRACKER_ADDRESS } from './helper/constant.js'
+import { getOrCreateCoin } from './helper/gmx-helper.js'
 
 VaultProcessor.bind({ address: VAULT_ADDRESS, network: EthChainId.ARBITRUM })
     .onEventIncreasePosition(async (evt, ctx) => {
-        const collateral = WhitelistTokenMap[evt.args.collateralToken.toLowerCase()]
+        const collateral = await getOrCreateCoin(ctx, evt.args.collateralToken.toLowerCase())
         const collateralDelta = Number(evt.args.collateralDelta) / Math.pow(10, 30)
         const token = evt.args.indexToken
         const sizeDelta = Number(evt.args.sizeDelta) / Math.pow(10, 30)
@@ -26,7 +27,7 @@ VaultProcessor.bind({ address: VAULT_ADDRESS, network: EthChainId.ARBITRUM })
         })
     })
     .onEventDecreasePosition(async (evt, ctx) => {
-        const collateral = WhitelistTokenMap[evt.args.collateralToken.toLowerCase()]
+        const collateral = await getOrCreateCoin(ctx, evt.args.collateralToken.toLowerCase())
         const collateralDelta = Number(evt.args.collateralDelta) / Math.pow(10, 30)
         const token = evt.args.indexToken
         const sizeDelta = Number(evt.args.sizeDelta) / Math.pow(10, 30)
@@ -41,8 +42,8 @@ VaultProcessor.bind({ address: VAULT_ADDRESS, network: EthChainId.ARBITRUM })
         })
     })
     .onEventSwap(async (evt, ctx) => {
-        const tokenIn = WhitelistTokenMap[evt.args.tokenIn.toLowerCase()]
-        const tokenOut = WhitelistTokenMap[evt.args.tokenOut.toLowerCase()]
+        const tokenIn = await getOrCreateCoin(ctx, evt.args.tokenIn.toLowerCase())
+        const tokenOut = await getOrCreateCoin(ctx, evt.args.tokenOut.toLowerCase())
         ctx.eventLogger.emit("vault.swap", {
             distinctId: evt.args.account,
             tokenIn: tokenIn.symbol,
@@ -59,7 +60,7 @@ VaultProcessor.bind({ address: VAULT_ADDRESS, network: EthChainId.ARBITRUM })
     //     })
     // })
     .onEventLiquidatePosition(async (evt, ctx) => {
-        const collateral = WhitelistTokenMap[evt.args.collateralToken.toLowerCase()]
+        const collateral = await getOrCreateCoin(ctx, evt.args.collateralToken.toLowerCase())
         ctx.eventLogger.emit("vault.liquidatePostion", {
             distinctId: evt.args.account,
             collateralToken: collateral.symbol,
@@ -90,7 +91,7 @@ VaultProcessor.bind({ address: VAULT_ADDRESS, network: EthChainId.ARBITRUM })
     })
     .onEventCollectMarginFees(async (evt, ctx) => {
         //todo: check decimal of other tokens
-        const token = WhitelistTokenMap[evt.args.token.toLowerCase()]
+        const token = await getOrCreateCoin(ctx, evt.args.token.toLowerCase())
         ctx.eventLogger.emit("vault.collectMarginFees", {
             token: token.symbol,
             feeUsd: Number(evt.args.feeUsd) / Math.pow(10, 30),
@@ -99,7 +100,7 @@ VaultProcessor.bind({ address: VAULT_ADDRESS, network: EthChainId.ARBITRUM })
     })
     .onEventCollectSwapFees(async (evt, ctx) => {
         //todo: check decimal of other tokens
-        const token = WhitelistTokenMap[evt.args.token.toLowerCase()]
+        const token = await getOrCreateCoin(ctx, evt.args.token.toLowerCase())
         ctx.eventLogger.emit("vault.collectSwapFees", {
             token: token.symbol,
             feeUsd: Number(evt.args.feeUsd) / Math.pow(10, token.decimal),
@@ -124,7 +125,7 @@ GMXProcessor.bind({ address: GMX_ADDRESS, network: EthChainId.ARBITRUM })
 
 GlpManagerProcessor.bind({ address: GLP_MANAGER_ADDRESS, network: EthChainId.ARBITRUM })
     .onEventAddLiquidity(async (evt, ctx) => {
-        const collateral = WhitelistTokenMap[evt.args.token.toLowerCase()]
+        const collateral = await getOrCreateCoin(ctx, evt.args.token.toLowerCase())
         ctx.eventLogger.emit("glpManager.addLiquidity", {
             distinctId: evt.args.account,
             token: collateral.symbol,
@@ -134,7 +135,7 @@ GlpManagerProcessor.bind({ address: GLP_MANAGER_ADDRESS, network: EthChainId.ARB
         })
     })
     .onEventRemoveLiquidity(async (evt, ctx) => {
-        const collateral = WhitelistTokenMap[evt.args.token.toLowerCase()]
+        const collateral = await getOrCreateCoin(ctx, evt.args.token.toLowerCase())
         ctx.eventLogger.emit("glpManager.removeLiquidity", {
             distinctId: evt.args.account,
             token: collateral.symbol,
