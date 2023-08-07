@@ -1,8 +1,9 @@
+import { EthChainId } from '@sentio/sdk/eth'
 import { MintedexchangeProcessor } from './types/eth/mintedexchange.js'
-import { getERC721Contract } from '@sentio/sdk/eth/builtin/erc721'
+import { getERC721ContractOnContext } from '@sentio/sdk/eth/builtin/erc721'
 
 //first tx block time 6006174
-MintedexchangeProcessor.bind({ address: '0x40cBf9C75a46b147E0fd9aB47df5E064aE015f92', network: 25, startBlock: 6006174 })
+MintedexchangeProcessor.bind({ address: '0x40cBf9C75a46b147E0fd9aB47df5E064aE015f92', network: EthChainId.CRONOS, startBlock: 6006174 })
   .onEventTakerBid(async (event, ctx) => {
     const taker = event.args.taker
     const maker = event.args.maker
@@ -29,7 +30,7 @@ MintedexchangeProcessor.bind({ address: '0x40cBf9C75a46b147E0fd9aB47df5E064aE015
   .onEventRoyaltyPayment(async (event, ctx) => {
     const collection = event.args.collection
     console.log(collection)
-    const collectionName = JSON.stringify(await getERC721Contract(ctx, collection).name())
+    const collectionName = JSON.stringify(await getERC721ContractOnContext(ctx, collection).name())
     // try {
     //   const collectionName = (await getERC721Contract(collection, 25).name()).toString
     // } catch (e) {

@@ -1,7 +1,7 @@
 import * as constant from "./constant.js"
 import { SwapProcessor } from "./types/eth/swap.js"
 import { AddLiquidityEvent, SwapContext } from "./types/eth/swap.js"
-import { EthChainId } from "@sentio/sdk"
+import { EthChainId } from "@sentio/sdk/eth"
 import { FerProcessor } from "./types/eth/fer.js"
 import { getPriceBySymbol } from "@sentio/sdk/utils"
 import { FerroFarmProcessor } from "./types/eth/ferrofarm.js"

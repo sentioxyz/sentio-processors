@@ -191,22 +191,6 @@ PortProcessor.bind({ address: '0x7a3CdB2364f92369a602CAE81167d0679087e6a3', netw
 
 
     })
-    .onAllEvents(async (event, ctx) => {
-        const hash = event.transactionHash
-        try {
-            var tx = (await ctx.contract.provider.getTransaction(hash))!
-            var from = tx.from
-            ctx.eventLogger.emit(event.name,
-                {
-                    distinctId: from
-                })
-        } catch (e) {
-            if (e instanceof Error) {
-                console.log(e.message)
-            }
-        }
-    })
-
 
 
 //first tx block time 2084066,6216653
@@ -310,35 +294,6 @@ MembershipStakerV3Processor.bind({ address: '0xeb074cc764F20d8fE4317ab63f45A85bc
 
 
     })
-    .onAllEvents(async (event, ctx) => {
-        const hash = event.transactionHash
-        let stakeBalance
-        try {
-            stakeBalance = Number(await ctx.contract.totalStaked())
-            console.log(`stakeBalance success, ${stakeBalance}. tx ${hash}`)
-
-            ctx.meter.Gauge("totalStaked").record(stakeBalance)
-        } catch (e) {
-            if (e instanceof Error) {
-                console.log(`stakeBalance failed, tx: ${hash} `, e.message)
-            }
-        }
-
-        try {
-            var tx = (await ctx.contract.provider.getTransaction(hash))!
-            var from = tx.from
-            ctx.eventLogger.emit(event.name,
-                {
-                    distinctId: from
-                })
-        } catch (e) {
-            if (e instanceof Error) {
-                console.log(e.message)
-            }
-        }
-
-    })
-
 
 
 //first tx block time 6688239
@@ -386,40 +341,9 @@ TradeshipProcessor.bind({ address: '0x523d6f30c4aaca133daad97ee2a0c48235bff137',
 
 
     })
-    .onAllEvents(async (event, ctx) => {
-        const hash = event.transactionHash
-        try {
-            var tx = (await ctx.contract.provider.getTransaction(hash))!
-            var from = tx.from
-            ctx.eventLogger.emit(event.name,
-                {
-                    distinctId: from
-                })
-        } catch (e) {
-            if (e instanceof Error) {
-                console.log(e.message)
-            }
-        }
-    })
-
 
 
 //first tx block time 4079464
-OfferContractProcessor.bind({ address: '0x016b347aeb70cc45e3bbaf324feb3c7c464e18b0', network: EthChainId.CRONOS })
-    .onAllEvents(async (event, ctx) => {
-        const hash = event.transactionHash
-        try {
-            var tx = (await ctx.contract.provider.getTransaction(hash))!
-            var from = tx.from
-            ctx.eventLogger.emit(event.name,
-                {
-                    distinctId: from
-                })
-        } catch (e) {
-            if (e instanceof Error) {
-                console.log(e.message)
-            }
-        }
-    })
+// OfferContractProcessor.bind({ address: '0x016b347aeb70cc45e3bbaf324feb3c7c464e18b0', network: EthChainId.CRONOS })
 
 

@@ -1,11 +1,10 @@
 import { validator } from "@sentio/sdk/sui/builtin/0x3"
-import { SuiChainId } from "@sentio/sdk"
-
+import { SuiNetwork } from "@sentio/sdk/sui"
 export const VALIDATOR_ADDRESS = "0x3"
 
 validator.bind({
   address: VALIDATOR_ADDRESS,
-  network: SuiChainId.SUI_MAINNET,
+  network: SuiNetwork.MAIN_NET,
   // startCheckpoint: 1500000n
 })
   .onEventStakingRequestEvent(async (event, ctx) => {

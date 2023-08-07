@@ -2,7 +2,7 @@ import { XSGDProcessor, BurnEvent, MintEvent, TransferEvent, XSGDContext, XSGD }
 import { XIDRProcessor } from "./types/eth/xidr.js";
 import { token } from "@sentio/sdk/utils";
 import { UniswapProcessor } from "./types/eth/uniswap.js";
-import { getERC20Contract } from "@sentio/sdk/eth/builtin/erc20";
+import { getERC20ContractOnContext } from "@sentio/sdk/eth/builtin/erc20";
 import { scaleDown } from "@sentio/sdk";
 export const XSGD_ETH = "0x70e8de73ce538da2beed35d14187f6959a8eca96"
 export const XSGD_POLYGON = "0xDC3326e71D45186F113a2F448984CA0e8D201995"
@@ -67,11 +67,11 @@ UniswapProcessor.bind({ address: "0x6279653c28f138c8b31b8a0f6f8cd2c58e8c1705" })
     ctx.meter.Gauge("liquidity").record(liquidity, { poolName: "XSGD/USDC" })
 
     //XSGD
-    const token0Balance = await getERC20Contract(ctx, "0x70e8dE73cE538DA2bEEd35d14187F6959a8ecA96").balanceOf("0x6279653c28f138c8b31b8a0f6f8cd2c58e8c1705")
+    const token0Balance = await getERC20ContractOnContext(ctx, "0x70e8dE73cE538DA2bEEd35d14187F6959a8ecA96").balanceOf("0x6279653c28f138c8b31b8a0f6f8cd2c58e8c1705")
     const token0decimal = 6
     const token0BalanceNormalize = Number(scaleDown(token0Balance, token0decimal))
     //USDC
-    const token1Balance = await getERC20Contract(ctx, "0xA0b86991c6218b36c1d19D4a2e9Eb0cE3606eB48").balanceOf("0x6279653c28f138c8b31b8a0f6f8cd2c58e8c1705")
+    const token1Balance = await getERC20ContractOnContext(ctx, "0xA0b86991c6218b36c1d19D4a2e9Eb0cE3606eB48").balanceOf("0x6279653c28f138c8b31b8a0f6f8cd2c58e8c1705")
     const token1decimal = 6
     const token1BalanceNormalize = Number(scaleDown(token1Balance, token1decimal))
 

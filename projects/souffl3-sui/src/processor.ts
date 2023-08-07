@@ -1,5 +1,5 @@
 import { Market } from "./types/sui/souffl3-market.js";
-import { port } from "./types/sui/souffl3-launchpad.js";
+// import { port } from "./types/sui/souffl3-launchpad.js";
 import { SuiNetwork } from "@sentio/sdk/sui";
 import { getNftAndCollectionName } from "./helper/nft-helper.js";
 
@@ -66,8 +66,8 @@ Market.bind({
   })
 
 
-port.bind({
-  address: SOUFFL3_LAUNCHPAD,
-  network: SuiNetwork.MAIN_NET,
-  startCheckpoint: 1500000n
-})
+// port.bind({
+//   address: SOUFFL3_LAUNCHPAD,
+//   network: SuiNetwork.MAIN_NET,
+//   startCheckpoint: 1500000n
+// })

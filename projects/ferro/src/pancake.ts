@@ -1,6 +1,6 @@
 import { PancakeFactoryProcessor, PancakeFactoryContext } from "./types/eth/pancakefactory.js"
 import { PancakePoolProcessorTemplate, PancakePoolProcessor, TokenExchangeEvent, PancakePoolContext } from "./types/eth/pancakepool.js"
-import { EthChainId } from "@sentio/sdk"
+import { EthChainId } from "@sentio/sdk/eth"
 import * as constant from './pancake-constant.js'
 import { getERC20ContractOnContext } from "@sentio/sdk/eth/builtin/erc20"
 import { getPriceBySymbol } from "@sentio/sdk/utils"

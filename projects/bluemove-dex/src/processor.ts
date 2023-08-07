@@ -1,14 +1,14 @@
 import { swap } from "./types/sui/bluemove.js"
-import { SuiObjectProcessor, SuiContext, SuiObjectsContext } from "@sentio/sdk/sui"
+import { SuiObjectProcessor, SuiContext } from "@sentio/sdk/sui"
 import { getPriceByType, token } from "@sentio/sdk/utils"
 import * as constant from './constant.js'
-import { SuiChainId } from "@sentio/sdk"
+import { SuiNetwork } from "@sentio/sdk/sui"
 import * as helper from './helper/clmm-helper.js'
 
 
 swap.bind({
   address: constant.CLMM_MAINNET,
-  network: SuiChainId.SUI_MAINNET,
+  network: SuiNetwork.MAIN_NET,
   startCheckpoint: 1500000n
 })
   .onEventCreated_Pool_Event((event, ctx) => {
@@ -156,7 +156,7 @@ swap.bind({
 //   const pool_address = constant.POOLS_INFO_MAINNET[i]
 //   SuiObjectProcessor.bind({
 //     objectId: pool_address,
-//     network: SuiChainId.SUI_MAINNET,
+//     network: SuiNetwork.MAIN_NET,
 //     startCheckpoint: 1500000n
 //   }).onTimeInterval(async (self, _, ctx) => {
 

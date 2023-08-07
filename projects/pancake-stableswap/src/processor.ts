@@ -1,6 +1,6 @@
 import { FactoryProcessor, FactoryContext, NewStableSwapPairEvent } from "./types/eth/factory.js"
 import { PoolProcessorTemplate, TokenExchangeEvent, PoolContext } from "./types/eth/pool.js"
-import { EthChainId } from "@sentio/sdk"
+import { EthChainId } from "@sentio/sdk/eth";
 import * as constant from './constant.js'
 import { getERC20Contract } from "@sentio/sdk/eth/builtin/erc20"
 

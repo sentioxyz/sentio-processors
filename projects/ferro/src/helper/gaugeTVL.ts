@@ -1,5 +1,5 @@
 import { SwapContext } from "../types/eth/swap.js"
-import { EthChainId } from "@sentio/sdk"
+import { EthChainId } from "@sentio/sdk/eth"
 import * as constant from "../constant.js"
 
 import { getPriceBySymbol } from "@sentio/sdk/utils"
