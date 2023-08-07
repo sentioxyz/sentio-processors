@@ -102,7 +102,9 @@ export function handleBlock(
   chainConfig: ChainConstants
 ): mevBlockResult {
   const dataByTxn = getDataByTxn(b);
-  console.log(`block ${b.number} has ${dataByTxn.size} txns`);
+  console.log(
+    `block ${Number(b.number)} of ${b.hash} has ${dataByTxn.size} txns`
+  );
   let txnResults = new Map<string, txnResult>();
   let txnByIndex = new Map<number, txnResult>();
 
