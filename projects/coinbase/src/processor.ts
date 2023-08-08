@@ -1,9 +1,8 @@
-import { StakedTokenV1Context, StakedTokenV1Processor, MintEvent, BurnEvent, TransferEvent  } from './types/eth/stakedtokenv1.js'
+import {BurnEvent, MintEvent, StakedTokenV1Context, StakedTokenV1Processor, TransferEvent} from './types/eth/stakedtokenv1.js'
 import {getPriceByType, token} from "@sentio/sdk/utils"
-import {BigDecimal, EthChainId, Counter, Gauge} from "@sentio/sdk"
-import {
-    CBETH_PROXY,
-} from "./constant.js"
+import {BigDecimal, Counter, Gauge} from "@sentio/sdk"
+import {EthChainId} from "@sentio/sdk/eth";
+import {CBETH_PROXY,} from "./constant.js"
 
 export const volOptions = {
     sparse: true,
@@ -26,14 +25,14 @@ const mintEventHandler = async function (event: MintEvent, ctx: StakedTokenV1Con
     mintAcc.add(ctx, amount, {token: tokenInfo.symbol})
 }
 
-const burnEventHandler = async function(event: BurnEvent, ctx: StakedTokenV1Context) {
+const burnEventHandler = async function (event: BurnEvent, ctx: StakedTokenV1Context) {
     const tokenInfo = await token.getERC20TokenInfo(ctx, ctx.contract.address)
     const amount = event.args.amount.scaleDown(tokenInfo.decimal)
     burn.record(ctx, amount, {token: tokenInfo.symbol})
     burnAcc.add(ctx, amount, {token: tokenInfo.symbol})
 }
 
-const transferEventHandler = async function(event: TransferEvent, ctx: StakedTokenV1Context) {
+const transferEventHandler = async function (event: TransferEvent, ctx: StakedTokenV1Context) {
     const tokenInfo = await token.getERC20TokenInfo(ctx, ctx.contract.address)
     const amount = event.args.value.scaleDown(tokenInfo.decimal)
     transfer.record(ctx, amount, {token: tokenInfo.symbol})
@@ -41,16 +40,16 @@ const transferEventHandler = async function(event: TransferEvent, ctx: StakedTok
     ctx.eventLogger.emit("Transfer", {
         distinctId: event.args.to,
         from: event.args.from,
-        to:event.args.to,
+        to: event.args.to,
         amount: amount,
         message: event.args.from + " transfers " + amount + " cbETH to " + event.args.to,
     })
 }
 
-const blockHandler = async function(_: any, ctx: StakedTokenV1Context) {
+const blockHandler = async function (_: any, ctx: StakedTokenV1Context) {
     const tokenInfo = await token.getERC20TokenInfo(ctx, ctx.contract.address)
     const totalSupply = (await ctx.contract.totalSupply()).scaleDown(tokenInfo.decimal)
-    const exchangeRate =(await ctx.contract.exchangeRate()).scaleDown(tokenInfo.decimal)
+    const exchangeRate = (await ctx.contract.exchangeRate()).scaleDown(tokenInfo.decimal)
     ctx.meter.Gauge("total_supply").record(totalSupply, {token: tokenInfo.symbol})
     ctx.meter.Gauge("exchange_rate").record(exchangeRate, {token: tokenInfo.symbol})
     const wethPrice = await getPriceByType(EthChainId.ETHEREUM,
