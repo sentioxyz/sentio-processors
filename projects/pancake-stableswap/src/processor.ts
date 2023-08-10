@@ -5,7 +5,7 @@ import * as constant from './constant.js'
 import { getERC20Contract } from "@sentio/sdk/eth/builtin/erc20"
 
 const TokenExchangeHandler = async (event: TokenExchangeEvent, ctx: PoolContext) => {
-  if (!constant.PoolInfoMap[ctx.address]) {
+  if (!constant.PoolInfoMap[ctx.address.toLowerCase()]) {
     console.log(`contract not in pool ${ctx.address}`)
     return
   }
@@ -15,13 +15,13 @@ const TokenExchangeHandler = async (event: TokenExchangeEvent, ctx: PoolContext)
   const buyer = event.args.buyer
   const sold_id = Number(event.args.sold_id)
   const bought_id = Number(event.args.bought_id)
-  const soldToken = sold_id == 0 ? constant.PoolInfoMap[ctx.address].token0 : constant.PoolInfoMap[ctx.address].token1
-  const boughtToken = bought_id == 0 ? constant.PoolInfoMap[ctx.address].token0 : constant.PoolInfoMap[ctx.address].token1
-  const soldDecimal = constant.CoinInfoMap[soldToken].decimal
-  const soldSymbol = constant.CoinInfoMap[soldToken].symbol
+  const soldToken = sold_id == 0 ? constant.PoolInfoMap[ctx.address.toLowerCase()].token0 : constant.PoolInfoMap[ctx.address.toLowerCase()].token1
+  const boughtToken = bought_id == 0 ? constant.PoolInfoMap[ctx.address.toLowerCase()].token0 : constant.PoolInfoMap[ctx.address.toLowerCase()].token1
+  const soldDecimal = constant.CoinInfoMap[soldToken.toLowerCase()].decimal
+  const soldSymbol = constant.CoinInfoMap[soldToken.toLowerCase()].symbol
   const tokens_sold = Number(event.args.tokens_sold) / Math.pow(10, soldDecimal)
-  const boughtDecimal = constant.CoinInfoMap[boughtToken].decimal
-  const boughtSymbol = constant.CoinInfoMap[boughtToken].symbol
+  const boughtDecimal = constant.CoinInfoMap[boughtToken.toLowerCase()].decimal
+  const boughtSymbol = constant.CoinInfoMap[boughtToken.toLowerCase()].symbol
   const tokens_bought = Number(event.args.tokens_bought) / Math.pow(10, boughtDecimal)
 
   ctx.eventLogger.emit("Swap", {
@@ -74,8 +74,8 @@ const poolTemplate = new PoolProcessorTemplate()
   .onEventTokenExchange(TokenExchangeHandler)
   .onTimeInterval(async (_, ctx) => {
     // ctx.meter.Counter("on_time_interval_counter").add(1)
-    const token0_amount = Number(await getERC20Contract(ctx.chainId, constant.PoolInfoMap[ctx.address].token0).balanceOf(ctx.address)) / Math.pow(10, constant.CoinInfoMap[constant.PoolInfoMap[ctx.address].token0].decimal)
-    const token1_amount = Number(await getERC20Contract(ctx.chainId, constant.PoolInfoMap[ctx.address].token1).balanceOf(ctx.address)) / Math.pow(10, constant.CoinInfoMap[constant.PoolInfoMap[ctx.address].token1].decimal)
+    const token0_amount = Number(await getERC20Contract(ctx.chainId, constant.PoolInfoMap[ctx.address.toLowerCase()].token0).balanceOf(ctx.address)) / Math.pow(10, constant.CoinInfoMap[constant.PoolInfoMap[ctx.address.toLowerCase()].token0].decimal)
+    const token1_amount = Number(await getERC20Contract(ctx.chainId, constant.PoolInfoMap[ctx.address.toLowerCase()].token1).balanceOf(ctx.address)) / Math.pow(10, constant.CoinInfoMap[constant.PoolInfoMap[ctx.address.toLowerCase()].token1].decimal)
     ctx.meter.Gauge("tvl").record(token0_amount + token1_amount, { pool: ctx.address })
   }, 1440, 1440)
 
