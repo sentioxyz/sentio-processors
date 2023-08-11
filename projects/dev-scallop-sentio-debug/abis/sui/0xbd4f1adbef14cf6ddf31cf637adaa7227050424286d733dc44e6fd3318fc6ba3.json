@@ -1,0 +1,548 @@
+{
+  "market_query": {
+    "fileFormatVersion": 6,
+    "address": "0xbd4f1adbef14cf6ddf31cf637adaa7227050424286d733dc44e6fd3318fc6ba3",
+    "name": "market_query",
+    "friends": [],
+    "structs": {
+      "CollateralData": {
+        "abilities": {
+          "abilities": [
+            "Copy",
+            "Drop",
+            "Store"
+          ]
+        },
+        "typeParameters": [],
+        "fields": [
+          {
+            "name": "type",
+            "type": {
+              "Struct": {
+                "address": "0x1",
+                "module": "type_name",
+                "name": "TypeName",
+                "typeArguments": []
+              }
+            }
+          },
+          {
+            "name": "collateralFactor",
+            "type": {
+              "Struct": {
+                "address": "0x1",
+                "module": "fixed_point32",
+                "name": "FixedPoint32",
+                "typeArguments": []
+              }
+            }
+          },
+          {
+            "name": "liquidationFactor",
+            "type": {
+              "Struct": {
+                "address": "0x1",
+                "module": "fixed_point32",
+                "name": "FixedPoint32",
+                "typeArguments": []
+              }
+            }
+          },
+          {
+            "name": "liquidationPanelty",
+            "type": {
+              "Struct": {
+                "address": "0x1",
+                "module": "fixed_point32",
+                "name": "FixedPoint32",
+                "typeArguments": []
+              }
+            }
+          },
+          {
+            "name": "liquidationDiscount",
+            "type": {
+              "Struct": {
+                "address": "0x1",
+                "module": "fixed_point32",
+                "name": "FixedPoint32",
+                "typeArguments": []
+              }
+            }
+          },
+          {
+            "name": "liquidationReserveFactor",
+            "type": {
+              "Struct": {
+                "address": "0x1",
+                "module": "fixed_point32",
+                "name": "FixedPoint32",
+                "typeArguments": []
+              }
+            }
+          },
+          {
+            "name": "maxCollateralAmount",
+            "type": "U64"
+          },
+          {
+            "name": "totalCollateralAmount",
+            "type": "U64"
+          }
+        ]
+      },
+      "MarketData": {
+        "abilities": {
+          "abilities": [
+            "Copy",
+            "Drop",
+            "Store"
+          ]
+        },
+        "typeParameters": [],
+        "fields": [
+          {
+            "name": "pools",
+            "type": {
+              "Vector": {
+                "Struct": {
+                  "address": "0xbd4f1adbef14cf6ddf31cf637adaa7227050424286d733dc44e6fd3318fc6ba3",
+                  "module": "market_query",
+                  "name": "PoolData",
+                  "typeArguments": []
+                }
+              }
+            }
+          },
+          {
+            "name": "collaterals",
+            "type": {
+              "Vector": {
+                "Struct": {
+                  "address": "0xbd4f1adbef14cf6ddf31cf637adaa7227050424286d733dc44e6fd3318fc6ba3",
+                  "module": "market_query",
+                  "name": "CollateralData",
+                  "typeArguments": []
+                }
+              }
+            }
+          }
+        ]
+      },
+      "PoolData": {
+        "abilities": {
+          "abilities": [
+            "Copy",
+            "Drop",
+            "Store"
+          ]
+        },
+        "typeParameters": [],
+        "fields": [
+          {
+            "name": "interestRate",
+            "type": {
+              "Struct": {
+                "address": "0x1",
+                "module": "fixed_point32",
+                "name": "FixedPoint32",
+                "typeArguments": []
+              }
+            }
+          },
+          {
+            "name": "borrowIndex",
+            "type": "U64"
+          },
+          {
+            "name": "lastUpdated",
+            "type": "U64"
+          },
+          {
+            "name": "type",
+            "type": {
+              "Struct": {
+                "address": "0x1",
+                "module": "type_name",
+                "name": "TypeName",
+                "typeArguments": []
+              }
+            }
+          },
+          {
+            "name": "baseBorrowRatePerSec",
+            "type": {
+              "Struct": {
+                "address": "0x1",
+                "module": "fixed_point32",
+                "name": "FixedPoint32",
+                "typeArguments": []
+              }
+            }
+          },
+          {
+            "name": "interestRateScale",
+            "type": "U64"
+          },
+          {
+            "name": "borrowRateOnMidKink",
+            "type": {
+              "Struct": {
+                "address": "0x1",
+                "module": "fixed_point32",
+                "name": "FixedPoint32",
+                "typeArguments": []
+              }
+            }
+          },
+          {
+            "name": "midKink",
+            "type": {
+              "Struct": {
+                "address": "0x1",
+                "module": "fixed_point32",
+                "name": "FixedPoint32",
+                "typeArguments": []
+              }
+            }
+          },
+          {
+            "name": "borrowRateOnHighKink",
+            "type": {
+              "Struct": {
+                "address": "0x1",
+                "module": "fixed_point32",
+                "name": "FixedPoint32",
+                "typeArguments": []
+              }
+            }
+          },
+          {
+            "name": "highKink",
+            "type": {
+              "Struct": {
+                "address": "0x1",
+                "module": "fixed_point32",
+                "name": "FixedPoint32",
+                "typeArguments": []
+              }
+            }
+          },
+          {
+            "name": "maxBorrowRate",
+            "type": {
+              "Struct": {
+                "address": "0x1",
+                "module": "fixed_point32",
+                "name": "FixedPoint32",
+                "typeArguments": []
+              }
+            }
+          },
+          {
+            "name": "reserveFactor",
+            "type": {
+              "Struct": {
+                "address": "0x1",
+                "module": "fixed_point32",
+                "name": "FixedPoint32",
+                "typeArguments": []
+              }
+            }
+          },
+          {
+            "name": "borrowWeight",
+            "type": {
+              "Struct": {
+                "address": "0x1",
+                "module": "fixed_point32",
+                "name": "FixedPoint32",
+                "typeArguments": []
+              }
+            }
+          },
+          {
+            "name": "minBorrowAmount",
+            "type": "U64"
+          },
+          {
+            "name": "cash",
+            "type": "U64"
+          },
+          {
+            "name": "debt",
+            "type": "U64"
+          },
+          {
+            "name": "reserve",
+            "type": "U64"
+          },
+          {
+            "name": "marketCoinSupply",
+            "type": "U64"
+          }
+        ]
+      }
+    },
+    "exposedFunctions": {
+      "collateral_data": {
+        "visibility": "Public",
+        "isEntry": false,
+        "typeParameters": [],
+        "parameters": [
+          {
+            "Reference": {
+              "Struct": {
+                "address": "0xefe8b36d5b2e43728cc323298626b83177803521d195cfb11e15b910e892fddf",
+                "module": "market",
+                "name": "Market",
+                "typeArguments": []
+              }
+            }
+          }
+        ],
+        "return": [
+          {
+            "Vector": {
+              "Struct": {
+                "address": "0xbd4f1adbef14cf6ddf31cf637adaa7227050424286d733dc44e6fd3318fc6ba3",
+                "module": "market_query",
+                "name": "CollateralData",
+                "typeArguments": []
+              }
+            }
+          }
+        ]
+      },
+      "market_data": {
+        "visibility": "Public",
+        "isEntry": false,
+        "typeParameters": [],
+        "parameters": [
+          {
+            "Reference": {
+              "Struct": {
+                "address": "0xefe8b36d5b2e43728cc323298626b83177803521d195cfb11e15b910e892fddf",
+                "module": "market",
+                "name": "Market",
+                "typeArguments": []
+              }
+            }
+          }
+        ],
+        "return": []
+      },
+      "pool_data": {
+        "visibility": "Public",
+        "isEntry": false,
+        "typeParameters": [],
+        "parameters": [
+          {
+            "Reference": {
+              "Struct": {
+                "address": "0xefe8b36d5b2e43728cc323298626b83177803521d195cfb11e15b910e892fddf",
+                "module": "market",
+                "name": "Market",
+                "typeArguments": []
+              }
+            }
+          }
+        ],
+        "return": [
+          {
+            "Vector": {
+              "Struct": {
+                "address": "0xbd4f1adbef14cf6ddf31cf637adaa7227050424286d733dc44e6fd3318fc6ba3",
+                "module": "market_query",
+                "name": "PoolData",
+                "typeArguments": []
+              }
+            }
+          }
+        ]
+      }
+    }
+  },
+  "obligation_query": {
+    "fileFormatVersion": 6,
+    "address": "0xbd4f1adbef14cf6ddf31cf637adaa7227050424286d733dc44e6fd3318fc6ba3",
+    "name": "obligation_query",
+    "friends": [],
+    "structs": {
+      "CollateralData": {
+        "abilities": {
+          "abilities": [
+            "Copy",
+            "Drop",
+            "Store"
+          ]
+        },
+        "typeParameters": [],
+        "fields": [
+          {
+            "name": "type",
+            "type": {
+              "Struct": {
+                "address": "0x1",
+                "module": "type_name",
+                "name": "TypeName",
+                "typeArguments": []
+              }
+            }
+          },
+          {
+            "name": "amount",
+            "type": "U64"
+          }
+        ]
+      },
+      "DebtData": {
+        "abilities": {
+          "abilities": [
+            "Copy",
+            "Drop",
+            "Store"
+          ]
+        },
+        "typeParameters": [],
+        "fields": [
+          {
+            "name": "type",
+            "type": {
+              "Struct": {
+                "address": "0x1",
+                "module": "type_name",
+                "name": "TypeName",
+                "typeArguments": []
+              }
+            }
+          },
+          {
+            "name": "amount",
+            "type": "U64"
+          },
+          {
+            "name": "borrowIndex",
+            "type": "U64"
+          }
+        ]
+      },
+      "ObligationData": {
+        "abilities": {
+          "abilities": [
+            "Copy",
+            "Drop",
+            "Store"
+          ]
+        },
+        "typeParameters": [],
+        "fields": [
+          {
+            "name": "collaterals",
+            "type": {
+              "Vector": {
+                "Struct": {
+                  "address": "0xbd4f1adbef14cf6ddf31cf637adaa7227050424286d733dc44e6fd3318fc6ba3",
+                  "module": "obligation_query",
+                  "name": "CollateralData",
+                  "typeArguments": []
+                }
+              }
+            }
+          },
+          {
+            "name": "debts",
+            "type": {
+              "Vector": {
+                "Struct": {
+                  "address": "0xbd4f1adbef14cf6ddf31cf637adaa7227050424286d733dc44e6fd3318fc6ba3",
+                  "module": "obligation_query",
+                  "name": "DebtData",
+                  "typeArguments": []
+                }
+              }
+            }
+          }
+        ]
+      }
+    },
+    "exposedFunctions": {
+      "collateral_data": {
+        "visibility": "Public",
+        "isEntry": false,
+        "typeParameters": [],
+        "parameters": [
+          {
+            "Reference": {
+              "Struct": {
+                "address": "0xefe8b36d5b2e43728cc323298626b83177803521d195cfb11e15b910e892fddf",
+                "module": "obligation",
+                "name": "Obligation",
+                "typeArguments": []
+              }
+            }
+          }
+        ],
+        "return": [
+          {
+            "Vector": {
+              "Struct": {
+                "address": "0xbd4f1adbef14cf6ddf31cf637adaa7227050424286d733dc44e6fd3318fc6ba3",
+                "module": "obligation_query",
+                "name": "CollateralData",
+                "typeArguments": []
+              }
+            }
+          }
+        ]
+      },
+      "debt_data": {
+        "visibility": "Public",
+        "isEntry": false,
+        "typeParameters": [],
+        "parameters": [
+          {
+            "Reference": {
+              "Struct": {
+                "address": "0xefe8b36d5b2e43728cc323298626b83177803521d195cfb11e15b910e892fddf",
+                "module": "obligation",
+                "name": "Obligation",
+                "typeArguments": []
+              }
+            }
+          }
+        ],
+        "return": [
+          {
+            "Vector": {
+              "Struct": {
+                "address": "0xbd4f1adbef14cf6ddf31cf637adaa7227050424286d733dc44e6fd3318fc6ba3",
+                "module": "obligation_query",
+                "name": "DebtData",
+                "typeArguments": []
+              }
+            }
+          }
+        ]
+      },
+      "obligation_data": {
+        "visibility": "Public",
+        "isEntry": false,
+        "typeParameters": [],
+        "parameters": [
+          {
+            "Reference": {
+              "Struct": {
+                "address": "0xefe8b36d5b2e43728cc323298626b83177803521d195cfb11e15b910e892fddf",
+                "module": "obligation",
+                "name": "Obligation",
+                "typeArguments": []
+              }
+            }
+          }
+        ],
+        "return": []
+      }
+    }
+  }
+}

@@ -1,0 +1,1 @@
+import './scallop-mainnet.js'
