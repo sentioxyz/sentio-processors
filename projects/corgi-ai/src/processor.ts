@@ -30,7 +30,7 @@ CorgiBoostProcessor.bind({
   })
   .onEventUpgrade(async (event, ctx) => {
     const stakeId = Number(event.args.stakeId)
-    const oldPidArray = await ctx.contract.getUserStakesByIds(event.args.user, [stakeId], { blockTag: ctx.blockNumber })
+    const oldPidArray = await ctx.contract.getUserStakesByIds(event.args.user, [stakeId], { blockTag: ctx.blockNumber - 1 })
     const oldPid = oldPidArray[0][1]
     const amount = Number(oldPidArray[0][0]) / 10 ** 18
 
