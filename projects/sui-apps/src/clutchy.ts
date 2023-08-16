@@ -64,6 +64,7 @@ mint_event.bind({
     const collection_id = event.data_decoded.collection_id
     const object = event.data_decoded.object
     ctx.eventLogger.emit("MintEvent", {
+      //@ts-ignore
       distinctId: ctx.transaction.transaction.data.sender,
       collection_id,
       object,
@@ -77,6 +78,7 @@ mint_event.bind({
     const collection_id = event.data_decoded.collection_id
     const object = event.data_decoded.object
     ctx.eventLogger.emit("BurnEvent", {
+      //@ts-ignore
       distinctId: ctx.transaction.transaction.data.sender,
       collection_id,
       object,
@@ -96,6 +98,7 @@ listing.bind({
 
     const listing_id = event.data_decoded.listing_id
     ctx.eventLogger.emit("CreateListing", {
+      //@ts-ignore
       distinctId: ctx.transaction.transaction.data.sender,
       listing_id,
       vertical: "nft", project: "clutchy"
@@ -107,6 +110,7 @@ listing.bind({
 
     const listing_id = event.data_decoded.listing_id
     ctx.eventLogger.emit("DeleteListing", {
+      //@ts-ignore
       distinctId: ctx.transaction.transaction.data.sender,
       listing_id,
       vertical: "nft", project: "clutchy"

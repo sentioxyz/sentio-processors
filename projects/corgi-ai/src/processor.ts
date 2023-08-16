@@ -1,6 +1,7 @@
 import { EthChainId } from "@sentio/sdk/eth";
 import { CorgiBoostProcessor } from "./types/eth/corgiboost.js";
 import { MemeVaultProcessor } from "./types/eth/memevault.js";
+import { ERC20Processor } from "@sentio/sdk/eth/builtin";
 
 //CORGIAI VAULT
 CorgiBoostProcessor.bind({
@@ -115,5 +116,32 @@ MemeVaultProcessor.bind({
       distinctId: event.args.user,
       amount: Number(event.args.pendingRewards) / 10 ** 18,
       coin_symbol: "corgiai"
+    })
+  })
+
+
+//corgiai erc20
+ERC20Processor.bind({
+  address: "0x6b431B8a964BFcf28191b07c91189fF4403957D0",
+  network: EthChainId.CRONOS
+})
+  .onEventTransfer(async (event, ctx) => {
+    ctx.eventLogger.emit("Transfer", {
+      distinctId: event.args.from,
+      amount: Number(event.args.value) / 10 ** 18,
+      from: event.args.from,
+      to: event.args.to
+    })
+    ctx.eventLogger.emit("_debugTransferIn", {
+      distinctId: event.args.to,
+      amount: Number(event.args.value) / 10 ** 18,
+      from: event.args.from,
+      to: event.args.to
+    })
+    ctx.eventLogger.emit("_debugTransferOut", {
+      distinctId: event.args.from,
+      amount: -Number(event.args.value) / 10 ** 18,
+      from: event.args.from,
+      to: event.args.to
     })
   })

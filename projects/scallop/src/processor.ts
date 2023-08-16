@@ -8,7 +8,7 @@ const mintEventHandler = async (
   ctx: SuiContext
 ) => {
   const deposit_asset = normalizeSuiAddress(event.data_decoded.deposit_asset.name);
-
+  
   let coin_symbol = "unk"
   if (deposit_asset == "0x0000000000000000000000000000000000000000000000000000000000000002::sui::sui") {
     coin_symbol = "sui"

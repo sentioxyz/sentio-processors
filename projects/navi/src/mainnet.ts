@@ -144,7 +144,7 @@ async function onEvent(event: LendingEvent, ctx: SuiContext) {
   const sender = event.data_decoded.sender
   const amount = event.data_decoded.amount
   const reserve = event.data_decoded.reserve
-
+  
   const typeArray = event.type.split("::")
   const type = typeArray[typeArray.length - 1]
 

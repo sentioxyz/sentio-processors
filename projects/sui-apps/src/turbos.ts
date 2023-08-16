@@ -183,8 +183,9 @@ const template = new SuiObjectProcessorTemplate()
         const coin_a_bridge = helper.getBridgeInfo(coin_a_address)
         const coin_b_bridge = helper.getBridgeInfo(coin_b_address)
 
-
+        //@ts-ignore
         const coin_a_balance = Number(self.fields.coin_a) / Math.pow(10, decimal_a)
+        //@ts-ignore
         const coin_b_balance = Number(self.fields.coin_b) / Math.pow(10, decimal_b)
         console.log(`pair: ${pairName} \nsymbol:${symbol_a} ${symbol_b}, \ncoin_a_balance ${coin_a_balance} coin_b_balance ${coin_b_balance}, \npool ${ctx.objectId}`)
         if (coin_a_balance) {
@@ -196,6 +197,7 @@ const template = new SuiObjectProcessorTemplate()
         }
 
         //record liquidity
+        //@ts-ignore
         const liquidity = Number(self.fields.liquidity)
         ctx.meter.Gauge("liquidity").record(liquidity, { pairName, vertical: "dex", project: "turbos" })
 

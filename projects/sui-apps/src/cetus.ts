@@ -17,8 +17,9 @@ factory.bind({
     const coin_type_b = event.data_decoded.coin_type_b
     const pool_id = event.data_decoded.pool_id
     const tick_spacing = event.data_decoded.tick_spacing
-
+    
     ctx.eventLogger.emit("CreatePoolEvent", {
+      //@ts-ignore
       distinctId: ctx.transaction.transaction.data.sender,
       pool_id,
       coin_type_a,
@@ -63,6 +64,7 @@ pool.bind({
     const usd_volume = await helper.calculateSwapVol_USD(poolInfo.type, amount_in, amount_out, atob, ctx.timestamp)
 
     ctx.eventLogger.emit("SwapEvent", {
+      //@ts-ignore
       distinctId: ctx.transaction.transaction.data.sender,
       pool,
       before_sqrt_price,
@@ -108,6 +110,7 @@ pool.bind({
     const [value_a, value_b] = await helper.calculateValue_USD(ctx, pool, amount_a, amount_b, ctx.timestamp)
     const value = value_a + value_b
     ctx.eventLogger.emit("AddLiquidityEvent", {
+      //@ts-ignore
       distinctId: ctx.transaction.transaction.data.sender,
       pool,
       position,
@@ -145,6 +148,7 @@ pool.bind({
     const [value_a, value_b] = await helper.calculateValue_USD(ctx, pool, amount_a, amount_b, ctx.timestamp)
     const value = value_a + value_b
     ctx.eventLogger.emit("RemoveLiquidityEvent", {
+      //@ts-ignore
       distinctId: ctx.transaction.transaction.data.sender,
       pool,
       position,
@@ -190,8 +194,9 @@ const template = new SuiObjectProcessorTemplate()
       const coin_a_bridge = helper.getBridgeInfo(coin_a_address)
       const coin_b_bridge = helper.getBridgeInfo(coin_b_address)
       // console.log(`pair: ${pairName} symbol:${symbol_a} ${symbol_b} address: ${coin_a_address} ${coin_b_address} type: ${type}`)
-
+      //@ts-ignore
       const coin_a_balance = Number(self.fields.coin_a) / Math.pow(10, decimal_a)
+      //@ts-ignore
       const coin_b_balance = Number(self.fields.coin_b) / Math.pow(10, decimal_b)
 
       if (coin_a_balance) {
@@ -203,10 +208,12 @@ const template = new SuiObjectProcessorTemplate()
       }
 
       //record liquidity
+      //@ts-ignore
       const liquidity = Number(self.fields.liquidity)
       ctx.meter.Gauge("liquidity").record(liquidity, { pairName, vertical: "dex", project: "cetus" })
 
       //record price
+      //@ts-ignore
       const current_sqrt_price = Number(self.fields.current_sqrt_price)
       let coin_b2a_price = 1 / (Number(current_sqrt_price) ** 2) * (2 ** 128) * 10 ** (decimal_b - decimal_a)
       let coin_a2b_price = 1 / coin_b2a_price

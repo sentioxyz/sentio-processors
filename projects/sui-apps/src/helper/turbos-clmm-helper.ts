@@ -77,8 +77,11 @@ export async function buildCoinInfo(ctx: SuiContext | SuiObjectContext, coinAddr
     let [symbol, decimal, name] = ["unk", 100, "unk"]
     try {
         const metadata = await ctx.client.getCoinMetadata({ coinType: coinAddress })
+        //@ts-ignore
         symbol = metadata.symbol
+        //@ts-ignore
         decimal = metadata.decimals
+        //@ts-ignore
         name = metadata.name
         console.log(`build coin metadata ${symbol} ${decimal} ${name}`)
 
@@ -109,8 +112,11 @@ export async function buildPoolInfo(ctx: SuiContext | SuiObjectContext, pool: st
     let [symbol_a, symbol_b, decimal_a, decimal_b, pairName, type, fee_label] = ["", "", 0, 0, "", "", "", "NaN"]
     try {
         const obj = await ctx.client.getObject({ id: pool, options: { showType: true, showContent: true } })
+        //@ts-ignore
         type = obj.data.type
+        //@ts-ignore
         if (obj.data.content.fields.fee) {
+            //@ts-ignore
             fee_label = (Number(obj.data.content.fields.fee) / 10000).toFixed(2) + "%"
         }
         let [coin_a_full_address, coin_b_full_address] = ["", ""]
@@ -153,6 +159,7 @@ export async function getPoolPrice(ctx: SuiContext | SuiObjectContext, pool: str
     let coin_a2b_price = 0
     try {
         const obj = await ctx.client.getObject({ id: pool, options: { showType: true, showContent: true } })
+        //@ts-ignore
         const sqrt_price = Number(obj.data.content.fields.sqrt_price)
         if (!sqrt_price) { console.log(`get pool price error at ${ctx}`) }
         const poolInfo = await getOrCreatePool(ctx, pool)
@@ -181,7 +188,13 @@ export async function calculateValue_USD(ctx: SuiContext | SuiObjectContext, poo
 
         if (price_a) {
             value_a = amount_a * price_a
-            value_b = amount_b / coin_a2b_price * price_a
+            //handle the case of low liquidity
+            if (price_b) {
+                value_b = amount_b * price_b
+            }
+            else {
+                value_b = amount_b / coin_a2b_price * price_a
+            }
         }
         else if (price_b) {
             value_a = amount_a * coin_a2b_price * price_b
