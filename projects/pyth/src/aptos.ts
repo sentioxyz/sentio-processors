@@ -3,6 +3,7 @@ import { Counter, Gauge } from "@sentio/sdk";
 import { PRICE_MAP } from "./pyth.js";
 import { BigDecimal } from "@sentio/sdk";
 import { console_v1 } from "./types/aptos/pyth2.js";
+import { pyth as pyth_new, event as event_new, price as price_new } from "./types/aptos/0xbd6d205f2aa288baa71270e66716d3d1bafe173ab9f312de4e9dd761ddef5409.js";
 
 import LRU from 'lru-cache'
 
@@ -53,15 +54,16 @@ event.bind()
     price_update_occur.record(ctx, 1, labels)
     ctx.meter.Counter("price_update_counter").add(1, labels)
   })
+// TODO: temp comment out for debugging
+// pyth.bind()
+//   .onEntryUpdatePriceFeedsWithFunder((call, ctx) => {
+//     updateWithFunder.add(ctx, 1)
+//   })
 
-pyth.bind()
-  .onEntryUpdatePriceFeedsWithFunder((call, ctx) => {
-    updateWithFunder.add(ctx, 1)
-  })
-
-console_v1.bind().onEntryMintWithPythAndPrice((evt, ctx) => {
-  messages2.add(ctx, 1)
-})
+// console_v1.bind().onEntryMintWithPythAndPrice((evt, ctx) => {
+//   messages2.add(ctx, 1)
+// })
+// TODO: temp comment out for 
 
 export function getPrice(p: price.Price) {
   let expo = p.expo.magnitude.asBigDecimal()

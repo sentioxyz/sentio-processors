@@ -300,10 +300,13 @@ async function craftsmanHandler(_:any, ctx: CraftsmanContext) {
   for (var i = 0; i < poolNumber; i++) {
     const poolInfo = await craftsmanContract.poolInfo(i)
     const poolAddress = poolInfo.lpToken.toLowerCase()
+    if (poolAddress.toLowerCase() !== "0x57A866335FDa4E69B54815C360eFe8E31a9bb32b".toLowerCase() && poolAddress.toLowerCase() !== "0x0b6cad3f49a15114090b301d814c8c5b6aad8823".toLowerCase()) {
     const allocPoint = poolInfo.allocPoint
-    const pool = await getOrCreatePoolForCraftsman(poolAddress, ctx)
+    // const pool = await getOrCreatePoolForCraftsman(poolAddress, ctx)
+
     const vvsPerBlock = vvsPerBlockTotal.multipliedBy(allocPoint.asBigDecimal()).div(totalAllocPoint.asBigDecimal())
-    ctx.meter.Gauge("vvsPerBlock").record(vvsPerBlock, {id: i.toString(), pool: poolAddress, poolName: pool.poolName, coin_symbol: "VVS"})
+    ctx.meter.Gauge("vvsPerBlock").record(vvsPerBlock, {id: i.toString(), coin_symbol: "VVS"})
+    }
   }
 } catch (e) {
   console.log(e)
@@ -423,13 +426,15 @@ for (var i = 0; i < CORE_POOLS.length; i++) {
 }
 
 CraftsmanProcessor.bind({address: "0xdccd6455ae04b03d785f12196b492b18129564bc", network: EthChainId.CRONOS
-
+, startBlock: 7636187
 })
 .onBlockInterval(craftsmanHandler, 4000, 40000)
 .onEventDeposit(onCraftsmanDeposit)
 .onEventWithdraw(onCraftsmanWithdraw)
 
-ERC20Processor.bind({address: "0x2d03bece6747adc00e1a131bba1469c15fd11e03", network: EthChainId.CRONOS})
+ERC20Processor.bind({address: "0x2d03bece6747adc00e1a131bba1469c15fd11e03", network: EthChainId.CRONOS
+, startBlock: 7636187
+})
 .onBlockInterval(xvvsBalanceHandler, 4000, 40000)
 
 // VVSFactoryProcessor.bind({address: "0x3b44b2a187a7b3824131f8db5a74194d0a42fc15", network: EthChainId.CRONOS})
