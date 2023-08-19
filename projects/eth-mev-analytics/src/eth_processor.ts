@@ -476,6 +476,8 @@ export function Bind(chainConfig: ChainConstants, startBlock: number) {
           link = `https://app.sentio.xyz/qiaokan/eth-mev-analytics/transaction/1/${txn.txnHash}`;
         } else if (chainConfig.phalconChain === "polygon") {
           link = `https://app.sentio.xyz/qiaokan/eth-mev-analytics-polygon/transaction/137/${txn.txnHash}`;
+        } else if (chainConfig.phalconChain === "moonbeam") {
+          link = `https://app.sentio.xyz/qiaokan/eth-mev-analytics-moonbeam/transaction/1284/${txn.txnHash}`;
         }
         const [revenue, cost, profitTokens] = await computePnL(
           txn.revenue,
@@ -524,6 +526,9 @@ export function Bind(chainConfig: ChainConstants, startBlock: number) {
         } else if (chainConfig.phalconChain === "polygon") {
           frontLink = `https://app.sentio.xyz/qiaokan/eth-mev-analytics-polygon/transaction/137/${txn.frontTxnHash}`;
           backLink = `https://app.sentio.xyz/qiaokan/eth-mev-analytics-polygon/transaction/137/${txn.backTxnHash}`;
+        } else if (chainConfig.phalconChain === "moonbeam") {
+          frontLink = `https://app.sentio.xyz/qiaokan/eth-mev-analytics-moonbeam/transaction/1284/${txn.frontTxnHash}`;
+          backLink = `https://app.sentio.xyz/qiaokan/eth-mev-analytics-moonbeam/transaction/1284/${txn.backTxnHash}`;
         }
 
         const [revenue, cost, profitTokens] = await computePnL(
