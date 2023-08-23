@@ -25,6 +25,7 @@ pool.bind({
         const sale_total = metadata.sale_total / Math.pow(10, poolInfo.decimal_a)
 
         ctx.eventLogger.emit("PurchaseEvent", {
+            //@ts-ignore
             distinctId: ctx.transaction.transaction.data.sender,
             pool_id,
             amount,
