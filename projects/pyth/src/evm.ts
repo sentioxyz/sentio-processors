@@ -40,6 +40,7 @@ const CHAIN_ADDRESS_MAP = new Map<EthChainId, string>([
   [EthChainId.CONFLUX, "0xe9d69CdD6Fe41e7B621B4A688C5D1a68cB5c8ADc"], // Conflux
   [EthChainId.MANTLE, "0xA2aa501b19aff244D90cc15a4Cf739D2725B5729"], // mantle
   [EthChainId.LINEA, "0xA2aa501b19aff244D90cc15a4Cf739D2725B5729"], // linea
+  [EthChainId.BASE, "0x8250f4aF4B972684F7b336503E2D6dFeDeB1487a"], // base
 ]);
 
 const CHAIN_NATIVE_MAP = new Map<EthChainId, string>([
@@ -59,6 +60,8 @@ const CHAIN_NATIVE_MAP = new Map<EthChainId, string>([
   [EthChainId.CONFLUX, "Crypto.CFX/USD"], // Conflux
   [EthChainId.MANTLE, "Crypto.MNT/USD"], // mantle
   [EthChainId.LINEA, "Crypto.ETH/USD"], // linea
+  [EthChainId.BASE, "Crypto.ETH/USD"], // linea
+
 ]);
 
 async function priceFeedUpdate(evt: PriceFeedUpdateEvent, ctx: PythEVMContext) {
