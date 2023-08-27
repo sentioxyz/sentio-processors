@@ -25,12 +25,14 @@ import { DystPairProcessor } from "./types/eth/dystpair.js";
 import { ApePairProcessor } from "./types/eth/apepair.js";
 
 import { RouterImplProcessor } from "./types/eth/routerimpl.js";
+import { BentoBoxV1Processor } from "./types/eth/bentoboxv1.js";
+import { ERC20Processor } from "@sentio/sdk/eth/builtin";
 
 // a constant string array
 const ALGEBRA_ADDRESSES = ["0x5b1fd9fa139353c5d9eaf459e4bd2f7a6b4812bb"];
 
 // target tx is 0xc988bfb51d44f6e5162e6a860a9aa75f7fd087f7e1b816f7a50d422bcbe6e712
-const START_BLOCK = 46464628;
+const START_BLOCK = 46769300;
 
 for (const address of ALGEBRA_ADDRESSES) {
   AlgebraPoolProcessor.bind({
@@ -78,10 +80,7 @@ for (const address of V3_ADDRESSES) {
   });
 }
 
-const V2_ADDRESSES = [
-  "0x853ee4b2a13f8a742d64c8f088be7ba2131f670d",
-  "0xc4e595acdd7d12fec385e5da5d43160e8a0bac0e",
-];
+const V2_ADDRESSES = ["0xd449d801Fe753c9d916eC193028F559b1d2cF343"];
 
 for (const address of V2_ADDRESSES) {
   UniswapV2PairProcessor.bind({
@@ -97,7 +96,7 @@ for (const address of V2_ADDRESSES) {
 }
 
 const CONSTANT_PRODUCT_ADDRESSES = [
-  "0xd0266A51c4FA3E07beD30639Be7cfAE4F6080Bc3",
+  "0x3b04998f72951a39899eF510Dc16a29B2802b3ac",
 ];
 
 for (const address of CONSTANT_PRODUCT_ADDRESSES) {
@@ -150,3 +149,25 @@ RouterImplProcessor.bind({
       token1: evt.args.token1,
     });
   });
+
+const BENTO_BOX = "0x0319000133d3AdA02600f0875d2cf03D442C3367";
+
+BentoBoxV1Processor.bind({
+  address: BENTO_BOX,
+  network: EthChainId.POLYGON,
+  startBlock: START_BLOCK,
+}).onEvent(async (evt, ctx) => {
+  ctx.eventLogger.emit("BentoBoxV1", {
+    name: evt.name,
+  });
+});
+
+ERC20Processor.bind({
+  address: "0x946A9fd5f3c7f779A7dC869E03Ac4250082f6dE0",
+  network: EthChainId.POLYGON,
+  startBlock: START_BLOCK,
+}).onEvent(async (evt, ctx) => {
+  ctx.eventLogger.emit("ERC20EVT", {
+    name: evt.name,
+  });
+});
