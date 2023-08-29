@@ -1,4 +1,10 @@
 export const NFT_COLLECTIONS = [
+    "0x6c5315bb9a56bf5415c12bd935fe13095773f0f2",
+    "0xcc742f68612bc673fb9538eb552a892e71b8faf1",
+    "0x101db3235e590feaa2128dee17c0e9efd33c9b88",
+    "0xd4ba2ed2a54203a7afdc84dad5aaab96cf3c7f0e",
+    "0xaee95d481bb1925a10f9d75df2e521e429a49452",
+    "0x2add415dfee9d7ac56ebfe0429a1780d39f7ee60",
     "0xb62c414abf83c0107db84f8de1c88631c05a8d7b",
     "0xaada8a00a35578c9156b45cb325beac0feeff177",
     "0xa9d89db621ce93102c1e8a7ae6261023b1258361",

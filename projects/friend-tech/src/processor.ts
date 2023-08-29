@@ -1,4 +1,4 @@
-import { EthChainId } from "@sentio/sdk/eth";
+import { EthChainId } from "@sentio/sdk/eth"
 import { FriendtechSharesV1Context, FriendtechSharesV1Processor, TradeEvent } from "./types/eth/friendtechsharesv1.js";
 const FRIEND_TECH_SHARES_ADDR = "0xCF205808Ed36593aa40a44F10c7f7C2F67d4A4d4"
 import { LRUCache } from 'lru-cache'
@@ -14,26 +14,34 @@ const tradeEventHandler = async (event: TradeEvent, ctx: FriendtechSharesV1Conte
   const traderTwitterUsername = traderAccountInfo.twitterUsername
   const subjectAccountInfo = await getOrCreateAccountInfo(ctx, event.args.subject.toLowerCase())
   const subjectTwitterUsername = subjectAccountInfo.twitterUsername
+  const lastPrice = (Number(event.args.supply) - 1) ** 2 / 16000
+  const shareAmount = Number(event.args.shareAmount)
+  const supply = Number(event.args.supply)
+  const bot = (supply - shareAmount == 1 && shareAmount >= 10) ? "true" : "false"
 
   ctx.eventLogger.emit("TradeEvent", {
     distinctId: event.args.trader,
     trader: event.args.trader,
     subject: event.args.subject,
     isBuy: event.args.isBuy.toString(),
-    shareAmount: Number(event.args.shareAmount),
+    shareAmount,
     ethAmount: Number(event.args.ethAmount) / 10 ** 18,
     protocolEthAmount: Number(event.args.protocolEthAmount) / 10 ** 18,
     subjectEthAmount: Number(event.args.subjectEthAmount) / 10 ** 18,
-    supply: event.args.supply,
+    supply,
     traderTwitterUsername,
-    subjectTwitterUsername
+    subjectTwitterUsername,
+    lastPrice,
+    bot,
+    message: `${(event.args.isBuy) ? "Buy" : "Sell"} ${subjectTwitterUsername} ${shareAmount} shares at ${lastPrice}ETH by ${traderTwitterUsername}`
   })
 
 }
 
 FriendtechSharesV1Processor.bind({
   address: FRIEND_TECH_SHARES_ADDR,
-  network: EthChainId.BASE
+  network: EthChainId.BASE,
+  // startBlock: 2878738
 })
   .onEventTrade(tradeEventHandler)
 

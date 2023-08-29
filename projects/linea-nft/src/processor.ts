@@ -1,9 +1,8 @@
-import { ERC721Processor, ERC1155Processor } from "@sentio/sdk/eth/builtin";
+import { ERC721Processor } from "@sentio/sdk/eth/builtin";
 import { getERC721Contract } from '@sentio/sdk/eth/builtin/erc721'
-import { getERC1155Contract } from "@sentio/sdk/eth/builtin/erc1155";
 import { EthChainId } from "@sentio/sdk/eth";
 import { NFT_COLLECTIONS } from "./helper/constant.js";
-import { ZonicProcessor } from "./types/eth/zonic.js";
+import { ZonicBasicOrderFulfilledEvent, ZonicContext, ZonicProcessor } from "./types/eth/zonic.js";
 
 interface nftMetadata {
   name: string,
@@ -45,7 +44,6 @@ export async function fetchTokenUri(nftAddress: string, tokenId: number) {
   try {
     tokenUri = await getERC721Contract(EthChainId.LINEA, nftAddress).tokenURI(tokenId)!
     if (tokenUri.slice(0, 4) == "ipfs") {
-      // tokenUri = "https://sentio.infura-ipfs.io/ipfs/" + tokenUri.substring(7,)
       tokenUri = "https://ipfs.io/ipfs/" + tokenUri.substring(7,)
     }
     const data = await fetch(tokenUri)
@@ -67,6 +65,53 @@ interface ERC721Metadata {
   image: string,
   attributes: string
 }
+
+
+const orderFulfilledEventHandler = async (event: ZonicBasicOrderFulfilledEvent, ctx: ZonicContext) => {
+  const token = event.args.token.toLowerCase()
+  const nftMetadata = await getOrCreateERC721(token)
+  const tokenId = Number(event.args.identifier)
+  let fetchedMetadata: ERC721Metadata
+  let tokenUri
+  [fetchedMetadata, tokenUri] = await fetchTokenUri(token, tokenId)
+
+  ctx.eventLogger.emit("ZonicBasicOrderFulfulled", {
+    distinctId: event.args.buyer.toLowerCase(),
+    offerer: event.args.offerer.toLowerCase(),
+    token,
+    identifier: tokenId,
+    name: nftMetadata.name,
+    symbol: nftMetadata.symbol,
+    currency: event.args.currency.toLowerCase(),
+    totalPrice: Number(event.args.totalPrice) / 10 ** 18,
+    creatorFee: Number(event.args.creatorFee) / 10 ** 18,
+    marketplaceFee: Number(event.args.marketplaceFee) / 10 ** 18,
+    saleId: event.args.saleId.toLowerCase(),
+    tokenUri,
+    normalized_metadata_token_name: fetchedMetadata.name,
+    normalized_metadata_token_description: fetchedMetadata.description,
+    normalized_metadata_token_image: fetchedMetadata.image,
+    normalized_metadata_token_attributes: JSON.stringify(fetchedMetadata.attributes)
+  })
+}
+
+const ZONIC_CONTRACT_ADDR = "0x1a7b46c660603ebb5fbe3ae51e80ad21df00bdd1"
+
+ZonicProcessor.bind({
+  address: ZONIC_CONTRACT_ADDR,
+  network: EthChainId.LINEA
+})
+  .onEventZonicBasicOrderFulfilled(orderFulfilledEventHandler)
+  
+
+
+
+
+
+
+
+
+
 
 NFT_COLLECTIONS.forEach(address => {
   ERC721Processor.bind({
@@ -101,22 +146,3 @@ NFT_COLLECTIONS.forEach(address => {
       })
     })
 })
-
-
-ZonicProcessor.bind({
-  address: "0x1a7b46c660603ebb5fbe3ae51e80ad21df00bdd1",
-  network: EthChainId.LINEA
-})
-  .onEventZonicBasicOrderFulfilled(async (event, ctx) => {
-    ctx.eventLogger.emit("ZonicBasicOrderFulfulled", {
-      distinctId: event.args.buyer.toLowerCase(),
-      offerer: event.args.offerer.toLowerCase(),
-      token: event.args.token.toLowerCase(),
-      identifier: event.args.identifier,
-      currency: event.args.currency.toLowerCase(),
-      totalPrice: Number(event.args.totalPrice) / 10 ** 18,
-      creatorFee: Number(event.args.creatorFee) / 10 ** 18,
-      marketplaceFee: Number(event.args.marketplaceFee) / 10 ** 18,
-      saleId: event.args.saleId.toLowerCase()
-    })
-  })
