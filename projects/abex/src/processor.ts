@@ -1,6 +1,6 @@
 import { market } from './types/sui/0xceab84acf6bf70f503c3b0627acaff6b3f84cee0f2d7ed53d00fa6c2a168d14f.js'
-import { ABEX_PACKAGE_ID, AbexEventType, PositionEventType } from './constants.js'
-import { SuiContext, SuiNetwork, SuiObjectProcessor } from '@sentio/sdk/sui'
+import { AbexEventType, PositionEventType } from './constants.js'
+import { SuiContext, SuiNetwork, SuiObjectProcessor, SuiWrappedObjectProcessor } from '@sentio/sdk/sui'
 import { ALP_TOKEN_DECIMALS, getConsts, suiSymbolToSymbol } from './consts/index.js';
 
 
@@ -8,7 +8,7 @@ const consts = getConsts('mainnet');
 
 
 class ABExParser {
-  public parseEventType(typeRaw: string) {
+  private parseEventType(typeRaw: string) {
     for (const abexEventType in AbexEventType) {
       if (typeRaw.includes(abexEventType)) {
         return abexEventType;
@@ -17,7 +17,7 @@ class ABExParser {
     return 'Unknown'
   }
 
-  public parsePositionType(typeRaw: string) {
+  private parsePositionType(typeRaw: string) {
     for (const positionEventType in PositionEventType) {
       if (typeRaw.includes(positionEventType)) {
         return positionEventType;
@@ -26,7 +26,7 @@ class ABExParser {
     return 'Unknown';
   }
 
-  public parseOrder(typeRaw: string, content: any, abexEventType: AbexEventType, network: string) {
+  private parseOrder(typeRaw: string, content: any, abexEventType: AbexEventType, network: string) {
     let result = {
       parsedDetail: {
         collateralToken: '',
@@ -73,7 +73,7 @@ class ABExParser {
     return result;
   }
 
-  public parsePool(typeRaw: string, content: any, abexEventType: AbexEventType, network: string) {
+  private parsePool(typeRaw: string, content: any, abexEventType: AbexEventType, network: string) {
     let result = {
       parsedDetail: {
         fromToken: '',
@@ -117,7 +117,7 @@ class ABExParser {
     return result;
   }
 
-  public parsePosition(typeRaw: string, content: any, network: string) {
+  private parsePosition(typeRaw: string, content: any, network: string) {
     let result = {
       parsedDetail: {
         collateralToken: '',
@@ -199,6 +199,7 @@ class ABExParser {
   }
 
   public async parse(event: any, ctx: SuiContext) {
+    ctx.client
     const abexEventType = this.parseEventType(event.type);
     let result: any = {}
     switch (abexEventType) {
@@ -281,34 +282,29 @@ class ABExParser {
 
 const abexParser = new ABExParser();
 
-market.bind({
-  address: ABEX_PACKAGE_ID,
-  network: SuiNetwork.MAIN_NET,
-  startCheckpoint: 9724618n,
-})
-  .onEventPositionClaimed(abexParser.parse)
-  .onEventOrderCreated(abexParser.parse)
-  .onEventOrderExecuted(abexParser.parse)
-  .onEventOrderCleared(abexParser.parse)
-  .onEventDeposited(abexParser.parse)
-  .onEventWithdrawn(abexParser.parse)
-  .onEventSwapped(abexParser.parse)
+// market.bind({
+//   address: consts.abexCore.package,
+//   network: SuiNetwork.MAIN_NET,
+//   startCheckpoint: 9724618n,
+// })
+//   .onEventPositionClaimed(abexParser.parse.bind(abexParser))
+//   .onEventOrderCreated(abexParser.parse.bind(abexParser))
+//   .onEventOrderExecuted(abexParser.parse.bind(abexParser))
+//   .onEventOrderCleared(abexParser.parse.bind(abexParser))
+//   .onEventDeposited(abexParser.parse.bind(abexParser))
+//   .onEventWithdrawn(abexParser.parse.bind(abexParser))
+//   .onEventSwapped(abexParser.parse.bind(abexParser))
 
-for (const vault of Object.keys(consts.abexCore.vaults)) {
-  console.log(consts.coins[vault].module)
-  SuiObjectProcessor.bind({
-    objectId: consts.coins[vault].module,
-    network: SuiNetwork.MAIN_NET,
-    startCheckpoint: 9724618n,
-  })
-}
 
 console.log(consts.abexCore.vaultsParent)
 
-SuiObjectProcessor.bind({
+SuiWrappedObjectProcessor.bind({
   objectId: consts.abexCore.vaultsParent,
   network: SuiNetwork.MAIN_NET,
   startCheckpoint: 9724618n,
-}).onTimeInterval(async (self, dynamicFieldObjects, ctx) => {
-  console.log('dynamicFieldObjects:', dynamicFieldObjects)
+}).onTimeInterval(async (dynamicFieldObjects, ctx) => {
+  console.log("length", dynamicFieldObjects.length)
+  for (const dynamicFieldObject of dynamicFieldObjects) {
+    console.log("dynamic object: ", JSON.stringify(dynamicFieldObject))
+  }
 })

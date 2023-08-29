@@ -2,6 +2,7 @@ import testnetJson from "./deployments-testnet.json";
 import mainnetJson from "./deployments-mainnet.json";
 // import PriceIdToObjectIdTestnet from "./price_id_to_object_id.testnet.json"
 // import PriceIdToObjectIdMainnet from "./price_id_to_object_id.mainnet.json"
+import { normalizeStructTag, normalizeSuiObjectId } from "@mysten/sui.js/utils";
 
 interface IVault {
   weight: string;
@@ -170,9 +171,7 @@ export const ALLOW_TRADE_CAN_TRADE = 1
 export const ALLOW_TRADE_MUST_TRADE = 2
 
 export function suiSymbolToSymbol(symbol: string, consts: IConsts): string {
-  if (symbol === '0x2::sui::SUI') {
-    return 'sui'
-  }
+  symbol = normalizeStructTag(symbol)
   const ret: { [key: string]: string } = {}
   for (const key of Object.keys(consts.coins)) {
     ret[consts.coins[key].module] = key

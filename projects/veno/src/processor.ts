@@ -1,8 +1,8 @@
-import { Counter, Gauge } from '@sentio/sdk'
+import { Counter, Gauge, scaleDown } from '@sentio/sdk'
 import { ERC20Processor } from '@sentio/sdk/eth/builtin'
 import { FountainProcessor, WithdrawEarlyEvent, ClaimVaultPenaltyEvent, FountainContext, UpgradeEvent, UpgradeCallTrace, TransferEvent } from './types/eth/fountain.js'
 import { ReservoirContext, ReservoirProcessor } from './types/eth/reservoir.js'
-import { VenostormProcessor } from './types/eth/venostorm.js'
+import { StakeNftEvent, UnstakeNftEvent, VenostormContext, VenostormProcessor } from './types/eth/venostorm.js'
 import { LiquidCroProcessor, StakeEvent, RequestUnbondEvent, UnbondEvent, AccrueRewardEvent, LiquidCroContext } from './types/eth/liquidcro.js'
 import { EthChainId } from "@sentio/sdk/eth";
 import './liquidatom.js'
@@ -13,7 +13,6 @@ import { ethers } from 'ethers'
 import { ERC20Context, getERC20ContractOnContext } from '@sentio/sdk/eth/builtin/erc20'
 
 const DepositEventHandler = async (event: any, ctx: any) => {
-  const user = event.args.user
   const pid = Number(event.args.pid)
   const amount = Number(event.args.amount) / Math.pow(10, 18)
 
@@ -21,77 +20,91 @@ const DepositEventHandler = async (event: any, ctx: any) => {
     pid: pid.toString()
   })
 
-  ctx.eventLogger.emit("Deposit", {
-    distinctId: user,
-    pid,
-    amount
-  })
+  if (ctx.address.toLowerCase() == "0x579206e4e49581ca8ada619e9e42641f61a84ac3") {
+    ctx.eventLogger.emit("Deposit", {
+      distinctId: event.args.user,
+      pid,
+      amount
+    })
+  }
+  else {
+    ctx.eventLogger.emit("Deposit", {
+      distinctId: event.args.user,
+      pid,
+      amount,
+      stakeId: Number(event.args.stakeId),
+      weightedAmount: Number(event.args.weightedAmount),
+      unlockTimestamp: event.args.unlockTimestamp
+    })
+  }
 }
-
-const VenostormWithdrawEventHandler = async (event: any, ctx: any) => {
-  const hash = event.transactionHash
-
-  const user = event.args.user
-  const amount = Number(event.args.amount) / Math.pow(10, 18)
-  const pid = Number(event.args.pid)
-
-  ctx.meter.Counter(`withdraw_counter`).add(amount,
-    {
-      pid: pid
-    }
-  )
-
-  ctx.eventLogger.emit("Withdraw", {
-    distinctId: user,
-    pid: pid,
-    amount
-  })
-}
-
 
 
 const WithdrawEventHandler = async (event: any, ctx: any) => {
   const hash = event.transactionHash
   const user = event.args.user
-  const stakeId = Number(event.args.stakeId)
   const amount = Number(event.args.amount) / Math.pow(10, 18)
-  const weightedAmount = Number(event.args.weightedAmount)
-  let pid = -1
-  try {
-    const stake = await ctx.contract.getUserStake(user, stakeId)
-    pid = Number(stake[1])
-    // console.log("get pid from view function ", pid)
-  }
-  catch (e) {
-    console.log(e.message, "Get pid failure, tx ", hash)
-  }
 
-  ctx.meter.Counter(`withdraw_counter`).add(amount,
-    {
-      pid: pid
+  //venostorm
+  if (ctx.address.toLowerCase() == "0x579206e4e49581ca8ada619e9e42641f61a84ac3") {
+    const pid = Number(event.args.pid)
+    ctx.meter.Counter(`withdraw_counter`).add(amount, {
+      pid: pid.toString()
+    })
+
+    ctx.eventLogger.emit("Withdraw", {
+      distinctId: user,
+      pid: pid,
+      amount
+    })
+  }
+  else {
+    const stakeId = Number(event.args.stakeId)
+    const weightedAmount = Number(event.args.weightedAmount)
+    let pid = -1
+    try {
+      const stake = await ctx.contract.getUserStake(user, stakeId)
+      pid = Number(stake[1])
+      // console.log("get pid from view function ", pid)
     }
-  )
+    catch (e) {
+      console.log(e.message, "Get pid failure at withdraw event, tx ", hash)
+    }
 
-  ctx.eventLogger.emit("Withdraw", {
-    distinctId: user,
-    pid: pid,
-    amount
-  })
+    ctx.meter.Counter(`withdraw_counter`).add(amount, {
+      pid: pid.toString()
+    })
+
+    ctx.eventLogger.emit("Withdraw", {
+      distinctId: user,
+      pid: pid,
+      amount,
+      stakeId
+    })
+  }
 }
 
 const WithdrawEarlyEventHandler = async (event: WithdrawEarlyEvent, ctx: FountainContext) => {
   const user = event.args.user
   const amount = Number(event.args.amount) / Math.pow(10, 18)
   const stakeId = Number(event.args.stakeId)
-  // const hash = event.transactionHash
-  // console.log(`WithdrawEarly tx ${hash}`)
+  let stakeInfo
+  let pid = -1
+  try {
+    stakeInfo = await ctx.contract.getUserStake(user, stakeId, { blockTag: ctx.blockNumber - 1 })
+    pid = Number(stakeInfo[1])
+  }
+  catch (e) {
+    console.log(`get stakeInfo failed for withdrawEarly. ${user}, ${event.transactionHash}`)
+  }
 
-  ctx.meter.Counter(`withdraw_early_counter`).add(amount)
+  ctx.meter.Counter(`withdraw_early_counter`).add(amount, { pid: pid.toString() })
 
   ctx.eventLogger.emit("WithdrawEarly", {
     distinctId: user,
     stakeId,
-    amount
+    amount,
+    pid
   })
 }
 
@@ -123,12 +136,12 @@ const StakeEventHandler = async (event: StakeEvent, ctx: LiquidCroContext) => {
 const RequestUnbondEventHandler = async (event: RequestUnbondEvent, ctx: LiquidCroContext) => {
   const receiver = event.args.receiver
   const tokenId = Number(event.args.tokenId)
-  const shareAmount = Number(event.args.shareAmount) / Math.pow(10, 18)
-  const liquidCro2CroExchangeRate = Number(event.args.liquidCro2CroExchangeRate)
+  const shareAmount = event.args.shareAmount
+  const liquidCro2CroExchangeRate = event.args.liquidCro2CroExchangeRate
   const batchNo = Number(event.args.batchNo)
   try {
-    const EXCHANGE_RATE_PRECISION = Number(await ctx.contract.EXCHANGE_RATE_PRECISION())
-    const lcro_unstaked = shareAmount * liquidCro2CroExchangeRate / EXCHANGE_RATE_PRECISION
+    const EXCHANGE_RATE_PRECISION = await ctx.contract.EXCHANGE_RATE_PRECISION()
+    const lcro_unstaked = scaleDown(shareAmount * liquidCro2CroExchangeRate / EXCHANGE_RATE_PRECISION, 18)
 
     ctx.meter.Counter(`lcro_unstaked_counter`).add(lcro_unstaked)
 
@@ -189,7 +202,7 @@ const UpgradeEventHandler = async (event: UpgradeEvent, ctx: FountainContext | R
 
   //retrieve new stake info
   let newStakeInfo
-  let amount
+  let amount = -1
   try {
     newStakeInfo = await ctx.contract.getUserStake(user, stakeId, { blockTag: ctx.blockNumber })
     amount = Number(newStakeInfo[0])
@@ -197,9 +210,13 @@ const UpgradeEventHandler = async (event: UpgradeEvent, ctx: FountainContext | R
   catch (e) {
     console.log(`get old stakeInfo failed. ${user}, ${event.transactionHash}`)
   }
-  let contractName = "Reservoir"
-  if (ctx.address.toLowerCase() == "0xb4be51216f4926ab09ddf4e64bc20f499fd6ca95") contractName = "Fountain"
-  ctx.eventLogger.emit(contractName + "Upgrade", {
+  // let contractName = "Reservoir"
+  // if (ctx.address.toLowerCase() == "0xb4be51216f4926ab09ddf4e64bc20f499fd6ca95") contractName = "Fountain"
+
+  ctx.meter.Counter(`upgrade_from_counter`).add(amount, { pid: oldPid.toString() })
+  ctx.meter.Counter(`upgrade_to_counter`).add(amount, { pid: event.args.newPid.toString() })
+
+  ctx.eventLogger.emit("Upgrade", {
     distinctId: user,
     stakeId,
     newPid: event.args.newPid,
@@ -211,9 +228,6 @@ const UpgradeEventHandler = async (event: UpgradeEvent, ctx: FountainContext | R
 }
 
 const ClaimRewardsCallHandler = async (call: ClaimRewardsCallTrace, ctx: FeeDistributorContext) => {
-  ctx.eventLogger.emit("debugClaimCall", {
-    txHash: call.transactionHash
-  })
   const rewardTokens = await ctx.contract.getRewardTokens()
   const block = ctx.blockNumber
   for (const rewardToken of rewardTokens) {
@@ -235,22 +249,29 @@ const ClaimRewardsCallHandler = async (call: ClaimRewardsCallTrace, ctx: FeeDist
     //parse log and match conditions
     for (let i = 0; i < logs.length; i++) {
       const parsedLog = await processLog(logs[i])
-      if (parsedLog?.args.src.toLowerCase() == rewardToken.toLowerCase() && parsedLog?.args.dst.toLowerCase() == ctx.address.toLowerCase()) {
-        let contractName = "Reservoir"
-        if (ctx.address.toLowerCase() == "0xb4be51216f4926ab09ddf4e64bc20f499fd6ca95") contractName = "Fountain"
-        ctx.eventLogger.emit(contractName + "Harvest", {
+      //from fee distributor to fountain/reservoir
+      if (parsedLog?.args.src.toLowerCase() == ctx.address.toLowerCase()) {
+        ctx.eventLogger.emit("ReservoirHarvest", {
           distinctId: call.action.from,
           amount: Number(parsedLog?.args.wad) / 10 ** decimal,
-          coin_symbol: symbol
+          coin_symbol: (symbol == "WCRO") ? "CRO" : symbol
         })
       }
     }
   }
 }
 
-const UpgradeCallHandler = async (call: any, ctx: any) => {
-  ctx.eventLogger.emit("debug2", {
-    txHash: call.transactionHash
+const StakeNftEventHandler = async (event: StakeNftEvent, ctx: VenostormContext) => {
+  ctx.eventLogger.emit("StakeNftEvent", {
+    distinctId: event.args.user,
+    pid: event.args.pid
+  })
+}
+
+const UnstakeNftEventHandler = async (event: UnstakeNftEvent, ctx: VenostormContext) => {
+  ctx.eventLogger.emit("UnstakeNftEvent", {
+    distinctId: event.args.user,
+    pid: event.args.pid
   })
 }
 
@@ -286,12 +307,14 @@ ReservoirProcessor.bind({ address: '0x21179329c1dcfd36ffe0862cca2c7e85538cca07',
   .onEventDeposit(DepositEventHandler)
   .onEventWithdraw(WithdrawEventHandler)
   .onEventUpgrade(UpgradeEventHandler)
-  .onCallUpgrade(UpgradeCallHandler)
+// .onCallUpgrade(UpgradeCallHandler)
 
 
 VenostormProcessor.bind({ address: '0x579206e4e49581ca8ada619e9e42641f61a84ac3', network: EthChainId.CRONOS })
   .onEventDeposit(DepositEventHandler)
-  .onEventWithdraw(VenostormWithdrawEventHandler)
+  .onEventWithdraw(WithdrawEventHandler)
+  .onEventStakeNft(StakeNftEventHandler)
+  .onEventUnstakeNft(UnstakeNftEventHandler)
 
 LiquidCroProcessor.bind({ address: '0x9fae23a2700feecd5b93e43fdbc03c76aa7c08a6', network: EthChainId.CRONOS })
   .onEventStake(StakeEventHandler)
@@ -302,21 +325,21 @@ LiquidCroProcessor.bind({ address: '0x9fae23a2700feecd5b93e43fdbc03c76aa7c08a6',
 FeeDistributorProcessor.bind({ address: '0x4758de8640cf7fef229c20299ad853c86c0c1e39', network: EthChainId.CRONOS })
   .onCallClaimRewards(ClaimRewardsCallHandler)
 
-const filter1 = ERC20Processor.filters.Transfer(null, "0x21179329c1dcfd36ffe0862cca2c7e85538cca07")
-const filter2 = ERC20Processor.filters.Transfer(null, "0xb4be51216f4926ab09ddf4e64bc20f499fd6ca95")
+// const filter1 = ERC20Processor.filters.Transfer(null, "0x21179329c1dcfd36ffe0862cca2c7e85538cca07")
+// const filter2 = ERC20Processor.filters.Transfer(null, "0xb4be51216f4926ab09ddf4e64bc20f499fd6ca95")
 
-ERC20Processor.bind({ address: "0xB888d8Dd1733d72681b30c00ee76BDE93ae7aa93", network: EthChainId.CRONOS })
-  .onEventTransfer(TransferEventHandler, [filter1, filter2])
-  .onCallTransfer(async (call, ctx) => {
-    ctx.eventLogger.emit("debug2", {
-      txHash: call.transactionHash
-    })
-  })
+// ERC20Processor.bind({ address: "0xB888d8Dd1733d72681b30c00ee76BDE93ae7aa93", network: EthChainId.CRONOS })
+//   .onEventTransfer(TransferEventHandler, [filter1, filter2])
+//   .onCallTransfer(async (call, ctx) => {
+//     ctx.eventLogger.emit("debug2", {
+//       txHash: call.transactionHash
+//     })
+//   })
 
-ERC20Processor.bind({ address: "0x5C7F8A570d578ED84E63fdFA7b1eE72dEae1AE23", network: EthChainId.CRONOS })
-  .onEventTransfer(TransferEventHandler, [filter1, filter2])
-  .onCallTransfer(async (call, ctx) => {
-    ctx.eventLogger.emit("debug3", {
-      txHash: call.transactionHash
-    })
-  })
+// ERC20Processor.bind({ address: "0x5C7F8A570d578ED84E63fdFA7b1eE72dEae1AE23", network: EthChainId.CRONOS })
+//   .onEventTransfer(TransferEventHandler, [filter1, filter2])
+//   .onCallTransfer(async (call, ctx) => {
+//     ctx.eventLogger.emit("debug3", {
+//       txHash: call.transactionHash
+//     })
+//   })
