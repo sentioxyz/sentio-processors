@@ -205,7 +205,7 @@ const UpgradeEventHandler = async (event: UpgradeEvent, ctx: FountainContext | R
   let amount = -1
   try {
     newStakeInfo = await ctx.contract.getUserStake(user, stakeId, { blockTag: ctx.blockNumber })
-    amount = Number(newStakeInfo[0])
+    amount = Number(newStakeInfo[0]) / 10 ** 18
   }
   catch (e) {
     console.log(`get old stakeInfo failed. ${user}, ${event.transactionHash}`)
