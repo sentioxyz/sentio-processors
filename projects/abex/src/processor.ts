@@ -1,7 +1,8 @@
-import { market } from './types/sui/0xceab84acf6bf70f503c3b0627acaff6b3f84cee0f2d7ed53d00fa6c2a168d14f.js'
+import { market, pool } from './types/sui/0xceab84acf6bf70f503c3b0627acaff6b3f84cee0f2d7ed53d00fa6c2a168d14f.js'
 import { AbexEventType, PositionEventType } from './constants.js'
 import { SuiContext, SuiNetwork, SuiObjectProcessor, SuiWrappedObjectProcessor } from '@sentio/sdk/sui'
 import { ALP_TOKEN_DECIMALS, getConsts, suiSymbolToSymbol } from './consts/index.js';
+import { Value } from '@sentio/sdk';
 
 
 const consts = getConsts('mainnet');
@@ -296,7 +297,10 @@ const abexParser = new ABExParser();
 //   .onEventSwapped(abexParser.parse.bind(abexParser))
 
 
-console.log(consts.abexCore.vaultsParent)
+// console.log("parent",consts.abexCore.vaultsParent)
+// console.log("package",consts.abexCore.package)
+// console.log("module",consts.coins[].module)
+
 
 SuiWrappedObjectProcessor.bind({
   objectId: consts.abexCore.vaultsParent,
@@ -305,6 +309,11 @@ SuiWrappedObjectProcessor.bind({
 }).onTimeInterval(async (dynamicFieldObjects, ctx) => {
   console.log("length", dynamicFieldObjects.length)
   for (const dynamicFieldObject of dynamicFieldObjects) {
+    const decodedObject = ctx.coder.getDynamicFields(
+      dynamicFieldObjects,
+      pool.Vault.type(),
+      pool.Vault.type(),
+    )
     console.log("dynamic object: ", JSON.stringify(dynamicFieldObject))
   }
-})
+}, 60, 240, undefined, { owned: true })
