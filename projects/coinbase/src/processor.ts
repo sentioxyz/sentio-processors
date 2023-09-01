@@ -1,9 +1,13 @@
+// Sentio processor for coinbase's staking token cbETH
 import {BurnEvent, MintEvent, StakedTokenV1Context, StakedTokenV1Processor, TransferEvent} from './types/eth/stakedtokenv1.js'
 import {getPriceByType, token} from "@sentio/sdk/utils"
 import {BigDecimal, Counter, Gauge} from "@sentio/sdk"
 import {EthChainId} from "@sentio/sdk/eth";
 import {CBETH_PROXY,} from "./constant.js"
 
+// commonly used option for Gauge
+// set sparse to true
+// and aggregation interval to 60 min
 export const volOptions = {
     sparse: true,
     aggregationConfig: {
@@ -18,6 +22,9 @@ const mintAcc = Counter.register("mint_acc")
 const burnAcc = Counter.register("burn_acc")
 const transferAcc = Counter.register("transfer_acc")
 
+// event handler for Mint event
+// record the amount of each mint event, along with token symbol as label
+// recording both intantaneous amount as gauge and cumulative amount as counter
 const mintEventHandler = async function (event: MintEvent, ctx: StakedTokenV1Context) {
     const tokenInfo = await token.getERC20TokenInfo(ctx, ctx.contract.address)
     const amount = event.args.amount.scaleDown(tokenInfo.decimal)
@@ -25,6 +32,9 @@ const mintEventHandler = async function (event: MintEvent, ctx: StakedTokenV1Con
     mintAcc.add(ctx, amount, {token: tokenInfo.symbol})
 }
 
+// event handler for Burn event
+// record the amount of each mint event, along with token symbol as label
+// recording both intantaneous amount as gauge and cumulative amount as counter
 const burnEventHandler = async function (event: BurnEvent, ctx: StakedTokenV1Context) {
     const tokenInfo = await token.getERC20TokenInfo(ctx, ctx.contract.address)
     const amount = event.args.amount.scaleDown(tokenInfo.decimal)
@@ -32,6 +42,11 @@ const burnEventHandler = async function (event: BurnEvent, ctx: StakedTokenV1Con
     burnAcc.add(ctx, amount, {token: tokenInfo.symbol})
 }
 
+
+// event handler for Transfer event
+// record the amount of each mint event, along with token symbol as label
+// recording both intantaneous amount as gauge and cumulative amount as counter
+// Also recording a Eventlog for each transfer event, with to address as distinct ID
 const transferEventHandler = async function (event: TransferEvent, ctx: StakedTokenV1Context) {
     const tokenInfo = await token.getERC20TokenInfo(ctx, ctx.contract.address)
     const amount = event.args.value.scaleDown(tokenInfo.decimal)
@@ -46,6 +61,8 @@ const transferEventHandler = async function (event: TransferEvent, ctx: StakedTo
     })
 }
 
+// block handler to record total supply and exchange rate by querying the view functions
+// also calcualte TVL by using total supply * eth price
 const blockHandler = async function (_: any, ctx: StakedTokenV1Context) {
     const tokenInfo = await token.getERC20TokenInfo(ctx, ctx.contract.address)
     const totalSupply = (await ctx.contract.totalSupply()).scaleDown(tokenInfo.decimal)
@@ -68,6 +85,7 @@ const blockHandler = async function (_: any, ctx: StakedTokenV1Context) {
     ctx.meter.Gauge("tvl").record(totalSupply.multipliedBy(cbEthPrice), {token: tokenInfo.symbol})
 }
 
+// processor binding logic to bind the right contract address and attach right event and block handlers
 StakedTokenV1Processor.bind({address: CBETH_PROXY})
     .onEventTransfer(transferEventHandler)
     .onEventMint(mintEventHandler)
