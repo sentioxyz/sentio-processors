@@ -1,4 +1,4 @@
-// import { pool, pool_factory } from "./types/sui/turbos.js";
+// Sentio processor for Navi, which is an Dex on Sui blockchain in Move
 import {
   SuiObjectProcessor,
   SuiContext,
@@ -24,16 +24,6 @@ let coinInfoMap = new Map<string, Promise<token.TokenInfo>>()
 const DECIMAL1 = 9
 const DECIMAL2 = 27
 
-// const reserves = [
-//   "0xab644b5fd11aa11e930d1c7bc903ef609a9feaf9ffe1b23532ad8441854fbfaf",
-//   "0xeb3903f7748ace73429bd52a70fff278aac1725d3b58afa781f25ce3450ac203",
-//   "0x9342cc1ca3f48ba5d5acfbdf36d7efafcf48f8af9951515d971253c551d3395c",
-//   "0x145ee09c7b74b2470c90d55b9ba9b99684f9d81d03f52968bbaf3a95501f17c6",
-//   "0xb78d4cf370d983e1bafd47252fb32355bd12e3a76194c736bb56024694f39308"
-// ]
-
-// const coin = ["SUI", "USDC", "USDT", "ETH", "BTC"]
-
 const reserves = [
   "0xab644b5fd11aa11e930d1c7bc903ef609a9feaf9ffe1b23532ad8441854fbfaf",
   "0xeb3903f7748ace73429bd52a70fff278aac1725d3b58afa781f25ce3450ac203",
@@ -41,7 +31,6 @@ const reserves = [
 ]
 
 const coin = ["SUI", "USDC", "USDT"]
-
 
 export const getOrCreateCoin = async function (ctx: SuiContext | SuiObjectContext, coinAddress: string): Promise<token.TokenInfo> {
   let coinInfo = coinInfoMap.get(coinAddress)
@@ -53,6 +42,7 @@ export const getOrCreateCoin = async function (ctx: SuiContext | SuiObjectContex
   return await coinInfo
 }
 
+// helper function to retrieve coin info
 export async function buildCoinInfo(ctx: SuiContext | SuiObjectContext, coinAddress: string): Promise<token.TokenInfo> {
   const metadata = await ctx.client.getCoinMetadata({ coinType: coinAddress })
   const symbol = metadata.symbol
@@ -68,17 +58,14 @@ export async function buildCoinInfo(ctx: SuiContext | SuiObjectContext, coinAddr
 
 export type LendingEvent = lending.BorrowEventInstance | lending.DepositEventInstance | lending.WithdrawEventInstance | lending.RepayEventInstance
 
+// for each reserve coin type, access the dynamic field and retrive information such as
+// totalSupply, currentBorrowIndex, borrowCapCeiling, treasuryBalance, currentSupplyIndex
 for (let i = 0; i < reserves.length; i++) {
   SuiObjectProcessor.bind({
     objectId: reserves[i],
     network: ChainId.SUI_MAINNET,
     startCheckpoint: 5000000n
   }).onTimeInterval(async (self, _, ctx) => {
-
-    // const typeDescriptor = dynamic_field.Field.type(BUILTIN_TYPES.U8_TYPE, storage.ReserveData.type())
-
-    // const v = await ctx.coder.decodedType(self, typeDescriptor)
-    // if (v) {
       try {
         const type = String(self.fields.value.fields.coin_type)
         const id = String(self.fields.value.fields.id)
@@ -107,6 +94,8 @@ for (let i = 0; i < reserves.length; i++) {
   })
 }
 
+// logic to bind wrapped object with the right address
+// and a block handler to access info in this object on fixed time interval
 SuiWrappedObjectProcessor.bind({
   network: ChainId.SUI_MAINNET,
   objectId: '0xc0601facd3b98d1e82905e660bf9f5998097dedcf86ed802cf485865e3e3667c',
@@ -139,7 +128,8 @@ SuiWrappedObjectProcessor.bind({
 })
 })
 
-
+// event handler for BorrowEvent, DepositEvent, RepayEvent and WithdrawEvent
+// record the event in a event log, using sender of the event as distinct ID
 async function onEvent(event: LendingEvent, ctx: SuiContext) {
   const sender = event.data_decoded.sender
   const amount = event.data_decoded.amount
@@ -158,6 +148,8 @@ async function onEvent(event: LendingEvent, ctx: SuiContext) {
   })
 }
 
+// event handler for LiquidationEvent
+// record the event in a event log, using sender of the event as distinct ID
 async function onLiquidationEvent(event: lending.LiquidationCallEventInstance, ctx: SuiContext) {
   const sender = event.data_decoded.sender
   const liquidation_amount = event.data_decoded.liquidate_amount
@@ -178,7 +170,7 @@ async function onLiquidationEvent(event: lending.LiquidationCallEventInstance, c
   })
 }
 
-
+// binding event handlers
 lending.bind()
 .onEventBorrowEvent(onEvent)
 .onEventDepositEvent(onEvent)
