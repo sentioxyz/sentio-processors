@@ -2,7 +2,7 @@ import { Counter, Gauge, scaleDown } from '@sentio/sdk'
 import { ERC20Processor } from '@sentio/sdk/eth/builtin'
 import { FountainProcessor, WithdrawEarlyEvent, ClaimVaultPenaltyEvent, FountainContext, UpgradeEvent, UpgradeCallTrace, TransferEvent } from './types/eth/fountain.js'
 import { ReservoirContext, ReservoirProcessor } from './types/eth/reservoir.js'
-import { StakeNftEvent, UnstakeNftEvent, VenostormContext, VenostormProcessor } from './types/eth/venostorm.js'
+import { StakeNftCallTrace, StakeNftEvent, UnstakeNftCallTrace, UnstakeNftEvent, VenostormContext, VenostormProcessor } from './types/eth/venostorm.js'
 import { LiquidCroProcessor, StakeEvent, RequestUnbondEvent, UnbondEvent, AccrueRewardEvent, LiquidCroContext } from './types/eth/liquidcro.js'
 import { EthChainId } from "@sentio/sdk/eth";
 import './liquidatom.js'
@@ -11,10 +11,11 @@ import { ReserveFoundationProcessor } from './types/eth/reservefoundation.js'
 import { ClaimRewardsCallTrace, FeeDistributorContext, FeeDistributorProcessor } from './types/eth/feedistributor.js'
 import { ethers } from 'ethers'
 import { ERC20Context, getERC20ContractOnContext } from '@sentio/sdk/eth/builtin/erc20'
+import { getOrCreateERC721 } from './helper/nft-helper.js'
 
 const DepositEventHandler = async (event: any, ctx: any) => {
   const pid = Number(event.args.pid)
-  const amount = Number(event.args.amount) / Math.pow(10, 18)
+  const amount = Number(event.args.amount)
 
   ctx.meter.Counter(`deposit_counter`).add(amount, {
     pid: pid.toString()
@@ -24,14 +25,14 @@ const DepositEventHandler = async (event: any, ctx: any) => {
     ctx.eventLogger.emit("Deposit", {
       distinctId: event.args.user,
       pid,
-      amount
+      amount: amount / 10 ** 8
     })
   }
   else {
     ctx.eventLogger.emit("Deposit", {
       distinctId: event.args.user,
       pid,
-      amount,
+      amount: amount / 10 ** 18,
       stakeId: Number(event.args.stakeId),
       weightedAmount: Number(event.args.weightedAmount),
       unlockTimestamp: event.args.unlockTimestamp
@@ -43,19 +44,19 @@ const DepositEventHandler = async (event: any, ctx: any) => {
 const WithdrawEventHandler = async (event: any, ctx: any) => {
   const hash = event.transactionHash
   const user = event.args.user
-  const amount = Number(event.args.amount) / Math.pow(10, 18)
+  const amount = Number(event.args.amount)
 
   //venostorm
   if (ctx.address.toLowerCase() == "0x579206e4e49581ca8ada619e9e42641f61a84ac3") {
     const pid = Number(event.args.pid)
-    ctx.meter.Counter(`withdraw_counter`).add(amount, {
+    ctx.meter.Counter(`withdraw_counter`).add(amount / 10 ** 8, {
       pid: pid.toString()
     })
 
     ctx.eventLogger.emit("Withdraw", {
       distinctId: user,
       pid: pid,
-      amount
+      amount: amount / 10 ** 8
     })
   }
   else {
@@ -71,14 +72,14 @@ const WithdrawEventHandler = async (event: any, ctx: any) => {
       console.log(e.message, "Get pid failure at withdraw event, tx ", hash)
     }
 
-    ctx.meter.Counter(`withdraw_counter`).add(amount, {
+    ctx.meter.Counter(`withdraw_counter`).add(amount / 10 ** 18, {
       pid: pid.toString()
     })
 
     ctx.eventLogger.emit("Withdraw", {
       distinctId: user,
       pid: pid,
-      amount,
+      amount: amount / 10 ** 18,
       stakeId
     })
   }
@@ -261,18 +262,58 @@ const ClaimRewardsCallHandler = async (call: ClaimRewardsCallTrace, ctx: FeeDist
   }
 }
 
-const StakeNftEventHandler = async (event: StakeNftEvent, ctx: VenostormContext) => {
-  ctx.eventLogger.emit("StakeNftEvent", {
-    distinctId: event.args.user,
-    pid: event.args.pid
-  })
+interface nftMetadata {
+  name: string,
+  symbol: string
 }
 
-const UnstakeNftEventHandler = async (event: UnstakeNftEvent, ctx: VenostormContext) => {
-  ctx.eventLogger.emit("UnstakeNftEvent", {
-    distinctId: event.args.user,
-    pid: event.args.pid
-  })
+const StakeNftCallHandler = async (call: StakeNftCallTrace, ctx: VenostormContext) => {
+  const pid = call.args._pid
+  const nfts = call.args._nfts
+  for (let i = 0; i < nfts.length; i++) {
+    let [nftName, nftSymbol] = ["unk", "unk"]
+    try {
+      const metadata = await getOrCreateERC721(ctx, nfts[i][0])
+      nftName = metadata.name
+      nftSymbol = metadata.symbol
+    }
+    catch (e) {
+      console.log(`get erc721 failed at ${ctx.transactionHash}`)
+    }
+    ctx.eventLogger.emit("StakeNftCall", {
+      distinctId: call.action.from,
+      pid,
+      tokenContract: nfts[i][0],
+      tokenId: nfts[i][1],
+      nftName,
+      nftSymbol
+    })
+  }
+}
+
+const UnstakeNftCallHandler = async (call: UnstakeNftCallTrace, ctx: VenostormContext) => {
+  const pid = call.args._pid
+  const nfts = call.args._nfts
+  for (let i = 0; i < nfts.length; i++) {
+    let [nftName, nftSymbol] = ["unk", "unk"]
+    try {
+      const metadata = await getOrCreateERC721(ctx, nfts[i][0])
+      nftName = metadata.name
+      nftSymbol = metadata.symbol
+    }
+    catch (e) {
+      console.log(`get erc721 failed at ${ctx.transactionHash}`)
+    }
+
+    ctx.eventLogger.emit("UnstakeNftCall", {
+      distinctId: call.action.from,
+      pid,
+      tokenContract: nfts[i][0],
+      tokenId: nfts[i][1],
+      nftName,
+      nftSymbol
+    })
+  }
 }
 
 const TransferEventHandler = async (event: TransferEvent, ctx: ERC20Context) => {
@@ -307,14 +348,13 @@ ReservoirProcessor.bind({ address: '0x21179329c1dcfd36ffe0862cca2c7e85538cca07',
   .onEventDeposit(DepositEventHandler)
   .onEventWithdraw(WithdrawEventHandler)
   .onEventUpgrade(UpgradeEventHandler)
-// .onCallUpgrade(UpgradeCallHandler)
 
 
 VenostormProcessor.bind({ address: '0x579206e4e49581ca8ada619e9e42641f61a84ac3', network: EthChainId.CRONOS })
   .onEventDeposit(DepositEventHandler)
   .onEventWithdraw(WithdrawEventHandler)
-  .onEventStakeNft(StakeNftEventHandler)
-  .onEventUnstakeNft(UnstakeNftEventHandler)
+  .onCallStakeNft(StakeNftCallHandler)
+  .onCallUnstakeNft(UnstakeNftCallHandler)
 
 LiquidCroProcessor.bind({ address: '0x9fae23a2700feecd5b93e43fdbc03c76aa7c08a6', network: EthChainId.CRONOS })
   .onEventStake(StakeEventHandler)
@@ -324,22 +364,3 @@ LiquidCroProcessor.bind({ address: '0x9fae23a2700feecd5b93e43fdbc03c76aa7c08a6',
 
 FeeDistributorProcessor.bind({ address: '0x4758de8640cf7fef229c20299ad853c86c0c1e39', network: EthChainId.CRONOS })
   .onCallClaimRewards(ClaimRewardsCallHandler)
-
-// const filter1 = ERC20Processor.filters.Transfer(null, "0x21179329c1dcfd36ffe0862cca2c7e85538cca07")
-// const filter2 = ERC20Processor.filters.Transfer(null, "0xb4be51216f4926ab09ddf4e64bc20f499fd6ca95")
-
-// ERC20Processor.bind({ address: "0xB888d8Dd1733d72681b30c00ee76BDE93ae7aa93", network: EthChainId.CRONOS })
-//   .onEventTransfer(TransferEventHandler, [filter1, filter2])
-//   .onCallTransfer(async (call, ctx) => {
-//     ctx.eventLogger.emit("debug2", {
-//       txHash: call.transactionHash
-//     })
-//   })
-
-// ERC20Processor.bind({ address: "0x5C7F8A570d578ED84E63fdFA7b1eE72dEae1AE23", network: EthChainId.CRONOS })
-//   .onEventTransfer(TransferEventHandler, [filter1, filter2])
-//   .onCallTransfer(async (call, ctx) => {
-//     ctx.eventLogger.emit("debug3", {
-//       txHash: call.transactionHash
-//     })
-//   })
