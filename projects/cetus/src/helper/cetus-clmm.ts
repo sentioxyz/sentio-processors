@@ -239,14 +239,6 @@ export async function calculateValue_USD(ctx: SuiContext | SuiObjectContext, poo
 
 export async function calculateSwapVol_USD(event: pool.SwapEventInstance, type: string, amount_in: number, amount_out: number, atob: Boolean, date: Date) {
     let [coin_a_full_address, coin_b_full_address] = getCoinFullAddress(type)
-    //temp fix normalised address
-    if (coin_a_full_address == "0x06864a6f921804860930db6ddbe2e16acdf8504495ea7481637a1c8b9a8fe54b::cetus::CETUS") {
-        coin_a_full_address = "0x6864a6f921804860930db6ddbe2e16acdf8504495ea7481637a1c8b9a8fe54b::cetus::CETUS"
-    }
-    if (coin_b_full_address == "0x06864a6f921804860930db6ddbe2e16acdf8504495ea7481637a1c8b9a8fe54b::cetus::CETUS") {
-        coin_b_full_address = "0x6864a6f921804860930db6ddbe2e16acdf8504495ea7481637a1c8b9a8fe54b::cetus::CETUS"
-    }
-
     const price_a = await getPriceByType(SuiNetwork.MAIN_NET, coin_a_full_address, date)
     const price_b = await getPriceByType(SuiNetwork.MAIN_NET, coin_b_full_address, date)
 

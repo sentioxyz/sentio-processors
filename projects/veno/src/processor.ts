@@ -17,11 +17,11 @@ const DepositEventHandler = async (event: any, ctx: any) => {
   const pid = Number(event.args.pid)
   const amount = Number(event.args.amount)
 
-  ctx.meter.Counter(`deposit_counter`).add(amount, {
-    pid: pid.toString()
-  })
-
   if (ctx.address.toLowerCase() == "0x579206e4e49581ca8ada619e9e42641f61a84ac3") {
+    ctx.meter.Counter(`deposit_counter`).add(amount / 10 ** 8, {
+      pid: pid.toString()
+    })
+
     ctx.eventLogger.emit("Deposit", {
       distinctId: event.args.user,
       pid,
@@ -29,6 +29,9 @@ const DepositEventHandler = async (event: any, ctx: any) => {
     })
   }
   else {
+    ctx.meter.Counter(`deposit_counter`).add(amount / 10 ** 18, {
+      pid: pid.toString()
+    })
     ctx.eventLogger.emit("Deposit", {
       distinctId: event.args.user,
       pid,
