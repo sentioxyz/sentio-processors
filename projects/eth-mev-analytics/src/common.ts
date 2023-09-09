@@ -43,25 +43,20 @@ export const chainConfigs = [
       "0x2967E7Bb9DaA5711Ac332cAF874BD47ef99B3820".toLowerCase(), // sodimanod
       "0xDef1C0ded9bec7F1a1670819833240f027b25EfF".toLowerCase(), // 0xproxy
       "0xB77EC71C90A533719df75bc6a209f7fB3e936EEd".toLowerCase(), //strategy
+      "0xa5e0829caced8ffdd4de3c43696c57f7d7a678ff".toLowerCase(), // router
+      "0x1E8ae092651e7B14e4D0f93611267c5Be19B8b9F".toLowerCase(), // settlement
     ]),
     mintBurnAddr: new Set<string>([
       "0x0000000000000000000000000000000000000000",
     ]),
     phalconChain: "polygon",
     watchSpam: new Set<string>([
-      "0xEbE3A29afB5E1bC576407b29446bFcee3DFa2b8C".toLowerCase(),
-      "0x7fA6377F78b587C71f7E24176D7a65C12fba76b2".toLowerCase(),
       "0xefA413DE95fD661346C6dE01342b4779Df2dd517".toLowerCase(),
-      "0x8eca22800465e74a0fd00e7fcbc180e0990ddf9f".toLowerCase(),
       "0xED8dD4384c309bD57aAD10789740F865B1CAea91".toLowerCase(),
       "0x458df878cae2174a294b907df6d4235fa59eaa44".toLowerCase(),
-      "0xad3b67BCA8935Cb510C8D18bD45F0b94F54A968f".toLowerCase(),
-      "0xade541a5ccdbbca9d0c45e1dc1e7be3f5978e33b".toLowerCase(),
-      "0x68bde664140a4ce623db80b8b82842eaf2e8a34b".toLowerCase(),
       "0xce6314f881c05f64c89b0f6520c0286f0ac91f8f".toLowerCase(),
       "0xefa413de95fd661346c6de01342b4779df2dd517".toLowerCase(),
       "0xe9324ca2d46f651ec16289f518b1392cf90d6d77".toLowerCase(),
-      "0xed6fe9d0410eebd002e5d68fb914eee061b2edab".toLowerCase(),
     ]),
   },
   {
