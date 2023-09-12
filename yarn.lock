@@ -706,12 +706,20 @@
     "@ethersproject/properties" "^5.7.0"
     "@ethersproject/strings" "^5.7.0"
 
-"@grpc/grpc-js@^1.7.3", "@grpc/grpc-js@^1.8.14":
+"@grpc/grpc-js@^1.8.14":
   version "1.8.15"
   resolved "https://registry.npmjs.org/@grpc/grpc-js/-/grpc-js-1.8.15.tgz"
   integrity sha512-H2Bu/w6+oQ58DsRbQol66ERBk3V5ZIak/z/MDx0T4EgDnJWps807I6BvTjq0v6UvZtOcLO+ur+Q9wvniqu3OJA==
   dependencies:
     "@grpc/proto-loader" "^0.7.0"
+    "@types/node" ">=12.12.47"
+
+"@grpc/grpc-js@^1.8.18":
+  version "1.9.2"
+  resolved "https://registry.yarnpkg.com/@grpc/grpc-js/-/grpc-js-1.9.2.tgz#151148f6485eab8fb13fe53042d25f4ffa9c7d09"
+  integrity sha512-Lf2pUhNTaviEdEaGgjU+29qw3arX7Qd/45q66F3z1EV5hroE6wM9xSHPvjB8EY+b1RmKZgwnLWXQorC6fZ9g5g==
+  dependencies:
+    "@grpc/proto-loader" "^0.7.8"
     "@types/node" ">=12.12.47"
 
 "@grpc/proto-loader@^0.7.0":
@@ -723,6 +731,16 @@
     lodash.camelcase "^4.3.0"
     long "^4.0.0"
     protobufjs "^7.0.0"
+    yargs "^17.7.2"
+
+"@grpc/proto-loader@^0.7.8":
+  version "0.7.9"
+  resolved "https://registry.yarnpkg.com/@grpc/proto-loader/-/proto-loader-0.7.9.tgz#3ca68236f1a0d77566dafa53c715eb31d096279a"
+  integrity sha512-YJsOehVXzgurc+lLAxYnlSMc1p/Gu6VAvnfx0ATi2nzvr0YZcjhmZDeY8SeAKv1M7zE3aEJH0Xo9mK1iZ8GYoQ==
+  dependencies:
+    lodash.camelcase "^4.3.0"
+    long "^5.0.0"
+    protobufjs "^7.2.4"
     yargs "^17.7.2"
 
 "@istanbuljs/load-nyc-config@^1.0.0":
@@ -988,26 +1006,19 @@
   resolved "https://registry.npmjs.org/@metamask/safe-event-emitter/-/safe-event-emitter-2.0.0.tgz"
   integrity sha512-/kSXhY692qiV1MXu6EeOZvg5nECLclxNXcKCxJ3cXQgYuRymRHpdx/t7JXfsK+JLjwA1e1c1/SBrlQYpusC29Q==
 
-"@mysten/bcs@0.7.1":
-  version "0.7.1"
-  resolved "https://registry.npmjs.org/@mysten/bcs/-/bcs-0.7.1.tgz"
-  integrity sha512-wFPb8bkhwrbiStfZMV5rFM7J+umpke59/dNjDp+UYJKykNlW23LCk2ePyEUvGdb62HGJM1jyOJ8g4egE3OmdKA==
+"@mysten/bcs@0.7.4", "@mysten/bcs@^0.7.4":
+  version "0.7.4"
+  resolved "https://registry.yarnpkg.com/@mysten/bcs/-/bcs-0.7.4.tgz#1e32ec3d1fa68a0ed98323e604a741728927e421"
+  integrity sha512-6DKzM4L10Au3Og5EJRBqJZmXWZ7hS/clVjbVUH4sA0aFtS3AZo2xc+r5fUFfdJbaWZUxVaDiQ8BNiEZWkAnEOw==
   dependencies:
     bs58 "^5.0.0"
 
-"@mysten/bcs@0.7.3", "@mysten/bcs@^0.7.3":
-  version "0.7.3"
-  resolved "https://registry.npmjs.org/@mysten/bcs/-/bcs-0.7.3.tgz"
-  integrity sha512-fbusBfsyc2MpTACi72H5edWJ670T84va+qn9jSPpb5BzZ+pzUM1Q0ApPrF5OT+mB1o5Ng+mxPQpBCZQkfiV2TA==
+"@mysten/sui.js@^0.41.0", "@mysten/sui.js@^0.41.2":
+  version "0.41.2"
+  resolved "https://registry.yarnpkg.com/@mysten/sui.js/-/sui.js-0.41.2.tgz#0ef09ce8777f254c1a25f4108fb55c4755a60943"
+  integrity sha512-00Kkk4don9H9iRWBqXfRC4wUPY0hqAvmzxhwaYZIHj9Tmb71Nx51zLLFsxeA7dlR6cJFaXFMbZkt6WR2vP8WLQ==
   dependencies:
-    bs58 "^5.0.0"
-
-"@mysten/sui.js@^0.40.0":
-  version "0.40.0"
-  resolved "https://registry.npmjs.org/@mysten/sui.js/-/sui.js-0.40.0.tgz"
-  integrity sha512-PEGdMe+QgpIdDIpyO4/yb+CK4x3Hki+kYPbQ5n3DVsWyb2ztFwB+5oYdc7qG3QkniO1lnCrlSHqZ5mN+x3RzrQ==
-  dependencies:
-    "@mysten/bcs" "0.7.3"
+    "@mysten/bcs" "0.7.4"
     "@noble/curves" "^1.1.0"
     "@noble/hashes" "^1.3.1"
     "@open-rpc/client-js" "^1.8.1"
@@ -1018,35 +1029,12 @@
     superstruct "^1.0.3"
     tweetnacl "^1.0.3"
 
-"@mysten/sui.js@npm:@sentio/sui.js@^0.34":
-  version "0.34.0"
-  resolved "https://registry.npmjs.org/@sentio/sui.js/-/sui.js-0.34.0.tgz"
-  integrity sha512-bFT21WfHlgGCyHRD3vwNgtFrhkpHo71/go7UXiE14YgBuobHOUnTAVSRcO5REZja1ZR4kb8jSf3uLQbFjCoWKg==
-  dependencies:
-    "@mysten/bcs" "0.7.1"
-    "@noble/curves" "^1.0.0"
-    "@noble/hashes" "^1.3.0"
-    "@scure/bip32" "^1.3.0"
-    "@scure/bip39" "^1.2.0"
-    "@suchipi/femver" "^1.0.0"
-    jayson "^4.0.0"
-    rpc-websockets "^7.5.1"
-    superstruct "^1.0.3"
-    tweetnacl "^1.0.3"
-
 "@noble/curves@^1.0.0", "@noble/curves@^1.1.0", "@noble/curves@~1.1.0":
   version "1.1.0"
   resolved "https://registry.npmjs.org/@noble/curves/-/curves-1.1.0.tgz"
   integrity sha512-091oBExgENk/kGj3AZmtBDMpxQPDtxQABR2B9lb1JbVTs6ytdzZNwvhxQ4MWasRNEzlbEH8jCWFCwhF/Obj5AA==
   dependencies:
     "@noble/hashes" "1.3.1"
-
-"@noble/curves@~1.0.0":
-  version "1.0.0"
-  resolved "https://registry.npmjs.org/@noble/curves/-/curves-1.0.0.tgz"
-  integrity sha512-2upgEu0iLiDVDZkNLeFV2+ht0BAVgQnEmCk6JsOch9Rp8xfkMCbvbAZlA2pBHQc73dbl+vFOXfqkf4uemdn0bw==
-  dependencies:
-    "@noble/hashes" "1.3.0"
 
 "@noble/hashes@1.1.2":
   version "1.1.2"
@@ -1057,11 +1045,6 @@
   version "1.1.3"
   resolved "https://registry.npmjs.org/@noble/hashes/-/hashes-1.1.3.tgz"
   integrity sha512-CE0FCR57H2acVI5UOzIGSSIYxZ6v/HOhDR0Ro9VLyhnzLwx0o8W1mmgaqlEUx4049qJDlIBRztv5k+MM8vbO3A==
-
-"@noble/hashes@1.3.0":
-  version "1.3.0"
-  resolved "https://registry.npmjs.org/@noble/hashes/-/hashes-1.3.0.tgz"
-  integrity sha512-ilHEACi9DwqJB0pw7kv+Apvh50jiiSyR/cQ3y4W7lOR5mhvn/50FLUfsnfJz0BDZtl/RR16kXvptiv6q1msYZg==
 
 "@noble/hashes@1.3.1", "@noble/hashes@^1.3.0", "@noble/hashes@^1.3.1", "@noble/hashes@~1.3.0", "@noble/hashes@~1.3.1":
   version "1.3.1"
@@ -1209,15 +1192,6 @@
   resolved "https://registry.npmjs.org/@scure/base/-/base-1.1.1.tgz"
   integrity sha512-ZxOhsSyxYwLJj3pLZCefNitxsj093tb2vq90mp2txoYeBqbcjDjqFhyM8eUjq/uFm6zJ+mUuqxlS2FkuSY1MTA==
 
-"@scure/bip32@^1.3.0":
-  version "1.3.0"
-  resolved "https://registry.npmjs.org/@scure/bip32/-/bip32-1.3.0.tgz"
-  integrity sha512-bcKpo1oj54hGholplGLpqPHRbIsnbixFtc06nwuNM5/dwSXOq/AAYoIBRsBmnZJSdfeNW5rnff7NTAz3ZCqR9Q==
-  dependencies:
-    "@noble/curves" "~1.0.0"
-    "@noble/hashes" "~1.3.0"
-    "@scure/base" "~1.1.0"
-
 "@scure/bip32@^1.3.1":
   version "1.3.1"
   resolved "https://registry.npmjs.org/@scure/bip32/-/bip32-1.3.1.tgz"
@@ -1235,14 +1209,6 @@
     "@noble/hashes" "~1.1.1"
     "@scure/base" "~1.1.0"
 
-"@scure/bip39@^1.2.0":
-  version "1.2.0"
-  resolved "https://registry.npmjs.org/@scure/bip39/-/bip39-1.2.0.tgz"
-  integrity sha512-SX/uKq52cuxm4YFXWFaVByaSHJh2w3BnokVSeUJVCv6K7WulT9u2BuNRBhuFl8vAuYnzx9bEu9WgpcNYTrYieg==
-  dependencies:
-    "@noble/hashes" "~1.3.0"
-    "@scure/base" "~1.1.0"
-
 "@scure/bip39@^1.2.1":
   version "1.2.1"
   resolved "https://registry.npmjs.org/@scure/bip39/-/bip39-1.2.1.tgz"
@@ -1256,28 +1222,23 @@
   resolved "https://registry.npmjs.org/@sentio/bigdecimal/-/bigdecimal-9.1.1-patch.3.tgz"
   integrity sha512-O5w8XdyeatUcwI+ZbpSw60/cXFPJk3NbpIupwMHfYmW8fpxpXyRbyGESNJNufWWrB6CadsWGh1R3rd7owvrmlw==
 
-"@sentio/chain@^1.0.0":
-  version "1.0.0"
-  resolved "https://registry.npmjs.org/@sentio/chain/-/chain-1.0.0.tgz"
-  integrity sha512-Mxjx+LLSr9UIMldRY6WsLpXLNjr4i2OfoK0Uttag10XmQCO/U7W3Q7QyMHUKTHdxz3pk1PsR05DKP5BYBHevhw==
-
-"@sentio/chain@^1.0.4":
+"@sentio/chain@^1.0.3", "@sentio/chain@^1.0.4":
   version "1.0.4"
   resolved "https://registry.npmjs.org/@sentio/chain/-/chain-1.0.4.tgz"
   integrity sha512-aFMqh6dJs7lewnXb20vm/EEovwTvTHnTUau82vlC7lgmokVWDo1IDwEZpXPBr8y4tSnUg7LiDOysJjrFLVcxiA==
 
-"@sentio/cli@^2.9.3":
-  version "2.9.3"
-  resolved "https://registry.npmjs.org/@sentio/cli/-/cli-2.9.3.tgz"
-  integrity sha512-GEGTNSf13270JNAmmVK0Ws3qzlPb13kYc1+G4q2TkKlg+UmObJ4EiikKuaAUCVyj8yNL5myGo1ngywHljK8Rrw==
+"@sentio/cli@^2.11.3":
+  version "2.11.3"
+  resolved "https://registry.yarnpkg.com/@sentio/cli/-/cli-2.11.3.tgz#0e2dc25333032ff4ddc694e545ba29bb35afd1ef"
+  integrity sha512-lMZaPKM0i5MRO81ebsaOQaVo82YOudqfL010vJNMKZOfSI0pbX50sp8gTYU6z90aKD6vsJCGooJ/F0czfdpcGw==
   dependencies:
     "@jest/globals" "^29.5.0"
     "@jest/types" "^29.5.0"
-    "@mysten/sui.js" "npm:@sentio/sui.js@^0.34"
-    "@sentio/chain" "^1.0.0"
+    "@mysten/sui.js" "^0.41.0"
+    "@sentio/chain" "^1.0.3"
     "@types/jest" "^29.5.0"
     "@types/node" "^18.11.18"
-    aptos-sdk "npm:aptos@^1.8.5"
+    aptos "^1.17.0"
     chalk "^5.2.0"
     command-line-args "^5.2.1"
     command-line-usage "^7.0.1"
@@ -1316,68 +1277,69 @@
     truffle-privatekey-provider "^1.5.0"
     web3 "^1.3.0"
 
-"@sentio/protos@2.24.3":
-  version "2.24.3"
-  resolved "https://registry.npmjs.org/@sentio/protos/-/protos-2.24.3.tgz"
-  integrity sha512-8jYXHyqCxQPUBW/Cs0jqhmgbUBze28CQVxVCAT6K3GUfTNazSYVrwawpSaJijQhilra9hp3u7XA0RpKHr5q/8A==
+"@sentio/protos@2.25.0":
+  version "2.25.0"
+  resolved "https://registry.yarnpkg.com/@sentio/protos/-/protos-2.25.0.tgz#b475ebed8df332072ccc09dd479ad89311bd2632"
+  integrity sha512-MMiJa4aQhwWjihoOzo2YTpupCBy1Bp3FbOcymQUsKHZ9hv/8XudUa9BCmJzek0FjaGc4kziQi4pYQZt4rSxLlA==
   dependencies:
     google-protobuf "^3.21.2"
     long "^5.2.3"
-    nice-grpc "^2.1.0"
+    nice-grpc "^2.1.5"
     nice-grpc-common "^2.0.2"
-    protobufjs "^7.2.3"
+    protobufjs "^7.2.5"
 
-"@sentio/runtime@^2.24.3":
-  version "2.24.3"
-  resolved "https://registry.npmjs.org/@sentio/runtime/-/runtime-2.24.3.tgz"
-  integrity sha512-0DTJpt0zge49MvALUutTHRPBhz2PIjfqXRrVbiQipySHfqCoy2ZAn67BPRrmkSVKRnKMv8iy09Qsl+N6H7TzmA==
+"@sentio/runtime@^2.25.0":
+  version "2.25.0"
+  resolved "https://registry.yarnpkg.com/@sentio/runtime/-/runtime-2.25.0.tgz#06f4025e03a17ae93f0c7c36efb0c0d3e864964a"
+  integrity sha512-Mc5LMstTu3ile8u8TkZKQYzeCxeN3higO0OlPllXtOZDVR21ySY3eUVgS4CKo9OYuIiDc6w6ut78WHYzrwsWjA==
   dependencies:
     "@grpc/grpc-js" "^1.8.14"
-    "@sentio/protos" "2.24.3"
+    "@sentio/protos" "2.25.0"
     command-line-args "^5.2.1"
     command-line-usage "^7.0.1"
     fs-extra "^11.0.0"
     google-protobuf "^3.21.2"
     long "^5.2.3"
-    nice-grpc "^2.1.0"
-    nice-grpc-client-middleware-retry "^3.1.2"
+    nice-grpc "^2.1.5"
+    nice-grpc-client-middleware-retry "^3.1.4"
     nice-grpc-common "^2.0.2"
     nice-grpc-error-details "^0.2.0"
-    nice-grpc-prometheus "^0.1.2"
+    nice-grpc-prometheus "^0.2.0"
     prom-client "^14.2.0"
-    protobufjs "^7.2.3"
+    protobufjs "^7.2.5"
     utility-types "^3.10.0"
-    winston "^3.8.2"
+    winston "^3.10.0"
 
-"@sentio/sdk@^v2.24.3":
-  version "2.24.3"
-  resolved "https://registry.npmjs.org/@sentio/sdk/-/sdk-2.24.3.tgz"
-  integrity sha512-o63Z3OO+jIlJw3a2DxlZPb/x/NNyxF+LrPspEvNRot5IhlFyvDcqI/TWE8OLjrOq6bj49gZCvBgR6Op74rwquQ==
+"@sentio/sdk@^v2.25.0":
+  version "2.25.0"
+  resolved "https://registry.yarnpkg.com/@sentio/sdk/-/sdk-2.25.0.tgz#76971381ea6e615cdd680751c8221df7ce684552"
+  integrity sha512-ZO5+Puxkw4AbRP1SrBiewEHZJQkHQajeTowSNHgp1d2p0yA0rGgYbXI0iM1OP66wcKULUUASbzA3x3DGkDXFYg==
   dependencies:
     "@coral-xyz/borsh" "^0.28.0"
-    "@mysten/sui.js" "^0.40.0"
+    "@mysten/sui.js" "^0.41.0"
     "@project-serum/anchor" "^0.26.0"
     "@sentio/bigdecimal" "^9.1.1-patch.3"
     "@sentio/chain" "^1.0.4"
     "@sentio/ethers-v6" "^1.0.28"
-    "@sentio/protos" "2.24.3"
-    "@sentio/runtime" "^2.24.3"
+    "@sentio/protos" "2.25.0"
+    "@sentio/runtime" "^2.25.0"
     "@solana/web3.js" "^1.78.3"
-    "@typemove/aptos" "^1.0.1"
-    "@typemove/move" "^1.0.1"
-    "@typemove/sui" "^1.0.1"
-    aptos "^1.17.0"
-    aptos-sdk "npm:aptos"
+    "@typemove/aptos" "^1.1.0"
+    "@typemove/move" "^1.1.0"
+    "@typemove/sui" "^1.1.0"
+    aptos "^1.19.0"
+    aptos-sdk "npm:aptos@^1.19.0"
     bs58 "^5.0.0"
     chalk "^5.2.0"
     csv-parse "^5.3.0"
-    ethers "npm:@sentio/ethers@^6.6.0"
-    js-sha3 "^0.8.0"
+    ethers "npm:@sentio/ethers@^6.7.1-patch.0"
+    js-sha3 "^0.9.0"
+    lru-cache "^10.0.1"
     mkdirp "^1.0.4"
-    nice-grpc "^2.1.4"
-    nice-grpc-client-middleware-retry "^3.1.3"
+    nice-grpc "^2.1.5"
+    nice-grpc-client-middleware-retry "^3.1.4"
     nice-grpc-common "^2.0.2"
-    nice-grpc-prometheus "^0.1.6"
+    nice-grpc-prometheus "^0.2.0"
     node-fetch "^3.3.1"
     p-queue "^7.3.4"
     prettier "^3.0.1"
@@ -1385,7 +1347,7 @@
     radash "^11.0.0"
     superstruct_solana "npm:superstruct@^0.14.2"
     typechain "^8.0.0"
-    typedoc "^0.24.8"
+    typedoc "^0.25.0"
     utility-types "^3.10.0"
     yaml "^2.2.1"
 
@@ -1506,33 +1468,33 @@
   resolved "https://registry.npmjs.org/@tsconfig/node16/-/node16-1.0.4.tgz"
   integrity sha512-vxhUy4J8lyeyinH7Azl1pdd43GJhZH/tP2weN8TntQblOY+A0XbT8DJk1/oCPuOOyg/Ja757rG0CgHcWC8OfMA==
 
-"@typemove/aptos@^1.0.1":
-  version "1.0.1"
-  resolved "https://registry.npmjs.org/@typemove/aptos/-/aptos-1.0.1.tgz"
-  integrity sha512-48vMeS27EVeaeqal0TMo0ztCO4tJJWMthSreu8PwEvnsZaaC3up7C0GZ37ozRhpa2S+46q2ByuY3RhoCQ+GfFg==
+"@typemove/aptos@^1.1.0":
+  version "1.1.0"
+  resolved "https://registry.yarnpkg.com/@typemove/aptos/-/aptos-1.1.0.tgz#51710ff99fa08e034c690bf40b9e1219c7845f01"
+  integrity sha512-+yX7YdswP/P0SBzrnooFRwpXbRqMWFlaGwYgc0C5mzH7UeeXQC+L3zCFmVrD0qJC1r0oAGgS9bewKXk1jkMcsQ==
   dependencies:
-    "@typemove/move" "1.0.1"
-    aptos "^1.16.0"
-    chalk "^5.2.0"
+    "@typemove/move" "1.1.0"
+    aptos "^1.19.0"
+    chalk "^5.3.0"
     radash "^11.0.0"
 
-"@typemove/move@1.0.1", "@typemove/move@^1.0.1":
-  version "1.0.1"
-  resolved "https://registry.npmjs.org/@typemove/move/-/move-1.0.1.tgz"
-  integrity sha512-CFtS2D5v7dPlwhqAtzPnkAkE8KvKORBWSeoDVEMb4oAdZ16JJiiIX2kveSkPkcYSzy5+YoWMLMrERIrMY1KEIg==
+"@typemove/move@1.1.0", "@typemove/move@^1.1.0":
+  version "1.1.0"
+  resolved "https://registry.yarnpkg.com/@typemove/move/-/move-1.1.0.tgz#c1ef5b4dff6173b1c76a5017e54ac1059878e011"
+  integrity sha512-nuu7G2YLBaR6TTUXrpCGCxb939Veq1onIsN3Ck6ImAEENNNUPbk+oBChMAfV7SxQR9RW9MWJG7ukSXbIe/KmBA==
   dependencies:
-    chalk "^5.2.0"
+    chalk "^5.3.0"
     radash "^11.0.0"
 
-"@typemove/sui@^1.0.1":
-  version "1.0.1"
-  resolved "https://registry.npmjs.org/@typemove/sui/-/sui-1.0.1.tgz"
-  integrity sha512-6NvyvDcR818RBUUoskcGno1ixaXxd5rvlhVSPS0coIHeU2LEW4P/jnjnQMGrxGSo2iC6J/YXO9vnQRGdyDDvcA==
+"@typemove/sui@^1.1.0":
+  version "1.1.0"
+  resolved "https://registry.yarnpkg.com/@typemove/sui/-/sui-1.1.0.tgz#6b30af0590e7d47d05dbcebffe052b8ceda0027c"
+  integrity sha512-giPwIBGjcMqnlauH87pUkN+RYSZ46HKdRVwAdlPCtAMSkja46/l0ykijv5xjLsXFrQvytV2di7OgPDaE/JyZ0A==
   dependencies:
-    "@mysten/bcs" "^0.7.3"
-    "@mysten/sui.js" "^0.40.0"
-    "@typemove/move" "1.0.1"
-    chalk "^5.2.0"
+    "@mysten/bcs" "^0.7.4"
+    "@mysten/sui.js" "^0.41.2"
+    "@typemove/move" "1.1.0"
+    chalk "^5.3.0"
     radash "^11.0.0"
 
 "@types/babel__core@^7.1.14":
@@ -1875,10 +1837,10 @@ anymatch@^3.0.3, anymatch@~3.1.2:
     normalize-path "^3.0.0"
     picomatch "^2.0.4"
 
-"aptos-sdk@npm:aptos":
-  version "1.18.0"
-  resolved "https://registry.npmjs.org/aptos/-/aptos-1.18.0.tgz"
-  integrity sha512-T+mhfUEWWQtCG0zqoNETFgO11d/eauKucg1oEJC7GuCSY97FLADMrj0sQWzz94BlP+RiR8R+l0wE9BN75cLw2g==
+"aptos-sdk@npm:aptos@^1.19.0", aptos@^1.19.0:
+  version "1.19.0"
+  resolved "https://registry.yarnpkg.com/aptos/-/aptos-1.19.0.tgz#47d075bfd8d28da4ff3c59aa5d1d25335744e168"
+  integrity sha512-IEvEfBFndhDce1HCMdow24Dh52sFFuRcgDpjTbH3Fi4TQpCD9s7zX+C5eCzTNiWQmEH/dfL2uDw5dbREGQxsbQ==
   dependencies:
     "@aptos-labs/aptos-client" "^0.0.2"
     "@noble/hashes" "1.1.3"
@@ -1887,18 +1849,7 @@ anymatch@^3.0.3, anymatch@~3.1.2:
     form-data "4.0.0"
     tweetnacl "1.0.3"
 
-"aptos-sdk@npm:aptos@^1.8.5":
-  version "1.10.0"
-  resolved "https://registry.npmjs.org/aptos/-/aptos-1.10.0.tgz"
-  integrity sha512-iapFseSv1GQn9nVXZzuk9LyrFCN/3/lg/kPgjbAeM2M66Fb2TZkN8khbTat4ol5qo4TXPWoMJdyzR8PwE6KlXA==
-  dependencies:
-    "@noble/hashes" "1.1.3"
-    "@scure/bip39" "1.1.0"
-    axios "0.27.2"
-    form-data "4.0.0"
-    tweetnacl "1.0.3"
-
-aptos@^1.16.0, aptos@^1.17.0:
+aptos@^1.17.0:
   version "1.17.0"
   resolved "https://registry.npmjs.org/aptos/-/aptos-1.17.0.tgz"
   integrity sha512-C+jNub8Sgg32F2t4TwYqMfHHWyuxLjNwoJGlRz5CTR52V4fTFjGvP6nlqE4MphwAWrIQnHKo93Thai7kNe3OvA==
@@ -2566,6 +2517,11 @@ chalk@^5.2.0:
   version "5.2.0"
   resolved "https://registry.npmjs.org/chalk/-/chalk-5.2.0.tgz"
   integrity sha512-ree3Gqw/nazQAPuJJEy+avdl7QfZMcUvmHIKgEZkGL+xOBzRvup5Hxo6LHuMceSxOabuJLJm5Yp/92R9eMmMvA==
+
+chalk@^5.3.0:
+  version "5.3.0"
+  resolved "https://registry.yarnpkg.com/chalk/-/chalk-5.3.0.tgz#67c20a7ebef70e7f3970a01f90fa210cb6860385"
+  integrity sha512-dLitG79d+GV1Nb/VYcCDFivJeK1hiukt9QjRNVOsUtTy1rR1YJsmpGGTZ3qJos+uw7WmWF4wUwBd9jxjocFC2w==
 
 char-regex@^1.0.2:
   version "1.0.2"
@@ -3579,7 +3535,7 @@ ethereumjs-wallet@^1.0.0:
     utf8 "^3.0.0"
     uuid "^8.3.2"
 
-ethers@^4.0.27, ethers@^6.7.1, "ethers@npm:@sentio/ethers@6.6.0", "ethers@npm:@sentio/ethers@^6.6.0":
+ethers@^4.0.27, ethers@^6.7.1, "ethers@npm:@sentio/ethers@6.6.0", "ethers@npm:@sentio/ethers@^6.7.1-patch.0":
   version "6.6.0"
   resolved "https://registry.yarnpkg.com/@sentio/ethers/-/ethers-6.6.0.tgz#e368a17e181536f9994f68d48b5b7ecf1e7a0e8a"
   integrity sha512-1ofcpDKnE2lvKklgD9QVaYAaXtLnjLlDapAYMPMkvWzbDXyug+MArvyX/Gva8jvqOBKcOE6/a/cH9P9FDzjrMw==
@@ -4649,7 +4605,7 @@ istanbul-reports@^3.1.3:
     html-escaper "^2.0.0"
     istanbul-lib-report "^3.0.0"
 
-jayson@^4.0.0, jayson@^4.1.0:
+jayson@^4.1.0:
   version "4.1.0"
   resolved "https://registry.npmjs.org/jayson/-/jayson-4.1.0.tgz"
   integrity sha512-R6JlbyLN53Mjku329XoRT2zJAE6ZgOQ8f91ucYdMCD4nkGCF9kZSrcGXpHIU4jeKj58zUZke2p+cdQchU7Ly7A==
@@ -5047,6 +5003,11 @@ js-sha3@^0.5.7:
   version "0.5.7"
   resolved "https://registry.npmjs.org/js-sha3/-/js-sha3-0.5.7.tgz"
   integrity sha512-GII20kjaPX0zJ8wzkTbNDYMY7msuZcTWk8S5UOh6806Jq/wz1J8/bnr8uGU0DAUmYDjj2Mr4X1cW8v/GLYnR+g==
+
+js-sha3@^0.9.0:
+  version "0.9.1"
+  resolved "https://registry.yarnpkg.com/js-sha3/-/js-sha3-0.9.1.tgz#bc84031591ebd9c47eeb49e9757561d19e22bd4a"
+  integrity sha512-BEtdfjzc2zf276Ck8FprMl0ej0rFrK3TSwNSzFjDvv/QOj2YlWmoRBOIZaaUHFWJAXHl2KfiwVBIbYYeHHtCNA==
 
 js-tokens@^4.0.0:
   version "4.0.0"
@@ -5608,10 +5569,10 @@ minimatch@^3.0.4, minimatch@^3.1.1:
   dependencies:
     brace-expansion "^1.1.7"
 
-minimatch@^9.0.0:
-  version "9.0.1"
-  resolved "https://registry.npmjs.org/minimatch/-/minimatch-9.0.1.tgz"
-  integrity sha512-0jWhJpD/MdhPXwPuiRkCbfYfSKp2qnn2eOc279qI7f+osl/l+prKSrvhg157zSYvx/1nmgn2NqdT6k2Z7zSH9w==
+minimatch@^9.0.3:
+  version "9.0.3"
+  resolved "https://registry.yarnpkg.com/minimatch/-/minimatch-9.0.3.tgz#a6e00c3de44c3a542bfaae70abfc22420a6da825"
+  integrity sha512-RHiac9mvaRw0x3AYRgDC1CxAP7HTcNrrECeA8YYJeWnpo+2Q5CegtZjaotWTWxDG3UeGA1coE05iH1mPjT/2mg==
   dependencies:
     brace-expansion "^2.0.1"
 
@@ -5762,10 +5723,10 @@ next-tick@^1.1.0:
   resolved "https://registry.npmjs.org/next-tick/-/next-tick-1.1.0.tgz"
   integrity sha512-CXdUiJembsNjuToQvxayPZF9Vqht7hewsvy2sOWafLvi2awflj9mOC6bHIg50orX8IJvWKY9wYQ/zB2kogPslQ==
 
-nice-grpc-client-middleware-retry@^3.1.2, nice-grpc-client-middleware-retry@^3.1.3:
-  version "3.1.3"
-  resolved "https://registry.npmjs.org/nice-grpc-client-middleware-retry/-/nice-grpc-client-middleware-retry-3.1.3.tgz"
-  integrity sha512-A5hyctxO0+uWKXXAApxdx/BL1rBN/1F/Hz2ksqorWz6l2/qvlwvYtVBi5oAxvDwJMF80r9bQTyFhhz0b/0VKZg==
+nice-grpc-client-middleware-retry@^3.1.4:
+  version "3.1.4"
+  resolved "https://registry.yarnpkg.com/nice-grpc-client-middleware-retry/-/nice-grpc-client-middleware-retry-3.1.4.tgz#40ac6cf98d7c6d6b32ccb9a2dd0e1e2eee5588d3"
+  integrity sha512-m2eQ/mzHxapcq5ShbLYETQ8iP2jLt9mOk8i52V7w4/GYR2xDAInBhTaSZv2SeKGYBIn0fVByumS4rRZXse3iBg==
   dependencies:
     abort-controller-x "^0.4.0"
     nice-grpc-common "^2.0.2"
@@ -5785,21 +5746,21 @@ nice-grpc-error-details@^0.2.0:
     nice-grpc-common "^2.0.2"
     protobufjs "^7.1.2"
 
-nice-grpc-prometheus@^0.1.2, nice-grpc-prometheus@^0.1.6:
-  version "0.1.6"
-  resolved "https://registry.npmjs.org/nice-grpc-prometheus/-/nice-grpc-prometheus-0.1.6.tgz"
-  integrity sha512-5aW71qs2X8xgIXjM0pXZg32YnQu7zPwBm1SO+7omfaueS9UKvdwXeZyoRoxjVmjFXKUNKrpW++8qxEpBxAnWHw==
+nice-grpc-prometheus@^0.2.0:
+  version "0.2.0"
+  resolved "https://registry.yarnpkg.com/nice-grpc-prometheus/-/nice-grpc-prometheus-0.2.0.tgz#5ca38b34fbeeed1a24e5ff811038fd8dbc1014a5"
+  integrity sha512-LDLtp7NbzmywBJkBki3M+jn9EB4wRXYHVesUHME/xYrluejMEfSFmWMPRD6V17pCOcJDLorOOpNPYpwsBI8Ypg==
   dependencies:
     abort-controller-x "^0.4.0"
     nice-grpc-common "^2.0.2"
     prom-client "^14.0.1"
 
-nice-grpc@^2.1.0, nice-grpc@^2.1.4:
-  version "2.1.4"
-  resolved "https://registry.npmjs.org/nice-grpc/-/nice-grpc-2.1.4.tgz"
-  integrity sha512-ZCSnFxg/k6PM1zZ2u/SbuySTrpK7q4klwRE4ymAdiMfZM3Rl1LRUdqUslKSbSjd9XQHzi80Y5JJL5fE58lSrVA==
+nice-grpc@^2.1.5:
+  version "2.1.5"
+  resolved "https://registry.yarnpkg.com/nice-grpc/-/nice-grpc-2.1.5.tgz#8d547b713e76b9df467aca1aa0fd65191b8bb03b"
+  integrity sha512-xqtgW+9VpKD+J3G3sl9+ggR//DmYGrNgjfuEznTU3eL/zRLhn/SwSzl2Elw7TiPknEQ54hDtaOP6VQ8ktv+6fA==
   dependencies:
-    "@grpc/grpc-js" "^1.7.3"
+    "@grpc/grpc-js" "^1.8.18"
     abort-controller-x "^0.4.0"
     nice-grpc-common "^2.0.2"
 
@@ -6184,6 +6145,7 @@ precond@0.2:
   integrity sha512-QCYG84SgGyGzqJ/vlMsxeXd/pgL/I94ixdNFyh1PusWmTCyVfPJjZ1K1jvHtsbfnXQs2TSkEP2fR7QiMZAnKFQ==
 
 "prettier2@npm:prettier@2.8.8", prettier@^2.3.1:
+  name prettier2
   version "2.8.8"
   resolved "https://registry.npmjs.org/prettier/-/prettier-2.8.8.tgz"
   integrity sha512-tdN8qQGvNjw4CHbY+XXk0JgCXn9QiF21a55rBe5LJAU+kDyC4WQn4+awm2Xfk2lQMk5fKup9XgzTZtGkjBdP9Q==
@@ -6240,10 +6202,28 @@ proto-list@~1.2.1:
   resolved "https://registry.npmjs.org/proto-list/-/proto-list-1.2.4.tgz"
   integrity sha512-vtK/94akxsTMhe0/cbfpR+syPuszcuwhqVjJq26CuNDgFGj682oRBXOP5MJpv2r7JtE8MsiepGIqvvOTBwn2vA==
 
-protobufjs@^7.0.0, protobufjs@^7.1.2, protobufjs@^7.2.3:
+protobufjs@^7.0.0, protobufjs@^7.1.2:
   version "7.2.3"
   resolved "https://registry.npmjs.org/protobufjs/-/protobufjs-7.2.3.tgz"
   integrity sha512-TtpvOqwB5Gdz/PQmOjgsrGH1nHjAQVCN7JG4A6r1sXRWESL5rNMAiRcBQlCAdKxZcAbstExQePYG8xof/JVRgg==
+  dependencies:
+    "@protobufjs/aspromise" "^1.1.2"
+    "@protobufjs/base64" "^1.1.2"
+    "@protobufjs/codegen" "^2.0.4"
+    "@protobufjs/eventemitter" "^1.1.0"
+    "@protobufjs/fetch" "^1.1.0"
+    "@protobufjs/float" "^1.0.2"
+    "@protobufjs/inquire" "^1.1.0"
+    "@protobufjs/path" "^1.1.2"
+    "@protobufjs/pool" "^1.1.0"
+    "@protobufjs/utf8" "^1.1.0"
+    "@types/node" ">=13.7.0"
+    long "^5.0.0"
+
+protobufjs@^7.2.4, protobufjs@^7.2.5:
+  version "7.2.5"
+  resolved "https://registry.yarnpkg.com/protobufjs/-/protobufjs-7.2.5.tgz#45d5c57387a6d29a17aab6846dcc283f9b8e7f2d"
+  integrity sha512-gGXRSXvxQ7UiPgfw8gevrfRWcTlSbOFg+p/N+JVJEK5VhueL2miT6qTymqAmjr1Q5WbOCyJbyrk6JfWKwlFn6A==
   dependencies:
     "@protobufjs/aspromise" "^1.1.2"
     "@protobufjs/base64" "^1.1.2"
@@ -7022,6 +7002,7 @@ sucrase@^3.20.3:
     ts-interface-checker "^0.1.9"
 
 superstruct@^0.14.2, "superstruct_solana@npm:superstruct@^0.14.2":
+  name superstruct_solana
   version "0.14.2"
   resolved "https://registry.npmjs.org/superstruct/-/superstruct-0.14.2.tgz"
   integrity sha512-nPewA6m9mR3d6k7WkZ8N8zpTWfenFH3q9pA2PkuiZxINr9DKB2+40wEQf0ixn8VaGuJ78AB6iWOtStI+/4FKZQ==
@@ -7406,14 +7387,14 @@ typedarray-to-buffer@^3.1.5:
   dependencies:
     is-typedarray "^1.0.0"
 
-typedoc@^0.24.8:
-  version "0.24.8"
-  resolved "https://registry.npmjs.org/typedoc/-/typedoc-0.24.8.tgz"
-  integrity sha512-ahJ6Cpcvxwaxfu4KtjA8qZNqS43wYt6JL27wYiIgl1vd38WW/KWX11YuAeZhuz9v+ttrutSsgK+XO1CjL1kA3w==
+typedoc@^0.25.0:
+  version "0.25.1"
+  resolved "https://registry.yarnpkg.com/typedoc/-/typedoc-0.25.1.tgz#50de2d8fb93623fbfb59e2fa6407ff40e3d3f438"
+  integrity sha512-c2ye3YUtGIadxN2O6YwPEXgrZcvhlZ6HlhWZ8jQRNzwLPn2ylhdGqdR8HbyDRyALP8J6lmSANILCkkIdNPFxqA==
   dependencies:
     lunr "^2.3.9"
     marked "^4.3.0"
-    minimatch "^9.0.0"
+    minimatch "^9.0.3"
     shiki "^0.14.1"
 
 typescript@^5.0.3, typescript@^5.0.4:
@@ -7948,10 +7929,10 @@ winston-transport@^4.5.0:
     readable-stream "^3.6.0"
     triple-beam "^1.3.0"
 
-winston@^3.8.2:
-  version "3.9.0"
-  resolved "https://registry.npmjs.org/winston/-/winston-3.9.0.tgz"
-  integrity sha512-jW51iW/X95BCW6MMtZWr2jKQBP4hV5bIDq9QrIjfDk6Q9QuxvTKEAlpUNAzP+HYHFFCeENhph16s0zEunu4uuQ==
+winston@^3.10.0:
+  version "3.10.0"
+  resolved "https://registry.yarnpkg.com/winston/-/winston-3.10.0.tgz#d033cb7bd3ced026fed13bf9d92c55b903116803"
+  integrity sha512-nT6SIDaE9B7ZRO0u3UvdrimG0HkB7dSTAgInQnNR2SOPJ4bvq5q79+pXLftKmP52lJGW15+H5MCK0nM9D3KB/g==
   dependencies:
     "@colors/colors" "1.5.0"
     "@dabh/diagnostics" "^2.0.2"
