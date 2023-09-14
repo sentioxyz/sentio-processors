@@ -32,7 +32,7 @@ import { ERC20Processor } from "@sentio/sdk/eth/builtin";
 const ALGEBRA_ADDRESSES = ["0x5b1fd9fa139353c5d9eaf459e4bd2f7a6b4812bb"];
 
 // target tx is 0xc988bfb51d44f6e5162e6a860a9aa75f7fd087f7e1b816f7a50d422bcbe6e712
-const START_BLOCK = 46769300;
+const START_BLOCK = 47510330;
 
 for (const address of ALGEBRA_ADDRESSES) {
   AlgebraPoolProcessor.bind({
@@ -80,7 +80,7 @@ for (const address of V3_ADDRESSES) {
   });
 }
 
-const V2_ADDRESSES = ["0xd449d801Fe753c9d916eC193028F559b1d2cF343"];
+const V2_ADDRESSES = ["0xbb8814ba0efe03c944cb10ca5c293da97bbebd56"];
 
 for (const address of V2_ADDRESSES) {
   UniswapV2PairProcessor.bind({

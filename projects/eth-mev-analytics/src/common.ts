@@ -57,6 +57,7 @@ export const chainConfigs = [
       "0xce6314f881c05f64c89b0f6520c0286f0ac91f8f".toLowerCase(),
       "0xefa413de95fd661346c6de01342b4779df2dd517".toLowerCase(),
       "0xe9324ca2d46f651ec16289f518b1392cf90d6d77".toLowerCase(),
+      "0x41139bd34ff2d438480d3e73c360a5e915c79a64".toLowerCase(),
     ]),
   },
   {
