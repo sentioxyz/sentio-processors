@@ -1,4 +1,4 @@
-import { pool, factory } from "./types/sui/testnet/clmm.js"
+import { pool, factory } from "./types/sui/0x1eabed72c53feb3805120a081dc15963c204dc8d091542592abaf7a35689b2fb.js"
 import { SuiObjectProcessor, SuiContext, SuiObjectContext, SuiObjectProcessorTemplate } from "@sentio/sdk/sui"
 import { getPriceByType, token } from "@sentio/sdk/utils"
 import * as constant from './constant-cetus.js'
@@ -7,8 +7,8 @@ import { SuiNetwork } from "@sentio/sdk/sui"
 import * as helper from './helper/cetus-clmm.js'
 
 factory.bind({
-  address: constant.CLMM_MAINNET,
-  network: SuiNetwork.MAIN_NET,
+  // address: constant.CLMM_MAINNET,
+  // network: SuiNetwork.MAIN_NET,
   startCheckpoint: 1500000n
 })
   .onEventCreatePoolEvent(async (event, ctx) => {
@@ -37,8 +37,8 @@ factory.bind({
   })
 
 pool.bind({
-  address: constant.CLMM_MAINNET,
-  network: SuiNetwork.MAIN_NET,
+  // address: constant.CLMM_MAINNET,
+  // network: SuiNetwork.MAIN_NET,
   startCheckpoint: 10926530n
 })
   .onEventSwapEvent(async (event, ctx) => {
