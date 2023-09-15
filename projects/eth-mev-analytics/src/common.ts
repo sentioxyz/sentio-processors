@@ -45,6 +45,8 @@ export const chainConfigs = [
       "0xB77EC71C90A533719df75bc6a209f7fB3e936EEd".toLowerCase(), //strategy
       "0xa5e0829caced8ffdd4de3c43696c57f7d7a678ff".toLowerCase(), // router
       "0x1E8ae092651e7B14e4D0f93611267c5Be19B8b9F".toLowerCase(), // settlement
+      "0x72108e4cd8b1e531d288434d80ac28ceed892793".toLowerCase(), // insta2
+      "0x6cf348d1b79df6af219af5309843b1977effefb1".toLowerCase(), // cefi-defi
     ]),
     mintBurnAddr: new Set<string>([
       "0x0000000000000000000000000000000000000000",
