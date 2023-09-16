@@ -18,7 +18,13 @@ const messages2 = Counter.register("mint_with_pyth_and_price")
 
 // more migration
 const evmPriceGauage = Gauge.register("evm_price_unsafe", commonOptions)
-const price_update_occur = Gauge.register("price_update_occur", commonOptions)
+// const price_update_occur = Gauge.register("price_update_occur", commonOptions)
+const price_update_counter = Counter.register("price_update_counter", {
+  resolutionConfig: {
+    intervalInMinutes: 1,
+  }
+})
+
 
 const cache = new LRU<bigint, any>({
   maxSize: 5000,
@@ -51,8 +57,9 @@ event.bind()
     priceEMAGauage.record(ctx,  getPrice(evt.data_decoded.price_feed.ema_price), labels)
     updates.add(ctx, 1, labels)
     //migration
-    price_update_occur.record(ctx, 1, labels)
-    ctx.meter.Counter("price_update_counter").add(1, labels)
+    price_update_counter.add(ctx, 1, labels)
+    // price_update_occur.record(ctx, 1, labels)
+    // ctx.meter.Counter("price_update_counter").add(1, labels)
   })
 // TODO: temp comment out for debugging
 // pyth.bind()
@@ -63,7 +70,7 @@ event.bind()
 // console_v1.bind().onEntryMintWithPythAndPrice((evt, ctx) => {
 //   messages2.add(ctx, 1)
 // })
-// TODO: temp comment out for 
+// TODO: temp comment out for
 
 export function getPrice(p: price.Price) {
   let expo = p.expo.magnitude.asBigDecimal()

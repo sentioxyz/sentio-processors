@@ -10,18 +10,24 @@ import {
 import { PRICE_MAP } from "./pyth.js";
 // import { toBigDecimal } from "@sentio/sdk/";
 // import { BigDecimal } from "@sentio/sdk/lib/core/big-decimal";
-import { Gauge, scaleDown } from "@sentio/sdk";
+import { Counter, Gauge, scaleDown } from "@sentio/sdk";
 import { EthChainId } from "@sentio/sdk/eth";
 
 const commonOptions = { sparse: true };
 const priceGauage = Gauge.register("evm_price", commonOptions);
 const priceUnsafeGauage = Gauge.register("evm_price_unsafe", commonOptions);
-const price_update_occur = Gauge.register("price_update_occur", commonOptions);
+// const price_update_occur = Gauge.register("price_update_occur", commonOptions);
 const batch_price_update_occur = Gauge.register(
   "batch_price_update_occur",
   commonOptions
 );
 const eth_balance = Gauge.register("eth_balance", commonOptions);
+
+const price_update_counter = Counter.register("price_update_counter", {
+  resolutionConfig: {
+    intervalInMinutes: 1,
+  }
+})
 
 const CHAIN_ADDRESS_MAP = new Map<EthChainId, string>([
   [EthChainId.ETHEREUM, "0x4305FB66699C3B2702D4d05CF36551390A4c69C6"], //ETH
@@ -90,7 +96,8 @@ async function priceFeedUpdate(evt: PriceFeedUpdateEvent, ctx: PythEVMContext) {
     priceGauage.record(ctx, price, labels);
     priceUnsafeGauage.record(ctx, priceUnsafe, labels);
     ctx.meter.Counter("price_update_counter").add(1, labels);
-    price_update_occur.record(ctx, 1, labels);
+    // price_update_occur.record(ctx, 1, labels);
+    price_update_counter.add(ctx, 1, labels);
     await recordGasUsage("priceFeedUpdate", evt.transactionHash, ctx)
   } catch (e) {
     console.log(ctx.chainId, priceId, ctx.address, evt.blockNumber, e);
