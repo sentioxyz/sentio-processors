@@ -2,7 +2,7 @@ import { Counter, Gauge, scaleDown } from '@sentio/sdk'
 import { ERC20Processor } from '@sentio/sdk/eth/builtin'
 import { FountainProcessor, WithdrawEarlyEvent, ClaimVaultPenaltyEvent, FountainContext, UpgradeEvent, UpgradeCallTrace, TransferEvent } from './types/eth/fountain.js'
 import { ReservoirContext, ReservoirProcessor } from './types/eth/reservoir.js'
-import { StakeNftCallTrace, StakeNftEvent, UnstakeNftCallTrace, UnstakeNftEvent, VenostormContext, VenostormProcessor } from './types/eth/venostorm.js'
+import { StakeNftCallTrace, StakeNftEvent, UnstakeEvent, UnstakeNftCallTrace, UnstakeNftEvent, VenostormContext, VenostormProcessor } from './types/eth/venostorm.js'
 import { LiquidCroProcessor, StakeEvent, RequestUnbondEvent, UnbondEvent, AccrueRewardEvent, LiquidCroContext } from './types/eth/liquidcro.js'
 import { EthChainId } from "@sentio/sdk/eth";
 import './liquidatom.js'
@@ -232,6 +232,9 @@ const UpgradeEventHandler = async (event: UpgradeEvent, ctx: FountainContext | R
 }
 
 const ClaimRewardsCallHandler = async (call: ClaimRewardsCallTrace, ctx: FeeDistributorContext) => {
+  if (call.error) {
+    return
+  }
   const rewardTokens = await ctx.contract.getRewardTokens()
   const block = ctx.blockNumber
   for (const rewardToken of rewardTokens) {
@@ -271,6 +274,9 @@ interface nftMetadata {
 }
 
 const StakeNftCallHandler = async (call: StakeNftCallTrace, ctx: VenostormContext) => {
+  if (call.error) {
+    return
+  }
   const pid = call.args._pid
   const nfts = call.args._nfts
   for (let i = 0; i < nfts.length; i++) {
@@ -289,12 +295,16 @@ const StakeNftCallHandler = async (call: StakeNftCallTrace, ctx: VenostormContex
       tokenContract: nfts[i][0],
       tokenId: nfts[i][1],
       nftName,
-      nftSymbol
+      nftSymbol,
+      amount: 1
     })
   }
 }
 
 const UnstakeNftCallHandler = async (call: UnstakeNftCallTrace, ctx: VenostormContext) => {
+  if (call.error) {
+    return
+  }
   const pid = call.args._pid
   const nfts = call.args._nfts
   for (let i = 0; i < nfts.length; i++) {
@@ -314,20 +324,30 @@ const UnstakeNftCallHandler = async (call: UnstakeNftCallTrace, ctx: VenostormCo
       tokenContract: nfts[i][0],
       tokenId: nfts[i][1],
       nftName,
-      nftSymbol
+      nftSymbol,
+      amount: 1
     })
   }
 }
+const nftStakeEventHandler = async (event: any, ctx: VenostormContext) => {
+  ctx.eventLogger.emit("nftStakeEvent", {
+    //@ts-ignore
+    distinctId: event.args.staker,
+    //@ts-ignore
+    tokenId: event.args.tokenId,
+    //@ts-ignore
+    tokenContract: event.args.tokenContract
+  })
+}
 
-const TransferEventHandler = async (event: TransferEvent, ctx: ERC20Context) => {
-  const decimal = Number(await getERC20ContractOnContext(ctx, ctx.address).decimals())
-  const symbol = await getERC20ContractOnContext(ctx, ctx.address).symbol()
-  let contractName = "Reservoir"
-  if (event.args.to == "0xb4be51216f4926ab09ddf4e64bc20f499fd6ca95") contractName = "Fountain"
-
-  ctx.eventLogger.emit(contractName + "Harvest", {
-    amount: Number(event.args.value) / 10 ** decimal,
-    coin_symbol: symbol
+const nftUnstakeEventHandler = async (event: UnstakeEvent, ctx: VenostormContext) => {
+  ctx.eventLogger.emit("nftUnstakeEvent", {
+    //@ts-ignore
+    distinctId: event.args.staker,
+    //@ts-ignore
+    tokenId: event.args.tokenId,
+    //@ts-ignore
+    tokenContract: event.args.tokenContract
   })
 }
 
@@ -358,6 +378,9 @@ VenostormProcessor.bind({ address: '0x579206e4e49581ca8ada619e9e42641f61a84ac3',
   .onEventWithdraw(WithdrawEventHandler)
   .onCallStakeNft(StakeNftCallHandler)
   .onCallUnstakeNft(UnstakeNftCallHandler)
+  .onEventStake(nftStakeEventHandler)
+  .onEventUnstake(nftUnstakeEventHandler)
+
 
 LiquidCroProcessor.bind({ address: '0x9fae23a2700feecd5b93e43fdbc03c76aa7c08a6', network: EthChainId.CRONOS })
   .onEventStake(StakeEventHandler)
