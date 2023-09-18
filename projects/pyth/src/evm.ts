@@ -16,7 +16,7 @@ import { EthChainId } from "@sentio/sdk/eth";
 const commonOptions = { sparse: true };
 const priceGauage = Gauge.register("evm_price", commonOptions);
 const priceUnsafeGauage = Gauge.register("evm_price_unsafe", commonOptions);
-// const price_update_occur = Gauge.register("price_update_occur", commonOptions);
+const price_update_occur = Gauge.register("price_update_occur", commonOptions);
 const batch_price_update_occur = Gauge.register(
   "batch_price_update_occur",
   commonOptions
@@ -96,7 +96,7 @@ async function priceFeedUpdate(evt: PriceFeedUpdateEvent, ctx: PythEVMContext) {
     priceGauage.record(ctx, price, labels);
     priceUnsafeGauage.record(ctx, priceUnsafe, labels);
     ctx.meter.Counter("price_update_counter").add(1, labels);
-    // price_update_occur.record(ctx, 1, labels);
+    price_update_occur.record(ctx, 1, labels);
     price_update_counter.add(ctx, 1, labels);
     await recordGasUsage("priceFeedUpdate", evt.transactionHash, ctx)
   } catch (e) {
