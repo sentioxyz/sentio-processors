@@ -48,6 +48,8 @@ export const chainConfigs = [
       "0x72108e4cd8b1e531d288434d80ac28ceed892793".toLowerCase(), // insta2
       "0x6cf348d1b79df6af219af5309843b1977effefb1".toLowerCase(), // cefi-defi
       "0xac9e9deaad7659bd83c7a8ff4ea97fd7366d006d".toLowerCase(), // some strategy
+      "0xdef171fe48cf0115b1d80b88dc8eab59176fee57".toLowerCase(), // augustusSwapper
+      "0xa50d8de409c57e58044c972eb443fa6e30ab7c36".toLowerCase(), // strategy
     ]),
     mintBurnAddr: new Set<string>([
       "0x0000000000000000000000000000000000000000",
