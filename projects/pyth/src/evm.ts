@@ -8,8 +8,6 @@ import {
   UpdatePriceFeedsIfNecessaryCallTrace,
 } from "./types/eth/pythevm.js";
 import { PRICE_MAP } from "./pyth.js";
-// import { toBigDecimal } from "@sentio/sdk/";
-// import { BigDecimal } from "@sentio/sdk/lib/core/big-decimal";
 import { Counter, Gauge, scaleDown } from "@sentio/sdk";
 import { EthChainId } from "@sentio/sdk/eth";
 
@@ -96,7 +94,7 @@ async function priceFeedUpdate(evt: PriceFeedUpdateEvent, ctx: PythEVMContext) {
     priceGauage.record(ctx, price, labels);
     priceUnsafeGauage.record(ctx, priceUnsafe, labels);
     // ctx.meter.Counter("price_update_counter").add(1, labels);
-    price_update_occur.record(ctx, 1, labels);
+    price_update_occur.record(ctx, ctx.timestamp.getTime(), labels);
     price_update_counter.add(ctx, 1, labels);
     await recordGasUsage("priceFeedUpdate", evt.transactionHash, ctx)
   } catch (e) {

@@ -2,20 +2,26 @@ import { event, price } from "./types/sui/0x8d97f1cd6ac663735be08d1d2b6d02a159e7
 
 import { event as oldEvent, price as oldPrice } from "./types/sui/0x00b53b0f4174108627fbee72e2498b58d6a2714cded53fac537034c220d26302.js";
 import { PRICE_MAP } from "./pyth.js";
-import { Counter, Gauge } from "@sentio/sdk";
-import { BigDecimal } from "@sentio/sdk";
+import { Counter, Gauge, MetricOptions } from "@sentio/sdk";
+import { BigDecimal, AggregationType } from "@sentio/sdk";
 
 
 import LRU from 'lru-cache'
 
-const commonOptions = { sparse: true }
+const commonOptions: MetricOptions = {
+  sparse: true,
+  aggregationConfig: {
+    intervalInMinutes: [1],
+    types: [AggregationType.LAST]
+  }
+}
 const priceGauage = Gauge.register("price", commonOptions)
 const priceEMAGauage = Gauge.register("price_ema", commonOptions)
 
-const updates = Counter.register("update")
-const updateWithFunder = Counter.register("update_price_feeds_with_funder")
-const message = Counter.register("message")
-const messages2 = Counter.register("mint_with_pyth_and_price")
+// const updates = Counter.register("update")
+// const updateWithFunder = Counter.register("update_price_feeds_with_funder")
+// const message = Counter.register("message")
+// const messages2 = Counter.register("mint_with_pyth_and_price")
 
 // more migration
 const evmPriceGauage = Gauge.register("evm_price_unsafe", commonOptions)
@@ -54,7 +60,7 @@ event.bind({
   priceEMAGauage.record(ctx,  getPrice(evt.data_decoded.price_feed.ema_price), labels)
   // updates.add(ctx, 1, labels)
   //migration
-  price_update_occur.record(ctx, 1, labels)
+  price_update_occur.record(ctx, ctx.timestamp.getTime(), labels)
 
   price_update_counter.add(ctx, 1, labels)
   // ctx.meter.Counter("price_update_counter").add(1, labels)
