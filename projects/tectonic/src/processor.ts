@@ -7,13 +7,14 @@ import { getPriceBySymbol } from '@sentio/sdk/utils'
 import { WCROProcessor, TransferEvent, WCROContext } from './types/eth/wcro.js'
 import { TectonicCoreProcessor } from './types/eth/tectoniccore.js'
 import { EthChainId } from "@sentio/sdk/eth";
-import { getERC20Contract } from '@sentio/sdk/eth/builtin/erc20'
-import './aave_v3.js'
+
+// import './aave_v3.js'
 import { TectonicStakingPoolV3Context, TectonicStakingPoolV3Processor, TonicReleasedEvent, TonicStakedEvent, TonicUnstakedEvent } from './types/eth/tectonicstakingpoolv3.js'
 import { DepositEvent, ReplaceNftsBurnTokenEvent, ReplaceNftsMintTokenEvent, StakeNftEvent, TONICVaultContext, TONICVaultProcessor, UnStakeNftEvent, UpgradeEvent, WithdrawEvent } from './types/eth/tonicvault.js'
-import { DeferLiquidityCheckAdapterContext, DeferLiquidityCheckAdapterProcessor, SwapAndRepayCallTrace } from './types/eth/deferliquiditycheckadapter.js'
+import { DeferLiquidityCheckAdapterContext, DeferLiquidityCheckAdapterProcessor, SwapAndDepositCallTrace, SwapAndRepayCallTrace } from './types/eth/deferliquiditycheckadapter.js'
 
 const MintEventHandler = async (event: any, ctx: TCROContext | LCROContext) => {
+  ctx.meter.Counter("handler_counter").add(1)
   const tokenType = constant.MAIN_POOLS.includes(ctx.address) ? "main_pool" : "lcro_pool"
 
   const minter = event.args.minter
@@ -49,6 +50,8 @@ const MintEventHandler = async (event: any, ctx: TCROContext | LCROContext) => {
 }
 
 const RedeemEventHandler = async (event: any, ctx: TCROContext | LCROContext) => {
+  ctx.meter.Counter("handler_counter").add(1)
+
   const tokenType = constant.MAIN_POOLS.includes(ctx.address) ? "main_pool" : "lcro_pool"
 
   const redeemer = event.args.redeemer
@@ -87,6 +90,8 @@ const RedeemEventHandler = async (event: any, ctx: TCROContext | LCROContext) =>
 }
 
 const BorrowEventHandler = async (event: any, ctx: TCROContext | LCROContext) => {
+  ctx.meter.Counter("handler_counter").add(1)
+
   const tokenType = constant.MAIN_POOLS.includes(ctx.address) ? "main_pool" : "lcro_pool"
 
   const borrower = event.args.borrower
@@ -124,6 +129,8 @@ const BorrowEventHandler = async (event: any, ctx: TCROContext | LCROContext) =>
 }
 
 const RepayBorrowEventHandler = async (event: any, ctx: TCROContext | LCROContext) => {
+  ctx.meter.Counter("handler_counter").add(1)
+
   const tokenType = constant.MAIN_POOLS.includes(ctx.address) ? "main_pool" : "lcro_pool"
 
   const payer = event.args.payer
@@ -161,6 +168,8 @@ const RepayBorrowEventHandler = async (event: any, ctx: TCROContext | LCROContex
 }
 
 const LiquidateBorrowHandler = async (event: LiquidateBorrowEvent, ctx: TCROContext | LCROContext) => {
+  ctx.meter.Counter("handler_counter").add(1)
+
   const tokenType = constant.MAIN_POOLS.includes(ctx.address) ? "main_pool" : "lcro_pool"
 
   const liquidator = event.args.liquidator
@@ -188,6 +197,8 @@ const LiquidateBorrowHandler = async (event: LiquidateBorrowEvent, ctx: TCROCont
 }
 
 const AccrueInterestHandler = async (event: AccrueInterestEvent, ctx: TCROContext | LCROContext) => {
+  ctx.meter.Counter("handler_counter").add(1)
+
   const tokenType = constant.MAIN_POOLS.includes(ctx.address) ? "main_pool" : "lcro_pool"
 
   const tSymbol = constant.TOKEN_SYMBOL.get(ctx.address.toLowerCase())!
@@ -215,6 +226,8 @@ const AccrueInterestHandler = async (event: AccrueInterestEvent, ctx: TCROContex
 }
 
 const ReservesAddedHandler = async (event: any, ctx: TCROContext | LCROContext) => {
+  ctx.meter.Counter("handler_counter").add(1)
+
   const tokenType = constant.MAIN_POOLS.includes(ctx.address) ? "main_pool" : "lcro_pool"
 
   const tSymbol = constant.TOKEN_SYMBOL.get(ctx.address.toLowerCase())!
@@ -234,6 +247,8 @@ const ReservesAddedHandler = async (event: any, ctx: TCROContext | LCROContext) 
 }
 
 const OnTimeIntervalHandler = async (_: any, ctx: TCROContext | LCROContext) => {
+  ctx.meter.Counter("handler_counter").add(1)
+
   const tokenType = constant.MAIN_POOLS.includes(ctx.address) ? "main_pool" : "lcro_pool"
 
   const tSymbol = constant.TOKEN_SYMBOL.get(ctx.address.toLowerCase())!
@@ -299,6 +314,8 @@ TectonicCoreProcessor.bind({
   // startBlock: 570286
 })
   .onEventDistributedBorrowerTonic(async (event, ctx) => {
+    ctx.meter.Counter("handler_counter").add(1)
+
     const hash = event.transactionHash
     try {
       const tToken = event.args.tToken.toLowerCase()
@@ -321,6 +338,8 @@ TectonicCoreProcessor.bind({
     }
   })
   .onEventDistributedSupplierTonic(async (event, ctx) => {
+    ctx.meter.Counter("handler_counter").add(1)
+
     const hash = event.transactionHash
 
     try {
@@ -352,6 +371,8 @@ TectonicCoreProcessor.bind({
 
 //Tonic staking
 const TonicStakedHandler = async (event: TonicStakedEvent, ctx: TectonicStakingPoolV3Context) => {
+  ctx.meter.Counter("handler_counter").add(1)
+
   ctx.eventLogger.emit("TonicStaked", {
     distinctId: event.args.user,
     tonicStaked: Number(event.args.tonicStaked) / 10 ** 18,
@@ -362,6 +383,8 @@ const TonicStakedHandler = async (event: TonicStakedEvent, ctx: TectonicStakingP
 }
 
 const TonicUnstakedEventHandler = async (event: TonicUnstakedEvent, ctx: TectonicStakingPoolV3Context) => {
+  ctx.meter.Counter("handler_counter").add(1)
+
   ctx.eventLogger.emit("TonicUnstaked", {
     distinctId: event.args.user,
     xTonicLocked: Number(event.args.xTonicLocked) / 10 ** 18,
@@ -370,6 +393,8 @@ const TonicUnstakedEventHandler = async (event: TonicUnstakedEvent, ctx: Tectoni
 }
 
 const TonicReleasedEventHandler = async (event: TonicReleasedEvent, ctx: TectonicStakingPoolV3Context) => {
+  ctx.meter.Counter("handler_counter").add(1)
+
   ctx.eventLogger.emit("TonicReleased", {
     distinctId: event.args.user,
     xTonicBurned: Number(event.args.xTonicBurned) / 10 ** 18,
@@ -393,6 +418,8 @@ TectonicStakingPoolV3Processor.bind({
 
 //Tonic Vault
 const DepositHandler = async (event: DepositEvent, ctx: TONICVaultContext) => {
+  ctx.meter.Counter("handler_counter").add(1)
+
   const pid = event.args.pid.toString() || "no pid"
   const amount = Number(event.args.amount) / Math.pow(10, 18)
   ctx.meter.Counter(`vault_deposit_counter`).add(amount, {
@@ -408,6 +435,8 @@ const DepositHandler = async (event: DepositEvent, ctx: TONICVaultContext) => {
 }
 
 const UpgradeHandler = async (event: UpgradeEvent, ctx: TONICVaultContext) => {
+  ctx.meter.Counter("handler_counter").add(1)
+
   try {
     const userStake = await ctx.contract.getUserStake(event.args.user, event.args.stakeId, { blockTag: Number(ctx.blockNumber) - 1 })
     const amount = Number(userStake[0]) / 10 ** 18
@@ -435,6 +464,8 @@ const UpgradeHandler = async (event: UpgradeEvent, ctx: TONICVaultContext) => {
 }
 
 const VaultWithdrawHandler = async (event: WithdrawEvent, ctx: TONICVaultContext) => {
+  ctx.meter.Counter("handler_counter").add(1)
+
   try {
     const userStake = await ctx.contract.getUserStake(event.args.user, event.args.stakeId, { blockTag: Number(ctx.blockNumber) - 1 })
     console.log(`user stake ${userStake[0]}, ${userStake[1]}`)
@@ -456,6 +487,8 @@ const VaultWithdrawHandler = async (event: WithdrawEvent, ctx: TONICVaultContext
 }
 
 const StakeNftHandler = async (event: StakeNftEvent, ctx: TONICVaultContext) => {
+  ctx.meter.Counter("handler_counter").add(1)
+
   const tokenNumbers = event.args.tokenIds.length
   ctx.eventLogger.emit("StakeNft", {
     distinctId: event.args.user,
@@ -470,6 +503,8 @@ const StakeNftHandler = async (event: StakeNftEvent, ctx: TONICVaultContext) => 
 }
 
 const UnstakeNftHandler = async (event: UnStakeNftEvent, ctx: TONICVaultContext) => {
+  ctx.meter.Counter("handler_counter").add(1)
+
   const tokenNumbers = event.args.tokenIds.length
   ctx.eventLogger.emit("UnstakeNft", {
     distinctId: event.args.user,
@@ -484,6 +519,8 @@ const UnstakeNftHandler = async (event: UnStakeNftEvent, ctx: TONICVaultContext)
 }
 
 const ReplaceNftsMintTokenHandler = async (event: ReplaceNftsMintTokenEvent, ctx: TONICVaultContext) => {
+  ctx.meter.Counter("handler_counter").add(1)
+
   const stakeTokenNumbers = event.args.stakeTokenIds.length
   const unstakeTokenNumbers = event.args.unstakeTokenIds.length
   const deltaBoostAmount = event.args.deltaBoostAmount
@@ -502,6 +539,8 @@ const ReplaceNftsMintTokenHandler = async (event: ReplaceNftsMintTokenEvent, ctx
 }
 
 const ReplaceNftsBurnTokenHandler = async (event: ReplaceNftsBurnTokenEvent, ctx: TONICVaultContext) => {
+  ctx.meter.Counter("handler_counter").add(1)
+
   const stakeTokenNumbers = event.args.stakeTokenIds.length
   const unstakeTokenNumbers = event.args.unstakeTokenIds.length
   const deltaBoostAmount = event.args.deltaBoostAmount
@@ -534,19 +573,22 @@ TONICVaultProcessor.bind({
 
 
 
-//repay with collateral
-const SwapAndRepayHandler = async (call: SwapAndRepayCallTrace,
-  ctx: DeferLiquidityCheckAdapterContext) => {
+const SwapAndRepayHandler = async (call: SwapAndRepayCallTrace, ctx: DeferLiquidityCheckAdapterContext) => {
+  if (call.error) {
+    return
+  }
+  ctx.meter.Counter("handler_counter").add(1)
+  ctx.meter.Counter("call_counter").add(1)
   const path = call.args.path
-  const collateral_address = path[path.length - 1]
+  const collateral_address = path[path.length - 1].toLowerCase()
 
   let collateralSymbol = "unk"
-  for (let symbol in constant.COLLATERAL_ADDRESSES) {
-    if (constant.COLLATERAL_ADDRESSES.get(symbol) == collateral_address) {
-      collateralSymbol = symbol
-      break
+  for (const [key, value] of constant.COLLATERAL_ADDRESSES.entries()) {
+    if (value === collateral_address) {
+      collateralSymbol = key
     }
   }
+
   if (collateralSymbol == "unk") {
     console.log(`get collateral symbol failed at ${ctx.transactionHash}`)
     return
@@ -559,11 +601,44 @@ const SwapAndRepayHandler = async (call: SwapAndRepayCallTrace,
     repayAmount,
     collateralSymbol
   })
+  ctx.meter.Counter("repay_with_collateral_amount").add(call.args.tTokenAmount, { collateralSymbol })
 }
 
-// DeferLiquidityCheckAdapterProcessor.bind({
-//   address: constant.REPAY_WITH_COLLATERAL,
-//   network: EthChainId.CRONOS,
-//   // startBlock: 570286
-// })
-//   .onCallSwapAndRepay(SwapAndRepayHandler)
+const SwapAndDepositHandler = async (call: SwapAndDepositCallTrace, ctx: DeferLiquidityCheckAdapterContext) => {
+  if (call.error) {
+    return
+  }
+  ctx.meter.Counter("handler_counter").add(1)
+  ctx.meter.Counter("call_counter").add(1)
+
+  const path = call.args.path
+  const collateral_address = path[path.length - 1].toLowerCase()
+
+  let collateralSymbol = "unk"
+  for (const [key, value] of constant.COLLATERAL_ADDRESSES.entries()) {
+    if (value === collateral_address) {
+      collateralSymbol = key
+    }
+  }
+  if (collateralSymbol == "unk") {
+    console.log(`get collateral symbol failed at ${ctx.transactionHash}`)
+    return
+  }
+
+  // const collateralDecimal = (constant.COLLATERAL_DECIMAL.get(collateralSymbol))!
+
+  const tTokenAmount = call.args.tTokenAmount
+  ctx.eventLogger.emit("SwapAndDeposit", {
+    distinctId: call.args.account,
+    tTokenAmount,
+    collateralSymbol
+  })
+  ctx.meter.Counter("collateral_swap_amount").add(tTokenAmount, { collateralSymbol })
+}
+
+DeferLiquidityCheckAdapterProcessor.bind({
+  address: constant.REPAY_WITH_COLLATERAL,
+  network: EthChainId.CRONOS
+})
+  .onCallSwapAndDeposit(SwapAndDepositHandler)
+  .onCallSwapAndRepay(SwapAndRepayHandler)

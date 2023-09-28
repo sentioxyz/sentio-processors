@@ -17,7 +17,9 @@ export const MAIN_POOLS = [
     "0xfe6934fdf050854749945921faa83191bccf20ad",
     "0x0d9706531b517d24623118934de69108968ba266",
     "0x29984c47b0bac5a59290ef082e1f651a7019ec4a",
-    "0xb075a3590c9ffc8332c47db49f5c6ee1dbcdf804"
+    "0xb075a3590c9ffc8332c47db49f5c6ee1dbcdf804",
+    "0x53b4112cba389302b065d2a92bb249d27f51c680",
+    "0xe3e2cea8dffa592eadab7d9c7f1e0cc6700490aa"
 ]
 
 export const TOKEN_SYMBOL: Map<string, string> = new Map([
@@ -35,7 +37,9 @@ export const TOKEN_SYMBOL: Map<string, string> = new Map([
     ["0x972173afb7eefb80a0815831b318a643442ad0c1", "tCROl"],
     ["0xcd8f4147a4f9452e027f5203bfc5b7a786055138", "tLCROl"],
     ["0x498bd0cbdf3ba43c02fe768f8e993d4bf21d011d", "tUSDCl"],
-    ["0x3c920600e049a128b01d2ef0b932108687196502", "tUSDTl"]
+    ["0x3c920600e049a128b01d2ef0b932108687196502", "tUSDTl"],
+    ["0x53b4112cba389302b065d2a92bb249d27f51c680", "tXRP"],
+    ["0xe3e2cea8dffa592eadab7d9c7f1e0cc6700490aa", "tLTC"]
 ])
 
 
@@ -54,7 +58,13 @@ export const COLLATERAL_TOKENS: Map<string, string> = new Map([
     ["tCROl", "cro"],
     ["tLCROl", "lcro"],
     ["tUSDCl", "usdc"],
-    ["tUSDTl", "usdt"]
+    ["tUSDTl", "usdt"],
+    ["tXRP", "xrp"],
+    ["tLTC", "ltc"],
+    ["tLATOM", "latom"],
+    ["tFERd", "fer"],
+    ["tFULd", "ful"],
+    ["tbCROd", "bcro"]
 ])
 
 export const COLLATERAL_ADDRESSES: Map<string, string> = new Map([
@@ -69,7 +79,13 @@ export const COLLATERAL_ADDRESSES: Map<string, string> = new Map([
     ["atom", "0xb888d8dd1733d72681b30c00ee76bde93ae7aa93"],
     ["ada", "0x0e517979c2c1c1522ddb0c73905e0d39b3f990c0"],
     ["vvs", "0x2d03bece6747adc00e1a131bba1469c15fd11e03"],
-    ["lcro", "0x9fae23a2700feecd5b93e43fdbc03c76aa7c08a6"]
+    ["lcro", "0x9fae23a2700feecd5b93e43fdbc03c76aa7c08a6"],
+    ["xrp", "0xb9ce0dd29c91e02d4620f57a66700fc5e41d6d15"],
+    ["ltc", "0x9d97be214b68c7051215bb61059b4e299cd792c3"],
+    ["latom", "0xac974ee7fc5d083112c809ccb3fce4a4f385750d"],
+    ["fer", "0x39bc1e38c842c60775ce37566d03b41a7a66c782"],
+    ["ful", "0x83afb1c32e5637acd0a452d87c3249f4a9f0013a"],
+    ["bcro", "0xebaceb7f193955b946cc5dd8f8724a80671a1f2f"]
 ])
 
 export const COLLATERAL_DECIMAL: Map<string, number> = new Map([
@@ -84,7 +100,13 @@ export const COLLATERAL_DECIMAL: Map<string, number> = new Map([
     ["atom", 6],
     ["ada", 6],
     ["vvs", 18],
-    ["lcro", 18]
+    ["lcro", 18],
+    ["xrp", 6],
+    ["ltc", 8],
+    ["latom", 6],
+    ["fer", 18],
+    ["ful", 18],
+    ["bcro", 18]
 ])
 
 //lcro pool
@@ -93,6 +115,8 @@ export const LCRO_POOLS = [
     "0xcd8f4147a4f9452e027f5203bfc5b7a786055138",
     "0x498bd0cbdf3ba43c02fe768f8e993d4bf21d011d",
     "0x3c920600e049a128b01d2ef0b932108687196502",
+    "0x0a927384cc7ff3d250ac276ae2158d837e42f667",
+    "0x56b6000f7aa338d77ba834f6f70a1774d0248517"
 ]
 
 
