@@ -51,6 +51,7 @@ export const chainConfigs = [
       "0xdef171fe48cf0115b1d80b88dc8eab59176fee57".toLowerCase(), // augustusSwapper
       "0xa50d8de409c57e58044c972eb443fa6e30ab7c36".toLowerCase(), // strategy
       "0x1111111254eeb25477b68fb85ed929f73a960582".toLowerCase(), // 1inch
+      "0xce16f69375520ab01377ce7b88f5ba8c48f8d666".toLowerCase(), // some strategy
     ]),
     mintBurnAddr: new Set<string>([
       "0x0000000000000000000000000000000000000000",
