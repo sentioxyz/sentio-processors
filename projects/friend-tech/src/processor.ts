@@ -42,7 +42,7 @@ const tradeEventHandler = async (event: TradeEvent, ctx: FriendtechSharesV1Conte
 FriendtechSharesV1Processor.bind({
   address: FRIEND_TECH_SHARES_ADDR,
   network: EthChainId.BASE,
-  startBlock: 4039357
+  // startBlock: 4039357
 })
   .onEventTrade(tradeEventHandler)
 
@@ -64,6 +64,7 @@ FriendtechSharesV1Processor.bind({
 //   let fetchUrl = "https://prod-api.kosetto.com/users/" + traderAddress
 //   await fetch(fetchUrl, {
 //     headers: {
+//       'User-Agent': 'Mozilla/5.0 (Macintosh; Intel Mac OS X 10_15_7) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/104.0.5112.79 Safari/537.36',
 //       'Content-Type': 'application/json',
 //     }
 //   })
