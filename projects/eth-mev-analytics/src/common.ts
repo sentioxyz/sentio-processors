@@ -52,6 +52,7 @@ export const chainConfigs = [
       "0xa50d8de409c57e58044c972eb443fa6e30ab7c36".toLowerCase(), // strategy
       "0x1111111254eeb25477b68fb85ed929f73a960582".toLowerCase(), // 1inch
       "0xce16f69375520ab01377ce7b88f5ba8c48f8d666".toLowerCase(), // some strategy
+      "0x64bc3532991d8147167ee028a7adbf01c05594f7".toLowerCase(), // liquidity hub
     ]),
     mintBurnAddr: new Set<string>([
       "0x0000000000000000000000000000000000000000",
