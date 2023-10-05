@@ -6,6 +6,7 @@ export interface ChainConstants {
   mintBurnAddr: Set<string>;
   phalconChain: string;
   watchSpam: Set<string>;
+  trueReceivers: Set<string>;
 }
 
 export const chainConfigs = [
@@ -31,6 +32,7 @@ export const chainConfigs = [
     ]),
     phalconChain: "eth",
     watchSpam: new Set<string>([]),
+    trueReceivers: new Set<string>([]),
   },
   {
     chainID: EthChainId.POLYGON,
@@ -67,6 +69,10 @@ export const chainConfigs = [
       "0xe9324ca2d46f651ec16289f518b1392cf90d6d77".toLowerCase(),
       "0x41139bd34ff2d438480d3e73c360a5e915c79a64".toLowerCase(),
     ]),
+    trueReceivers: new Set<string>([
+      "0x76d25eaa2f8a2e69db9ce5ae6a28f7905e995f9b".toLowerCase(),
+      "0xf697bfd1860a025f86bca2ba18e7417095770c5b".toLowerCase(),
+    ]),
   },
   {
     chainID: EthChainId.AVALANCHE,
@@ -90,6 +96,7 @@ export const chainConfigs = [
     ]),
     phalconChain: "avax",
     watchSpam: new Set<string>([]),
+    trueReceivers: new Set<string>([]),
   },
   {
     chainID: EthChainId.MOONBEAM,
@@ -99,5 +106,6 @@ export const chainConfigs = [
     mintBurnAddr: new Set<string>([]),
     phalconChain: "moonbeam",
     watchSpam: new Set<string>([]),
+    trueReceivers: new Set<string>([]),
   },
 ];

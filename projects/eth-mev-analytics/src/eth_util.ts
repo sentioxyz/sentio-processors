@@ -17,6 +17,7 @@ export interface dataByTxn {
   traces: Trace[];
   transactionReceipts: TransactionReceiptParams[];
   feeRecipent: string;
+  trueReceiver: string;
 }
 
 function buildNativeETH(
@@ -215,13 +216,22 @@ export function buildGraph(
   return graph;
 }
 
-export function getDataByTxn(b: RichBlock): Map<string, dataByTxn> {
+export function getDataByTxn(
+  b: RichBlock,
+  chainConfig: ChainConstants
+): Map<string, dataByTxn> {
   let ret = new Map<string, dataByTxn>();
+  let trueReceiver: string = "";
   for (const tx of b.transactions || []) {
     // check if tx is string
     if (typeof tx === "string") {
       continue;
     }
+    if (tx.to === undefined || tx.to === null) {
+      continue;
+    }
+    trueReceiver = tx.to!.toLowerCase();
+
     // add tx to ret
     ret.set(tx.hash, {
       transactionReceipts: [],
@@ -229,6 +239,7 @@ export function getDataByTxn(b: RichBlock): Map<string, dataByTxn> {
       blockNumber: b.number,
       tx: tx,
       feeRecipent: b.miner.toLowerCase(),
+      trueReceiver: trueReceiver,
     });
   }
 
@@ -239,7 +250,24 @@ export function getDataByTxn(b: RichBlock): Map<string, dataByTxn> {
     ret.get(trace.transactionHash)!.traces.push(trace);
   }
 
+  for (const kv of ret.entries()) {
+    const hash = kv[0];
+    const data = kv[1];
+    for (const trace of data.traces || []) {
+      if (trace.action.to === undefined) {
+        continue;
+      }
+      if (chainConfig.trueReceivers.has(trace.action.to.toLowerCase())) {
+        ret.get(hash)!.trueReceiver = trace.action.to.toLowerCase();
+        break;
+      }
+    }
+  }
+
   for (const tx of b.transactionReceipts || []) {
+    if (!ret.has(tx.hash)) {
+      continue;
+    }
     ret.get(tx.hash)!.transactionReceipts.push(tx);
   }
 

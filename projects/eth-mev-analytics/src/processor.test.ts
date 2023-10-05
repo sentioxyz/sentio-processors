@@ -23,8 +23,12 @@ import { txnProfitAndCost, isArbitrage, handleBlock } from "./eth_processor.js";
 import { dataByTxn, getDataByTxn } from "./eth_util.js";
 import { chainConfigs, ChainConstants } from "./common.js";
 
-function filterByHash(b: RichBlock, hash: string): dataByTxn {
-  const allData = getDataByTxn(b);
+function filterByHash(
+  b: RichBlock,
+  hash: string,
+  chainConfig: ChainConstants
+): dataByTxn {
+  const allData = getDataByTxn(b, chainConfig);
   for (const [txnHash, data] of allData) {
     if (txnHash.toLowerCase() === hash.toLowerCase()) {
       return data;
@@ -59,7 +63,11 @@ function compute(
   const block = JSON.parse(strValue) as RichBlock;
   const formattedBlock = formatRichBlock(block);
   //const test = await service.eth.testBlock(formattedBlock);
-  const data = filterByHash(formattedBlock, hash);
+  const data = filterByHash(
+    formattedBlock,
+    hash,
+    chainConfigs[chainConfigIndex]
+  );
   return handleTxn(data, chainConfigs[chainConfigIndex], printInfo);
 }
 

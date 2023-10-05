@@ -52,10 +52,10 @@ export function findSandwich(
     if (!arbResults.has(txnData.tx.hash)) {
       continue;
     }
-    if (txnData.tx.to === undefined) {
+    if (txnData.trueReceiver === undefined) {
       continue;
     }
-    const to = txnData.tx.to!.toLowerCase();
+    const to = txnData.trueReceiver.toLowerCase();
     if (!txnMap.has(to)) {
       txnMap.set(to, new Array<dataByTxn>());
     }
@@ -101,7 +101,7 @@ export function handleBlock(
   b: RichBlock,
   chainConfig: ChainConstants
 ): mevBlockResult {
-  const dataByTxn = getDataByTxn(b);
+  const dataByTxn = getDataByTxn(b, chainConfig);
   console.log(
     `block ${Number(b.number)} of ${b.hash} has ${dataByTxn.size} txns`
   );
@@ -162,17 +162,17 @@ export function handleBlock(
   let spamInfo = new Map<bigint, Map<string, spamInfo>>();
   if (chainConfig.watchSpam.size > 0) {
     for (const [hash, data] of dataByTxn) {
-      if (data.tx.to === undefined || data.tx.to === null) {
+      if (data.trueReceiver === undefined || data.trueReceiver === null) {
         continue;
       }
-      if (!chainConfig.watchSpam.has(data.tx.to.toLowerCase())) {
+      if (!chainConfig.watchSpam.has(data.trueReceiver)) {
         continue;
       }
       const gas = data.tx.gasPrice;
       if (!spamInfo.has(gas)) {
         spamInfo.set(gas, new Map<string, spamInfo>());
       }
-      const to = data.tx.to.toLowerCase();
+      const to = data.trueReceiver;
       if (!spamInfo.get(gas)!.has(to)) {
         spamInfo.get(gas)!.set(to, {
           minIndex: data.tx.index,
@@ -216,9 +216,9 @@ export function isArbitrage(
   if (graph.numNodes() === sccs.length) {
     return false;
   }
-  if (data.tx.to !== undefined) {
+  if (data.trueReceiver !== undefined) {
     const from = data.tx.from.toLowerCase();
-    const to = data.tx.to!.toLowerCase();
+    const to = data.trueReceiver.toLowerCase();
     const sccMap = graph.getSCCIndex(sccs);
     let reach: Set<string> = new Set();
     for (const [k, v] of addressProperty) {
@@ -279,10 +279,10 @@ export function txnProfitAndCost(
     targetTxnContract: "",
     targetTxnHash: "",
   };
-  if (data.tx.to === undefined || data.tx.to === null) {
+  if (data.trueReceiver === undefined || data.trueReceiver === null) {
     return ret;
   }
-  ret.mevContract = data.tx.to.toLowerCase();
+  ret.mevContract = data.trueReceiver;
   // This is a hack to handle ethers bug.
   // @ts-ignore
   data.tx.index = parseInt(data.tx.transactionIndex);
@@ -301,7 +301,7 @@ export function txnProfitAndCost(
   const addressProperty = getAddressProperty(balances);
   const sender = data.tx.from.toLowerCase();
 
-  const receiver = data.tx.to!.toLowerCase();
+  const receiver = data.trueReceiver;
   const gasPrice = data.tx.gasPrice;
   const gasTotal = data.transactionReceipts[0].gasUsed * BigInt(gasPrice);
   [rewards, costs] = winnerRewards(
@@ -332,7 +332,7 @@ export function txnProfitAndCost(
   ret = {
     txnHash: data.tx.hash,
     txFrom: data.tx.from,
-    mevContract: data.tx.to!,
+    mevContract: data.trueReceiver,
     revenue: rewards,
     txnIndex: data.tx.index,
     costs: costs,
