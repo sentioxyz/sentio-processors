@@ -7,6 +7,7 @@ export interface ChainConstants {
   phalconChain: string;
   watchSpam: Set<string>;
   trueReceivers: Set<string>;
+  tailMode?: boolean;
 }
 
 export const chainConfigs = [
@@ -107,5 +108,15 @@ export const chainConfigs = [
     phalconChain: "moonbeam",
     watchSpam: new Set<string>([]),
     trueReceivers: new Set<string>([]),
+  },
+  {
+    chainID: EthChainId.ARBITRUM,
+    nativeTokenWrappedAddress:
+      "0x912ce59144191c1204e64559fe8253a0e49e6548".toLowerCase(),
+    blackListedAddresses: new Set<string>([]),
+    mintBurnAddr: new Set<string>([]),
+    phalconChain: "moonbeam",
+    watchSpam: new Set<string>([]),
+    tailMode: true,
   },
 ];

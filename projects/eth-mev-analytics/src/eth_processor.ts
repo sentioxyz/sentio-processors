@@ -7,6 +7,7 @@ import {
   GlobalProcessor,
   RichBlock,
   Trace,
+  BindOptions,
 } from "@sentio/sdk/eth";
 
 import { getDataByTxn, buildGraph, dataByTxn } from "./eth_util.js";
@@ -449,9 +450,14 @@ async function computePnL(
 }
 
 export function Bind(chainConfig: ChainConstants, startBlock: number) {
+  let name = "Default";
+  if (chainConfig.tailMode) {
+    name = "TestTailMode";
+  }
   GlobalProcessor.bind({
     startBlock: startBlock,
     network: chainConfig.chainID,
+    name: name,
   }).onBlockInterval(
     async (b, ctx) => {
       const mevResults = handleBlock(b, chainConfig);
