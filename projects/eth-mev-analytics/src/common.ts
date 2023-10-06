@@ -7,7 +7,7 @@ export interface ChainConstants {
   phalconChain: string;
   watchSpam: Set<string>;
   trueReceivers: Set<string>;
-  tailMode?: boolean;
+  tailMode: boolean;
 }
 
 export const chainConfigs = [
@@ -34,6 +34,7 @@ export const chainConfigs = [
     phalconChain: "eth",
     watchSpam: new Set<string>([]),
     trueReceivers: new Set<string>([]),
+    tailMode: false,
   },
   {
     chainID: EthChainId.POLYGON,
@@ -74,6 +75,7 @@ export const chainConfigs = [
       "0x76d25eaa2f8a2e69db9ce5ae6a28f7905e995f9b".toLowerCase(),
       "0xf697bfd1860a025f86bca2ba18e7417095770c5b".toLowerCase(),
     ]),
+    tailMode: false,
   },
   {
     chainID: EthChainId.AVALANCHE,
@@ -98,6 +100,7 @@ export const chainConfigs = [
     phalconChain: "avax",
     watchSpam: new Set<string>([]),
     trueReceivers: new Set<string>([]),
+    tailMode: false,
   },
   {
     chainID: EthChainId.MOONBEAM,
@@ -108,15 +111,20 @@ export const chainConfigs = [
     phalconChain: "moonbeam",
     watchSpam: new Set<string>([]),
     trueReceivers: new Set<string>([]),
+    tailMode: false,
   },
   {
     chainID: EthChainId.ARBITRUM,
     nativeTokenWrappedAddress:
       "0x912ce59144191c1204e64559fe8253a0e49e6548".toLowerCase(),
-    blackListedAddresses: new Set<string>([]),
+    blackListedAddresses: new Set<string>([
+      "0xc7517f481Cc0a645e63f870830A4B2e580421e32".toLowerCase(),
+      "0xDEF171Fe48CF0115B1d80b88dc8eAB59176FEe57".toLowerCase(),
+    ]),
     mintBurnAddr: new Set<string>([]),
-    phalconChain: "moonbeam",
+    phalconChain: "arbitrum",
     watchSpam: new Set<string>([]),
+    trueReceivers: new Set<string>([]),
     tailMode: true,
   },
 ];
