@@ -129,4 +129,15 @@ export const chainConfigs = [
     trueReceivers: new Set<string>([]),
     tailMode: true,
   },
+  {
+    chainID: EthChainId.BINANCE,
+    nativeTokenWrappedAddress:
+      "0xbb4cdb9cbd36b01bd1cbaebf2de08d9173bc095c".toLowerCase(),
+    blackListedAddresses: new Set<string>([]),
+    mintBurnAddr: new Set<string>([]),
+    phalconChain: "bsc",
+    watchSpam: new Set<string>([]),
+    trueReceivers: new Set<string>([]),
+    tailMode: true,
+  },
 ];
