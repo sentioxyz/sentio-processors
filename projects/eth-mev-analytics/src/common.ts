@@ -121,6 +121,7 @@ export const chainConfigs = [
     blackListedAddresses: new Set<string>([
       "0xc7517f481Cc0a645e63f870830A4B2e580421e32".toLowerCase(),
       "0xDEF171Fe48CF0115B1d80b88dc8eAB59176FEe57".toLowerCase(),
+      "0x0e303e9d98a3f88097b07befb510aa7a97ff440d".toLowerCase(),
     ]),
     mintBurnAddr: new Set<string>([]),
     phalconChain: "arbitrum",
