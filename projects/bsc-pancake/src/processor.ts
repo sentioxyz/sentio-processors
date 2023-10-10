@@ -2,9 +2,10 @@ import { Counter, Gauge } from "@sentio/sdk";
 import { ERC20Processor } from "@sentio/sdk/eth/builtin";
 import { PancakePairProcessor } from "./types/eth/pancakepair.js";
 import { PancakeV3PoolProcessor } from "./types/eth/pancakev3pool.js";
+import { AlgebraPoolProcessor } from "./types/eth/algebrapool.js";
 import { EthChainId } from "@sentio/sdk/eth";
 
-const START_BLOCK = 32473281;
+const START_BLOCK = 32485968;
 
 const V2_ADDRESSES = [
   "0x4c85aace702587c977e1372d44a12addfb6f3402",
@@ -37,6 +38,21 @@ for (const address of V3_ADDRESSES) {
     startBlock: START_BLOCK,
   }).onEventSwap(async (evt, ctx) => {
     ctx.eventLogger.emit("V3SwapEvent", {
+      sender: evt.args.sender,
+      index: evt.transactionIndex,
+    });
+  });
+}
+
+const ALGEBRA_ADDRESSES = ["0xD6f0Ba7eC72Ff3974B02c18ED1fC33Da77434d41"];
+
+for (const address of ALGEBRA_ADDRESSES) {
+  AlgebraPoolProcessor.bind({
+    address: address,
+    network: EthChainId.BINANCE,
+    startBlock: START_BLOCK,
+  }).onEventSwap(async (evt, ctx) => {
+    ctx.eventLogger.emit("AlgebraSwapEvent", {
       sender: evt.args.sender,
       index: evt.transactionIndex,
     });
