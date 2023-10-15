@@ -204,48 +204,48 @@ const template = new SuiObjectProcessorTemplate()
   .onTimeInterval(async (self, fields, ctx) => {
     if (self) {
       try {
-        // //get coin addresses
-        // const poolInfo = await helper.getOrCreatePool(ctx, ctx.objectId)
-        // const symbol_a = poolInfo.symbol_a
-        // const symbol_b = poolInfo.symbol_b
-        // const decimal_a = poolInfo.decimal_a
-        // const decimal_b = poolInfo.decimal_b
-        // const pairName = poolInfo.pairName
-        // const pairFullName = poolInfo.pairFullName
+        //get coin addresses
+        const poolInfo = await helper.getOrCreatePool(ctx, ctx.objectId)
+        const symbol_a = poolInfo.symbol_a
+        const symbol_b = poolInfo.symbol_b
+        const decimal_a = poolInfo.decimal_a
+        const decimal_b = poolInfo.decimal_b
+        const pairName = poolInfo.pairName
+        const pairFullName = poolInfo.pairFullName
 
-        // const [coin_a_address, coin_b_address] = helper.getCoinObjectAddress(poolInfo.type)
-        // const coin_a_bridge = helper.getBridgeInfo(coin_a_address)
-        // const coin_b_bridge = helper.getBridgeInfo(coin_b_address)
-
-
-
-        // const coin_a_balance = Number(self.fields.coin_a) / Math.pow(10, decimal_a)
-        // const coin_b_balance = Number(self.fields.coin_b) / Math.pow(10, decimal_b)
-        // console.log(`pair: ${pairFullName} \nsymbol:${symbol_a} ${symbol_b}, \ncoin_a_balance ${coin_a_balance} coin_b_balance ${coin_b_balance}, \npool ${ctx.objectId}`)
-        // if (coin_a_balance) {
-        //   ctx.meter.Gauge('coin_a_balance').record(coin_a_balance, { coin_symbol: symbol_a, pairName, pairFullName })
-        // }
-
-        // if (coin_b_balance) {
-        //   ctx.meter.Gauge('coin_b_balance').record(coin_b_balance, { coin_symbol: symbol_b, pairName, pairFullName })
-        // }
-
-        // //record liquidity
-        // const liquidity = Number(self.fields.liquidity)
-        // ctx.meter.Gauge("liquidity").record(liquidity, { pairName, pairFullName })
-
-        // //record price
-        // const coin_a2b_price = await helper.getPoolPrice(ctx, ctx.objectId)
-
-        // //record tvl
-        // const [tvl_a, tvl_b] = await helper.calculateValue_USD(ctx, ctx.objectId, coin_a_balance, coin_b_balance, ctx.timestamp)
-        // const tvl = tvl_a + tvl_b
-        // ctx.meter.Gauge("tvl").record(tvl, { pairName, pairFullName })
-        // ctx.meter.Gauge("tvl_oneside").record(tvl_a, { pairName, pairFullName, bridge: coin_a_bridge, coin: coin_a_address })
-        // ctx.meter.Gauge("tvl_oneside").record(tvl_b, { pairName, pairFullName, bridge: coin_b_bridge, coin: coin_b_address })
+        const [coin_a_address, coin_b_address] = helper.getCoinObjectAddress(poolInfo.type)
+        const coin_a_bridge = helper.getBridgeInfo(coin_a_address)
+        const coin_b_bridge = helper.getBridgeInfo(coin_b_address)
 
 
-        // console.log(`pair: ${pairFullName} \nsymbol:${symbol_a} ${symbol_b}, \ncoin_a_balance ${coin_a_balance} coin_b_balance ${coin_b_balance}, \npool ${ctx.objectId} \nliquidity: ${liquidity} \ntvl: ${tvl} `)
+
+        const coin_a_balance = Number(self.fields.coin_a) / Math.pow(10, decimal_a)
+        const coin_b_balance = Number(self.fields.coin_b) / Math.pow(10, decimal_b)
+        console.log(`pair: ${pairFullName} \nsymbol:${symbol_a} ${symbol_b}, \ncoin_a_balance ${coin_a_balance} coin_b_balance ${coin_b_balance}, \npool ${ctx.objectId}`)
+        if (coin_a_balance) {
+          ctx.meter.Gauge('coin_a_balance').record(coin_a_balance, { coin_symbol: symbol_a, pairName, pairFullName })
+        }
+
+        if (coin_b_balance) {
+          ctx.meter.Gauge('coin_b_balance').record(coin_b_balance, { coin_symbol: symbol_b, pairName, pairFullName })
+        }
+
+        //record liquidity
+        const liquidity = Number(self.fields.liquidity)
+        ctx.meter.Gauge("liquidity").record(liquidity, { pairName, pairFullName })
+
+        //record price
+        const coin_a2b_price = await helper.getPoolPrice(ctx, ctx.objectId)
+
+        //record tvl
+        const [tvl_a, tvl_b] = await helper.calculateValue_USD(ctx, ctx.objectId, coin_a_balance, coin_b_balance, ctx.timestamp)
+        const tvl = tvl_a + tvl_b
+        ctx.meter.Gauge("tvl").record(tvl, { pairName, pairFullName })
+        ctx.meter.Gauge("tvl_oneside").record(tvl_a, { pairName, pairFullName, bridge: coin_a_bridge, coin: coin_a_address })
+        ctx.meter.Gauge("tvl_oneside").record(tvl_b, { pairName, pairFullName, bridge: coin_b_bridge, coin: coin_b_address })
+
+
+        console.log(`pair: ${pairFullName} \nsymbol:${symbol_a} ${symbol_b}, \ncoin_a_balance ${coin_a_balance} coin_b_balance ${coin_b_balance}, \npool ${ctx.objectId} \nliquidity: ${liquidity} \ntvl: ${tvl} `)
 
         console.log(fields)
 
@@ -256,7 +256,7 @@ const template = new SuiObjectProcessorTemplate()
     }
 
   }, 60, 10, undefined, { owned: false })
-// }
+
 
 // public async getPoolTicks(poolId: string | undefined) {
 //   if (poolId == undefined) return [];
@@ -305,3 +305,7 @@ const template = new SuiObjectProcessorTemplate()
 //     })
 //     .sort((a, b) => a.index - b.index);
 // }
+
+
+
+
