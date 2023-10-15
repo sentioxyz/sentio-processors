@@ -7,11 +7,7 @@ import { EthChainId } from "@sentio/sdk/eth";
 
 const START_BLOCK = 32485968;
 
-const V2_ADDRESSES = [
-  "0x4c85aace702587c977e1372d44a12addfb6f3402",
-  "0xdac44d168c3c050c47b0d9bb067aabfd7497751f",
-  "0x4e7ae8129311f3670964cd58da28de56d4eeff41",
-];
+const V2_ADDRESSES = ["0x819A26D0C6F3Af2b9fe4e9C4bcaC04Fcb3eA7F2A"];
 
 for (const address of V2_ADDRESSES) {
   PancakePairProcessor.bind({

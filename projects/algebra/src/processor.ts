@@ -26,13 +26,14 @@ import { ApePairProcessor } from "./types/eth/apepair.js";
 
 import { RouterImplProcessor } from "./types/eth/routerimpl.js";
 import { BentoBoxV1Processor } from "./types/eth/bentoboxv1.js";
+import { PairProcessor } from "./types/eth/pair.js";
 import { ERC20Processor } from "@sentio/sdk/eth/builtin";
 
 // a constant string array
 const ALGEBRA_ADDRESSES = ["0x5b1fd9fa139353c5d9eaf459e4bd2f7a6b4812bb"];
 
 // target tx is 0xc988bfb51d44f6e5162e6a860a9aa75f7fd087f7e1b816f7a50d422bcbe6e712
-const START_BLOCK = 47728891;
+const START_BLOCK = 48613306;
 
 for (const address of ALGEBRA_ADDRESSES) {
   AlgebraPoolProcessor.bind({
@@ -56,6 +57,20 @@ for (const address of APE_ADDRESSES) {
     startBlock: START_BLOCK,
   }).onEventSwap(async (evt, ctx) => {
     ctx.eventLogger.emit("ApeSwapEvent", {
+      sender: evt.args.sender,
+      index: evt.transactionIndex,
+    });
+  });
+}
+
+const PAIR_ADDRESSES = ["0xD17cb0f162f133e339C0BbFc18c36c357E681D6b"];
+for (const address of PAIR_ADDRESSES) {
+  PairProcessor.bind({
+    address: address,
+    network: EthChainId.POLYGON,
+    startBlock: START_BLOCK,
+  }).onEventSwap(async (evt, ctx) => {
+    ctx.eventLogger.emit("PairSwapEvent", {
       sender: evt.args.sender,
       index: evt.transactionIndex,
     });
