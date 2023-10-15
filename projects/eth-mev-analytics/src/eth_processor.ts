@@ -479,11 +479,11 @@ export function Bind(chainConfig: ChainConstants, startBlock: number) {
       for (const txn of mevResults.arbTxns) {
         let link = `https://explorer.phalcon.xyz/tx/${chainConfig.phalconChain}/${txn.txnHash}`;
         if (chainConfig.phalconChain === "eth") {
-          link = `https://app.sentio.xyz/qiaokan/eth-mev-analytics/transaction/1/${txn.txnHash}`;
+          link = `https://app.sentio.xyz/tx/1/${txn.txnHash}`;
         } else if (chainConfig.phalconChain === "polygon") {
-          link = `https://app.sentio.xyz/qiaokan/eth-mev-analytics-polygon/transaction/137/${txn.txnHash}`;
+          link = `https://app.sentio.xyz/tx/137/${txn.txnHash}`;
         } else if (chainConfig.phalconChain === "moonbeam") {
-          link = `https://app.sentio.xyz/qiaokan/eth-mev-analytics-moonbeam/transaction/1284/${txn.txnHash}`;
+          link = `https://app.sentio.xyz/tx/1284/${txn.txnHash}`;
         }
         const [revenue, cost, profitTokens] = await computePnL(
           txn.revenue,
@@ -527,14 +527,14 @@ export function Bind(chainConfig: ChainConstants, startBlock: number) {
         let frontLink = `https://explorer.phalcon.xyz/tx/${chainConfig.phalconChain}/${txn.frontTxnHash}`;
         let backLink = `https://explorer.phalcon.xyz/tx/${chainConfig.phalconChain}/${txn.backTxnHash}`;
         if (chainConfig.phalconChain === "eth") {
-          frontLink = `https://app.sentio.xyz/qiaokan/eth-mev-analytics/transaction/1/${txn.frontTxnHash}`;
-          backLink = `https://app.sentio.xyz/qiaokan/eth-mev-analytics/transaction/1/${txn.backTxnHash}`;
+          frontLink = `https://app.sentio.xyz/tx/1/${txn.frontTxnHash}`;
+          backLink = `https://app.sentio.xyz/tx/1/${txn.backTxnHash}`;
         } else if (chainConfig.phalconChain === "polygon") {
-          frontLink = `https://app.sentio.xyz/qiaokan/eth-mev-analytics-polygon/transaction/137/${txn.frontTxnHash}`;
-          backLink = `https://app.sentio.xyz/qiaokan/eth-mev-analytics-polygon/transaction/137/${txn.backTxnHash}`;
+          frontLink = `https://app.sentio.xyz/tx/137/${txn.frontTxnHash}`;
+          backLink = `https://app.sentio.xyz/tx/137/${txn.backTxnHash}`;
         } else if (chainConfig.phalconChain === "moonbeam") {
-          frontLink = `https://app.sentio.xyz/qiaokan/eth-mev-analytics-moonbeam/transaction/1284/${txn.frontTxnHash}`;
-          backLink = `https://app.sentio.xyz/qiaokan/eth-mev-analytics-moonbeam/transaction/1284/${txn.backTxnHash}`;
+          frontLink = `https://app.sentio.xyz/tx/1284/${txn.frontTxnHash}`;
+          backLink = `https://app.sentio.xyz/tx/1284/${txn.backTxnHash}`;
         }
 
         const [revenue, cost, profitTokens] = await computePnL(
