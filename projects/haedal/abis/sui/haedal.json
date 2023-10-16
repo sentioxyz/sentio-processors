@@ -1,0 +1,4283 @@
+{
+    "config": {
+        "fileFormatVersion": 6,
+        "address": "0xbde4ba4c2e274a60ce15c1cfff9e5c42e41654ac8b6d906a57efa4bd3c29f47d",
+        "name": "config",
+        "friends": [
+            {
+                "address": "0xbde4ba4c2e274a60ce15c1cfff9e5c42e41654ac8b6d906a57efa4bd3c29f47d",
+                "name": "manage"
+            },
+            {
+                "address": "0xbde4ba4c2e274a60ce15c1cfff9e5c42e41654ac8b6d906a57efa4bd3c29f47d",
+                "name": "staking"
+            }
+        ],
+        "structs": {
+            "StakingConfig": {
+                "abilities": {
+                    "abilities": [
+                        "Store"
+                    ]
+                },
+                "typeParameters": [],
+                "fields": [
+                    {
+                        "name": "deposit_fee",
+                        "type": "U64"
+                    },
+                    {
+                        "name": "reward_fee",
+                        "type": "U64"
+                    },
+                    {
+                        "name": "validator_reward_fee",
+                        "type": "U64"
+                    },
+                    {
+                        "name": "service_fee",
+                        "type": "U64"
+                    },
+                    {
+                        "name": "withdraw_time_limit",
+                        "type": "U64"
+                    },
+                    {
+                        "name": "validator_count",
+                        "type": "U64"
+                    }
+                ]
+            },
+            "StakingConfigCreated": {
+                "abilities": {
+                    "abilities": [
+                        "Copy",
+                        "Drop"
+                    ]
+                },
+                "typeParameters": [],
+                "fields": [
+                    {
+                        "name": "deposit_fee",
+                        "type": "U64"
+                    },
+                    {
+                        "name": "reward_fee",
+                        "type": "U64"
+                    },
+                    {
+                        "name": "validator_reward_fee",
+                        "type": "U64"
+                    },
+                    {
+                        "name": "service_fee",
+                        "type": "U64"
+                    },
+                    {
+                        "name": "withdraw_time_limit",
+                        "type": "U64"
+                    },
+                    {
+                        "name": "validator_count",
+                        "type": "U64"
+                    }
+                ]
+            },
+            "StakingFeeConfigUpdated": {
+                "abilities": {
+                    "abilities": [
+                        "Copy",
+                        "Drop"
+                    ]
+                },
+                "typeParameters": [],
+                "fields": [
+                    {
+                        "name": "name",
+                        "type": {
+                            "Vector": "U8"
+                        }
+                    },
+                    {
+                        "name": "old",
+                        "type": "U64"
+                    },
+                    {
+                        "name": "new",
+                        "type": "U64"
+                    }
+                ]
+            }
+        },
+        "exposedFunctions": {
+            "get_deposit_fee": {
+                "visibility": "Public",
+                "isEntry": false,
+                "typeParameters": [],
+                "parameters": [
+                    {
+                        "Reference": {
+                            "Struct": {
+                                "address": "0xbde4ba4c2e274a60ce15c1cfff9e5c42e41654ac8b6d906a57efa4bd3c29f47d",
+                                "module": "config",
+                                "name": "StakingConfig",
+                                "typeArguments": []
+                            }
+                        }
+                    }
+                ],
+                "return": [
+                    "U64"
+                ]
+            },
+            "get_reward_fee": {
+                "visibility": "Public",
+                "isEntry": false,
+                "typeParameters": [],
+                "parameters": [
+                    {
+                        "Reference": {
+                            "Struct": {
+                                "address": "0xbde4ba4c2e274a60ce15c1cfff9e5c42e41654ac8b6d906a57efa4bd3c29f47d",
+                                "module": "config",
+                                "name": "StakingConfig",
+                                "typeArguments": []
+                            }
+                        }
+                    }
+                ],
+                "return": [
+                    "U64"
+                ]
+            },
+            "get_service_fee": {
+                "visibility": "Public",
+                "isEntry": false,
+                "typeParameters": [],
+                "parameters": [
+                    {
+                        "Reference": {
+                            "Struct": {
+                                "address": "0xbde4ba4c2e274a60ce15c1cfff9e5c42e41654ac8b6d906a57efa4bd3c29f47d",
+                                "module": "config",
+                                "name": "StakingConfig",
+                                "typeArguments": []
+                            }
+                        }
+                    }
+                ],
+                "return": [
+                    "U64"
+                ]
+            },
+            "get_validator_count": {
+                "visibility": "Public",
+                "isEntry": false,
+                "typeParameters": [],
+                "parameters": [
+                    {
+                        "Reference": {
+                            "Struct": {
+                                "address": "0xbde4ba4c2e274a60ce15c1cfff9e5c42e41654ac8b6d906a57efa4bd3c29f47d",
+                                "module": "config",
+                                "name": "StakingConfig",
+                                "typeArguments": []
+                            }
+                        }
+                    }
+                ],
+                "return": [
+                    "U64"
+                ]
+            },
+            "get_validator_reward_fee": {
+                "visibility": "Public",
+                "isEntry": false,
+                "typeParameters": [],
+                "parameters": [
+                    {
+                        "Reference": {
+                            "Struct": {
+                                "address": "0xbde4ba4c2e274a60ce15c1cfff9e5c42e41654ac8b6d906a57efa4bd3c29f47d",
+                                "module": "config",
+                                "name": "StakingConfig",
+                                "typeArguments": []
+                            }
+                        }
+                    }
+                ],
+                "return": [
+                    "U64"
+                ]
+            },
+            "get_withdraw_time_limit": {
+                "visibility": "Public",
+                "isEntry": false,
+                "typeParameters": [],
+                "parameters": [
+                    {
+                        "Reference": {
+                            "Struct": {
+                                "address": "0xbde4ba4c2e274a60ce15c1cfff9e5c42e41654ac8b6d906a57efa4bd3c29f47d",
+                                "module": "config",
+                                "name": "StakingConfig",
+                                "typeArguments": []
+                            }
+                        }
+                    }
+                ],
+                "return": [
+                    "U64"
+                ]
+            },
+            "new": {
+                "visibility": "Friend",
+                "isEntry": false,
+                "typeParameters": [],
+                "parameters": [
+                    "U64",
+                    "U64",
+                    "U64",
+                    "U64",
+                    "U64",
+                    "U64"
+                ],
+                "return": [
+                    {
+                        "Struct": {
+                            "address": "0xbde4ba4c2e274a60ce15c1cfff9e5c42e41654ac8b6d906a57efa4bd3c29f47d",
+                            "module": "config",
+                            "name": "StakingConfig",
+                            "typeArguments": []
+                        }
+                    }
+                ]
+            },
+            "set_deposit_fee": {
+                "visibility": "Friend",
+                "isEntry": false,
+                "typeParameters": [],
+                "parameters": [
+                    {
+                        "MutableReference": {
+                            "Struct": {
+                                "address": "0xbde4ba4c2e274a60ce15c1cfff9e5c42e41654ac8b6d906a57efa4bd3c29f47d",
+                                "module": "config",
+                                "name": "StakingConfig",
+                                "typeArguments": []
+                            }
+                        }
+                    },
+                    "U64"
+                ],
+                "return": []
+            },
+            "set_reward_fee": {
+                "visibility": "Friend",
+                "isEntry": false,
+                "typeParameters": [],
+                "parameters": [
+                    {
+                        "MutableReference": {
+                            "Struct": {
+                                "address": "0xbde4ba4c2e274a60ce15c1cfff9e5c42e41654ac8b6d906a57efa4bd3c29f47d",
+                                "module": "config",
+                                "name": "StakingConfig",
+                                "typeArguments": []
+                            }
+                        }
+                    },
+                    "U64"
+                ],
+                "return": []
+            },
+            "set_service_fee": {
+                "visibility": "Friend",
+                "isEntry": false,
+                "typeParameters": [],
+                "parameters": [
+                    {
+                        "MutableReference": {
+                            "Struct": {
+                                "address": "0xbde4ba4c2e274a60ce15c1cfff9e5c42e41654ac8b6d906a57efa4bd3c29f47d",
+                                "module": "config",
+                                "name": "StakingConfig",
+                                "typeArguments": []
+                            }
+                        }
+                    },
+                    "U64"
+                ],
+                "return": []
+            },
+            "set_validator_count": {
+                "visibility": "Friend",
+                "isEntry": false,
+                "typeParameters": [],
+                "parameters": [
+                    {
+                        "MutableReference": {
+                            "Struct": {
+                                "address": "0xbde4ba4c2e274a60ce15c1cfff9e5c42e41654ac8b6d906a57efa4bd3c29f47d",
+                                "module": "config",
+                                "name": "StakingConfig",
+                                "typeArguments": []
+                            }
+                        }
+                    },
+                    "U64"
+                ],
+                "return": []
+            },
+            "set_validator_reward_fee": {
+                "visibility": "Friend",
+                "isEntry": false,
+                "typeParameters": [],
+                "parameters": [
+                    {
+                        "MutableReference": {
+                            "Struct": {
+                                "address": "0xbde4ba4c2e274a60ce15c1cfff9e5c42e41654ac8b6d906a57efa4bd3c29f47d",
+                                "module": "config",
+                                "name": "StakingConfig",
+                                "typeArguments": []
+                            }
+                        }
+                    },
+                    "U64"
+                ],
+                "return": []
+            },
+            "set_withdraw_time_limit": {
+                "visibility": "Friend",
+                "isEntry": false,
+                "typeParameters": [],
+                "parameters": [
+                    {
+                        "MutableReference": {
+                            "Struct": {
+                                "address": "0xbde4ba4c2e274a60ce15c1cfff9e5c42e41654ac8b6d906a57efa4bd3c29f47d",
+                                "module": "config",
+                                "name": "StakingConfig",
+                                "typeArguments": []
+                            }
+                        }
+                    },
+                    "U64"
+                ],
+                "return": []
+            }
+        }
+    },
+    "hasui": {
+        "fileFormatVersion": 6,
+        "address": "0xbde4ba4c2e274a60ce15c1cfff9e5c42e41654ac8b6d906a57efa4bd3c29f47d",
+        "name": "hasui",
+        "friends": [
+            {
+                "address": "0xbde4ba4c2e274a60ce15c1cfff9e5c42e41654ac8b6d906a57efa4bd3c29f47d",
+                "name": "staking"
+            }
+        ],
+        "structs": {
+            "HASUI": {
+                "abilities": {
+                    "abilities": [
+                        "Drop"
+                    ]
+                },
+                "typeParameters": [],
+                "fields": [
+                    {
+                        "name": "dummy_field",
+                        "type": "Bool"
+                    }
+                ]
+            }
+        },
+        "exposedFunctions": {}
+    },
+    "interface": {
+        "fileFormatVersion": 6,
+        "address": "0xbde4ba4c2e274a60ce15c1cfff9e5c42e41654ac8b6d906a57efa4bd3c29f47d",
+        "name": "interface2",
+        "friends": [],
+        "structs": {},
+        "exposedFunctions": {
+            "claim": {
+                "visibility": "Public",
+                "isEntry": true,
+                "typeParameters": [],
+                "parameters": [
+                    {
+                        "MutableReference": {
+                            "Struct": {
+                                "address": "0xbde4ba4c2e274a60ce15c1cfff9e5c42e41654ac8b6d906a57efa4bd3c29f47d",
+                                "module": "staking",
+                                "name": "Staking",
+                                "typeArguments": []
+                            }
+                        }
+                    },
+                    {
+                        "Struct": {
+                            "address": "0xbde4ba4c2e274a60ce15c1cfff9e5c42e41654ac8b6d906a57efa4bd3c29f47d",
+                            "module": "staking",
+                            "name": "UnstakeTicket",
+                            "typeArguments": []
+                        }
+                    },
+                    {
+                        "MutableReference": {
+                            "Struct": {
+                                "address": "0x2",
+                                "module": "tx_context",
+                                "name": "TxContext",
+                                "typeArguments": []
+                            }
+                        }
+                    }
+                ],
+                "return": []
+            },
+            "import_stake_sui_vec": {
+                "visibility": "Public",
+                "isEntry": true,
+                "typeParameters": [],
+                "parameters": [
+                    {
+                        "MutableReference": {
+                            "Struct": {
+                                "address": "0x3",
+                                "module": "sui_system",
+                                "name": "SuiSystemState",
+                                "typeArguments": []
+                            }
+                        }
+                    },
+                    {
+                        "MutableReference": {
+                            "Struct": {
+                                "address": "0xbde4ba4c2e274a60ce15c1cfff9e5c42e41654ac8b6d906a57efa4bd3c29f47d",
+                                "module": "staking",
+                                "name": "Staking",
+                                "typeArguments": []
+                            }
+                        }
+                    },
+                    {
+                        "Vector": {
+                            "Struct": {
+                                "address": "0x3",
+                                "module": "staking_pool",
+                                "name": "StakedSui",
+                                "typeArguments": []
+                            }
+                        }
+                    },
+                    "Address",
+                    {
+                        "MutableReference": {
+                            "Struct": {
+                                "address": "0x2",
+                                "module": "tx_context",
+                                "name": "TxContext",
+                                "typeArguments": []
+                            }
+                        }
+                    }
+                ],
+                "return": []
+            },
+            "request_stake": {
+                "visibility": "Public",
+                "isEntry": true,
+                "typeParameters": [],
+                "parameters": [
+                    {
+                        "MutableReference": {
+                            "Struct": {
+                                "address": "0x3",
+                                "module": "sui_system",
+                                "name": "SuiSystemState",
+                                "typeArguments": []
+                            }
+                        }
+                    },
+                    {
+                        "MutableReference": {
+                            "Struct": {
+                                "address": "0xbde4ba4c2e274a60ce15c1cfff9e5c42e41654ac8b6d906a57efa4bd3c29f47d",
+                                "module": "staking",
+                                "name": "Staking",
+                                "typeArguments": []
+                            }
+                        }
+                    },
+                    {
+                        "Struct": {
+                            "address": "0x2",
+                            "module": "coin",
+                            "name": "Coin",
+                            "typeArguments": [
+                                {
+                                    "Struct": {
+                                        "address": "0x2",
+                                        "module": "sui",
+                                        "name": "SUI",
+                                        "typeArguments": []
+                                    }
+                                }
+                            ]
+                        }
+                    },
+                    "Address",
+                    {
+                        "MutableReference": {
+                            "Struct": {
+                                "address": "0x2",
+                                "module": "tx_context",
+                                "name": "TxContext",
+                                "typeArguments": []
+                            }
+                        }
+                    }
+                ],
+                "return": []
+            },
+            "request_unstake_delay": {
+                "visibility": "Public",
+                "isEntry": true,
+                "typeParameters": [],
+                "parameters": [
+                    {
+                        "MutableReference": {
+                            "Struct": {
+                                "address": "0xbde4ba4c2e274a60ce15c1cfff9e5c42e41654ac8b6d906a57efa4bd3c29f47d",
+                                "module": "staking",
+                                "name": "Staking",
+                                "typeArguments": []
+                            }
+                        }
+                    },
+                    {
+                        "Reference": {
+                            "Struct": {
+                                "address": "0x2",
+                                "module": "clock",
+                                "name": "Clock",
+                                "typeArguments": []
+                            }
+                        }
+                    },
+                    {
+                        "Struct": {
+                            "address": "0x2",
+                            "module": "coin",
+                            "name": "Coin",
+                            "typeArguments": [
+                                {
+                                    "Struct": {
+                                        "address": "0xbde4ba4c2e274a60ce15c1cfff9e5c42e41654ac8b6d906a57efa4bd3c29f47d",
+                                        "module": "hasui",
+                                        "name": "HASUI",
+                                        "typeArguments": []
+                                    }
+                                }
+                            ]
+                        }
+                    },
+                    {
+                        "MutableReference": {
+                            "Struct": {
+                                "address": "0x2",
+                                "module": "tx_context",
+                                "name": "TxContext",
+                                "typeArguments": []
+                            }
+                        }
+                    }
+                ],
+                "return": []
+            },
+            "request_unstake_instant": {
+                "visibility": "Public",
+                "isEntry": true,
+                "typeParameters": [],
+                "parameters": [
+                    {
+                        "MutableReference": {
+                            "Struct": {
+                                "address": "0xbde4ba4c2e274a60ce15c1cfff9e5c42e41654ac8b6d906a57efa4bd3c29f47d",
+                                "module": "staking",
+                                "name": "Staking",
+                                "typeArguments": []
+                            }
+                        }
+                    },
+                    {
+                        "Struct": {
+                            "address": "0x2",
+                            "module": "coin",
+                            "name": "Coin",
+                            "typeArguments": [
+                                {
+                                    "Struct": {
+                                        "address": "0xbde4ba4c2e274a60ce15c1cfff9e5c42e41654ac8b6d906a57efa4bd3c29f47d",
+                                        "module": "hasui",
+                                        "name": "HASUI",
+                                        "typeArguments": []
+                                    }
+                                }
+                            ]
+                        }
+                    },
+                    {
+                        "MutableReference": {
+                            "Struct": {
+                                "address": "0x2",
+                                "module": "tx_context",
+                                "name": "TxContext",
+                                "typeArguments": []
+                            }
+                        }
+                    }
+                ],
+                "return": []
+            }
+        }
+    },
+    "manage": {
+        "fileFormatVersion": 6,
+        "address": "0xbde4ba4c2e274a60ce15c1cfff9e5c42e41654ac8b6d906a57efa4bd3c29f47d",
+        "name": "manage",
+        "friends": [],
+        "structs": {
+            "AdminCap": {
+                "abilities": {
+                    "abilities": [
+                        "Store",
+                        "Key"
+                    ]
+                },
+                "typeParameters": [],
+                "fields": [
+                    {
+                        "name": "id",
+                        "type": {
+                            "Struct": {
+                                "address": "0x2",
+                                "module": "object",
+                                "name": "UID",
+                                "typeArguments": []
+                            }
+                        }
+                    },
+                    {
+                        "name": "init",
+                        "type": "Bool"
+                    }
+                ]
+            },
+            "OperatorCap": {
+                "abilities": {
+                    "abilities": [
+                        "Store",
+                        "Key"
+                    ]
+                },
+                "typeParameters": [],
+                "fields": [
+                    {
+                        "name": "id",
+                        "type": {
+                            "Struct": {
+                                "address": "0x2",
+                                "module": "object",
+                                "name": "UID",
+                                "typeArguments": []
+                            }
+                        }
+                    }
+                ]
+            }
+        },
+        "exposedFunctions": {
+            "collect_rewards_fee": {
+                "visibility": "Public",
+                "isEntry": true,
+                "typeParameters": [],
+                "parameters": [
+                    {
+                        "Reference": {
+                            "Struct": {
+                                "address": "0xbde4ba4c2e274a60ce15c1cfff9e5c42e41654ac8b6d906a57efa4bd3c29f47d",
+                                "module": "manage",
+                                "name": "AdminCap",
+                                "typeArguments": []
+                            }
+                        }
+                    },
+                    {
+                        "MutableReference": {
+                            "Struct": {
+                                "address": "0xbde4ba4c2e274a60ce15c1cfff9e5c42e41654ac8b6d906a57efa4bd3c29f47d",
+                                "module": "staking",
+                                "name": "Staking",
+                                "typeArguments": []
+                            }
+                        }
+                    },
+                    "Address",
+                    {
+                        "MutableReference": {
+                            "Struct": {
+                                "address": "0x2",
+                                "module": "tx_context",
+                                "name": "TxContext",
+                                "typeArguments": []
+                            }
+                        }
+                    }
+                ],
+                "return": []
+            },
+            "collect_service_fee": {
+                "visibility": "Public",
+                "isEntry": true,
+                "typeParameters": [],
+                "parameters": [
+                    {
+                        "Reference": {
+                            "Struct": {
+                                "address": "0xbde4ba4c2e274a60ce15c1cfff9e5c42e41654ac8b6d906a57efa4bd3c29f47d",
+                                "module": "manage",
+                                "name": "AdminCap",
+                                "typeArguments": []
+                            }
+                        }
+                    },
+                    {
+                        "MutableReference": {
+                            "Struct": {
+                                "address": "0xbde4ba4c2e274a60ce15c1cfff9e5c42e41654ac8b6d906a57efa4bd3c29f47d",
+                                "module": "staking",
+                                "name": "Staking",
+                                "typeArguments": []
+                            }
+                        }
+                    },
+                    "Address",
+                    {
+                        "MutableReference": {
+                            "Struct": {
+                                "address": "0x2",
+                                "module": "tx_context",
+                                "name": "TxContext",
+                                "typeArguments": []
+                            }
+                        }
+                    }
+                ],
+                "return": []
+            },
+            "do_stake": {
+                "visibility": "Public",
+                "isEntry": true,
+                "typeParameters": [],
+                "parameters": [
+                    {
+                        "Reference": {
+                            "Struct": {
+                                "address": "0xbde4ba4c2e274a60ce15c1cfff9e5c42e41654ac8b6d906a57efa4bd3c29f47d",
+                                "module": "manage",
+                                "name": "AdminCap",
+                                "typeArguments": []
+                            }
+                        }
+                    },
+                    {
+                        "MutableReference": {
+                            "Struct": {
+                                "address": "0xbde4ba4c2e274a60ce15c1cfff9e5c42e41654ac8b6d906a57efa4bd3c29f47d",
+                                "module": "staking",
+                                "name": "Staking",
+                                "typeArguments": []
+                            }
+                        }
+                    },
+                    {
+                        "MutableReference": {
+                            "Struct": {
+                                "address": "0x3",
+                                "module": "sui_system",
+                                "name": "SuiSystemState",
+                                "typeArguments": []
+                            }
+                        }
+                    },
+                    {
+                        "Vector": "Address"
+                    },
+                    {
+                        "MutableReference": {
+                            "Struct": {
+                                "address": "0x2",
+                                "module": "tx_context",
+                                "name": "TxContext",
+                                "typeArguments": []
+                            }
+                        }
+                    }
+                ],
+                "return": []
+            },
+            "do_unstake_onchain": {
+                "visibility": "Public",
+                "isEntry": true,
+                "typeParameters": [],
+                "parameters": [
+                    {
+                        "Reference": {
+                            "Struct": {
+                                "address": "0xbde4ba4c2e274a60ce15c1cfff9e5c42e41654ac8b6d906a57efa4bd3c29f47d",
+                                "module": "manage",
+                                "name": "AdminCap",
+                                "typeArguments": []
+                            }
+                        }
+                    },
+                    {
+                        "MutableReference": {
+                            "Struct": {
+                                "address": "0xbde4ba4c2e274a60ce15c1cfff9e5c42e41654ac8b6d906a57efa4bd3c29f47d",
+                                "module": "staking",
+                                "name": "Staking",
+                                "typeArguments": []
+                            }
+                        }
+                    },
+                    {
+                        "MutableReference": {
+                            "Struct": {
+                                "address": "0x3",
+                                "module": "sui_system",
+                                "name": "SuiSystemState",
+                                "typeArguments": []
+                            }
+                        }
+                    },
+                    {
+                        "Vector": "Address"
+                    },
+                    {
+                        "MutableReference": {
+                            "Struct": {
+                                "address": "0x2",
+                                "module": "tx_context",
+                                "name": "TxContext",
+                                "typeArguments": []
+                            }
+                        }
+                    }
+                ],
+                "return": []
+            },
+            "initialize": {
+                "visibility": "Public",
+                "isEntry": true,
+                "typeParameters": [],
+                "parameters": [
+                    {
+                        "MutableReference": {
+                            "Struct": {
+                                "address": "0xbde4ba4c2e274a60ce15c1cfff9e5c42e41654ac8b6d906a57efa4bd3c29f47d",
+                                "module": "manage",
+                                "name": "AdminCap",
+                                "typeArguments": []
+                            }
+                        }
+                    },
+                    {
+                        "Struct": {
+                            "address": "0x2",
+                            "module": "coin",
+                            "name": "TreasuryCap",
+                            "typeArguments": [
+                                {
+                                    "Struct": {
+                                        "address": "0xbde4ba4c2e274a60ce15c1cfff9e5c42e41654ac8b6d906a57efa4bd3c29f47d",
+                                        "module": "hasui",
+                                        "name": "HASUI",
+                                        "typeArguments": []
+                                    }
+                                }
+                            ]
+                        }
+                    },
+                    {
+                        "MutableReference": {
+                            "Struct": {
+                                "address": "0x2",
+                                "module": "tx_context",
+                                "name": "TxContext",
+                                "typeArguments": []
+                            }
+                        }
+                    }
+                ],
+                "return": []
+            },
+            "migrate": {
+                "visibility": "Public",
+                "isEntry": true,
+                "typeParameters": [],
+                "parameters": [
+                    {
+                        "Reference": {
+                            "Struct": {
+                                "address": "0xbde4ba4c2e274a60ce15c1cfff9e5c42e41654ac8b6d906a57efa4bd3c29f47d",
+                                "module": "manage",
+                                "name": "AdminCap",
+                                "typeArguments": []
+                            }
+                        }
+                    },
+                    {
+                        "MutableReference": {
+                            "Struct": {
+                                "address": "0xbde4ba4c2e274a60ce15c1cfff9e5c42e41654ac8b6d906a57efa4bd3c29f47d",
+                                "module": "staking",
+                                "name": "Staking",
+                                "typeArguments": []
+                            }
+                        }
+                    }
+                ],
+                "return": []
+            },
+            "set_deposit_fee": {
+                "visibility": "Public",
+                "isEntry": true,
+                "typeParameters": [],
+                "parameters": [
+                    {
+                        "Reference": {
+                            "Struct": {
+                                "address": "0xbde4ba4c2e274a60ce15c1cfff9e5c42e41654ac8b6d906a57efa4bd3c29f47d",
+                                "module": "manage",
+                                "name": "AdminCap",
+                                "typeArguments": []
+                            }
+                        }
+                    },
+                    {
+                        "MutableReference": {
+                            "Struct": {
+                                "address": "0xbde4ba4c2e274a60ce15c1cfff9e5c42e41654ac8b6d906a57efa4bd3c29f47d",
+                                "module": "staking",
+                                "name": "Staking",
+                                "typeArguments": []
+                            }
+                        }
+                    },
+                    "U64"
+                ],
+                "return": []
+            },
+            "set_reward_fee": {
+                "visibility": "Public",
+                "isEntry": true,
+                "typeParameters": [],
+                "parameters": [
+                    {
+                        "Reference": {
+                            "Struct": {
+                                "address": "0xbde4ba4c2e274a60ce15c1cfff9e5c42e41654ac8b6d906a57efa4bd3c29f47d",
+                                "module": "manage",
+                                "name": "AdminCap",
+                                "typeArguments": []
+                            }
+                        }
+                    },
+                    {
+                        "MutableReference": {
+                            "Struct": {
+                                "address": "0xbde4ba4c2e274a60ce15c1cfff9e5c42e41654ac8b6d906a57efa4bd3c29f47d",
+                                "module": "staking",
+                                "name": "Staking",
+                                "typeArguments": []
+                            }
+                        }
+                    },
+                    "U64"
+                ],
+                "return": []
+            },
+            "set_service_fee": {
+                "visibility": "Public",
+                "isEntry": true,
+                "typeParameters": [],
+                "parameters": [
+                    {
+                        "Reference": {
+                            "Struct": {
+                                "address": "0xbde4ba4c2e274a60ce15c1cfff9e5c42e41654ac8b6d906a57efa4bd3c29f47d",
+                                "module": "manage",
+                                "name": "AdminCap",
+                                "typeArguments": []
+                            }
+                        }
+                    },
+                    {
+                        "MutableReference": {
+                            "Struct": {
+                                "address": "0xbde4ba4c2e274a60ce15c1cfff9e5c42e41654ac8b6d906a57efa4bd3c29f47d",
+                                "module": "staking",
+                                "name": "Staking",
+                                "typeArguments": []
+                            }
+                        }
+                    },
+                    "U64"
+                ],
+                "return": []
+            },
+            "set_validator_count": {
+                "visibility": "Public",
+                "isEntry": true,
+                "typeParameters": [],
+                "parameters": [
+                    {
+                        "Reference": {
+                            "Struct": {
+                                "address": "0xbde4ba4c2e274a60ce15c1cfff9e5c42e41654ac8b6d906a57efa4bd3c29f47d",
+                                "module": "manage",
+                                "name": "AdminCap",
+                                "typeArguments": []
+                            }
+                        }
+                    },
+                    {
+                        "MutableReference": {
+                            "Struct": {
+                                "address": "0xbde4ba4c2e274a60ce15c1cfff9e5c42e41654ac8b6d906a57efa4bd3c29f47d",
+                                "module": "staking",
+                                "name": "Staking",
+                                "typeArguments": []
+                            }
+                        }
+                    },
+                    "U64"
+                ],
+                "return": []
+            },
+            "set_validator_reward_fee": {
+                "visibility": "Public",
+                "isEntry": true,
+                "typeParameters": [],
+                "parameters": [
+                    {
+                        "Reference": {
+                            "Struct": {
+                                "address": "0xbde4ba4c2e274a60ce15c1cfff9e5c42e41654ac8b6d906a57efa4bd3c29f47d",
+                                "module": "manage",
+                                "name": "AdminCap",
+                                "typeArguments": []
+                            }
+                        }
+                    },
+                    {
+                        "MutableReference": {
+                            "Struct": {
+                                "address": "0xbde4ba4c2e274a60ce15c1cfff9e5c42e41654ac8b6d906a57efa4bd3c29f47d",
+                                "module": "staking",
+                                "name": "Staking",
+                                "typeArguments": []
+                            }
+                        }
+                    },
+                    "U64"
+                ],
+                "return": []
+            },
+            "set_withdraw_time_limit": {
+                "visibility": "Public",
+                "isEntry": true,
+                "typeParameters": [],
+                "parameters": [
+                    {
+                        "Reference": {
+                            "Struct": {
+                                "address": "0xbde4ba4c2e274a60ce15c1cfff9e5c42e41654ac8b6d906a57efa4bd3c29f47d",
+                                "module": "manage",
+                                "name": "AdminCap",
+                                "typeArguments": []
+                            }
+                        }
+                    },
+                    {
+                        "MutableReference": {
+                            "Struct": {
+                                "address": "0xbde4ba4c2e274a60ce15c1cfff9e5c42e41654ac8b6d906a57efa4bd3c29f47d",
+                                "module": "staking",
+                                "name": "Staking",
+                                "typeArguments": []
+                            }
+                        }
+                    },
+                    "U64"
+                ],
+                "return": []
+            },
+            "toggle_stake": {
+                "visibility": "Public",
+                "isEntry": true,
+                "typeParameters": [],
+                "parameters": [
+                    {
+                        "Reference": {
+                            "Struct": {
+                                "address": "0xbde4ba4c2e274a60ce15c1cfff9e5c42e41654ac8b6d906a57efa4bd3c29f47d",
+                                "module": "manage",
+                                "name": "AdminCap",
+                                "typeArguments": []
+                            }
+                        }
+                    },
+                    {
+                        "MutableReference": {
+                            "Struct": {
+                                "address": "0xbde4ba4c2e274a60ce15c1cfff9e5c42e41654ac8b6d906a57efa4bd3c29f47d",
+                                "module": "staking",
+                                "name": "Staking",
+                                "typeArguments": []
+                            }
+                        }
+                    },
+                    "Bool"
+                ],
+                "return": []
+            },
+            "toggle_unstake": {
+                "visibility": "Public",
+                "isEntry": true,
+                "typeParameters": [],
+                "parameters": [
+                    {
+                        "Reference": {
+                            "Struct": {
+                                "address": "0xbde4ba4c2e274a60ce15c1cfff9e5c42e41654ac8b6d906a57efa4bd3c29f47d",
+                                "module": "manage",
+                                "name": "AdminCap",
+                                "typeArguments": []
+                            }
+                        }
+                    },
+                    {
+                        "MutableReference": {
+                            "Struct": {
+                                "address": "0xbde4ba4c2e274a60ce15c1cfff9e5c42e41654ac8b6d906a57efa4bd3c29f47d",
+                                "module": "staking",
+                                "name": "Staking",
+                                "typeArguments": []
+                            }
+                        }
+                    },
+                    "Bool"
+                ],
+                "return": []
+            },
+            "unstake_pools": {
+                "visibility": "Public",
+                "isEntry": true,
+                "typeParameters": [],
+                "parameters": [
+                    {
+                        "Reference": {
+                            "Struct": {
+                                "address": "0xbde4ba4c2e274a60ce15c1cfff9e5c42e41654ac8b6d906a57efa4bd3c29f47d",
+                                "module": "manage",
+                                "name": "AdminCap",
+                                "typeArguments": []
+                            }
+                        }
+                    },
+                    {
+                        "MutableReference": {
+                            "Struct": {
+                                "address": "0xbde4ba4c2e274a60ce15c1cfff9e5c42e41654ac8b6d906a57efa4bd3c29f47d",
+                                "module": "staking",
+                                "name": "Staking",
+                                "typeArguments": []
+                            }
+                        }
+                    },
+                    {
+                        "MutableReference": {
+                            "Struct": {
+                                "address": "0x3",
+                                "module": "sui_system",
+                                "name": "SuiSystemState",
+                                "typeArguments": []
+                            }
+                        }
+                    },
+                    {
+                        "Vector": "Address"
+                    },
+                    {
+                        "MutableReference": {
+                            "Struct": {
+                                "address": "0x2",
+                                "module": "tx_context",
+                                "name": "TxContext",
+                                "typeArguments": []
+                            }
+                        }
+                    }
+                ],
+                "return": []
+            },
+            "update_total_rewards_onchain": {
+                "visibility": "Public",
+                "isEntry": true,
+                "typeParameters": [],
+                "parameters": [
+                    {
+                        "Reference": {
+                            "Struct": {
+                                "address": "0xbde4ba4c2e274a60ce15c1cfff9e5c42e41654ac8b6d906a57efa4bd3c29f47d",
+                                "module": "manage",
+                                "name": "AdminCap",
+                                "typeArguments": []
+                            }
+                        }
+                    },
+                    {
+                        "MutableReference": {
+                            "Struct": {
+                                "address": "0xbde4ba4c2e274a60ce15c1cfff9e5c42e41654ac8b6d906a57efa4bd3c29f47d",
+                                "module": "staking",
+                                "name": "Staking",
+                                "typeArguments": []
+                            }
+                        }
+                    },
+                    {
+                        "MutableReference": {
+                            "Struct": {
+                                "address": "0x3",
+                                "module": "sui_system",
+                                "name": "SuiSystemState",
+                                "typeArguments": []
+                            }
+                        }
+                    },
+                    {
+                        "MutableReference": {
+                            "Struct": {
+                                "address": "0x2",
+                                "module": "tx_context",
+                                "name": "TxContext",
+                                "typeArguments": []
+                            }
+                        }
+                    }
+                ],
+                "return": []
+            }
+        }
+    },
+    "operate": {
+        "fileFormatVersion": 6,
+        "address": "0xbde4ba4c2e274a60ce15c1cfff9e5c42e41654ac8b6d906a57efa4bd3c29f47d",
+        "name": "operate",
+        "friends": [],
+        "structs": {},
+        "exposedFunctions": {
+            "do_stake": {
+                "visibility": "Public",
+                "isEntry": true,
+                "typeParameters": [],
+                "parameters": [
+                    {
+                        "Reference": {
+                            "Struct": {
+                                "address": "0xbde4ba4c2e274a60ce15c1cfff9e5c42e41654ac8b6d906a57efa4bd3c29f47d",
+                                "module": "manage",
+                                "name": "OperatorCap",
+                                "typeArguments": []
+                            }
+                        }
+                    },
+                    {
+                        "MutableReference": {
+                            "Struct": {
+                                "address": "0xbde4ba4c2e274a60ce15c1cfff9e5c42e41654ac8b6d906a57efa4bd3c29f47d",
+                                "module": "staking",
+                                "name": "Staking",
+                                "typeArguments": []
+                            }
+                        }
+                    },
+                    {
+                        "MutableReference": {
+                            "Struct": {
+                                "address": "0x3",
+                                "module": "sui_system",
+                                "name": "SuiSystemState",
+                                "typeArguments": []
+                            }
+                        }
+                    },
+                    {
+                        "Vector": "Address"
+                    },
+                    {
+                        "MutableReference": {
+                            "Struct": {
+                                "address": "0x2",
+                                "module": "tx_context",
+                                "name": "TxContext",
+                                "typeArguments": []
+                            }
+                        }
+                    }
+                ],
+                "return": []
+            },
+            "do_unstake_onchain": {
+                "visibility": "Public",
+                "isEntry": true,
+                "typeParameters": [],
+                "parameters": [
+                    {
+                        "Reference": {
+                            "Struct": {
+                                "address": "0xbde4ba4c2e274a60ce15c1cfff9e5c42e41654ac8b6d906a57efa4bd3c29f47d",
+                                "module": "manage",
+                                "name": "OperatorCap",
+                                "typeArguments": []
+                            }
+                        }
+                    },
+                    {
+                        "MutableReference": {
+                            "Struct": {
+                                "address": "0xbde4ba4c2e274a60ce15c1cfff9e5c42e41654ac8b6d906a57efa4bd3c29f47d",
+                                "module": "staking",
+                                "name": "Staking",
+                                "typeArguments": []
+                            }
+                        }
+                    },
+                    {
+                        "MutableReference": {
+                            "Struct": {
+                                "address": "0x3",
+                                "module": "sui_system",
+                                "name": "SuiSystemState",
+                                "typeArguments": []
+                            }
+                        }
+                    },
+                    {
+                        "Vector": "Address"
+                    },
+                    {
+                        "MutableReference": {
+                            "Struct": {
+                                "address": "0x2",
+                                "module": "tx_context",
+                                "name": "TxContext",
+                                "typeArguments": []
+                            }
+                        }
+                    }
+                ],
+                "return": []
+            },
+            "unstake_pools": {
+                "visibility": "Public",
+                "isEntry": true,
+                "typeParameters": [],
+                "parameters": [
+                    {
+                        "Reference": {
+                            "Struct": {
+                                "address": "0xbde4ba4c2e274a60ce15c1cfff9e5c42e41654ac8b6d906a57efa4bd3c29f47d",
+                                "module": "manage",
+                                "name": "OperatorCap",
+                                "typeArguments": []
+                            }
+                        }
+                    },
+                    {
+                        "MutableReference": {
+                            "Struct": {
+                                "address": "0xbde4ba4c2e274a60ce15c1cfff9e5c42e41654ac8b6d906a57efa4bd3c29f47d",
+                                "module": "staking",
+                                "name": "Staking",
+                                "typeArguments": []
+                            }
+                        }
+                    },
+                    {
+                        "MutableReference": {
+                            "Struct": {
+                                "address": "0x3",
+                                "module": "sui_system",
+                                "name": "SuiSystemState",
+                                "typeArguments": []
+                            }
+                        }
+                    },
+                    {
+                        "Vector": "Address"
+                    },
+                    {
+                        "MutableReference": {
+                            "Struct": {
+                                "address": "0x2",
+                                "module": "tx_context",
+                                "name": "TxContext",
+                                "typeArguments": []
+                            }
+                        }
+                    }
+                ],
+                "return": []
+            },
+            "update_total_rewards_onchain": {
+                "visibility": "Public",
+                "isEntry": true,
+                "typeParameters": [],
+                "parameters": [
+                    {
+                        "Reference": {
+                            "Struct": {
+                                "address": "0xbde4ba4c2e274a60ce15c1cfff9e5c42e41654ac8b6d906a57efa4bd3c29f47d",
+                                "module": "manage",
+                                "name": "OperatorCap",
+                                "typeArguments": []
+                            }
+                        }
+                    },
+                    {
+                        "MutableReference": {
+                            "Struct": {
+                                "address": "0xbde4ba4c2e274a60ce15c1cfff9e5c42e41654ac8b6d906a57efa4bd3c29f47d",
+                                "module": "staking",
+                                "name": "Staking",
+                                "typeArguments": []
+                            }
+                        }
+                    },
+                    {
+                        "MutableReference": {
+                            "Struct": {
+                                "address": "0x3",
+                                "module": "sui_system",
+                                "name": "SuiSystemState",
+                                "typeArguments": []
+                            }
+                        }
+                    },
+                    {
+                        "MutableReference": {
+                            "Struct": {
+                                "address": "0x2",
+                                "module": "tx_context",
+                                "name": "TxContext",
+                                "typeArguments": []
+                            }
+                        }
+                    }
+                ],
+                "return": []
+            }
+        }
+    },
+    "staking": {
+        "fileFormatVersion": 6,
+        "address": "0xbde4ba4c2e274a60ce15c1cfff9e5c42e41654ac8b6d906a57efa4bd3c29f47d",
+        "name": "staking",
+        "friends": [
+            {
+                "address": "0xbde4ba4c2e274a60ce15c1cfff9e5c42e41654ac8b6d906a57efa4bd3c29f47d",
+                "name": "manage"
+            },
+            {
+                "address": "0xbde4ba4c2e274a60ce15c1cfff9e5c42e41654ac8b6d906a57efa4bd3c29f47d",
+                "name": "operate"
+            }
+        ],
+        "structs": {
+            "EpochClaim": {
+                "abilities": {
+                    "abilities": [
+                        "Store"
+                    ]
+                },
+                "typeParameters": [],
+                "fields": [
+                    {
+                        "name": "epoch",
+                        "type": "U64"
+                    },
+                    {
+                        "name": "amount",
+                        "type": "U64"
+                    },
+                    {
+                        "name": "approved",
+                        "type": "Bool"
+                    }
+                ]
+            },
+            "ExchangeRateUpdated": {
+                "abilities": {
+                    "abilities": [
+                        "Copy",
+                        "Drop"
+                    ]
+                },
+                "typeParameters": [],
+                "fields": [
+                    {
+                        "name": "old",
+                        "type": "U64"
+                    },
+                    {
+                        "name": "new",
+                        "type": "U64"
+                    }
+                ]
+            },
+            "PoolInfo": {
+                "abilities": {
+                    "abilities": [
+                        "Store"
+                    ]
+                },
+                "typeParameters": [],
+                "fields": [
+                    {
+                        "name": "staked_suis",
+                        "type": {
+                            "Struct": {
+                                "address": "0xbde4ba4c2e274a60ce15c1cfff9e5c42e41654ac8b6d906a57efa4bd3c29f47d",
+                                "module": "table_queue",
+                                "name": "TableQueue",
+                                "typeArguments": [
+                                    {
+                                        "Struct": {
+                                            "address": "0x3",
+                                            "module": "staking_pool",
+                                            "name": "StakedSui",
+                                            "typeArguments": []
+                                        }
+                                    }
+                                ]
+                            }
+                        }
+                    },
+                    {
+                        "name": "total_staked",
+                        "type": "U64"
+                    },
+                    {
+                        "name": "rewards",
+                        "type": "U64"
+                    }
+                ]
+            },
+            "PoolSystemUnstaked": {
+                "abilities": {
+                    "abilities": [
+                        "Copy",
+                        "Drop"
+                    ]
+                },
+                "typeParameters": [],
+                "fields": [
+                    {
+                        "name": "validator",
+                        "type": "Address"
+                    },
+                    {
+                        "name": "epoch",
+                        "type": "U64"
+                    },
+                    {
+                        "name": "sui_amount",
+                        "type": "U64"
+                    },
+                    {
+                        "name": "unstaked_all",
+                        "type": "Bool"
+                    }
+                ]
+            },
+            "RewardsFeeCollected": {
+                "abilities": {
+                    "abilities": [
+                        "Copy",
+                        "Drop"
+                    ]
+                },
+                "typeParameters": [],
+                "fields": [
+                    {
+                        "name": "owner",
+                        "type": "Address"
+                    },
+                    {
+                        "name": "sui_amount",
+                        "type": "U64"
+                    }
+                ]
+            },
+            "ServiceFeeCollected": {
+                "abilities": {
+                    "abilities": [
+                        "Copy",
+                        "Drop"
+                    ]
+                },
+                "typeParameters": [],
+                "fields": [
+                    {
+                        "name": "owner",
+                        "type": "Address"
+                    },
+                    {
+                        "name": "sui_amount",
+                        "type": "U64"
+                    }
+                ]
+            },
+            "Staking": {
+                "abilities": {
+                    "abilities": [
+                        "Key"
+                    ]
+                },
+                "typeParameters": [],
+                "fields": [
+                    {
+                        "name": "id",
+                        "type": {
+                            "Struct": {
+                                "address": "0x2",
+                                "module": "object",
+                                "name": "UID",
+                                "typeArguments": []
+                            }
+                        }
+                    },
+                    {
+                        "name": "version",
+                        "type": "U64"
+                    },
+                    {
+                        "name": "config",
+                        "type": {
+                            "Struct": {
+                                "address": "0xbde4ba4c2e274a60ce15c1cfff9e5c42e41654ac8b6d906a57efa4bd3c29f47d",
+                                "module": "config",
+                                "name": "StakingConfig",
+                                "typeArguments": []
+                            }
+                        }
+                    },
+                    {
+                        "name": "sui_vault",
+                        "type": {
+                            "Struct": {
+                                "address": "0xbde4ba4c2e274a60ce15c1cfff9e5c42e41654ac8b6d906a57efa4bd3c29f47d",
+                                "module": "vault",
+                                "name": "Vault",
+                                "typeArguments": [
+                                    {
+                                        "Struct": {
+                                            "address": "0x2",
+                                            "module": "sui",
+                                            "name": "SUI",
+                                            "typeArguments": []
+                                        }
+                                    }
+                                ]
+                            }
+                        }
+                    },
+                    {
+                        "name": "claim_sui_vault",
+                        "type": {
+                            "Struct": {
+                                "address": "0xbde4ba4c2e274a60ce15c1cfff9e5c42e41654ac8b6d906a57efa4bd3c29f47d",
+                                "module": "vault",
+                                "name": "Vault",
+                                "typeArguments": [
+                                    {
+                                        "Struct": {
+                                            "address": "0x2",
+                                            "module": "sui",
+                                            "name": "SUI",
+                                            "typeArguments": []
+                                        }
+                                    }
+                                ]
+                            }
+                        }
+                    },
+                    {
+                        "name": "protocol_sui_vault",
+                        "type": {
+                            "Struct": {
+                                "address": "0xbde4ba4c2e274a60ce15c1cfff9e5c42e41654ac8b6d906a57efa4bd3c29f47d",
+                                "module": "vault",
+                                "name": "Vault",
+                                "typeArguments": [
+                                    {
+                                        "Struct": {
+                                            "address": "0x2",
+                                            "module": "sui",
+                                            "name": "SUI",
+                                            "typeArguments": []
+                                        }
+                                    }
+                                ]
+                            }
+                        }
+                    },
+                    {
+                        "name": "service_sui_vault",
+                        "type": {
+                            "Struct": {
+                                "address": "0xbde4ba4c2e274a60ce15c1cfff9e5c42e41654ac8b6d906a57efa4bd3c29f47d",
+                                "module": "vault",
+                                "name": "Vault",
+                                "typeArguments": [
+                                    {
+                                        "Struct": {
+                                            "address": "0x2",
+                                            "module": "sui",
+                                            "name": "SUI",
+                                            "typeArguments": []
+                                        }
+                                    }
+                                ]
+                            }
+                        }
+                    },
+                    {
+                        "name": "stsui_treasury_cap",
+                        "type": {
+                            "Struct": {
+                                "address": "0x2",
+                                "module": "coin",
+                                "name": "TreasuryCap",
+                                "typeArguments": [
+                                    {
+                                        "Struct": {
+                                            "address": "0xbde4ba4c2e274a60ce15c1cfff9e5c42e41654ac8b6d906a57efa4bd3c29f47d",
+                                            "module": "hasui",
+                                            "name": "HASUI",
+                                            "typeArguments": []
+                                        }
+                                    }
+                                ]
+                            }
+                        }
+                    },
+                    {
+                        "name": "unstake_epochs",
+                        "type": {
+                            "Vector": {
+                                "Struct": {
+                                    "address": "0xbde4ba4c2e274a60ce15c1cfff9e5c42e41654ac8b6d906a57efa4bd3c29f47d",
+                                    "module": "staking",
+                                    "name": "EpochClaim",
+                                    "typeArguments": []
+                                }
+                            }
+                        }
+                    },
+                    {
+                        "name": "total_staked",
+                        "type": "U64"
+                    },
+                    {
+                        "name": "total_unstaked",
+                        "type": "U64"
+                    },
+                    {
+                        "name": "total_rewards",
+                        "type": "U64"
+                    },
+                    {
+                        "name": "total_protocol_fees",
+                        "type": "U64"
+                    },
+                    {
+                        "name": "uncollected_protocol_fees",
+                        "type": "U64"
+                    },
+                    {
+                        "name": "stsui_supply",
+                        "type": "U64"
+                    },
+                    {
+                        "name": "unclaimed_sui_amount",
+                        "type": "U64"
+                    },
+                    {
+                        "name": "pause_stake",
+                        "type": "Bool"
+                    },
+                    {
+                        "name": "pause_unstake",
+                        "type": "Bool"
+                    },
+                    {
+                        "name": "validators",
+                        "type": {
+                            "Vector": "Address"
+                        }
+                    },
+                    {
+                        "name": "pools",
+                        "type": {
+                            "Struct": {
+                                "address": "0x2",
+                                "module": "table",
+                                "name": "Table",
+                                "typeArguments": [
+                                    "Address",
+                                    {
+                                        "Struct": {
+                                            "address": "0xbde4ba4c2e274a60ce15c1cfff9e5c42e41654ac8b6d906a57efa4bd3c29f47d",
+                                            "module": "staking",
+                                            "name": "PoolInfo",
+                                            "typeArguments": []
+                                        }
+                                    }
+                                ]
+                            }
+                        }
+                    },
+                    {
+                        "name": "user_selected_validator_bals",
+                        "type": {
+                            "Struct": {
+                                "address": "0x2",
+                                "module": "vec_map",
+                                "name": "VecMap",
+                                "typeArguments": [
+                                    "Address",
+                                    {
+                                        "Struct": {
+                                            "address": "0x2",
+                                            "module": "balance",
+                                            "name": "Balance",
+                                            "typeArguments": [
+                                                {
+                                                    "Struct": {
+                                                        "address": "0x2",
+                                                        "module": "sui",
+                                                        "name": "SUI",
+                                                        "typeArguments": []
+                                                    }
+                                                }
+                                            ]
+                                        }
+                                    }
+                                ]
+                            }
+                        }
+                    },
+                    {
+                        "name": "rewards_last_updated_epoch",
+                        "type": "U64"
+                    }
+                ]
+            },
+            "SuiRewardsUpdated": {
+                "abilities": {
+                    "abilities": [
+                        "Copy",
+                        "Drop"
+                    ]
+                },
+                "typeParameters": [],
+                "fields": [
+                    {
+                        "name": "old",
+                        "type": "U64"
+                    },
+                    {
+                        "name": "new",
+                        "type": "U64"
+                    },
+                    {
+                        "name": "fee",
+                        "type": "U64"
+                    }
+                ]
+            },
+            "SystemStaked": {
+                "abilities": {
+                    "abilities": [
+                        "Copy",
+                        "Drop"
+                    ]
+                },
+                "typeParameters": [],
+                "fields": [
+                    {
+                        "name": "staked_sui_id",
+                        "type": {
+                            "Struct": {
+                                "address": "0x2",
+                                "module": "object",
+                                "name": "ID",
+                                "typeArguments": []
+                            }
+                        }
+                    },
+                    {
+                        "name": "epoch",
+                        "type": "U64"
+                    },
+                    {
+                        "name": "sui_amount",
+                        "type": "U64"
+                    },
+                    {
+                        "name": "validator",
+                        "type": "Address"
+                    }
+                ]
+            },
+            "SystemUnstaked": {
+                "abilities": {
+                    "abilities": [
+                        "Copy",
+                        "Drop"
+                    ]
+                },
+                "typeParameters": [],
+                "fields": [
+                    {
+                        "name": "epoch",
+                        "type": "U64"
+                    },
+                    {
+                        "name": "sui_amount",
+                        "type": "U64"
+                    },
+                    {
+                        "name": "approved_amount",
+                        "type": "U64"
+                    }
+                ]
+            },
+            "UnstakeTicket": {
+                "abilities": {
+                    "abilities": [
+                        "Key"
+                    ]
+                },
+                "typeParameters": [],
+                "fields": [
+                    {
+                        "name": "id",
+                        "type": {
+                            "Struct": {
+                                "address": "0x2",
+                                "module": "object",
+                                "name": "UID",
+                                "typeArguments": []
+                            }
+                        }
+                    },
+                    {
+                        "name": "unstake_timestamp_ms",
+                        "type": "U64"
+                    },
+                    {
+                        "name": "st_amount",
+                        "type": "U64"
+                    },
+                    {
+                        "name": "sui_amount",
+                        "type": "U64"
+                    },
+                    {
+                        "name": "claim_epoch",
+                        "type": "U64"
+                    },
+                    {
+                        "name": "claim_timestamp_ms",
+                        "type": "U64"
+                    }
+                ]
+            },
+            "UserClaimed": {
+                "abilities": {
+                    "abilities": [
+                        "Copy",
+                        "Drop"
+                    ]
+                },
+                "typeParameters": [],
+                "fields": [
+                    {
+                        "name": "id",
+                        "type": {
+                            "Struct": {
+                                "address": "0x2",
+                                "module": "object",
+                                "name": "ID",
+                                "typeArguments": []
+                            }
+                        }
+                    },
+                    {
+                        "name": "owner",
+                        "type": "Address"
+                    },
+                    {
+                        "name": "sui_amount",
+                        "type": "U64"
+                    }
+                ]
+            },
+            "UserInstantUnstaked": {
+                "abilities": {
+                    "abilities": [
+                        "Copy",
+                        "Drop"
+                    ]
+                },
+                "typeParameters": [],
+                "fields": [
+                    {
+                        "name": "owner",
+                        "type": "Address"
+                    },
+                    {
+                        "name": "sui_amount",
+                        "type": "U64"
+                    },
+                    {
+                        "name": "st_amount",
+                        "type": "U64"
+                    }
+                ]
+            },
+            "UserNormalUnstaked": {
+                "abilities": {
+                    "abilities": [
+                        "Copy",
+                        "Drop"
+                    ]
+                },
+                "typeParameters": [],
+                "fields": [
+                    {
+                        "name": "owner",
+                        "type": "Address"
+                    },
+                    {
+                        "name": "epoch",
+                        "type": "U64"
+                    },
+                    {
+                        "name": "epoch_timestamp_ms",
+                        "type": "U64"
+                    },
+                    {
+                        "name": "unstake_timestamp_ms",
+                        "type": "U64"
+                    },
+                    {
+                        "name": "sui_amount",
+                        "type": "U64"
+                    },
+                    {
+                        "name": "st_amount",
+                        "type": "U64"
+                    }
+                ]
+            },
+            "UserSelectedStaking": {
+                "abilities": {
+                    "abilities": [
+                        "Drop"
+                    ]
+                },
+                "typeParameters": [],
+                "fields": [
+                    {
+                        "name": "validator",
+                        "type": "Address"
+                    },
+                    {
+                        "name": "amount",
+                        "type": "U64"
+                    }
+                ]
+            },
+            "UserStaked": {
+                "abilities": {
+                    "abilities": [
+                        "Copy",
+                        "Drop"
+                    ]
+                },
+                "typeParameters": [],
+                "fields": [
+                    {
+                        "name": "owner",
+                        "type": "Address"
+                    },
+                    {
+                        "name": "sui_amount",
+                        "type": "U64"
+                    },
+                    {
+                        "name": "st_amount",
+                        "type": "U64"
+                    },
+                    {
+                        "name": "validator",
+                        "type": "Address"
+                    }
+                ]
+            },
+            "ValidatorStakedInfo": {
+                "abilities": {
+                    "abilities": [
+                        "Store"
+                    ]
+                },
+                "typeParameters": [],
+                "fields": [
+                    {
+                        "name": "validator",
+                        "type": "Address"
+                    },
+                    {
+                        "name": "total_staked",
+                        "type": "U64"
+                    },
+                    {
+                        "name": "rewards",
+                        "type": "U64"
+                    },
+                    {
+                        "name": "staked_sui_count",
+                        "type": "U64"
+                    }
+                ]
+            },
+            "VersionUpdated": {
+                "abilities": {
+                    "abilities": [
+                        "Copy",
+                        "Drop"
+                    ]
+                },
+                "typeParameters": [],
+                "fields": [
+                    {
+                        "name": "old",
+                        "type": "U64"
+                    },
+                    {
+                        "name": "new",
+                        "type": "U64"
+                    }
+                ]
+            }
+        },
+        "exposedFunctions": {
+            "assert_version": {
+                "visibility": "Public",
+                "isEntry": false,
+                "typeParameters": [],
+                "parameters": [
+                    {
+                        "Reference": {
+                            "Struct": {
+                                "address": "0xbde4ba4c2e274a60ce15c1cfff9e5c42e41654ac8b6d906a57efa4bd3c29f47d",
+                                "module": "staking",
+                                "name": "Staking",
+                                "typeArguments": []
+                            }
+                        }
+                    }
+                ],
+                "return": []
+            },
+            "claim": {
+                "visibility": "Public",
+                "isEntry": false,
+                "typeParameters": [],
+                "parameters": [
+                    {
+                        "MutableReference": {
+                            "Struct": {
+                                "address": "0xbde4ba4c2e274a60ce15c1cfff9e5c42e41654ac8b6d906a57efa4bd3c29f47d",
+                                "module": "staking",
+                                "name": "Staking",
+                                "typeArguments": []
+                            }
+                        }
+                    },
+                    {
+                        "Struct": {
+                            "address": "0xbde4ba4c2e274a60ce15c1cfff9e5c42e41654ac8b6d906a57efa4bd3c29f47d",
+                            "module": "staking",
+                            "name": "UnstakeTicket",
+                            "typeArguments": []
+                        }
+                    },
+                    {
+                        "MutableReference": {
+                            "Struct": {
+                                "address": "0x2",
+                                "module": "tx_context",
+                                "name": "TxContext",
+                                "typeArguments": []
+                            }
+                        }
+                    }
+                ],
+                "return": []
+            },
+            "claim_coin": {
+                "visibility": "Public",
+                "isEntry": false,
+                "typeParameters": [],
+                "parameters": [
+                    {
+                        "MutableReference": {
+                            "Struct": {
+                                "address": "0xbde4ba4c2e274a60ce15c1cfff9e5c42e41654ac8b6d906a57efa4bd3c29f47d",
+                                "module": "staking",
+                                "name": "Staking",
+                                "typeArguments": []
+                            }
+                        }
+                    },
+                    {
+                        "Struct": {
+                            "address": "0xbde4ba4c2e274a60ce15c1cfff9e5c42e41654ac8b6d906a57efa4bd3c29f47d",
+                            "module": "staking",
+                            "name": "UnstakeTicket",
+                            "typeArguments": []
+                        }
+                    },
+                    {
+                        "MutableReference": {
+                            "Struct": {
+                                "address": "0x2",
+                                "module": "tx_context",
+                                "name": "TxContext",
+                                "typeArguments": []
+                            }
+                        }
+                    }
+                ],
+                "return": [
+                    {
+                        "Struct": {
+                            "address": "0x2",
+                            "module": "coin",
+                            "name": "Coin",
+                            "typeArguments": [
+                                {
+                                    "Struct": {
+                                        "address": "0x2",
+                                        "module": "sui",
+                                        "name": "SUI",
+                                        "typeArguments": []
+                                    }
+                                }
+                            ]
+                        }
+                    }
+                ]
+            },
+            "collect_rewards_fee": {
+                "visibility": "Friend",
+                "isEntry": false,
+                "typeParameters": [],
+                "parameters": [
+                    {
+                        "MutableReference": {
+                            "Struct": {
+                                "address": "0xbde4ba4c2e274a60ce15c1cfff9e5c42e41654ac8b6d906a57efa4bd3c29f47d",
+                                "module": "staking",
+                                "name": "Staking",
+                                "typeArguments": []
+                            }
+                        }
+                    },
+                    "Address",
+                    {
+                        "MutableReference": {
+                            "Struct": {
+                                "address": "0x2",
+                                "module": "tx_context",
+                                "name": "TxContext",
+                                "typeArguments": []
+                            }
+                        }
+                    }
+                ],
+                "return": []
+            },
+            "collect_service_fee": {
+                "visibility": "Friend",
+                "isEntry": false,
+                "typeParameters": [],
+                "parameters": [
+                    {
+                        "MutableReference": {
+                            "Struct": {
+                                "address": "0xbde4ba4c2e274a60ce15c1cfff9e5c42e41654ac8b6d906a57efa4bd3c29f47d",
+                                "module": "staking",
+                                "name": "Staking",
+                                "typeArguments": []
+                            }
+                        }
+                    },
+                    "Address",
+                    {
+                        "MutableReference": {
+                            "Struct": {
+                                "address": "0x2",
+                                "module": "tx_context",
+                                "name": "TxContext",
+                                "typeArguments": []
+                            }
+                        }
+                    }
+                ],
+                "return": []
+            },
+            "do_before_unstake": {
+                "visibility": "Friend",
+                "isEntry": false,
+                "typeParameters": [],
+                "parameters": [
+                    {
+                        "MutableReference": {
+                            "Struct": {
+                                "address": "0xbde4ba4c2e274a60ce15c1cfff9e5c42e41654ac8b6d906a57efa4bd3c29f47d",
+                                "module": "staking",
+                                "name": "Staking",
+                                "typeArguments": []
+                            }
+                        }
+                    },
+                    "Bool",
+                    {
+                        "MutableReference": {
+                            "Struct": {
+                                "address": "0x2",
+                                "module": "tx_context",
+                                "name": "TxContext",
+                                "typeArguments": []
+                            }
+                        }
+                    }
+                ],
+                "return": [
+                    "U64",
+                    "U64",
+                    "U64"
+                ]
+            },
+            "do_stake": {
+                "visibility": "Friend",
+                "isEntry": false,
+                "typeParameters": [],
+                "parameters": [
+                    {
+                        "MutableReference": {
+                            "Struct": {
+                                "address": "0xbde4ba4c2e274a60ce15c1cfff9e5c42e41654ac8b6d906a57efa4bd3c29f47d",
+                                "module": "staking",
+                                "name": "Staking",
+                                "typeArguments": []
+                            }
+                        }
+                    },
+                    {
+                        "MutableReference": {
+                            "Struct": {
+                                "address": "0x3",
+                                "module": "sui_system",
+                                "name": "SuiSystemState",
+                                "typeArguments": []
+                            }
+                        }
+                    },
+                    {
+                        "Vector": "Address"
+                    },
+                    {
+                        "MutableReference": {
+                            "Struct": {
+                                "address": "0x2",
+                                "module": "tx_context",
+                                "name": "TxContext",
+                                "typeArguments": []
+                            }
+                        }
+                    }
+                ],
+                "return": []
+            },
+            "do_unstake_onchain_by_validator": {
+                "visibility": "Friend",
+                "isEntry": false,
+                "typeParameters": [],
+                "parameters": [
+                    {
+                        "MutableReference": {
+                            "Struct": {
+                                "address": "0xbde4ba4c2e274a60ce15c1cfff9e5c42e41654ac8b6d906a57efa4bd3c29f47d",
+                                "module": "staking",
+                                "name": "Staking",
+                                "typeArguments": []
+                            }
+                        }
+                    },
+                    {
+                        "MutableReference": {
+                            "Struct": {
+                                "address": "0x3",
+                                "module": "sui_system",
+                                "name": "SuiSystemState",
+                                "typeArguments": []
+                            }
+                        }
+                    },
+                    {
+                        "Vector": "Address"
+                    },
+                    {
+                        "MutableReference": {
+                            "Struct": {
+                                "address": "0x2",
+                                "module": "tx_context",
+                                "name": "TxContext",
+                                "typeArguments": []
+                            }
+                        }
+                    }
+                ],
+                "return": []
+            },
+            "get_cached_validator_number": {
+                "visibility": "Public",
+                "isEntry": false,
+                "typeParameters": [],
+                "parameters": [
+                    {
+                        "Reference": {
+                            "Struct": {
+                                "address": "0xbde4ba4c2e274a60ce15c1cfff9e5c42e41654ac8b6d906a57efa4bd3c29f47d",
+                                "module": "staking",
+                                "name": "Staking",
+                                "typeArguments": []
+                            }
+                        }
+                    }
+                ],
+                "return": [
+                    "U64"
+                ]
+            },
+            "get_config_mut": {
+                "visibility": "Public",
+                "isEntry": false,
+                "typeParameters": [],
+                "parameters": [
+                    {
+                        "MutableReference": {
+                            "Struct": {
+                                "address": "0xbde4ba4c2e274a60ce15c1cfff9e5c42e41654ac8b6d906a57efa4bd3c29f47d",
+                                "module": "staking",
+                                "name": "Staking",
+                                "typeArguments": []
+                            }
+                        }
+                    }
+                ],
+                "return": [
+                    {
+                        "MutableReference": {
+                            "Struct": {
+                                "address": "0xbde4ba4c2e274a60ce15c1cfff9e5c42e41654ac8b6d906a57efa4bd3c29f47d",
+                                "module": "config",
+                                "name": "StakingConfig",
+                                "typeArguments": []
+                            }
+                        }
+                    }
+                ]
+            },
+            "get_exchange_rate": {
+                "visibility": "Public",
+                "isEntry": false,
+                "typeParameters": [],
+                "parameters": [
+                    {
+                        "Reference": {
+                            "Struct": {
+                                "address": "0xbde4ba4c2e274a60ce15c1cfff9e5c42e41654ac8b6d906a57efa4bd3c29f47d",
+                                "module": "staking",
+                                "name": "Staking",
+                                "typeArguments": []
+                            }
+                        }
+                    }
+                ],
+                "return": [
+                    "U64"
+                ]
+            },
+            "get_protocol_sui_vault_amount": {
+                "visibility": "Public",
+                "isEntry": false,
+                "typeParameters": [],
+                "parameters": [
+                    {
+                        "Reference": {
+                            "Struct": {
+                                "address": "0xbde4ba4c2e274a60ce15c1cfff9e5c42e41654ac8b6d906a57efa4bd3c29f47d",
+                                "module": "staking",
+                                "name": "Staking",
+                                "typeArguments": []
+                            }
+                        }
+                    }
+                ],
+                "return": [
+                    "U64"
+                ]
+            },
+            "get_service_sui_vault_amount": {
+                "visibility": "Public",
+                "isEntry": false,
+                "typeParameters": [],
+                "parameters": [
+                    {
+                        "Reference": {
+                            "Struct": {
+                                "address": "0xbde4ba4c2e274a60ce15c1cfff9e5c42e41654ac8b6d906a57efa4bd3c29f47d",
+                                "module": "staking",
+                                "name": "Staking",
+                                "typeArguments": []
+                            }
+                        }
+                    }
+                ],
+                "return": [
+                    "U64"
+                ]
+            },
+            "get_staked_validator": {
+                "visibility": "Public",
+                "isEntry": false,
+                "typeParameters": [],
+                "parameters": [
+                    {
+                        "Reference": {
+                            "Struct": {
+                                "address": "0xbde4ba4c2e274a60ce15c1cfff9e5c42e41654ac8b6d906a57efa4bd3c29f47d",
+                                "module": "staking",
+                                "name": "Staking",
+                                "typeArguments": []
+                            }
+                        }
+                    },
+                    "Address"
+                ],
+                "return": [
+                    "Bool"
+                ]
+            },
+            "get_staked_validators": {
+                "visibility": "Public",
+                "isEntry": false,
+                "typeParameters": [],
+                "parameters": [
+                    {
+                        "Reference": {
+                            "Struct": {
+                                "address": "0xbde4ba4c2e274a60ce15c1cfff9e5c42e41654ac8b6d906a57efa4bd3c29f47d",
+                                "module": "staking",
+                                "name": "Staking",
+                                "typeArguments": []
+                            }
+                        }
+                    }
+                ],
+                "return": [
+                    {
+                        "Vector": "Address"
+                    }
+                ]
+            },
+            "get_stsui_by_sui": {
+                "visibility": "Public",
+                "isEntry": false,
+                "typeParameters": [],
+                "parameters": [
+                    {
+                        "Reference": {
+                            "Struct": {
+                                "address": "0xbde4ba4c2e274a60ce15c1cfff9e5c42e41654ac8b6d906a57efa4bd3c29f47d",
+                                "module": "staking",
+                                "name": "Staking",
+                                "typeArguments": []
+                            }
+                        }
+                    },
+                    "U64"
+                ],
+                "return": [
+                    "U64"
+                ]
+            },
+            "get_stsui_supply": {
+                "visibility": "Public",
+                "isEntry": false,
+                "typeParameters": [],
+                "parameters": [
+                    {
+                        "Reference": {
+                            "Struct": {
+                                "address": "0xbde4ba4c2e274a60ce15c1cfff9e5c42e41654ac8b6d906a57efa4bd3c29f47d",
+                                "module": "staking",
+                                "name": "Staking",
+                                "typeArguments": []
+                            }
+                        }
+                    }
+                ],
+                "return": [
+                    "U64"
+                ]
+            },
+            "get_sui_by_stsui": {
+                "visibility": "Public",
+                "isEntry": false,
+                "typeParameters": [],
+                "parameters": [
+                    {
+                        "Reference": {
+                            "Struct": {
+                                "address": "0xbde4ba4c2e274a60ce15c1cfff9e5c42e41654ac8b6d906a57efa4bd3c29f47d",
+                                "module": "staking",
+                                "name": "Staking",
+                                "typeArguments": []
+                            }
+                        }
+                    },
+                    "U64"
+                ],
+                "return": [
+                    "U64"
+                ]
+            },
+            "get_sui_vault_amount": {
+                "visibility": "Public",
+                "isEntry": false,
+                "typeParameters": [],
+                "parameters": [
+                    {
+                        "Reference": {
+                            "Struct": {
+                                "address": "0xbde4ba4c2e274a60ce15c1cfff9e5c42e41654ac8b6d906a57efa4bd3c29f47d",
+                                "module": "staking",
+                                "name": "Staking",
+                                "typeArguments": []
+                            }
+                        }
+                    }
+                ],
+                "return": [
+                    "U64"
+                ]
+            },
+            "get_total_protocol_fees": {
+                "visibility": "Public",
+                "isEntry": false,
+                "typeParameters": [],
+                "parameters": [
+                    {
+                        "Reference": {
+                            "Struct": {
+                                "address": "0xbde4ba4c2e274a60ce15c1cfff9e5c42e41654ac8b6d906a57efa4bd3c29f47d",
+                                "module": "staking",
+                                "name": "Staking",
+                                "typeArguments": []
+                            }
+                        }
+                    }
+                ],
+                "return": [
+                    "U64"
+                ]
+            },
+            "get_total_rewards": {
+                "visibility": "Public",
+                "isEntry": false,
+                "typeParameters": [],
+                "parameters": [
+                    {
+                        "Reference": {
+                            "Struct": {
+                                "address": "0xbde4ba4c2e274a60ce15c1cfff9e5c42e41654ac8b6d906a57efa4bd3c29f47d",
+                                "module": "staking",
+                                "name": "Staking",
+                                "typeArguments": []
+                            }
+                        }
+                    }
+                ],
+                "return": [
+                    "U64"
+                ]
+            },
+            "get_total_staked": {
+                "visibility": "Public",
+                "isEntry": false,
+                "typeParameters": [],
+                "parameters": [
+                    {
+                        "Reference": {
+                            "Struct": {
+                                "address": "0xbde4ba4c2e274a60ce15c1cfff9e5c42e41654ac8b6d906a57efa4bd3c29f47d",
+                                "module": "staking",
+                                "name": "Staking",
+                                "typeArguments": []
+                            }
+                        }
+                    }
+                ],
+                "return": [
+                    "U64"
+                ]
+            },
+            "get_total_sui": {
+                "visibility": "Public",
+                "isEntry": false,
+                "typeParameters": [],
+                "parameters": [
+                    {
+                        "Reference": {
+                            "Struct": {
+                                "address": "0xbde4ba4c2e274a60ce15c1cfff9e5c42e41654ac8b6d906a57efa4bd3c29f47d",
+                                "module": "staking",
+                                "name": "Staking",
+                                "typeArguments": []
+                            }
+                        }
+                    }
+                ],
+                "return": [
+                    "U64"
+                ]
+            },
+            "get_total_sui_cap": {
+                "visibility": "Public",
+                "isEntry": false,
+                "typeParameters": [],
+                "parameters": [
+                    {
+                        "Reference": {
+                            "Struct": {
+                                "address": "0xbde4ba4c2e274a60ce15c1cfff9e5c42e41654ac8b6d906a57efa4bd3c29f47d",
+                                "module": "staking",
+                                "name": "Staking",
+                                "typeArguments": []
+                            }
+                        }
+                    }
+                ],
+                "return": [
+                    "U64"
+                ]
+            },
+            "get_total_unstaked": {
+                "visibility": "Public",
+                "isEntry": false,
+                "typeParameters": [],
+                "parameters": [
+                    {
+                        "Reference": {
+                            "Struct": {
+                                "address": "0xbde4ba4c2e274a60ce15c1cfff9e5c42e41654ac8b6d906a57efa4bd3c29f47d",
+                                "module": "staking",
+                                "name": "Staking",
+                                "typeArguments": []
+                            }
+                        }
+                    }
+                ],
+                "return": [
+                    "U64"
+                ]
+            },
+            "get_unclaimed_sui_amount": {
+                "visibility": "Public",
+                "isEntry": false,
+                "typeParameters": [],
+                "parameters": [
+                    {
+                        "Reference": {
+                            "Struct": {
+                                "address": "0xbde4ba4c2e274a60ce15c1cfff9e5c42e41654ac8b6d906a57efa4bd3c29f47d",
+                                "module": "staking",
+                                "name": "Staking",
+                                "typeArguments": []
+                            }
+                        }
+                    }
+                ],
+                "return": [
+                    "U64"
+                ]
+            },
+            "get_uncollected_protocol_fees": {
+                "visibility": "Public",
+                "isEntry": false,
+                "typeParameters": [],
+                "parameters": [
+                    {
+                        "Reference": {
+                            "Struct": {
+                                "address": "0xbde4ba4c2e274a60ce15c1cfff9e5c42e41654ac8b6d906a57efa4bd3c29f47d",
+                                "module": "staking",
+                                "name": "Staking",
+                                "typeArguments": []
+                            }
+                        }
+                    }
+                ],
+                "return": [
+                    "U64"
+                ]
+            },
+            "get_user_selected_staking": {
+                "visibility": "Public",
+                "isEntry": false,
+                "typeParameters": [],
+                "parameters": [
+                    {
+                        "MutableReference": {
+                            "Struct": {
+                                "address": "0xbde4ba4c2e274a60ce15c1cfff9e5c42e41654ac8b6d906a57efa4bd3c29f47d",
+                                "module": "staking",
+                                "name": "Staking",
+                                "typeArguments": []
+                            }
+                        }
+                    }
+                ],
+                "return": [
+                    {
+                        "Vector": {
+                            "Struct": {
+                                "address": "0xbde4ba4c2e274a60ce15c1cfff9e5c42e41654ac8b6d906a57efa4bd3c29f47d",
+                                "module": "staking",
+                                "name": "UserSelectedStaking",
+                                "typeArguments": []
+                            }
+                        }
+                    }
+                ]
+            },
+            "get_validator_staked_info": {
+                "visibility": "Public",
+                "isEntry": false,
+                "typeParameters": [],
+                "parameters": [
+                    {
+                        "Reference": {
+                            "Struct": {
+                                "address": "0xbde4ba4c2e274a60ce15c1cfff9e5c42e41654ac8b6d906a57efa4bd3c29f47d",
+                                "module": "staking",
+                                "name": "Staking",
+                                "typeArguments": []
+                            }
+                        }
+                    }
+                ],
+                "return": [
+                    {
+                        "Vector": {
+                            "Struct": {
+                                "address": "0xbde4ba4c2e274a60ce15c1cfff9e5c42e41654ac8b6d906a57efa4bd3c29f47d",
+                                "module": "staking",
+                                "name": "ValidatorStakedInfo",
+                                "typeArguments": []
+                            }
+                        }
+                    }
+                ]
+            },
+            "get_version": {
+                "visibility": "Public",
+                "isEntry": false,
+                "typeParameters": [],
+                "parameters": [
+                    {
+                        "Reference": {
+                            "Struct": {
+                                "address": "0xbde4ba4c2e274a60ce15c1cfff9e5c42e41654ac8b6d906a57efa4bd3c29f47d",
+                                "module": "staking",
+                                "name": "Staking",
+                                "typeArguments": []
+                            }
+                        }
+                    }
+                ],
+                "return": [
+                    "U64"
+                ]
+            },
+            "import_stake_sui_vec": {
+                "visibility": "Public",
+                "isEntry": false,
+                "typeParameters": [],
+                "parameters": [
+                    {
+                        "MutableReference": {
+                            "Struct": {
+                                "address": "0x3",
+                                "module": "sui_system",
+                                "name": "SuiSystemState",
+                                "typeArguments": []
+                            }
+                        }
+                    },
+                    {
+                        "MutableReference": {
+                            "Struct": {
+                                "address": "0xbde4ba4c2e274a60ce15c1cfff9e5c42e41654ac8b6d906a57efa4bd3c29f47d",
+                                "module": "staking",
+                                "name": "Staking",
+                                "typeArguments": []
+                            }
+                        }
+                    },
+                    {
+                        "Vector": {
+                            "Struct": {
+                                "address": "0x3",
+                                "module": "staking_pool",
+                                "name": "StakedSui",
+                                "typeArguments": []
+                            }
+                        }
+                    },
+                    "Address",
+                    {
+                        "MutableReference": {
+                            "Struct": {
+                                "address": "0x2",
+                                "module": "tx_context",
+                                "name": "TxContext",
+                                "typeArguments": []
+                            }
+                        }
+                    }
+                ],
+                "return": [
+                    {
+                        "Struct": {
+                            "address": "0x2",
+                            "module": "coin",
+                            "name": "Coin",
+                            "typeArguments": [
+                                {
+                                    "Struct": {
+                                        "address": "0xbde4ba4c2e274a60ce15c1cfff9e5c42e41654ac8b6d906a57efa4bd3c29f47d",
+                                        "module": "hasui",
+                                        "name": "HASUI",
+                                        "typeArguments": []
+                                    }
+                                }
+                            ]
+                        }
+                    }
+                ]
+            },
+            "initialize": {
+                "visibility": "Friend",
+                "isEntry": false,
+                "typeParameters": [],
+                "parameters": [
+                    {
+                        "Struct": {
+                            "address": "0x2",
+                            "module": "coin",
+                            "name": "TreasuryCap",
+                            "typeArguments": [
+                                {
+                                    "Struct": {
+                                        "address": "0xbde4ba4c2e274a60ce15c1cfff9e5c42e41654ac8b6d906a57efa4bd3c29f47d",
+                                        "module": "hasui",
+                                        "name": "HASUI",
+                                        "typeArguments": []
+                                    }
+                                }
+                            ]
+                        }
+                    },
+                    {
+                        "MutableReference": {
+                            "Struct": {
+                                "address": "0x2",
+                                "module": "tx_context",
+                                "name": "TxContext",
+                                "typeArguments": []
+                            }
+                        }
+                    }
+                ],
+                "return": []
+            },
+            "migrate": {
+                "visibility": "Friend",
+                "isEntry": false,
+                "typeParameters": [],
+                "parameters": [
+                    {
+                        "MutableReference": {
+                            "Struct": {
+                                "address": "0xbde4ba4c2e274a60ce15c1cfff9e5c42e41654ac8b6d906a57efa4bd3c29f47d",
+                                "module": "staking",
+                                "name": "Staking",
+                                "typeArguments": []
+                            }
+                        }
+                    }
+                ],
+                "return": []
+            },
+            "request_stake_coin": {
+                "visibility": "Public",
+                "isEntry": false,
+                "typeParameters": [],
+                "parameters": [
+                    {
+                        "MutableReference": {
+                            "Struct": {
+                                "address": "0x3",
+                                "module": "sui_system",
+                                "name": "SuiSystemState",
+                                "typeArguments": []
+                            }
+                        }
+                    },
+                    {
+                        "MutableReference": {
+                            "Struct": {
+                                "address": "0xbde4ba4c2e274a60ce15c1cfff9e5c42e41654ac8b6d906a57efa4bd3c29f47d",
+                                "module": "staking",
+                                "name": "Staking",
+                                "typeArguments": []
+                            }
+                        }
+                    },
+                    {
+                        "Struct": {
+                            "address": "0x2",
+                            "module": "coin",
+                            "name": "Coin",
+                            "typeArguments": [
+                                {
+                                    "Struct": {
+                                        "address": "0x2",
+                                        "module": "sui",
+                                        "name": "SUI",
+                                        "typeArguments": []
+                                    }
+                                }
+                            ]
+                        }
+                    },
+                    "Address",
+                    {
+                        "MutableReference": {
+                            "Struct": {
+                                "address": "0x2",
+                                "module": "tx_context",
+                                "name": "TxContext",
+                                "typeArguments": []
+                            }
+                        }
+                    }
+                ],
+                "return": [
+                    {
+                        "Struct": {
+                            "address": "0x2",
+                            "module": "coin",
+                            "name": "Coin",
+                            "typeArguments": [
+                                {
+                                    "Struct": {
+                                        "address": "0xbde4ba4c2e274a60ce15c1cfff9e5c42e41654ac8b6d906a57efa4bd3c29f47d",
+                                        "module": "hasui",
+                                        "name": "HASUI",
+                                        "typeArguments": []
+                                    }
+                                }
+                            ]
+                        }
+                    }
+                ]
+            },
+            "request_unstake_delay": {
+                "visibility": "Public",
+                "isEntry": false,
+                "typeParameters": [],
+                "parameters": [
+                    {
+                        "MutableReference": {
+                            "Struct": {
+                                "address": "0xbde4ba4c2e274a60ce15c1cfff9e5c42e41654ac8b6d906a57efa4bd3c29f47d",
+                                "module": "staking",
+                                "name": "Staking",
+                                "typeArguments": []
+                            }
+                        }
+                    },
+                    {
+                        "Reference": {
+                            "Struct": {
+                                "address": "0x2",
+                                "module": "clock",
+                                "name": "Clock",
+                                "typeArguments": []
+                            }
+                        }
+                    },
+                    {
+                        "Struct": {
+                            "address": "0x2",
+                            "module": "coin",
+                            "name": "Coin",
+                            "typeArguments": [
+                                {
+                                    "Struct": {
+                                        "address": "0xbde4ba4c2e274a60ce15c1cfff9e5c42e41654ac8b6d906a57efa4bd3c29f47d",
+                                        "module": "hasui",
+                                        "name": "HASUI",
+                                        "typeArguments": []
+                                    }
+                                }
+                            ]
+                        }
+                    },
+                    {
+                        "MutableReference": {
+                            "Struct": {
+                                "address": "0x2",
+                                "module": "tx_context",
+                                "name": "TxContext",
+                                "typeArguments": []
+                            }
+                        }
+                    }
+                ],
+                "return": []
+            },
+            "request_unstake_instant": {
+                "visibility": "Public",
+                "isEntry": false,
+                "typeParameters": [],
+                "parameters": [
+                    {
+                        "MutableReference": {
+                            "Struct": {
+                                "address": "0xbde4ba4c2e274a60ce15c1cfff9e5c42e41654ac8b6d906a57efa4bd3c29f47d",
+                                "module": "staking",
+                                "name": "Staking",
+                                "typeArguments": []
+                            }
+                        }
+                    },
+                    {
+                        "Struct": {
+                            "address": "0x2",
+                            "module": "coin",
+                            "name": "Coin",
+                            "typeArguments": [
+                                {
+                                    "Struct": {
+                                        "address": "0xbde4ba4c2e274a60ce15c1cfff9e5c42e41654ac8b6d906a57efa4bd3c29f47d",
+                                        "module": "hasui",
+                                        "name": "HASUI",
+                                        "typeArguments": []
+                                    }
+                                }
+                            ]
+                        }
+                    },
+                    {
+                        "MutableReference": {
+                            "Struct": {
+                                "address": "0x2",
+                                "module": "tx_context",
+                                "name": "TxContext",
+                                "typeArguments": []
+                            }
+                        }
+                    }
+                ],
+                "return": []
+            },
+            "ticket_claim_epoch": {
+                "visibility": "Public",
+                "isEntry": false,
+                "typeParameters": [],
+                "parameters": [
+                    {
+                        "Reference": {
+                            "Struct": {
+                                "address": "0xbde4ba4c2e274a60ce15c1cfff9e5c42e41654ac8b6d906a57efa4bd3c29f47d",
+                                "module": "staking",
+                                "name": "UnstakeTicket",
+                                "typeArguments": []
+                            }
+                        }
+                    }
+                ],
+                "return": [
+                    "U64"
+                ]
+            },
+            "ticket_claim_timestamp_ms": {
+                "visibility": "Public",
+                "isEntry": false,
+                "typeParameters": [],
+                "parameters": [
+                    {
+                        "Reference": {
+                            "Struct": {
+                                "address": "0xbde4ba4c2e274a60ce15c1cfff9e5c42e41654ac8b6d906a57efa4bd3c29f47d",
+                                "module": "staking",
+                                "name": "UnstakeTicket",
+                                "typeArguments": []
+                            }
+                        }
+                    }
+                ],
+                "return": [
+                    "U64"
+                ]
+            },
+            "ticket_st_amount": {
+                "visibility": "Public",
+                "isEntry": false,
+                "typeParameters": [],
+                "parameters": [
+                    {
+                        "Reference": {
+                            "Struct": {
+                                "address": "0xbde4ba4c2e274a60ce15c1cfff9e5c42e41654ac8b6d906a57efa4bd3c29f47d",
+                                "module": "staking",
+                                "name": "UnstakeTicket",
+                                "typeArguments": []
+                            }
+                        }
+                    }
+                ],
+                "return": [
+                    "U64"
+                ]
+            },
+            "ticket_sui_amount": {
+                "visibility": "Public",
+                "isEntry": false,
+                "typeParameters": [],
+                "parameters": [
+                    {
+                        "Reference": {
+                            "Struct": {
+                                "address": "0xbde4ba4c2e274a60ce15c1cfff9e5c42e41654ac8b6d906a57efa4bd3c29f47d",
+                                "module": "staking",
+                                "name": "UnstakeTicket",
+                                "typeArguments": []
+                            }
+                        }
+                    }
+                ],
+                "return": [
+                    "U64"
+                ]
+            },
+            "ticket_unstake_timestamp_ms": {
+                "visibility": "Public",
+                "isEntry": false,
+                "typeParameters": [],
+                "parameters": [
+                    {
+                        "Reference": {
+                            "Struct": {
+                                "address": "0xbde4ba4c2e274a60ce15c1cfff9e5c42e41654ac8b6d906a57efa4bd3c29f47d",
+                                "module": "staking",
+                                "name": "UnstakeTicket",
+                                "typeArguments": []
+                            }
+                        }
+                    }
+                ],
+                "return": [
+                    "U64"
+                ]
+            },
+            "toggle_stake": {
+                "visibility": "Friend",
+                "isEntry": false,
+                "typeParameters": [],
+                "parameters": [
+                    {
+                        "MutableReference": {
+                            "Struct": {
+                                "address": "0xbde4ba4c2e274a60ce15c1cfff9e5c42e41654ac8b6d906a57efa4bd3c29f47d",
+                                "module": "staking",
+                                "name": "Staking",
+                                "typeArguments": []
+                            }
+                        }
+                    },
+                    "Bool"
+                ],
+                "return": []
+            },
+            "toggle_unstake": {
+                "visibility": "Friend",
+                "isEntry": false,
+                "typeParameters": [],
+                "parameters": [
+                    {
+                        "MutableReference": {
+                            "Struct": {
+                                "address": "0xbde4ba4c2e274a60ce15c1cfff9e5c42e41654ac8b6d906a57efa4bd3c29f47d",
+                                "module": "staking",
+                                "name": "Staking",
+                                "typeArguments": []
+                            }
+                        }
+                    },
+                    "Bool"
+                ],
+                "return": []
+            },
+            "unstake_validator_pools": {
+                "visibility": "Friend",
+                "isEntry": false,
+                "typeParameters": [],
+                "parameters": [
+                    {
+                        "MutableReference": {
+                            "Struct": {
+                                "address": "0xbde4ba4c2e274a60ce15c1cfff9e5c42e41654ac8b6d906a57efa4bd3c29f47d",
+                                "module": "staking",
+                                "name": "Staking",
+                                "typeArguments": []
+                            }
+                        }
+                    },
+                    {
+                        "MutableReference": {
+                            "Struct": {
+                                "address": "0x3",
+                                "module": "sui_system",
+                                "name": "SuiSystemState",
+                                "typeArguments": []
+                            }
+                        }
+                    },
+                    {
+                        "Vector": "Address"
+                    },
+                    {
+                        "MutableReference": {
+                            "Struct": {
+                                "address": "0x2",
+                                "module": "tx_context",
+                                "name": "TxContext",
+                                "typeArguments": []
+                            }
+                        }
+                    }
+                ],
+                "return": []
+            },
+            "update_total_rewards_onchain": {
+                "visibility": "Friend",
+                "isEntry": false,
+                "typeParameters": [],
+                "parameters": [
+                    {
+                        "MutableReference": {
+                            "Struct": {
+                                "address": "0xbde4ba4c2e274a60ce15c1cfff9e5c42e41654ac8b6d906a57efa4bd3c29f47d",
+                                "module": "staking",
+                                "name": "Staking",
+                                "typeArguments": []
+                            }
+                        }
+                    },
+                    {
+                        "MutableReference": {
+                            "Struct": {
+                                "address": "0x3",
+                                "module": "sui_system",
+                                "name": "SuiSystemState",
+                                "typeArguments": []
+                            }
+                        }
+                    },
+                    {
+                        "MutableReference": {
+                            "Struct": {
+                                "address": "0x2",
+                                "module": "tx_context",
+                                "name": "TxContext",
+                                "typeArguments": []
+                            }
+                        }
+                    }
+                ],
+                "return": []
+            }
+        }
+    },
+    "table_queue": {
+        "fileFormatVersion": 6,
+        "address": "0xbde4ba4c2e274a60ce15c1cfff9e5c42e41654ac8b6d906a57efa4bd3c29f47d",
+        "name": "table_queue",
+        "friends": [],
+        "structs": {
+            "TableQueue": {
+                "abilities": {
+                    "abilities": [
+                        "Store"
+                    ]
+                },
+                "typeParameters": [
+                    {
+                        "constraints": {
+                            "abilities": [
+                                "Store"
+                            ]
+                        },
+                        "isPhantom": true
+                    }
+                ],
+                "fields": [
+                    {
+                        "name": "head",
+                        "type": "U64"
+                    },
+                    {
+                        "name": "tail",
+                        "type": "U64"
+                    },
+                    {
+                        "name": "contents",
+                        "type": {
+                            "Struct": {
+                                "address": "0x2",
+                                "module": "table",
+                                "name": "Table",
+                                "typeArguments": [
+                                    "U64",
+                                    {
+                                        "TypeParameter": 0
+                                    }
+                                ]
+                            }
+                        }
+                    }
+                ]
+            }
+        },
+        "exposedFunctions": {
+            "borrow": {
+                "visibility": "Public",
+                "isEntry": false,
+                "typeParameters": [
+                    {
+                        "abilities": [
+                            "Store"
+                        ]
+                    }
+                ],
+                "parameters": [
+                    {
+                        "Reference": {
+                            "Struct": {
+                                "address": "0xbde4ba4c2e274a60ce15c1cfff9e5c42e41654ac8b6d906a57efa4bd3c29f47d",
+                                "module": "table_queue",
+                                "name": "TableQueue",
+                                "typeArguments": [
+                                    {
+                                        "TypeParameter": 0
+                                    }
+                                ]
+                            }
+                        }
+                    },
+                    "U64"
+                ],
+                "return": [
+                    {
+                        "Reference": {
+                            "TypeParameter": 0
+                        }
+                    }
+                ]
+            },
+            "borrow_front": {
+                "visibility": "Public",
+                "isEntry": false,
+                "typeParameters": [
+                    {
+                        "abilities": [
+                            "Store"
+                        ]
+                    }
+                ],
+                "parameters": [
+                    {
+                        "Reference": {
+                            "Struct": {
+                                "address": "0xbde4ba4c2e274a60ce15c1cfff9e5c42e41654ac8b6d906a57efa4bd3c29f47d",
+                                "module": "table_queue",
+                                "name": "TableQueue",
+                                "typeArguments": [
+                                    {
+                                        "TypeParameter": 0
+                                    }
+                                ]
+                            }
+                        }
+                    }
+                ],
+                "return": [
+                    {
+                        "Reference": {
+                            "TypeParameter": 0
+                        }
+                    }
+                ]
+            },
+            "borrow_front_mut": {
+                "visibility": "Public",
+                "isEntry": false,
+                "typeParameters": [
+                    {
+                        "abilities": [
+                            "Store"
+                        ]
+                    }
+                ],
+                "parameters": [
+                    {
+                        "MutableReference": {
+                            "Struct": {
+                                "address": "0xbde4ba4c2e274a60ce15c1cfff9e5c42e41654ac8b6d906a57efa4bd3c29f47d",
+                                "module": "table_queue",
+                                "name": "TableQueue",
+                                "typeArguments": [
+                                    {
+                                        "TypeParameter": 0
+                                    }
+                                ]
+                            }
+                        }
+                    }
+                ],
+                "return": [
+                    {
+                        "MutableReference": {
+                            "TypeParameter": 0
+                        }
+                    }
+                ]
+            },
+            "borrow_mut": {
+                "visibility": "Public",
+                "isEntry": false,
+                "typeParameters": [
+                    {
+                        "abilities": [
+                            "Store"
+                        ]
+                    }
+                ],
+                "parameters": [
+                    {
+                        "MutableReference": {
+                            "Struct": {
+                                "address": "0xbde4ba4c2e274a60ce15c1cfff9e5c42e41654ac8b6d906a57efa4bd3c29f47d",
+                                "module": "table_queue",
+                                "name": "TableQueue",
+                                "typeArguments": [
+                                    {
+                                        "TypeParameter": 0
+                                    }
+                                ]
+                            }
+                        }
+                    },
+                    "U64"
+                ],
+                "return": [
+                    {
+                        "MutableReference": {
+                            "TypeParameter": 0
+                        }
+                    }
+                ]
+            },
+            "destroy_empty": {
+                "visibility": "Public",
+                "isEntry": false,
+                "typeParameters": [
+                    {
+                        "abilities": [
+                            "Store"
+                        ]
+                    }
+                ],
+                "parameters": [
+                    {
+                        "Struct": {
+                            "address": "0xbde4ba4c2e274a60ce15c1cfff9e5c42e41654ac8b6d906a57efa4bd3c29f47d",
+                            "module": "table_queue",
+                            "name": "TableQueue",
+                            "typeArguments": [
+                                {
+                                    "TypeParameter": 0
+                                }
+                            ]
+                        }
+                    }
+                ],
+                "return": []
+            },
+            "empty": {
+                "visibility": "Public",
+                "isEntry": false,
+                "typeParameters": [
+                    {
+                        "abilities": [
+                            "Store"
+                        ]
+                    }
+                ],
+                "parameters": [
+                    {
+                        "MutableReference": {
+                            "Struct": {
+                                "address": "0x2",
+                                "module": "tx_context",
+                                "name": "TxContext",
+                                "typeArguments": []
+                            }
+                        }
+                    }
+                ],
+                "return": [
+                    {
+                        "Struct": {
+                            "address": "0xbde4ba4c2e274a60ce15c1cfff9e5c42e41654ac8b6d906a57efa4bd3c29f47d",
+                            "module": "table_queue",
+                            "name": "TableQueue",
+                            "typeArguments": [
+                                {
+                                    "TypeParameter": 0
+                                }
+                            ]
+                        }
+                    }
+                ]
+            },
+            "head": {
+                "visibility": "Public",
+                "isEntry": false,
+                "typeParameters": [
+                    {
+                        "abilities": [
+                            "Store"
+                        ]
+                    }
+                ],
+                "parameters": [
+                    {
+                        "Reference": {
+                            "Struct": {
+                                "address": "0xbde4ba4c2e274a60ce15c1cfff9e5c42e41654ac8b6d906a57efa4bd3c29f47d",
+                                "module": "table_queue",
+                                "name": "TableQueue",
+                                "typeArguments": [
+                                    {
+                                        "TypeParameter": 0
+                                    }
+                                ]
+                            }
+                        }
+                    }
+                ],
+                "return": [
+                    "U64"
+                ]
+            },
+            "is_empty": {
+                "visibility": "Public",
+                "isEntry": false,
+                "typeParameters": [
+                    {
+                        "abilities": [
+                            "Store"
+                        ]
+                    }
+                ],
+                "parameters": [
+                    {
+                        "Reference": {
+                            "Struct": {
+                                "address": "0xbde4ba4c2e274a60ce15c1cfff9e5c42e41654ac8b6d906a57efa4bd3c29f47d",
+                                "module": "table_queue",
+                                "name": "TableQueue",
+                                "typeArguments": [
+                                    {
+                                        "TypeParameter": 0
+                                    }
+                                ]
+                            }
+                        }
+                    }
+                ],
+                "return": [
+                    "Bool"
+                ]
+            },
+            "length": {
+                "visibility": "Public",
+                "isEntry": false,
+                "typeParameters": [
+                    {
+                        "abilities": [
+                            "Store"
+                        ]
+                    }
+                ],
+                "parameters": [
+                    {
+                        "Reference": {
+                            "Struct": {
+                                "address": "0xbde4ba4c2e274a60ce15c1cfff9e5c42e41654ac8b6d906a57efa4bd3c29f47d",
+                                "module": "table_queue",
+                                "name": "TableQueue",
+                                "typeArguments": [
+                                    {
+                                        "TypeParameter": 0
+                                    }
+                                ]
+                            }
+                        }
+                    }
+                ],
+                "return": [
+                    "U64"
+                ]
+            },
+            "pop_front": {
+                "visibility": "Public",
+                "isEntry": false,
+                "typeParameters": [
+                    {
+                        "abilities": [
+                            "Store"
+                        ]
+                    }
+                ],
+                "parameters": [
+                    {
+                        "MutableReference": {
+                            "Struct": {
+                                "address": "0xbde4ba4c2e274a60ce15c1cfff9e5c42e41654ac8b6d906a57efa4bd3c29f47d",
+                                "module": "table_queue",
+                                "name": "TableQueue",
+                                "typeArguments": [
+                                    {
+                                        "TypeParameter": 0
+                                    }
+                                ]
+                            }
+                        }
+                    }
+                ],
+                "return": [
+                    {
+                        "TypeParameter": 0
+                    }
+                ]
+            },
+            "push_back": {
+                "visibility": "Public",
+                "isEntry": false,
+                "typeParameters": [
+                    {
+                        "abilities": [
+                            "Store"
+                        ]
+                    }
+                ],
+                "parameters": [
+                    {
+                        "MutableReference": {
+                            "Struct": {
+                                "address": "0xbde4ba4c2e274a60ce15c1cfff9e5c42e41654ac8b6d906a57efa4bd3c29f47d",
+                                "module": "table_queue",
+                                "name": "TableQueue",
+                                "typeArguments": [
+                                    {
+                                        "TypeParameter": 0
+                                    }
+                                ]
+                            }
+                        }
+                    },
+                    {
+                        "TypeParameter": 0
+                    }
+                ],
+                "return": []
+            },
+            "tail": {
+                "visibility": "Public",
+                "isEntry": false,
+                "typeParameters": [
+                    {
+                        "abilities": [
+                            "Store"
+                        ]
+                    }
+                ],
+                "parameters": [
+                    {
+                        "Reference": {
+                            "Struct": {
+                                "address": "0xbde4ba4c2e274a60ce15c1cfff9e5c42e41654ac8b6d906a57efa4bd3c29f47d",
+                                "module": "table_queue",
+                                "name": "TableQueue",
+                                "typeArguments": [
+                                    {
+                                        "TypeParameter": 0
+                                    }
+                                ]
+                            }
+                        }
+                    }
+                ],
+                "return": [
+                    "U64"
+                ]
+            }
+        }
+    },
+    "util": {
+        "fileFormatVersion": 6,
+        "address": "0xbde4ba4c2e274a60ce15c1cfff9e5c42e41654ac8b6d906a57efa4bd3c29f47d",
+        "name": "util",
+        "friends": [],
+        "structs": {},
+        "exposedFunctions": {
+            "calculate_rewards": {
+                "visibility": "Public",
+                "isEntry": false,
+                "typeParameters": [],
+                "parameters": [
+                    {
+                        "MutableReference": {
+                            "Struct": {
+                                "address": "0x3",
+                                "module": "sui_system",
+                                "name": "SuiSystemState",
+                                "typeArguments": []
+                            }
+                        }
+                    },
+                    {
+                        "Struct": {
+                            "address": "0x2",
+                            "module": "object",
+                            "name": "ID",
+                            "typeArguments": []
+                        }
+                    },
+                    "U64",
+                    "U64",
+                    "U64"
+                ],
+                "return": [
+                    "U64"
+                ]
+            },
+            "get_sui_amount": {
+                "visibility": "Public",
+                "isEntry": false,
+                "typeParameters": [],
+                "parameters": [
+                    {
+                        "Reference": {
+                            "Struct": {
+                                "address": "0x3",
+                                "module": "staking_pool",
+                                "name": "PoolTokenExchangeRate",
+                                "typeArguments": []
+                            }
+                        }
+                    },
+                    "U64"
+                ],
+                "return": [
+                    "U64"
+                ]
+            },
+            "get_token_amount": {
+                "visibility": "Public",
+                "isEntry": false,
+                "typeParameters": [],
+                "parameters": [
+                    {
+                        "Reference": {
+                            "Struct": {
+                                "address": "0x3",
+                                "module": "staking_pool",
+                                "name": "PoolTokenExchangeRate",
+                                "typeArguments": []
+                            }
+                        }
+                    },
+                    "U64"
+                ],
+                "return": [
+                    "U64"
+                ]
+            },
+            "mul_div": {
+                "visibility": "Public",
+                "isEntry": false,
+                "typeParameters": [],
+                "parameters": [
+                    "U64",
+                    "U64",
+                    "U64"
+                ],
+                "return": [
+                    "U64"
+                ]
+            },
+            "pool_token_exchange_rate_at_epoch": {
+                "visibility": "Public",
+                "isEntry": false,
+                "typeParameters": [],
+                "parameters": [
+                    {
+                        "Reference": {
+                            "Struct": {
+                                "address": "0x2",
+                                "module": "table",
+                                "name": "Table",
+                                "typeArguments": [
+                                    "U64",
+                                    {
+                                        "Struct": {
+                                            "address": "0x3",
+                                            "module": "staking_pool",
+                                            "name": "PoolTokenExchangeRate",
+                                            "typeArguments": []
+                                        }
+                                    }
+                                ]
+                            }
+                        }
+                    },
+                    "U64"
+                ],
+                "return": [
+                    {
+                        "Struct": {
+                            "address": "0x3",
+                            "module": "staking_pool",
+                            "name": "PoolTokenExchangeRate",
+                            "typeArguments": []
+                        }
+                    }
+                ]
+            }
+        }
+    },
+    "vault": {
+        "fileFormatVersion": 6,
+        "address": "0xbde4ba4c2e274a60ce15c1cfff9e5c42e41654ac8b6d906a57efa4bd3c29f47d",
+        "name": "vault",
+        "friends": [
+            {
+                "address": "0xbde4ba4c2e274a60ce15c1cfff9e5c42e41654ac8b6d906a57efa4bd3c29f47d",
+                "name": "staking"
+            }
+        ],
+        "structs": {
+            "Vault": {
+                "abilities": {
+                    "abilities": [
+                        "Store",
+                        "Key"
+                    ]
+                },
+                "typeParameters": [
+                    {
+                        "constraints": {
+                            "abilities": []
+                        },
+                        "isPhantom": true
+                    }
+                ],
+                "fields": [
+                    {
+                        "name": "id",
+                        "type": {
+                            "Struct": {
+                                "address": "0x2",
+                                "module": "object",
+                                "name": "UID",
+                                "typeArguments": []
+                            }
+                        }
+                    },
+                    {
+                        "name": "cache_pool",
+                        "type": {
+                            "Struct": {
+                                "address": "0x2",
+                                "module": "balance",
+                                "name": "Balance",
+                                "typeArguments": [
+                                    {
+                                        "TypeParameter": 0
+                                    }
+                                ]
+                            }
+                        }
+                    }
+                ]
+            }
+        },
+        "exposedFunctions": {
+            "deposit": {
+                "visibility": "Friend",
+                "isEntry": false,
+                "typeParameters": [
+                    {
+                        "abilities": []
+                    }
+                ],
+                "parameters": [
+                    {
+                        "MutableReference": {
+                            "Struct": {
+                                "address": "0xbde4ba4c2e274a60ce15c1cfff9e5c42e41654ac8b6d906a57efa4bd3c29f47d",
+                                "module": "vault",
+                                "name": "Vault",
+                                "typeArguments": [
+                                    {
+                                        "TypeParameter": 0
+                                    }
+                                ]
+                            }
+                        }
+                    },
+                    {
+                        "Struct": {
+                            "address": "0x2",
+                            "module": "balance",
+                            "name": "Balance",
+                            "typeArguments": [
+                                {
+                                    "TypeParameter": 0
+                                }
+                            ]
+                        }
+                    }
+                ],
+                "return": []
+            },
+            "new": {
+                "visibility": "Friend",
+                "isEntry": false,
+                "typeParameters": [
+                    {
+                        "abilities": []
+                    }
+                ],
+                "parameters": [
+                    {
+                        "MutableReference": {
+                            "Struct": {
+                                "address": "0x2",
+                                "module": "tx_context",
+                                "name": "TxContext",
+                                "typeArguments": []
+                            }
+                        }
+                    }
+                ],
+                "return": [
+                    {
+                        "Struct": {
+                            "address": "0xbde4ba4c2e274a60ce15c1cfff9e5c42e41654ac8b6d906a57efa4bd3c29f47d",
+                            "module": "vault",
+                            "name": "Vault",
+                            "typeArguments": [
+                                {
+                                    "TypeParameter": 0
+                                }
+                            ]
+                        }
+                    }
+                ]
+            },
+            "vault_amount": {
+                "visibility": "Public",
+                "isEntry": false,
+                "typeParameters": [
+                    {
+                        "abilities": []
+                    }
+                ],
+                "parameters": [
+                    {
+                        "Reference": {
+                            "Struct": {
+                                "address": "0xbde4ba4c2e274a60ce15c1cfff9e5c42e41654ac8b6d906a57efa4bd3c29f47d",
+                                "module": "vault",
+                                "name": "Vault",
+                                "typeArguments": [
+                                    {
+                                        "TypeParameter": 0
+                                    }
+                                ]
+                            }
+                        }
+                    }
+                ],
+                "return": [
+                    "U64"
+                ]
+            },
+            "withdraw": {
+                "visibility": "Friend",
+                "isEntry": false,
+                "typeParameters": [
+                    {
+                        "abilities": []
+                    }
+                ],
+                "parameters": [
+                    {
+                        "MutableReference": {
+                            "Struct": {
+                                "address": "0xbde4ba4c2e274a60ce15c1cfff9e5c42e41654ac8b6d906a57efa4bd3c29f47d",
+                                "module": "vault",
+                                "name": "Vault",
+                                "typeArguments": [
+                                    {
+                                        "TypeParameter": 0
+                                    }
+                                ]
+                            }
+                        }
+                    },
+                    "U64"
+                ],
+                "return": [
+                    {
+                        "Struct": {
+                            "address": "0x2",
+                            "module": "balance",
+                            "name": "Balance",
+                            "typeArguments": [
+                                {
+                                    "TypeParameter": 0
+                                }
+                            ]
+                        }
+                    }
+                ]
+            },
+            "withdraw_all": {
+                "visibility": "Friend",
+                "isEntry": false,
+                "typeParameters": [
+                    {
+                        "abilities": []
+                    }
+                ],
+                "parameters": [
+                    {
+                        "MutableReference": {
+                            "Struct": {
+                                "address": "0xbde4ba4c2e274a60ce15c1cfff9e5c42e41654ac8b6d906a57efa4bd3c29f47d",
+                                "module": "vault",
+                                "name": "Vault",
+                                "typeArguments": [
+                                    {
+                                        "TypeParameter": 0
+                                    }
+                                ]
+                            }
+                        }
+                    }
+                ],
+                "return": [
+                    {
+                        "Struct": {
+                            "address": "0x2",
+                            "module": "balance",
+                            "name": "Balance",
+                            "typeArguments": [
+                                {
+                                    "TypeParameter": 0
+                                }
+                            ]
+                        }
+                    }
+                ]
+            }
+        }
+    }
+}

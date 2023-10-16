@@ -15,7 +15,6 @@ const tradeEventHandler = async (event: TradeEvent, ctx: TomoContext) => {
     trader: event.args.tradeEvent.trader,
     subject: ethers.decodeBytes32String(ethers.zeroPadBytes(ethers.stripZerosLeft(event.args.tradeEvent.subject), 32)),
     subjectBytes32: event.args.tradeEvent.subject,
-    // subjectOwner,
     isBuy: event.args.tradeEvent.isBuy.toString(),
     buyAmount: event.args.tradeEvent.buyAmount,
     ethAmount: scaleDown(event.args.tradeEvent.ethAmount, 18),
@@ -63,6 +62,16 @@ const subjectRewardSetEventHandler = async (event: SubjectRewardSetEvent, ctx: T
   })
 }
 
+const tomoOnTimeIntervalHandler = async (_: any, ctx: TomoContext) => {
+  try {
+    const amount = scaleDown(await ctx.contract.provider!.getBalance(ctx.address, ctx.blockNumber), 18)
+    ctx.meter.Gauge("tvl").record(amount)
+  } catch (e) {
+    console.log(`Get tvl error ${e.message} at ${ctx.blockNumber}`)
+  }
+}
+
+
 TomoProcessor.bind({
   address: TOMO_CONTRACT,
   network: EthChainId.LINEA
@@ -71,5 +80,6 @@ TomoProcessor.bind({
   .onEventBindSubject(bindSubjectEventHandler)
   .onEventRewardClaimed(rewardClaimedEventHandler)
   .onEventSubjectRewardSet(subjectRewardSetEventHandler)
+  .onTimeInterval(tomoOnTimeIntervalHandler, 10)
 
 
