@@ -15,27 +15,29 @@ import { getOrCreateERC721 } from './helper/nft-helper.js'
 
 const DepositEventHandler = async (event: any, ctx: any) => {
   const pid = Number(event.args.pid)
-  const amount = Number(event.args.amount)
+  const amount = event.args.amount
+  const decimals = pid == 3 ? 8 : 18
 
+  //venostorm
   if (ctx.address.toLowerCase() == "0x579206e4e49581ca8ada619e9e42641f61a84ac3") {
-    ctx.meter.Counter(`deposit_counter`).add(amount / 10 ** 8, {
+    ctx.meter.Counter(`deposit_counter`).add(scaleDown(amount, decimals), {
       pid: pid.toString()
     })
 
     ctx.eventLogger.emit("Deposit", {
       distinctId: event.args.user,
       pid,
-      amount: amount / 10 ** 8
+      amount: scaleDown(amount, decimals)
     })
   }
   else {
-    ctx.meter.Counter(`deposit_counter`).add(amount / 10 ** 18, {
+    ctx.meter.Counter(`deposit_counter`).add(scaleDown(amount, 18), {
       pid: pid.toString()
     })
     ctx.eventLogger.emit("Deposit", {
       distinctId: event.args.user,
       pid,
-      amount: amount / 10 ** 18,
+      amount: scaleDown(amount, 18),
       stakeId: Number(event.args.stakeId),
       weightedAmount: Number(event.args.weightedAmount),
       unlockTimestamp: event.args.unlockTimestamp
@@ -47,19 +49,21 @@ const DepositEventHandler = async (event: any, ctx: any) => {
 const WithdrawEventHandler = async (event: any, ctx: any) => {
   const hash = event.transactionHash
   const user = event.args.user
-  const amount = Number(event.args.amount)
+  const amount = event.args.amount
 
   //venostorm
   if (ctx.address.toLowerCase() == "0x579206e4e49581ca8ada619e9e42641f61a84ac3") {
     const pid = Number(event.args.pid)
-    ctx.meter.Counter(`withdraw_counter`).add(amount / 10 ** 8, {
+    const decimals = pid == 3 ? 8 : 18
+
+    ctx.meter.Counter(`withdraw_counter`).add(scaleDown(amount, decimals), {
       pid: pid.toString()
     })
 
     ctx.eventLogger.emit("Withdraw", {
       distinctId: user,
       pid: pid,
-      amount: amount / 10 ** 8
+      amount: scaleDown(amount, decimals)
     })
   }
   else {
@@ -75,14 +79,14 @@ const WithdrawEventHandler = async (event: any, ctx: any) => {
       console.log(e.message, "Get pid failure at withdraw event, tx ", hash)
     }
 
-    ctx.meter.Counter(`withdraw_counter`).add(amount / 10 ** 18, {
+    ctx.meter.Counter(`withdraw_counter`).add(scaleDown(amount, 18), {
       pid: pid.toString()
     })
 
     ctx.eventLogger.emit("Withdraw", {
       distinctId: user,
       pid: pid,
-      amount: amount / 10 ** 18,
+      amount: scaleDown(amount, 18),
       stakeId
     })
   }
