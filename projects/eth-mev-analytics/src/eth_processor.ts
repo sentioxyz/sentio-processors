@@ -484,6 +484,8 @@ export function Bind(chainConfig: ChainConstants, startBlock: number) {
           link = `https://app.sentio.xyz/tx/137/${txn.txnHash}`;
         } else if (chainConfig.phalconChain === "moonbeam") {
           link = `https://app.sentio.xyz/tx/1284/${txn.txnHash}`;
+        } else if (chainConfig.phalconChain === "bsc") {
+          link = `https://app.sentio.xyz/tx/56/${txn.txnHash}`;
         }
         const [revenue, cost, profitTokens] = await computePnL(
           txn.revenue,
@@ -535,6 +537,9 @@ export function Bind(chainConfig: ChainConstants, startBlock: number) {
         } else if (chainConfig.phalconChain === "moonbeam") {
           frontLink = `https://app.sentio.xyz/tx/1284/${txn.frontTxnHash}`;
           backLink = `https://app.sentio.xyz/tx/1284/${txn.backTxnHash}`;
+        } else if (chainConfig.phalconChain === "bsc") {
+          frontLink = `https://app.sentio.xyz/tx/56/${txn.frontTxnHash}`;
+          backLink = `https://app.sentio.xyz/tx/56/${txn.backTxnHash}`;
         }
 
         const [revenue, cost, profitTokens] = await computePnL(
