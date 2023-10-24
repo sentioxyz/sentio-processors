@@ -32,8 +32,7 @@ import { ERC20Processor } from "@sentio/sdk/eth/builtin";
 // a constant string array
 const ALGEBRA_ADDRESSES = ["0x5b1fd9fa139353c5d9eaf459e4bd2f7a6b4812bb"];
 
-// target tx is 0xc988bfb51d44f6e5162e6a860a9aa75f7fd087f7e1b816f7a50d422bcbe6e712
-const START_BLOCK = 48613306;
+const START_BLOCK = 48910140;
 
 for (const address of ALGEBRA_ADDRESSES) {
   AlgebraPoolProcessor.bind({
@@ -77,10 +76,7 @@ for (const address of PAIR_ADDRESSES) {
   });
 }
 
-const V3_ADDRESSES = [
-  "0x3f5228d0e7d75467366be7de2c31d0d098ba2c23",
-  "0x7de263d0ad6e5d208844e65118c3a02a9a5d56b6",
-];
+const V3_ADDRESSES = ["0x2e0ad6ffe323bb1594ead93c9f4b42d499763e8c"];
 
 for (const address of V3_ADDRESSES) {
   UniswapV3PoolProcessor.bind({
@@ -96,9 +92,8 @@ for (const address of V3_ADDRESSES) {
 }
 
 const V2_ADDRESSES = [
-  "0x7a81ab0f4fbfcd8cbfc8e96ec8cad5e1e0c67c97",
-  "0xd6c1fe4e4dd9a949c05c9b6904c353b87e3cea3a",
-  "0x019ba0325f1988213d448b3472fa1cf8d07618d7",
+  "0x24f262efa5bfb1af267db9be87eb12a734788a01",
+  "0x56ea2342232ce09bc204e5f7d3641df4303bbd8a",
 ];
 
 for (const address of V2_ADDRESSES) {

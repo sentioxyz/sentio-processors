@@ -75,7 +75,7 @@ export const chainConfigs = [
       "0x41139bd34ff2d438480d3e73c360a5e915c79a64".toLowerCase(),
     ]),
     trueReceivers: new Set<string>([
-      "0x76d25eaa2f8a2e69db9ce5ae6a28f7905e995f9b".toLowerCase(),
+      "0x0F6C08Ab14F149BABBA73C583f1bdECE544A87Fb".toLowerCase(),
       "0xf697bfd1860a025f86bca2ba18e7417095770c5b".toLowerCase(),
       "0x246478615bd6f4e18d7d846d5fde293cdfc95a39".toLowerCase(),
       "0xe0b003C64ecBa393843B03B86cCE2BAfcEd6C4a2".toLowerCase(),
