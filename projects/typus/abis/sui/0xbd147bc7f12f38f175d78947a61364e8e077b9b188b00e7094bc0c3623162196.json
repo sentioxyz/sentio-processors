@@ -1,0 +1,2608 @@
+{
+  "royalty_rule": {
+    "fileFormatVersion": 6,
+    "address": "0xbd147bc7f12f38f175d78947a61364e8e077b9b188b00e7094bc0c3623162196",
+    "name": "royalty_rule",
+    "friends": [],
+    "structs": {
+      "Config": {
+        "abilities": {
+          "abilities": [
+            "Drop",
+            "Store"
+          ]
+        },
+        "typeParameters": [],
+        "fields": [
+          {
+            "name": "amount_bp",
+            "type": "U16"
+          },
+          {
+            "name": "min_amount",
+            "type": "U64"
+          }
+        ]
+      },
+      "Rule": {
+        "abilities": {
+          "abilities": [
+            "Drop"
+          ]
+        },
+        "typeParameters": [],
+        "fields": [
+          {
+            "name": "dummy_field",
+            "type": "Bool"
+          }
+        ]
+      }
+    },
+    "exposedFunctions": {
+      "add": {
+        "visibility": "Public",
+        "isEntry": false,
+        "typeParameters": [
+          {
+            "abilities": []
+          }
+        ],
+        "parameters": [
+          {
+            "MutableReference": {
+              "Struct": {
+                "address": "0x2",
+                "module": "transfer_policy",
+                "name": "TransferPolicy",
+                "typeArguments": [
+                  {
+                    "TypeParameter": 0
+                  }
+                ]
+              }
+            }
+          },
+          {
+            "Reference": {
+              "Struct": {
+                "address": "0x2",
+                "module": "transfer_policy",
+                "name": "TransferPolicyCap",
+                "typeArguments": [
+                  {
+                    "TypeParameter": 0
+                  }
+                ]
+              }
+            }
+          },
+          "U16",
+          "U64"
+        ],
+        "return": []
+      },
+      "fee_amount": {
+        "visibility": "Public",
+        "isEntry": false,
+        "typeParameters": [
+          {
+            "abilities": []
+          }
+        ],
+        "parameters": [
+          {
+            "Reference": {
+              "Struct": {
+                "address": "0x2",
+                "module": "transfer_policy",
+                "name": "TransferPolicy",
+                "typeArguments": [
+                  {
+                    "TypeParameter": 0
+                  }
+                ]
+              }
+            }
+          },
+          "U64"
+        ],
+        "return": [
+          "U64"
+        ]
+      },
+      "pay": {
+        "visibility": "Public",
+        "isEntry": false,
+        "typeParameters": [
+          {
+            "abilities": []
+          }
+        ],
+        "parameters": [
+          {
+            "MutableReference": {
+              "Struct": {
+                "address": "0x2",
+                "module": "transfer_policy",
+                "name": "TransferPolicy",
+                "typeArguments": [
+                  {
+                    "TypeParameter": 0
+                  }
+                ]
+              }
+            }
+          },
+          {
+            "MutableReference": {
+              "Struct": {
+                "address": "0x2",
+                "module": "transfer_policy",
+                "name": "TransferRequest",
+                "typeArguments": [
+                  {
+                    "TypeParameter": 0
+                  }
+                ]
+              }
+            }
+          },
+          {
+            "Struct": {
+              "address": "0x2",
+              "module": "coin",
+              "name": "Coin",
+              "typeArguments": [
+                {
+                  "Struct": {
+                    "address": "0x2",
+                    "module": "sui",
+                    "name": "SUI",
+                    "typeArguments": []
+                  }
+                }
+              ]
+            }
+          }
+        ],
+        "return": []
+      }
+    }
+  },
+  "staking": {
+    "fileFormatVersion": 6,
+    "address": "0xbd147bc7f12f38f175d78947a61364e8e077b9b188b00e7094bc0c3623162196",
+    "name": "staking",
+    "friends": [],
+    "structs": {
+      "LevelUpEvent": {
+        "abilities": {
+          "abilities": [
+            "Copy",
+            "Drop"
+          ]
+        },
+        "typeParameters": [],
+        "fields": [
+          {
+            "name": "nft_id",
+            "type": {
+              "Struct": {
+                "address": "0x2",
+                "module": "object",
+                "name": "ID",
+                "typeArguments": []
+              }
+            }
+          },
+          {
+            "name": "sender",
+            "type": "Address"
+          },
+          {
+            "name": "number",
+            "type": "U64"
+          },
+          {
+            "name": "level",
+            "type": "U64"
+          }
+        ]
+      },
+      "ManagerCap": {
+        "abilities": {
+          "abilities": [
+            "Key"
+          ]
+        },
+        "typeParameters": [],
+        "fields": [
+          {
+            "name": "id",
+            "type": {
+              "Struct": {
+                "address": "0x2",
+                "module": "object",
+                "name": "UID",
+                "typeArguments": []
+              }
+            }
+          }
+        ]
+      },
+      "NftExtension": {
+        "abilities": {
+          "abilities": [
+            "Store"
+          ]
+        },
+        "typeParameters": [],
+        "fields": [
+          {
+            "name": "nft_table",
+            "type": {
+              "Struct": {
+                "address": "0x2",
+                "module": "table",
+                "name": "Table",
+                "typeArguments": [
+                  "Address",
+                  {
+                    "Struct": {
+                      "address": "0xbd147bc7f12f38f175d78947a61364e8e077b9b188b00e7094bc0c3623162196",
+                      "module": "staking",
+                      "name": "StakingTails",
+                      "typeArguments": []
+                    }
+                  }
+                ]
+              }
+            }
+          },
+          {
+            "name": "nft_manager_cap",
+            "type": {
+              "Struct": {
+                "address": "0xbd147bc7f12f38f175d78947a61364e8e077b9b188b00e7094bc0c3623162196",
+                "module": "typus_nft",
+                "name": "ManagerCap",
+                "typeArguments": []
+              }
+            }
+          }
+        ]
+      },
+      "Registry": {
+        "abilities": {
+          "abilities": [
+            "Key"
+          ]
+        },
+        "typeParameters": [],
+        "fields": [
+          {
+            "name": "id",
+            "type": {
+              "Struct": {
+                "address": "0x2",
+                "module": "object",
+                "name": "UID",
+                "typeArguments": []
+              }
+            }
+          }
+        ]
+      },
+      "StakingTails": {
+        "abilities": {
+          "abilities": [
+            "Store"
+          ]
+        },
+        "typeParameters": [],
+        "fields": [
+          {
+            "name": "nft",
+            "type": {
+              "Struct": {
+                "address": "0xbd147bc7f12f38f175d78947a61364e8e077b9b188b00e7094bc0c3623162196",
+                "module": "typus_nft",
+                "name": "Tails",
+                "typeArguments": []
+              }
+            }
+          },
+          {
+            "name": "snapshot_ms",
+            "type": "U64"
+          },
+          {
+            "name": "updating_url",
+            "type": "Bool"
+          }
+        ]
+      }
+    },
+    "exposedFunctions": {
+      "add_exp": {
+        "visibility": "Public",
+        "isEntry": false,
+        "typeParameters": [],
+        "parameters": [
+          {
+            "MutableReference": {
+              "Struct": {
+                "address": "0xbd147bc7f12f38f175d78947a61364e8e077b9b188b00e7094bc0c3623162196",
+                "module": "staking",
+                "name": "Registry",
+                "typeArguments": []
+              }
+            }
+          },
+          {
+            "Reference": {
+              "Struct": {
+                "address": "0xbd147bc7f12f38f175d78947a61364e8e077b9b188b00e7094bc0c3623162196",
+                "module": "staking",
+                "name": "ManagerCap",
+                "typeArguments": []
+              }
+            }
+          },
+          "Address",
+          "U64"
+        ],
+        "return": []
+      },
+      "add_nft_extension": {
+        "visibility": "Public",
+        "isEntry": false,
+        "typeParameters": [],
+        "parameters": [
+          {
+            "MutableReference": {
+              "Struct": {
+                "address": "0xbd147bc7f12f38f175d78947a61364e8e077b9b188b00e7094bc0c3623162196",
+                "module": "staking",
+                "name": "Registry",
+                "typeArguments": []
+              }
+            }
+          },
+          {
+            "Struct": {
+              "address": "0xbd147bc7f12f38f175d78947a61364e8e077b9b188b00e7094bc0c3623162196",
+              "module": "typus_nft",
+              "name": "ManagerCap",
+              "typeArguments": []
+            }
+          },
+          {
+            "MutableReference": {
+              "Struct": {
+                "address": "0x2",
+                "module": "tx_context",
+                "name": "TxContext",
+                "typeArguments": []
+              }
+            }
+          }
+        ],
+        "return": []
+      },
+      "first_bid": {
+        "visibility": "Public",
+        "isEntry": false,
+        "typeParameters": [],
+        "parameters": [
+          {
+            "MutableReference": {
+              "Struct": {
+                "address": "0xbd147bc7f12f38f175d78947a61364e8e077b9b188b00e7094bc0c3623162196",
+                "module": "staking",
+                "name": "Registry",
+                "typeArguments": []
+              }
+            }
+          },
+          {
+            "MutableReference": {
+              "Struct": {
+                "address": "0x2",
+                "module": "tx_context",
+                "name": "TxContext",
+                "typeArguments": []
+              }
+            }
+          }
+        ],
+        "return": []
+      },
+      "first_deposit": {
+        "visibility": "Public",
+        "isEntry": false,
+        "typeParameters": [],
+        "parameters": [
+          {
+            "MutableReference": {
+              "Struct": {
+                "address": "0xbd147bc7f12f38f175d78947a61364e8e077b9b188b00e7094bc0c3623162196",
+                "module": "staking",
+                "name": "Registry",
+                "typeArguments": []
+              }
+            }
+          },
+          {
+            "MutableReference": {
+              "Struct": {
+                "address": "0x2",
+                "module": "tx_context",
+                "name": "TxContext",
+                "typeArguments": []
+              }
+            }
+          }
+        ],
+        "return": []
+      },
+      "level_up": {
+        "visibility": "Public",
+        "isEntry": false,
+        "typeParameters": [],
+        "parameters": [
+          {
+            "MutableReference": {
+              "Struct": {
+                "address": "0xbd147bc7f12f38f175d78947a61364e8e077b9b188b00e7094bc0c3623162196",
+                "module": "staking",
+                "name": "Registry",
+                "typeArguments": []
+              }
+            }
+          },
+          {
+            "MutableReference": {
+              "Struct": {
+                "address": "0x2",
+                "module": "tx_context",
+                "name": "TxContext",
+                "typeArguments": []
+              }
+            }
+          }
+        ],
+        "return": []
+      },
+      "snapshot": {
+        "visibility": "Public",
+        "isEntry": false,
+        "typeParameters": [],
+        "parameters": [
+          {
+            "MutableReference": {
+              "Struct": {
+                "address": "0xbd147bc7f12f38f175d78947a61364e8e077b9b188b00e7094bc0c3623162196",
+                "module": "staking",
+                "name": "Registry",
+                "typeArguments": []
+              }
+            }
+          },
+          {
+            "Reference": {
+              "Struct": {
+                "address": "0x2",
+                "module": "clock",
+                "name": "Clock",
+                "typeArguments": []
+              }
+            }
+          },
+          {
+            "MutableReference": {
+              "Struct": {
+                "address": "0x2",
+                "module": "tx_context",
+                "name": "TxContext",
+                "typeArguments": []
+              }
+            }
+          }
+        ],
+        "return": []
+      },
+      "stake_nft": {
+        "visibility": "Public",
+        "isEntry": false,
+        "typeParameters": [],
+        "parameters": [
+          {
+            "MutableReference": {
+              "Struct": {
+                "address": "0xbd147bc7f12f38f175d78947a61364e8e077b9b188b00e7094bc0c3623162196",
+                "module": "staking",
+                "name": "Registry",
+                "typeArguments": []
+              }
+            }
+          },
+          {
+            "MutableReference": {
+              "Struct": {
+                "address": "0x2",
+                "module": "kiosk",
+                "name": "Kiosk",
+                "typeArguments": []
+              }
+            }
+          },
+          {
+            "Reference": {
+              "Struct": {
+                "address": "0x2",
+                "module": "kiosk",
+                "name": "KioskOwnerCap",
+                "typeArguments": []
+              }
+            }
+          },
+          {
+            "Struct": {
+              "address": "0x2",
+              "module": "object",
+              "name": "ID",
+              "typeArguments": []
+            }
+          },
+          {
+            "Reference": {
+              "Struct": {
+                "address": "0x2",
+                "module": "clock",
+                "name": "Clock",
+                "typeArguments": []
+              }
+            }
+          },
+          {
+            "MutableReference": {
+              "Struct": {
+                "address": "0x2",
+                "module": "tx_context",
+                "name": "TxContext",
+                "typeArguments": []
+              }
+            }
+          }
+        ],
+        "return": []
+      },
+      "unstake_nft": {
+        "visibility": "Public",
+        "isEntry": false,
+        "typeParameters": [],
+        "parameters": [
+          {
+            "MutableReference": {
+              "Struct": {
+                "address": "0xbd147bc7f12f38f175d78947a61364e8e077b9b188b00e7094bc0c3623162196",
+                "module": "staking",
+                "name": "Registry",
+                "typeArguments": []
+              }
+            }
+          },
+          {
+            "MutableReference": {
+              "Struct": {
+                "address": "0x2",
+                "module": "kiosk",
+                "name": "Kiosk",
+                "typeArguments": []
+              }
+            }
+          },
+          {
+            "Reference": {
+              "Struct": {
+                "address": "0x2",
+                "module": "kiosk",
+                "name": "KioskOwnerCap",
+                "typeArguments": []
+              }
+            }
+          },
+          {
+            "MutableReference": {
+              "Struct": {
+                "address": "0x2",
+                "module": "tx_context",
+                "name": "TxContext",
+                "typeArguments": []
+              }
+            }
+          }
+        ],
+        "return": []
+      },
+      "update_image_url": {
+        "visibility": "Public",
+        "isEntry": false,
+        "typeParameters": [],
+        "parameters": [
+          {
+            "MutableReference": {
+              "Struct": {
+                "address": "0xbd147bc7f12f38f175d78947a61364e8e077b9b188b00e7094bc0c3623162196",
+                "module": "staking",
+                "name": "Registry",
+                "typeArguments": []
+              }
+            }
+          },
+          {
+            "Reference": {
+              "Struct": {
+                "address": "0xbd147bc7f12f38f175d78947a61364e8e077b9b188b00e7094bc0c3623162196",
+                "module": "staking",
+                "name": "ManagerCap",
+                "typeArguments": []
+              }
+            }
+          },
+          "Address",
+          {
+            "Vector": "U8"
+          }
+        ],
+        "return": []
+      }
+    }
+  },
+  "table_vec": {
+    "fileFormatVersion": 6,
+    "address": "0xbd147bc7f12f38f175d78947a61364e8e077b9b188b00e7094bc0c3623162196",
+    "name": "table_vec",
+    "friends": [],
+    "structs": {
+      "TableVec": {
+        "abilities": {
+          "abilities": [
+            "Store"
+          ]
+        },
+        "typeParameters": [
+          {
+            "constraints": {
+              "abilities": [
+                "Store"
+              ]
+            },
+            "isPhantom": true
+          }
+        ],
+        "fields": [
+          {
+            "name": "contents",
+            "type": {
+              "Struct": {
+                "address": "0x2",
+                "module": "table",
+                "name": "Table",
+                "typeArguments": [
+                  "U64",
+                  {
+                    "TypeParameter": 0
+                  }
+                ]
+              }
+            }
+          }
+        ]
+      }
+    },
+    "exposedFunctions": {
+      "borrow": {
+        "visibility": "Public",
+        "isEntry": false,
+        "typeParameters": [
+          {
+            "abilities": [
+              "Store"
+            ]
+          }
+        ],
+        "parameters": [
+          {
+            "Reference": {
+              "Struct": {
+                "address": "0xbd147bc7f12f38f175d78947a61364e8e077b9b188b00e7094bc0c3623162196",
+                "module": "table_vec",
+                "name": "TableVec",
+                "typeArguments": [
+                  {
+                    "TypeParameter": 0
+                  }
+                ]
+              }
+            }
+          },
+          "U64"
+        ],
+        "return": [
+          {
+            "Reference": {
+              "TypeParameter": 0
+            }
+          }
+        ]
+      },
+      "borrow_mut": {
+        "visibility": "Public",
+        "isEntry": false,
+        "typeParameters": [
+          {
+            "abilities": [
+              "Store"
+            ]
+          }
+        ],
+        "parameters": [
+          {
+            "MutableReference": {
+              "Struct": {
+                "address": "0xbd147bc7f12f38f175d78947a61364e8e077b9b188b00e7094bc0c3623162196",
+                "module": "table_vec",
+                "name": "TableVec",
+                "typeArguments": [
+                  {
+                    "TypeParameter": 0
+                  }
+                ]
+              }
+            }
+          },
+          "U64"
+        ],
+        "return": [
+          {
+            "MutableReference": {
+              "TypeParameter": 0
+            }
+          }
+        ]
+      },
+      "destroy_empty": {
+        "visibility": "Public",
+        "isEntry": false,
+        "typeParameters": [
+          {
+            "abilities": [
+              "Store"
+            ]
+          }
+        ],
+        "parameters": [
+          {
+            "Struct": {
+              "address": "0xbd147bc7f12f38f175d78947a61364e8e077b9b188b00e7094bc0c3623162196",
+              "module": "table_vec",
+              "name": "TableVec",
+              "typeArguments": [
+                {
+                  "TypeParameter": 0
+                }
+              ]
+            }
+          }
+        ],
+        "return": []
+      },
+      "drop": {
+        "visibility": "Public",
+        "isEntry": false,
+        "typeParameters": [
+          {
+            "abilities": [
+              "Drop",
+              "Store"
+            ]
+          }
+        ],
+        "parameters": [
+          {
+            "Struct": {
+              "address": "0xbd147bc7f12f38f175d78947a61364e8e077b9b188b00e7094bc0c3623162196",
+              "module": "table_vec",
+              "name": "TableVec",
+              "typeArguments": [
+                {
+                  "TypeParameter": 0
+                }
+              ]
+            }
+          }
+        ],
+        "return": []
+      },
+      "empty": {
+        "visibility": "Public",
+        "isEntry": false,
+        "typeParameters": [
+          {
+            "abilities": [
+              "Store"
+            ]
+          }
+        ],
+        "parameters": [
+          {
+            "MutableReference": {
+              "Struct": {
+                "address": "0x2",
+                "module": "tx_context",
+                "name": "TxContext",
+                "typeArguments": []
+              }
+            }
+          }
+        ],
+        "return": [
+          {
+            "Struct": {
+              "address": "0xbd147bc7f12f38f175d78947a61364e8e077b9b188b00e7094bc0c3623162196",
+              "module": "table_vec",
+              "name": "TableVec",
+              "typeArguments": [
+                {
+                  "TypeParameter": 0
+                }
+              ]
+            }
+          }
+        ]
+      },
+      "is_empty": {
+        "visibility": "Public",
+        "isEntry": false,
+        "typeParameters": [
+          {
+            "abilities": [
+              "Store"
+            ]
+          }
+        ],
+        "parameters": [
+          {
+            "Reference": {
+              "Struct": {
+                "address": "0xbd147bc7f12f38f175d78947a61364e8e077b9b188b00e7094bc0c3623162196",
+                "module": "table_vec",
+                "name": "TableVec",
+                "typeArguments": [
+                  {
+                    "TypeParameter": 0
+                  }
+                ]
+              }
+            }
+          }
+        ],
+        "return": [
+          "Bool"
+        ]
+      },
+      "length": {
+        "visibility": "Public",
+        "isEntry": false,
+        "typeParameters": [
+          {
+            "abilities": [
+              "Store"
+            ]
+          }
+        ],
+        "parameters": [
+          {
+            "Reference": {
+              "Struct": {
+                "address": "0xbd147bc7f12f38f175d78947a61364e8e077b9b188b00e7094bc0c3623162196",
+                "module": "table_vec",
+                "name": "TableVec",
+                "typeArguments": [
+                  {
+                    "TypeParameter": 0
+                  }
+                ]
+              }
+            }
+          }
+        ],
+        "return": [
+          "U64"
+        ]
+      },
+      "pop_back": {
+        "visibility": "Public",
+        "isEntry": false,
+        "typeParameters": [
+          {
+            "abilities": [
+              "Store"
+            ]
+          }
+        ],
+        "parameters": [
+          {
+            "MutableReference": {
+              "Struct": {
+                "address": "0xbd147bc7f12f38f175d78947a61364e8e077b9b188b00e7094bc0c3623162196",
+                "module": "table_vec",
+                "name": "TableVec",
+                "typeArguments": [
+                  {
+                    "TypeParameter": 0
+                  }
+                ]
+              }
+            }
+          }
+        ],
+        "return": [
+          {
+            "TypeParameter": 0
+          }
+        ]
+      },
+      "push_back": {
+        "visibility": "Public",
+        "isEntry": false,
+        "typeParameters": [
+          {
+            "abilities": [
+              "Store"
+            ]
+          }
+        ],
+        "parameters": [
+          {
+            "MutableReference": {
+              "Struct": {
+                "address": "0xbd147bc7f12f38f175d78947a61364e8e077b9b188b00e7094bc0c3623162196",
+                "module": "table_vec",
+                "name": "TableVec",
+                "typeArguments": [
+                  {
+                    "TypeParameter": 0
+                  }
+                ]
+              }
+            }
+          },
+          {
+            "TypeParameter": 0
+          }
+        ],
+        "return": []
+      },
+      "singleton": {
+        "visibility": "Public",
+        "isEntry": false,
+        "typeParameters": [
+          {
+            "abilities": [
+              "Store"
+            ]
+          }
+        ],
+        "parameters": [
+          {
+            "TypeParameter": 0
+          },
+          {
+            "MutableReference": {
+              "Struct": {
+                "address": "0x2",
+                "module": "tx_context",
+                "name": "TxContext",
+                "typeArguments": []
+              }
+            }
+          }
+        ],
+        "return": [
+          {
+            "Struct": {
+              "address": "0xbd147bc7f12f38f175d78947a61364e8e077b9b188b00e7094bc0c3623162196",
+              "module": "table_vec",
+              "name": "TableVec",
+              "typeArguments": [
+                {
+                  "TypeParameter": 0
+                }
+              ]
+            }
+          }
+        ]
+      },
+      "swap": {
+        "visibility": "Public",
+        "isEntry": false,
+        "typeParameters": [
+          {
+            "abilities": [
+              "Store"
+            ]
+          }
+        ],
+        "parameters": [
+          {
+            "MutableReference": {
+              "Struct": {
+                "address": "0xbd147bc7f12f38f175d78947a61364e8e077b9b188b00e7094bc0c3623162196",
+                "module": "table_vec",
+                "name": "TableVec",
+                "typeArguments": [
+                  {
+                    "TypeParameter": 0
+                  }
+                ]
+              }
+            }
+          },
+          "U64",
+          "U64"
+        ],
+        "return": []
+      }
+    }
+  },
+  "typus_nft": {
+    "fileFormatVersion": 6,
+    "address": "0xbd147bc7f12f38f175d78947a61364e8e077b9b188b00e7094bc0c3623162196",
+    "name": "typus_nft",
+    "friends": [],
+    "structs": {
+      "LevelUpEvent": {
+        "abilities": {
+          "abilities": [
+            "Copy",
+            "Drop"
+          ]
+        },
+        "typeParameters": [],
+        "fields": [
+          {
+            "name": "nft_id",
+            "type": {
+              "Struct": {
+                "address": "0x2",
+                "module": "object",
+                "name": "ID",
+                "typeArguments": []
+              }
+            }
+          },
+          {
+            "name": "level",
+            "type": "U64"
+          }
+        ]
+      },
+      "ManagerCap": {
+        "abilities": {
+          "abilities": [
+            "Store",
+            "Key"
+          ]
+        },
+        "typeParameters": [],
+        "fields": [
+          {
+            "name": "id",
+            "type": {
+              "Struct": {
+                "address": "0x2",
+                "module": "object",
+                "name": "UID",
+                "typeArguments": []
+              }
+            }
+          }
+        ]
+      },
+      "MintEvent": {
+        "abilities": {
+          "abilities": [
+            "Copy",
+            "Drop"
+          ]
+        },
+        "typeParameters": [],
+        "fields": [
+          {
+            "name": "id",
+            "type": {
+              "Struct": {
+                "address": "0x2",
+                "module": "object",
+                "name": "ID",
+                "typeArguments": []
+              }
+            }
+          },
+          {
+            "name": "name",
+            "type": {
+              "Struct": {
+                "address": "0x1",
+                "module": "string",
+                "name": "String",
+                "typeArguments": []
+              }
+            }
+          },
+          {
+            "name": "description",
+            "type": {
+              "Struct": {
+                "address": "0x1",
+                "module": "string",
+                "name": "String",
+                "typeArguments": []
+              }
+            }
+          },
+          {
+            "name": "number",
+            "type": "U64"
+          },
+          {
+            "name": "url",
+            "type": {
+              "Struct": {
+                "address": "0x2",
+                "module": "url",
+                "name": "Url",
+                "typeArguments": []
+              }
+            }
+          },
+          {
+            "name": "attributes",
+            "type": {
+              "Struct": {
+                "address": "0x2",
+                "module": "vec_map",
+                "name": "VecMap",
+                "typeArguments": [
+                  {
+                    "Struct": {
+                      "address": "0x1",
+                      "module": "string",
+                      "name": "String",
+                      "typeArguments": []
+                    }
+                  },
+                  {
+                    "Struct": {
+                      "address": "0x1",
+                      "module": "string",
+                      "name": "String",
+                      "typeArguments": []
+                    }
+                  }
+                ]
+              }
+            }
+          },
+          {
+            "name": "sender",
+            "type": "Address"
+          }
+        ]
+      },
+      "NewManagerCapEvent": {
+        "abilities": {
+          "abilities": [
+            "Copy",
+            "Drop"
+          ]
+        },
+        "typeParameters": [],
+        "fields": [
+          {
+            "name": "id",
+            "type": {
+              "Struct": {
+                "address": "0x2",
+                "module": "object",
+                "name": "ID",
+                "typeArguments": []
+              }
+            }
+          },
+          {
+            "name": "sender",
+            "type": "Address"
+          }
+        ]
+      },
+      "Pool": {
+        "abilities": {
+          "abilities": [
+            "Key"
+          ]
+        },
+        "typeParameters": [],
+        "fields": [
+          {
+            "name": "id",
+            "type": {
+              "Struct": {
+                "address": "0x2",
+                "module": "object",
+                "name": "UID",
+                "typeArguments": []
+              }
+            }
+          },
+          {
+            "name": "tails",
+            "type": {
+              "Struct": {
+                "address": "0xbd147bc7f12f38f175d78947a61364e8e077b9b188b00e7094bc0c3623162196",
+                "module": "table_vec",
+                "name": "TableVec",
+                "typeArguments": [
+                  {
+                    "Struct": {
+                      "address": "0xbd147bc7f12f38f175d78947a61364e8e077b9b188b00e7094bc0c3623162196",
+                      "module": "typus_nft",
+                      "name": "Tails",
+                      "typeArguments": []
+                    }
+                  }
+                ]
+              }
+            }
+          },
+          {
+            "name": "num",
+            "type": "U64"
+          },
+          {
+            "name": "is_live",
+            "type": "Bool"
+          },
+          {
+            "name": "start_ms",
+            "type": "U64"
+          }
+        ]
+      },
+      "Royalty": {
+        "abilities": {
+          "abilities": [
+            "Key"
+          ]
+        },
+        "typeParameters": [],
+        "fields": [
+          {
+            "name": "id",
+            "type": {
+              "Struct": {
+                "address": "0x2",
+                "module": "object",
+                "name": "UID",
+                "typeArguments": []
+              }
+            }
+          },
+          {
+            "name": "recipients",
+            "type": {
+              "Struct": {
+                "address": "0x2",
+                "module": "vec_map",
+                "name": "VecMap",
+                "typeArguments": [
+                  "Address",
+                  "U64"
+                ]
+              }
+            }
+          },
+          {
+            "name": "policy_cap",
+            "type": {
+              "Struct": {
+                "address": "0x2",
+                "module": "transfer_policy",
+                "name": "TransferPolicyCap",
+                "typeArguments": [
+                  {
+                    "Struct": {
+                      "address": "0xbd147bc7f12f38f175d78947a61364e8e077b9b188b00e7094bc0c3623162196",
+                      "module": "typus_nft",
+                      "name": "Tails",
+                      "typeArguments": []
+                    }
+                  }
+                ]
+              }
+            }
+          }
+        ]
+      },
+      "RoyaltyUpdateEvent": {
+        "abilities": {
+          "abilities": [
+            "Copy",
+            "Drop"
+          ]
+        },
+        "typeParameters": [],
+        "fields": [
+          {
+            "name": "sender",
+            "type": "Address"
+          },
+          {
+            "name": "recipients",
+            "type": {
+              "Struct": {
+                "address": "0x2",
+                "module": "vec_map",
+                "name": "VecMap",
+                "typeArguments": [
+                  "Address",
+                  "U64"
+                ]
+              }
+            }
+          }
+        ]
+      },
+      "TYPUS_NFT": {
+        "abilities": {
+          "abilities": [
+            "Drop"
+          ]
+        },
+        "typeParameters": [],
+        "fields": [
+          {
+            "name": "dummy_field",
+            "type": "Bool"
+          }
+        ]
+      },
+      "Tails": {
+        "abilities": {
+          "abilities": [
+            "Store",
+            "Key"
+          ]
+        },
+        "typeParameters": [],
+        "fields": [
+          {
+            "name": "id",
+            "type": {
+              "Struct": {
+                "address": "0x2",
+                "module": "object",
+                "name": "UID",
+                "typeArguments": []
+              }
+            }
+          },
+          {
+            "name": "name",
+            "type": {
+              "Struct": {
+                "address": "0x1",
+                "module": "string",
+                "name": "String",
+                "typeArguments": []
+              }
+            }
+          },
+          {
+            "name": "description",
+            "type": {
+              "Struct": {
+                "address": "0x1",
+                "module": "string",
+                "name": "String",
+                "typeArguments": []
+              }
+            }
+          },
+          {
+            "name": "number",
+            "type": "U64"
+          },
+          {
+            "name": "url",
+            "type": {
+              "Struct": {
+                "address": "0x2",
+                "module": "url",
+                "name": "Url",
+                "typeArguments": []
+              }
+            }
+          },
+          {
+            "name": "attributes",
+            "type": {
+              "Struct": {
+                "address": "0x2",
+                "module": "vec_map",
+                "name": "VecMap",
+                "typeArguments": [
+                  {
+                    "Struct": {
+                      "address": "0x1",
+                      "module": "string",
+                      "name": "String",
+                      "typeArguments": []
+                    }
+                  },
+                  {
+                    "Struct": {
+                      "address": "0x1",
+                      "module": "string",
+                      "name": "String",
+                      "typeArguments": []
+                    }
+                  }
+                ]
+              }
+            }
+          },
+          {
+            "name": "level",
+            "type": "U64"
+          },
+          {
+            "name": "exp",
+            "type": "U64"
+          },
+          {
+            "name": "first_bid",
+            "type": "Bool"
+          },
+          {
+            "name": "first_deposit",
+            "type": "Bool"
+          },
+          {
+            "name": "first_deposit_nft",
+            "type": "Bool"
+          },
+          {
+            "name": "u64_padding",
+            "type": {
+              "Struct": {
+                "address": "0x2",
+                "module": "vec_map",
+                "name": "VecMap",
+                "typeArguments": [
+                  {
+                    "Struct": {
+                      "address": "0x1",
+                      "module": "string",
+                      "name": "String",
+                      "typeArguments": []
+                    }
+                  },
+                  "U64"
+                ]
+              }
+            }
+          }
+        ]
+      },
+      "Whitelist": {
+        "abilities": {
+          "abilities": [
+            "Key"
+          ]
+        },
+        "typeParameters": [],
+        "fields": [
+          {
+            "name": "id",
+            "type": {
+              "Struct": {
+                "address": "0x2",
+                "module": "object",
+                "name": "UID",
+                "typeArguments": []
+              }
+            }
+          },
+          {
+            "name": "for",
+            "type": {
+              "Struct": {
+                "address": "0x2",
+                "module": "object",
+                "name": "ID",
+                "typeArguments": []
+              }
+            }
+          }
+        ]
+      }
+    },
+    "exposedFunctions": {
+      "deposit_nft": {
+        "visibility": "Private",
+        "isEntry": true,
+        "typeParameters": [],
+        "parameters": [
+          {
+            "Reference": {
+              "Struct": {
+                "address": "0xbd147bc7f12f38f175d78947a61364e8e077b9b188b00e7094bc0c3623162196",
+                "module": "typus_nft",
+                "name": "ManagerCap",
+                "typeArguments": []
+              }
+            }
+          },
+          {
+            "MutableReference": {
+              "Struct": {
+                "address": "0xbd147bc7f12f38f175d78947a61364e8e077b9b188b00e7094bc0c3623162196",
+                "module": "typus_nft",
+                "name": "Pool",
+                "typeArguments": []
+              }
+            }
+          },
+          {
+            "Struct": {
+              "address": "0x1",
+              "module": "string",
+              "name": "String",
+              "typeArguments": []
+            }
+          },
+          "U64",
+          {
+            "Vector": "U8"
+          },
+          {
+            "Vector": {
+              "Struct": {
+                "address": "0x1",
+                "module": "string",
+                "name": "String",
+                "typeArguments": []
+              }
+            }
+          },
+          {
+            "Vector": {
+              "Struct": {
+                "address": "0x1",
+                "module": "string",
+                "name": "String",
+                "typeArguments": []
+              }
+            }
+          },
+          {
+            "MutableReference": {
+              "Struct": {
+                "address": "0x2",
+                "module": "tx_context",
+                "name": "TxContext",
+                "typeArguments": []
+              }
+            }
+          }
+        ],
+        "return": []
+      },
+      "first_bid": {
+        "visibility": "Public",
+        "isEntry": false,
+        "typeParameters": [],
+        "parameters": [
+          {
+            "Reference": {
+              "Struct": {
+                "address": "0xbd147bc7f12f38f175d78947a61364e8e077b9b188b00e7094bc0c3623162196",
+                "module": "typus_nft",
+                "name": "ManagerCap",
+                "typeArguments": []
+              }
+            }
+          },
+          {
+            "MutableReference": {
+              "Struct": {
+                "address": "0xbd147bc7f12f38f175d78947a61364e8e077b9b188b00e7094bc0c3623162196",
+                "module": "typus_nft",
+                "name": "Tails",
+                "typeArguments": []
+              }
+            }
+          }
+        ],
+        "return": []
+      },
+      "first_deposit": {
+        "visibility": "Public",
+        "isEntry": false,
+        "typeParameters": [],
+        "parameters": [
+          {
+            "Reference": {
+              "Struct": {
+                "address": "0xbd147bc7f12f38f175d78947a61364e8e077b9b188b00e7094bc0c3623162196",
+                "module": "typus_nft",
+                "name": "ManagerCap",
+                "typeArguments": []
+              }
+            }
+          },
+          {
+            "MutableReference": {
+              "Struct": {
+                "address": "0xbd147bc7f12f38f175d78947a61364e8e077b9b188b00e7094bc0c3623162196",
+                "module": "typus_nft",
+                "name": "Tails",
+                "typeArguments": []
+              }
+            }
+          }
+        ],
+        "return": []
+      },
+      "first_deposit_nft": {
+        "visibility": "Public",
+        "isEntry": false,
+        "typeParameters": [],
+        "parameters": [
+          {
+            "Reference": {
+              "Struct": {
+                "address": "0xbd147bc7f12f38f175d78947a61364e8e077b9b188b00e7094bc0c3623162196",
+                "module": "typus_nft",
+                "name": "ManagerCap",
+                "typeArguments": []
+              }
+            }
+          },
+          {
+            "MutableReference": {
+              "Struct": {
+                "address": "0xbd147bc7f12f38f175d78947a61364e8e077b9b188b00e7094bc0c3623162196",
+                "module": "typus_nft",
+                "name": "Tails",
+                "typeArguments": []
+              }
+            }
+          }
+        ],
+        "return": []
+      },
+      "free_mint": {
+        "visibility": "Private",
+        "isEntry": true,
+        "typeParameters": [],
+        "parameters": [
+          {
+            "MutableReference": {
+              "Struct": {
+                "address": "0xbd147bc7f12f38f175d78947a61364e8e077b9b188b00e7094bc0c3623162196",
+                "module": "typus_nft",
+                "name": "Pool",
+                "typeArguments": []
+              }
+            }
+          },
+          {
+            "Struct": {
+              "address": "0xbd147bc7f12f38f175d78947a61364e8e077b9b188b00e7094bc0c3623162196",
+              "module": "typus_nft",
+              "name": "Whitelist",
+              "typeArguments": []
+            }
+          },
+          {
+            "Reference": {
+              "Struct": {
+                "address": "0x2",
+                "module": "clock",
+                "name": "Clock",
+                "typeArguments": []
+              }
+            }
+          },
+          {
+            "MutableReference": {
+              "Struct": {
+                "address": "0x2",
+                "module": "tx_context",
+                "name": "TxContext",
+                "typeArguments": []
+              }
+            }
+          }
+        ],
+        "return": []
+      },
+      "free_mint_into_kiosk": {
+        "visibility": "Private",
+        "isEntry": true,
+        "typeParameters": [],
+        "parameters": [
+          {
+            "MutableReference": {
+              "Struct": {
+                "address": "0xbd147bc7f12f38f175d78947a61364e8e077b9b188b00e7094bc0c3623162196",
+                "module": "typus_nft",
+                "name": "Pool",
+                "typeArguments": []
+              }
+            }
+          },
+          {
+            "Struct": {
+              "address": "0xbd147bc7f12f38f175d78947a61364e8e077b9b188b00e7094bc0c3623162196",
+              "module": "typus_nft",
+              "name": "Whitelist",
+              "typeArguments": []
+            }
+          },
+          {
+            "MutableReference": {
+              "Struct": {
+                "address": "0x2",
+                "module": "kiosk",
+                "name": "Kiosk",
+                "typeArguments": []
+              }
+            }
+          },
+          {
+            "Reference": {
+              "Struct": {
+                "address": "0x2",
+                "module": "kiosk",
+                "name": "KioskOwnerCap",
+                "typeArguments": []
+              }
+            }
+          },
+          {
+            "Reference": {
+              "Struct": {
+                "address": "0x2",
+                "module": "clock",
+                "name": "Clock",
+                "typeArguments": []
+              }
+            }
+          },
+          {
+            "MutableReference": {
+              "Struct": {
+                "address": "0x2",
+                "module": "tx_context",
+                "name": "TxContext",
+                "typeArguments": []
+              }
+            }
+          }
+        ],
+        "return": []
+      },
+      "get_u64_padding": {
+        "visibility": "Public",
+        "isEntry": false,
+        "typeParameters": [],
+        "parameters": [
+          {
+            "Reference": {
+              "Struct": {
+                "address": "0xbd147bc7f12f38f175d78947a61364e8e077b9b188b00e7094bc0c3623162196",
+                "module": "typus_nft",
+                "name": "ManagerCap",
+                "typeArguments": []
+              }
+            }
+          },
+          {
+            "Reference": {
+              "Struct": {
+                "address": "0xbd147bc7f12f38f175d78947a61364e8e077b9b188b00e7094bc0c3623162196",
+                "module": "typus_nft",
+                "name": "Tails",
+                "typeArguments": []
+              }
+            }
+          },
+          {
+            "Struct": {
+              "address": "0x1",
+              "module": "string",
+              "name": "String",
+              "typeArguments": []
+            }
+          }
+        ],
+        "return": [
+          "U64"
+        ]
+      },
+      "insert_u64_padding": {
+        "visibility": "Public",
+        "isEntry": false,
+        "typeParameters": [],
+        "parameters": [
+          {
+            "Reference": {
+              "Struct": {
+                "address": "0xbd147bc7f12f38f175d78947a61364e8e077b9b188b00e7094bc0c3623162196",
+                "module": "typus_nft",
+                "name": "ManagerCap",
+                "typeArguments": []
+              }
+            }
+          },
+          {
+            "MutableReference": {
+              "Struct": {
+                "address": "0xbd147bc7f12f38f175d78947a61364e8e077b9b188b00e7094bc0c3623162196",
+                "module": "typus_nft",
+                "name": "Tails",
+                "typeArguments": []
+              }
+            }
+          },
+          {
+            "Struct": {
+              "address": "0x1",
+              "module": "string",
+              "name": "String",
+              "typeArguments": []
+            }
+          },
+          "U64"
+        ],
+        "return": []
+      },
+      "issue_whitelist": {
+        "visibility": "Private",
+        "isEntry": true,
+        "typeParameters": [],
+        "parameters": [
+          {
+            "Reference": {
+              "Struct": {
+                "address": "0xbd147bc7f12f38f175d78947a61364e8e077b9b188b00e7094bc0c3623162196",
+                "module": "typus_nft",
+                "name": "ManagerCap",
+                "typeArguments": []
+              }
+            }
+          },
+          {
+            "Reference": {
+              "Struct": {
+                "address": "0xbd147bc7f12f38f175d78947a61364e8e077b9b188b00e7094bc0c3623162196",
+                "module": "typus_nft",
+                "name": "Pool",
+                "typeArguments": []
+              }
+            }
+          },
+          {
+            "Vector": "Address"
+          },
+          {
+            "MutableReference": {
+              "Struct": {
+                "address": "0x2",
+                "module": "tx_context",
+                "name": "TxContext",
+                "typeArguments": []
+              }
+            }
+          }
+        ],
+        "return": []
+      },
+      "level_up": {
+        "visibility": "Public",
+        "isEntry": false,
+        "typeParameters": [],
+        "parameters": [
+          {
+            "Reference": {
+              "Struct": {
+                "address": "0xbd147bc7f12f38f175d78947a61364e8e077b9b188b00e7094bc0c3623162196",
+                "module": "typus_nft",
+                "name": "ManagerCap",
+                "typeArguments": []
+              }
+            }
+          },
+          {
+            "MutableReference": {
+              "Struct": {
+                "address": "0xbd147bc7f12f38f175d78947a61364e8e077b9b188b00e7094bc0c3623162196",
+                "module": "typus_nft",
+                "name": "Tails",
+                "typeArguments": []
+              }
+            }
+          }
+        ],
+        "return": [
+          {
+            "Struct": {
+              "address": "0x1",
+              "module": "option",
+              "name": "Option",
+              "typeArguments": [
+                "U64"
+              ]
+            }
+          }
+        ]
+      },
+      "new_manager_cap": {
+        "visibility": "Private",
+        "isEntry": true,
+        "typeParameters": [],
+        "parameters": [
+          {
+            "Reference": {
+              "Struct": {
+                "address": "0xbd147bc7f12f38f175d78947a61364e8e077b9b188b00e7094bc0c3623162196",
+                "module": "typus_nft",
+                "name": "ManagerCap",
+                "typeArguments": []
+              }
+            }
+          },
+          {
+            "MutableReference": {
+              "Struct": {
+                "address": "0x2",
+                "module": "tx_context",
+                "name": "TxContext",
+                "typeArguments": []
+              }
+            }
+          }
+        ],
+        "return": []
+      },
+      "new_pool": {
+        "visibility": "Private",
+        "isEntry": true,
+        "typeParameters": [],
+        "parameters": [
+          {
+            "Reference": {
+              "Struct": {
+                "address": "0xbd147bc7f12f38f175d78947a61364e8e077b9b188b00e7094bc0c3623162196",
+                "module": "typus_nft",
+                "name": "ManagerCap",
+                "typeArguments": []
+              }
+            }
+          },
+          "U64",
+          {
+            "MutableReference": {
+              "Struct": {
+                "address": "0x2",
+                "module": "tx_context",
+                "name": "TxContext",
+                "typeArguments": []
+              }
+            }
+          }
+        ],
+        "return": []
+      },
+      "nft_exp_up": {
+        "visibility": "Public",
+        "isEntry": false,
+        "typeParameters": [],
+        "parameters": [
+          {
+            "Reference": {
+              "Struct": {
+                "address": "0xbd147bc7f12f38f175d78947a61364e8e077b9b188b00e7094bc0c3623162196",
+                "module": "typus_nft",
+                "name": "ManagerCap",
+                "typeArguments": []
+              }
+            }
+          },
+          {
+            "MutableReference": {
+              "Struct": {
+                "address": "0xbd147bc7f12f38f175d78947a61364e8e077b9b188b00e7094bc0c3623162196",
+                "module": "typus_nft",
+                "name": "Tails",
+                "typeArguments": []
+              }
+            }
+          },
+          "U64"
+        ],
+        "return": []
+      },
+      "pool_set_n_level": {
+        "visibility": "Private",
+        "isEntry": true,
+        "typeParameters": [],
+        "parameters": [
+          {
+            "Reference": {
+              "Struct": {
+                "address": "0xbd147bc7f12f38f175d78947a61364e8e077b9b188b00e7094bc0c3623162196",
+                "module": "typus_nft",
+                "name": "ManagerCap",
+                "typeArguments": []
+              }
+            }
+          },
+          {
+            "MutableReference": {
+              "Struct": {
+                "address": "0xbd147bc7f12f38f175d78947a61364e8e077b9b188b00e7094bc0c3623162196",
+                "module": "typus_nft",
+                "name": "Pool",
+                "typeArguments": []
+              }
+            }
+          },
+          "U64",
+          "U64"
+        ],
+        "return": []
+      },
+      "remove_u64_padding": {
+        "visibility": "Public",
+        "isEntry": false,
+        "typeParameters": [],
+        "parameters": [
+          {
+            "Reference": {
+              "Struct": {
+                "address": "0xbd147bc7f12f38f175d78947a61364e8e077b9b188b00e7094bc0c3623162196",
+                "module": "typus_nft",
+                "name": "ManagerCap",
+                "typeArguments": []
+              }
+            }
+          },
+          {
+            "MutableReference": {
+              "Struct": {
+                "address": "0xbd147bc7f12f38f175d78947a61364e8e077b9b188b00e7094bc0c3623162196",
+                "module": "typus_nft",
+                "name": "Tails",
+                "typeArguments": []
+              }
+            }
+          },
+          {
+            "Struct": {
+              "address": "0x1",
+              "module": "string",
+              "name": "String",
+              "typeArguments": []
+            }
+          }
+        ],
+        "return": []
+      },
+      "send_nfts": {
+        "visibility": "Private",
+        "isEntry": true,
+        "typeParameters": [],
+        "parameters": [
+          {
+            "Reference": {
+              "Struct": {
+                "address": "0xbd147bc7f12f38f175d78947a61364e8e077b9b188b00e7094bc0c3623162196",
+                "module": "typus_nft",
+                "name": "ManagerCap",
+                "typeArguments": []
+              }
+            }
+          },
+          {
+            "MutableReference": {
+              "Struct": {
+                "address": "0xbd147bc7f12f38f175d78947a61364e8e077b9b188b00e7094bc0c3623162196",
+                "module": "typus_nft",
+                "name": "Pool",
+                "typeArguments": []
+              }
+            }
+          },
+          "Address",
+          "U64",
+          {
+            "MutableReference": {
+              "Struct": {
+                "address": "0x2",
+                "module": "tx_context",
+                "name": "TxContext",
+                "typeArguments": []
+              }
+            }
+          }
+        ],
+        "return": []
+      },
+      "tails_exp": {
+        "visibility": "Public",
+        "isEntry": false,
+        "typeParameters": [],
+        "parameters": [
+          {
+            "Reference": {
+              "Struct": {
+                "address": "0xbd147bc7f12f38f175d78947a61364e8e077b9b188b00e7094bc0c3623162196",
+                "module": "typus_nft",
+                "name": "Tails",
+                "typeArguments": []
+              }
+            }
+          }
+        ],
+        "return": [
+          "U64"
+        ]
+      },
+      "tails_level": {
+        "visibility": "Public",
+        "isEntry": false,
+        "typeParameters": [],
+        "parameters": [
+          {
+            "Reference": {
+              "Struct": {
+                "address": "0xbd147bc7f12f38f175d78947a61364e8e077b9b188b00e7094bc0c3623162196",
+                "module": "typus_nft",
+                "name": "Tails",
+                "typeArguments": []
+              }
+            }
+          }
+        ],
+        "return": [
+          "U64"
+        ]
+      },
+      "tails_number": {
+        "visibility": "Public",
+        "isEntry": false,
+        "typeParameters": [],
+        "parameters": [
+          {
+            "Reference": {
+              "Struct": {
+                "address": "0xbd147bc7f12f38f175d78947a61364e8e077b9b188b00e7094bc0c3623162196",
+                "module": "typus_nft",
+                "name": "Tails",
+                "typeArguments": []
+              }
+            }
+          }
+        ],
+        "return": [
+          "U64"
+        ]
+      },
+      "update_image_url": {
+        "visibility": "Public",
+        "isEntry": false,
+        "typeParameters": [],
+        "parameters": [
+          {
+            "Reference": {
+              "Struct": {
+                "address": "0xbd147bc7f12f38f175d78947a61364e8e077b9b188b00e7094bc0c3623162196",
+                "module": "typus_nft",
+                "name": "ManagerCap",
+                "typeArguments": []
+              }
+            }
+          },
+          {
+            "MutableReference": {
+              "Struct": {
+                "address": "0xbd147bc7f12f38f175d78947a61364e8e077b9b188b00e7094bc0c3623162196",
+                "module": "typus_nft",
+                "name": "Tails",
+                "typeArguments": []
+              }
+            }
+          },
+          {
+            "Vector": "U8"
+          }
+        ],
+        "return": []
+      },
+      "update_royalty": {
+        "visibility": "Private",
+        "isEntry": true,
+        "typeParameters": [],
+        "parameters": [
+          {
+            "Reference": {
+              "Struct": {
+                "address": "0xbd147bc7f12f38f175d78947a61364e8e077b9b188b00e7094bc0c3623162196",
+                "module": "typus_nft",
+                "name": "ManagerCap",
+                "typeArguments": []
+              }
+            }
+          },
+          {
+            "MutableReference": {
+              "Struct": {
+                "address": "0xbd147bc7f12f38f175d78947a61364e8e077b9b188b00e7094bc0c3623162196",
+                "module": "typus_nft",
+                "name": "Royalty",
+                "typeArguments": []
+              }
+            }
+          },
+          {
+            "Vector": "Address"
+          },
+          {
+            "Vector": "U64"
+          },
+          {
+            "Reference": {
+              "Struct": {
+                "address": "0x2",
+                "module": "tx_context",
+                "name": "TxContext",
+                "typeArguments": []
+              }
+            }
+          }
+        ],
+        "return": []
+      },
+      "update_sale": {
+        "visibility": "Private",
+        "isEntry": true,
+        "typeParameters": [],
+        "parameters": [
+          {
+            "Reference": {
+              "Struct": {
+                "address": "0xbd147bc7f12f38f175d78947a61364e8e077b9b188b00e7094bc0c3623162196",
+                "module": "typus_nft",
+                "name": "ManagerCap",
+                "typeArguments": []
+              }
+            }
+          },
+          {
+            "MutableReference": {
+              "Struct": {
+                "address": "0xbd147bc7f12f38f175d78947a61364e8e077b9b188b00e7094bc0c3623162196",
+                "module": "typus_nft",
+                "name": "Pool",
+                "typeArguments": []
+              }
+            }
+          },
+          "Bool"
+        ],
+        "return": []
+      },
+      "update_start_ms": {
+        "visibility": "Private",
+        "isEntry": true,
+        "typeParameters": [],
+        "parameters": [
+          {
+            "Reference": {
+              "Struct": {
+                "address": "0xbd147bc7f12f38f175d78947a61364e8e077b9b188b00e7094bc0c3623162196",
+                "module": "typus_nft",
+                "name": "ManagerCap",
+                "typeArguments": []
+              }
+            }
+          },
+          {
+            "MutableReference": {
+              "Struct": {
+                "address": "0xbd147bc7f12f38f175d78947a61364e8e077b9b188b00e7094bc0c3623162196",
+                "module": "typus_nft",
+                "name": "Pool",
+                "typeArguments": []
+              }
+            }
+          },
+          "U64"
+        ],
+        "return": []
+      },
+      "update_u64_padding": {
+        "visibility": "Public",
+        "isEntry": false,
+        "typeParameters": [],
+        "parameters": [
+          {
+            "Reference": {
+              "Struct": {
+                "address": "0xbd147bc7f12f38f175d78947a61364e8e077b9b188b00e7094bc0c3623162196",
+                "module": "typus_nft",
+                "name": "ManagerCap",
+                "typeArguments": []
+              }
+            }
+          },
+          {
+            "MutableReference": {
+              "Struct": {
+                "address": "0xbd147bc7f12f38f175d78947a61364e8e077b9b188b00e7094bc0c3623162196",
+                "module": "typus_nft",
+                "name": "Tails",
+                "typeArguments": []
+              }
+            }
+          },
+          {
+            "Struct": {
+              "address": "0x1",
+              "module": "string",
+              "name": "String",
+              "typeArguments": []
+            }
+          },
+          "U64"
+        ],
+        "return": []
+      },
+      "withdraw_royalty": {
+        "visibility": "Private",
+        "isEntry": true,
+        "typeParameters": [],
+        "parameters": [
+          {
+            "Reference": {
+              "Struct": {
+                "address": "0xbd147bc7f12f38f175d78947a61364e8e077b9b188b00e7094bc0c3623162196",
+                "module": "typus_nft",
+                "name": "ManagerCap",
+                "typeArguments": []
+              }
+            }
+          },
+          {
+            "Reference": {
+              "Struct": {
+                "address": "0xbd147bc7f12f38f175d78947a61364e8e077b9b188b00e7094bc0c3623162196",
+                "module": "typus_nft",
+                "name": "Royalty",
+                "typeArguments": []
+              }
+            }
+          },
+          {
+            "MutableReference": {
+              "Struct": {
+                "address": "0x2",
+                "module": "transfer_policy",
+                "name": "TransferPolicy",
+                "typeArguments": [
+                  {
+                    "Struct": {
+                      "address": "0xbd147bc7f12f38f175d78947a61364e8e077b9b188b00e7094bc0c3623162196",
+                      "module": "typus_nft",
+                      "name": "Tails",
+                      "typeArguments": []
+                    }
+                  }
+                ]
+              }
+            }
+          },
+          {
+            "MutableReference": {
+              "Struct": {
+                "address": "0x2",
+                "module": "tx_context",
+                "name": "TxContext",
+                "typeArguments": []
+              }
+            }
+          }
+        ],
+        "return": []
+      }
+    }
+  },
+  "utils": {
+    "fileFormatVersion": 6,
+    "address": "0xbd147bc7f12f38f175d78947a61364e8e077b9b188b00e7094bc0c3623162196",
+    "name": "utils",
+    "friends": [
+      {
+        "address": "0xbd147bc7f12f38f175d78947a61364e8e077b9b188b00e7094bc0c3623162196",
+        "name": "typus_nft"
+      }
+    ],
+    "structs": {},
+    "exposedFunctions": {
+      "extract_balance": {
+        "visibility": "Friend",
+        "isEntry": false,
+        "typeParameters": [
+          {
+            "abilities": []
+          }
+        ],
+        "parameters": [
+          {
+            "Vector": {
+              "Struct": {
+                "address": "0x2",
+                "module": "coin",
+                "name": "Coin",
+                "typeArguments": [
+                  {
+                    "TypeParameter": 0
+                  }
+                ]
+              }
+            }
+          },
+          "U64",
+          {
+            "Reference": {
+              "Struct": {
+                "address": "0x2",
+                "module": "tx_context",
+                "name": "TxContext",
+                "typeArguments": []
+              }
+            }
+          }
+        ],
+        "return": [
+          {
+            "Struct": {
+              "address": "0x2",
+              "module": "balance",
+              "name": "Balance",
+              "typeArguments": [
+                {
+                  "TypeParameter": 0
+                }
+              ]
+            }
+          }
+        ]
+      },
+      "from_vec_to_map": {
+        "visibility": "Friend",
+        "isEntry": false,
+        "typeParameters": [
+          {
+            "abilities": [
+              "Copy",
+              "Drop"
+            ]
+          },
+          {
+            "abilities": [
+              "Drop"
+            ]
+          }
+        ],
+        "parameters": [
+          {
+            "Vector": {
+              "TypeParameter": 0
+            }
+          },
+          {
+            "Vector": {
+              "TypeParameter": 1
+            }
+          }
+        ],
+        "return": [
+          {
+            "Struct": {
+              "address": "0x2",
+              "module": "vec_map",
+              "name": "VecMap",
+              "typeArguments": [
+                {
+                  "TypeParameter": 0
+                },
+                {
+                  "TypeParameter": 1
+                }
+              ]
+            }
+          }
+        ]
+      },
+      "rand": {
+        "visibility": "Friend",
+        "isEntry": false,
+        "typeParameters": [],
+        "parameters": [
+          {
+            "MutableReference": {
+              "Struct": {
+                "address": "0x2",
+                "module": "tx_context",
+                "name": "TxContext",
+                "typeArguments": []
+              }
+            }
+          }
+        ],
+        "return": [
+          "U256"
+        ]
+      },
+      "u256_from_bytes": {
+        "visibility": "Friend",
+        "isEntry": false,
+        "typeParameters": [],
+        "parameters": [
+          {
+            "Reference": {
+              "Vector": "U8"
+            }
+          }
+        ],
+        "return": [
+          "U256"
+        ]
+      },
+      "u64_from_bytes": {
+        "visibility": "Friend",
+        "isEntry": false,
+        "typeParameters": [],
+        "parameters": [
+          {
+            "Reference": {
+              "Vector": "U8"
+            }
+          }
+        ],
+        "return": [
+          "U64"
+        ]
+      }
+    }
+  }
+}

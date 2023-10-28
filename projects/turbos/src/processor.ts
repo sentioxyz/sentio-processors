@@ -255,7 +255,7 @@ const template = new SuiObjectProcessorTemplate()
       }
     }
 
-  }, 60, 10, undefined, { owned: false })
+  }, 10, 10000, undefined, { owned: false })
 
 
 // public async getPoolTicks(poolId: string | undefined) {

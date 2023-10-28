@@ -52,7 +52,7 @@ async function onEvent(event: LendingEvent, ctx: SuiContext) {
 }
 
 lendingTestnet.bind()
-  .onEventBorrowEvent(onEvent)
-  .onEventDepositEvent(onEvent)
-  .onEventRepayEvent(onEvent)
-  .onEventWithdrawEvent(onEvent)
+.onEventBorrowEvent(onEvent)
+.onEventDepositEvent(onEvent)
+.onEventRepayEvent(onEvent)
+.onEventWithdrawEvent(onEvent)

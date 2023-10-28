@@ -109,7 +109,8 @@ pool.bind({
     const amount_a = Number(event.data_decoded.amount_a) / Math.pow(10, decimal_a)
     const amount_b = Number(event.data_decoded.amount_b) / Math.pow(10, decimal_b)
 
-    const value = await helper.calculateValue_USD(ctx, pool, amount_a, amount_b, ctx.timestamp)
+    const [value_a, value_b] = await helper.calculateValue_USD(ctx, pool, amount_a, amount_b, ctx.timestamp)
+    const value = value_a + value_b
 
     ctx.eventLogger.emit("AddLiquidityEvent", {
       //@ts-ignore
@@ -148,7 +149,9 @@ pool.bind({
     const amount_a = Number(event.data_decoded.amount_a) / Math.pow(10, decimal_a)
     const amount_b = Number(event.data_decoded.amount_b) / Math.pow(10, decimal_b)
 
-    const value = await helper.calculateValue_USD(ctx, pool, amount_a, amount_b, ctx.timestamp)
+
+    const [value_a, value_b] = await helper.calculateValue_USD(ctx, pool, amount_a, amount_b, ctx.timestamp)
+    const value = value_a + value_b
 
     ctx.eventLogger.emit("RemoveLiquidityEvent", {
       //@ts-ignore
@@ -221,8 +224,16 @@ const template = new SuiObjectProcessorTemplate()
       ctx.meter.Gauge("b2a_price").record(coin_b2a_price, { pairName, project: "cetus" })
 
       //record tvl
-      const tvl = await helper.calculateValue_USD(ctx, ctx.objectId, coin_a_balance, coin_b_balance, ctx.timestamp)
+      // const tvl = await helper.calculateValue_USD(ctx, ctx.objectId, coin_a_balance, coin_b_balance, ctx.timestamp)
+
+      //record one side tvl
+      const [tvl_a, tvl_b] = await helper.calculateValue_USD(ctx, ctx.objectId, coin_a_balance, coin_b_balance, ctx.timestamp)
+      const tvl = tvl_a + tvl_b
+
       ctx.meter.Gauge("tvl").record(tvl, { pairName, project: "cetus" })
+      ctx.meter.Gauge("tvl_oneside").record(tvl_a, { pairName, coin_symbol: symbol_a })
+      ctx.meter.Gauge("tvl_oneside").record(tvl_b, { pairName, coin_symbol: symbol_b })
+
     }
     catch (e) {
       console.log(`${e.message} error at ${JSON.stringify(self)}`)

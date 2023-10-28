@@ -212,30 +212,62 @@ export async function getPoolPrice(ctx: SuiContext | SuiObjectContext, pool: str
 }
 
 
+// export async function calculateValue_USD(ctx: SuiContext | SuiObjectContext, pool: string, amount_a: number, amount_b: number, date: Date) {
+//     const poolInfo = await getOrCreatePool(ctx, pool)
+//     const [coin_a_full_address, coin_b_full_address] = getCoinFullAddress(poolInfo.type)
+//     const price_a = await getPriceByType(SuiNetwork.MAIN_NET, coin_a_full_address, date)
+//     const price_b = await getPriceByType(SuiNetwork.MAIN_NET, coin_b_full_address, date)
+
+//     const coin_a2b_price = await getPoolPrice(ctx, pool)
+
+//     let [value_a, value_b] = [0, 0]
+//     if (price_a) {
+//         value_a = amount_a * price_a
+//         value_b = amount_b / coin_a2b_price * price_a
+//     }
+//     else if (price_b) {
+//         value_a = amount_a * coin_a2b_price * price_b
+//         value_b = amount_b * price_b
+//     }
+//     else {
+//         console.log(`price not in sui coinlist, calculate value failed at ${ctx}`)
+//     }
+
+//     return value_a + value_b
+// }
+
 export async function calculateValue_USD(ctx: SuiContext | SuiObjectContext, pool: string, amount_a: number, amount_b: number, date: Date) {
-    const poolInfo = await getOrCreatePool(ctx, pool)
-    const [coin_a_full_address, coin_b_full_address] = getCoinFullAddress(poolInfo.type)
-    const price_a = await getPriceByType(SuiNetwork.MAIN_NET, coin_a_full_address, date)
-    const price_b = await getPriceByType(SuiNetwork.MAIN_NET, coin_b_full_address, date)
-
-    const coin_a2b_price = await getPoolPrice(ctx, pool)
-
     let [value_a, value_b] = [0, 0]
-    if (price_a) {
-        value_a = amount_a * price_a
-        value_b = amount_b / coin_a2b_price * price_a
-    }
-    else if (price_b) {
-        value_a = amount_a * coin_a2b_price * price_b
-        value_b = amount_b * price_b
-    }
-    else {
-        console.log(`price not in sui coinlist, calculate value failed at ${ctx}`)
-    }
+    try {
+        const poolInfo = await getOrCreatePool(ctx, pool)
+        const [coin_a_full_address, coin_b_full_address] = getCoinFullAddress(poolInfo.type)
+        const price_a = await getPriceByType(SuiNetwork.MAIN_NET, coin_a_full_address, date)
+        const price_b = await getPriceByType(SuiNetwork.MAIN_NET, coin_b_full_address, date)
+        const coin_a2b_price = await getPoolPrice(ctx, pool)
 
-    return value_a + value_b
+        if (price_a) {
+            value_a = amount_a * price_a
+            //handle the case of low liquidity
+            if (price_b) {
+                value_b = amount_b * price_b
+            }
+            else {
+                value_b = amount_b / coin_a2b_price * price_a
+            }
+        }
+        else if (price_b) {
+            value_a = amount_a * coin_a2b_price * price_b
+            value_b = amount_b * price_b
+        }
+        else {
+            console.log(`price not in sui coinlist, calculate value failed at coin_a: ${coin_a_full_address},coin_b: ${coin_b_full_address} at ${JSON.stringify(ctx)}`)
+        }
+    }
+    catch (e) {
+        console.log(` calculate value error ${e.message} at ${JSON.stringify(ctx)}`)
+    }
+    return [value_a, value_b]
 }
-
 
 export async function calculateSwapVol_USD(event: pool.SwapEventInstance, type: string, amount_in: number, amount_out: number, atob: Boolean, date: Date) {
     let [coin_a_full_address, coin_b_full_address] = getCoinFullAddress(type)

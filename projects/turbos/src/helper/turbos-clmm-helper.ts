@@ -1,5 +1,5 @@
 import { SuiObjectProcessor, SuiContext, SuiObjectContext } from "@sentio/sdk/sui"
-import { getPriceByType, token } from "@sentio/sdk/utils"
+import { getPriceBySymbol, getPriceByType, token } from "@sentio/sdk/utils"
 import * as constant from '../constant-turbos.js'
 import { SuiNetwork } from "@sentio/sdk/sui"
 
@@ -188,8 +188,8 @@ export async function calculateValue_USD(ctx: SuiContext | SuiObjectContext, poo
     try {
         const poolInfo = await getOrCreatePool(ctx, pool)
         const [coin_a_full_address, coin_b_full_address] = getCoinFullAddress(poolInfo.type)
-        const price_a = await getPriceByType(SuiNetwork.MAIN_NET, coin_a_full_address, date)
-        const price_b = await getPriceByType(SuiNetwork.MAIN_NET, coin_b_full_address, date)
+        const price_a = await getPriceBySymbol(poolInfo.symbol_a, date)
+        const price_b = await getPriceBySymbol(poolInfo.symbol_b, date)
         console.log(`price_a ${price_a}, price_b ${price_b}`)
         const coin_a2b_price = await getPoolPrice(ctx, pool)
 
