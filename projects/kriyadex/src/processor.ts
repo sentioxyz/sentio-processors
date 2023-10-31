@@ -224,4 +224,4 @@ spot_dex
     });
   }).onTransactionBlock(async (block, ctx) => {
     const timestamp = ctx.timestamp;
-  });
+  })

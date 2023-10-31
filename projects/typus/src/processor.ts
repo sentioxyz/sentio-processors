@@ -422,3 +422,26 @@ SuiWrappedObjectProcessor.bind({
     undefined,
     { owned: true }
 );
+
+
+
+
+SuiWrappedObjectProcessor.bind({
+    network: SuiNetwork.MAIN_NET,
+    startCheckpoint,
+    objectId: SINGLE_DEPOSIT_VAULT_REGISTRY,
+}).onTimeInterval(
+    async (objects, ctx) => {
+        ctx.meter.Gauge("num_of_vaults").record(objects.length);
+
+        const decodedObjects = await ctx.coder.getDynamicFields(objects, BUILTIN_TYPES.U64_TYPE, vault.DepositVault.type());
+        decodedObjects.forEach((depositVault) => {
+            const index = depositVault.value.index.toString();
+            const deposit_token = parse_token("0x" + depositVault.value.deposit_token.name);
+            ctx.meter
+                .Gauge("active_share_supply1111")
+                .record(Number(depositVault.value.active_share_supply) / 10 ** token_decimal(deposit_token), {
+                    index,
+                    coin_symbol: deposit_token,
+                });
+        });

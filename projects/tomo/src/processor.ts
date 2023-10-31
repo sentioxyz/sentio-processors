@@ -4,16 +4,10 @@ import { ethers } from "ethers"
 import * as dotenv from 'dotenv'
 import { TWITTER_ENDPOINT } from "./twitterEndpoint.js";
 import { scaleDown } from "@sentio/sdk";
-// import { DepositedEvent, EntryPointContext, EntryPointProcessor } from "./types/eth/entrypoint.js";
 import { Client } from "twitter-api-sdk";
-// import { LRUCache } from 'lru-cache'
 
 const TOMO_CONTRACT = "0x9E813d7661D7B56CBCd3F73E958039B208925Ef8"
-// const ENTRY_POINT_CONTRACT = "0x5ff137d4b0fdcd49dca30c7cf57e578a026d2789"
-
-// let profileInfoMapCache = new LRUCache<string, Promise<profileInfo>>({
-//   max: 500
-// })
+const MAX_FETCH_TRY = 10
 
 interface profileInfo {
   username: string,
@@ -27,6 +21,46 @@ interface profileInfo {
 
 const tradeEventHandler = async (event: TradeEvent, ctx: TomoContext) => {
   const subject = ethers.decodeBytes32String(ethers.zeroPadBytes(ethers.stripZerosLeft(event.args.tradeEvent.subject), 32))
+
+  if (subject.slice(0, 2) == "x@") {
+    let profileInfo: profileInfo = {
+      username: "unk",
+      name: "unk",
+      followers_count: -1,
+      friends_count: -1,
+      profile_image_url_https: "unk",
+      description: "unk"
+    }
+
+    //check whether in sql table
+    const sqlResult = await getSqlResult(subject)
+    console.log(`get sqlResult in trade ${JSON.stringify(sqlResult)}`)
+    if (sqlResult) {
+      console.log(`found in sql ${subject}`)
+      profileInfo = getFields(sqlResult)
+    }
+    else {
+      //if not, retrieve from twitter api
+      let try_counter = 0
+      while (Number(profileInfo.followers_count) == -1 && try_counter < MAX_FETCH_TRY) {
+        profileInfo = await fetchX(ctx, subject.slice(2,))
+        try_counter++
+        if (!profileInfo && try_counter < MAX_FETCH_TRY) {
+          await sleep(try_counter * 1000)
+        }
+      }
+      ctx.eventLogger.emit("subjectInfo", {
+        distinctId: subject,
+        username: subject,
+        name: profileInfo.name,
+        followers_count: Number(profileInfo.followers_count),
+        friends_count: Number(profileInfo.friends_count),
+        profile_image_url_https: profileInfo.profile_image_url_https,
+        description: profileInfo.description
+      })
+    }
+  }
+
   ctx.eventLogger.emit("tradeEvent", {
     distinctId: event.args.tradeEvent.trader,
     eventIndex: event.args.tradeEvent.eventIndex,
@@ -46,33 +80,54 @@ const tradeEventHandler = async (event: TradeEvent, ctx: TomoContext) => {
 
 const bindSubjectEventHandler = async (event: BindSubjectEvent, ctx: TomoContext) => {
   const subject = ethers.decodeBytes32String(ethers.zeroPadBytes(ethers.stripZerosLeft(event.args.subject), 32))
-  console.log()
-  let [name, followers_count, following_count, tweet_count, listed_count, like_count, profile_image_url] = ["unk", -1, -1, -1, -1, -1, "unk"]
-
-  let profileInfo: profileInfo = {
-    username: "unk",
-    name: "unk",
-    followers_count: -1,
-    friends_count: -1,
-    profile_image_url_https: "unk",
-    description: "unk"
-  }
 
   if (subject.slice(0, 2) == "x@") {
-    // profileInfo = await getOrCreateProfileInfo(ctx, subject)
-    profileInfo = await fetchX(ctx, subject)
+    let profileInfo: profileInfo = {
+      username: "unk",
+      name: "unk",
+      followers_count: -1,
+      friends_count: -1,
+      profile_image_url_https: "unk",
+      description: "unk"
+    }
 
-    console.log("profileInfo: ", JSON.stringify(profileInfo))
+    //check whether in sql table
+    const sqlResult = await getSqlResult(subject)
+    console.log(`get sqlResult in bind ${JSON.stringify(sqlResult)}`)
+    if (sqlResult) {
+      console.log(`found in sql ${subject}`)
+      profileInfo = getFields(sqlResult)
+    }
+    else {
+      //if not, retrieve from twitter api
+      let try_counter = 0
+      while (Number(profileInfo.followers_count) == -1 && try_counter < MAX_FETCH_TRY) {
+        profileInfo = await fetchX(ctx, subject.slice(2,))
+        try_counter++
+        if (!profileInfo && try_counter < MAX_FETCH_TRY) {
+          await sleep(try_counter * 1000)
+        }
+      }
+      ctx.eventLogger.emit("subjectInfo", {
+        distinctId: subject,
+        username: subject,
+        name: profileInfo.name,
+        followers_count: Number(profileInfo.followers_count),
+        friends_count: Number(profileInfo.friends_count),
+        profile_image_url_https: profileInfo.profile_image_url_https,
+        description: profileInfo.description
+      })
+    }
 
     ctx.eventLogger.emit("bindSubject", {
       eventIndex: event.args.eventIndex,
       ts: event.args.ts,
-      subject: ethers.decodeBytes32String(ethers.zeroPadBytes(ethers.stripZerosLeft(event.args.subject), 32)),
+      subject,
       subjectBytes32: event.args.subject,
       owner: event.args.owner,
       name: profileInfo.name,
-      followers_count: profileInfo.followers_count,
-      friends_count: profileInfo.friends_count,
+      followers_count: Number(profileInfo.followers_count),
+      friends_count: Number(profileInfo.friends_count),
       profile_image_url_https: profileInfo.profile_image_url_https,
       description: profileInfo.description
     })
@@ -81,7 +136,7 @@ const bindSubjectEventHandler = async (event: BindSubjectEvent, ctx: TomoContext
     ctx.eventLogger.emit("bindSubject", {
       eventIndex: event.args.eventIndex,
       ts: event.args.ts,
-      subject: ethers.decodeBytes32String(ethers.zeroPadBytes(ethers.stripZerosLeft(event.args.subject), 32)),
+      subject,
       subjectBytes32: event.args.subject,
       owner: event.args.owner
     })
@@ -138,90 +193,6 @@ TomoProcessor.bind({
 
 
 
-// async function buildProfileInfo(ctx: TomoContext, subject: string): Promise<profileInfo | null> {
-//   let [username, name, followers_count, friends_count, profile_image_url_https, description] = ["unknown", "unknown", -1, -1, "unknown", "unknown"]
-//   //check if in sql table first
-//   // const result = await getSqlResult(subject)
-//   // if (result) {
-//   //   return await getFields(result)
-//   // }
-//   // //otherwise calling api, and write to sql table
-//   // else {
-//   //to do, nothing checked here, only draft 
-//   let fetchUrl = "https://tomotrade.xyz/profile/api/" + subject
-//   await fetch(fetchUrl)
-//     .then(response => response.json())
-//     .then(data => {
-//       username = subject
-//       name = data.user.result.legacy.name
-//       followers_count = data.user.result.legacy.followers_count
-//       friends_count = data.user.result.legacy.friends_count
-//       profile_image_url_https = data.user.result.legacy.profile_image_url_https
-//       description = data.user.result.legacy.description
-
-//       console.log("name", name)
-//       console.log("followers_count", followers_count)
-//       console.log("friends_count", friends_count)
-//       console.log("profile_image_url_https", profile_image_url_https)
-//       console.log("description", description)
-
-//       ctx.eventLogger.emit("profileInfo", {
-//         distinctId: subject,
-//         username,
-//         name,
-//         followers_count,
-//         friends_count,
-//         profile_image_url_https,
-//         description
-//       })
-//       console.log("built profile built: ", subject)
-
-//       return Promise.resolve({
-//         username,
-//         name,
-//         followers_count,
-//         friends_count,
-//         profile_image_url_https,
-//         description
-//       })
-//     })
-//     .catch(err => {
-//       console.log(`fetch error ${subject} ${err}`);
-//     })
-//   // }
-//   return null
-// }
-
-// async function getOrCreateProfileInfo(ctx: TomoContext, subject: string): Promise<profileInfo | null> {
-//   if (profileInfoMapCache.has(subject)) {
-//     const profileInfo = profileInfoMapCache.get(subject)
-//     console.log(`found profile for  ${subject}`)
-//     //@ts-ignore
-//     return profileInfo
-//   }
-//   else {
-//     let profileInfo = await buildProfileInfo(ctx, subject)
-//     console.log("get profile built: ", profileInfo?.username)
-//     //@ts-ignore
-//     if (profileInfo) {
-//       const profileInfoPromise = Promise.resolve(profileInfo)
-//       profileInfoMapCache.set(subject, profileInfoPromise)
-
-//       let i = 0
-//       let msg = `set profile for ${subject}`
-//       profileInfoMapCache.forEach((value, key) => {
-//         msg += `\n ${i}:${key}`
-//         i++
-//       })
-//       // await sleep(30 * 1000)
-//       console.log(msg)
-//       return profileInfoPromise
-//     }
-
-//   }
-//   return null
-// }
-
 async function sleep(milliseconds: number): Promise<void> {
   return new Promise((resolve) => {
     setTimeout(resolve, milliseconds);
@@ -229,73 +200,75 @@ async function sleep(milliseconds: number): Promise<void> {
 }
 
 
-// export async function fetchResults(subject: string) {
-//   const url = new URL(
-//     "/api/v1/analytics/sentio/tomo/sql/execute",
-//     "https://app.sentio.xyz"
-//   );
-//   return fetch(url.href, {
-//     method: "POST",
-//     headers: {
-//       "Content-Type": "application/json",
-//       "api-key": "i7xfbgHqXSYTKoMrQeIzgaYOTBAMuPoGQ",
-//     },
-//     body: `{
-//       "sqlQuery": {
-//         "sql": "SELECT username, name, followers_count, friends_count, profile_image_url_https, description FROM PortfolioInfo WHERE distinctId = '${subject}'"
-//       }
-//     }`,
-//   })
-// }
+export async function fetchResults(subject: string) {
+  const url = new URL(
+    "/api/v1/analytics/ye/tomo/sql/execute",
+    "https://app.sentio.xyz"
+  )
+
+  return await fetch(url.href, {
+    method: "POST",
+    headers: {
+      "Content-Type": "application/json",
+      "api-key": "i7xfbgHqXSYTKoMrQeIzgaYOTBAMuPoGQ",
+    },
+    body: `{
+      "sqlQuery": {
+        "sql": "SELECT username, name, followers_count, friends_count, profile_image_url_https, description FROM subjectInfo WHERE distinct_id = '${subject}'"
+      }
+    }`,
+  })
+}
 
 
-// async function getSqlResult(_subject: string) {
-//   let sqlResult = null
-//   try {
-//     const res = await fetchResults(_subject);
-//     if (!res.ok) {
-//       console.log(res.status)
-//       console.log("error=", await res.text())
-//     }
-//     else {
-//       const data = await res.json()
-//       sqlResult = data.result
-//     }
-//   } catch (e) {
-//     console.log("error=", e);
-//   }
-//   //non empty query return
-//   if (sqlResult && sqlResult.rows.length != 0) {
-//     const fields = sqlResult.rows[0]
-//     return fields
-//   }
-//   //get failed or empty return
-//   else {
-//     console.log(`fetch sql for ${_subject} failed`)
-//   }
-//   return null
-// }
+async function getSqlResult(_subject: string) {
+  let sqlResult = null
+  try {
+    const res = await fetchResults(_subject);
+    if (!res.ok) {
+      console.log(res.status)
+      console.log("error=", await res.text())
+    }
+    else {
+      const data = await res.json()
+      sqlResult = data.result
+      console.log(`inside getSqlResult() function ${JSON.stringify(sqlResult)}`)
+    }
+  } catch (e) {
+    console.log("error=", e);
+  }
+  //non empty query return
+  if (sqlResult && sqlResult.rows.length != 0) {
+    const fields = sqlResult.rows[0]
+    return fields
+  }
+  //get failed or empty return
+  else {
+    console.log(`fetch sql for ${_subject} failed`)
+  }
+  return null
+}
 
 
-// async function getFields(sqlResult: any) {
-//   let [username, name, followers_count, friends_count, profile_image_url_https, description] = ["unknown", "unknown", -1, -1, "unknown", "unknown"]
+function getFields(sqlResult: any): profileInfo {
+  let [username, name, followers_count, friends_count, profile_image_url_https, description] = ["unknown", "unknown", -1, -1, "unknown", "unknown"]
 
-//   username = sqlResult.username
-//   name = sqlResult.name
-//   followers_count = sqlResult.followers_count
-//   friends_count = sqlResult.friends_count
-//   profile_image_url_https = sqlResult.profile_image_url
-//   description = sqlResult.description
+  username = sqlResult.username
+  name = sqlResult.name
+  followers_count = sqlResult.followers_count
+  friends_count = sqlResult.friends_count
+  profile_image_url_https = sqlResult.profile_image_url
+  description = sqlResult.description
 
-//   return {
-//     username,
-//     name,
-//     followers_count,
-//     friends_count,
-//     profile_image_url_https,
-//     description
-//   }
-// }
+  return {
+    username,
+    name,
+    followers_count,
+    friends_count,
+    profile_image_url_https,
+    description
+  }
+}
 
 
 async function fetchX(ctx: TomoContext, subject: string): Promise<profileInfo> {
@@ -304,7 +277,7 @@ async function fetchX(ctx: TomoContext, subject: string): Promise<profileInfo> {
   await fetch(fetchUrl)
     .then(response => response.json())
     .then(data => {
-      username = subject
+      username = "x@" + subject
       name = data.user.result.legacy.name
       followers_count = data.user.result.legacy.followers_count
       friends_count = data.user.result.legacy.friends_count
@@ -318,20 +291,8 @@ async function fetchX(ctx: TomoContext, subject: string): Promise<profileInfo> {
 
     })
     .catch(err => {
-      console.log(`fetch error ${subject} ${err}`);
+      console.log(`fetchX error for ${subject} ${err}`);
     })
-
-  // ctx.eventLogger.emit("profileInfo", {
-  //   distinctId: subject,
-  //   username,
-  //   name,
-  //   followers_count,
-  //   friends_count,
-  //   profile_image_url_https,
-  //   description
-  // })
-
-  console.log("built profile built: ", subject, name, followers_count, friends_count)
 
   return Promise.resolve({
     username,
