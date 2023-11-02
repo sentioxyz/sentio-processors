@@ -10,11 +10,11 @@ SuiGlobalProcessor.bind({ network: SuiNetwork.TEST_NET, startCheckpoint: 4928686
       if (txSig) {
         ExecuteTransaction.emit(ctx, {
           signature: txSig,
-          payloadHash: tx.transaction.payloadHash,
+          payloadHash: tx.transaction!.payloadHash,
         });
         ctx.eventLogger.emit('multisigTx', {
           signature: txSig,
-          payloadHash: tx.transaction.payloadHash,
+          payloadHash: tx.transaction!.payloadHash,
           message: `received a multisig transaction`,
         });
       } else {
