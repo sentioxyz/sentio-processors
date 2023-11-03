@@ -3,7 +3,7 @@ import { BindSubjectEvent, RewardClaimedEvent, SubjectRewardSetEvent, TomoContex
 import { ethers } from "ethers"
 import * as dotenv from 'dotenv'
 import { TWITTER_ENDPOINT } from "./twitterEndpoint.js";
-import { scaleDown } from "@sentio/sdk";
+import { BigDecimal, scaleDown } from "@sentio/sdk";
 import { Client } from "twitter-api-sdk";
 
 const TOMO_CONTRACT = "0x9E813d7661D7B56CBCd3F73E958039B208925Ef8"
@@ -21,46 +21,6 @@ interface profileInfo {
 
 const tradeEventHandler = async (event: TradeEvent, ctx: TomoContext) => {
   const subject = ethers.decodeBytes32String(ethers.zeroPadBytes(ethers.stripZerosLeft(event.args.tradeEvent.subject), 32))
-
-  if (subject.slice(0, 2) == "x@") {
-    let profileInfo: profileInfo = {
-      username: "unk",
-      name: "unk",
-      followers_count: -1,
-      friends_count: -1,
-      profile_image_url_https: "unk",
-      description: "unk"
-    }
-
-    //check whether in sql table
-    const sqlResult = await getSqlResult(subject)
-    console.log(`get sqlResult in trade ${JSON.stringify(sqlResult)}`)
-    if (sqlResult) {
-      console.log(`found in sql ${subject}`)
-      profileInfo = getFields(sqlResult)
-    }
-    else {
-      //if not, retrieve from twitter api
-      let try_counter = 0
-      while (Number(profileInfo.followers_count) == -1 && try_counter < MAX_FETCH_TRY) {
-        profileInfo = await fetchX(ctx, subject.slice(2,))
-        try_counter++
-        if (!profileInfo && try_counter < MAX_FETCH_TRY) {
-          await sleep(try_counter * 1000)
-        }
-      }
-      ctx.eventLogger.emit("subjectInfo", {
-        distinctId: subject,
-        username: subject,
-        name: profileInfo.name,
-        followers_count: Number(profileInfo.followers_count),
-        friends_count: Number(profileInfo.friends_count),
-        profile_image_url_https: profileInfo.profile_image_url_https,
-        description: profileInfo.description
-      })
-    }
-  }
-
   ctx.eventLogger.emit("tradeEvent", {
     distinctId: event.args.tradeEvent.trader,
     eventIndex: event.args.tradeEvent.eventIndex,
@@ -80,6 +40,13 @@ const tradeEventHandler = async (event: TradeEvent, ctx: TomoContext) => {
 
 const bindSubjectEventHandler = async (event: BindSubjectEvent, ctx: TomoContext) => {
   const subject = ethers.decodeBytes32String(ethers.zeroPadBytes(ethers.stripZerosLeft(event.args.subject), 32))
+  let balance = BigDecimal(-1)
+  try {
+    balance = scaleDown(await ctx.contract.provider.getBalance(event.args.owner), 18)
+  }
+  catch (e) {
+    console.log(`get wallet balance failed for ${event.args.owner}`)
+  }
 
   if (subject.slice(0, 2) == "x@") {
     let profileInfo: profileInfo = {
@@ -129,7 +96,8 @@ const bindSubjectEventHandler = async (event: BindSubjectEvent, ctx: TomoContext
       followers_count: Number(profileInfo.followers_count),
       friends_count: Number(profileInfo.friends_count),
       profile_image_url_https: profileInfo.profile_image_url_https,
-      description: profileInfo.description
+      description: profileInfo.description,
+      balance
     })
   }
   else {
@@ -138,7 +106,8 @@ const bindSubjectEventHandler = async (event: BindSubjectEvent, ctx: TomoContext
       ts: event.args.ts,
       subject,
       subjectBytes32: event.args.subject,
-      owner: event.args.owner
+      owner: event.args.owner,
+      balance
     })
   }
 }
@@ -202,7 +171,7 @@ async function sleep(milliseconds: number): Promise<void> {
 
 export async function fetchResults(subject: string) {
   const url = new URL(
-    "/api/v1/analytics/ye/tomo/sql/execute",
+    "/api/v1/analytics/sentio/tomo/sql/execute",
     "https://app.sentio.xyz"
   )
 

@@ -7,6 +7,7 @@ import { gaugeTokenAum, gaugeStakedAssets } from './helper/fulcrom-helper.js';
 import { getERC20ContractOnContext } from '@sentio/sdk/eth/builtin/erc20'
 import { FUL_ADDRESS_MAP, sFUL_ADDRESS_MAP, esFUL_ADDRESS_MAP, vFLP_ADDRESS_MAP, vFUL_ADDRESS_MAP, VAULT_ADDRESS_MAP, FUL_MANAGER_ADDRESS_MAP, REWARD_ROUTER_ADDRESS_MAP, CHAINS } from './helper/constant.js'
 import { getOrCreateCoin } from './helper/fulcrom-helper.js';
+import { VesterProcessor } from './types/eth/vester.js';
 
 
 CHAINS.forEach(chain => {
@@ -213,4 +214,24 @@ CHAINS.forEach(chain => {
         ctx.meter.Gauge("unstake_esful_gauge").record(Number(evt.args.amount) / Math.pow(10, 18))
       }
     })
+
+
+
+  const dauEventHandler = async (evt: any, ctx: any) => {
+    ctx.eventLogger.emit(`${evt.name}`, {
+      //@ts-ignore
+      distinctId: ctx.transaction.from
+    })
+  }
+
+  VesterProcessor.bind({ address: vFUL_ADDRESS_MAP.get(chain)!, network: chain })
+    .onEventClaim(dauEventHandler, [], { transaction: true })
+    .onEventDeposit(dauEventHandler, [], { transaction: true })
+    .onEventWithdraw(dauEventHandler, [], { transaction: true })
+
+  VesterProcessor.bind({ address: vFLP_ADDRESS_MAP.get(chain)!, network: chain })
+    .onEventClaim(dauEventHandler, [], { transaction: true })
+    .onEventDeposit(dauEventHandler, [], { transaction: true })
+    .onEventWithdraw(dauEventHandler, [], { transaction: true })
+
 })

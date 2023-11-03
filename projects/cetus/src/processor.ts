@@ -9,7 +9,7 @@ import * as helper from './helper/cetus-clmm.js'
 factory.bind({
   // address: constant.CLMM_MAINNET,
   // network: SuiNetwork.MAIN_NET,
-  startCheckpoint: 1500000n
+  // startCheckpoint: 1500000n
 })
   .onEventCreatePoolEvent(async (event, ctx) => {
     ctx.meter.Counter("create_pool_counter").add(1, { project: "cetus" })
@@ -39,7 +39,7 @@ factory.bind({
 pool.bind({
   // address: constant.CLMM_MAINNET,
   // network: SuiNetwork.MAIN_NET,
-  startCheckpoint: 10926530n
+  // startCheckpoint: 10926530n
 })
   .onEventSwapEvent(async (event, ctx) => {
     ctx.meter.Counter("swap_counter").add(1, { project: "cetus" })
@@ -238,7 +238,7 @@ const template = new SuiObjectProcessorTemplate()
     catch (e) {
       console.log(`${e.message} error at ${JSON.stringify(self)}`)
     }
-  }, 10, 60, undefined, { owned: false })
+  }, 10, 1440, undefined, { owned: false })
 
 
 
