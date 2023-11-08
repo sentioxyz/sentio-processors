@@ -124,6 +124,17 @@ for (const env of [v0, v05]) {
                 })
             }
 
+            if (value.isGreaterThan(0)) {
+                const pair = getPair(evt.type_arguments[0], evt.type_arguments[1])
+                ctx.eventLogger.emit('swap', {
+                    distinctId: ctx.transaction.sender,
+                    value: value,
+                    xAmount: evt.data_decoded.x_in + evt.data_decoded.x_out,
+                    yAmount: evt.data_decoded.y_in + evt.data_decoded.y_out,
+                    pair,
+                    version: ver
+                })
+            }
             const coinXInfo = getCoinInfo(evt.type_arguments[0])
             const coinYInfo = getCoinInfo(evt.type_arguments[1])
             // ctx.logger.info(`${ctx.transaction.sender} Swap ${coinXInfo.symbol} for ${coinYInfo.symbol}`, {user: ctx.transaction.sender, value: value.toNumber()})
