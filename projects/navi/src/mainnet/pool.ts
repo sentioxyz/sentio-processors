@@ -20,9 +20,11 @@ export function PoolProcessor() {
             const type = String(self.type);
             const coin_type = SymbolMatcher(type);
             const coin_symbol = COIN_MAP[coin_type];
-
-            const decimal = self.fields.decimal;
+            //@ts-ignore
+            const decimal = self.fields.decimal
+            //@ts-ignore
             const balance = BigDecimal(self.fields.balance).div(Math.pow(10, decimal));
+            //@ts-ignore
             const treasuryBalance = BigDecimal(self.fields.treasury_balance).div(Math.pow(10, decimal));
 
             //TODO

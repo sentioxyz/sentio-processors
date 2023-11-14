@@ -20,7 +20,7 @@ export const esFUL_ADDRESS_MAP = new Map<EthChainId, string>([
 ])
 export const vFUL_ADDRESS_MAP = new Map<EthChainId, string>([
     [EthChainId.CRONOS, "0xa461fa4bf68c72369db4fa8ed7cba4796598f2b0"],
-    [EthChainId.ZKSYNC_ERA, "0x2Fb40160020Ca0F87f3D2169e2Af74F0706Ef561"]
+    [EthChainId.ZKSYNC_ERA, "0x4d9193D87C57c0839157F8EfDE0A6Aa8f4118a33"]
 ])
 export const vFLP_ADDRESS_MAP = new Map<EthChainId, string>([
     [EthChainId.CRONOS, "0x27e51d2b5a3283bef4014519f095ab8ddcf023f6"],

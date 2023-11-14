@@ -19,23 +19,31 @@ export function ProtocolProcessor() {
             startCheckpoint: 7800000n
         }).onTimeInterval(async (self, _, ctx) => {
             try {
+                //@ts-ignore
                 const type = String(self.fields.value.fields.coin_type)
+                //@ts-ignore
                 const id = String(self.fields.value.fields.id)
+                //@ts-ignore
                 const ltv = BigDecimal(self.fields.value.fields.ltv).div(Math.pow(10, DECIMAL_RAY))
                 const coin_symbol = COIN[i]
-
+                //@ts-ignore
                 const totalSupply = BigDecimal(self.fields.value.fields.supply_balance.fields.total_supply).div(Math.pow(10, DEFAULT_COIN_DECIMAL))
+                //@ts-ignore
                 const totalBorrow = BigDecimal(self.fields.value.fields.borrow_balance.fields.total_supply).div(Math.pow(10, DEFAULT_COIN_DECIMAL))
-
+                //@ts-ignore
                 const currentSupplyIndex = BigDecimal(self.fields.value.fields.current_supply_index).div(Math.pow(10, DECIMAL_RAY))
+                //@ts-ignore
                 const currentBorrowIndex = BigDecimal(self.fields.value.fields.current_borrow_index).div(Math.pow(10, DECIMAL_RAY))
                 //add
+                //@ts-ignore
                 const supplyCapCelling = BigDecimal(self.fields.value.fields.supply_cap_ceiling).div(Math.pow(10, DECIMAL_RAY))
+                //@ts-ignore
                 const borrowCapCeiling = BigDecimal(self.fields.value.fields.borrow_cap_ceiling).div(Math.pow(10, DECIMAL_RAY))
-                
+                //@ts-ignore
                 const treasuryBalance = BigDecimal(self.fields.value.fields.treasury_balance).div(Math.pow(10, DEFAULT_COIN_DECIMAL))
-
+                //@ts-ignore
                 const currentBorrowRate = BigDecimal(self.fields.value.fields.current_borrow_rate).div(Math.pow(10, DECIMAL_RAY))
+                //@ts-ignore
                 const currentSupplyRate = BigDecimal(self.fields.value.fields.current_supply_rate).div(Math.pow(10, DECIMAL_RAY))
 
                 // const supply rate

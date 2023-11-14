@@ -17,7 +17,7 @@ const transferEventHandler = async (event: any, ctx: any) => {
     distinctId: event.args.from,
     from: event.args.from,
     to: event.args.to,
-    value: event.args.value
+    value: event.args.value,
   })
 }
 
@@ -32,16 +32,6 @@ const transactionHandler = async (tx: TransactionResponseParams, ctx: GlobalCont
   }
 }
 
-
-const filter1_to = ERC20Processor.filters.Transfer(
-  null,
-  address1
-)
-
-const filter1_from = ERC20Processor.filters.Transfer(
-  address1,
-  null
-)
 
 const filter2_to = ERC20Processor.filters.Transfer(
   null,
@@ -66,23 +56,30 @@ const filter3_from = ERC20Processor.filters.Transfer(
 
 ERC20Processor.bind({
   address: WETH,
-  network: EthChainId.CRONOS
+  network: EthChainId.CRONOS,
+  baseLabels: { "symbol": "WETH" }
 })
   .onEventTransfer(transferEventHandler, [filter2_from, filter2_to])
 
 
 ERC20Processor.bind({
   address: WCRO,
-  network: EthChainId.CRONOS
+  network: EthChainId.CRONOS,
+  baseLabels: { "symbol": "WCRO" }
+
 })
   .onEventTransfer(transferEventHandler, [filter3_from, filter3_to])
 
 ERC20Processor.bind({
   address: VVS,
-  network: EthChainId.CRONOS
+  network: EthChainId.CRONOS,
+  baseLabels: { "symbol": "VVS" }
 })
   .onEventTransfer(transferEventHandler, [filter3_from, filter3_to])
 
 
-GlobalProcessor.bind({ network: EthChainId.CRONOS })
+GlobalProcessor.bind({
+  network: EthChainId.CRONOS,
+  baseLabels: { "symbol": "CRO" }
+})
   .onTransaction(transactionHandler)

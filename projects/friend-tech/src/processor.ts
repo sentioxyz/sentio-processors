@@ -4,20 +4,19 @@ import { scaleDown } from "@sentio/sdk";
 const FRIEND_TECH_SHARES_ADDR = "0xCF205808Ed36593aa40a44F10c7f7C2F67d4A4d4"
 import { LRUCache } from 'lru-cache'
 import { throttledQueue } from "./throttled-queue.js";
+import { JWT } from "./auth.js";
 
 
 const accountInfoMapCache = new LRUCache<string, Promise<accountInfo>>({
   max: 300
 })
 
-const throttle = throttledQueue(5, 1000);
+// const throttle = throttledQueue(5, 1000);
 
 const tradeEventHandler = async (event: TradeEvent, ctx: FriendtechSharesV1Context) => {
   ctx.meter.Counter("trade_counter").add(1)
   const traderAccountInfo = await getOrCreateAccountInfo(ctx, event.args.trader.toLowerCase())
-  const traderTwitterUsername = traderAccountInfo.twitterUsername
   const subjectAccountInfo = await getOrCreateAccountInfo(ctx, event.args.subject.toLowerCase())
-  const subjectTwitterUsername = subjectAccountInfo.twitterUsername
   const lastPrice = (Number(event.args.supply) - 1) ** 2 / 16000
   const shareAmount = Number(event.args.shareAmount)
   const supply = Number(event.args.supply)
@@ -33,8 +32,8 @@ const tradeEventHandler = async (event: TradeEvent, ctx: FriendtechSharesV1Conte
     protocolEthAmount: scaleDown(event.args.protocolEthAmount, 18),
     subjectEthAmount: scaleDown(event.args.subjectEthAmount, 18),
     supply,
-    traderTwitterUsername,
-    subjectTwitterUsername,
+    traderTwitterUsername: traderAccountInfo ? traderAccountInfo.twitterUsername : "unk",
+    subjectTwitterUsername: subjectAccountInfo ? subjectAccountInfo.twitterUsername : "unk",
     lastPrice,
     bot,
     message: `${(event.args.isBuy) ? "Buy" : "Sell"} ${event.args.subject} ${shareAmount} shares at ${lastPrice}ETH by ${event.args.trader}`
@@ -58,14 +57,14 @@ interface accountInfo {
   twitterUserId: string
 }
 
-async function buildAccountInfo(ctx: FriendtechSharesV1Context, traderAddress: string): Promise<accountInfo> {
+async function buildAccountInfo(ctx: FriendtechSharesV1Context, traderAddress: string): Promise<accountInfo | null> {
   let [id, address, twitterUsername, twitterName, twitterPfpUrl, twitterUserId] = ["unk", "unk", "unk", "unk", "unk", "unk"]
-
-
 
   let fetchUrl = "https://prod-api.kosetto.com/users/" + traderAddress
   const data = await fetch(fetchUrl, {
-    headers: { 'User-Agent': 'Mozilla/5.0 (Macintosh; Intel Mac OS X 10_15_7) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/104.0.5112.79 Safari/537.36' }
+    headers: {
+      'Authorization': `Bearer ${JWT}`
+    }
   })
     .then(res => {
       if (!res.ok) { return res.text().then(text => { throw new Error(text) }) }
@@ -73,14 +72,7 @@ async function buildAccountInfo(ctx: FriendtechSharesV1Context, traderAddress: s
     })
     .catch(err => {
       console.log(`fetch api error ${err} for ${traderAddress}`)
-      return {
-        id,
-        address,
-        twitterUsername,
-        twitterName,
-        twitterPfpUrl,
-        twitterUserId
-      }
+      return null
     })
   if (data) {
     console.log("Data fetched from api ", JSON.stringify(data))
@@ -105,37 +97,36 @@ async function buildAccountInfo(ctx: FriendtechSharesV1Context, traderAddress: s
     })
   }
 
-  return {
+  return Promise.resolve({
     id,
     address,
     twitterUsername,
     twitterName,
     twitterPfpUrl,
     twitterUserId
-  }
-
-
+  })
 }
 
-async function getOrCreateAccountInfo(ctx: FriendtechSharesV1Context, traderAddress: string): Promise<accountInfo> {
+async function getOrCreateAccountInfo(ctx: FriendtechSharesV1Context, traderAddress: string): Promise<accountInfo | null> {
   if (accountInfoMapCache.has(traderAddress)) {
     const accountInfo = accountInfoMapCache.get(traderAddress)
-    //@ts-ignore
-    console.log(`found account for ${(await accountInfo).twitterUsername} ${traderAddress}`)
-    //@ts-ignore
-    return accountInfo
+    if (accountInfo) {
+      console.log(`found account for ${(await accountInfo).twitterUsername} ${traderAddress}`)
+      return accountInfo
+    }
   }
 
   //check if in sql table first
   const result = await getSqlResult(traderAddress)
   if (result) {
     console.log(`Find match in sql ${traderAddress}`)
-    return await getFields(result)
+    return Promise.resolve(getFields(result))
   }
 
   //otherwise calling api, and write to sql table
   let accountInfo
-  await throttle(async () => { accountInfo = await buildAccountInfo(ctx, traderAddress) })
+  // await throttle(async () => { accountInfo = await buildAccountInfo(ctx, traderAddress) })
+  accountInfo = await buildAccountInfo(ctx, traderAddress)
   if (accountInfo) {
     const accountInfoPromise = Promise.resolve(accountInfo)
     accountInfoMapCache.set(traderAddress, accountInfoPromise)
@@ -150,8 +141,7 @@ async function getOrCreateAccountInfo(ctx: FriendtechSharesV1Context, traderAddr
     // await sleep(60 * 1000)
     return accountInfoPromise
   }
-
-
+  else return null
 }
 
 async function sleep(milliseconds: number): Promise<void> {
@@ -176,7 +166,8 @@ export async function fetchResults(traderAddress: string) {
     body: `{
       "sqlQuery": {
         "sql": "SELECT * FROM AccountInfo WHERE distinct_id = '${traderAddress}'"
-      }
+      },
+      "version":59
     }`,
   })
 }

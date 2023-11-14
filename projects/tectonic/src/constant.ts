@@ -47,7 +47,8 @@ export const TOKEN_SYMBOL: Map<string, string> = new Map([
     ["0x47e5229d46a11a25ff5dca210df57d62345decf1", "tbCROd"],
     ["0xf2a4c7595a64a18158d205148a975509d969cb8d", "tUSDCd"],
     ["0x2c5515be5bb123b8088843e85789e3e294670cad", "tFERd"],
-    ["0x5f2e412392a317b8b80234b8a6941e0282161a25", "tVNOd"]
+    ["0x5f2e412392a317b8b80234b8a6941e0282161a25", "tVNOd"],
+    ["0x0ba8683fb1d8f66d9ebbe3634b67da623188ac84", "tUSDTd"]
 ])
 
 
@@ -77,7 +78,8 @@ export const COLLATERAL_TOKENS: Map<string, string> = new Map([
     ["tLATOMl", "latom"],
     ["tCROd", "cro"],
     ["tUSDCd", "usdc"],
-    ["tVNOd", "vno"]
+    ["tVNOd", "vno"],
+    ["tUSDTd", "usdt"]
 ])
 
 export const COLLATERAL_ADDRESSES: Map<string, string> = new Map([

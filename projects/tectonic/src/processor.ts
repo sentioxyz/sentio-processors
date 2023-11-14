@@ -605,7 +605,8 @@ const FlashLoanAndLiquidateCallHandler = async (call: FlashLoanAndLiquidateCallT
 
 DeferLiquidityCheckAdapterProcessor.bind({
   address: constant.REPAY_WITH_COLLATERAL,
-  network: EthChainId.CRONOS
+  network: EthChainId.CRONOS,
+  // startBlock: 10524700
 })
   .onEventSwapAndRepay(SwapAndRepayEventHandler)
   .onEventSwapAndDeposit(SwapAndDepositEventHandler)

@@ -52,6 +52,10 @@ export const gaugeTokenAum = async (_: any, ctx: VaultContext) => {
             const tokenAum = Number(await getERC20ContractOnContext(ctx, address).balanceOf(VAULT_ADDRESS_MAP.get(ctx.chainId)!)) / Math.pow(10, token.decimal)
             // console.log("tokenAum", tokenAum, WhitelistTokenMap[address].decimal, WhitelistTokenMap[address].symbol, ctx.timestamp)
             ctx.meter.Gauge("tokenAum").record(tokenAum, { coin_symbol: token.symbol })
+            ctx.eventLogger.emit("tokenAum_log", {
+                tokenAum,
+                coin_symbol: token.symbol
+            })
         } catch (e) { console.log(`gauge token aum error ${token.symbol} ${ctx.timestamp}`) }
     }
 }
@@ -62,7 +66,11 @@ export const gaugeStakedAssets = async (_: any, ctx: FulContext) => {
     try {
         const stakedFul = Number(await getERC20ContractOnContext(ctx, FUL_ADDRESS_MAP.get(ctx.chainId)!).balanceOf(sFUL_ADDRESS_MAP.get(ctx.chainId)!)) / Math.pow(10, 18)
         ctx.meter.Gauge("stakedFul").record(stakedFul)
-    } catch (e) { console.log(`get stake ful amount error ${ctx.timestamp}`) }
+        ctx.eventLogger.emit("stakedFul_log", {
+            stakedFul,
+            coin_symbol: "ful"
+        })
+    } catch (e) { console.log(`get staked ful amount error ${ctx.timestamp}`) }
     //record staked esFUL
     try {
         const stakedesFUL = Number(await getERC20ContractOnContext(ctx, esFUL_ADDRESS_MAP.get(ctx.chainId)!).balanceOf(sFUL_ADDRESS_MAP.get(ctx.chainId)!)) / Math.pow(10, 18)
