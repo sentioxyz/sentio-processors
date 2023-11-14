@@ -1,0 +1,1 @@
+export const TWITTER_ENDPOINT = "https://tomotrade.xyz/x/tomo/"
