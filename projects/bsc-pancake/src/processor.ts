@@ -5,9 +5,12 @@ import { PancakeV3PoolProcessor } from "./types/eth/pancakev3pool.js";
 import { AlgebraPoolProcessor } from "./types/eth/algebrapool.js";
 import { EthChainId } from "@sentio/sdk/eth";
 
-const START_BLOCK = 32485968;
+const START_BLOCK = 33268168;
 
-const V2_ADDRESSES = ["0x819A26D0C6F3Af2b9fe4e9C4bcaC04Fcb3eA7F2A"];
+const V2_ADDRESSES = [
+  "0xba5Ae86960FE468fF02d83022c0079670BD8F6a9",
+  "0x183ebd9f9CD444f654d5A46f3FE583542B8948e9",
+];
 
 for (const address of V2_ADDRESSES) {
   PancakePairProcessor.bind({
@@ -22,10 +25,7 @@ for (const address of V2_ADDRESSES) {
   });
 }
 
-const V3_ADDRESSES = [
-  "0x0f338Ec12d3f7C3D77A4B9fcC1f95F3FB6AD0EA6",
-  "0x7d05c84581f0C41AD80ddf677A510360bae09a5A",
-];
+const V3_ADDRESSES = ["0x77d5b2560e4B84b3fC58875Cb0133F39560e8AE3"];
 
 for (const address of V3_ADDRESSES) {
   PancakeV3PoolProcessor.bind({
@@ -40,7 +40,10 @@ for (const address of V3_ADDRESSES) {
   });
 }
 
-const ALGEBRA_ADDRESSES = ["0xD6f0Ba7eC72Ff3974B02c18ED1fC33Da77434d41"];
+const ALGEBRA_ADDRESSES = [
+  "0x2F6C6e00E517944EE5EFE310cd0b98A3fC61Cb98",
+  "0x0748fb34bcb68d2c055cDfCb9F5bcB3549FcB456",
+];
 
 for (const address of ALGEBRA_ADDRESSES) {
   AlgebraPoolProcessor.bind({
