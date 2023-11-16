@@ -1,4 +1,4 @@
-import { clob_v2 } from "./types/sui/deepbook.js"
+import { clob_v2, custodian_v2 } from "./types/sui/deepbook.js"
 import { SuiContext } from "@sentio/sdk/sui"
 import { SuiTransactionBlockResponse } from '@mysten/sui.js/client'
 import { getCoinAddressFromType, getOrCreateCoin } from './helper/getCoinOrPool.js'
@@ -91,4 +91,4 @@ clob_v2.bind()
   .onEventOrderFilled(orderFilledHandler)
   .onEventWithdrawAsset(WithdrawAssetHandler)
   .onEventDepositAsset(DepositAssetHandler)
-
+\
