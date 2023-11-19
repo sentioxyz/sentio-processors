@@ -61,6 +61,7 @@ export const chainConfigs = [
       "0xf5df545113dee4df10f8149090aa737ddc05070a".toLowerCase(), // pfl
       "0xd7f1dd5d49206349cae8b585fcb0ce3d96f1696f".toLowerCase(), // router
       "0x0BC9526d2a7B4FCb8901aD71d2b6756895a42C2d".toLowerCase(), // strategy
+      "0x25135C8513Fd5C54eCa806F040d323cB60995b4A".toLowerCase(), // liquidity hub
     ]),
     mintBurnAddr: new Set<string>([
       "0x0000000000000000000000000000000000000000",
