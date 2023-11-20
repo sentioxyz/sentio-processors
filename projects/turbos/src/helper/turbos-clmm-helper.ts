@@ -219,15 +219,16 @@ export async function calculateValue_USD(ctx: SuiContext | SuiObjectContext, poo
 }
 
 
-export async function calculateSwapVol_USD(type: string, amount_a: number, amount_b: number, atob: Boolean, date: Date) {
+export async function calculateSwapVol_USD(ctx: SuiContext | SuiObjectContext, pool: string, amount_a: number, amount_b: number, atob: Boolean, date: Date) {
     let vol: number = 0
     let price_a
     let price_b
 
     try {
-        const [coin_a_full_address, coin_b_full_address] = getCoinFullAddress(type)
-        price_a = await getPriceByType(SuiNetwork.MAIN_NET, coin_a_full_address, date)
-        price_b = await getPriceByType(SuiNetwork.MAIN_NET, coin_b_full_address, date)
+        const poolInfo = await getOrCreatePool(ctx, pool)
+        // const [coin_a_full_address, coin_b_full_address] = getCoinFullAddress(poolInfo.type)
+        const price_a = await getPriceBySymbol(poolInfo.symbol_a, date)
+        const price_b = await getPriceBySymbol(poolInfo.symbol_b, date)
 
         if (price_a) {
             vol = amount_a * price_a
@@ -236,16 +237,16 @@ export async function calculateSwapVol_USD(type: string, amount_a: number, amoun
             vol = amount_b * price_b
             // use exchange rate to try to fill price_a
             if (amount_a != 0) {
-                price_a = amount_b / amount_a * price_b
+                vol = amount_b / amount_a * price_b
             }
         }
         else {
-            console.log(`price not in sui coinlist, calculate vol failed for pool w/ ${type}`)
+            console.log(`price not in sui coinlist, calculate vol failed for pool w/ ${pool}`)
         }
 
     }
     catch (e) {
-        console.log(` calculate swap value error ${e.message} at ${type}`)
+        console.log(` calculate swap value error ${e.message} at ${pool}`)
     }
     return [vol, price_a, price_b]
 

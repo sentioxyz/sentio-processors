@@ -183,13 +183,13 @@ export const getOrCreatIDOPool = async function (ctx: SuiContext | SuiObjectCont
         infoPromise = buildIDOPoolInfo(ctx, pool)
         IDOPoolInfoMap.set(pool, infoPromise)
         // console.log("set poolInfoMap for " + pool)
-        let i = 0
+        // let i = 0
         let msg = `set IDO PoolInfoMap for ${(await infoPromise).pairName}`
-        for (const key of IDOPoolInfoMap.keys()) {
-            const poolInfo = await IDOPoolInfoMap.get(key)
-            msg += `\n${i}:${poolInfo?.pairName} `
-            i++
-        }
+        // for (const key of IDOPoolInfoMap.keys()) {
+        //     const poolInfo = await IDOPoolInfoMap.get(key)
+        //     msg += `\n${i}:${poolInfo?.pairName} `
+        //     i++
+        // }
         console.log(msg)
     }
     return infoPromise
@@ -277,14 +277,46 @@ export async function calculateSwapVol_USD(event: pool.SwapEventInstance, type: 
     let vol = 0
     if (price_a) {
         vol = (atob ? amount_in : amount_out) * price_a
-        console.log(`price a ${coin_a_full_address} ${coin_b_full_address} ${date}`)
+        // console.log(`price a ${coin_a_full_address} ${coin_b_full_address} ${date}`)
     }
     else if (price_b) {
         vol = (atob ? amount_out : amount_in) * price_b
-        console.log(`price b ${coin_a_full_address} ${coin_b_full_address} ${date}`)
+        // console.log(`price b ${coin_a_full_address} ${coin_b_full_address} ${date}`)
     }
     else {
         console.log(`price not in sui coinlist, calculate vol failed for pool w/ ${event.id.txDigest} ${coin_a_full_address} ${coin_b_full_address} ${date}`)
+    }
+
+    return vol
+}
+
+
+export async function calculateFee_USD(ctx: SuiContext | SuiObjectContext, pool: string, amount: number, atob: Boolean, date: Date) {
+    let vol = 0
+
+    try {
+        const poolInfo = await getOrCreatePool(ctx, pool)
+        const [coin_a_full_address, coin_b_full_address] = getCoinFullAddress(poolInfo.type)
+        const price_a = await getPriceByType(SuiNetwork.MAIN_NET, coin_a_full_address, date)
+        const price_b = await getPriceByType(SuiNetwork.MAIN_NET, coin_b_full_address, date)
+        const coin_a2b_price = await getPoolPrice(ctx, pool)
+
+        if (!price_a && !price_b) {
+            console.log(`price not in sui coinlist, calculate fee failed at coin_a: ${coin_a_full_address},coin_b: ${coin_b_full_address} at ${JSON.stringify(ctx)}`)
+            return 0
+        }
+
+        if (atob) {
+            if (price_a) vol = amount * price_a
+            else if (price_b) vol = amount * coin_a2b_price * price_b
+        }
+        else {
+            if (price_b) vol = amount * price_b
+            else if (price_a) vol = amount / coin_a2b_price * price_a
+        }
+    }
+    catch (e) {
+        console.log(`calculate fee error ${e.message} at ${JSON.stringify(ctx)}`)
     }
 
     return vol

@@ -1,6 +1,6 @@
 import { pool, factory } from "./types/sui/0x1eabed72c53feb3805120a081dc15963c204dc8d091542592abaf7a35689b2fb.js"
 import { SuiObjectProcessor, SuiContext, SuiObjectContext, SuiObjectProcessorTemplate } from "@sentio/sdk/sui"
-import { getPriceByType, token } from "@sentio/sdk/utils"
+import { getPriceBySymbol, getPriceByType, token } from "@sentio/sdk/utils"
 import * as constant from './constant-cetus.js'
 import { SuiNetwork } from "@sentio/sdk/sui"
 // import './cetus-launchpad.js'
@@ -55,7 +55,7 @@ pool.bind({
     const pairName = poolInfo.pairName
     const amount_in = Number(event.data_decoded.amount_in) / Math.pow(10, atob ? decimal_a : decimal_b)
     const amount_out = Number(event.data_decoded.amount_out) / Math.pow(10, atob ? decimal_b : decimal_a)
-    const fee_amount = Number(event.data_decoded.fee_amount)
+    const fee_amount = Number(event.data_decoded.fee_amount) / Math.pow(10, atob ? decimal_a : decimal_b)
     const partner = event.data_decoded.partner
     const ref_amount = event.data_decoded.ref_amount
     const steps = event.data_decoded.steps
@@ -63,6 +63,8 @@ pool.bind({
     const vault_b_amount = event.data_decoded.vault_b_amount
 
     const usd_volume = await helper.calculateSwapVol_USD(event, poolInfo.type, amount_in, amount_out, atob, ctx.timestamp)
+
+    const fee_amount_usd = await helper.calculateFee_USD(ctx, pool, fee_amount, atob, ctx.timestamp)
 
     ctx.eventLogger.emit("SwapEvent", {
       //@ts-ignore
@@ -74,6 +76,7 @@ pool.bind({
       amount_out,
       usd_volume,
       fee_amount,
+      fee_amount_usd,
       atob,
       partner,
       ref_amount,
