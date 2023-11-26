@@ -509,7 +509,11 @@ export function Bind(chainConfig: ChainConstants, startBlock: number) {
         }
         // @ts-ignore
         ctx.transactionHash = txn.txnHash;
-        console.log("emit arbitrage event", txn.txnHash);
+        console.log(
+          "emit arbitrage event",
+          txn.txnHash,
+          Number(ctx.blockNumber)
+        );
         ctx.eventLogger.emit("arbitrage", {
           distinctId: txn.mevContract,
           mevContract: txn.mevContract,
