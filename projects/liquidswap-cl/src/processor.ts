@@ -1,13 +1,10 @@
-import { pool } from './types/aptos/testnet/0x441500aa9825825f2f88b325d25c39be76682a5518ffee48848c7d208727ecea.js'
+import { pool } from './types/aptos/testnet/0x73a2aa302e5e40dd9781a3b2d43ab45b3617a562416c16becfbfe66dcf378141.js'
 import { AptosDex, getPairValue } from "@sentio/sdk/aptos/ext";
 import { Gauge, MetricOptions } from "@sentio/sdk";
 import { type_info } from "@sentio/sdk/aptos/builtin/0x1";
 import { AptosNetwork, AptosResourcesProcessor, Transaction_UserTransaction } from "@sentio/sdk/aptos";
 import { MoveFetchConfig, parseMoveType, TypeDescriptor } from "@sentio/sdk/move";
 import { Types } from 'aptos-sdk'
-import { AptosChainId } from "@sentio/chain";
-
-// pool.bind().onEventSwapEvent()
 
 export const commonOptions = {sparse: true}
 export const volOptions: MetricOptions = {
@@ -36,17 +33,17 @@ const liquidSwapCl = new AptosDex(volume, volumeByCoin,
     })
 
 
-const POOL_PREFIX = "0x441500aa9825825f2f88b325d25c39be76682a5518ffee48848c7d208727ecea::pool::Pool"
+const POOL_PREFIX = pool.Pool.TYPE_QNAME
 
 const fetchConfig: MoveFetchConfig = {
   resourceChanges: true,
   allEvents: false,
-  resourceConfig: {
-    moveTypePrefix: POOL_PREFIX,
-  }
+  // resourceConfig: {
+  //   moveTypePrefix: POOL_PREFIX,
+  // }
 }
 
-pool.bind()
+pool.bind({startVersion: 638615642})
     .onEventPoolCreatedEvent(async (evt, ctx) => {
       const coinx = toTypeString(evt.data_decoded.x)
       const coiny = toTypeString(evt.data_decoded.y)
@@ -61,8 +58,8 @@ pool.bind()
     }, fetchConfig)
     .onEventMintEvent(async (evt, ctx) => {
       const pool = getPool(ctx.transaction)
-      const coinx = pool.typeArgs[0].qname
-      const coiny = pool.typeArgs[1].qname
+      const coinx = pool.typeArgs[0].getSignature()
+      const coiny = pool.typeArgs[1].getSignature()
       const value = await getPairValue(ctx, coinx, coiny, sum(evt.data_decoded.x_liq), sum(evt.data_decoded.y_liq))
 
       ctx.eventLogger.emit("Mint", {
@@ -72,11 +69,11 @@ pool.bind()
           value: value,
           pair: await liquidSwapCl.getPair(coinx, coiny),
         })
-    })
+    }, fetchConfig)
     .onEventBurnEvent(async (evt, ctx) => {
       const pool = getPool(ctx.transaction)
-      const coinx = pool.typeArgs[0].qname
-      const coiny = pool.typeArgs[1].qname
+      const coinx = pool.typeArgs[0].getSignature()
+      const coiny = pool.typeArgs[1].getSignature()
       const value = await getPairValue(ctx, coinx, coiny, sum(evt.data_decoded.x_liq_reedemed), sum(evt.data_decoded.y_liq_reedemed))
 
       ctx.eventLogger.emit("Burn", {
@@ -86,11 +83,11 @@ pool.bind()
         value: value,
         pair: await liquidSwapCl.getPair(coinx, coiny),
       })
-    })
+    }, fetchConfig)
     .onEventSwapEvent(async (evt, ctx) => {
       const pool = getPool(ctx.transaction)
-      const coinx = pool.typeArgs[0].qname
-      const coiny = pool.typeArgs[1].qname
+      const coinx = pool.typeArgs[0].getSignature()
+      const coiny = pool.typeArgs[1].getSignature()
 
       const value = await liquidSwapCl.recordTradingVolume(ctx,
           coinx, coiny,
@@ -112,8 +109,8 @@ pool.bind()
     }, fetchConfig)
     .onEventFlashloanEvent(async (evt, ctx) => {
       const pool = getPool(ctx.transaction)
-      const coinx = pool.typeArgs[0].qname
-      const coiny = pool.typeArgs[1].qname
+      const coinx = pool.typeArgs[0].getSignature()
+      const coiny = pool.typeArgs[1].getSignature()
 
       const value = await liquidSwapCl.recordTradingVolume(ctx,
           coinx, coiny,
@@ -132,10 +129,13 @@ pool.bind()
       }
     }, fetchConfig)
 
-AptosResourcesProcessor.bind({address: "0x52791f02e7e9186222ab4b54ce046f7c9b12b4396c36c965592e45ddcdb2f348", network: AptosNetwork.TEST_NET})
+AptosResourcesProcessor.bind({
+  address: "0xe747d92f105d23dbcd47630ac03ddf3c60ea86d7030ec2170897cd499eb89aa1",
+  network: AptosNetwork.TEST_NET,
+  startVersion: 638615642
+})
     .onTimeInterval((rs, ctx) =>
-        liquidSwapCl.syncPools(rs, ctx), 60, 12 * 60)
-
+        liquidSwapCl.syncPools(rs, ctx), 60, 24 * 60)
 
 function toTypeString(typ: type_info.TypeInfo) {
   return typ.account_address + "::" + typ.module_name + "::" + typ.struct_name
@@ -147,7 +147,7 @@ function getPool(tx: Transaction_UserTransaction): TypeDescriptor<pool.Pool<any,
       continue
     }
     const writeResource = change as Types.WriteSetChange_WriteResource
-    if (writeResource.data.type !== POOL_PREFIX) {
+    if (!writeResource.data.type.startsWith(POOL_PREFIX)) {
       console.error("wrong resource type get fetched", writeResource.data.type)
       continue
     }
