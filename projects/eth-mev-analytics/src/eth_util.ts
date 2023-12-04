@@ -201,7 +201,7 @@ function buildERC20AndWETH(
           continue;
         }
       }
-    } catch (e) {}
+    } catch (e) { }
   }
 }
 

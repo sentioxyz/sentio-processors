@@ -260,11 +260,11 @@ export async function calculateValue_USD(ctx: SuiContext | SuiObjectContext, poo
             value_b = amount_b * price_b
         }
         else {
-            console.log(`price not in sui coinlist, calculate value failed at coin_a: ${coin_a_full_address},coin_b: ${coin_b_full_address} at ${JSON.stringify(ctx)}`)
+            console.log(`price not in sui coinlist, calculate value failed at coin_a: ${coin_a_full_address},coin_b: ${coin_b_full_address} at at ${pool} ${amount_a} ${amount_b}`)
         }
     }
     catch (e) {
-        console.log(` calculate value error ${e.message} at ${JSON.stringify(ctx)}`)
+        console.log(` calculate value error ${e.message} at ${pool} ${amount_a} ${amount_b}`)
     }
     return [value_a, value_b]
 }
@@ -302,7 +302,7 @@ export async function calculateFee_USD(ctx: SuiContext | SuiObjectContext, pool:
         const coin_a2b_price = await getPoolPrice(ctx, pool)
 
         if (!price_a && !price_b) {
-            console.log(`price not in sui coinlist, calculate fee failed at coin_a: ${coin_a_full_address},coin_b: ${coin_b_full_address} at ${JSON.stringify(ctx)}`)
+            console.log(`price not in sui coinlist, calculate fee failed at coin_a: ${coin_a_full_address},coin_b: ${coin_b_full_address} at ${pool}`)
             return 0
         }
 
@@ -316,7 +316,7 @@ export async function calculateFee_USD(ctx: SuiContext | SuiObjectContext, pool:
         }
     }
     catch (e) {
-        console.log(`calculate fee error ${e.message} at ${JSON.stringify(ctx)}`)
+        console.log(`calculate fee error ${e.message} at at ${pool} ${amount}`)
     }
 
     return vol

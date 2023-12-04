@@ -297,7 +297,7 @@ AtlantisEquipmentsProcessor.bind({
     const id = Number(event.args._id)
     const amount = Number(event.args._amount)
     const totalSupply = Number(event.args._totalSupply)
-    const calculateFusionCost = Number(await ctx.contract.calculateFusionCost(id - 3, amount, { blockTag: ctx.blockNumber })) /// 10 ** 18
+    const calculateFusionCost = Number(await ctx.contract.calculateFusionCost(id - 3, amount, { blockTag: ctx.blockNumber })) /// 10 ** 18    
     console.log(`calculateFusionCost(${id - 3},${amount}): ${calculateFusionCost}`)
     ctx.eventLogger.emit("FuseEquipment", {
       distinctId: from,

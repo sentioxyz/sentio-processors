@@ -39,7 +39,7 @@ factory.bind({
 pool.bind({
   // address: constant.CLMM_MAINNET,
   // network: SuiNetwork.MAIN_NET,
-  // startCheckpoint: 10926530n
+  // startCheckpoint: 19548548n
 })
   .onEventSwapEvent(async (event, ctx) => {
     ctx.meter.Counter("swap_counter").add(1, { project: "cetus" })
@@ -113,6 +113,7 @@ pool.bind({
     const amount_b = Number(event.data_decoded.amount_b) / Math.pow(10, decimal_b)
 
     const [value_a, value_b] = await helper.calculateValue_USD(ctx, pool, amount_a, amount_b, ctx.timestamp)
+
     const value = value_a + value_b
 
     ctx.eventLogger.emit("AddLiquidityEvent", {
