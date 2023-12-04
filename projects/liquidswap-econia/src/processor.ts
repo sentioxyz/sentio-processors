@@ -46,12 +46,17 @@ user.bind()
         const [type1, type2] = await getCoinInfos(marketInfo)
 
         // 800 * 6916 * (10**6) / 100000 / (10**8) * 7
-        const tmp1 = marketInfo.tick_size * 10n ** BigInt(type1.decimals)
-        const tmp2 = marketInfo.lot_size * 10n ** BigInt(type2.decimals)
+        // const tmp1 = marketInfo.lot_size * (10n ** BigInt(type1.decimals))
+        // const tmp2 = marketInfo.tick_size * (10n ** BigInt(type2.decimals))
 
-        const amount= (evt.data_decoded.price * evt.data_decoded.size).asBigDecimal()
-            .multipliedBy(tmp1.asBigDecimal())
-            .div(tmp2.asBigDecimal())
+        // size * price =
+
+        const amount= (evt.data_decoded.size * marketInfo.lot_size).scaleDown(type1.decimals)
+
+            // .multipliedBy(tmp1.asBigDecimal())
+            // .dividedBy(tmp2.asBigDecimal())
+            // .multipliedBy(tmp2.asBigDecimal())
+            // .div(tmp1.asBigDecimal())
           // multipliedBy(marketInfo.tick_size.asBigDecimal()).dividedBy(type1.decimals)
         const price = await getPrice(type1.token_type.type, ctx.getTimestamp())
         const value = amount.multipliedBy(price)

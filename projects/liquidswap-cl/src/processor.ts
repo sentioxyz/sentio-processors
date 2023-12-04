@@ -43,7 +43,7 @@ const fetchConfig: MoveFetchConfig = {
   // }
 }
 
-pool.bind({startVersion: 638615642})
+pool.bind()
     .onEventPoolCreatedEvent(async (evt, ctx) => {
       const coinx = toTypeString(evt.data_decoded.x)
       const coiny = toTypeString(evt.data_decoded.y)
@@ -134,8 +134,10 @@ AptosResourcesProcessor.bind({
   network: AptosNetwork.TEST_NET,
   startVersion: 638615642
 })
-    .onTimeInterval((rs, ctx) =>
-        liquidSwapCl.syncPools(rs, ctx), 60, 24 * 60)
+    .onTimeInterval(async (rs, ctx) => {
+      console.log("sync pools outter", rs)
+      await liquidSwapCl.syncPools(rs, ctx)
+    }, 60, 24 * 60)
 
 function toTypeString(typ: type_info.TypeInfo) {
   return typ.account_address + "::" + typ.module_name + "::" + typ.struct_name
