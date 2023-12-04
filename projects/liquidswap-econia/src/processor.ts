@@ -43,11 +43,19 @@ user.bind()
         const marketInfo = await getMarketInfo(ctx, evt.data_decoded.market_id)
         const pair = await getPair(marketInfo)
 
-        const amount= (evt.data_decoded.price * evt.data_decoded.size).asBigDecimal().dividedBy(marketInfo.lot_size.asBigDecimal())
         const [type1, type2] = await getCoinInfos(marketInfo)
+
+        // 800 * 6916 * (10**6) / 100000 / (10**8) * 7
+        const tmp1 = marketInfo.tick_size * 10n ** BigInt(type1.decimals)
+        const tmp2 = marketInfo.lot_size * 10n ** BigInt(type2.decimals)
+
+        const amount= (evt.data_decoded.price * evt.data_decoded.size).asBigDecimal()
+            .multipliedBy(tmp1.asBigDecimal())
+            .div(tmp2.asBigDecimal())
+          // multipliedBy(marketInfo.tick_size.asBigDecimal()).dividedBy(type1.decimals)
         const price = await getPrice(type1.token_type.type, ctx.getTimestamp())
         const value = amount.multipliedBy(price)
-        
+
         ctx.eventLogger.emit('fill_order', {
           distinctId: evt.guid.account_address,
           pair,
