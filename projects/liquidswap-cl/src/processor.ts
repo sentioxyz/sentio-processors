@@ -14,7 +14,6 @@ export const volOptions: MetricOptions = {
   // }
 }
 
-export const totalValue = Gauge.register("total_value", commonOptions)
 export const tvlAll = Gauge.register("tvl_all", commonOptions)
 export const tvlByPool = Gauge.register("tvl_by_pool", commonOptions)
 export const tvlByPoolNew = Gauge.register("tvl_by_pool_new", commonOptions)
@@ -43,7 +42,7 @@ const fetchConfig: MoveFetchConfig = {
   // }
 }
 
-pool.bind()
+pool.bind({  startVersion: 638615642 })
     .onEventPoolCreatedEvent(async (evt, ctx) => {
       const coinx = toTypeString(evt.data_decoded.x)
       const coiny = toTypeString(evt.data_decoded.y)
@@ -95,7 +94,7 @@ pool.bind()
           sum(evt.data_decoded.y_in) + sum(evt.data_decoded.y_out),
           {})
 
-      if (value.isGreaterThan(0)) {
+      // if (value.isGreaterThan(0)) {
         ctx.eventLogger.emit("Swap", {
           distinctId: ctx.transaction.sender,
           value: value,
@@ -105,7 +104,7 @@ pool.bind()
           fee: sum(evt.data_decoded.fees),
           protocolFee: sum(evt.data_decoded.protocol_fees)
         })
-      }
+      // }
     }, fetchConfig)
     .onEventFlashloanEvent(async (evt, ctx) => {
       const pool = getPool(ctx.transaction)
