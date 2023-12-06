@@ -11,9 +11,9 @@ import { SimpleCoinInfo } from "@sentio/sdk/move/ext";
 export const commonOptions = {sparse: true}
 export const volOptions: MetricOptions = {
   sparse: true,
-  // aggregationConfig: {
-  //   intervalInMinutes: [60],
-  // }
+  aggregationConfig: {
+    intervalInMinutes: [60],
+  }
 }
 
 function setTestCoin() {
@@ -49,6 +49,7 @@ export const tvlByPoolNew = Gauge.register("tvl_by_pool_new", commonOptions)
 export const tvl = Gauge.register("tvl", commonOptions)
 export const volume = Gauge.register("vol", volOptions)
 export const volumeByCoin = Gauge.register("vol_by_coin", volOptions)
+export const feeByPool = Gauge.register("fee_by_pool", volOptions)
 
 const liquidSwapCl = new AptosDex(volume, volumeByCoin,
     tvlAll, tvl, tvlByPool, {
@@ -66,9 +67,9 @@ const POOL_PREFIX = pool.Pool.TYPE_QNAME
 const fetchConfig: MoveFetchConfig = {
   resourceChanges: true,
   allEvents: false,
-  // resourceConfig: {
-  //   moveTypePrefix: POOL_PREFIX,
-  // }
+  resourceConfig: {
+    moveTypePrefix: POOL_PREFIX,
+  }
 }
 
 pool.bind({  startVersion: 638615642 })
@@ -116,6 +117,7 @@ pool.bind({  startVersion: 638615642 })
       const pool = getPool(ctx.transaction)
       const coinx = pool.typeArgs[0].getSignature()
       const coiny = pool.typeArgs[1].getSignature()
+      const pair = await liquidSwapCl.getPair(coinx, coiny)
 
       const value = await liquidSwapCl.recordTradingVolume(ctx,
           coinx, coiny,
@@ -123,13 +125,15 @@ pool.bind({  startVersion: 638615642 })
           sum(evt.data_decoded.y_in) + sum(evt.data_decoded.y_out),
           {})
 
+      feeByPool.record(ctx, sum(evt.data_decoded.fees), { pair })
+
       // if (value.isGreaterThan(0)) {
         ctx.eventLogger.emit("Swap", {
           distinctId: ctx.transaction.sender,
           value: value,
           xAmount: sum(evt.data_decoded.x_in) + sum(evt.data_decoded.x_out),
           yAmount: sum(evt.data_decoded.y_in) + sum(evt.data_decoded.y_out),
-          pair: await liquidSwapCl.getPair(coinx, coiny),
+          pair,
           fee: sum(evt.data_decoded.fees),
           protocolFee: sum(evt.data_decoded.protocol_fees)
         })
