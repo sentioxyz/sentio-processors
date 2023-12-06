@@ -1,10 +1,12 @@
 import { pool } from './types/aptos/testnet/0x73a2aa302e5e40dd9781a3b2d43ab45b3617a562416c16becfbfe66dcf378141.js'
-import { AptosDex, getPairValue } from "@sentio/sdk/aptos/ext";
+import { AptosDex, getCoinInfo, getPairValue, whiteListed } from "@sentio/sdk/aptos/ext";
 import { Gauge, MetricOptions } from "@sentio/sdk";
 import { type_info } from "@sentio/sdk/aptos/builtin/0x1";
 import { AptosNetwork, AptosResourcesProcessor, Transaction_UserTransaction } from "@sentio/sdk/aptos";
 import { MoveFetchConfig, parseMoveType, TypeDescriptor } from "@sentio/sdk/move";
 import { Types } from 'aptos-sdk'
+import { whitelistCoins } from "@sentio/sdk/aptos/ext";
+import { SimpleCoinInfo } from "@sentio/sdk/move/ext";
 
 export const commonOptions = {sparse: true}
 export const volOptions: MetricOptions = {
@@ -13,6 +15,33 @@ export const volOptions: MetricOptions = {
   //   intervalInMinutes: [60],
   // }
 }
+
+function setTestCoin() {
+  const list = whitelistCoins()
+  const btc: SimpleCoinInfo = {
+    token_type: {
+      type: "0x43417434fd869edee76cca2a4d2301e528a1551b1d719b75c350c3c97d15b8b9::coins::BTC",
+      account_address: "0x43417434fd869edee76cca2a4d2301e528a1551b1d719b75c350c3c97d15b8b9"
+    },
+    symbol: "BTC",
+    decimals: 8,
+    bridge: "native",
+  }
+
+  const busd: SimpleCoinInfo = {
+    token_type: {
+      type: "0x43417434fd869edee76cca2a4d2301e528a1551b1d719b75c350c3c97d15b8b9::coins::USDT",
+      account_address: "0x43417434fd869edee76cca2a4d2301e528a1551b1d719b75c350c3c97d15b8b9"
+    },
+    symbol: "USDT",
+    decimals: 6,
+    bridge: "native",
+  }
+  list.set(btc.token_type.type, btc)
+  list.set(busd.token_type.type, busd)
+}
+
+setTestCoin()
 
 export const tvlAll = Gauge.register("tvl_all", commonOptions)
 export const tvlByPool = Gauge.register("tvl_by_pool", commonOptions)
@@ -149,7 +178,7 @@ function getPool(tx: Transaction_UserTransaction): TypeDescriptor<pool.Pool<any,
     }
     const writeResource = change as Types.WriteSetChange_WriteResource
     if (!writeResource.data.type.startsWith(POOL_PREFIX)) {
-      console.error("wrong resource type get fetched", writeResource.data.type)
+      // console.error("wrong resource type get fetched", writeResource.data.type)
       continue
     }
     return parseMoveType(writeResource.data.type)
