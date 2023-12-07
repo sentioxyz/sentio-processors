@@ -1,12 +1,49 @@
-import { BUILTIN_TYPES, SuiNetwork, SuiWrappedObjectProcessor, SuiObjectProcessor } from "@sentio/sdk/sui";
-import { typus_dov_single, tails_staking } from "./types/sui/typus_dov_single.js";
-import { getPriceByType } from "@sentio/sdk/utils";
-import { ChainId } from "@sentio/chain";
+import { SuiNetwork, SuiWrappedObjectProcessor } from "@sentio/sdk/sui";
+import { typus_dov_single, tails_staking, tds_authorized_entry } from "./types/sui/typus_dov_single.js";
+import { tails_exp } from "./types/sui/exp_dice.js";
 import { normalizeSuiAddress } from "@mysten/sui.js/utils";
-import { dynamic_field } from "@sentio/sdk/sui/builtin/0x2";
-import { vault } from "./types/sui/0xb4f25230ba74837d8299e92951306100c4a532e8c48cc3d8828abe9b91c8b274.js";
 
 const startCheckpoint = BigInt(15970051);
+
+tails_exp
+    .bind({ network: SuiNetwork.MAIN_NET, startCheckpoint })
+    .onEventNewGame((event, ctx) => {
+        let token = parse_token(event.type_arguments[0]);
+        let stake_amount = Number(event.data_decoded.stake_amount) / 10 ** token_decimal(token);
+        ctx.eventLogger.emit("NewGame", {
+            distinctId: event.data_decoded.signer,
+            game_id: event.data_decoded.game_id,
+            stake_amount: stake_amount,
+        });
+    })
+    .onEventPlayGuess((event, ctx) => {
+        ctx.eventLogger.emit("PlayGuess", {
+            distinctId: event.data_decoded.signer,
+            index: event.data_decoded.index,
+            game_id: event.data_decoded.game_id,
+            guess_1: event.data_decoded.guess_1,
+            guess_2: event.data_decoded.guess_2,
+            larger_than_1: event.data_decoded.larger_than_1,
+            larger_than_2: event.data_decoded.larger_than_2,
+        });
+    })
+    .onEventDraw((event, ctx) => {
+        ctx.eventLogger.emit("Draw", {
+            distinctId: event.data_decoded.signer,
+            index: event.data_decoded.index,
+            game_id: event.data_decoded.game_id,
+            // guess_1: event.data_decoded.guess_1,
+            // guess_2: event.data_decoded.guess_2,
+            // larger_than_1: event.data_decoded.larger_than_1,
+            // larger_than_2: event.data_decoded.larger_than_2,
+            answer_1: event.data_decoded.answer_1,
+            answer_2: event.data_decoded.answer_2,
+            result_1: event.data_decoded.result_1,
+            result_2: event.data_decoded.result_2,
+            // stake_amount: event.data_decoded.stake_amount,
+            exp: event.data_decoded.exp,
+        });
+    });
 
 tails_staking
     .bind({ network: SuiNetwork.MAIN_NET, startCheckpoint })
@@ -57,6 +94,16 @@ tails_staking
         });
     });
 
+tds_authorized_entry.bind({ network: SuiNetwork.MAIN_NET, startCheckpoint: BigInt(1651870) }).onEventUpdateStrikeEvent((event, ctx) => {
+    ctx.eventLogger.emit("UpdateStrike", {
+        distinctId: event.data_decoded.signer,
+        index: event.data_decoded.index,
+        oracle_price: event.data_decoded.oracle_price,
+        oracle_price_decimal: event.data_decoded.oracle_price_decimal,
+        strikes: event.data_decoded.vault_config.payoff_configs.map((config) => config.strike?.toString()).join("   "),
+    });
+});
+
 typus_dov_single
     .bind({ network: SuiNetwork.MAIN_NET, startCheckpoint: BigInt(1651870) })
     .onEventDepositEvent((event, ctx) => {
@@ -71,7 +118,6 @@ typus_dov_single
             distinctId: event.data_decoded.signer,
             index: event.data_decoded.index,
             coin_symbol: token,
-            signer: event.data_decoded.signer,
             amount: amount,
         });
     })
@@ -87,7 +133,6 @@ typus_dov_single
             distinctId: event.data_decoded.signer,
             index: event.data_decoded.index,
             coin_symbol: token,
-            signer: event.data_decoded.signer,
             amount: amount,
         });
     })
@@ -103,7 +148,6 @@ typus_dov_single
             distinctId: event.data_decoded.signer,
             index: event.data_decoded.index,
             coin_symbol: token,
-            signer: event.data_decoded.signer,
             amount: amount,
         });
     })
@@ -119,7 +163,6 @@ typus_dov_single
             distinctId: event.data_decoded.signer,
             index: event.data_decoded.index,
             coin_symbol: token,
-            signer: event.data_decoded.signer,
             amount: amount,
         });
     })
@@ -138,20 +181,18 @@ typus_dov_single
             distinctId: event.data_decoded.signer,
             index: event.data_decoded.index,
             coin_symbol: token,
-            signer: event.data_decoded.signer,
             amount: Number(event.data_decoded.amount) / 10 ** token_decimal(token),
         });
     })
     .onEventCompoundEvent((event, ctx) => {
         let token = parse_token(event.data_decoded.token.name);
 
-        let fee = event.data_decoded.u64_padding.pop();
-        if (fee) {
-            ctx.meter.Counter("compoundFee").add(Number(fee) / 10 ** token_decimal(token), {
-                index: event.data_decoded.index.toString(),
-                coin_symbol: token,
-            });
-        }
+        let temp = event.data_decoded.u64_padding.at(0);
+        let fee = Number(temp ? temp : 0) / 10 ** token_decimal(token);
+        ctx.meter.Counter("compoundFee").add(fee, {
+            index: event.data_decoded.index.toString(),
+            coin_symbol: token,
+        });
 
         ctx.meter.Counter("totalCompound").add(Number(event.data_decoded.amount) / 10 ** token_decimal(token), {
             index: event.data_decoded.index.toString(),
@@ -161,8 +202,8 @@ typus_dov_single
             distinctId: event.data_decoded.signer,
             index: event.data_decoded.index,
             coin_symbol: token,
-            signer: event.data_decoded.signer,
             amount: Number(event.data_decoded.amount) / 10 ** token_decimal(token),
+            fee,
         });
     })
     .onEventExerciseEvent((event, ctx) => {
@@ -172,7 +213,6 @@ typus_dov_single
             distinctId: event.data_decoded.signer,
             index: event.data_decoded.index,
             coin_symbol: token,
-            signer: event.data_decoded.signer,
             amount: Number(event.data_decoded.amount) / 10 ** token_decimal(token),
             raw_share: event.data_decoded.u64_padding.pop(),
         });
@@ -183,7 +223,6 @@ typus_dov_single
         ctx.eventLogger.emit("Refund", {
             distinctId: event.data_decoded.signer,
             coin_symbol: token,
-            signer: event.data_decoded.signer,
             amount: Number(event.data_decoded.amount) / 10 ** token_decimal(token),
         });
     })
@@ -199,7 +238,7 @@ typus_dov_single
         let incentive_fee = Number(event.data_decoded.incentive_fee) / 10 ** token_decimal(b_token);
         let depositor_incentive_value = Number(event.data_decoded.depositor_incentive_value) / 10 ** token_decimal(b_token);
 
-        ctx.meter.Counter("totalBidderFee").add(bidder_fee, {
+        ctx.meter.Counter("totalBidderFee").add(bidder_fee + incentive_fee, {
             index: event.data_decoded.index.toString(),
             coin_symbol: b_token,
         });
@@ -240,7 +279,7 @@ typus_dov_single
             index: event.data_decoded.index,
             b_token: b_token,
             o_token: o_token,
-            signer: event.data_decoded.signer,
+            distinctId: event.data_decoded.signer,
             round: event.data_decoded.round,
             delivery_price: delivery_price,
             delivery_size: delivery_size,
@@ -279,7 +318,7 @@ typus_dov_single
         ctx.eventLogger.emit("Settle", {
             index: event.data_decoded.index,
             d_token,
-            signer: event.data_decoded.signer,
+            distinctId: event.data_decoded.signer,
             round: event.data_decoded.round,
             oracle_price: Number(event.data_decoded.oracle_price) / 10 ** Number(event.data_decoded.oracle_price_decimal),
             share_price: Number(event.data_decoded.share_price) / 10 ** 8,
@@ -290,15 +329,16 @@ typus_dov_single
     .onEventNewAuctionEvent((event, ctx) => {
         ctx.eventLogger.emit("NewAuction", {
             index: event.data_decoded.index,
-            signer: event.data_decoded.signer,
+            distinctId: event.data_decoded.signer,
             round: event.data_decoded.round,
             start_ts_ms: event.data_decoded.start_ts_ms,
             end_ts_ms: event.data_decoded.end_ts_ms,
             size: event.data_decoded.size,
             oracle_info: event.data_decoded.oracle_info,
-            strikes: event.data_decoded.vault_config.payoff_configs.map((config) => config.strike?.toString()).join(","),
-            weights: event.data_decoded.vault_config.payoff_configs.map((config) => config.weight).join(","),
-            is_buyers: event.data_decoded.vault_config.payoff_configs.map((config) => config.is_buyer).join(","),
+            strike_bps: event.data_decoded.vault_config.payoff_configs.map((config) => config.strike_bp?.toString()).join("   "),
+            strikes: event.data_decoded.vault_config.payoff_configs.map((config) => config.strike?.toString()).join("   "),
+            weights: event.data_decoded.vault_config.payoff_configs.map((config) => config.weight).join("   "),
+            is_buyers: event.data_decoded.vault_config.payoff_configs.map((config) => config.is_buyer).join("   "),
             strike_increment: event.data_decoded.vault_config.strike_increment,
             decay_speed: event.data_decoded.vault_config.decay_speed,
             initial_price: event.data_decoded.vault_config.initial_price,
@@ -363,85 +403,49 @@ SuiWrappedObjectProcessor.bind({
     async (objects, ctx) => {
         ctx.meter.Gauge("num_of_vaults").record(objects.length);
 
-        const decodedObjects = await ctx.coder.getDynamicFields(objects, BUILTIN_TYPES.U64_TYPE, vault.DepositVault.type());
-        decodedObjects.forEach((depositVault) => {
-            const index = depositVault.value.index.toString();
-            const deposit_token = parse_token("0x" + depositVault.value.deposit_token.name);
-            ctx.meter
-                .Gauge("active_share_supply1111")
-                .record(Number(depositVault.value.active_share_supply) / 10 ** token_decimal(deposit_token), {
+        // @ts-ignore
+        const ids = objects.map((object) => object.fields.value);
+
+        if (ids.length > 0) {
+            const res = await ctx.client.multiGetObjects({
+                ids,
+                options: { showType: true, showContent: true },
+            });
+
+            for (const object of res) {
+                // @ts-ignore
+                const fields = object.data?.content?.fields;
+                const index = fields.index.toString();
+                const deposit_token = parse_token("0x" + fields.deposit_token.fields.name);
+                const bid_token = parse_token("0x" + fields.bid_token.fields.name);
+
+                ctx.meter.Gauge("active_share_supply").record(Number(fields.active_share_supply) / 10 ** token_decimal(deposit_token), {
                     index,
                     coin_symbol: deposit_token,
                 });
-        });
-
-        for (const object of objects) {
-            const depositVaultType = dynamic_field.Field.type(BUILTIN_TYPES.U64_TYPE, vault.DepositVault.type());
-            const depositVault = await ctx.coder.decodedType(object, depositVaultType);
-            if (depositVault) {
-                ctx.meter.Gauge("success").record(1);
-                const index = depositVault.value.index.toString();
-                const deposit_token = parse_token("0x" + depositVault.value.deposit_token.name);
-                const bid_token = parse_token("0x" + depositVault.value.bid_token.name);
-
-                ctx.meter
-                    .Gauge("active_share_supply")
-                    .record(Number(depositVault.value.active_share_supply) / 10 ** token_decimal(deposit_token), {
-                        index,
-                        coin_symbol: deposit_token,
-                    });
                 ctx.meter
                     .Gauge("deactivating_share_supply")
-                    .record(Number(depositVault.value.deactivating_share_supply) / 10 ** token_decimal(deposit_token), {
+                    .record(Number(fields.deactivating_share_supply) / 10 ** token_decimal(deposit_token), {
                         index,
                         coin_symbol: deposit_token,
                     });
-                ctx.meter
-                    .Gauge("inactive_share_supply")
-                    .record(Number(depositVault.value.inactive_share_supply) / 10 ** token_decimal(deposit_token), {
-                        index,
-                        coin_symbol: deposit_token,
-                    });
-                ctx.meter
-                    .Gauge("warmup_share_supply")
-                    .record(Number(depositVault.value.warmup_share_supply) / 10 ** token_decimal(deposit_token), {
-                        index,
-                        coin_symbol: deposit_token,
-                    });
-                ctx.meter
-                    .Gauge("premium_share_supply")
-                    .record(Number(depositVault.value.premium_share_supply) / 10 ** token_decimal(bid_token), {
-                        index,
-                        coin_symbol: deposit_token,
-                    });
+                ctx.meter.Gauge("inactive_share_supply").record(Number(fields.inactive_share_supply) / 10 ** token_decimal(deposit_token), {
+                    index,
+                    coin_symbol: deposit_token,
+                });
+                ctx.meter.Gauge("warmup_share_supply").record(Number(fields.warmup_share_supply) / 10 ** token_decimal(deposit_token), {
+                    index,
+                    coin_symbol: deposit_token,
+                });
+                ctx.meter.Gauge("premium_share_supply").record(Number(fields.premium_share_supply) / 10 ** token_decimal(bid_token), {
+                    index,
+                    coin_symbol: deposit_token,
+                });
             }
         }
     },
     60,
-    120,
+    60,
     undefined,
     { owned: true }
 );
-
-
-
-
-SuiWrappedObjectProcessor.bind({
-    network: SuiNetwork.MAIN_NET,
-    startCheckpoint,
-    objectId: SINGLE_DEPOSIT_VAULT_REGISTRY,
-}).onTimeInterval(
-    async (objects, ctx) => {
-        ctx.meter.Gauge("num_of_vaults").record(objects.length);
-
-        const decodedObjects = await ctx.coder.getDynamicFields(objects, BUILTIN_TYPES.U64_TYPE, vault.DepositVault.type());
-        decodedObjects.forEach((depositVault) => {
-            const index = depositVault.value.index.toString();
-            const deposit_token = parse_token("0x" + depositVault.value.deposit_token.name);
-            ctx.meter
-                .Gauge("active_share_supply1111")
-                .record(Number(depositVault.value.active_share_supply) / 10 ** token_decimal(deposit_token), {
-                    index,
-                    coin_symbol: deposit_token,
-                });
-        });

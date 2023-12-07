@@ -1,0 +1,2225 @@
+[
+	{
+		"fileFormatVersion": 6,
+		"address": "0xe87f1b2d498106a2c61421cec75b7b5c5e348512b0dc263949a0e7a3c256571a",
+		"name": "admin",
+		"friends": [],
+		"structs": {
+			"AdminCap": {
+				"abilities": {
+					"abilities": [
+						"Store",
+						"Key"
+					]
+				},
+				"typeParameters": [],
+				"fields": [
+					{
+						"name": "id",
+						"type": {
+							"Struct": {
+								"address": "0x2",
+								"module": "object",
+								"name": "UID",
+								"typeArguments": []
+							}
+						}
+					}
+				]
+			},
+			"CreateSpoolEvent": {
+				"abilities": {
+					"abilities": [
+						"Copy",
+						"Drop"
+					]
+				},
+				"typeParameters": [],
+				"fields": [
+					{
+						"name": "spool_id",
+						"type": {
+							"Struct": {
+								"address": "0x2",
+								"module": "object",
+								"name": "ID",
+								"typeArguments": []
+							}
+						}
+					},
+					{
+						"name": "staking_type",
+						"type": {
+							"Struct": {
+								"address": "0x1",
+								"module": "type_name",
+								"name": "TypeName",
+								"typeArguments": []
+							}
+						}
+					},
+					{
+						"name": "distributed_point_per_period",
+						"type": "U64"
+					},
+					{
+						"name": "point_distribution_time",
+						"type": "U64"
+					},
+					{
+						"name": "max_distributed_point",
+						"type": "U64"
+					},
+					{
+						"name": "max_stakes",
+						"type": "U64"
+					},
+					{
+						"name": "created_at",
+						"type": "U64"
+					}
+				]
+			},
+			"UpdateSpoolConfigEvent": {
+				"abilities": {
+					"abilities": [
+						"Copy",
+						"Drop"
+					]
+				},
+				"typeParameters": [],
+				"fields": [
+					{
+						"name": "spool_id",
+						"type": {
+							"Struct": {
+								"address": "0x2",
+								"module": "object",
+								"name": "ID",
+								"typeArguments": []
+							}
+						}
+					},
+					{
+						"name": "distributed_point_per_period",
+						"type": "U64"
+					},
+					{
+						"name": "point_distribution_time",
+						"type": "U64"
+					},
+					{
+						"name": "max_distributed_point",
+						"type": "U64"
+					},
+					{
+						"name": "max_stakes",
+						"type": "U64"
+					},
+					{
+						"name": "updated_at",
+						"type": "U64"
+					}
+				]
+			}
+		},
+		"exposedFunctions": {
+			"add_rewards": {
+				"visibility": "Public",
+				"isEntry": true,
+				"typeParameters": [
+					{
+						"abilities": []
+					}
+				],
+				"parameters": [
+					{
+						"MutableReference": {
+							"Struct": {
+								"address": "0xe87f1b2d498106a2c61421cec75b7b5c5e348512b0dc263949a0e7a3c256571a",
+								"module": "rewards_pool",
+								"name": "RewardsPool",
+								"typeArguments": [
+									{
+										"TypeParameter": 0
+									}
+								]
+							}
+						}
+					},
+					{
+						"Struct": {
+							"address": "0x2",
+							"module": "coin",
+							"name": "Coin",
+							"typeArguments": [
+								{
+									"TypeParameter": 0
+								}
+							]
+						}
+					}
+				],
+				"return": []
+			},
+			"create_rewards_pool": {
+				"visibility": "Public",
+				"isEntry": true,
+				"typeParameters": [
+					{
+						"abilities": []
+					}
+				],
+				"parameters": [
+					{
+						"Reference": {
+							"Struct": {
+								"address": "0xe87f1b2d498106a2c61421cec75b7b5c5e348512b0dc263949a0e7a3c256571a",
+								"module": "admin",
+								"name": "AdminCap",
+								"typeArguments": []
+							}
+						}
+					},
+					{
+						"Reference": {
+							"Struct": {
+								"address": "0xe87f1b2d498106a2c61421cec75b7b5c5e348512b0dc263949a0e7a3c256571a",
+								"module": "spool",
+								"name": "Spool",
+								"typeArguments": []
+							}
+						}
+					},
+					"U64",
+					"U64",
+					{
+						"MutableReference": {
+							"Struct": {
+								"address": "0x2",
+								"module": "tx_context",
+								"name": "TxContext",
+								"typeArguments": []
+							}
+						}
+					}
+				],
+				"return": []
+			},
+			"create_spool": {
+				"visibility": "Public",
+				"isEntry": true,
+				"typeParameters": [
+					{
+						"abilities": []
+					}
+				],
+				"parameters": [
+					{
+						"Reference": {
+							"Struct": {
+								"address": "0xe87f1b2d498106a2c61421cec75b7b5c5e348512b0dc263949a0e7a3c256571a",
+								"module": "admin",
+								"name": "AdminCap",
+								"typeArguments": []
+							}
+						}
+					},
+					"U64",
+					"U64",
+					"U64",
+					"U64",
+					{
+						"Reference": {
+							"Struct": {
+								"address": "0x2",
+								"module": "clock",
+								"name": "Clock",
+								"typeArguments": []
+							}
+						}
+					},
+					{
+						"MutableReference": {
+							"Struct": {
+								"address": "0x2",
+								"module": "tx_context",
+								"name": "TxContext",
+								"typeArguments": []
+							}
+						}
+					}
+				],
+				"return": []
+			},
+			"take_rewards": {
+				"visibility": "Public",
+				"isEntry": false,
+				"typeParameters": [
+					{
+						"abilities": []
+					}
+				],
+				"parameters": [
+					{
+						"Reference": {
+							"Struct": {
+								"address": "0xe87f1b2d498106a2c61421cec75b7b5c5e348512b0dc263949a0e7a3c256571a",
+								"module": "admin",
+								"name": "AdminCap",
+								"typeArguments": []
+							}
+						}
+					},
+					{
+						"MutableReference": {
+							"Struct": {
+								"address": "0xe87f1b2d498106a2c61421cec75b7b5c5e348512b0dc263949a0e7a3c256571a",
+								"module": "rewards_pool",
+								"name": "RewardsPool",
+								"typeArguments": [
+									{
+										"TypeParameter": 0
+									}
+								]
+							}
+						}
+					},
+					"U64",
+					{
+						"MutableReference": {
+							"Struct": {
+								"address": "0x2",
+								"module": "tx_context",
+								"name": "TxContext",
+								"typeArguments": []
+							}
+						}
+					}
+				],
+				"return": [
+					{
+						"Struct": {
+							"address": "0x2",
+							"module": "coin",
+							"name": "Coin",
+							"typeArguments": [
+								{
+									"TypeParameter": 0
+								}
+							]
+						}
+					}
+				]
+			},
+			"update_spool_config": {
+				"visibility": "Public",
+				"isEntry": true,
+				"typeParameters": [],
+				"parameters": [
+					{
+						"Reference": {
+							"Struct": {
+								"address": "0xe87f1b2d498106a2c61421cec75b7b5c5e348512b0dc263949a0e7a3c256571a",
+								"module": "admin",
+								"name": "AdminCap",
+								"typeArguments": []
+							}
+						}
+					},
+					{
+						"MutableReference": {
+							"Struct": {
+								"address": "0xe87f1b2d498106a2c61421cec75b7b5c5e348512b0dc263949a0e7a3c256571a",
+								"module": "spool",
+								"name": "Spool",
+								"typeArguments": []
+							}
+						}
+					},
+					"U64",
+					"U64",
+					"U64",
+					"U64",
+					{
+						"Reference": {
+							"Struct": {
+								"address": "0x2",
+								"module": "clock",
+								"name": "Clock",
+								"typeArguments": []
+							}
+						}
+					}
+				],
+				"return": []
+			}
+		}
+	},
+	{
+		"fileFormatVersion": 6,
+		"address": "0xe87f1b2d498106a2c61421cec75b7b5c5e348512b0dc263949a0e7a3c256571a",
+		"name": "rewards_pool",
+		"friends": [
+			{
+				"address": "0xe87f1b2d498106a2c61421cec75b7b5c5e348512b0dc263949a0e7a3c256571a",
+				"name": "admin"
+			},
+			{
+				"address": "0xe87f1b2d498106a2c61421cec75b7b5c5e348512b0dc263949a0e7a3c256571a",
+				"name": "user"
+			}
+		],
+		"structs": {
+			"RewardsPool": {
+				"abilities": {
+					"abilities": [
+						"Store",
+						"Key"
+					]
+				},
+				"typeParameters": [
+					{
+						"constraints": {
+							"abilities": []
+						},
+						"isPhantom": true
+					}
+				],
+				"fields": [
+					{
+						"name": "id",
+						"type": {
+							"Struct": {
+								"address": "0x2",
+								"module": "object",
+								"name": "UID",
+								"typeArguments": []
+							}
+						}
+					},
+					{
+						"name": "spool_id",
+						"type": {
+							"Struct": {
+								"address": "0x2",
+								"module": "object",
+								"name": "ID",
+								"typeArguments": []
+							}
+						}
+					},
+					{
+						"name": "exchange_rate_numerator",
+						"type": "U64"
+					},
+					{
+						"name": "exchange_rate_denominator",
+						"type": "U64"
+					},
+					{
+						"name": "rewards",
+						"type": {
+							"Struct": {
+								"address": "0x2",
+								"module": "balance",
+								"name": "Balance",
+								"typeArguments": [
+									{
+										"TypeParameter": 0
+									}
+								]
+							}
+						}
+					},
+					{
+						"name": "claimed_rewards",
+						"type": "U64"
+					}
+				]
+			}
+		},
+		"exposedFunctions": {
+			"add_rewards": {
+				"visibility": "Friend",
+				"isEntry": false,
+				"typeParameters": [
+					{
+						"abilities": []
+					}
+				],
+				"parameters": [
+					{
+						"MutableReference": {
+							"Struct": {
+								"address": "0xe87f1b2d498106a2c61421cec75b7b5c5e348512b0dc263949a0e7a3c256571a",
+								"module": "rewards_pool",
+								"name": "RewardsPool",
+								"typeArguments": [
+									{
+										"TypeParameter": 0
+									}
+								]
+							}
+						}
+					},
+					{
+						"Struct": {
+							"address": "0x2",
+							"module": "balance",
+							"name": "Balance",
+							"typeArguments": [
+								{
+									"TypeParameter": 0
+								}
+							]
+						}
+					}
+				],
+				"return": []
+			},
+			"assert_spool_id": {
+				"visibility": "Public",
+				"isEntry": false,
+				"typeParameters": [
+					{
+						"abilities": []
+					}
+				],
+				"parameters": [
+					{
+						"Reference": {
+							"Struct": {
+								"address": "0xe87f1b2d498106a2c61421cec75b7b5c5e348512b0dc263949a0e7a3c256571a",
+								"module": "rewards_pool",
+								"name": "RewardsPool",
+								"typeArguments": [
+									{
+										"TypeParameter": 0
+									}
+								]
+							}
+						}
+					},
+					{
+						"Reference": {
+							"Struct": {
+								"address": "0xe87f1b2d498106a2c61421cec75b7b5c5e348512b0dc263949a0e7a3c256571a",
+								"module": "spool",
+								"name": "Spool",
+								"typeArguments": []
+							}
+						}
+					}
+				],
+				"return": []
+			},
+			"calculate_point_to_reward": {
+				"visibility": "Public",
+				"isEntry": false,
+				"typeParameters": [
+					{
+						"abilities": []
+					}
+				],
+				"parameters": [
+					{
+						"Reference": {
+							"Struct": {
+								"address": "0xe87f1b2d498106a2c61421cec75b7b5c5e348512b0dc263949a0e7a3c256571a",
+								"module": "rewards_pool",
+								"name": "RewardsPool",
+								"typeArguments": [
+									{
+										"TypeParameter": 0
+									}
+								]
+							}
+						}
+					},
+					"U64"
+				],
+				"return": [
+					"U64"
+				]
+			},
+			"calculate_reward_to_point": {
+				"visibility": "Public",
+				"isEntry": false,
+				"typeParameters": [
+					{
+						"abilities": []
+					}
+				],
+				"parameters": [
+					{
+						"Reference": {
+							"Struct": {
+								"address": "0xe87f1b2d498106a2c61421cec75b7b5c5e348512b0dc263949a0e7a3c256571a",
+								"module": "rewards_pool",
+								"name": "RewardsPool",
+								"typeArguments": [
+									{
+										"TypeParameter": 0
+									}
+								]
+							}
+						}
+					},
+					"U64"
+				],
+				"return": [
+					"U64"
+				]
+			},
+			"claimed_rewards": {
+				"visibility": "Public",
+				"isEntry": false,
+				"typeParameters": [
+					{
+						"abilities": []
+					}
+				],
+				"parameters": [
+					{
+						"Reference": {
+							"Struct": {
+								"address": "0xe87f1b2d498106a2c61421cec75b7b5c5e348512b0dc263949a0e7a3c256571a",
+								"module": "rewards_pool",
+								"name": "RewardsPool",
+								"typeArguments": [
+									{
+										"TypeParameter": 0
+									}
+								]
+							}
+						}
+					}
+				],
+				"return": [
+					"U64"
+				]
+			},
+			"new": {
+				"visibility": "Friend",
+				"isEntry": false,
+				"typeParameters": [
+					{
+						"abilities": []
+					}
+				],
+				"parameters": [
+					{
+						"Reference": {
+							"Struct": {
+								"address": "0xe87f1b2d498106a2c61421cec75b7b5c5e348512b0dc263949a0e7a3c256571a",
+								"module": "spool",
+								"name": "Spool",
+								"typeArguments": []
+							}
+						}
+					},
+					"U64",
+					"U64",
+					{
+						"MutableReference": {
+							"Struct": {
+								"address": "0x2",
+								"module": "tx_context",
+								"name": "TxContext",
+								"typeArguments": []
+							}
+						}
+					}
+				],
+				"return": [
+					{
+						"Struct": {
+							"address": "0xe87f1b2d498106a2c61421cec75b7b5c5e348512b0dc263949a0e7a3c256571a",
+							"module": "rewards_pool",
+							"name": "RewardsPool",
+							"typeArguments": [
+								{
+									"TypeParameter": 0
+								}
+							]
+						}
+					}
+				]
+			},
+			"redeem_rewards": {
+				"visibility": "Friend",
+				"isEntry": false,
+				"typeParameters": [
+					{
+						"abilities": []
+					},
+					{
+						"abilities": []
+					}
+				],
+				"parameters": [
+					{
+						"MutableReference": {
+							"Struct": {
+								"address": "0xe87f1b2d498106a2c61421cec75b7b5c5e348512b0dc263949a0e7a3c256571a",
+								"module": "rewards_pool",
+								"name": "RewardsPool",
+								"typeArguments": [
+									{
+										"TypeParameter": 1
+									}
+								]
+							}
+						}
+					},
+					{
+						"MutableReference": {
+							"Struct": {
+								"address": "0xe87f1b2d498106a2c61421cec75b7b5c5e348512b0dc263949a0e7a3c256571a",
+								"module": "spool_account",
+								"name": "SpoolAccount",
+								"typeArguments": [
+									{
+										"TypeParameter": 0
+									}
+								]
+							}
+						}
+					}
+				],
+				"return": [
+					{
+						"Struct": {
+							"address": "0x2",
+							"module": "balance",
+							"name": "Balance",
+							"typeArguments": [
+								{
+									"TypeParameter": 1
+								}
+							]
+						}
+					}
+				]
+			},
+			"take_rewards": {
+				"visibility": "Friend",
+				"isEntry": false,
+				"typeParameters": [
+					{
+						"abilities": []
+					}
+				],
+				"parameters": [
+					{
+						"MutableReference": {
+							"Struct": {
+								"address": "0xe87f1b2d498106a2c61421cec75b7b5c5e348512b0dc263949a0e7a3c256571a",
+								"module": "rewards_pool",
+								"name": "RewardsPool",
+								"typeArguments": [
+									{
+										"TypeParameter": 0
+									}
+								]
+							}
+						}
+					},
+					"U64"
+				],
+				"return": [
+					{
+						"Struct": {
+							"address": "0x2",
+							"module": "balance",
+							"name": "Balance",
+							"typeArguments": [
+								{
+									"TypeParameter": 0
+								}
+							]
+						}
+					}
+				]
+			}
+		}
+	},
+	{
+		"fileFormatVersion": 6,
+		"address": "0xe87f1b2d498106a2c61421cec75b7b5c5e348512b0dc263949a0e7a3c256571a",
+		"name": "spool",
+		"friends": [
+			{
+				"address": "0xe87f1b2d498106a2c61421cec75b7b5c5e348512b0dc263949a0e7a3c256571a",
+				"name": "admin"
+			},
+			{
+				"address": "0xe87f1b2d498106a2c61421cec75b7b5c5e348512b0dc263949a0e7a3c256571a",
+				"name": "user"
+			}
+		],
+		"structs": {
+			"Spool": {
+				"abilities": {
+					"abilities": [
+						"Store",
+						"Key"
+					]
+				},
+				"typeParameters": [],
+				"fields": [
+					{
+						"name": "id",
+						"type": {
+							"Struct": {
+								"address": "0x2",
+								"module": "object",
+								"name": "UID",
+								"typeArguments": []
+							}
+						}
+					},
+					{
+						"name": "stake_type",
+						"type": {
+							"Struct": {
+								"address": "0x1",
+								"module": "type_name",
+								"name": "TypeName",
+								"typeArguments": []
+							}
+						}
+					},
+					{
+						"name": "distributed_point_per_period",
+						"type": "U64"
+					},
+					{
+						"name": "point_distribution_time",
+						"type": "U64"
+					},
+					{
+						"name": "distributed_point",
+						"type": "U64"
+					},
+					{
+						"name": "max_distributed_point",
+						"type": "U64"
+					},
+					{
+						"name": "max_stakes",
+						"type": "U64"
+					},
+					{
+						"name": "index",
+						"type": "U64"
+					},
+					{
+						"name": "stakes",
+						"type": "U64"
+					},
+					{
+						"name": "last_update",
+						"type": "U64"
+					},
+					{
+						"name": "created_at",
+						"type": "U64"
+					}
+				]
+			}
+		},
+		"exposedFunctions": {
+			"accrue_points": {
+				"visibility": "Friend",
+				"isEntry": false,
+				"typeParameters": [],
+				"parameters": [
+					{
+						"MutableReference": {
+							"Struct": {
+								"address": "0xe87f1b2d498106a2c61421cec75b7b5c5e348512b0dc263949a0e7a3c256571a",
+								"module": "spool",
+								"name": "Spool",
+								"typeArguments": []
+							}
+						}
+					},
+					{
+						"Reference": {
+							"Struct": {
+								"address": "0x2",
+								"module": "clock",
+								"name": "Clock",
+								"typeArguments": []
+							}
+						}
+					}
+				],
+				"return": []
+			},
+			"base_index_rate": {
+				"visibility": "Public",
+				"isEntry": false,
+				"typeParameters": [],
+				"parameters": [],
+				"return": [
+					"U64"
+				]
+			},
+			"index": {
+				"visibility": "Public",
+				"isEntry": false,
+				"typeParameters": [],
+				"parameters": [
+					{
+						"Reference": {
+							"Struct": {
+								"address": "0xe87f1b2d498106a2c61421cec75b7b5c5e348512b0dc263949a0e7a3c256571a",
+								"module": "spool",
+								"name": "Spool",
+								"typeArguments": []
+							}
+						}
+					}
+				],
+				"return": [
+					"U64"
+				]
+			},
+			"is_points_up_to_date": {
+				"visibility": "Public",
+				"isEntry": false,
+				"typeParameters": [],
+				"parameters": [
+					{
+						"Reference": {
+							"Struct": {
+								"address": "0xe87f1b2d498106a2c61421cec75b7b5c5e348512b0dc263949a0e7a3c256571a",
+								"module": "spool",
+								"name": "Spool",
+								"typeArguments": []
+							}
+						}
+					},
+					{
+						"Reference": {
+							"Struct": {
+								"address": "0x2",
+								"module": "clock",
+								"name": "Clock",
+								"typeArguments": []
+							}
+						}
+					}
+				],
+				"return": [
+					"Bool"
+				]
+			},
+			"last_update": {
+				"visibility": "Public",
+				"isEntry": false,
+				"typeParameters": [],
+				"parameters": [
+					{
+						"Reference": {
+							"Struct": {
+								"address": "0xe87f1b2d498106a2c61421cec75b7b5c5e348512b0dc263949a0e7a3c256571a",
+								"module": "spool",
+								"name": "Spool",
+								"typeArguments": []
+							}
+						}
+					}
+				],
+				"return": [
+					"U64"
+				]
+			},
+			"max_stakes": {
+				"visibility": "Public",
+				"isEntry": false,
+				"typeParameters": [],
+				"parameters": [
+					{
+						"Reference": {
+							"Struct": {
+								"address": "0xe87f1b2d498106a2c61421cec75b7b5c5e348512b0dc263949a0e7a3c256571a",
+								"module": "spool",
+								"name": "Spool",
+								"typeArguments": []
+							}
+						}
+					}
+				],
+				"return": [
+					"U64"
+				]
+			},
+			"new": {
+				"visibility": "Friend",
+				"isEntry": false,
+				"typeParameters": [
+					{
+						"abilities": []
+					}
+				],
+				"parameters": [
+					"U64",
+					"U64",
+					"U64",
+					"U64",
+					{
+						"Reference": {
+							"Struct": {
+								"address": "0x2",
+								"module": "clock",
+								"name": "Clock",
+								"typeArguments": []
+							}
+						}
+					},
+					{
+						"MutableReference": {
+							"Struct": {
+								"address": "0x2",
+								"module": "tx_context",
+								"name": "TxContext",
+								"typeArguments": []
+							}
+						}
+					}
+				],
+				"return": [
+					{
+						"Struct": {
+							"address": "0xe87f1b2d498106a2c61421cec75b7b5c5e348512b0dc263949a0e7a3c256571a",
+							"module": "spool",
+							"name": "Spool",
+							"typeArguments": []
+						}
+					}
+				]
+			},
+			"point_distribution_time": {
+				"visibility": "Public",
+				"isEntry": false,
+				"typeParameters": [],
+				"parameters": [
+					{
+						"Reference": {
+							"Struct": {
+								"address": "0xe87f1b2d498106a2c61421cec75b7b5c5e348512b0dc263949a0e7a3c256571a",
+								"module": "spool",
+								"name": "Spool",
+								"typeArguments": []
+							}
+						}
+					}
+				],
+				"return": [
+					"U64"
+				]
+			},
+			"stake": {
+				"visibility": "Friend",
+				"isEntry": false,
+				"typeParameters": [],
+				"parameters": [
+					{
+						"MutableReference": {
+							"Struct": {
+								"address": "0xe87f1b2d498106a2c61421cec75b7b5c5e348512b0dc263949a0e7a3c256571a",
+								"module": "spool",
+								"name": "Spool",
+								"typeArguments": []
+							}
+						}
+					},
+					"U64"
+				],
+				"return": []
+			},
+			"stake_type": {
+				"visibility": "Public",
+				"isEntry": false,
+				"typeParameters": [],
+				"parameters": [
+					{
+						"Reference": {
+							"Struct": {
+								"address": "0xe87f1b2d498106a2c61421cec75b7b5c5e348512b0dc263949a0e7a3c256571a",
+								"module": "spool",
+								"name": "Spool",
+								"typeArguments": []
+							}
+						}
+					}
+				],
+				"return": [
+					{
+						"Struct": {
+							"address": "0x1",
+							"module": "type_name",
+							"name": "TypeName",
+							"typeArguments": []
+						}
+					}
+				]
+			},
+			"stakes": {
+				"visibility": "Public",
+				"isEntry": false,
+				"typeParameters": [],
+				"parameters": [
+					{
+						"Reference": {
+							"Struct": {
+								"address": "0xe87f1b2d498106a2c61421cec75b7b5c5e348512b0dc263949a0e7a3c256571a",
+								"module": "spool",
+								"name": "Spool",
+								"typeArguments": []
+							}
+						}
+					}
+				],
+				"return": [
+					"U64"
+				]
+			},
+			"unstake": {
+				"visibility": "Friend",
+				"isEntry": false,
+				"typeParameters": [],
+				"parameters": [
+					{
+						"MutableReference": {
+							"Struct": {
+								"address": "0xe87f1b2d498106a2c61421cec75b7b5c5e348512b0dc263949a0e7a3c256571a",
+								"module": "spool",
+								"name": "Spool",
+								"typeArguments": []
+							}
+						}
+					},
+					"U64"
+				],
+				"return": []
+			},
+			"update_config": {
+				"visibility": "Friend",
+				"isEntry": false,
+				"typeParameters": [],
+				"parameters": [
+					{
+						"MutableReference": {
+							"Struct": {
+								"address": "0xe87f1b2d498106a2c61421cec75b7b5c5e348512b0dc263949a0e7a3c256571a",
+								"module": "spool",
+								"name": "Spool",
+								"typeArguments": []
+							}
+						}
+					},
+					"U64",
+					"U64",
+					"U64",
+					"U64"
+				],
+				"return": []
+			}
+		}
+	},
+	{
+		"fileFormatVersion": 6,
+		"address": "0xe87f1b2d498106a2c61421cec75b7b5c5e348512b0dc263949a0e7a3c256571a",
+		"name": "spool_account",
+		"friends": [
+			{
+				"address": "0xe87f1b2d498106a2c61421cec75b7b5c5e348512b0dc263949a0e7a3c256571a",
+				"name": "admin"
+			},
+			{
+				"address": "0xe87f1b2d498106a2c61421cec75b7b5c5e348512b0dc263949a0e7a3c256571a",
+				"name": "rewards_pool"
+			},
+			{
+				"address": "0xe87f1b2d498106a2c61421cec75b7b5c5e348512b0dc263949a0e7a3c256571a",
+				"name": "user"
+			}
+		],
+		"structs": {
+			"SpoolAccount": {
+				"abilities": {
+					"abilities": [
+						"Store",
+						"Key"
+					]
+				},
+				"typeParameters": [
+					{
+						"constraints": {
+							"abilities": []
+						},
+						"isPhantom": true
+					}
+				],
+				"fields": [
+					{
+						"name": "id",
+						"type": {
+							"Struct": {
+								"address": "0x2",
+								"module": "object",
+								"name": "UID",
+								"typeArguments": []
+							}
+						}
+					},
+					{
+						"name": "spool_id",
+						"type": {
+							"Struct": {
+								"address": "0x2",
+								"module": "object",
+								"name": "ID",
+								"typeArguments": []
+							}
+						}
+					},
+					{
+						"name": "stake_type",
+						"type": {
+							"Struct": {
+								"address": "0x1",
+								"module": "type_name",
+								"name": "TypeName",
+								"typeArguments": []
+							}
+						}
+					},
+					{
+						"name": "stakes",
+						"type": {
+							"Struct": {
+								"address": "0x2",
+								"module": "balance",
+								"name": "Balance",
+								"typeArguments": [
+									{
+										"TypeParameter": 0
+									}
+								]
+							}
+						}
+					},
+					{
+						"name": "points",
+						"type": "U64"
+					},
+					{
+						"name": "total_points",
+						"type": "U64"
+					},
+					{
+						"name": "index",
+						"type": "U64"
+					}
+				]
+			}
+		},
+		"exposedFunctions": {
+			"accrue_points": {
+				"visibility": "Friend",
+				"isEntry": false,
+				"typeParameters": [
+					{
+						"abilities": []
+					}
+				],
+				"parameters": [
+					{
+						"Reference": {
+							"Struct": {
+								"address": "0xe87f1b2d498106a2c61421cec75b7b5c5e348512b0dc263949a0e7a3c256571a",
+								"module": "spool",
+								"name": "Spool",
+								"typeArguments": []
+							}
+						}
+					},
+					{
+						"MutableReference": {
+							"Struct": {
+								"address": "0xe87f1b2d498106a2c61421cec75b7b5c5e348512b0dc263949a0e7a3c256571a",
+								"module": "spool_account",
+								"name": "SpoolAccount",
+								"typeArguments": [
+									{
+										"TypeParameter": 0
+									}
+								]
+							}
+						}
+					},
+					{
+						"Reference": {
+							"Struct": {
+								"address": "0x2",
+								"module": "clock",
+								"name": "Clock",
+								"typeArguments": []
+							}
+						}
+					}
+				],
+				"return": []
+			},
+			"assert_pool_id": {
+				"visibility": "Public",
+				"isEntry": false,
+				"typeParameters": [
+					{
+						"abilities": []
+					}
+				],
+				"parameters": [
+					{
+						"Reference": {
+							"Struct": {
+								"address": "0xe87f1b2d498106a2c61421cec75b7b5c5e348512b0dc263949a0e7a3c256571a",
+								"module": "spool",
+								"name": "Spool",
+								"typeArguments": []
+							}
+						}
+					},
+					{
+						"Reference": {
+							"Struct": {
+								"address": "0xe87f1b2d498106a2c61421cec75b7b5c5e348512b0dc263949a0e7a3c256571a",
+								"module": "spool_account",
+								"name": "SpoolAccount",
+								"typeArguments": [
+									{
+										"TypeParameter": 0
+									}
+								]
+							}
+						}
+					}
+				],
+				"return": []
+			},
+			"new": {
+				"visibility": "Friend",
+				"isEntry": false,
+				"typeParameters": [
+					{
+						"abilities": []
+					}
+				],
+				"parameters": [
+					{
+						"Reference": {
+							"Struct": {
+								"address": "0xe87f1b2d498106a2c61421cec75b7b5c5e348512b0dc263949a0e7a3c256571a",
+								"module": "spool",
+								"name": "Spool",
+								"typeArguments": []
+							}
+						}
+					},
+					{
+						"MutableReference": {
+							"Struct": {
+								"address": "0x2",
+								"module": "tx_context",
+								"name": "TxContext",
+								"typeArguments": []
+							}
+						}
+					}
+				],
+				"return": [
+					{
+						"Struct": {
+							"address": "0xe87f1b2d498106a2c61421cec75b7b5c5e348512b0dc263949a0e7a3c256571a",
+							"module": "spool_account",
+							"name": "SpoolAccount",
+							"typeArguments": [
+								{
+									"TypeParameter": 0
+								}
+							]
+						}
+					}
+				]
+			},
+			"points": {
+				"visibility": "Public",
+				"isEntry": false,
+				"typeParameters": [
+					{
+						"abilities": []
+					}
+				],
+				"parameters": [
+					{
+						"Reference": {
+							"Struct": {
+								"address": "0xe87f1b2d498106a2c61421cec75b7b5c5e348512b0dc263949a0e7a3c256571a",
+								"module": "spool_account",
+								"name": "SpoolAccount",
+								"typeArguments": [
+									{
+										"TypeParameter": 0
+									}
+								]
+							}
+						}
+					}
+				],
+				"return": [
+					"U64"
+				]
+			},
+			"redeem_point": {
+				"visibility": "Friend",
+				"isEntry": false,
+				"typeParameters": [
+					{
+						"abilities": []
+					}
+				],
+				"parameters": [
+					{
+						"MutableReference": {
+							"Struct": {
+								"address": "0xe87f1b2d498106a2c61421cec75b7b5c5e348512b0dc263949a0e7a3c256571a",
+								"module": "spool_account",
+								"name": "SpoolAccount",
+								"typeArguments": [
+									{
+										"TypeParameter": 0
+									}
+								]
+							}
+						}
+					},
+					"U64"
+				],
+				"return": []
+			},
+			"spool_id": {
+				"visibility": "Public",
+				"isEntry": false,
+				"typeParameters": [
+					{
+						"abilities": []
+					}
+				],
+				"parameters": [
+					{
+						"Reference": {
+							"Struct": {
+								"address": "0xe87f1b2d498106a2c61421cec75b7b5c5e348512b0dc263949a0e7a3c256571a",
+								"module": "spool_account",
+								"name": "SpoolAccount",
+								"typeArguments": [
+									{
+										"TypeParameter": 0
+									}
+								]
+							}
+						}
+					}
+				],
+				"return": [
+					{
+						"Struct": {
+							"address": "0x2",
+							"module": "object",
+							"name": "ID",
+							"typeArguments": []
+						}
+					}
+				]
+			},
+			"stake": {
+				"visibility": "Friend",
+				"isEntry": false,
+				"typeParameters": [
+					{
+						"abilities": []
+					}
+				],
+				"parameters": [
+					{
+						"Reference": {
+							"Struct": {
+								"address": "0xe87f1b2d498106a2c61421cec75b7b5c5e348512b0dc263949a0e7a3c256571a",
+								"module": "spool",
+								"name": "Spool",
+								"typeArguments": []
+							}
+						}
+					},
+					{
+						"MutableReference": {
+							"Struct": {
+								"address": "0xe87f1b2d498106a2c61421cec75b7b5c5e348512b0dc263949a0e7a3c256571a",
+								"module": "spool_account",
+								"name": "SpoolAccount",
+								"typeArguments": [
+									{
+										"TypeParameter": 0
+									}
+								]
+							}
+						}
+					},
+					{
+						"Struct": {
+							"address": "0x2",
+							"module": "balance",
+							"name": "Balance",
+							"typeArguments": [
+								{
+									"TypeParameter": 0
+								}
+							]
+						}
+					}
+				],
+				"return": []
+			},
+			"stake_amount": {
+				"visibility": "Public",
+				"isEntry": false,
+				"typeParameters": [
+					{
+						"abilities": []
+					}
+				],
+				"parameters": [
+					{
+						"Reference": {
+							"Struct": {
+								"address": "0xe87f1b2d498106a2c61421cec75b7b5c5e348512b0dc263949a0e7a3c256571a",
+								"module": "spool_account",
+								"name": "SpoolAccount",
+								"typeArguments": [
+									{
+										"TypeParameter": 0
+									}
+								]
+							}
+						}
+					}
+				],
+				"return": [
+					"U64"
+				]
+			},
+			"stake_type": {
+				"visibility": "Public",
+				"isEntry": false,
+				"typeParameters": [
+					{
+						"abilities": []
+					}
+				],
+				"parameters": [
+					{
+						"Reference": {
+							"Struct": {
+								"address": "0xe87f1b2d498106a2c61421cec75b7b5c5e348512b0dc263949a0e7a3c256571a",
+								"module": "spool_account",
+								"name": "SpoolAccount",
+								"typeArguments": [
+									{
+										"TypeParameter": 0
+									}
+								]
+							}
+						}
+					}
+				],
+				"return": [
+					{
+						"Struct": {
+							"address": "0x1",
+							"module": "type_name",
+							"name": "TypeName",
+							"typeArguments": []
+						}
+					}
+				]
+			},
+			"total_points": {
+				"visibility": "Public",
+				"isEntry": false,
+				"typeParameters": [
+					{
+						"abilities": []
+					}
+				],
+				"parameters": [
+					{
+						"Reference": {
+							"Struct": {
+								"address": "0xe87f1b2d498106a2c61421cec75b7b5c5e348512b0dc263949a0e7a3c256571a",
+								"module": "spool_account",
+								"name": "SpoolAccount",
+								"typeArguments": [
+									{
+										"TypeParameter": 0
+									}
+								]
+							}
+						}
+					}
+				],
+				"return": [
+					"U64"
+				]
+			},
+			"unstake": {
+				"visibility": "Friend",
+				"isEntry": false,
+				"typeParameters": [
+					{
+						"abilities": []
+					}
+				],
+				"parameters": [
+					{
+						"MutableReference": {
+							"Struct": {
+								"address": "0xe87f1b2d498106a2c61421cec75b7b5c5e348512b0dc263949a0e7a3c256571a",
+								"module": "spool_account",
+								"name": "SpoolAccount",
+								"typeArguments": [
+									{
+										"TypeParameter": 0
+									}
+								]
+							}
+						}
+					},
+					"U64"
+				],
+				"return": [
+					{
+						"Struct": {
+							"address": "0x2",
+							"module": "balance",
+							"name": "Balance",
+							"typeArguments": [
+								{
+									"TypeParameter": 0
+								}
+							]
+						}
+					}
+				]
+			}
+		}
+	},
+	{
+		"fileFormatVersion": 6,
+		"address": "0xe87f1b2d498106a2c61421cec75b7b5c5e348512b0dc263949a0e7a3c256571a",
+		"name": "user",
+		"friends": [],
+		"structs": {
+			"CreateSpoolAccountEvent": {
+				"abilities": {
+					"abilities": [
+						"Copy",
+						"Drop"
+					]
+				},
+				"typeParameters": [],
+				"fields": [
+					{
+						"name": "spool_account_id",
+						"type": {
+							"Struct": {
+								"address": "0x2",
+								"module": "object",
+								"name": "ID",
+								"typeArguments": []
+							}
+						}
+					},
+					{
+						"name": "spool_id",
+						"type": {
+							"Struct": {
+								"address": "0x2",
+								"module": "object",
+								"name": "ID",
+								"typeArguments": []
+							}
+						}
+					},
+					{
+						"name": "staking_type",
+						"type": {
+							"Struct": {
+								"address": "0x1",
+								"module": "type_name",
+								"name": "TypeName",
+								"typeArguments": []
+							}
+						}
+					},
+					{
+						"name": "created_at",
+						"type": "U64"
+					}
+				]
+			},
+			"SpoolAccountRedeemRewardsEvent": {
+				"abilities": {
+					"abilities": [
+						"Copy",
+						"Drop"
+					]
+				},
+				"typeParameters": [],
+				"fields": [
+					{
+						"name": "sender",
+						"type": "Address"
+					},
+					{
+						"name": "spool_account_id",
+						"type": {
+							"Struct": {
+								"address": "0x2",
+								"module": "object",
+								"name": "ID",
+								"typeArguments": []
+							}
+						}
+					},
+					{
+						"name": "spool_id",
+						"type": {
+							"Struct": {
+								"address": "0x2",
+								"module": "object",
+								"name": "ID",
+								"typeArguments": []
+							}
+						}
+					},
+					{
+						"name": "rewards_pool_id",
+						"type": {
+							"Struct": {
+								"address": "0x2",
+								"module": "object",
+								"name": "ID",
+								"typeArguments": []
+							}
+						}
+					},
+					{
+						"name": "staking_type",
+						"type": {
+							"Struct": {
+								"address": "0x1",
+								"module": "type_name",
+								"name": "TypeName",
+								"typeArguments": []
+							}
+						}
+					},
+					{
+						"name": "rewards_type",
+						"type": {
+							"Struct": {
+								"address": "0x1",
+								"module": "type_name",
+								"name": "TypeName",
+								"typeArguments": []
+							}
+						}
+					},
+					{
+						"name": "redeemed_points",
+						"type": "U64"
+					},
+					{
+						"name": "previous_points",
+						"type": "U64"
+					},
+					{
+						"name": "rewards",
+						"type": "U64"
+					},
+					{
+						"name": "total_claimed_rewards",
+						"type": "U64"
+					},
+					{
+						"name": "total_user_points",
+						"type": "U64"
+					},
+					{
+						"name": "timestamp",
+						"type": "U64"
+					}
+				]
+			},
+			"SpoolAccountStakeEvent": {
+				"abilities": {
+					"abilities": [
+						"Copy",
+						"Drop"
+					]
+				},
+				"typeParameters": [],
+				"fields": [
+					{
+						"name": "sender",
+						"type": "Address"
+					},
+					{
+						"name": "spool_account_id",
+						"type": {
+							"Struct": {
+								"address": "0x2",
+								"module": "object",
+								"name": "ID",
+								"typeArguments": []
+							}
+						}
+					},
+					{
+						"name": "spool_id",
+						"type": {
+							"Struct": {
+								"address": "0x2",
+								"module": "object",
+								"name": "ID",
+								"typeArguments": []
+							}
+						}
+					},
+					{
+						"name": "staking_type",
+						"type": {
+							"Struct": {
+								"address": "0x1",
+								"module": "type_name",
+								"name": "TypeName",
+								"typeArguments": []
+							}
+						}
+					},
+					{
+						"name": "stake_amount",
+						"type": "U64"
+					},
+					{
+						"name": "previous_amount",
+						"type": "U64"
+					},
+					{
+						"name": "timestamp",
+						"type": "U64"
+					}
+				]
+			},
+			"SpoolAccountUnstakeEvent": {
+				"abilities": {
+					"abilities": [
+						"Copy",
+						"Drop"
+					]
+				},
+				"typeParameters": [],
+				"fields": [
+					{
+						"name": "spool_account_id",
+						"type": {
+							"Struct": {
+								"address": "0x2",
+								"module": "object",
+								"name": "ID",
+								"typeArguments": []
+							}
+						}
+					},
+					{
+						"name": "spool_id",
+						"type": {
+							"Struct": {
+								"address": "0x2",
+								"module": "object",
+								"name": "ID",
+								"typeArguments": []
+							}
+						}
+					},
+					{
+						"name": "staking_type",
+						"type": {
+							"Struct": {
+								"address": "0x1",
+								"module": "type_name",
+								"name": "TypeName",
+								"typeArguments": []
+							}
+						}
+					},
+					{
+						"name": "unstake_amount",
+						"type": "U64"
+					},
+					{
+						"name": "remaining_amount",
+						"type": "U64"
+					},
+					{
+						"name": "timestamp",
+						"type": "U64"
+					}
+				]
+			}
+		},
+		"exposedFunctions": {
+			"new_spool_account": {
+				"visibility": "Public",
+				"isEntry": false,
+				"typeParameters": [
+					{
+						"abilities": []
+					}
+				],
+				"parameters": [
+					{
+						"MutableReference": {
+							"Struct": {
+								"address": "0xe87f1b2d498106a2c61421cec75b7b5c5e348512b0dc263949a0e7a3c256571a",
+								"module": "spool",
+								"name": "Spool",
+								"typeArguments": []
+							}
+						}
+					},
+					{
+						"Reference": {
+							"Struct": {
+								"address": "0x2",
+								"module": "clock",
+								"name": "Clock",
+								"typeArguments": []
+							}
+						}
+					},
+					{
+						"MutableReference": {
+							"Struct": {
+								"address": "0x2",
+								"module": "tx_context",
+								"name": "TxContext",
+								"typeArguments": []
+							}
+						}
+					}
+				],
+				"return": [
+					{
+						"Struct": {
+							"address": "0xe87f1b2d498106a2c61421cec75b7b5c5e348512b0dc263949a0e7a3c256571a",
+							"module": "spool_account",
+							"name": "SpoolAccount",
+							"typeArguments": [
+								{
+									"TypeParameter": 0
+								}
+							]
+						}
+					}
+				]
+			},
+			"redeem_rewards": {
+				"visibility": "Public",
+				"isEntry": false,
+				"typeParameters": [
+					{
+						"abilities": []
+					},
+					{
+						"abilities": []
+					}
+				],
+				"parameters": [
+					{
+						"MutableReference": {
+							"Struct": {
+								"address": "0xe87f1b2d498106a2c61421cec75b7b5c5e348512b0dc263949a0e7a3c256571a",
+								"module": "spool",
+								"name": "Spool",
+								"typeArguments": []
+							}
+						}
+					},
+					{
+						"MutableReference": {
+							"Struct": {
+								"address": "0xe87f1b2d498106a2c61421cec75b7b5c5e348512b0dc263949a0e7a3c256571a",
+								"module": "rewards_pool",
+								"name": "RewardsPool",
+								"typeArguments": [
+									{
+										"TypeParameter": 1
+									}
+								]
+							}
+						}
+					},
+					{
+						"MutableReference": {
+							"Struct": {
+								"address": "0xe87f1b2d498106a2c61421cec75b7b5c5e348512b0dc263949a0e7a3c256571a",
+								"module": "spool_account",
+								"name": "SpoolAccount",
+								"typeArguments": [
+									{
+										"TypeParameter": 0
+									}
+								]
+							}
+						}
+					},
+					{
+						"Reference": {
+							"Struct": {
+								"address": "0x2",
+								"module": "clock",
+								"name": "Clock",
+								"typeArguments": []
+							}
+						}
+					},
+					{
+						"MutableReference": {
+							"Struct": {
+								"address": "0x2",
+								"module": "tx_context",
+								"name": "TxContext",
+								"typeArguments": []
+							}
+						}
+					}
+				],
+				"return": [
+					{
+						"Struct": {
+							"address": "0x2",
+							"module": "coin",
+							"name": "Coin",
+							"typeArguments": [
+								{
+									"TypeParameter": 1
+								}
+							]
+						}
+					}
+				]
+			},
+			"stake": {
+				"visibility": "Public",
+				"isEntry": true,
+				"typeParameters": [
+					{
+						"abilities": []
+					}
+				],
+				"parameters": [
+					{
+						"MutableReference": {
+							"Struct": {
+								"address": "0xe87f1b2d498106a2c61421cec75b7b5c5e348512b0dc263949a0e7a3c256571a",
+								"module": "spool",
+								"name": "Spool",
+								"typeArguments": []
+							}
+						}
+					},
+					{
+						"MutableReference": {
+							"Struct": {
+								"address": "0xe87f1b2d498106a2c61421cec75b7b5c5e348512b0dc263949a0e7a3c256571a",
+								"module": "spool_account",
+								"name": "SpoolAccount",
+								"typeArguments": [
+									{
+										"TypeParameter": 0
+									}
+								]
+							}
+						}
+					},
+					{
+						"Struct": {
+							"address": "0x2",
+							"module": "coin",
+							"name": "Coin",
+							"typeArguments": [
+								{
+									"TypeParameter": 0
+								}
+							]
+						}
+					},
+					{
+						"Reference": {
+							"Struct": {
+								"address": "0x2",
+								"module": "clock",
+								"name": "Clock",
+								"typeArguments": []
+							}
+						}
+					},
+					{
+						"Reference": {
+							"Struct": {
+								"address": "0x2",
+								"module": "tx_context",
+								"name": "TxContext",
+								"typeArguments": []
+							}
+						}
+					}
+				],
+				"return": []
+			},
+			"unstake": {
+				"visibility": "Public",
+				"isEntry": false,
+				"typeParameters": [
+					{
+						"abilities": []
+					}
+				],
+				"parameters": [
+					{
+						"MutableReference": {
+							"Struct": {
+								"address": "0xe87f1b2d498106a2c61421cec75b7b5c5e348512b0dc263949a0e7a3c256571a",
+								"module": "spool",
+								"name": "Spool",
+								"typeArguments": []
+							}
+						}
+					},
+					{
+						"MutableReference": {
+							"Struct": {
+								"address": "0xe87f1b2d498106a2c61421cec75b7b5c5e348512b0dc263949a0e7a3c256571a",
+								"module": "spool_account",
+								"name": "SpoolAccount",
+								"typeArguments": [
+									{
+										"TypeParameter": 0
+									}
+								]
+							}
+						}
+					},
+					"U64",
+					{
+						"Reference": {
+							"Struct": {
+								"address": "0x2",
+								"module": "clock",
+								"name": "Clock",
+								"typeArguments": []
+							}
+						}
+					},
+					{
+						"MutableReference": {
+							"Struct": {
+								"address": "0x2",
+								"module": "tx_context",
+								"name": "TxContext",
+								"typeArguments": []
+							}
+						}
+					}
+				],
+				"return": [
+					{
+						"Struct": {
+							"address": "0x2",
+							"module": "coin",
+							"name": "Coin",
+							"typeArguments": [
+								{
+									"TypeParameter": 0
+								}
+							]
+						}
+					}
+				]
+			},
+			"update_points": {
+				"visibility": "Public",
+				"isEntry": true,
+				"typeParameters": [
+					{
+						"abilities": []
+					}
+				],
+				"parameters": [
+					{
+						"MutableReference": {
+							"Struct": {
+								"address": "0xe87f1b2d498106a2c61421cec75b7b5c5e348512b0dc263949a0e7a3c256571a",
+								"module": "spool",
+								"name": "Spool",
+								"typeArguments": []
+							}
+						}
+					},
+					{
+						"MutableReference": {
+							"Struct": {
+								"address": "0xe87f1b2d498106a2c61421cec75b7b5c5e348512b0dc263949a0e7a3c256571a",
+								"module": "spool_account",
+								"name": "SpoolAccount",
+								"typeArguments": [
+									{
+										"TypeParameter": 0
+									}
+								]
+							}
+						}
+					},
+					{
+						"Reference": {
+							"Struct": {
+								"address": "0x2",
+								"module": "clock",
+								"name": "Clock",
+								"typeArguments": []
+							}
+						}
+					}
+				],
+				"return": []
+			}
+		}
+	}
+]

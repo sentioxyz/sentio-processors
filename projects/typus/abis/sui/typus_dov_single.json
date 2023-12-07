@@ -7,6 +7,52 @@
             "name": "tails_staking",
             "friends": [],
             "structs": {
+                "ClaimProfitSharingEvent": {
+                    "abilities": {
+                        "abilities": ["Copy", "Drop"]
+                    },
+                    "typeParameters": [],
+                    "fields": [
+                        {
+                            "name": "value",
+                            "type": "U64"
+                        },
+                        {
+                            "name": "token",
+                            "type": {
+                                "Struct": {
+                                    "address": "0x1",
+                                    "module": "type_name",
+                                    "name": "TypeName",
+                                    "typeArguments": []
+                                }
+                            }
+                        },
+                        {
+                            "name": "sender",
+                            "type": "Address"
+                        },
+                        {
+                            "name": "nft_id",
+                            "type": {
+                                "Struct": {
+                                    "address": "0x2",
+                                    "module": "object",
+                                    "name": "ID",
+                                    "typeArguments": []
+                                }
+                            }
+                        },
+                        {
+                            "name": "number",
+                            "type": "U64"
+                        },
+                        {
+                            "name": "level",
+                            "type": "U64"
+                        }
+                    ]
+                },
                 "DailyAttendEvent": {
                     "abilities": {
                         "abilities": ["Copy", "Drop"]
@@ -250,6 +296,85 @@
                                     "address": "0x1",
                                     "module": "string",
                                     "name": "String",
+                                    "typeArguments": []
+                                }
+                            }
+                        }
+                    ]
+                },
+                "ProfitSharing": {
+                    "abilities": {
+                        "abilities": ["Store"]
+                    },
+                    "typeParameters": [
+                        {
+                            "constraints": {
+                                "abilities": []
+                            },
+                            "isPhantom": true
+                        }
+                    ],
+                    "fields": [
+                        {
+                            "name": "level_profits",
+                            "type": {
+                                "Vector": "U64"
+                            }
+                        },
+                        {
+                            "name": "level_users",
+                            "type": {
+                                "Vector": "U64"
+                            }
+                        },
+                        {
+                            "name": "total",
+                            "type": "U64"
+                        },
+                        {
+                            "name": "remaining",
+                            "type": "U64"
+                        },
+                        {
+                            "name": "pool",
+                            "type": {
+                                "Struct": {
+                                    "address": "0x2",
+                                    "module": "balance",
+                                    "name": "Balance",
+                                    "typeArguments": [
+                                        {
+                                            "TypeParameter": 0
+                                        }
+                                    ]
+                                }
+                            }
+                        }
+                    ]
+                },
+                "ProfitSharingEvent": {
+                    "abilities": {
+                        "abilities": ["Copy", "Drop"]
+                    },
+                    "typeParameters": [],
+                    "fields": [
+                        {
+                            "name": "level_profits",
+                            "type": {
+                                "Vector": "U64"
+                            }
+                        },
+                        {
+                            "name": "value",
+                            "type": "U64"
+                        },
+                        {
+                            "name": "token",
+                            "type": {
+                                "Struct": {
+                                    "address": "0x1",
+                                    "module": "type_name",
+                                    "name": "TypeName",
                                     "typeArguments": []
                                 }
                             }
@@ -651,6 +776,73 @@
                                 "module": "string",
                                 "name": "String",
                                 "typeArguments": []
+                            }
+                        },
+                        {
+                            "MutableReference": {
+                                "Struct": {
+                                    "address": "0x2",
+                                    "module": "tx_context",
+                                    "name": "TxContext",
+                                    "typeArguments": []
+                                }
+                            }
+                        }
+                    ],
+                    "return": []
+                },
+                "allocate_profit_sharing": {
+                    "visibility": "Private",
+                    "isEntry": true,
+                    "typeParameters": [
+                        {
+                            "abilities": []
+                        }
+                    ],
+                    "parameters": [
+                        {
+                            "MutableReference": {
+                                "Struct": {
+                                    "address": "0x321848bf1ae327a9e022ccb3701940191e02fa193ab160d9c0e49cd3c003de3a",
+                                    "module": "typus_dov_single",
+                                    "name": "Registry",
+                                    "typeArguments": []
+                                }
+                            }
+                        },
+                        {
+                            "Vector": "Address"
+                        },
+                        {
+                            "MutableReference": {
+                                "Struct": {
+                                    "address": "0x2",
+                                    "module": "tx_context",
+                                    "name": "TxContext",
+                                    "typeArguments": []
+                                }
+                            }
+                        }
+                    ],
+                    "return": []
+                },
+                "claim_profit_sharing": {
+                    "visibility": "Private",
+                    "isEntry": true,
+                    "typeParameters": [
+                        {
+                            "abilities": []
+                        }
+                    ],
+                    "parameters": [
+                        {
+                            "MutableReference": {
+                                "Struct": {
+                                    "address": "0x321848bf1ae327a9e022ccb3701940191e02fa193ab160d9c0e49cd3c003de3a",
+                                    "module": "typus_dov_single",
+                                    "name": "Registry",
+                                    "typeArguments": []
+                                }
                             }
                         },
                         {
@@ -1173,6 +1365,38 @@
                     ],
                     "return": []
                 },
+                "remove_exp_coin_extension": {
+                    "visibility": "Private",
+                    "isEntry": true,
+                    "typeParameters": [
+                        {
+                            "abilities": []
+                        }
+                    ],
+                    "parameters": [
+                        {
+                            "MutableReference": {
+                                "Struct": {
+                                    "address": "0x321848bf1ae327a9e022ccb3701940191e02fa193ab160d9c0e49cd3c003de3a",
+                                    "module": "typus_dov_single",
+                                    "name": "Registry",
+                                    "typeArguments": []
+                                }
+                            }
+                        },
+                        {
+                            "MutableReference": {
+                                "Struct": {
+                                    "address": "0x2",
+                                    "module": "tx_context",
+                                    "name": "TxContext",
+                                    "typeArguments": []
+                                }
+                            }
+                        }
+                    ],
+                    "return": []
+                },
                 "remove_nft_extension": {
                     "visibility": "Public",
                     "isEntry": false,
@@ -1342,10 +1566,14 @@
                     ],
                     "return": []
                 },
-                "snapshot": {
+                "set_profit_sharing": {
                     "visibility": "Private",
                     "isEntry": true,
-                    "typeParameters": [],
+                    "typeParameters": [
+                        {
+                            "abilities": []
+                        }
+                    ],
                     "parameters": [
                         {
                             "MutableReference": {
@@ -1358,13 +1586,18 @@
                             }
                         },
                         {
-                            "Reference": {
-                                "Struct": {
-                                    "address": "0x2",
-                                    "module": "clock",
-                                    "name": "Clock",
-                                    "typeArguments": []
-                                }
+                            "Vector": "U64"
+                        },
+                        {
+                            "Struct": {
+                                "address": "0x2",
+                                "module": "coin",
+                                "name": "Coin",
+                                "typeArguments": [
+                                    {
+                                        "TypeParameter": 0
+                                    }
+                                ]
                             }
                         },
                         {
@@ -1380,7 +1613,7 @@
                     ],
                     "return": []
                 },
-                "snapshot_and_calibrate": {
+                "snapshot": {
                     "visibility": "Private",
                     "isEntry": true,
                     "typeParameters": [],
@@ -1394,9 +1627,6 @@
                                     "typeArguments": []
                                 }
                             }
-                        },
-                        {
-                            "Vector": "Address"
                         },
                         {
                             "Reference": {
@@ -1882,6 +2112,115 @@
                         }
                     ]
                 },
+                "CreateScallopSpoolAccount": {
+                    "abilities": {
+                        "abilities": ["Copy", "Drop"]
+                    },
+                    "typeParameters": [],
+                    "fields": [
+                        {
+                            "name": "signer",
+                            "type": "Address"
+                        },
+                        {
+                            "name": "index",
+                            "type": "U64"
+                        },
+                        {
+                            "name": "spool_id",
+                            "type": "Address"
+                        },
+                        {
+                            "name": "spool_account_id",
+                            "type": "Address"
+                        }
+                    ]
+                },
+                "DepositScallop": {
+                    "abilities": {
+                        "abilities": ["Copy", "Drop"]
+                    },
+                    "typeParameters": [],
+                    "fields": [
+                        {
+                            "name": "signer",
+                            "type": "Address"
+                        },
+                        {
+                            "name": "index",
+                            "type": "U64"
+                        },
+                        {
+                            "name": "u64_padding",
+                            "type": {
+                                "Vector": "U64"
+                            }
+                        }
+                    ]
+                },
+                "DisableScallop": {
+                    "abilities": {
+                        "abilities": ["Copy", "Drop"]
+                    },
+                    "typeParameters": [],
+                    "fields": [
+                        {
+                            "name": "signer",
+                            "type": "Address"
+                        },
+                        {
+                            "name": "index",
+                            "type": "U64"
+                        }
+                    ]
+                },
+                "EnableScallop": {
+                    "abilities": {
+                        "abilities": ["Copy", "Drop"]
+                    },
+                    "typeParameters": [],
+                    "fields": [
+                        {
+                            "name": "signer",
+                            "type": "Address"
+                        },
+                        {
+                            "name": "index",
+                            "type": "U64"
+                        }
+                    ]
+                },
+                "FixedIncentiviseEvent": {
+                    "abilities": {
+                        "abilities": ["Copy", "Drop"]
+                    },
+                    "typeParameters": [],
+                    "fields": [
+                        {
+                            "name": "signer",
+                            "type": "Address"
+                        },
+                        {
+                            "name": "token",
+                            "type": {
+                                "Struct": {
+                                    "address": "0x1",
+                                    "module": "type_name",
+                                    "name": "TypeName",
+                                    "typeArguments": []
+                                }
+                            }
+                        },
+                        {
+                            "name": "amount",
+                            "type": "U64"
+                        },
+                        {
+                            "name": "fixed_incentive_amount",
+                            "type": "U64"
+                        }
+                    ]
+                },
                 "RemovePortfolioVaultAuthorizedUserEvent": {
                     "abilities": {
                         "abilities": ["Copy", "Drop"]
@@ -2036,6 +2375,41 @@
                         }
                     ]
                 },
+                "UpdateStrikeEvent": {
+                    "abilities": {
+                        "abilities": ["Copy", "Drop"]
+                    },
+                    "typeParameters": [],
+                    "fields": [
+                        {
+                            "name": "signer",
+                            "type": "Address"
+                        },
+                        {
+                            "name": "index",
+                            "type": "U64"
+                        },
+                        {
+                            "name": "oracle_price",
+                            "type": "U64"
+                        },
+                        {
+                            "name": "oracle_price_decimal",
+                            "type": "U64"
+                        },
+                        {
+                            "name": "vault_config",
+                            "type": {
+                                "Struct": {
+                                    "address": "0x321848bf1ae327a9e022ccb3701940191e02fa193ab160d9c0e49cd3c003de3a",
+                                    "module": "typus_dov_single",
+                                    "name": "VaultConfig",
+                                    "typeArguments": []
+                                }
+                            }
+                        }
+                    ]
+                },
                 "UpdateWarmupVaultConfigEvent": {
                     "abilities": {
                         "abilities": ["Copy", "Drop"]
@@ -2070,6 +2444,28 @@
                                     "name": "VaultConfig",
                                     "typeArguments": []
                                 }
+                            }
+                        }
+                    ]
+                },
+                "WithdrawScallop": {
+                    "abilities": {
+                        "abilities": ["Copy", "Drop"]
+                    },
+                    "typeParameters": [],
+                    "fields": [
+                        {
+                            "name": "signer",
+                            "type": "Address"
+                        },
+                        {
+                            "name": "index",
+                            "type": "U64"
+                        },
+                        {
+                            "name": "u64_padding",
+                            "type": {
+                                "Vector": "U64"
                             }
                         }
                     ]
@@ -2200,10 +2596,69 @@
                     ],
                     "return": []
                 },
+                "create_scallop_spool_account": {
+                    "visibility": "Friend",
+                    "isEntry": true,
+                    "typeParameters": [
+                        {
+                            "abilities": []
+                        },
+                        {
+                            "abilities": []
+                        }
+                    ],
+                    "parameters": [
+                        {
+                            "MutableReference": {
+                                "Struct": {
+                                    "address": "0x321848bf1ae327a9e022ccb3701940191e02fa193ab160d9c0e49cd3c003de3a",
+                                    "module": "typus_dov_single",
+                                    "name": "Registry",
+                                    "typeArguments": []
+                                }
+                            }
+                        },
+                        "U64",
+                        {
+                            "MutableReference": {
+                                "Struct": {
+                                    "address": "0xe87f1b2d498106a2c61421cec75b7b5c5e348512b0dc263949a0e7a3c256571a",
+                                    "module": "spool",
+                                    "name": "Spool",
+                                    "typeArguments": []
+                                }
+                            }
+                        },
+                        {
+                            "Reference": {
+                                "Struct": {
+                                    "address": "0x2",
+                                    "module": "clock",
+                                    "name": "Clock",
+                                    "typeArguments": []
+                                }
+                            }
+                        },
+                        {
+                            "MutableReference": {
+                                "Struct": {
+                                    "address": "0x2",
+                                    "module": "tx_context",
+                                    "name": "TxContext",
+                                    "typeArguments": []
+                                }
+                            }
+                        }
+                    ],
+                    "return": []
+                },
                 "delivery": {
                     "visibility": "Friend",
                     "isEntry": true,
                     "typeParameters": [
+                        {
+                            "abilities": []
+                        },
                         {
                             "abilities": []
                         },
@@ -2236,6 +2691,242 @@
                         },
                         {
                             "MutableReference": {
+                                "Struct": {
+                                    "address": "0x2",
+                                    "module": "tx_context",
+                                    "name": "TxContext",
+                                    "typeArguments": []
+                                }
+                            }
+                        }
+                    ],
+                    "return": []
+                },
+                "deposit_scallop": {
+                    "visibility": "Friend",
+                    "isEntry": true,
+                    "typeParameters": [
+                        {
+                            "abilities": []
+                        },
+                        {
+                            "abilities": []
+                        }
+                    ],
+                    "parameters": [
+                        {
+                            "MutableReference": {
+                                "Struct": {
+                                    "address": "0x321848bf1ae327a9e022ccb3701940191e02fa193ab160d9c0e49cd3c003de3a",
+                                    "module": "typus_dov_single",
+                                    "name": "Registry",
+                                    "typeArguments": []
+                                }
+                            }
+                        },
+                        "U64",
+                        {
+                            "Reference": {
+                                "Struct": {
+                                    "address": "0xefe8b36d5b2e43728cc323298626b83177803521d195cfb11e15b910e892fddf",
+                                    "module": "version",
+                                    "name": "Version",
+                                    "typeArguments": []
+                                }
+                            }
+                        },
+                        {
+                            "MutableReference": {
+                                "Struct": {
+                                    "address": "0xefe8b36d5b2e43728cc323298626b83177803521d195cfb11e15b910e892fddf",
+                                    "module": "market",
+                                    "name": "Market",
+                                    "typeArguments": []
+                                }
+                            }
+                        },
+                        {
+                            "MutableReference": {
+                                "Struct": {
+                                    "address": "0xe87f1b2d498106a2c61421cec75b7b5c5e348512b0dc263949a0e7a3c256571a",
+                                    "module": "spool",
+                                    "name": "Spool",
+                                    "typeArguments": []
+                                }
+                            }
+                        },
+                        {
+                            "Reference": {
+                                "Struct": {
+                                    "address": "0x2",
+                                    "module": "clock",
+                                    "name": "Clock",
+                                    "typeArguments": []
+                                }
+                            }
+                        },
+                        {
+                            "MutableReference": {
+                                "Struct": {
+                                    "address": "0x2",
+                                    "module": "tx_context",
+                                    "name": "TxContext",
+                                    "typeArguments": []
+                                }
+                            }
+                        }
+                    ],
+                    "return": []
+                },
+                "disable_scallop": {
+                    "visibility": "Friend",
+                    "isEntry": true,
+                    "typeParameters": [
+                        {
+                            "abilities": []
+                        },
+                        {
+                            "abilities": []
+                        }
+                    ],
+                    "parameters": [
+                        {
+                            "MutableReference": {
+                                "Struct": {
+                                    "address": "0x321848bf1ae327a9e022ccb3701940191e02fa193ab160d9c0e49cd3c003de3a",
+                                    "module": "typus_dov_single",
+                                    "name": "Registry",
+                                    "typeArguments": []
+                                }
+                            }
+                        },
+                        "U64",
+                        {
+                            "MutableReference": {
+                                "Struct": {
+                                    "address": "0x2",
+                                    "module": "tx_context",
+                                    "name": "TxContext",
+                                    "typeArguments": []
+                                }
+                            }
+                        }
+                    ],
+                    "return": []
+                },
+                "drop_vault": {
+                    "visibility": "Friend",
+                    "isEntry": true,
+                    "typeParameters": [
+                        {
+                            "abilities": []
+                        },
+                        {
+                            "abilities": []
+                        }
+                    ],
+                    "parameters": [
+                        {
+                            "MutableReference": {
+                                "Struct": {
+                                    "address": "0x321848bf1ae327a9e022ccb3701940191e02fa193ab160d9c0e49cd3c003de3a",
+                                    "module": "typus_dov_single",
+                                    "name": "Registry",
+                                    "typeArguments": []
+                                }
+                            }
+                        },
+                        "U64",
+                        {
+                            "MutableReference": {
+                                "Struct": {
+                                    "address": "0x2",
+                                    "module": "tx_context",
+                                    "name": "TxContext",
+                                    "typeArguments": []
+                                }
+                            }
+                        }
+                    ],
+                    "return": []
+                },
+                "enable_scallop": {
+                    "visibility": "Friend",
+                    "isEntry": true,
+                    "typeParameters": [
+                        {
+                            "abilities": []
+                        },
+                        {
+                            "abilities": []
+                        }
+                    ],
+                    "parameters": [
+                        {
+                            "MutableReference": {
+                                "Struct": {
+                                    "address": "0x321848bf1ae327a9e022ccb3701940191e02fa193ab160d9c0e49cd3c003de3a",
+                                    "module": "typus_dov_single",
+                                    "name": "Registry",
+                                    "typeArguments": []
+                                }
+                            }
+                        },
+                        "U64",
+                        {
+                            "MutableReference": {
+                                "Struct": {
+                                    "address": "0x2",
+                                    "module": "tx_context",
+                                    "name": "TxContext",
+                                    "typeArguments": []
+                                }
+                            }
+                        }
+                    ],
+                    "return": []
+                },
+                "fixed_incentivise": {
+                    "visibility": "Friend",
+                    "isEntry": true,
+                    "typeParameters": [
+                        {
+                            "abilities": []
+                        },
+                        {
+                            "abilities": []
+                        },
+                        {
+                            "abilities": []
+                        }
+                    ],
+                    "parameters": [
+                        {
+                            "MutableReference": {
+                                "Struct": {
+                                    "address": "0x321848bf1ae327a9e022ccb3701940191e02fa193ab160d9c0e49cd3c003de3a",
+                                    "module": "typus_dov_single",
+                                    "name": "Registry",
+                                    "typeArguments": []
+                                }
+                            }
+                        },
+                        "U64",
+                        {
+                            "Struct": {
+                                "address": "0x2",
+                                "module": "coin",
+                                "name": "Coin",
+                                "typeArguments": [
+                                    {
+                                        "TypeParameter": 2
+                                    }
+                                ]
+                            }
+                        },
+                        "U64",
+                        {
+                            "Reference": {
                                 "Struct": {
                                     "address": "0x2",
                                     "module": "tx_context",
@@ -2848,6 +3539,55 @@
                     ],
                     "return": []
                 },
+                "update_strike": {
+                    "visibility": "Friend",
+                    "isEntry": true,
+                    "typeParameters": [],
+                    "parameters": [
+                        {
+                            "MutableReference": {
+                                "Struct": {
+                                    "address": "0x321848bf1ae327a9e022ccb3701940191e02fa193ab160d9c0e49cd3c003de3a",
+                                    "module": "typus_dov_single",
+                                    "name": "Registry",
+                                    "typeArguments": []
+                                }
+                            }
+                        },
+                        "U64",
+                        {
+                            "Reference": {
+                                "Struct": {
+                                    "address": "0x855eb2d260ee42b898266e6df90bfd3c4ed821ccb253a352c159c223244a4b8a",
+                                    "module": "oracle",
+                                    "name": "Oracle",
+                                    "typeArguments": []
+                                }
+                            }
+                        },
+                        {
+                            "Reference": {
+                                "Struct": {
+                                    "address": "0x2",
+                                    "module": "clock",
+                                    "name": "Clock",
+                                    "typeArguments": []
+                                }
+                            }
+                        },
+                        {
+                            "Reference": {
+                                "Struct": {
+                                    "address": "0x2",
+                                    "module": "tx_context",
+                                    "name": "TxContext",
+                                    "typeArguments": []
+                                }
+                            }
+                        }
+                    ],
+                    "return": []
+                },
                 "update_warmup_vault_config": {
                     "visibility": "Friend",
                     "isEntry": true,
@@ -2879,6 +3619,276 @@
                         "U64",
                         {
                             "Reference": {
+                                "Struct": {
+                                    "address": "0x2",
+                                    "module": "tx_context",
+                                    "name": "TxContext",
+                                    "typeArguments": []
+                                }
+                            }
+                        }
+                    ],
+                    "return": []
+                },
+                "withdraw_xxx_scallop": {
+                    "visibility": "Friend",
+                    "isEntry": true,
+                    "typeParameters": [
+                        {
+                            "abilities": []
+                        },
+                        {
+                            "abilities": []
+                        }
+                    ],
+                    "parameters": [
+                        {
+                            "MutableReference": {
+                                "Struct": {
+                                    "address": "0x321848bf1ae327a9e022ccb3701940191e02fa193ab160d9c0e49cd3c003de3a",
+                                    "module": "typus_dov_single",
+                                    "name": "Registry",
+                                    "typeArguments": []
+                                }
+                            }
+                        },
+                        "U64",
+                        {
+                            "Reference": {
+                                "Struct": {
+                                    "address": "0xefe8b36d5b2e43728cc323298626b83177803521d195cfb11e15b910e892fddf",
+                                    "module": "version",
+                                    "name": "Version",
+                                    "typeArguments": []
+                                }
+                            }
+                        },
+                        {
+                            "MutableReference": {
+                                "Struct": {
+                                    "address": "0xefe8b36d5b2e43728cc323298626b83177803521d195cfb11e15b910e892fddf",
+                                    "module": "market",
+                                    "name": "Market",
+                                    "typeArguments": []
+                                }
+                            }
+                        },
+                        {
+                            "MutableReference": {
+                                "Struct": {
+                                    "address": "0xe87f1b2d498106a2c61421cec75b7b5c5e348512b0dc263949a0e7a3c256571a",
+                                    "module": "spool",
+                                    "name": "Spool",
+                                    "typeArguments": []
+                                }
+                            }
+                        },
+                        {
+                            "MutableReference": {
+                                "Struct": {
+                                    "address": "0xe87f1b2d498106a2c61421cec75b7b5c5e348512b0dc263949a0e7a3c256571a",
+                                    "module": "rewards_pool",
+                                    "name": "RewardsPool",
+                                    "typeArguments": [
+                                        {
+                                            "TypeParameter": 0
+                                        }
+                                    ]
+                                }
+                            }
+                        },
+                        {
+                            "Reference": {
+                                "Struct": {
+                                    "address": "0x2",
+                                    "module": "clock",
+                                    "name": "Clock",
+                                    "typeArguments": []
+                                }
+                            }
+                        },
+                        {
+                            "MutableReference": {
+                                "Struct": {
+                                    "address": "0x2",
+                                    "module": "tx_context",
+                                    "name": "TxContext",
+                                    "typeArguments": []
+                                }
+                            }
+                        }
+                    ],
+                    "return": []
+                },
+                "withdraw_xyx_scallop": {
+                    "visibility": "Friend",
+                    "isEntry": true,
+                    "typeParameters": [
+                        {
+                            "abilities": []
+                        },
+                        {
+                            "abilities": []
+                        }
+                    ],
+                    "parameters": [
+                        {
+                            "MutableReference": {
+                                "Struct": {
+                                    "address": "0x321848bf1ae327a9e022ccb3701940191e02fa193ab160d9c0e49cd3c003de3a",
+                                    "module": "typus_dov_single",
+                                    "name": "Registry",
+                                    "typeArguments": []
+                                }
+                            }
+                        },
+                        "U64",
+                        {
+                            "Reference": {
+                                "Struct": {
+                                    "address": "0xefe8b36d5b2e43728cc323298626b83177803521d195cfb11e15b910e892fddf",
+                                    "module": "version",
+                                    "name": "Version",
+                                    "typeArguments": []
+                                }
+                            }
+                        },
+                        {
+                            "MutableReference": {
+                                "Struct": {
+                                    "address": "0xefe8b36d5b2e43728cc323298626b83177803521d195cfb11e15b910e892fddf",
+                                    "module": "market",
+                                    "name": "Market",
+                                    "typeArguments": []
+                                }
+                            }
+                        },
+                        {
+                            "MutableReference": {
+                                "Struct": {
+                                    "address": "0xe87f1b2d498106a2c61421cec75b7b5c5e348512b0dc263949a0e7a3c256571a",
+                                    "module": "spool",
+                                    "name": "Spool",
+                                    "typeArguments": []
+                                }
+                            }
+                        },
+                        {
+                            "MutableReference": {
+                                "Struct": {
+                                    "address": "0xe87f1b2d498106a2c61421cec75b7b5c5e348512b0dc263949a0e7a3c256571a",
+                                    "module": "rewards_pool",
+                                    "name": "RewardsPool",
+                                    "typeArguments": [
+                                        {
+                                            "TypeParameter": 0
+                                        }
+                                    ]
+                                }
+                            }
+                        },
+                        {
+                            "Reference": {
+                                "Struct": {
+                                    "address": "0x2",
+                                    "module": "clock",
+                                    "name": "Clock",
+                                    "typeArguments": []
+                                }
+                            }
+                        },
+                        {
+                            "MutableReference": {
+                                "Struct": {
+                                    "address": "0x2",
+                                    "module": "tx_context",
+                                    "name": "TxContext",
+                                    "typeArguments": []
+                                }
+                            }
+                        }
+                    ],
+                    "return": []
+                },
+                "withdraw_xyy_scallop": {
+                    "visibility": "Friend",
+                    "isEntry": true,
+                    "typeParameters": [
+                        {
+                            "abilities": []
+                        },
+                        {
+                            "abilities": []
+                        }
+                    ],
+                    "parameters": [
+                        {
+                            "MutableReference": {
+                                "Struct": {
+                                    "address": "0x321848bf1ae327a9e022ccb3701940191e02fa193ab160d9c0e49cd3c003de3a",
+                                    "module": "typus_dov_single",
+                                    "name": "Registry",
+                                    "typeArguments": []
+                                }
+                            }
+                        },
+                        "U64",
+                        {
+                            "Reference": {
+                                "Struct": {
+                                    "address": "0xefe8b36d5b2e43728cc323298626b83177803521d195cfb11e15b910e892fddf",
+                                    "module": "version",
+                                    "name": "Version",
+                                    "typeArguments": []
+                                }
+                            }
+                        },
+                        {
+                            "MutableReference": {
+                                "Struct": {
+                                    "address": "0xefe8b36d5b2e43728cc323298626b83177803521d195cfb11e15b910e892fddf",
+                                    "module": "market",
+                                    "name": "Market",
+                                    "typeArguments": []
+                                }
+                            }
+                        },
+                        {
+                            "MutableReference": {
+                                "Struct": {
+                                    "address": "0xe87f1b2d498106a2c61421cec75b7b5c5e348512b0dc263949a0e7a3c256571a",
+                                    "module": "spool",
+                                    "name": "Spool",
+                                    "typeArguments": []
+                                }
+                            }
+                        },
+                        {
+                            "MutableReference": {
+                                "Struct": {
+                                    "address": "0xe87f1b2d498106a2c61421cec75b7b5c5e348512b0dc263949a0e7a3c256571a",
+                                    "module": "rewards_pool",
+                                    "name": "RewardsPool",
+                                    "typeArguments": [
+                                        {
+                                            "TypeParameter": 1
+                                        }
+                                    ]
+                                }
+                            }
+                        },
+                        {
+                            "Reference": {
+                                "Struct": {
+                                    "address": "0x2",
+                                    "module": "clock",
+                                    "name": "Clock",
+                                    "typeArguments": []
+                                }
+                            }
+                        },
+                        {
+                            "MutableReference": {
                                 "Struct": {
                                     "address": "0x2",
                                     "module": "tx_context",
@@ -2967,6 +3977,37 @@
                             "type": {
                                 "Vector": "Address"
                             }
+                        }
+                    ]
+                },
+                "SendFeeEvent": {
+                    "abilities": {
+                        "abilities": ["Copy", "Drop"]
+                    },
+                    "typeParameters": [],
+                    "fields": [
+                        {
+                            "name": "signer",
+                            "type": "Address"
+                        },
+                        {
+                            "name": "token",
+                            "type": {
+                                "Struct": {
+                                    "address": "0x1",
+                                    "module": "type_name",
+                                    "name": "TypeName",
+                                    "typeArguments": []
+                                }
+                            }
+                        },
+                        {
+                            "name": "amount",
+                            "type": "U64"
+                        },
+                        {
+                            "name": "recipient",
+                            "type": "Address"
                         }
                     ]
                 },
@@ -3151,6 +4192,46 @@
                         },
                         {
                             "Reference": {
+                                "Struct": {
+                                    "address": "0x2",
+                                    "module": "tx_context",
+                                    "name": "TxContext",
+                                    "typeArguments": []
+                                }
+                            }
+                        }
+                    ],
+                    "return": []
+                },
+                "send_fee": {
+                    "visibility": "Friend",
+                    "isEntry": true,
+                    "typeParameters": [
+                        {
+                            "abilities": []
+                        }
+                    ],
+                    "parameters": [
+                        {
+                            "MutableReference": {
+                                "Struct": {
+                                    "address": "0x321848bf1ae327a9e022ccb3701940191e02fa193ab160d9c0e49cd3c003de3a",
+                                    "module": "typus_dov_single",
+                                    "name": "Registry",
+                                    "typeArguments": []
+                                }
+                            }
+                        },
+                        {
+                            "Struct": {
+                                "address": "0x1",
+                                "module": "option",
+                                "name": "Option",
+                                "typeArguments": ["U64"]
+                            }
+                        },
+                        {
+                            "MutableReference": {
                                 "Struct": {
                                     "address": "0x2",
                                     "module": "tx_context",
@@ -3952,55 +5033,6 @@
                     ],
                     "return": []
                 },
-                "exercise_i": {
-                    "visibility": "Friend",
-                    "isEntry": true,
-                    "typeParameters": [
-                        {
-                            "abilities": []
-                        },
-                        {
-                            "abilities": []
-                        },
-                        {
-                            "abilities": []
-                        }
-                    ],
-                    "parameters": [
-                        {
-                            "MutableReference": {
-                                "Struct": {
-                                    "address": "0x321848bf1ae327a9e022ccb3701940191e02fa193ab160d9c0e49cd3c003de3a",
-                                    "module": "typus_dov_single",
-                                    "name": "Registry",
-                                    "typeArguments": []
-                                }
-                            }
-                        },
-                        "U64",
-                        {
-                            "Vector": {
-                                "Struct": {
-                                    "address": "0xb4f25230ba74837d8299e92951306100c4a532e8c48cc3d8828abe9b91c8b274",
-                                    "module": "vault",
-                                    "name": "TypusBidReceipt",
-                                    "typeArguments": []
-                                }
-                            }
-                        },
-                        {
-                            "MutableReference": {
-                                "Struct": {
-                                    "address": "0x2",
-                                    "module": "tx_context",
-                                    "name": "TxContext",
-                                    "typeArguments": []
-                                }
-                            }
-                        }
-                    ],
-                    "return": []
-                },
                 "harvest": {
                     "visibility": "Friend",
                     "isEntry": true,
@@ -4108,6 +5140,38 @@
                     ],
                     "return": ["U64"]
                 },
+                "rebate": {
+                    "visibility": "Friend",
+                    "isEntry": true,
+                    "typeParameters": [
+                        {
+                            "abilities": []
+                        }
+                    ],
+                    "parameters": [
+                        {
+                            "MutableReference": {
+                                "Struct": {
+                                    "address": "0x321848bf1ae327a9e022ccb3701940191e02fa193ab160d9c0e49cd3c003de3a",
+                                    "module": "typus_dov_single",
+                                    "name": "Registry",
+                                    "typeArguments": []
+                                }
+                            }
+                        },
+                        {
+                            "MutableReference": {
+                                "Struct": {
+                                    "address": "0x2",
+                                    "module": "tx_context",
+                                    "name": "TxContext",
+                                    "typeArguments": []
+                                }
+                            }
+                        }
+                    ],
+                    "return": []
+                },
                 "redeem": {
                     "visibility": "Friend",
                     "isEntry": true,
@@ -4157,10 +5221,13 @@
                     ],
                     "return": []
                 },
-                "refund": {
+                "transfer_bid_receipt": {
                     "visibility": "Friend",
                     "isEntry": true,
                     "typeParameters": [
+                        {
+                            "abilities": []
+                        },
                         {
                             "abilities": []
                         }
@@ -4176,6 +5243,26 @@
                                 }
                             }
                         },
+                        "U64",
+                        {
+                            "Vector": {
+                                "Struct": {
+                                    "address": "0xb4f25230ba74837d8299e92951306100c4a532e8c48cc3d8828abe9b91c8b274",
+                                    "module": "vault",
+                                    "name": "TypusBidReceipt",
+                                    "typeArguments": []
+                                }
+                            }
+                        },
+                        {
+                            "Struct": {
+                                "address": "0x1",
+                                "module": "option",
+                                "name": "Option",
+                                "typeArguments": ["U64"]
+                            }
+                        },
+                        "Address",
                         {
                             "MutableReference": {
                                 "Struct": {
@@ -4499,6 +5586,102 @@
                         }
                     ]
                 },
+                "get_scallop_withdrawal_bcs": {
+                    "visibility": "Friend",
+                    "isEntry": false,
+                    "typeParameters": [
+                        {
+                            "abilities": []
+                        },
+                        {
+                            "abilities": []
+                        }
+                    ],
+                    "parameters": [
+                        {
+                            "MutableReference": {
+                                "Struct": {
+                                    "address": "0x321848bf1ae327a9e022ccb3701940191e02fa193ab160d9c0e49cd3c003de3a",
+                                    "module": "typus_dov_single",
+                                    "name": "Registry",
+                                    "typeArguments": []
+                                }
+                            }
+                        },
+                        "U64",
+                        {
+                            "Reference": {
+                                "Struct": {
+                                    "address": "0xefe8b36d5b2e43728cc323298626b83177803521d195cfb11e15b910e892fddf",
+                                    "module": "version",
+                                    "name": "Version",
+                                    "typeArguments": []
+                                }
+                            }
+                        },
+                        {
+                            "MutableReference": {
+                                "Struct": {
+                                    "address": "0xefe8b36d5b2e43728cc323298626b83177803521d195cfb11e15b910e892fddf",
+                                    "module": "market",
+                                    "name": "Market",
+                                    "typeArguments": []
+                                }
+                            }
+                        },
+                        {
+                            "MutableReference": {
+                                "Struct": {
+                                    "address": "0xe87f1b2d498106a2c61421cec75b7b5c5e348512b0dc263949a0e7a3c256571a",
+                                    "module": "spool",
+                                    "name": "Spool",
+                                    "typeArguments": []
+                                }
+                            }
+                        },
+                        {
+                            "MutableReference": {
+                                "Struct": {
+                                    "address": "0xe87f1b2d498106a2c61421cec75b7b5c5e348512b0dc263949a0e7a3c256571a",
+                                    "module": "rewards_pool",
+                                    "name": "RewardsPool",
+                                    "typeArguments": [
+                                        {
+                                            "TypeParameter": 1
+                                        }
+                                    ]
+                                }
+                            }
+                        },
+                        {
+                            "Reference": {
+                                "Struct": {
+                                    "address": "0x2",
+                                    "module": "clock",
+                                    "name": "Clock",
+                                    "typeArguments": []
+                                }
+                            }
+                        },
+                        {
+                            "MutableReference": {
+                                "Struct": {
+                                    "address": "0x2",
+                                    "module": "tx_context",
+                                    "name": "TxContext",
+                                    "typeArguments": []
+                                }
+                            }
+                        }
+                    ],
+                    "return": [
+                        {
+                            "Vector": {
+                                "Vector": "U8"
+                            }
+                        }
+                    ]
+                },
                 "get_vault_data_bcs": {
                     "visibility": "Friend",
                     "isEntry": false,
@@ -4608,6 +5791,25 @@
                             "name": "u64_padding",
                             "type": {
                                 "Vector": "U64"
+                            }
+                        }
+                    ]
+                },
+                "AdditionalConfig": {
+                    "abilities": {
+                        "abilities": ["Store", "Key"]
+                    },
+                    "typeParameters": [],
+                    "fields": [
+                        {
+                            "name": "id",
+                            "type": {
+                                "Struct": {
+                                    "address": "0x2",
+                                    "module": "object",
+                                    "name": "UID",
+                                    "typeArguments": []
+                                }
                             }
                         }
                     ]
@@ -5107,6 +6309,32 @@
                                     "typeArguments": []
                                 }
                             }
+                        },
+                        {
+                            "name": "u64_padding",
+                            "type": {
+                                "Vector": "U64"
+                            }
+                        }
+                    ]
+                },
+                "DropVaultEvent": {
+                    "abilities": {
+                        "abilities": ["Copy", "Drop"]
+                    },
+                    "typeParameters": [],
+                    "fields": [
+                        {
+                            "name": "signer",
+                            "type": "Address"
+                        },
+                        {
+                            "name": "index",
+                            "type": "U64"
+                        },
+                        {
+                            "name": "round",
+                            "type": "U64"
                         },
                         {
                             "name": "u64_padding",
@@ -6132,6 +7360,51 @@
                         }
                     ]
                 },
+                "TransferBidReceiptEvent": {
+                    "abilities": {
+                        "abilities": ["Copy", "Drop"]
+                    },
+                    "typeParameters": [],
+                    "fields": [
+                        {
+                            "name": "signer",
+                            "type": "Address"
+                        },
+                        {
+                            "name": "index",
+                            "type": "U64"
+                        },
+                        {
+                            "name": "amount",
+                            "type": "U64"
+                        },
+                        {
+                            "name": "decimal",
+                            "type": "U64"
+                        },
+                        {
+                            "name": "recipient",
+                            "type": "Address"
+                        },
+                        {
+                            "name": "oracle_info",
+                            "type": {
+                                "Struct": {
+                                    "address": "0x321848bf1ae327a9e022ccb3701940191e02fa193ab160d9c0e49cd3c003de3a",
+                                    "module": "typus_dov_single",
+                                    "name": "OracleInfo",
+                                    "typeArguments": []
+                                }
+                            }
+                        },
+                        {
+                            "name": "u64_padding",
+                            "type": {
+                                "Vector": "U64"
+                            }
+                        }
+                    ]
+                },
                 "UnsubscribeEvent": {
                     "abilities": {
                         "abilities": ["Copy", "Drop"]
@@ -6478,6 +7751,34 @@
                     ],
                     "return": []
                 },
+                "create_additional_configs": {
+                    "visibility": "Private",
+                    "isEntry": true,
+                    "typeParameters": [],
+                    "parameters": [
+                        {
+                            "MutableReference": {
+                                "Struct": {
+                                    "address": "0x321848bf1ae327a9e022ccb3701940191e02fa193ab160d9c0e49cd3c003de3a",
+                                    "module": "typus_dov_single",
+                                    "name": "Registry",
+                                    "typeArguments": []
+                                }
+                            }
+                        },
+                        {
+                            "MutableReference": {
+                                "Struct": {
+                                    "address": "0x2",
+                                    "module": "tx_context",
+                                    "name": "TxContext",
+                                    "typeArguments": []
+                                }
+                            }
+                        }
+                    ],
+                    "return": []
+                },
                 "create_payoff_configs": {
                     "visibility": "Friend",
                     "isEntry": false,
@@ -6506,10 +7807,66 @@
                         }
                     ]
                 },
+                "create_scallop_spool_account_": {
+                    "visibility": "Friend",
+                    "isEntry": false,
+                    "typeParameters": [
+                        {
+                            "abilities": []
+                        }
+                    ],
+                    "parameters": [
+                        {
+                            "MutableReference": {
+                                "Struct": {
+                                    "address": "0x321848bf1ae327a9e022ccb3701940191e02fa193ab160d9c0e49cd3c003de3a",
+                                    "module": "typus_dov_single",
+                                    "name": "Registry",
+                                    "typeArguments": []
+                                }
+                            }
+                        },
+                        "U64",
+                        {
+                            "MutableReference": {
+                                "Struct": {
+                                    "address": "0xe87f1b2d498106a2c61421cec75b7b5c5e348512b0dc263949a0e7a3c256571a",
+                                    "module": "spool",
+                                    "name": "Spool",
+                                    "typeArguments": []
+                                }
+                            }
+                        },
+                        {
+                            "Reference": {
+                                "Struct": {
+                                    "address": "0x2",
+                                    "module": "clock",
+                                    "name": "Clock",
+                                    "typeArguments": []
+                                }
+                            }
+                        },
+                        {
+                            "MutableReference": {
+                                "Struct": {
+                                    "address": "0x2",
+                                    "module": "tx_context",
+                                    "name": "TxContext",
+                                    "typeArguments": []
+                                }
+                            }
+                        }
+                    ],
+                    "return": ["Address", "Address"]
+                },
                 "delivery_": {
                     "visibility": "Friend",
                     "isEntry": false,
                     "typeParameters": [
+                        {
+                            "abilities": []
+                        },
                         {
                             "abilities": []
                         },
@@ -6551,7 +7908,120 @@
                             }
                         }
                     ],
-                    "return": ["U64", "U64", "U64", "U64", "U64", "U64", "U64"]
+                    "return": [
+                        {
+                            "Vector": "U64"
+                        }
+                    ]
+                },
+                "deposit_scallop_": {
+                    "visibility": "Friend",
+                    "isEntry": false,
+                    "typeParameters": [
+                        {
+                            "abilities": []
+                        }
+                    ],
+                    "parameters": [
+                        {
+                            "MutableReference": {
+                                "Struct": {
+                                    "address": "0x321848bf1ae327a9e022ccb3701940191e02fa193ab160d9c0e49cd3c003de3a",
+                                    "module": "typus_dov_single",
+                                    "name": "Registry",
+                                    "typeArguments": []
+                                }
+                            }
+                        },
+                        "U64",
+                        {
+                            "Reference": {
+                                "Struct": {
+                                    "address": "0xefe8b36d5b2e43728cc323298626b83177803521d195cfb11e15b910e892fddf",
+                                    "module": "version",
+                                    "name": "Version",
+                                    "typeArguments": []
+                                }
+                            }
+                        },
+                        {
+                            "MutableReference": {
+                                "Struct": {
+                                    "address": "0xefe8b36d5b2e43728cc323298626b83177803521d195cfb11e15b910e892fddf",
+                                    "module": "market",
+                                    "name": "Market",
+                                    "typeArguments": []
+                                }
+                            }
+                        },
+                        {
+                            "MutableReference": {
+                                "Struct": {
+                                    "address": "0xe87f1b2d498106a2c61421cec75b7b5c5e348512b0dc263949a0e7a3c256571a",
+                                    "module": "spool",
+                                    "name": "Spool",
+                                    "typeArguments": []
+                                }
+                            }
+                        },
+                        {
+                            "Reference": {
+                                "Struct": {
+                                    "address": "0x2",
+                                    "module": "clock",
+                                    "name": "Clock",
+                                    "typeArguments": []
+                                }
+                            }
+                        },
+                        {
+                            "MutableReference": {
+                                "Struct": {
+                                    "address": "0x2",
+                                    "module": "tx_context",
+                                    "name": "TxContext",
+                                    "typeArguments": []
+                                }
+                            }
+                        }
+                    ],
+                    "return": []
+                },
+                "drop_": {
+                    "visibility": "Friend",
+                    "isEntry": false,
+                    "typeParameters": [
+                        {
+                            "abilities": []
+                        },
+                        {
+                            "abilities": []
+                        }
+                    ],
+                    "parameters": [
+                        {
+                            "MutableReference": {
+                                "Struct": {
+                                    "address": "0x321848bf1ae327a9e022ccb3701940191e02fa193ab160d9c0e49cd3c003de3a",
+                                    "module": "typus_dov_single",
+                                    "name": "Registry",
+                                    "typeArguments": []
+                                }
+                            }
+                        },
+                        "U64",
+                        {
+                            "Reference": {
+                                "Struct": {
+                                    "address": "0x2",
+                                    "module": "tx_context",
+                                    "name": "TxContext",
+                                    "typeArguments": []
+                                }
+                            }
+                        }
+                    ],
+                    "return": []
                 },
                 "emit_activate_event": {
                     "visibility": "Friend",
@@ -6658,6 +8128,8 @@
                             }
                         },
                         "U64",
+                        "U64",
+                        "U64",
                         {
                             "Reference": {
                                 "Struct": {
@@ -6688,13 +8160,9 @@
                         },
                         "U64",
                         "Bool",
-                        "U64",
-                        "U64",
-                        "U64",
-                        "U64",
-                        "U64",
-                        "U64",
-                        "U64",
+                        {
+                            "Vector": "U64"
+                        },
                         {
                             "Reference": {
                                 "Struct": {
@@ -6737,6 +8205,35 @@
                     ],
                     "return": []
                 },
+                "emit_drop_vault_event": {
+                    "visibility": "Friend",
+                    "isEntry": false,
+                    "typeParameters": [],
+                    "parameters": [
+                        {
+                            "Reference": {
+                                "Struct": {
+                                    "address": "0x321848bf1ae327a9e022ccb3701940191e02fa193ab160d9c0e49cd3c003de3a",
+                                    "module": "typus_dov_single",
+                                    "name": "Registry",
+                                    "typeArguments": []
+                                }
+                            }
+                        },
+                        "U64",
+                        {
+                            "Reference": {
+                                "Struct": {
+                                    "address": "0x2",
+                                    "module": "tx_context",
+                                    "name": "TxContext",
+                                    "typeArguments": []
+                                }
+                            }
+                        }
+                    ],
+                    "return": []
+                },
                 "emit_exercise_event": {
                     "visibility": "Friend",
                     "isEntry": false,
@@ -6752,6 +8249,7 @@
                                 }
                             }
                         },
+                        "U64",
                         "U64",
                         {
                             "Struct": {
@@ -6799,6 +8297,7 @@
                                 }
                             }
                         },
+                        "U64",
                         "U64",
                         "U64",
                         {
@@ -6971,6 +8470,8 @@
                             }
                         },
                         "U64",
+                        "U64",
+                        "U64",
                         {
                             "Reference": {
                                 "Struct": {
@@ -7103,6 +8604,36 @@
                     ],
                     "return": []
                 },
+                "emit_transfer_bid_receipt_event": {
+                    "visibility": "Friend",
+                    "isEntry": false,
+                    "typeParameters": [],
+                    "parameters": [
+                        {
+                            "Reference": {
+                                "Struct": {
+                                    "address": "0x321848bf1ae327a9e022ccb3701940191e02fa193ab160d9c0e49cd3c003de3a",
+                                    "module": "typus_dov_single",
+                                    "name": "PortfolioVault",
+                                    "typeArguments": []
+                                }
+                            }
+                        },
+                        "U64",
+                        "Address",
+                        {
+                            "Reference": {
+                                "Struct": {
+                                    "address": "0x2",
+                                    "module": "tx_context",
+                                    "name": "TxContext",
+                                    "typeArguments": []
+                                }
+                            }
+                        }
+                    ],
+                    "return": []
+                },
                 "emit_unsubscribe_event": {
                     "visibility": "Friend",
                     "isEntry": false,
@@ -7160,6 +8691,72 @@
                         }
                     ],
                     "return": []
+                },
+                "fixed_incentivise_": {
+                    "visibility": "Friend",
+                    "isEntry": false,
+                    "typeParameters": [
+                        {
+                            "abilities": []
+                        }
+                    ],
+                    "parameters": [
+                        {
+                            "MutableReference": {
+                                "Struct": {
+                                    "address": "0x321848bf1ae327a9e022ccb3701940191e02fa193ab160d9c0e49cd3c003de3a",
+                                    "module": "typus_dov_single",
+                                    "name": "Registry",
+                                    "typeArguments": []
+                                }
+                            }
+                        },
+                        "U64",
+                        {
+                            "Struct": {
+                                "address": "0x2",
+                                "module": "coin",
+                                "name": "Coin",
+                                "typeArguments": [
+                                    {
+                                        "TypeParameter": 0
+                                    }
+                                ]
+                            }
+                        },
+                        "U64"
+                    ],
+                    "return": ["U64"]
+                },
+                "get_additional_config": {
+                    "visibility": "Friend",
+                    "isEntry": false,
+                    "typeParameters": [],
+                    "parameters": [
+                        {
+                            "Reference": {
+                                "Struct": {
+                                    "address": "0x2",
+                                    "module": "object",
+                                    "name": "UID",
+                                    "typeArguments": []
+                                }
+                            }
+                        },
+                        "U64"
+                    ],
+                    "return": [
+                        {
+                            "Reference": {
+                                "Struct": {
+                                    "address": "0x321848bf1ae327a9e022ccb3701940191e02fa193ab160d9c0e49cd3c003de3a",
+                                    "module": "typus_dov_single",
+                                    "name": "AdditionalConfig",
+                                    "typeArguments": []
+                                }
+                            }
+                        }
+                    ]
                 },
                 "get_auction": {
                     "visibility": "Friend",
@@ -7285,6 +8882,36 @@
                                     "address": "0xb4f25230ba74837d8299e92951306100c4a532e8c48cc3d8828abe9b91c8b274",
                                     "module": "vault",
                                     "name": "DepositVault",
+                                    "typeArguments": []
+                                }
+                            }
+                        }
+                    ]
+                },
+                "get_mut_additional_config": {
+                    "visibility": "Friend",
+                    "isEntry": false,
+                    "typeParameters": [],
+                    "parameters": [
+                        {
+                            "MutableReference": {
+                                "Struct": {
+                                    "address": "0x2",
+                                    "module": "object",
+                                    "name": "UID",
+                                    "typeArguments": []
+                                }
+                            }
+                        },
+                        "U64"
+                    ],
+                    "return": [
+                        {
+                            "MutableReference": {
+                                "Struct": {
+                                    "address": "0x321848bf1ae327a9e022ccb3701940191e02fa193ab160d9c0e49cd3c003de3a",
+                                    "module": "typus_dov_single",
+                                    "name": "AdditionalConfig",
                                     "typeArguments": []
                                 }
                             }
@@ -7627,6 +9254,53 @@
                         },
                         {
                             "MutableReference": "Bool"
+                        }
+                    ]
+                },
+                "get_mut_scallop_spool_account": {
+                    "visibility": "Friend",
+                    "isEntry": false,
+                    "typeParameters": [
+                        {
+                            "abilities": []
+                        }
+                    ],
+                    "parameters": [
+                        {
+                            "MutableReference": {
+                                "Struct": {
+                                    "address": "0x321848bf1ae327a9e022ccb3701940191e02fa193ab160d9c0e49cd3c003de3a",
+                                    "module": "typus_dov_single",
+                                    "name": "Registry",
+                                    "typeArguments": []
+                                }
+                            }
+                        },
+                        "U64"
+                    ],
+                    "return": [
+                        {
+                            "MutableReference": {
+                                "Struct": {
+                                    "address": "0xe87f1b2d498106a2c61421cec75b7b5c5e348512b0dc263949a0e7a3c256571a",
+                                    "module": "spool_account",
+                                    "name": "SpoolAccount",
+                                    "typeArguments": [
+                                        {
+                                            "Struct": {
+                                                "address": "0xefe8b36d5b2e43728cc323298626b83177803521d195cfb11e15b910e892fddf",
+                                                "module": "reserve",
+                                                "name": "MarketCoin",
+                                                "typeArguments": [
+                                                    {
+                                                        "TypeParameter": 0
+                                                    }
+                                                ]
+                                            }
+                                        }
+                                    ]
+                                }
+                            }
                         }
                     ]
                 },
@@ -7978,6 +9652,29 @@
                             "Reference": "Bool"
                         }
                     ]
+                },
+                "get_scallop_deposit_amount": {
+                    "visibility": "Friend",
+                    "isEntry": false,
+                    "typeParameters": [
+                        {
+                            "abilities": []
+                        }
+                    ],
+                    "parameters": [
+                        {
+                            "Reference": {
+                                "Struct": {
+                                    "address": "0x321848bf1ae327a9e022ccb3701940191e02fa193ab160d9c0e49cd3c003de3a",
+                                    "module": "typus_dov_single",
+                                    "name": "Registry",
+                                    "typeArguments": []
+                                }
+                            }
+                        },
+                        "U64"
+                    ],
+                    "return": ["U64"]
                 },
                 "get_version": {
                     "visibility": "Friend",
@@ -8546,6 +10243,26 @@
                     ],
                     "return": ["U64"]
                 },
+                "set_enable_scallop_flag_": {
+                    "visibility": "Friend",
+                    "isEntry": false,
+                    "typeParameters": [],
+                    "parameters": [
+                        {
+                            "MutableReference": {
+                                "Struct": {
+                                    "address": "0x321848bf1ae327a9e022ccb3701940191e02fa193ab160d9c0e49cd3c003de3a",
+                                    "module": "typus_dov_single",
+                                    "name": "Registry",
+                                    "typeArguments": []
+                                }
+                            }
+                        },
+                        "U64",
+                        "Bool"
+                    ],
+                    "return": []
+                },
                 "settle_": {
                     "visibility": "Friend",
                     "isEntry": false,
@@ -8647,6 +10364,39 @@
                             }
                         }
                     ]
+                },
+                "terminate_": {
+                    "visibility": "Friend",
+                    "isEntry": false,
+                    "typeParameters": [
+                        {
+                            "abilities": []
+                        }
+                    ],
+                    "parameters": [
+                        {
+                            "MutableReference": {
+                                "Struct": {
+                                    "address": "0x321848bf1ae327a9e022ccb3701940191e02fa193ab160d9c0e49cd3c003de3a",
+                                    "module": "typus_dov_single",
+                                    "name": "Registry",
+                                    "typeArguments": []
+                                }
+                            }
+                        },
+                        "U64",
+                        {
+                            "Reference": {
+                                "Struct": {
+                                    "address": "0x2",
+                                    "module": "tx_context",
+                                    "name": "TxContext",
+                                    "typeArguments": []
+                                }
+                            }
+                        }
+                    ],
+                    "return": []
                 },
                 "update_active_vault_config_": {
                     "visibility": "Friend",
@@ -8948,6 +10698,56 @@
                         }
                     ]
                 },
+                "update_strike_": {
+                    "visibility": "Friend",
+                    "isEntry": false,
+                    "typeParameters": [],
+                    "parameters": [
+                        {
+                            "MutableReference": {
+                                "Struct": {
+                                    "address": "0x321848bf1ae327a9e022ccb3701940191e02fa193ab160d9c0e49cd3c003de3a",
+                                    "module": "typus_dov_single",
+                                    "name": "Registry",
+                                    "typeArguments": []
+                                }
+                            }
+                        },
+                        "U64",
+                        {
+                            "Reference": {
+                                "Struct": {
+                                    "address": "0x855eb2d260ee42b898266e6df90bfd3c4ed821ccb253a352c159c223244a4b8a",
+                                    "module": "oracle",
+                                    "name": "Oracle",
+                                    "typeArguments": []
+                                }
+                            }
+                        },
+                        {
+                            "Reference": {
+                                "Struct": {
+                                    "address": "0x2",
+                                    "module": "clock",
+                                    "name": "Clock",
+                                    "typeArguments": []
+                                }
+                            }
+                        }
+                    ],
+                    "return": [
+                        "U64",
+                        "U64",
+                        {
+                            "Struct": {
+                                "address": "0x321848bf1ae327a9e022ccb3701940191e02fa193ab160d9c0e49cd3c003de3a",
+                                "module": "typus_dov_single",
+                                "name": "VaultConfig",
+                                "typeArguments": []
+                            }
+                        }
+                    ]
+                },
                 "update_warmup_vault_config_": {
                     "visibility": "Friend",
                     "isEntry": false,
@@ -9174,6 +10974,270 @@
                                     "address": "0x321848bf1ae327a9e022ccb3701940191e02fa193ab160d9c0e49cd3c003de3a",
                                     "module": "typus_dov_single",
                                     "name": "Registry",
+                                    "typeArguments": []
+                                }
+                            }
+                        }
+                    ],
+                    "return": []
+                },
+                "withdraw_xxx_scallop_": {
+                    "visibility": "Friend",
+                    "isEntry": false,
+                    "typeParameters": [
+                        {
+                            "abilities": []
+                        }
+                    ],
+                    "parameters": [
+                        {
+                            "MutableReference": {
+                                "Struct": {
+                                    "address": "0x321848bf1ae327a9e022ccb3701940191e02fa193ab160d9c0e49cd3c003de3a",
+                                    "module": "typus_dov_single",
+                                    "name": "Registry",
+                                    "typeArguments": []
+                                }
+                            }
+                        },
+                        "U64",
+                        {
+                            "Reference": {
+                                "Struct": {
+                                    "address": "0xefe8b36d5b2e43728cc323298626b83177803521d195cfb11e15b910e892fddf",
+                                    "module": "version",
+                                    "name": "Version",
+                                    "typeArguments": []
+                                }
+                            }
+                        },
+                        {
+                            "MutableReference": {
+                                "Struct": {
+                                    "address": "0xefe8b36d5b2e43728cc323298626b83177803521d195cfb11e15b910e892fddf",
+                                    "module": "market",
+                                    "name": "Market",
+                                    "typeArguments": []
+                                }
+                            }
+                        },
+                        {
+                            "MutableReference": {
+                                "Struct": {
+                                    "address": "0xe87f1b2d498106a2c61421cec75b7b5c5e348512b0dc263949a0e7a3c256571a",
+                                    "module": "spool",
+                                    "name": "Spool",
+                                    "typeArguments": []
+                                }
+                            }
+                        },
+                        {
+                            "MutableReference": {
+                                "Struct": {
+                                    "address": "0xe87f1b2d498106a2c61421cec75b7b5c5e348512b0dc263949a0e7a3c256571a",
+                                    "module": "rewards_pool",
+                                    "name": "RewardsPool",
+                                    "typeArguments": [
+                                        {
+                                            "TypeParameter": 0
+                                        }
+                                    ]
+                                }
+                            }
+                        },
+                        {
+                            "Reference": {
+                                "Struct": {
+                                    "address": "0x2",
+                                    "module": "clock",
+                                    "name": "Clock",
+                                    "typeArguments": []
+                                }
+                            }
+                        },
+                        {
+                            "MutableReference": {
+                                "Struct": {
+                                    "address": "0x2",
+                                    "module": "tx_context",
+                                    "name": "TxContext",
+                                    "typeArguments": []
+                                }
+                            }
+                        }
+                    ],
+                    "return": []
+                },
+                "withdraw_xyx_scallop_": {
+                    "visibility": "Friend",
+                    "isEntry": false,
+                    "typeParameters": [
+                        {
+                            "abilities": []
+                        }
+                    ],
+                    "parameters": [
+                        {
+                            "MutableReference": {
+                                "Struct": {
+                                    "address": "0x321848bf1ae327a9e022ccb3701940191e02fa193ab160d9c0e49cd3c003de3a",
+                                    "module": "typus_dov_single",
+                                    "name": "Registry",
+                                    "typeArguments": []
+                                }
+                            }
+                        },
+                        "U64",
+                        {
+                            "Reference": {
+                                "Struct": {
+                                    "address": "0xefe8b36d5b2e43728cc323298626b83177803521d195cfb11e15b910e892fddf",
+                                    "module": "version",
+                                    "name": "Version",
+                                    "typeArguments": []
+                                }
+                            }
+                        },
+                        {
+                            "MutableReference": {
+                                "Struct": {
+                                    "address": "0xefe8b36d5b2e43728cc323298626b83177803521d195cfb11e15b910e892fddf",
+                                    "module": "market",
+                                    "name": "Market",
+                                    "typeArguments": []
+                                }
+                            }
+                        },
+                        {
+                            "MutableReference": {
+                                "Struct": {
+                                    "address": "0xe87f1b2d498106a2c61421cec75b7b5c5e348512b0dc263949a0e7a3c256571a",
+                                    "module": "spool",
+                                    "name": "Spool",
+                                    "typeArguments": []
+                                }
+                            }
+                        },
+                        {
+                            "MutableReference": {
+                                "Struct": {
+                                    "address": "0xe87f1b2d498106a2c61421cec75b7b5c5e348512b0dc263949a0e7a3c256571a",
+                                    "module": "rewards_pool",
+                                    "name": "RewardsPool",
+                                    "typeArguments": [
+                                        {
+                                            "TypeParameter": 0
+                                        }
+                                    ]
+                                }
+                            }
+                        },
+                        {
+                            "Reference": {
+                                "Struct": {
+                                    "address": "0x2",
+                                    "module": "clock",
+                                    "name": "Clock",
+                                    "typeArguments": []
+                                }
+                            }
+                        },
+                        {
+                            "MutableReference": {
+                                "Struct": {
+                                    "address": "0x2",
+                                    "module": "tx_context",
+                                    "name": "TxContext",
+                                    "typeArguments": []
+                                }
+                            }
+                        }
+                    ],
+                    "return": []
+                },
+                "withdraw_xyy_scallop_": {
+                    "visibility": "Friend",
+                    "isEntry": false,
+                    "typeParameters": [
+                        {
+                            "abilities": []
+                        },
+                        {
+                            "abilities": []
+                        }
+                    ],
+                    "parameters": [
+                        {
+                            "MutableReference": {
+                                "Struct": {
+                                    "address": "0x321848bf1ae327a9e022ccb3701940191e02fa193ab160d9c0e49cd3c003de3a",
+                                    "module": "typus_dov_single",
+                                    "name": "Registry",
+                                    "typeArguments": []
+                                }
+                            }
+                        },
+                        "U64",
+                        {
+                            "Reference": {
+                                "Struct": {
+                                    "address": "0xefe8b36d5b2e43728cc323298626b83177803521d195cfb11e15b910e892fddf",
+                                    "module": "version",
+                                    "name": "Version",
+                                    "typeArguments": []
+                                }
+                            }
+                        },
+                        {
+                            "MutableReference": {
+                                "Struct": {
+                                    "address": "0xefe8b36d5b2e43728cc323298626b83177803521d195cfb11e15b910e892fddf",
+                                    "module": "market",
+                                    "name": "Market",
+                                    "typeArguments": []
+                                }
+                            }
+                        },
+                        {
+                            "MutableReference": {
+                                "Struct": {
+                                    "address": "0xe87f1b2d498106a2c61421cec75b7b5c5e348512b0dc263949a0e7a3c256571a",
+                                    "module": "spool",
+                                    "name": "Spool",
+                                    "typeArguments": []
+                                }
+                            }
+                        },
+                        {
+                            "MutableReference": {
+                                "Struct": {
+                                    "address": "0xe87f1b2d498106a2c61421cec75b7b5c5e348512b0dc263949a0e7a3c256571a",
+                                    "module": "rewards_pool",
+                                    "name": "RewardsPool",
+                                    "typeArguments": [
+                                        {
+                                            "TypeParameter": 1
+                                        }
+                                    ]
+                                }
+                            }
+                        },
+                        {
+                            "Reference": {
+                                "Struct": {
+                                    "address": "0x2",
+                                    "module": "clock",
+                                    "name": "Clock",
+                                    "typeArguments": []
+                                }
+                            }
+                        },
+                        {
+                            "MutableReference": {
+                                "Struct": {
+                                    "address": "0x2",
+                                    "module": "tx_context",
+                                    "name": "TxContext",
                                     "typeArguments": []
                                 }
                             }
