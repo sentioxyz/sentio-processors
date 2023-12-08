@@ -9,47 +9,46 @@ SuiGlobalProcessor.bind({
   .onObjectChange(async (changes, ctx) => {
 
     for (let i = 0; i < changes.length; i++) {
-      console.log("objectChanges", JSON.stringify(changes[i]))
-      processObjectChanges(ctx, changes[i])
+      // console.log("objectChanges", JSON.stringify(changes[i]))
+
+      await processObjectChanges(ctx, changes[i])
     }
 
   }, LP_TOKEN_TYPE)
-
-//   .onTransactionBlock(async (tx, ctx) => {
-//     const balanceChanges = ctx.transaction.balanceChanges
-
-//     if (balanceChanges) {
-//       for (let i = 0; i < balanceChanges.length; i++) {
-//         const amount = balanceChanges[i].amount
-//         const coinType = balanceChanges[i].coinType
-//         const owner = balanceChanges[i].owner
-//         ctx.eventLogger.emit("balanceChanges", {
-//           amount,
-//           coinType,
-//           owner
-//         })
-//       }
-//     }
-
-//     const objectChanges = ctx.transaction.objectChanges
-//     if (objectChanges) {
-//       for (let i = 0; i < objectChanges.length; i++) {
-//         console.log("objectChanges", JSON.stringify(objectChanges[i]))
-//         await processObjectChanges(ctx, objectChanges[i])
-//       }
-//     }
-
-//   }, {}, { resourceChanges: true })
 
 
 
 
 async function processObjectChanges(ctx: SuiObjectChangeContext, objectChange: SuiObjectChange) {
   try {
-    ctx.eventLogger.emit(objectChange.type, objectChange)
+    //@ts-ignore
+    // const obj = await ctx.client.tryGetPastObject({ id: objectChange.objectId, version: Number(objectChange.version), options: { showOwner: true, showContent: true } })
+    const obj = await ctx.client.tryGetPastObject({ id: "0x44a23a584e3120b7329ead7249425d278582d4ea2f426275e3e2ca542dd37f0d", version: 20671342, options: { showOwner: true, showContent: true } })
+    let [balance, pool_id, owner] = [0, "unk", "unk"]
+
+    if (obj.status == "VersionFound") {
+      //@ts-ignore
+      balance = Number(obj.details.content.fields.lsp.fields.balance) || 0 //null for object deleted
+      //@ts-ignore
+      pool_id = obj.details.content.fields.pool_id || "unk" //null for object deleted
+      //@ts-ignore
+      owner = obj.details.owner.AddressOwner || "unk" //null for object deleted
+    }
+
+    const newObjectChange = {
+      ...objectChange,
+      owner,
+      balance,
+      pool_id
+    }
+
+    ctx.eventLogger.emit("objectChange", newObjectChange)
+
   }
   catch (e) {
-    console.log(`fail to process object changes for ${JSON.stringify(objectChange)}`)
+    console.log(`${e.message} fail to process object changes for ${JSON.stringify(objectChange)}`)
+    if (e.message == "Bad response format")
+      throw new Error("bad response format, crash the processor and retry later")
   }
 }
 
