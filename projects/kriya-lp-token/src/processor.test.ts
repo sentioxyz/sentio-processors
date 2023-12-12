@@ -17,6 +17,12 @@ describe('Test Processor', () => {
     const resp = await service.sui.testEvent(txdata.result as any, SuiNetwork.MAIN_NET)
     console.log(resp)
   })
+
+  test('check transaction block', async () => {
+    const resp = await service.sui.testEvent(txdata.result as any, SuiNetwork.MAIN_NET)
+    console.log(resp)
+  })
+  
 })
 
 
