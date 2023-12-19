@@ -59,6 +59,7 @@ export const chainConfigs = [
       "0x64bc3532991d8147167ee028a7adbf01c05594f7".toLowerCase(), // liquidity hub
       "0x1231deb6f5749ef6ce6943a275a1d3e7486f4eae".toLowerCase(), // diamond
       "0xf5df545113dee4df10f8149090aa737ddc05070a".toLowerCase(), // pfl
+      "0xCACe8D78269ba00f1C4D5Fc3B1228C7DF0a7C8BA".toLowerCase(), // pfl
       "0xd7f1dd5d49206349cae8b585fcb0ce3d96f1696f".toLowerCase(), // router
       "0x0BC9526d2a7B4FCb8901aD71d2b6756895a42C2d".toLowerCase(), // strategy
       "0x25135C8513Fd5C54eCa806F040d323cB60995b4A".toLowerCase(), // liquidity hub
