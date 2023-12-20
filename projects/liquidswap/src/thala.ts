@@ -73,7 +73,7 @@ export async function onEventSwapEvent(
 
   ctx.eventLogger.emit("swap", swapAttributes)
 
-  thalaVolume.record(ctx, volumeUsd, { poolType, type, pairTag });
+  thalaVolume.record(ctx, volumeUsd, { poolType, type, pairTag, pair: getPairTag2(coin_in, coin_out) });
 }
 
 // get usd prices based on the first asset with known price (which is available via price API)
@@ -115,6 +115,12 @@ function getPairTag(coin0: string, coin1: string): string {
   return coinTag0.localeCompare(coinTag1) < 0
     ? coinTag0.concat("-").concat(coinTag1)
     : coinTag1.concat("-").concat(coinTag0);
+}
+
+function getPairTag2(coin0: string, coin1: string): string {
+  const info1 = getCoinInfo(coin0)
+  const info2 = getCoinInfo(coin1)
+  return info1.symbol + "-" + info2.symbol
 }
 
 export function bigintToInteger(a: bigint): number {
@@ -291,6 +297,7 @@ AptosResourcesProcessor.bind({
           BigDecimal(0)
         );
 
+        thalaTvlByPool.record(ctx, tvl, { poolType: pool.type, pair: getPairTag2(coinTypes[0], coinTypes[1]) });
         thalaTvl.record(ctx, tvl, { poolType: pool.type });
       }
     },
