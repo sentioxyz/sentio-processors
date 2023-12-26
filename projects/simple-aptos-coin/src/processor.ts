@@ -10,6 +10,7 @@ coin.bind({
     const balance = findNewCoinBalances(evt, ctx.transaction, TOKEN)
     if (balance) {
       ctx.eventLogger.emit("change", {
+        distinctId: evt.guid.account_address,
         token: TOKEN,
         amount: evt.data_decoded.amount,
         balance: balance,
@@ -21,9 +22,10 @@ coin.bind({
     const balance = findNewCoinBalances(evt, ctx.transaction, TOKEN)
     if (balance) {
       ctx.eventLogger.emit("change", {
+        distinctId: evt.guid.account_address,
         token: TOKEN,
         amount: -evt.data_decoded.amount,
-        balance: balance,
+        balance: balance.value,
         account: evt.guid.account_address
       })
     }
