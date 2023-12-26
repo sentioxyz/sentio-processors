@@ -1,8 +1,11 @@
-import { SimpleCoinInfo, whitelistCoins } from "@sentio/sdk/aptos/ext";
-import {CHAIN_IDS} from "@sentio/sdk";
+import { whitelistCoins } from "@sentio/sdk/aptos/ext";
+import { AptosNetwork   } from "@sentio/sdk/aptos";
 import {account, coin, type_info} from "@sentio/sdk/aptos/builtin/0x1";
 import {getPriceByType} from "@sentio/sdk/utils";
 import {defaultMoveCoder, getAptosClient} from "@sentio/sdk/aptos";
+import { SimpleCoinInfo } from "@sentio/sdk/move/ext";
+import { MoveStructId, EntryFunctionPayloadResponse } from "@aptos-labs/ts-sdk"
+import { scaleDown } from "@sentio/sdk";
 
 const BRIDGE_TOKENS = new Map<string, SimpleCoinInfo>()
 const PRICES = new Map<string, number>()
@@ -16,7 +19,7 @@ for (const token of whitelistCoins().values()) {
 
     BRIDGE_TOKENS.set(token.token_type.type, token)
 
-    getPriceByType(CHAIN_IDS.APTOS_MAINNET, token.token_type.type, date).then((price) => {
+    getPriceByType(AptosNetwork.MAIN_NET, token.token_type.type, date).then((price) => {
         price = price || 0
         PRICES.set(token.token_type.type, price)
         console.log("price", token.token_type.type, price)
@@ -25,39 +28,39 @@ for (const token of whitelistCoins().values()) {
 
 const client = getAptosClient()!
 
-// coin.bind().onEventDepositEvent(async (evt, ctx) => {
-//   const payload = ctx.transaction.payload as TransactionPayload_EntryFunctionPayload
-//   const token = BRIDGE_TOKENS.get(payload.type_arguments[0])
-//   if (!token) {
-//     return
-//   }
-//
-//   const amount = scaleDown(evt.data_decoded.amount, token.decimals)
-//   const value = amount.multipliedBy(PRICES.get(token.token_type.type)!)
-//
-//   // const value = await calculateValueInUsd(evt.data_decoded.amount, token, priceTimestamp)
-//   if (!value.isGreaterThan(0)) {
-//     return
-//   }
-//
-//   ctx.logger.info("deposit", {value: value.toNumber(), token: token.symbol, bridge: token.bridge, account: evt.guid.account_address})
-// }).onEventWithdrawEvent(async (evt, ctx) => {
-//   const payload = ctx.transaction.payload as TransactionPayload_EntryFunctionPayload
-//   const token = BRIDGE_TOKENS.get(payload.type_arguments[0])
-//   if (!token) {
-//     return
-//   }
-//
-//   const amount = scaleDown(evt.data_decoded.amount, token.decimals)
-//   const value = amount.multipliedBy(PRICES.get(token.token_type.type)!)
-//   // const value = await calculateValueInUsd(evt.data_decoded.amount, token, priceTimestamp)
-//   if (!value.isGreaterThan(0)) {
-//     return
-//   }
-//   ctx.logger.info("withdraw", {value: value.negated().toNumber(), token: token.symbol, bridge: token.bridge, account: evt.guid.account_address})
-// })
+coin.bind().onEventDepositEvent(async (evt, ctx) => {
+  const payload = ctx.transaction.payload as EntryFunctionPayloadResponse
+  const token = BRIDGE_TOKENS.get(payload.type_arguments[0])
+  if (!token) {
+    return
+  }
 
-coin.bind()
+  const amount = scaleDown(evt.data_decoded.amount, token.decimals)
+  const value = amount.multipliedBy(PRICES.get(token.token_type.type)!)
+
+  // const value = await calculateValueInUsd(evt.data_decoded.amount, token, priceTimestamp)
+  if (!value.isGreaterThan(0)) {
+    return
+  }
+
+  ctx.eventLogger.emit("deposit", {value: value.toNumber(), token: token.symbol, bridge: token.bridge, account: evt.guid.account_address})
+}).onEventWithdrawEvent(async (evt, ctx) => {
+  const payload = ctx.transaction.payload as EntryFunctionPayloadResponse
+  const token = BRIDGE_TOKENS.get(payload.type_arguments[0])
+  if (!token) {
+    return
+  }
+
+  const amount = scaleDown(evt.data_decoded.amount, token.decimals)
+  const value = amount.multipliedBy(PRICES.get(token.token_type.type)!)
+  // const value = await calculateValueInUsd(evt.data_decoded.amount, token, priceTimestamp)
+  if (!value.isGreaterThan(0)) {
+    return
+  }
+    ctx.eventLogger.emit("withdraw", {value: value.negated().toNumber(), token: token.symbol, bridge: token.bridge, account: evt.guid.account_address})
+})
+
+// coin.bind()
 
 
 // defaultMoveCoder().load(coin.ABI)
@@ -68,9 +71,9 @@ account.bind().onEventCoinRegisterEvent(async (call, ctx) => {
     if (!token) {
         return
     }
-    const coinStore = `0x1::coin::CoinStore<${token.token_type.type}>`;
+    const coinStore = `0x1::coin::CoinStore<${token.token_type.type}>` as MoveStructId;
 
-    const res = await client.getAccountResource(accountAddress, coinStore)
+    const res = await client.getAccountResource({ accountAddress, resourceType: coinStore })
     const decodedRes = await defaultMoveCoder().decodeResource<coin.CoinStore<any>>(res)
     if (!decodedRes) {
         console.log(res)

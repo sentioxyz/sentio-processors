@@ -1,5 +1,6 @@
 
-import {defaultMoveCoder, AptosResourcesProcessor, TypedMoveResource, MoveResource, AptosResourcesContext} from "@sentio/sdk/aptos";
+import {defaultMoveCoder, AptosResourcesProcessor, TypedMoveResource, AptosResourcesContext} from "@sentio/sdk/aptos";
+import { MoveResource } from "@aptos-labs/ts-sdk"
 
 
 // v0
@@ -32,6 +33,7 @@ import {
     tvlByPoolNew,
     volume, volumeByCoin,
 } from "./metrics.js"
+import { SimpleCoinInfo } from "@sentio/sdk/move/ext";
 
 // TODO to remove
 export const accountTracker = AccountEventTracker.register("users")
@@ -362,7 +364,7 @@ for (const env of [v0, v05]) {
     let priceInUsd: Map<string, BigDecimal> = new Map<string, BigDecimal>()
 
     function calcPrice(coin: string, pools: TypedMoveResource<PoolType<any, any, any>>[]) {
-        /*
+
         const coinInfo = getCoinInfo(coin)
         if (coinInfo.symbol == "USDC") {
             return BigDecimal(1)
@@ -414,8 +416,8 @@ for (const env of [v0, v05]) {
         } else {
             console.log(`failed to get price of coin[${coinInfo.symbol}]`)
         }
-        return res*/
-        return BigDecimal(0)
+        return res
+        // return BigDecimal(0)
     }
 
     // loadAllTypes(defaultMoveCoder())
