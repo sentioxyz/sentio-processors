@@ -94,9 +94,20 @@ async function onLiquidationEvent(event: lending.LiquidationCallEventInstance, c
 }
 
 
-lending.bind()
-  .onEventBorrowEvent(onEvent)
-  .onEventDepositEvent(onEvent)
-  .onEventRepayEvent(onEvent)
-  .onEventWithdrawEvent(onEvent)
-  .onEventLiquidationCallEvent(onLiquidationEvent)
+import { lending as lending2 } from "../types/sui/0xe17e8d461129585fdd83dd891b1b5858f51984acbb308daa7ad8627c13f31c9d.js"
+// import { lending as lending } from "../types/sui/0xccdf4385016f20c784e68376359ddc2f6a9e050ec431ca5c85f1bc81024d4427.js"
+// import { lending as lending2 } from "../types/sui/0xda691d321641786d758d7435d0e230a7125777566c75b34c5742591163a252c3.js"
+// import { lending as lending2 } from "../types/sui/0xca441b44943c16be0e6e23c5a955bb971537ea3289ae8016fbf33fffe1fd210f.js"
+import { lending as lending3 } from "../types/sui/0xd899cf7d2b5db716bd2cf55599fb0d5ee38a3061e7b6bb6eebf73fa5bc4c81ca.js"
+import { lending as lending4 } from "../types/sui/0xe66f07e2a8d9cf793da1e0bca98ff312b3ffba57228d97cf23a0613fddf31b65.js"
+import { lending as lending5 } from "../types/sui/0x81be491340a6964eb9903141c3068db55704b5892072eb9e372cc98f4b04639c.js"
+import { lending as lending6 } from "../types/sui/0xd92bc457b42d48924087ea3f22d35fd2fe9afdf5bdfe38cc51c0f14f3282f6d5.js"
+
+for (const l of [lending, lending2, lending3, lending4, lending5, lending6]) {
+  l.bind()
+      .onEventBorrowEvent(onEvent)
+      .onEventDepositEvent(onEvent)
+      .onEventRepayEvent(onEvent)
+      .onEventWithdrawEvent(onEvent)
+      .onEventLiquidationCallEvent(onLiquidationEvent)
+}
