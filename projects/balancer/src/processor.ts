@@ -5,7 +5,7 @@ import { EthChainId } from "@sentio/sdk/eth";
 
 VaultProcessor.bind({
   address: "0xBA12222222228d8Ba445958a75a0704d566BF2C8",
-  startBlock: 44534288,
+  startBlock: 51976090,
   network: EthChainId.POLYGON,
 }).onEventSwap(
   async (evt, ctx) => {
