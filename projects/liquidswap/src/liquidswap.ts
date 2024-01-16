@@ -304,7 +304,7 @@ for (const env of [v0, v05]) {
                     poolValueNew = poolValueNew.plus(valueNew)
                 }
             }
-            if (poolValue.isGreaterThan(0)) {
+            if (poolValue.isGreaterThan(1000)) {
                 tvlByPool.record(ctx, poolValue, {pair, curve, ver})
                 tvlByPoolNew.record(ctx, poolValueNew, {pair, curve, ver})
 

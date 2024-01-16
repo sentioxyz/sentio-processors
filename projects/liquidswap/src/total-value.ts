@@ -32,11 +32,17 @@ const client = getAptosClient()!
             let aggString: any
             while (!aggString) {
               try {
-                aggString = await client.getTableItem(agg.handle, {
-                  key: agg.key,
-                  key_type: "address",
-                  value_type: "u128"
-                }, {ledgerVersion: ctx.version})
+                aggString = await client.getTableItem({
+                  handle: agg.handle,
+                  data: {
+                    key: agg.key,
+                    key_type: "address",
+                    value_type: "u128"
+                  },
+                  options: {
+                    ledgerVersion: ctx.version
+                  }
+                })
               } catch (e) {
                 if (e.status === 429) {
                   const random =  Math.floor(Math.random() * 1000);
