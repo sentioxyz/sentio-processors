@@ -1,0 +1,629 @@
+[
+	{
+		"fileFormatVersion": 6,
+		"address": "0x30e7109c6b3b813cd7af2c724183ffc6202958d1baf9744258870a4877d34370",
+		"name": "worker_config",
+		"friends": [],
+		"structs": {
+			"AdminCap": {
+				"abilities": {
+					"abilities": [
+						"Store",
+						"Key"
+					]
+				},
+				"typeParameters": [],
+				"fields": [
+					{
+						"name": "id",
+						"type": {
+							"Struct": {
+								"address": "0x2",
+								"module": "object",
+								"name": "UID",
+								"typeArguments": []
+							}
+						}
+					}
+				]
+			},
+			"ConfigCapability": {
+				"abilities": {
+					"abilities": [
+						"Store",
+						"Key"
+					]
+				},
+				"typeParameters": [],
+				"fields": [
+					{
+						"name": "id",
+						"type": {
+							"Struct": {
+								"address": "0x2",
+								"module": "object",
+								"name": "UID",
+								"typeArguments": []
+							}
+						}
+					},
+					{
+						"name": "config",
+						"type": "Address"
+					}
+				]
+			},
+			"WorkerConfig": {
+				"abilities": {
+					"abilities": [
+						"Drop",
+						"Store"
+					]
+				},
+				"typeParameters": [],
+				"fields": [
+					{
+						"name": "accept_debt",
+						"type": "Bool"
+					},
+					{
+						"name": "work_factor",
+						"type": "U64"
+					},
+					{
+						"name": "kill_factor",
+						"type": "U64"
+					},
+					{
+						"name": "max_price_diff",
+						"type": "U64"
+					}
+				]
+			},
+			"WorkerConfigStore": {
+				"abilities": {
+					"abilities": [
+						"Store"
+					]
+				},
+				"typeParameters": [],
+				"fields": [
+					{
+						"name": "oracle",
+						"type": "Address"
+					},
+					{
+						"name": "workers",
+						"type": {
+							"Struct": {
+								"address": "0x2",
+								"module": "table",
+								"name": "Table",
+								"typeArguments": [
+									"Address",
+									{
+										"Struct": {
+											"address": "0x30e7109c6b3b813cd7af2c724183ffc6202958d1baf9744258870a4877d34370",
+											"module": "worker_config",
+											"name": "WorkerConfig",
+											"typeArguments": []
+										}
+									}
+								]
+							}
+						}
+					},
+					{
+						"name": "governor",
+						"type": "Address"
+					}
+				]
+			},
+			"WorkerInfo": {
+				"abilities": {
+					"abilities": [
+						"Store"
+					]
+				},
+				"typeParameters": [],
+				"fields": [
+					{
+						"name": "base_coin_type",
+						"type": {
+							"Struct": {
+								"address": "0x1",
+								"module": "type_name",
+								"name": "TypeName",
+								"typeArguments": []
+							}
+						}
+					},
+					{
+						"name": "farming_coin_type",
+						"type": {
+							"Struct": {
+								"address": "0x1",
+								"module": "type_name",
+								"name": "TypeName",
+								"typeArguments": []
+							}
+						}
+					},
+					{
+						"name": "lp_type",
+						"type": {
+							"Struct": {
+								"address": "0x1",
+								"module": "type_name",
+								"name": "TypeName",
+								"typeArguments": []
+							}
+						}
+					}
+				]
+			},
+			"WorkerInfoStore": {
+				"abilities": {
+					"abilities": [
+						"Key"
+					]
+				},
+				"typeParameters": [],
+				"fields": [
+					{
+						"name": "id",
+						"type": {
+							"Struct": {
+								"address": "0x2",
+								"module": "object",
+								"name": "UID",
+								"typeArguments": []
+							}
+						}
+					},
+					{
+						"name": "worker_infos",
+						"type": {
+							"Struct": {
+								"address": "0x2",
+								"module": "table",
+								"name": "Table",
+								"typeArguments": [
+									"Address",
+									{
+										"Struct": {
+											"address": "0x30e7109c6b3b813cd7af2c724183ffc6202958d1baf9744258870a4877d34370",
+											"module": "worker_config",
+											"name": "WorkerInfo",
+											"typeArguments": []
+										}
+									}
+								]
+							}
+						}
+					}
+				]
+			}
+		},
+		"exposedFunctions": {
+			"emergency_set_accept_debt": {
+				"visibility": "Public",
+				"isEntry": true,
+				"typeParameters": [],
+				"parameters": [
+					{
+						"MutableReference": {
+							"Struct": {
+								"address": "0x9ec6f17e19c5e64c8872779a635235497fd6c71f7b5c23b07f652b02a240c84a",
+								"module": "global_storage",
+								"name": "GlobalStorage",
+								"typeArguments": []
+							}
+						}
+					},
+					"Address",
+					"Address",
+					"Bool",
+					{
+						"Reference": {
+							"Struct": {
+								"address": "0x2",
+								"module": "tx_context",
+								"name": "TxContext",
+								"typeArguments": []
+							}
+						}
+					}
+				],
+				"return": []
+			},
+			"get_accept_debt": {
+				"visibility": "Public",
+				"isEntry": false,
+				"typeParameters": [],
+				"parameters": [
+					{
+						"Reference": {
+							"Struct": {
+								"address": "0x9ec6f17e19c5e64c8872779a635235497fd6c71f7b5c23b07f652b02a240c84a",
+								"module": "global_storage",
+								"name": "GlobalStorage",
+								"typeArguments": []
+							}
+						}
+					},
+					"Address",
+					"Address",
+					"Bool"
+				],
+				"return": [
+					"Bool"
+				]
+			},
+			"get_governor": {
+				"visibility": "Public",
+				"isEntry": false,
+				"typeParameters": [],
+				"parameters": [
+					{
+						"Reference": {
+							"Struct": {
+								"address": "0x9ec6f17e19c5e64c8872779a635235497fd6c71f7b5c23b07f652b02a240c84a",
+								"module": "global_storage",
+								"name": "GlobalStorage",
+								"typeArguments": []
+							}
+						}
+					},
+					"Address"
+				],
+				"return": [
+					"Address"
+				]
+			},
+			"get_kill_factor": {
+				"visibility": "Public",
+				"isEntry": false,
+				"typeParameters": [],
+				"parameters": [
+					{
+						"Reference": {
+							"Struct": {
+								"address": "0x9ec6f17e19c5e64c8872779a635235497fd6c71f7b5c23b07f652b02a240c84a",
+								"module": "global_storage",
+								"name": "GlobalStorage",
+								"typeArguments": []
+							}
+						}
+					},
+					"Address",
+					"Address",
+					"U64",
+					"Bool"
+				],
+				"return": [
+					"U64"
+				]
+			},
+			"get_max_price_diff": {
+				"visibility": "Public",
+				"isEntry": false,
+				"typeParameters": [],
+				"parameters": [
+					{
+						"Reference": {
+							"Struct": {
+								"address": "0x9ec6f17e19c5e64c8872779a635235497fd6c71f7b5c23b07f652b02a240c84a",
+								"module": "global_storage",
+								"name": "GlobalStorage",
+								"typeArguments": []
+							}
+						}
+					},
+					"Address",
+					"Address"
+				],
+				"return": [
+					"U64"
+				]
+			},
+			"get_max_price_diff_scale": {
+				"visibility": "Public",
+				"isEntry": false,
+				"typeParameters": [],
+				"parameters": [],
+				"return": [
+					"U64"
+				]
+			},
+			"get_oracle": {
+				"visibility": "Public",
+				"isEntry": false,
+				"typeParameters": [],
+				"parameters": [
+					{
+						"Reference": {
+							"Struct": {
+								"address": "0x9ec6f17e19c5e64c8872779a635235497fd6c71f7b5c23b07f652b02a240c84a",
+								"module": "global_storage",
+								"name": "GlobalStorage",
+								"typeArguments": []
+							}
+						}
+					},
+					"Address"
+				],
+				"return": [
+					"Address"
+				]
+			},
+			"get_raw_kill_factor": {
+				"visibility": "Public",
+				"isEntry": false,
+				"typeParameters": [],
+				"parameters": [
+					{
+						"Reference": {
+							"Struct": {
+								"address": "0x9ec6f17e19c5e64c8872779a635235497fd6c71f7b5c23b07f652b02a240c84a",
+								"module": "global_storage",
+								"name": "GlobalStorage",
+								"typeArguments": []
+							}
+						}
+					},
+					"Address",
+					"Address",
+					"U64"
+				],
+				"return": [
+					"U64"
+				]
+			},
+			"get_work_factor": {
+				"visibility": "Public",
+				"isEntry": false,
+				"typeParameters": [],
+				"parameters": [
+					{
+						"Reference": {
+							"Struct": {
+								"address": "0x9ec6f17e19c5e64c8872779a635235497fd6c71f7b5c23b07f652b02a240c84a",
+								"module": "global_storage",
+								"name": "GlobalStorage",
+								"typeArguments": []
+							}
+						}
+					},
+					"Address",
+					"Address",
+					"U64",
+					"Bool"
+				],
+				"return": [
+					"U64"
+				]
+			},
+			"is_worker_info_registered": {
+				"visibility": "Public",
+				"isEntry": false,
+				"typeParameters": [],
+				"parameters": [
+					{
+						"Reference": {
+							"Struct": {
+								"address": "0x30e7109c6b3b813cd7af2c724183ffc6202958d1baf9744258870a4877d34370",
+								"module": "worker_config",
+								"name": "WorkerInfoStore",
+								"typeArguments": []
+							}
+						}
+					},
+					"Address"
+				],
+				"return": [
+					"Bool"
+				]
+			},
+			"register": {
+				"visibility": "Public",
+				"isEntry": true,
+				"typeParameters": [],
+				"parameters": [
+					{
+						"Reference": {
+							"Struct": {
+								"address": "0x30e7109c6b3b813cd7af2c724183ffc6202958d1baf9744258870a4877d34370",
+								"module": "worker_config",
+								"name": "AdminCap",
+								"typeArguments": []
+							}
+						}
+					},
+					{
+						"MutableReference": {
+							"Struct": {
+								"address": "0x9ec6f17e19c5e64c8872779a635235497fd6c71f7b5c23b07f652b02a240c84a",
+								"module": "global_storage",
+								"name": "GlobalStorage",
+								"typeArguments": []
+							}
+						}
+					},
+					"Address",
+					{
+						"MutableReference": {
+							"Struct": {
+								"address": "0x2",
+								"module": "tx_context",
+								"name": "TxContext",
+								"typeArguments": []
+							}
+						}
+					}
+				],
+				"return": []
+			},
+			"register_worker_info": {
+				"visibility": "Public",
+				"isEntry": false,
+				"typeParameters": [
+					{
+						"abilities": []
+					},
+					{
+						"abilities": []
+					},
+					{
+						"abilities": []
+					}
+				],
+				"parameters": [
+					{
+						"Reference": {
+							"Struct": {
+								"address": "0x30e7109c6b3b813cd7af2c724183ffc6202958d1baf9744258870a4877d34370",
+								"module": "worker_config",
+								"name": "AdminCap",
+								"typeArguments": []
+							}
+						}
+					},
+					{
+						"MutableReference": {
+							"Struct": {
+								"address": "0x30e7109c6b3b813cd7af2c724183ffc6202958d1baf9744258870a4877d34370",
+								"module": "worker_config",
+								"name": "WorkerInfoStore",
+								"typeArguments": []
+							}
+						}
+					},
+					"Address"
+				],
+				"return": []
+			},
+			"set_config": {
+				"visibility": "Public",
+				"isEntry": true,
+				"typeParameters": [],
+				"parameters": [
+					{
+						"Reference": {
+							"Struct": {
+								"address": "0x30e7109c6b3b813cd7af2c724183ffc6202958d1baf9744258870a4877d34370",
+								"module": "worker_config",
+								"name": "AdminCap",
+								"typeArguments": []
+							}
+						}
+					},
+					{
+						"Reference": {
+							"Struct": {
+								"address": "0x30e7109c6b3b813cd7af2c724183ffc6202958d1baf9744258870a4877d34370",
+								"module": "worker_config",
+								"name": "ConfigCapability",
+								"typeArguments": []
+							}
+						}
+					},
+					{
+						"MutableReference": {
+							"Struct": {
+								"address": "0x9ec6f17e19c5e64c8872779a635235497fd6c71f7b5c23b07f652b02a240c84a",
+								"module": "global_storage",
+								"name": "GlobalStorage",
+								"typeArguments": []
+							}
+						}
+					},
+					"Address",
+					"Bool",
+					"U64",
+					"U64",
+					"U64"
+				],
+				"return": []
+			},
+			"set_governor": {
+				"visibility": "Public",
+				"isEntry": true,
+				"typeParameters": [],
+				"parameters": [
+					{
+						"Reference": {
+							"Struct": {
+								"address": "0x30e7109c6b3b813cd7af2c724183ffc6202958d1baf9744258870a4877d34370",
+								"module": "worker_config",
+								"name": "AdminCap",
+								"typeArguments": []
+							}
+						}
+					},
+					{
+						"Reference": {
+							"Struct": {
+								"address": "0x30e7109c6b3b813cd7af2c724183ffc6202958d1baf9744258870a4877d34370",
+								"module": "worker_config",
+								"name": "ConfigCapability",
+								"typeArguments": []
+							}
+						}
+					},
+					{
+						"MutableReference": {
+							"Struct": {
+								"address": "0x9ec6f17e19c5e64c8872779a635235497fd6c71f7b5c23b07f652b02a240c84a",
+								"module": "global_storage",
+								"name": "GlobalStorage",
+								"typeArguments": []
+							}
+						}
+					},
+					"Address"
+				],
+				"return": []
+			},
+			"set_oracle": {
+				"visibility": "Public",
+				"isEntry": true,
+				"typeParameters": [],
+				"parameters": [
+					{
+						"Reference": {
+							"Struct": {
+								"address": "0x30e7109c6b3b813cd7af2c724183ffc6202958d1baf9744258870a4877d34370",
+								"module": "worker_config",
+								"name": "AdminCap",
+								"typeArguments": []
+							}
+						}
+					},
+					{
+						"Reference": {
+							"Struct": {
+								"address": "0x30e7109c6b3b813cd7af2c724183ffc6202958d1baf9744258870a4877d34370",
+								"module": "worker_config",
+								"name": "ConfigCapability",
+								"typeArguments": []
+							}
+						}
+					},
+					{
+						"MutableReference": {
+							"Struct": {
+								"address": "0x9ec6f17e19c5e64c8872779a635235497fd6c71f7b5c23b07f652b02a240c84a",
+								"module": "global_storage",
+								"name": "GlobalStorage",
+								"typeArguments": []
+							}
+						}
+					},
+					"Address"
+				],
+				"return": []
+			}
+		}
+	}
+]
