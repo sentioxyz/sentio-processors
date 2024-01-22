@@ -5,10 +5,11 @@ import { cetus_clmm_worker } from './types/sui/0x334bed7f6426c1a3710ef7f4d66b122
 import { pool } from './types/sui/0x1eabed72c53feb3805120a081dc15963c204dc8d091542592abaf7a35689b2fb.js'
 import { getPriceByType, token } from "@sentio/sdk/utils"
 import { buildCoinInfo } from './utils/mole_utils.js'
-import { ANY_TYPE } from '@sentio/sdk/move'
+import { ANY_TYPE, BUILTIN_TYPES } from '@sentio/sdk/move'
+import { string_ } from "@sentio/sdk/sui/builtin/0x1";
 
 
-// vault.bind({ 
+// vault.bind({
 //   address: '0x5ffa69ee4ee14d899dcc750df92de12bad4bacf81efa1ae12ee76406804dda7f',
 //   network: SuiNetwork.MAIN_NET,
 //   // startCheckpoint: 4000000n
@@ -200,7 +201,7 @@ import { ANY_TYPE } from '@sentio/sdk/move'
 // })
 // .onEventAddLiquidityEvent(async (event, ctx) => {
 //   const pool = event.data_decoded.pool
-//   // black list 
+//   // black list
 //   if (constant.POOLS_TVL_BLACK_LIST.includes(pool)) { return }
 //   // white list
 //   if (!constant.POOLS_MOLE_LIST.includes(pool)) { return }
@@ -244,7 +245,7 @@ import { ANY_TYPE } from '@sentio/sdk/move'
 // })
 // .onEventRemoveLiquidityEvent(async (event, ctx) => {
 //   const pool = event.data_decoded.pool
-//   // black list 
+//   // black list
 //   if (constant.POOLS_TVL_BLACK_LIST.includes(pool)) { return }
 //   // white list
 //   if (!constant.POOLS_MOLE_LIST.includes(pool)) { return }
@@ -297,17 +298,17 @@ SuiWrappedObjectProcessor.bind({
   .onTimeInterval(async (dynamicFieldObjects, ctx) => {
     try {
       console.log("hellp, onTimeInterval")
-      console.log("object 0", dynamicFieldObjects[0])
+      // console.log("object 0", dynamicFieldObjects[0])
 
       const objectType = vault.VaultInfo.type(ANY_TYPE)
+      //
+      // console.log(objectType.getNormalizedSignature())
 
-      console.log(objectType.getNormalizedSignature())
-
-      const fields = await ctx.coder.filterAndDecodeObjects(objectType, dynamicFieldObjects)
+      const fields = await ctx.coder.getDynamicFields(dynamicFieldObjects, string_.String.type(),  objectType)
 
       for (const field of fields) {
-        const fields = field.data_decoded
-        console.log(`pos ${JSON.stringify(fields)}`)
+        const value = field.value
+        console.log(`pos ${JSON.stringify(value)}`)
       }
     }
     catch (e) {
