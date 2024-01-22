@@ -307,7 +307,7 @@ SuiWrappedObjectProcessor.bind({
       const fields = await ctx.coder.getDynamicFields(dynamicFieldObjects, string_.String.type(),  objectType)
 
       for (const field of fields) {
-        const value = field.value
+        const value = field.value as vault.VaultInfo<any>
         console.log(`pos ${JSON.stringify(value)}`)
       }
     }
