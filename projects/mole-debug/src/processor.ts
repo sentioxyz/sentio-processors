@@ -5,8 +5,9 @@ import { cetus_clmm_worker } from './types/sui/0x334bed7f6426c1a3710ef7f4d66b122
 import { pool } from './types/sui/0x1eabed72c53feb3805120a081dc15963c204dc8d091542592abaf7a35689b2fb.js'
 import { getPriceByType, token } from "@sentio/sdk/utils"
 import { buildCoinInfo } from './utils/mole_utils.js'
-import { ANY_TYPE, BUILTIN_TYPES } from '@sentio/sdk/move'
+import { ANY_TYPE, BUILTIN_TYPES, TypeDescriptor, parseMoveType } from '@sentio/sdk/move'
 import { string_ } from "@sentio/sdk/sui/builtin/0x1";
+import { dynamic_field } from "@sentio/sdk/sui/builtin/0x2";
 
 
 // vault.bind({
@@ -300,15 +301,16 @@ SuiWrappedObjectProcessor.bind({
       console.log("hellp, onTimeInterval")
       // console.log("object 0", dynamicFieldObjects[0])
 
-      const objectType = vault.VaultInfo.type(ANY_TYPE)
-      //
-      // console.log(objectType.getNormalizedSignature())
+      const fieldType: TypeDescriptor<dynamic_field.Field<string_.String, vault.VaultInfo<any>>>
+          = dynamic_field.Field.type(string_.String.type(), vault.VaultInfo.type(ANY_TYPE))
 
-      const fields = await ctx.coder.getDynamicFields(dynamicFieldObjects, string_.String.type(),  objectType)
+      const fields = await ctx.coder.filterAndDecodeObjects(fieldType, dynamicFieldObjects)
 
       for (const field of fields) {
-        const value = field.value as vault.VaultInfo<any>
-        console.log(`pos ${JSON.stringify(value)}`)
+        const coinType = parseMoveType(field.type).typeArgs[1].typeArgs[0].qname
+        const fieldDecoded = field.data_decoded
+        const value = fieldDecoded.value
+        console.log(`pos ${coinType}, ${JSON.stringify(value)}`)
       }
     }
     catch (e) {
