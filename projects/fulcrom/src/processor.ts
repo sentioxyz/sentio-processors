@@ -1,13 +1,14 @@
-import { VaultProcessor } from './types/eth/vault.js'
+import { VaultProcessor, mockDecreasePoolAmountLog } from './types/eth/vault.js'
 import { FlpManagerProcessor } from './types/eth/flpmanager.js'
 import { EthChainId } from "@sentio/sdk/eth";
 import { FulProcessor } from './types/eth/ful.js'
 import { RewardRouterProcessor } from './types/eth/rewardrouter.js'
-import { gaugeTokenAum, gaugeStakedAssets } from './helper/fulcrom-helper.js';
+import { gaugeTokenAum, gaugeStakedAssets, gaugeTokenUtilization } from './helper/fulcrom-helper.js';
 import { getERC20ContractOnContext } from '@sentio/sdk/eth/builtin/erc20'
 import { FUL_ADDRESS_MAP, sFUL_ADDRESS_MAP, esFUL_ADDRESS_MAP, vFLP_ADDRESS_MAP, vFUL_ADDRESS_MAP, VAULT_ADDRESS_MAP, FUL_MANAGER_ADDRESS_MAP, REWARD_ROUTER_ADDRESS_MAP, CHAINS } from './helper/constant.js'
 import { getOrCreateCoin } from './helper/fulcrom-helper.js';
 import { VesterProcessor } from './types/eth/vester.js';
+import { getPriceBySymbol } from '@sentio/sdk/utils';
 
 
 CHAINS.forEach(chain => {
@@ -48,13 +49,18 @@ CHAINS.forEach(chain => {
     .onEventSwap(async (evt, ctx) => {
       const tokenIn = await getOrCreateCoin(ctx, evt.args.tokenIn.toLowerCase())
       const tokenOut = await getOrCreateCoin(ctx, evt.args.tokenOut.toLowerCase())
+      const tokenPrice = await getPriceBySymbol(tokenIn.symbol.toLowerCase(), ctx.timestamp) || 0
+      const amountIn = Number(evt.args.amountIn) / Math.pow(10, tokenIn.decimal)
+      const vol = amountIn * tokenPrice
       ctx.eventLogger.emit("vault.swap", {
         distinctId: evt.args.account,
         tokenIn: tokenIn.symbol,
         coin_symbol: tokenIn.symbol,
         tokenOut: tokenOut.symbol,
-        amountIn: Number(evt.args.amountIn) / Math.pow(10, tokenIn.decimal),
+        amountIn,
         amountOut: Number(evt.args.amountOut) / Math.pow(10, tokenOut.decimal),
+        vol,
+        fee: vol * Number(evt.args.feeBasisPoints) / 10000,
         pairName: (tokenIn.symbol < tokenOut.symbol) ? tokenIn.symbol + "-" + tokenOut.symbol : tokenOut.symbol + "-" + tokenIn.symbol
       })
       ctx.meter.Gauge("swap_gauge").record(Number(evt.args.amountIn) / Math.pow(10, tokenIn.decimal), { coin_symbol: tokenIn.symbol })
@@ -70,7 +76,7 @@ CHAINS.forEach(chain => {
         size: Number(evt.args.size) / Math.pow(10, 30),
         collateral: Number(evt.args.collateral) / Math.pow(10, 30)
       })
-      ctx.meter.Gauge("swap_gauge").record(Number(evt.args.size) / Math.pow(10, 30), { coin_symbol: collateral.symbol })
+      ctx.meter.Gauge("liquidate_position_gauge").record(Number(evt.args.size) / Math.pow(10, 30), { coin_symbol: collateral.symbol })
 
     })
     .onEventClosePosition(async (evt, ctx) => {
@@ -113,9 +119,43 @@ CHAINS.forEach(chain => {
         feeTokens: Number(evt.args.feeTokens) / 10 ** token.decimal
       })
       ctx.meter.Gauge("vault_collect_swap_fee_gauge").record(Number(evt.args.feeUsd) / Math.pow(10, 30), { coin_symbol: token.symbol })
-
+    })
+    .onEventCollectLiquidationFees(async (evt, ctx) => {
+      const token = await getOrCreateCoin(ctx, evt.args.token.toLowerCase())
+      ctx.eventLogger.emit("vault.collectLiquidationFees", {
+        token: token.symbol,
+        feeUsd: Number(evt.args.feeUsd) / Math.pow(10, 30),
+        feeTokens: Number(evt.args.feeTokens) / 10 ** token.decimal
+      })
+      ctx.meter.Gauge("vault_collect_liquidation_fee_gauge").record(Number(evt.args.feeUsd) / Math.pow(10, 30), { coin_symbol: token.symbol })
+    })
+    .onEventBuyUSDG(async (evt, ctx) => {
+      const token = await getOrCreateCoin(ctx, evt.args.token.toLowerCase())
+      ctx.eventLogger.emit("vault.buyUSDG", {
+        account: evt.args.account,
+        token: token.symbol,
+        tokenAmount: Number(evt.args.tokenAmount) / 10 ** token.decimal,
+        usdgAmount: Number(evt.args.usdgAmount) / Math.pow(10, 18),
+        feeBasisPoints: evt.args.feeBasisPoints,
+        fee: Number(evt.args.tokenAmount) / Math.pow(10, 18) * Number(evt.args.feeBasisPoints) / 10000
+      })
+      ctx.meter.Gauge("vault_buyUSDG_gauge").record(Number(evt.args.usdgAmount) / Math.pow(10, 30), { coin_symbol: token.symbol })
+    })
+    .onEventSellUSDG(async (evt, ctx) => {
+      const token = await getOrCreateCoin(ctx, evt.args.token.toLowerCase())
+      ctx.eventLogger.emit("vault.sellUSDG", {
+        account: evt.args.account,
+        token: token.symbol,
+        tokenAmount: Number(evt.args.tokenAmount) / 10 ** token.decimal,
+        usdgAmount: Number(evt.args.usdgAmount) / Math.pow(10, 18),
+        feeBasisPoints: evt.args.feeBasisPoints,
+        fee: Number(evt.args.usdgAmount) / Math.pow(10, 18) * Number(evt.args.feeBasisPoints) / 10000
+      })
+      ctx.meter.Gauge("vault_sellUSDG_gauge").record(Number(evt.args.usdgAmount) / Math.pow(10, 30), { coin_symbol: token.symbol })
     })
     .onTimeInterval(gaugeTokenAum, 240, 240)
+    .onTimeInterval(gaugeTokenUtilization, 240, 240)
+
 
 
   FulProcessor.bind({ address: FUL_ADDRESS_MAP.get(chain)!, network: chain })
