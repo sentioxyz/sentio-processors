@@ -15,6 +15,7 @@ const handleFlashBid = async (
     distinctId: event.args.searcherContractAddress,
     oppTxHash: event.args.oppTxHash,
     validator: event.args.validator,
+    searcher: event.args.searcherContractAddress,
     amount: event.args.amountPaid.scaleDown(18),
   });
 };
