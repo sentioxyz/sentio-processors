@@ -22,4 +22,5 @@ const handleFlashBid = async (
 FastLaneAuctionHandlerProcessor.bind({
   address: "0xCACe8D78269ba00f1C4D5Fc3B1228C7DF0a7C8BA",
   network: EthChainId.POLYGON,
+  startBlock: 52083358,
 }).onEventRelayFlashBid(handleFlashBid);
