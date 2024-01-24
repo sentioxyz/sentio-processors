@@ -60,6 +60,31 @@ export const gaugeTokenAum = async (_: any, ctx: VaultContext) => {
     }
 }
 
+
+export const gaugeTokenUtilization = async (_: any, ctx: VaultContext) => {
+    const whitelistedTokenCount = await ctx.contract.whitelistedTokenCount({ blockTag: ctx.blockNumber })
+    let address = ""
+    for (let i = 0; i < whitelistedTokenCount; i++) {
+        address = (await ctx.contract.whitelistedTokens(i, { blockTag: ctx.blockNumber })).toLowerCase()
+        const token = await getOrCreateCoin(ctx, address)
+        try {
+            const reservedAmount = await ctx.contract.reservedAmounts(address, { blockTag: ctx.blockNumber })
+            const poolAmount = await ctx.contract.poolAmounts(address, { blockTag: ctx.blockNumber })
+            ctx.meter.Gauge("reservedAmount").record(reservedAmount, { coin_symbol: token.symbol })
+            ctx.meter.Gauge("poolAmount").record(poolAmount, { coin_symbol: token.symbol })
+
+            ctx.eventLogger.emit("reservedAmount", {
+                reservedAmount,
+                coin_symbol: token.symbol
+            })
+            ctx.eventLogger.emit("poolAmount", {
+                poolAmount,
+                coin_symbol: token.symbol
+            })
+        } catch (e) { console.log(`gauge utilization error ${token.symbol} ${ctx.timestamp}`) }
+    }
+}
+
 //gauge staked asset balance 
 export const gaugeStakedAssets = async (_: any, ctx: FulContext) => {
     //record staked ful amount using ful.balanceOf(sFUL)

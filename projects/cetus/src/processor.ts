@@ -5,6 +5,9 @@ import * as constant from './constant-cetus.js'
 import { SuiNetwork } from "@sentio/sdk/sui"
 // import './cetus-launchpad.js'
 import * as helper from './helper/cetus-clmm.js'
+import { linked_table } from "./types/sui/0xbe21a06129308e0495431d12286127897aff07a8ade3970495a4404d97f9eaaa.js";
+import { object_ } from "@sentio/sdk/sui/builtin/0x2";
+import { position } from "./types/sui/clmm.js";
 
 factory.bind({
   // address: constant.CLMM_MAINNET,
@@ -244,6 +247,17 @@ const template = new SuiObjectProcessorTemplate()
     }
   }, 10, 1440, undefined, { owned: false })
 
-
-
-
+SuiObjectProcessor
+    .bind({objectId: "0x305866847f16ec900dc066e54664e4b0acd60115649de73586e544e2750658ae"})
+    .onTimeInterval(async (self, dynamicFieldObjects, ctx) => {
+      ctx.meter.Counter("times").add(1)
+      console.log("hellp, onTimeInterval")
+      console.log("object 0", dynamicFieldObjects[0])
+      const nodeType = linked_table.Node.type(object_.ID.type(), position.PositionInfo.type())
+      console.log(nodeType.getNormalizedSignature())
+      const nodes = await ctx.coder.filterAndDecodeObjects(nodeType, dynamicFieldObjects)
+      for (const node of nodes) {
+        const pos = node.data_decoded.value
+        ctx.meter.Gauge("liquidity").record(pos.liquidity, { position_id: pos.position_id})
+      }
+    }, 60, 60 * 24 * 30 , undefined, {owned: true})

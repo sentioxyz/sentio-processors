@@ -1,183 +1,91 @@
 [
+  { "inputs": [], "name": "RelayAuctionBidReceivedLate", "type": "error" },
+  { "inputs": [], "name": "RelayAuctionInvalidBid", "type": "error" },
   {
     "inputs": [
-      {
-        "internalType": "uint24",
-        "name": "_initialStakeShare",
-        "type": "uint24"
-      },
-      {
-        "internalType": "uint256",
-        "name": "_minRelayBidAmount",
-        "type": "uint256"
-      }
-    ],
-    "stateMutability": "nonpayable",
-    "type": "constructor"
-  },
-  {
-    "inputs": [],
-    "name": "RelayAuctionBidReceivedLate",
-    "type": "error"
-  },
-  {
-    "inputs": [
-      {
-        "internalType": "uint256",
-        "name": "current",
-        "type": "uint256"
-      },
-      {
-        "internalType": "uint256",
-        "name": "existing",
-        "type": "uint256"
-      }
+      { "internalType": "uint256", "name": "current", "type": "uint256" },
+      { "internalType": "uint256", "name": "existing", "type": "uint256" }
     ],
     "name": "RelayAuctionSearcherNotWinner",
     "type": "error"
   },
-  {
-    "inputs": [],
-    "name": "RelayCannotBeSelf",
-    "type": "error"
-  },
-  {
-    "inputs": [],
-    "name": "RelayCannotBeZero",
-    "type": "error"
-  },
-  {
-    "inputs": [],
-    "name": "RelayInequalityTooHigh",
-    "type": "error"
-  },
+  { "inputs": [], "name": "RelayCannotBeSelf", "type": "error" },
+  { "inputs": [], "name": "RelayCannotBeZero", "type": "error" },
+  { "inputs": [], "name": "RelayCustomCallbackLockInvalid", "type": "error" },
+  { "inputs": [], "name": "RelayCustomPayoutCantBePartial", "type": "error" },
+  { "inputs": [], "name": "RelayImmutableBlockAuthorRate", "type": "error" },
+  { "inputs": [], "name": "RelayInvalidSender", "type": "error" },
+  { "inputs": [], "name": "RelayMustBeSelf", "type": "error" },
+  { "inputs": [], "name": "RelayNotActiveValidator", "type": "error" },
   {
     "inputs": [
-      {
-        "internalType": "uint256",
-        "name": "bidAmount",
-        "type": "uint256"
-      },
-      {
-        "internalType": "uint256",
-        "name": "actualAmount",
-        "type": "uint256"
-      }
+      { "internalType": "uint256", "name": "bidAmount", "type": "uint256" },
+      { "internalType": "uint256", "name": "actualAmount", "type": "uint256" }
     ],
     "name": "RelayNotRepaid",
     "type": "error"
   },
-  {
-    "inputs": [],
-    "name": "RelayPermissionNotFastlaneValidator",
-    "type": "error"
-  },
-  {
-    "inputs": [],
-    "name": "RelayPermissionPaused",
-    "type": "error"
-  },
-  {
-    "inputs": [],
-    "name": "RelayPermissionSenderNotOrigin",
-    "type": "error"
-  },
-  {
-    "inputs": [],
-    "name": "RelayPermissionUnauthorized",
-    "type": "error"
-  },
+  { "inputs": [], "name": "RelayPayeeIsTimelocked", "type": "error" },
+  { "inputs": [], "name": "RelayPayeeUpdateInvalid", "type": "error" },
+  { "inputs": [], "name": "RelayPermissionSenderNotOrigin", "type": "error" },
+  { "inputs": [], "name": "RelayProcessorCannotBeZero", "type": "error" },
+  { "inputs": [], "name": "RelaySearcherWrongParams", "type": "error" },
   {
     "inputs": [
-      {
-        "internalType": "uint256",
-        "name": "amountRequested",
-        "type": "uint256"
-      },
-      {
-        "internalType": "uint256",
-        "name": "balance",
-        "type": "uint256"
-      }
-    ],
-    "name": "RelayProcessingAmountExceedsBalance",
-    "type": "error"
-  },
-  {
-    "inputs": [],
-    "name": "RelayProcessingNoBalancePayable",
-    "type": "error"
-  },
-  {
-    "inputs": [
-      {
-        "internalType": "bytes",
-        "name": "retData",
-        "type": "bytes"
-      }
-    ],
-    "name": "RelaySearcherCallFailure",
-    "type": "error"
-  },
-  {
-    "inputs": [],
-    "name": "RelaySearcherWrongParams",
-    "type": "error"
-  },
-  {
-    "inputs": [
-      {
-        "internalType": "uint256",
-        "name": "bidAmount",
-        "type": "uint256"
-      },
-      {
-        "internalType": "uint256",
-        "name": "actualAmount",
-        "type": "uint256"
-      }
+      { "internalType": "uint256", "name": "bidAmount", "type": "uint256" },
+      { "internalType": "uint256", "name": "actualAmount", "type": "uint256" }
     ],
     "name": "RelaySimulatedNotRepaid",
     "type": "error"
   },
-  {
-    "inputs": [
-      {
-        "internalType": "bytes",
-        "name": "retData",
-        "type": "bytes"
-      }
-    ],
-    "name": "RelaySimulatedSearcherCallFailure",
-    "type": "error"
-  },
+  { "inputs": [], "name": "RelayUnapprovedReentrancy", "type": "error" },
   {
     "inputs": [],
-    "name": "RelayTimeUnsuitable",
+    "name": "RelayValidatorNotAcceptingRefundBids",
     "type": "error"
   },
-  {
-    "inputs": [],
-    "name": "RelayWrongInit",
-    "type": "error"
-  },
+  { "inputs": [], "name": "RelayValueIsZero", "type": "error" },
   {
     "anonymous": false,
     "inputs": [
       {
         "indexed": true,
         "internalType": "address",
-        "name": "previousOwner",
+        "name": "payor",
         "type": "address"
       },
       {
         "indexed": true,
         "internalType": "address",
-        "name": "newOwner",
+        "name": "payee",
         "type": "address"
+      },
+      {
+        "indexed": true,
+        "internalType": "address",
+        "name": "paymentProcessor",
+        "type": "address"
+      },
+      {
+        "indexed": false,
+        "internalType": "uint256",
+        "name": "totalAmount",
+        "type": "uint256"
+      },
+      {
+        "indexed": false,
+        "internalType": "uint256",
+        "name": "startBlock",
+        "type": "uint256"
+      },
+      {
+        "indexed": false,
+        "internalType": "uint256",
+        "name": "endBlock",
+        "type": "uint256"
       }
     ],
-    "name": "OwnershipTransferred",
+    "name": "CustomPaymentProcessorPaid",
     "type": "event"
   },
   {
@@ -190,10 +98,66 @@
         "type": "address"
       },
       {
+        "indexed": true,
+        "internalType": "address",
+        "name": "validator",
+        "type": "address"
+      },
+      {
+        "indexed": false,
+        "internalType": "bool",
+        "name": "success",
+        "type": "bool"
+      },
+      {
+        "indexed": false,
+        "internalType": "uint256",
+        "name": "bidAmount",
+        "type": "uint256"
+      },
+      {
+        "indexed": false,
+        "internalType": "address",
+        "name": "searcherContractAddress",
+        "type": "address"
+      }
+    ],
+    "name": "RelayFastBid",
+    "type": "event"
+  },
+  {
+    "anonymous": false,
+    "inputs": [
+      {
+        "indexed": true,
+        "internalType": "address",
+        "name": "payor",
+        "type": "address"
+      },
+      {
+        "indexed": true,
+        "internalType": "address",
+        "name": "payee",
+        "type": "address"
+      },
+      {
         "indexed": false,
         "internalType": "uint256",
         "name": "amount",
         "type": "uint256"
+      }
+    ],
+    "name": "RelayFeeCollected",
+    "type": "event"
+  },
+  {
+    "anonymous": false,
+    "inputs": [
+      {
+        "indexed": true,
+        "internalType": "address",
+        "name": "sender",
+        "type": "address"
       },
       {
         "indexed": true,
@@ -209,6 +173,18 @@
       },
       {
         "indexed": false,
+        "internalType": "uint256",
+        "name": "bidAmount",
+        "type": "uint256"
+      },
+      {
+        "indexed": false,
+        "internalType": "uint256",
+        "name": "amountPaid",
+        "type": "uint256"
+      },
+      {
+        "indexed": false,
         "internalType": "address",
         "name": "searcherContractAddress",
         "type": "address"
@@ -221,45 +197,104 @@
     "anonymous": false,
     "inputs": [
       {
-        "indexed": false,
-        "internalType": "uint24",
-        "name": "initialStakeShare",
-        "type": "uint24"
+        "indexed": true,
+        "internalType": "address",
+        "name": "sender",
+        "type": "address"
+      },
+      {
+        "indexed": true,
+        "internalType": "bytes32",
+        "name": "oppTxHash",
+        "type": "bytes32"
+      },
+      {
+        "indexed": true,
+        "internalType": "address",
+        "name": "validator",
+        "type": "address"
       },
       {
         "indexed": false,
         "internalType": "uint256",
-        "name": "minAmount",
+        "name": "bidAmount",
         "type": "uint256"
-      }
-    ],
-    "name": "RelayInitialized",
-    "type": "event"
-  },
-  {
-    "anonymous": false,
-    "inputs": [
+      },
       {
         "indexed": false,
         "internalType": "uint256",
-        "name": "minAmount",
+        "name": "amountPaid",
         "type": "uint256"
+      },
+      {
+        "indexed": false,
+        "internalType": "address",
+        "name": "searcherContractAddress",
+        "type": "address"
+      },
+      {
+        "indexed": false,
+        "internalType": "uint256",
+        "name": "refundedAmount",
+        "type": "uint256"
+      },
+      {
+        "indexed": false,
+        "internalType": "address",
+        "name": "refundAddress",
+        "type": "address"
       }
     ],
-    "name": "RelayMinAmountSet",
+    "name": "RelayFlashBidWithRefund",
     "type": "event"
   },
   {
     "anonymous": false,
     "inputs": [
       {
+        "indexed": true,
+        "internalType": "address",
+        "name": "validator",
+        "type": "address"
+      },
+      {
+        "indexed": true,
+        "internalType": "address",
+        "name": "sender",
+        "type": "address"
+      },
+      {
         "indexed": false,
-        "internalType": "bool",
-        "name": "state",
-        "type": "bool"
+        "internalType": "uint256",
+        "name": "blockNumber",
+        "type": "uint256"
+      },
+      {
+        "indexed": false,
+        "internalType": "uint256",
+        "name": "existingBidAmount",
+        "type": "uint256"
+      },
+      {
+        "indexed": false,
+        "internalType": "uint256",
+        "name": "newBidAmount",
+        "type": "uint256"
+      },
+      {
+        "indexed": false,
+        "internalType": "uint256",
+        "name": "existingGasPrice",
+        "type": "uint256"
+      },
+      {
+        "indexed": false,
+        "internalType": "uint256",
+        "name": "newGasPrice",
+        "type": "uint256"
       }
     ],
-    "name": "RelayPausedStateSet",
+    "name": "RelayInvestigateOutcome",
     "type": "event"
   },
   {
@@ -285,57 +320,6 @@
       }
     ],
     "name": "RelayProcessingPaidValidator",
-    "type": "event"
-  },
-  {
-    "anonymous": false,
-    "inputs": [
-      {
-        "indexed": true,
-        "internalType": "address",
-        "name": "recipient",
-        "type": "address"
-      },
-      {
-        "indexed": false,
-        "internalType": "uint256",
-        "name": "amountWithdrawn",
-        "type": "uint256"
-      }
-    ],
-    "name": "RelayProcessingWithdrewStakeShare",
-    "type": "event"
-  },
-  {
-    "anonymous": false,
-    "inputs": [
-      {
-        "indexed": false,
-        "internalType": "uint24",
-        "name": "amount",
-        "type": "uint24"
-      },
-      {
-        "indexed": false,
-        "internalType": "uint256",
-        "name": "deadline",
-        "type": "uint256"
-      }
-    ],
-    "name": "RelayShareProposed",
-    "type": "event"
-  },
-  {
-    "anonymous": false,
-    "inputs": [
-      {
-        "indexed": false,
-        "internalType": "uint24",
-        "name": "amount",
-        "type": "uint24"
-      }
-    ],
-    "name": "RelayShareSet",
     "type": "event"
   },
   {
@@ -380,51 +364,6 @@
     "inputs": [
       {
         "indexed": false,
-        "internalType": "bool",
-        "name": "state",
-        "type": "bool"
-      }
-    ],
-    "name": "RelaySimulatorStateSet",
-    "type": "event"
-  },
-  {
-    "anonymous": false,
-    "inputs": [
-      {
-        "indexed": false,
-        "internalType": "address",
-        "name": "validator",
-        "type": "address"
-      }
-    ],
-    "name": "RelayValidatorDisabled",
-    "type": "event"
-  },
-  {
-    "anonymous": false,
-    "inputs": [
-      {
-        "indexed": false,
-        "internalType": "address",
-        "name": "validator",
-        "type": "address"
-      },
-      {
-        "indexed": false,
-        "internalType": "address",
-        "name": "payee",
-        "type": "address"
-      }
-    ],
-    "name": "RelayValidatorEnabled",
-    "type": "event"
-  },
-  {
-    "anonymous": false,
-    "inputs": [
-      {
-        "indexed": false,
         "internalType": "address",
         "name": "validator",
         "type": "address"
@@ -443,25 +382,6 @@
       }
     ],
     "name": "RelayValidatorPayeeUpdated",
-    "type": "event"
-  },
-  {
-    "anonymous": false,
-    "inputs": [
-      {
-        "indexed": true,
-        "internalType": "address",
-        "name": "receiver",
-        "type": "address"
-      },
-      {
-        "indexed": false,
-        "internalType": "uint256",
-        "name": "amount",
-        "type": "uint256"
-      }
-    ],
-    "name": "RelayWithdrawDust",
     "type": "event"
   },
   {
@@ -508,33 +428,18 @@
     "name": "RelayWithdrawStuckNativeToken",
     "type": "event"
   },
-  {
-    "stateMutability": "payable",
-    "type": "fallback"
-  },
+  { "stateMutability": "payable", "type": "fallback" },
   {
     "inputs": [],
-    "name": "bid_simulator_enabled",
-    "outputs": [
-      {
-        "internalType": "bool",
-        "name": "",
-        "type": "bool"
-      }
-    ],
-    "stateMutability": "view",
+    "name": "clearValidatorPayee",
+    "outputs": [],
+    "stateMutability": "nonpayable",
     "type": "function"
   },
   {
-    "inputs": [
-      {
-        "internalType": "address",
-        "name": "_validator",
-        "type": "address"
-      }
-    ],
-    "name": "disableRelayValidator",
-    "outputs": [],
+    "inputs": [],
+    "name": "collectFees",
+    "outputs": [{ "internalType": "uint256", "name": "", "type": "uint256" }],
     "stateMutability": "nonpayable",
     "type": "function"
   },
@@ -542,124 +447,53 @@
     "inputs": [
       {
         "internalType": "address",
-        "name": "_validator",
+        "name": "paymentProcessor",
         "type": "address"
       },
-      {
-        "internalType": "address",
-        "name": "_payee",
-        "type": "address"
-      }
+      { "internalType": "bytes", "name": "data", "type": "bytes" }
     ],
-    "name": "enableRelayValidator",
+    "name": "collectFeesCustom",
     "outputs": [],
     "stateMutability": "nonpayable",
     "type": "function"
   },
   {
-    "inputs": [],
-    "name": "flStakeSharePayable",
-    "outputs": [
-      {
-        "internalType": "uint256",
-        "name": "",
-        "type": "uint256"
-      }
-    ],
-    "stateMutability": "view",
-    "type": "function"
-  },
-  {
-    "inputs": [],
-    "name": "flStakeShareRatio",
-    "outputs": [
-      {
-        "internalType": "uint24",
-        "name": "",
-        "type": "uint24"
-      }
-    ],
-    "stateMutability": "view",
-    "type": "function"
-  },
-  {
     "inputs": [
-      {
-        "internalType": "bytes32",
-        "name": "",
-        "type": "bytes32"
-      }
-    ],
-    "name": "fulfilledAuctionsMap",
-    "outputs": [
-      {
-        "internalType": "uint256",
-        "name": "",
-        "type": "uint256"
-      }
-    ],
-    "stateMutability": "view",
-    "type": "function"
-  },
-  {
-    "inputs": [],
-    "name": "getCurrentStakeBalance",
-    "outputs": [
-      {
-        "internalType": "uint256",
-        "name": "",
-        "type": "uint256"
-      }
-    ],
-    "stateMutability": "view",
-    "type": "function"
-  },
-  {
-    "inputs": [],
-    "name": "getCurrentStakeRatio",
-    "outputs": [
-      {
-        "internalType": "uint24",
-        "name": "",
-        "type": "uint24"
-      }
-    ],
-    "stateMutability": "view",
-    "type": "function"
-  },
-  {
-    "inputs": [],
-    "name": "getPendingDeadline",
-    "outputs": [
-      {
-        "internalType": "uint256",
-        "name": "_timeDeadline",
-        "type": "uint256"
-      }
-    ],
-    "stateMutability": "view",
-    "type": "function"
-  },
-  {
-    "inputs": [],
-    "name": "getPendingStakeRatio",
-    "outputs": [
-      {
-        "internalType": "uint24",
-        "name": "_fastLaneStakeShare",
-        "type": "uint24"
-      }
-    ],
-    "stateMutability": "view",
-    "type": "function"
-  },
-  {
-    "inputs": [
+      { "internalType": "address", "name": "msgSender", "type": "address" },
+      { "internalType": "uint256", "name": "fastPrice", "type": "uint256" },
       {
         "internalType": "address",
-        "name": "_validator",
+        "name": "searcherToAddress",
         "type": "address"
-      }
+      },
+      { "internalType": "bytes", "name": "searcherCallData", "type": "bytes" }
+    ],
+    "name": "fastBidWrapper",
+    "outputs": [{ "internalType": "uint256", "name": "", "type": "uint256" }],
+    "stateMutability": "payable",
+    "type": "function"
+  },
+  {
+    "inputs": [{ "internalType": "bytes32", "name": "", "type": "bytes32" }],
+    "name": "fulfilledAuctionsMap",
+    "outputs": [{ "internalType": "uint256", "name": "", "type": "uint256" }],
+    "stateMutability": "view",
+    "type": "function"
+  },
+  {
+    "inputs": [{ "internalType": "uint256", "name": "", "type": "uint256" }],
+    "name": "fulfilledPGAMap",
+    "outputs": [
+      { "internalType": "uint64", "name": "lowestGasPrice", "type": "uint64" },
+      { "internalType": "uint64", "name": "lowestFastPrice", "type": "uint64" },
+      { "internalType": "uint64", "name": "lowestTotalPrice", "type": "uint64" }
+    ],
+    "stateMutability": "view",
+    "type": "function"
+  },
+  {
+    "inputs": [
+      { "internalType": "address", "name": "_validator", "type": "address" }
     ],
     "name": "getValidatorBalance",
     "outputs": [
@@ -674,314 +508,95 @@
   },
   {
     "inputs": [
-      {
-        "internalType": "address",
-        "name": "_validator",
-        "type": "address"
-      }
+      { "internalType": "address", "name": "_validator", "type": "address" }
+    ],
+    "name": "getValidatorBlockOfLastWithdraw",
+    "outputs": [
+      { "internalType": "uint256", "name": "_blockNumber", "type": "uint256" }
+    ],
+    "stateMutability": "view",
+    "type": "function"
+  },
+  {
+    "inputs": [
+      { "internalType": "address", "name": "_validator", "type": "address" }
     ],
     "name": "getValidatorPayee",
     "outputs": [
-      {
-        "internalType": "address",
-        "name": "_payee",
-        "type": "address"
-      }
+      { "internalType": "address", "name": "_payee", "type": "address" }
     ],
     "stateMutability": "view",
     "type": "function"
   },
   {
     "inputs": [
-      {
-        "internalType": "address",
-        "name": "_validator",
-        "type": "address"
-      }
+      { "internalType": "address", "name": "_validator", "type": "address" }
     ],
     "name": "getValidatorRecipient",
     "outputs": [
-      {
-        "internalType": "address",
-        "name": "_recipient",
-        "type": "address"
-      }
+      { "internalType": "address", "name": "_recipient", "type": "address" }
     ],
     "stateMutability": "view",
     "type": "function"
   },
   {
     "inputs": [
-      {
-        "internalType": "address",
-        "name": "_validator",
-        "type": "address"
-      }
-    ],
-    "name": "getValidatorStatus",
-    "outputs": [
-      {
-        "internalType": "bool",
-        "name": "",
-        "type": "bool"
-      }
-    ],
-    "stateMutability": "view",
-    "type": "function"
-  },
-  {
-    "inputs": [
-      {
-        "internalType": "bytes",
-        "name": "_errorData",
-        "type": "bytes"
-      }
-    ],
-    "name": "humanizeError",
-    "outputs": [
-      {
-        "internalType": "string",
-        "name": "decoded",
-        "type": "string"
-      }
-    ],
-    "stateMutability": "pure",
-    "type": "function"
-  },
-  {
-    "inputs": [
-      {
-        "internalType": "address",
-        "name": "_validator",
-        "type": "address"
-      }
+      { "internalType": "address", "name": "_validator", "type": "address" }
     ],
     "name": "isPayeeTimeLocked",
     "outputs": [
-      {
-        "internalType": "bool",
-        "name": "_isTimeLocked",
-        "type": "bool"
-      }
+      { "internalType": "bool", "name": "_isTimeLocked", "type": "bool" }
     ],
     "stateMutability": "view",
     "type": "function"
   },
   {
     "inputs": [
-      {
-        "internalType": "address",
-        "name": "_validator",
-        "type": "address"
-      },
-      {
-        "internalType": "address",
-        "name": "_payee",
-        "type": "address"
-      }
+      { "internalType": "address", "name": "_validator", "type": "address" },
+      { "internalType": "address", "name": "_payee", "type": "address" }
     ],
     "name": "isValidPayee",
-    "outputs": [
-      {
-        "internalType": "bool",
-        "name": "_valid",
-        "type": "bool"
-      }
-    ],
+    "outputs": [{ "internalType": "bool", "name": "_valid", "type": "bool" }],
     "stateMutability": "view",
     "type": "function"
   },
   {
-    "inputs": [],
-    "name": "minRelayBidAmount",
-    "outputs": [
-      {
-        "internalType": "uint256",
-        "name": "",
-        "type": "uint256"
-      }
+    "inputs": [
+      { "internalType": "address", "name": "_payor", "type": "address" }
     ],
+    "name": "payValidatorFee",
+    "outputs": [],
+    "stateMutability": "payable",
+    "type": "function"
+  },
+  {
+    "inputs": [{ "internalType": "address", "name": "", "type": "address" }],
+    "name": "payeeMap",
+    "outputs": [{ "internalType": "address", "name": "", "type": "address" }],
     "stateMutability": "view",
     "type": "function"
   },
   {
-    "inputs": [],
-    "name": "owner",
-    "outputs": [
+    "inputs": [
+      { "internalType": "address", "name": "validator", "type": "address" },
+      { "internalType": "address", "name": "payee", "type": "address" },
+      { "internalType": "uint256", "name": "amount", "type": "uint256" }
+    ],
+    "name": "paymentCallback",
+    "outputs": [],
+    "stateMutability": "nonpayable",
+    "type": "function"
+  },
+  {
+    "inputs": [
+      { "internalType": "uint256", "name": "bidAmount", "type": "uint256" },
+      { "internalType": "bytes32", "name": "oppTxHash", "type": "bytes32" },
       {
         "internalType": "address",
-        "name": "",
-        "type": "address"
-      }
-    ],
-    "stateMutability": "view",
-    "type": "function"
-  },
-  {
-    "inputs": [],
-    "name": "paused",
-    "outputs": [
-      {
-        "internalType": "bool",
-        "name": "",
-        "type": "bool"
-      }
-    ],
-    "stateMutability": "view",
-    "type": "function"
-  },
-  {
-    "inputs": [
-      {
-        "internalType": "address",
-        "name": "_validator",
-        "type": "address"
-      }
-    ],
-    "name": "payValidator",
-    "outputs": [
-      {
-        "internalType": "uint256",
-        "name": "",
-        "type": "uint256"
-      }
-    ],
-    "stateMutability": "nonpayable",
-    "type": "function"
-  },
-  {
-    "inputs": [],
-    "name": "pendingStakeShareUpdate",
-    "outputs": [
-      {
-        "internalType": "bool",
-        "name": "",
-        "type": "bool"
-      }
-    ],
-    "stateMutability": "view",
-    "type": "function"
-  },
-  {
-    "inputs": [],
-    "name": "proposalDeadline",
-    "outputs": [
-      {
-        "internalType": "uint256",
-        "name": "",
-        "type": "uint256"
-      }
-    ],
-    "stateMutability": "view",
-    "type": "function"
-  },
-  {
-    "inputs": [],
-    "name": "proposalStakeShareRatio",
-    "outputs": [
-      {
-        "internalType": "uint24",
-        "name": "",
-        "type": "uint24"
-      }
-    ],
-    "stateMutability": "view",
-    "type": "function"
-  },
-  {
-    "inputs": [
-      {
-        "internalType": "uint256",
-        "name": "_amount",
-        "type": "uint256"
-      }
-    ],
-    "name": "recoverDust",
-    "outputs": [],
-    "stateMutability": "nonpayable",
-    "type": "function"
-  },
-  {
-    "inputs": [],
-    "name": "renounceOwnership",
-    "outputs": [],
-    "stateMutability": "nonpayable",
-    "type": "function"
-  },
-  {
-    "inputs": [
-      {
-        "internalType": "uint24",
-        "name": "_fastLaneStakeShare",
-        "type": "uint24"
-      }
-    ],
-    "name": "setFastLaneStakeShare",
-    "outputs": [],
-    "stateMutability": "nonpayable",
-    "type": "function"
-  },
-  {
-    "inputs": [
-      {
-        "internalType": "uint256",
-        "name": "_minAmount",
-        "type": "uint256"
-      }
-    ],
-    "name": "setMininumBidAmount",
-    "outputs": [],
-    "stateMutability": "nonpayable",
-    "type": "function"
-  },
-  {
-    "inputs": [
-      {
-        "internalType": "bool",
-        "name": "_state",
-        "type": "bool"
-      }
-    ],
-    "name": "setPausedState",
-    "outputs": [],
-    "stateMutability": "nonpayable",
-    "type": "function"
-  },
-  {
-    "inputs": [
-      {
-        "internalType": "bool",
-        "name": "_state",
-        "type": "bool"
-      }
-    ],
-    "name": "setSimulatorState",
-    "outputs": [],
-    "stateMutability": "nonpayable",
-    "type": "function"
-  },
-  {
-    "inputs": [
-      {
-        "internalType": "uint256",
-        "name": "_bidAmount",
-        "type": "uint256"
-      },
-      {
-        "internalType": "bytes32",
-        "name": "_oppTxHash",
-        "type": "bytes32"
-      },
-      {
-        "internalType": "address",
-        "name": "_searcherToAddress",
+        "name": "searcherToAddress",
         "type": "address"
       },
-      {
-        "internalType": "bytes",
-        "name": "_searcherCallData",
-        "type": "bytes"
-      }
+      { "internalType": "bytes", "name": "searcherCallData", "type": "bytes" }
     ],
     "name": "simulateFlashBid",
     "outputs": [],
@@ -990,26 +605,29 @@
   },
   {
     "inputs": [
-      {
-        "internalType": "uint256",
-        "name": "_bidAmount",
-        "type": "uint256"
-      },
-      {
-        "internalType": "bytes32",
-        "name": "_oppTxHash",
-        "type": "bytes32"
-      },
+      { "internalType": "uint256", "name": "fastGasPrice", "type": "uint256" },
       {
         "internalType": "address",
-        "name": "_searcherToAddress",
+        "name": "searcherToAddress",
         "type": "address"
       },
+      { "internalType": "bytes", "name": "searcherCallData", "type": "bytes" }
+    ],
+    "name": "submitFastBid",
+    "outputs": [],
+    "stateMutability": "payable",
+    "type": "function"
+  },
+  {
+    "inputs": [
+      { "internalType": "uint256", "name": "bidAmount", "type": "uint256" },
+      { "internalType": "bytes32", "name": "oppTxHash", "type": "bytes32" },
       {
-        "internalType": "bytes",
-        "name": "_searcherCallData",
-        "type": "bytes"
-      }
+        "internalType": "address",
+        "name": "searcherToAddress",
+        "type": "address"
+      },
+      { "internalType": "bytes", "name": "searcherCallData", "type": "bytes" }
     ],
     "name": "submitFlashBid",
     "outputs": [],
@@ -1018,36 +636,31 @@
   },
   {
     "inputs": [
+      { "internalType": "uint256", "name": "bidAmount", "type": "uint256" },
+      { "internalType": "bytes32", "name": "oppTxHash", "type": "bytes32" },
+      { "internalType": "address", "name": "refundAddress", "type": "address" },
       {
         "internalType": "address",
-        "name": "newOwner",
+        "name": "searcherToAddress",
         "type": "address"
-      }
+      },
+      { "internalType": "bytes", "name": "searcherCallData", "type": "bytes" }
     ],
-    "name": "transferOwnership",
+    "name": "submitFlashBidWithRefund",
     "outputs": [],
-    "stateMutability": "nonpayable",
+    "stateMutability": "payable",
     "type": "function"
   },
   {
     "inputs": [],
-    "name": "triggerPendingStakeShareUpdate",
+    "name": "syncStuckNativeToken",
     "outputs": [],
     "stateMutability": "nonpayable",
     "type": "function"
   },
   {
     "inputs": [
-      {
-        "internalType": "address",
-        "name": "_validator",
-        "type": "address"
-      },
-      {
-        "internalType": "address",
-        "name": "_payee",
-        "type": "address"
-      }
+      { "internalType": "address", "name": "_payee", "type": "address" }
     ],
     "name": "updateValidatorPayee",
     "outputs": [],
@@ -1056,101 +669,42 @@
   },
   {
     "inputs": [
-      {
-        "internalType": "address",
-        "name": "",
-        "type": "address"
-      }
+      { "internalType": "uint256", "name": "refundShare", "type": "uint256" }
     ],
+    "name": "updateValidatorRefundShare",
+    "outputs": [],
+    "stateMutability": "nonpayable",
+    "type": "function"
+  },
+  {
+    "inputs": [{ "internalType": "address", "name": "", "type": "address" }],
     "name": "validatorsBalanceMap",
-    "outputs": [
-      {
-        "internalType": "uint256",
-        "name": "",
-        "type": "uint256"
-      }
-    ],
+    "outputs": [{ "internalType": "uint256", "name": "", "type": "uint256" }],
     "stateMutability": "view",
     "type": "function"
   },
   {
-    "inputs": [
-      {
-        "internalType": "address",
-        "name": "",
-        "type": "address"
-      }
-    ],
-    "name": "validatorsStatusMap",
-    "outputs": [
-      {
-        "internalType": "bool",
-        "name": "",
-        "type": "bool"
-      }
-    ],
+    "inputs": [{ "internalType": "address", "name": "", "type": "address" }],
+    "name": "validatorsRefundShareMap",
+    "outputs": [{ "internalType": "uint256", "name": "", "type": "uint256" }],
     "stateMutability": "view",
     "type": "function"
   },
   {
     "inputs": [],
     "name": "validatorsTotal",
-    "outputs": [
-      {
-        "internalType": "uint256",
-        "name": "",
-        "type": "uint256"
-      }
-    ],
+    "outputs": [{ "internalType": "uint256", "name": "", "type": "uint256" }],
     "stateMutability": "view",
     "type": "function"
   },
   {
     "inputs": [
-      {
-        "internalType": "address",
-        "name": "_recipient",
-        "type": "address"
-      },
-      {
-        "internalType": "uint256",
-        "name": "_amount",
-        "type": "uint256"
-      }
-    ],
-    "name": "withdrawStakeShare",
-    "outputs": [],
-    "stateMutability": "nonpayable",
-    "type": "function"
-  },
-  {
-    "inputs": [
-      {
-        "internalType": "address",
-        "name": "_tokenAddress",
-        "type": "address"
-      }
+      { "internalType": "address", "name": "_tokenAddress", "type": "address" }
     ],
     "name": "withdrawStuckERC20",
     "outputs": [],
     "stateMutability": "nonpayable",
     "type": "function"
   },
-  {
-    "inputs": [
-      {
-        "internalType": "uint256",
-        "name": "_amount",
-        "type": "uint256"
-      }
-    ],
-    "name": "withdrawStuckNativeToken",
-    "outputs": [],
-    "stateMutability": "nonpayable",
-    "type": "function"
-  },
-  {
-    "stateMutability": "payable",
-    "type": "receive"
-  }
+  { "stateMutability": "payable", "type": "receive" }
 ]

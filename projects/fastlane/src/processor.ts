@@ -15,11 +15,13 @@ const handleFlashBid = async (
     distinctId: event.args.searcherContractAddress,
     oppTxHash: event.args.oppTxHash,
     validator: event.args.validator,
-    amount: event.args.amount.scaleDown(18),
+    searcher: event.args.searcherContractAddress,
+    amount: event.args.amountPaid.scaleDown(18),
   });
 };
 
 FastLaneAuctionHandlerProcessor.bind({
-  address: "0xf5df545113dee4df10f8149090aa737ddc05070a",
+  address: "0xCACe8D78269ba00f1C4D5Fc3B1228C7DF0a7C8BA",
   network: EthChainId.POLYGON,
+  startBlock: 52083358,
 }).onEventRelayFlashBid(handleFlashBid);
