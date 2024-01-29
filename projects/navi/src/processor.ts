@@ -1,1 +1,2 @@
-import "./mainnet/main"
+import "./mainnet/main.js"
+import "./testnet.js"
