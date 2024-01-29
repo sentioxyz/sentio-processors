@@ -141,6 +141,7 @@ async function onSwap(evt: SwapEvent, ctx: VVSPairContext) {
     const usd0 = await getUsdValue(ctx, poolInfo.token0, poolInfo.token0Address, amount0)
     // const usd1 = await getUsdValue(ctx, poolInfo.token1, poolInfo.token0Address, amount1)
     const sender = evt.args.sender
+    const to = evt.args.to
     let exchangePrice: BigDecimal
     if (amount1.eq(0)) {
       exchangePrice = BigDecimal(-1)
@@ -185,6 +186,7 @@ async function onSwap(evt: SwapEvent, ctx: VVSPairContext) {
       message: `${sender} swapped ${amount0} ${poolInfo.token0.symbol} for ${amount1} ${poolInfo.token1.symbol}`,
       distinctId: sender,
       sender: sender,
+      to: to,
       token0: poolInfo.token0.symbol,
       token1: poolInfo.token1.symbol,
       amount0: amount0,

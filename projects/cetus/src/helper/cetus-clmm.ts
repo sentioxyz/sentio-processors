@@ -2,7 +2,7 @@ import { SuiObjectProcessor, SuiContext, SuiObjectContext } from "@sentio/sdk/su
 import { getPriceByType, token } from "@sentio/sdk/utils"
 import * as constant from '../constant-cetus.js'
 import { SuiNetwork } from "@sentio/sdk/sui"
-import { pool } from "../types/sui/testnet/clmm.js"
+import { pool } from "../types/sui/clmm.js"
 
 //get coin address without suffix
 export function getCoinObjectAddress(type: string) {
