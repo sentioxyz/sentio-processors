@@ -140,7 +140,17 @@ async function onSwap(evt: SwapEvent, ctx: VVSPairContext) {
     const price1 = await getPriceByType(EthChainId.CRONOS, poolInfo.token1Address, ctx.timestamp) || 0
     const usd0 = await getUsdValue(ctx, poolInfo.token0, poolInfo.token0Address, amount0)
     // const usd1 = await getUsdValue(ctx, poolInfo.token1, poolInfo.token0Address, amount1)
-    const sender = evt.args.sender
+
+    let sender = "unk"
+    try {
+      const hash = evt.transactionHash
+      const tx = (await ctx.contract.provider.getTransaction(hash))!
+      sender = tx.from
+    }
+    catch (e) {
+      console.log(e.message, `Get tx from error at ${ctx.transactionHash}`)
+    }
+
     const to = evt.args.to
     let exchangePrice: BigDecimal
     if (amount1.eq(0)) {
@@ -201,6 +211,7 @@ async function onSwap(evt: SwapEvent, ctx: VVSPairContext) {
     console.log(e)
   }
 }
+
 async function onTransfer(evt: TransferEvent, ctx: VVSPairContext) {
   const from = evt.args.from
   const to = evt.args.to
@@ -421,8 +432,9 @@ async function xvvsBalanceHandler(_: any, ctx: ERC20Context) {
 for (var i = 0; i < CORE_POOLS.length; i++) {
   const pool = CORE_POOLS[i]
   VVSPairProcessor.bind({
-    address: pool, network: EthChainId.CRONOS
-    , startBlock: 9000000
+    address: pool,
+    network: EthChainId.CRONOS,
+    startBlock: 9000000
   })
     .onEventSwap(onSwap)
     .onBlockInterval(blockHandler, 4000, 40000)
