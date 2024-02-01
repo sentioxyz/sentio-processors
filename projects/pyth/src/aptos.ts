@@ -57,7 +57,7 @@ event.bind()
     priceEMAGauage.record(ctx,  getPrice(evt.data_decoded.price_feed.ema_price), labels)
     updates.add(ctx, 1, labels)
     //migration
-    price_update_counter.add(ctx, ctx.getTimestamp(), labels)
+    price_update_counter.add(ctx, 1, labels)
     price_update_occur.record(ctx, 1, labels)
     // ctx.meter.Counter("price_update_counter").add(1, labels)
   })
