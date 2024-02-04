@@ -190,7 +190,7 @@ CHAIN_ADDRESS_MAP.forEach((addr, chainId) => {
       .onCallUpdatePriceFeeds(updatePriceFeeds)
       .onCallUpdatePriceFeedsIfNecessary(updatePriceFeedsIfNecessary)
       .onEventBatchPriceFeedUpdate(batchPriceUpdate)
-      .onBlockInterval(blockHandler, 10000);
+      .onTimeInterval(blockHandler, 60, 60 * 24);
   }
   // else if (chainId == 250) { // TODO: individually pulling fantom eth_balance
   //     PythEVMProcessor.bind({address: addr, network: chainId})
@@ -206,7 +206,7 @@ CHAIN_ADDRESS_MAP.forEach((addr, chainId) => {
       .onCallUpdatePriceFeeds(updatePriceFeeds)
       .onCallUpdatePriceFeedsIfNecessary(updatePriceFeedsIfNecessary)
       .onEventBatchPriceFeedUpdate(batchPriceUpdate)
-      .onBlockInterval(blockHandler);
+      .onTimeInterval(blockHandler, 60, 60 * 24);
   }
 });
 
