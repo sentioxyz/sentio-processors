@@ -1,5 +1,6 @@
 import { kana_aggregatorv1 } from './types/aptos/KanalabsV0.js'
 import { KanalabsAggregatorV1, KanalabsRouterV1 } from './types/aptos/KanalabsAggregatorV1.js'
+import { Aggregator } from './types/aptos/KanaAggregator.js'
 
 import { aggregator } from './types/aptos/hippoAggregator.js'
 import { getPrice, getCoinInfo, whiteListed } from "@sentio/sdk/aptos/ext"
@@ -137,6 +138,54 @@ KanalabsRouterV1.bind()
 
 
   }))
+
+Aggregator.bind()
+  .onEventSwapStepEvent(async (event, ctx) => {
+    ctx.meter.Counter('swap_step_event_emit').add(1)
+    const dexType = event.data_decoded.dex_type
+    const poolType = event.data_decoded.pool_type
+    const inputAmount = event.data_decoded.input_amount
+    const outputAmount = event.data_decoded.output_amount
+    const xType = extractTypeName(event.data_decoded.x_type_info)
+    const yType = extractTypeName(event.data_decoded.y_type_info)
+
+    const timestamp = event.data_decoded.time_stamp
+
+    const coinXInfo = getCoinInfo(xType)
+    const coinYInfo = getCoinInfo(yType)
+    const symbolX = coinXInfo.symbol
+    const symbolY = coinYInfo.symbol
+    const priceX = await getPrice(xType, Number(timestamp))
+    const priceY = await getPrice(yType, Number(timestamp))
+    const pair = constructPair(xType, yType)
+    const volume = Number(inputAmount.scaleDown(coinXInfo.decimals).multipliedBy(priceX))
+    const displayPair = constructDisplay(symbolX, symbolY)
+
+
+    totalTx.add(ctx, 1, { tag: "kana" })
+    ctx.meter.Gauge("tx_gauge").record(1)
+
+    if (whiteListed(xType)) {
+      vol.record(ctx, volume, { dex: getDex(dexType, KANA_DEX_MAP), poolType: poolType.toString(), xType: xType, yType: yType, symbolX: symbolX, symbolY: symbolY, pair: displayPair })
+      volCounter.add(ctx, volume, { dex: getDex(dexType, KANA_DEX_MAP), poolType: poolType.toString(), xType: xType, yType: yType, symbolX: symbolX, symbolY: symbolY, pair: displayPair, tag: "kana" })
+      ctx.eventLogger.emit("swap", {
+        distinctId: ctx.transaction.sender,
+        volume: volume,
+        dex: getDex(dexType, KANA_DEX_MAP),
+        poolType: poolType.toString(),
+        xType: xType,
+        yType: yType,
+        symbolX: symbolX,
+        symbolY: symbolY,
+        pair: displayPair,
+        tag: "kana",
+        message: `KanaAggregator swap ${volume} ${symbolX} to ${symbolY} through dex ${getDex(dexType, KANA_DEX_MAP)}`
+      })
+      ctx.eventLogger.emit("any", {
+        distinctId: ctx.transaction.sender
+      })
+    }
+  })
 
 
 //hippo aggregator
