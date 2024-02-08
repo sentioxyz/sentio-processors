@@ -141,15 +141,7 @@ async function onSwap(evt: SwapEvent, ctx: VVSPairContext) {
     const usd0 = await getUsdValue(ctx, poolInfo.token0, poolInfo.token0Address, amount0)
     // const usd1 = await getUsdValue(ctx, poolInfo.token1, poolInfo.token0Address, amount1)
 
-    let sender = "unk"
-    try {
-      const hash = evt.transactionHash
-      const tx = (await ctx.contract.provider.getTransaction(hash))!
-      sender = tx.from
-    }
-    catch (e) {
-      console.log(e.message, `Get tx from error at ${ctx.transactionHash}`)
-    }
+    let sender = ctx.transaction?.from
 
     const to = evt.args.to
     let exchangePrice: BigDecimal
@@ -206,6 +198,7 @@ async function onSwap(evt: SwapEvent, ctx: VVSPairContext) {
       priceDiff: priceDiff,
       usd0,
       poolName: poolInfo.poolName,
+      gas: gasCost(ctx)
     })
   } catch (e) {
     console.log(e)
@@ -429,21 +422,28 @@ async function xvvsBalanceHandler(_: any, ctx: ERC20Context) {
 //   poolTemplate.bind({ address: address, startBlock: evt.blockNumber}, ctx)
 
 // }
+
+function gasCost(ctx: EthContext) {
+  console.log(ctx.transactionReceipt)
+  return BigInt(ctx.transactionReceipt?.effectiveGasPrice || ctx.transactionReceipt?.gasPrice || ctx.transaction?.gasPrice || 0n) * BigInt(ctx.transactionReceipt?.gasUsed || 0)
+}
+
+
 for (var i = 0; i < CORE_POOLS.length; i++) {
   const pool = CORE_POOLS[i]
   VVSPairProcessor.bind({
     address: pool,
     network: EthChainId.CRONOS,
-    startBlock: 9000000
+    startBlock: 6000000
   })
-    .onEventSwap(onSwap)
+    .onEventSwap(onSwap, undefined, { transaction: true, transactionReceipt: true })
     .onBlockInterval(blockHandler, 4000, 40000)
     .onTimeInterval(priceSlippageHandler, 6 * 60, 6 * 60 * 10)
 }
 
 CraftsmanProcessor.bind({
   address: "0xdccd6455ae04b03d785f12196b492b18129564bc", network: EthChainId.CRONOS
-  , startBlock: 7636187
+  , startBlock: 6000000
 })
   .onBlockInterval(craftsmanHandler, 4000, 40000)
   .onEventDeposit(onCraftsmanDeposit)
@@ -451,7 +451,7 @@ CraftsmanProcessor.bind({
 
 ERC20Processor.bind({
   address: "0x2d03bece6747adc00e1a131bba1469c15fd11e03", network: EthChainId.CRONOS
-  , startBlock: 7636187
+  , startBlock: 6000000
 })
   .onBlockInterval(xvvsBalanceHandler, 4000, 40000)
 
