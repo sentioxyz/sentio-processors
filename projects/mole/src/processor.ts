@@ -25,6 +25,8 @@ import * as helper from './utils/cetus-clmm.js'
 import { ANY_TYPE, BUILTIN_TYPES } from '@sentio/sdk/move'
 import { string_ } from "@sentio/sdk/sui/builtin/0x1";
 import BN from 'bn.js'
+import axiosInst from './utils/moleAxios.js'
+
 
 const vaultWethConfigId  = "0x7fa4aa18fc4488947dc7528b5177c4475ec478c28014e77a31dc2318fa4f125e"
 const vaultHaSuiConfigId = "0xa069ec74c6bb6d6df53e22d9bf00625a3d65da67c4d9e2868c8e348201251dd0"
@@ -87,12 +89,71 @@ SuiWrappedObjectProcessor.bind({
         ctx.meter.Gauge("savings_free_coin_usd").record(savings_free_coin_usd, { coin_symbol, project: "mole" })
 
         console.log("savings_debt_usd:", savings_debt_usd, ", savings_free_coin_usd:", savings_free_coin_usd, ",coin_symbol:", coin_symbol)
+
+        const use_rate = savings_debt / (savings_debt + savings_free_coin)
+
+        // Borrowing interest = a * utilization + b
+        let a, b
+        if (use_rate < 0.6) {
+          a = 0.333333333 
+          b = 0
+        } else if (use_rate >= 0.6 && use_rate < 0.9) {
+          a = 0 
+          b = 0.2
+        } else { // use_rate >= 0.9
+          a = 13
+          b = -11.5
+        }
+        const savings_borrowing_interest =  a * use_rate + b
+        ctx.meter.Gauge("savings_borrowing_interest").record(savings_borrowing_interest, { coin_symbol, project: "mole" })
+
+        // Lending interest = Borrowing Interest * Utilization * (1 - Borrow Protocol Fee)
+        const savings_lending_interest_apr = savings_borrowing_interest * use_rate * (1 - 0.19)
+        // apr to apy
+        const savings_lending_interest_apy =  Math.pow(1 + savings_lending_interest_apr / 365, 365) - 1
+
+        ctx.meter.Gauge("savings_lending_interest").record(savings_lending_interest_apy, { coin_symbol, project: "mole" })
+
       }
     }
     catch (e) {
       console.log(`${e.message} error at ${JSON.stringify(dynamicFieldObjects)}`)
     }
   }, 60, 240, undefined, { owned: true })
+
+  
+SuiObjectProcessor.bind({
+  objectId: "0xcf994611fd4c48e277ce3ffd4d4364c914af2c3cbb05f7bf6facd371de688630", // random fake id because no used in here
+  network: SuiNetwork.MAIN_NET,
+  startCheckpoint: 25721833n
+})
+.onTimeInterval(async (self, _, ctx) => {
+  try {
+    
+    // get json data from mole
+    const data_url = `https://app.mole.fi/api/SuiMainnet/data.json`
+    const res = await axiosInst.get(data_url).catch(err => {
+        console.error('get data error:', err)
+    })
+    if (!res) {
+      console.error('data_get got no response')
+    }
+
+    const farmsData = res!.data.farms    
+
+    for (let i = 0 ; i < farmsData.length; i ++) {
+      const farmName = farmsData[i].symbol1 + '-' + farmsData[i].symbol2
+      const farmApr = farmsData[i].totalApr         
+
+      ctx.meter.Gauge("lyf_apr").record(farmApr, { farmName, project: "mole" })
+    }
+  }
+catch (e) {
+      console.log(`${e.message} error at ${JSON.stringify(self)}`)
+    }
+  }, 30, 240, undefined, { owned: false })
+
+
 
 
 
