@@ -23,7 +23,7 @@ const vol = Gauge.register("vol")
 const routes = Gauge.register("routes")
 const routesCounter = Counter.register("routes_counter")
 
-// here starts the previous contract
+// v1
 kana_aggregatorv1.bind()
   .onEventSwapStepEvent(async (event, ctx) => {
     ctx.meter.Counter('swap_step_event_emit').add(1)
@@ -52,8 +52,8 @@ kana_aggregatorv1.bind()
     ctx.meter.Gauge("tx_gauge").record(1)
 
     if (whiteListed(xType)) {
-      vol.record(ctx, volume, { dex: getDex(dexType, KANA_DEX_MAP), poolType: poolType.toString(), xType: xType, yType: yType, symbolX: symbolX, symbolY: symbolY, pair: displayPair })
-      volCounter.add(ctx, volume, { dex: getDex(dexType, KANA_DEX_MAP), poolType: poolType.toString(), xType: xType, yType: yType, symbolX: symbolX, symbolY: symbolY, pair: displayPair, tag: "kana" })
+      vol.record(ctx, volume, { dex: getDex(dexType, KANA_DEX_MAP), poolType: poolType.toString(), xType: xType, yType: yType, symbolX: symbolX, symbolY: symbolY, pair: displayPair, contractName: "kana aggregator v1" })
+      volCounter.add(ctx, volume, { dex: getDex(dexType, KANA_DEX_MAP), poolType: poolType.toString(), xType: xType, yType: yType, symbolX: symbolX, symbolY: symbolY, pair: displayPair, tag: "kana", contractName: "kana aggregator v1" })
       ctx.eventLogger.emit("swap", {
         distinctId: ctx.transaction.sender,
         volume: volume,
@@ -65,6 +65,7 @@ kana_aggregatorv1.bind()
         symbolY: symbolY,
         pair: displayPair,
         tag: "kana",
+        contractName: "kana aggregator v1",
         message: `Legacy Kana contract swap ${volume} ${symbolX} to ${symbolY} through dex ${getDex(dexType, KANA_DEX_MAP)}`
       })
 
@@ -73,7 +74,7 @@ kana_aggregatorv1.bind()
   })
 
 
-// here starts the new contract
+// v2
 KanalabsAggregatorV1.bind()
   .onEventSwapStepEvent(async (event, ctx) => {
     ctx.meter.Counter('swap_step_event_emit').add(1)
@@ -101,8 +102,8 @@ KanalabsAggregatorV1.bind()
     ctx.meter.Gauge("tx_gauge").record(1)
 
     if (whiteListed(xType)) {
-      vol.record(ctx, volume, { dex: getDex(dexType, KANA_DEX_MAP), poolType: poolType.toString(), xType: xType, yType: yType, symbolX: symbolX, symbolY: symbolY, pair: displayPair })
-      volCounter.add(ctx, volume, { dex: getDex(dexType, KANA_DEX_MAP), poolType: poolType.toString(), xType: xType, yType: yType, symbolX: symbolX, symbolY: symbolY, pair: displayPair, tag: "kana" })
+      vol.record(ctx, volume, { dex: getDex(dexType, KANA_DEX_MAP), poolType: poolType.toString(), xType: xType, yType: yType, symbolX: symbolX, symbolY: symbolY, pair: displayPair, contractName: "kana aggregator v2" })
+      volCounter.add(ctx, volume, { dex: getDex(dexType, KANA_DEX_MAP), poolType: poolType.toString(), xType: xType, yType: yType, symbolX: symbolX, symbolY: symbolY, pair: displayPair, tag: "kana", contractName: "kana aggregator v2" })
       ctx.eventLogger.emit("swap", {
         distinctId: ctx.transaction.sender,
         // address: '0xcdca128119681f791ddc2283e8c7b364ae22d416c5be95b0faf6aa1818c7afd6',
@@ -116,6 +117,7 @@ KanalabsAggregatorV1.bind()
         symbolY: symbolY,
         pair: displayPair,
         tag: "kana",
+        contractName: "kana aggregator v2",
         message: `New Kana contract swap ${volume} ${symbolX} to ${symbolY} through dex ${getDex(dexType, KANA_DEX_MAP)}`
       })
       ctx.eventLogger.emit("any", {
@@ -133,12 +135,14 @@ KanalabsRouterV1.bind()
 
     ctx.eventLogger.emit("route", {
       distinctId: ctx.transaction.sender,
-      tag: "kana"
+      tag: "kana",
+      contractName: "kana router v2",
     })
 
 
   }))
 
+//v3
 Aggregator.bind()
   .onEventSwapStepEvent(async (event, ctx) => {
     ctx.meter.Counter('swap_step_event_emit').add(1)
@@ -166,8 +170,8 @@ Aggregator.bind()
     ctx.meter.Gauge("tx_gauge").record(1)
 
     if (whiteListed(xType)) {
-      vol.record(ctx, volume, { dex: getDex(dexType, KANA_DEX_MAP), poolType: poolType.toString(), xType: xType, yType: yType, symbolX: symbolX, symbolY: symbolY, pair: displayPair })
-      volCounter.add(ctx, volume, { dex: getDex(dexType, KANA_DEX_MAP), poolType: poolType.toString(), xType: xType, yType: yType, symbolX: symbolX, symbolY: symbolY, pair: displayPair, tag: "kana" })
+      vol.record(ctx, volume, { dex: getDex(dexType, KANA_DEX_MAP), poolType: poolType.toString(), xType: xType, yType: yType, symbolX: symbolX, symbolY: symbolY, pair: displayPair, contractName: "kana aggregator v3" })
+      volCounter.add(ctx, volume, { dex: getDex(dexType, KANA_DEX_MAP), poolType: poolType.toString(), xType: xType, yType: yType, symbolX: symbolX, symbolY: symbolY, pair: displayPair, tag: "kana", contractName: "kana aggregator v3" })
       ctx.eventLogger.emit("swap", {
         distinctId: ctx.transaction.sender,
         volume: volume,
@@ -179,6 +183,7 @@ Aggregator.bind()
         symbolY: symbolY,
         pair: displayPair,
         tag: "kana",
+        contractName: "kana aggregator v3",
         message: `KanaAggregator swap ${volume} ${symbolX} to ${symbolY} through dex ${getDex(dexType, KANA_DEX_MAP)}`
       })
       ctx.eventLogger.emit("any", {
@@ -197,7 +202,6 @@ aggregator.bind({ address: "0x89576037b3cc0b89645ea393a47787bb348272c76d6941c574
     const dexType = evt.data_decoded.dex_type
     const xType = extractTypeName(evt.data_decoded.x_type_info)
     const yType = extractTypeName(evt.data_decoded.y_type_info)
-
     const coinXInfo = getCoinInfo(xType)
     const coinYInfo = getCoinInfo(yType)
     const poolType = evt.data_decoded.pool_type
@@ -208,12 +212,10 @@ aggregator.bind({ address: "0x89576037b3cc0b89645ea393a47787bb348272c76d6941c574
     const symbolX = coinXInfo.symbol
     const symbolY = coinYInfo.symbol
     const displayPair = constructDisplay(symbolX, symbolY)
-
     totalTx.add(ctx, 1, { tag: "hippo" })
-
     if (whiteListed(xType)) {
-      vol.record(ctx, volume, { dex: getDex(dexType, HIPPO_DEX_MAP), poolType: poolType.toString(), xType: xType, yType: yType, symbolX: symbolX, symbolY: symbolY, pair: displayPair })
-      volCounter.add(ctx, volume, { dex: getDex(dexType, HIPPO_DEX_MAP), poolType: poolType.toString(), xType: xType, yType: yType, symbolX: symbolX, symbolY: symbolY, pair: displayPair, tag: "hippo" })
+      vol.record(ctx, volume, { dex: getDex(dexType, HIPPO_DEX_MAP), poolType: poolType.toString(), xType: xType, yType: yType, symbolX: symbolX, symbolY: symbolY, pair: displayPair, contractName: "hippo aggregator" })
+      volCounter.add(ctx, volume, { dex: getDex(dexType, HIPPO_DEX_MAP), poolType: poolType.toString(), xType: xType, yType: yType, symbolX: symbolX, symbolY: symbolY, pair: displayPair, tag: "hippo", contractName: "hippo aggregator" })
       ctx.eventLogger.emit("swap", {
         distinctId: ctx.transaction.sender,
         volume: volume,
@@ -225,6 +227,7 @@ aggregator.bind({ address: "0x89576037b3cc0b89645ea393a47787bb348272c76d6941c574
         symbolY: symbolY,
         pair: displayPair,
         tag: "hippo",
+        contractName: "hippo aggregator",
         message: `Hippo swap ${volume} ${symbolX} to ${symbolY} through dex ${getDex(dexType, HIPPO_DEX_MAP)}`
       })
       ctx.eventLogger.emit("any", {
@@ -232,8 +235,6 @@ aggregator.bind({ address: "0x89576037b3cc0b89645ea393a47787bb348272c76d6941c574
       })
     }
   })
-
-
 
 function constructPair(xType: String, yType: String) {
   if (xType > yType) {

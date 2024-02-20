@@ -72,6 +72,10 @@ export const chainConfigs = [
       "0x10eBee1d8d831B21ED40098274633367d0F52516".toLowerCase(), // safe
       "0x080AC7ec9995da5Cfdda4A14058ce0c872B22087".toLowerCase(), // some strategy
       "0x227bABe533fa9a1085f5261210E0B7137E44437B".toLowerCase(), // some strategy
+      "0x896D9b9Eee18F6C88C5575B78247834029375575".toLowerCase(), // liquidity hub
+      "0xA45DE4Bc6bBe70B5dB9AFaD5bbB125319e78AA9b".toLowerCase(), // some strategy
+      "0xF7078A0842581B70E9dAc78e7cA7421c15C07800".toLowerCase(), // some strategy
+      "0x2C8890218d7b740e31fec1b20DAa55c1e5C3FD6e".toLowerCase(), // some strategy
     ]),
     mintBurnAddr: new Set<string>([
       "0x0000000000000000000000000000000000000000",
@@ -95,7 +99,7 @@ export const chainConfigs = [
       "0x50482dbfe7f7e15F2395BdA9ed1C151b9948497d".toLowerCase(),
       "0x1DA036B1a22aC3E7d81D0387a2DD1E2914e3dd55".toLowerCase(),
       "0x7D2561152ff3F649d333949982b1aDD2A76A990A".toLowerCase(),
-      "0x755068540132bDfAD7242C8b006BB636935f74cA".toLowerCase(),
+      "0xc4D671ebD86CBAb222027E3FBE471b0d694DdFf0".toLowerCase(),
     ]),
     tailMode: false,
   },
