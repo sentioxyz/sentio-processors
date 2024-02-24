@@ -23,7 +23,8 @@ describe('Test Processor', () => {
           "0x47ef752f08676a1c8a72959d73da5281b37661e4",
         mintAmount: 1000000000000000000n,
         mintTokens: 1000000000n
-      })
+      }),
+      EthChainId.CRONOS
     )
 
     // const tokenCounter = firstCounterValue(resp.result, 'token')
