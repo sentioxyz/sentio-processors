@@ -48,7 +48,8 @@ export const TOKEN_SYMBOL: Map<string, string> = new Map([
     ["0xf2a4c7595a64a18158d205148a975509d969cb8d", "tUSDCd"],
     ["0x2c5515be5bb123b8088843e85789e3e294670cad", "tFERd"],
     ["0x5f2e412392a317b8b80234b8a6941e0282161a25", "tVNOd"],
-    ["0x0ba8683fb1d8f66d9ebbe3634b67da623188ac84", "tUSDTd"]
+    ["0x0ba8683fb1d8f66d9ebbe3634b67da623188ac84", "tUSDTd"],
+    ["0x131B6F908395f4F43A5A9320B7F96e755df86f8C", "tCDCETHd"]
 ])
 
 
@@ -79,7 +80,8 @@ export const COLLATERAL_TOKENS: Map<string, string> = new Map([
     ["tCROd", "cro"],
     ["tUSDCd", "usdc"],
     ["tVNOd", "vno"],
-    ["tUSDTd", "usdt"]
+    ["tUSDTd", "usdt"],
+    ["tCDCETHd", "cdceth"]
 ])
 
 export const COLLATERAL_ADDRESSES: Map<string, string> = new Map([
@@ -101,7 +103,8 @@ export const COLLATERAL_ADDRESSES: Map<string, string> = new Map([
     ["fer", "0x39bc1e38c842c60775ce37566d03b41a7a66c782"],
     ["ful", "0x83afb1c32e5637acd0a452d87c3249f4a9f0013a"],
     ["bcro", "0xebaceb7f193955b946cc5dd8f8724a80671a1f2f"],
-    ["vno", "0xdb7d0a1ec37de1de924f8e8adac6ed338d4404e9"]
+    ["vno", "0xdb7d0a1ec37de1de924f8e8adac6ed338d4404e9"],
+    ["cdceth", "0x7a7c9db510ab29a2fc362a4c34260becb5ce3446"]
 ])
 
 export const COLLATERAL_DECIMAL: Map<string, number> = new Map([
@@ -123,7 +126,8 @@ export const COLLATERAL_DECIMAL: Map<string, number> = new Map([
     ["fer", 18],
     ["ful", 18],
     ["bcro", 18],
-    ["vno", 18]
+    ["vno", 18],
+    ["cdceth", 18]
 ])
 
 //lcro pool
@@ -136,5 +140,17 @@ export const LCRO_POOLS = [
     "0x56b6000f7aa338d77ba834f6f70a1774d0248517"
 ]
 
+
+//defi pool
+export const DEFI_POOLS = [
+    "0xf2A4C7595A64A18158D205148A975509d969cB8d",
+    "0x0bA8683fB1d8F66d9EBBE3634b67Da623188AC84",
+    "0xf4Ff4B8Ee660D4276EdA17e79094A7CC519e9606",
+    "0x2C5515bE5bb123b8088843e85789e3e294670caD",
+    "0x5F2E412392A317b8b80234B8a6941e0282161A25",
+    "0x6B0eF5f3E00D7aF1459879079d3Df76afbBAf865",
+    "0x47e5229d46A11A25FF5dCa210DF57d62345dEcf1",
+    "0x131B6F908395f4F43A5A9320B7F96e755df86f8C",
+]
 
 

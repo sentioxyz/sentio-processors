@@ -1,3 +1,0 @@
-export const CLMM_MAINNET = "0x91bfbc386a41afcfd9b2533058d7e915a1d3829089cc268ff4333d54d6339ca1"
-
-
