@@ -121,7 +121,7 @@ const BorrowEventHandler = async (event: any, ctx: TCROContext | LCROContext) =>
   const borrowAmount = Number(event.args.borrowAmount) / Math.pow(10, collateralDecimal)
   const accountBorrows = Number(event.args.accountBorrows)
   const collateralPrice = (await getPriceBySymbol(collateralSymbol, ctx.timestamp))!
-  const borrowAmountUSD = borrowAmount * collateralPrice
+  const borrowAmountUSD = borrowAmount * (collateralPrice ? collateralPrice : 0)
 
   ctx.eventLogger.emit("Borrow", {
     distinctId: borrower,
@@ -323,41 +323,41 @@ const OnTimeIntervalHandler = async (_: any, ctx: TCROContext | LCROContext) => 
 }
 
 
-// //main_pools
-// for (let i = 0; i < constant.MAIN_POOLS.length; i++) {
-//   let address = constant.MAIN_POOLS[i]
-//   TCROProcessor.bind({
-//     address: address,
-//     network: EthChainId.CRONOS,
-//     // startBlock: 570286
-//   })
-//     .onEventMint(MintEventHandler)
-//     .onEventBorrow(BorrowEventHandler)
-//     .onEventRepayBorrow(RepayBorrowEventHandler)
-//     .onEventRedeem(RedeemEventHandler)
-//     .onEventLiquidateBorrow(LiquidateBorrowHandler)
-//     .onEventReservesAdded(ReservesAddedHandler)
-//     .onEventAccrueInterest(AccrueInterestHandler)
-//     .onTimeInterval(OnTimeIntervalHandler, 60, 10)
-// }
+//main_pools
+for (let i = 0; i < constant.MAIN_POOLS.length; i++) {
+  let address = constant.MAIN_POOLS[i]
+  TCROProcessor.bind({
+    address: address,
+    network: EthChainId.CRONOS,
+    // startBlock: 570286
+  })
+    .onEventMint(MintEventHandler)
+    .onEventBorrow(BorrowEventHandler)
+    .onEventRepayBorrow(RepayBorrowEventHandler)
+    .onEventRedeem(RedeemEventHandler)
+    .onEventLiquidateBorrow(LiquidateBorrowHandler)
+    .onEventReservesAdded(ReservesAddedHandler)
+    .onEventAccrueInterest(AccrueInterestHandler)
+    .onTimeInterval(OnTimeIntervalHandler, 60, 10)
+}
 
-// //lcro_pools
-// for (let i = 0; i < constant.LCRO_POOLS.length; i++) {
-//   let address = constant.LCRO_POOLS[i]
-//   LCROProcessor.bind({
-//     address: address,
-//     network: EthChainId.CRONOS,
-//     // startBlock: 570286
-//   })
-//     .onEventMint(MintEventHandler)
-//     .onEventBorrow(BorrowEventHandler)
-//     .onEventRepayBorrow(RepayBorrowEventHandler)
-//     .onEventRedeem(RedeemEventHandler)
-//     .onEventLiquidateBorrow(LiquidateBorrowHandler)
-//     .onEventReservesAdded(ReservesAddedHandler)
-//     .onEventAccrueInterest(AccrueInterestHandler)
-//     .onTimeInterval(OnTimeIntervalHandler, 60, 10)
-// }
+//lcro_pools
+for (let i = 0; i < constant.LCRO_POOLS.length; i++) {
+  let address = constant.LCRO_POOLS[i]
+  LCROProcessor.bind({
+    address: address,
+    network: EthChainId.CRONOS,
+    // startBlock: 570286
+  })
+    .onEventMint(MintEventHandler)
+    .onEventBorrow(BorrowEventHandler)
+    .onEventRepayBorrow(RepayBorrowEventHandler)
+    .onEventRedeem(RedeemEventHandler)
+    .onEventLiquidateBorrow(LiquidateBorrowHandler)
+    .onEventReservesAdded(ReservesAddedHandler)
+    .onEventAccrueInterest(AccrueInterestHandler)
+    .onTimeInterval(OnTimeIntervalHandler, 60, 10)
+}
 
 //defi_pools
 for (let i = 0; i < constant.DEFI_POOLS.length; i++) {
@@ -367,76 +367,74 @@ for (let i = 0; i < constant.DEFI_POOLS.length; i++) {
     network: EthChainId.CRONOS,
     // startBlock: 12672954
   })
-    .onEventMint(
-        MintEventHandler
-    )
-    // .onEventBorrow(BorrowEventHandler)
-    // .onEventRepayBorrow(RepayBorrowEventHandler)
-    // .onEventRedeem(RedeemEventHandler)
-    // .onEventLiquidateBorrow(LiquidateBorrowHandler)
-    // .onEventReservesAdded(ReservesAddedHandler)
-    // .onEventAccrueInterest(AccrueInterestHandler)
-    // .onTimeInterval(OnTimeIntervalHandler, 60, 10)
+    .onEventMint(MintEventHandler)
+    .onEventBorrow(BorrowEventHandler)
+    .onEventRepayBorrow(RepayBorrowEventHandler)
+    .onEventRedeem(RedeemEventHandler)
+    .onEventLiquidateBorrow(LiquidateBorrowHandler)
+    .onEventReservesAdded(ReservesAddedHandler)
+    .onEventAccrueInterest(AccrueInterestHandler)
+    .onTimeInterval(OnTimeIntervalHandler, 60, 10)
 }
 
-// //Tonic
-// TectonicCoreProcessor.bind({
-//   address: constant.SOCKET_ADDRESS,
-//   network: EthChainId.CRONOS,
-//   // startBlock: 570286
-// })
-//   .onEventDistributedBorrowerTonic(async (event, ctx) => {
+//Tonic
+TectonicCoreProcessor.bind({
+  address: constant.SOCKET_ADDRESS,
+  network: EthChainId.CRONOS,
+  // startBlock: 570286
+})
+  .onEventDistributedBorrowerTonic(async (event, ctx) => {
 
 
-//     const hash = event.transactionHash
-//     try {
-//       const tToken = event.args.tToken.toLowerCase()
-//       const borrower = event.args.borrower
-//       const tonicDelta = Number(event.args.tonicDelta) / Math.pow(10, 18)
-//       const tonicBorrowIndex = "index" + event.args.tonicBorrowIndex
-//       const tSymbol = constant.TOKEN_SYMBOL.get(tToken)!
+    const hash = event.transactionHash
+    try {
+      const tToken = event.args.tToken.toLowerCase()
+      const borrower = event.args.borrower
+      const tonicDelta = Number(event.args.tonicDelta) / Math.pow(10, 18)
+      const tonicBorrowIndex = "index" + event.args.tonicBorrowIndex
+      const tSymbol = constant.TOKEN_SYMBOL.get(tToken)!
 
-//       ctx.eventLogger.emit("DistributedBorrowerTonic", {
-//         distinctId: borrower,
-//         tSymbol,
-//         tonicDelta,
-//         tonicBorrowIndex,
-//         coin_symbol: "tonic", project: "tectonic"
-//       })
+      ctx.eventLogger.emit("DistributedBorrowerTonic", {
+        distinctId: borrower,
+        tSymbol,
+        tonicDelta,
+        tonicBorrowIndex,
+        coin_symbol: "tonic", project: "tectonic"
+      })
 
-//       ctx.meter.Counter("tonic_counter").add(tonicDelta, { tSymbol, coin_symbol: "tonic", event: "DistributedBorrowerTonic", project: "tectonic" })
-//     } catch (error) {
-//       console.log(error.message, hash)
-//     }
-//   })
-//   .onEventDistributedSupplierTonic(async (event, ctx) => {
+      ctx.meter.Counter("tonic_counter").add(tonicDelta, { tSymbol, coin_symbol: "tonic", event: "DistributedBorrowerTonic", project: "tectonic" })
+    } catch (error) {
+      console.log(error.message, hash)
+    }
+  })
+  .onEventDistributedSupplierTonic(async (event, ctx) => {
 
 
-//     const hash = event.transactionHash
+    const hash = event.transactionHash
 
-//     try {
-//       const tToken = event.args.tToken.toLowerCase()
-//       const supplier = event.args.supplier
-//       let tonicDelta = 0
-//       tonicDelta = Number(event.args.tonicDelta) / Math.pow(10, 18)
-//       let tonicSupplyIndex = ""
-//       tonicSupplyIndex = "index" + event.args.tonicSupplyIndex
-//       const tSymbol = constant.TOKEN_SYMBOL.get(tToken)!
+    try {
+      const tToken = event.args.tToken.toLowerCase()
+      const supplier = event.args.supplier
+      let tonicDelta = 0
+      tonicDelta = Number(event.args.tonicDelta) / Math.pow(10, 18)
+      let tonicSupplyIndex = ""
+      tonicSupplyIndex = "index" + event.args.tonicSupplyIndex
+      const tSymbol = constant.TOKEN_SYMBOL.get(tToken)!
 
-//       ctx.eventLogger.emit("DistributedSupplierTonic", {
-//         distinctId: supplier,
-//         tSymbol,
-//         tonicDelta,
-//         tonicSupplyIndex,
-//         coin_symbol: "tonic", project: "tectonic"
-//       })
+      ctx.eventLogger.emit("DistributedSupplierTonic", {
+        distinctId: supplier,
+        tSymbol,
+        tonicDelta,
+        tonicSupplyIndex,
+        coin_symbol: "tonic", project: "tectonic"
+      })
 
-//       ctx.meter.Counter("tonic_counter").add(tonicDelta, { tSymbol, coin_symbol: "tonic", event: "DistributedSupplierTonic", project: "tectonic" })
+      ctx.meter.Counter("tonic_counter").add(tonicDelta, { tSymbol, coin_symbol: "tonic", event: "DistributedSupplierTonic", project: "tectonic" })
 
-//     } catch (error) {
-//       console.log(error.message, hash)
-//     }
-//   })
+    } catch (error) {
+      console.log(error.message, hash)
+    }
+  })
 
 
 
@@ -471,14 +469,14 @@ const TonicReleasedEventHandler = async (event: TonicReleasedEvent, ctx: Tectoni
 
 }
 
-// TectonicStakingPoolV3Processor.bind({
-//   address: constant.TONIC_STAKING_ADDRESS,
-//   network: EthChainId.CRONOS,
-//   // startBlock: 570286
-// })
-//   .onEventTonicStaked(TonicStakedHandler)
-//   .onEventTonicUnstaked(TonicUnstakedEventHandler)
-//   .onEventTonicReleased(TonicReleasedEventHandler)
+TectonicStakingPoolV3Processor.bind({
+  address: constant.TONIC_STAKING_ADDRESS,
+  network: EthChainId.CRONOS,
+  // startBlock: 570286
+})
+  .onEventTonicStaked(TonicStakedHandler)
+  .onEventTonicUnstaked(TonicUnstakedEventHandler)
+  .onEventTonicReleased(TonicReleasedEventHandler)
 
 
 //Tonic Vault
@@ -609,18 +607,18 @@ const ReplaceNftsBurnTokenHandler = async (event: ReplaceNftsBurnTokenEvent, ctx
   })
 }
 
-// TONICVaultProcessor.bind({
-//   address: constant.TONIC_VAULT_ADDRESS,
-//   network: EthChainId.CRONOS,
-//   // startBlock: 570286
-// })
-//   .onEventDeposit(DepositHandler)
-//   .onEventUpgrade(UpgradeHandler)
-//   .onEventWithdraw(VaultWithdrawHandler)
-//   .onEventStakeNft(StakeNftHandler)
-//   .onEventUnStakeNft(UnstakeNftHandler)
-//   .onEventReplaceNftsMintToken(ReplaceNftsMintTokenHandler)
-//   .onEventReplaceNftsBurnToken(ReplaceNftsBurnTokenHandler)
+TONICVaultProcessor.bind({
+  address: constant.TONIC_VAULT_ADDRESS,
+  network: EthChainId.CRONOS,
+  // startBlock: 570286
+})
+  .onEventDeposit(DepositHandler)
+  .onEventUpgrade(UpgradeHandler)
+  .onEventWithdraw(VaultWithdrawHandler)
+  .onEventStakeNft(StakeNftHandler)
+  .onEventUnStakeNft(UnstakeNftHandler)
+  .onEventReplaceNftsMintToken(ReplaceNftsMintTokenHandler)
+  .onEventReplaceNftsBurnToken(ReplaceNftsBurnTokenHandler)
 
 const SwapAndRepayEventHandler = async (event: SwapAndRepayEvent,
   ctx: DeferLiquidityCheckAdapterContext) => {
@@ -689,12 +687,12 @@ const FlashLoanAndLiquidateCallHandler = async (call: FlashLoanAndLiquidateCallT
   ctx.meter.Counter("liquidation_bot_amount").add(repayAmount, { coin_symbol: collateralSymbol })
 }
 
-// DeferLiquidityCheckAdapterProcessor.bind({
-//   address: constant.REPAY_WITH_COLLATERAL,
-//   network: EthChainId.CRONOS,
-//   // startBlock: 10524700
-// })
-//   .onEventSwapAndRepay(SwapAndRepayEventHandler)
-//   .onEventSwapAndDeposit(SwapAndDepositEventHandler)
-//   .onEventCreateLongNShortPosition(CreateLongNShortPositionEventHandler)
-//   .onCallFlashLoanAndLiquidate(FlashLoanAndLiquidateCallHandler)
+DeferLiquidityCheckAdapterProcessor.bind({
+  address: constant.REPAY_WITH_COLLATERAL,
+  network: EthChainId.CRONOS,
+  // startBlock: 10524700
+})
+  .onEventSwapAndRepay(SwapAndRepayEventHandler)
+  .onEventSwapAndDeposit(SwapAndDepositEventHandler)
+  .onEventCreateLongNShortPosition(CreateLongNShortPositionEventHandler)
+  .onCallFlashLoanAndLiquidate(FlashLoanAndLiquidateCallHandler)

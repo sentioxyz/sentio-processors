@@ -1,6 +1,7 @@
 import { TestProcessorServer } from '@sentio/sdk/testing'
 import { EthChainId } from '@sentio/sdk/eth'
-import { mockMintLog } from './types/eth/tcro.js'
+import { mockMintLog, mockBorrowLog } from './types/eth/tcro.js'
+
 
 describe('Test Processor', () => {
   const service = new TestProcessorServer(() => import('./processor.js'))
@@ -23,6 +24,25 @@ describe('Test Processor', () => {
           "0x47ef752f08676a1c8a72959d73da5281b37661e4",
         mintAmount: 1000000000000000000n,
         mintTokens: 1000000000n
+      }),
+      EthChainId.CRONOS
+    )
+
+    // const tokenCounter = firstCounterValue(resp.result, 'token')
+    // expect(tokenCounter).toEqual(10n)
+  })
+
+  test('check borrow event handling', async () => {
+    const resp = await service.eth.testLog(
+      mockBorrowLog('0x47e5229d46a11a25ff5dca210df57d62345decf1', {
+        borrower:
+          "0x47ef752f08676a1c8a72959d73da5281b37661e4",
+        borrowAmount:
+          1963925048784506231206523n,
+        accountBorrows:
+          1963925048784506231206523n,
+        totalBorrows:
+          2036233812352929595455696n
       }),
       EthChainId.CRONOS
     )
