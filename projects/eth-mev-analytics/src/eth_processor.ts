@@ -561,6 +561,10 @@ export function Bind(chainConfig: ChainConstants, startBlock: number) {
           );
           continue;
         }
+        let tokens = "";
+        for (const token of txn.usedTokens) {
+          tokens += token + ",";
+        }
         ctx.eventLogger.emit("sandwich", {
           distinctId: txn.mevContract,
           mevContract: txn.mevContract,
@@ -573,6 +577,7 @@ export function Bind(chainConfig: ChainConstants, startBlock: number) {
           profit: BigDecimal(revenue.minus(cost).toFixed(2)),
           paidBuilder: txn.minerPayment,
           profitTokens: profitTokens,
+          usedTokens: tokens,
         });
       }
       for (const [gas, perGas] of mevResults.spamInfo) {
