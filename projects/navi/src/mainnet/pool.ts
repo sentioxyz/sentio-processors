@@ -11,7 +11,7 @@ const pools = [
     "0x3c376f857ec4247b8ee456c1db19e9c74e0154d4876915e54221b5052d5b1e2e",  //Treasury Pool For CETUS
     "0x9790c2c272e15b6bf9b341eb531ef16bcc8ed2b20dfda25d060bf47f5dd88d01",  // Treasury Pool For VoloSui
     "0x6fd9cb6ebd76bc80340a9443d72ea0ae282ee20e2fd7544f6ffcd2c070d9557a", //Treasury Pool For haSui
-
+    "0xc0e02e7a245e855dd365422faf76f87d9f5b2148a26d48dda6e8253c3fe9fa60"  // Treasury Pool For NAVX
 ]
 
 export function PoolProcessor() {
@@ -25,8 +25,11 @@ export function PoolProcessor() {
             const coin_type = SymbolMatcher(type);
             const coin_symbol = COIN_MAP[coin_type];
 
+            //@ts-ignore
             const decimal = self.fields.decimal;
+            //@ts-ignore
             const balance = BigDecimal(self.fields.balance).div(Math.pow(10, decimal));
+            //@ts-ignore
             const treasuryBalance = BigDecimal(self.fields.treasury_balance).div(Math.pow(10, decimal));
 
             //TODO

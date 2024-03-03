@@ -22,10 +22,15 @@ export function PoolProcessor() {
             const coin_type = SymbolMatcher(type);
             const coin_symbol = COIN_MAP[coin_type];
 
+            //@ts-ignore
             const decimal = self.fields.decimal;
+            //@ts-ignore
             const distributedAmountForRewardPool = BigDecimal(self.fields.distributed_amount).div(Math.pow(10, decimal));
+            //@ts-ignore
             const balanceForRewardPool = BigDecimal(self.fields.balance).div(Math.pow(10, decimal));
+            //@ts-ignore
             const assetForRewardPool = self.fields.asset;
+            //@ts-ignore
             const currentIdxForRewardPool = self.fields.current_idx;
 
 
