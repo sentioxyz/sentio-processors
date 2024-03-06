@@ -12,7 +12,9 @@ import { ClaimRewardsCallTrace, FeeDistributorContext, FeeDistributorProcessor }
 import { ethers } from 'ethers'
 import { ERC20Context, getERC20ContractOnContext } from '@sentio/sdk/eth/builtin/erc20'
 import { getOrCreateERC721 } from './helper/nft-helper.js'
+
 import './croLiquidityStrategy.js'
+import './liquidEth.js'
 
 
 const DepositEventHandler = async (event: any, ctx: any) => {
