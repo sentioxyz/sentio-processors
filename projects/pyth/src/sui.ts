@@ -29,7 +29,7 @@ const price_update_occur = Gauge.register("price_update_occur", commonOptions)
 
 const price_update_counter = Counter.register("price_update_counter", {
   resolutionConfig: {
-    intervalInMinutes: 1,
+    intervalInMinutes: 5,
   }
 })
 
