@@ -67,7 +67,9 @@ const CHAIN_NATIVE_MAP = new Map<EthChainId, string>([
   [EthChainId.CONFLUX, "Crypto.CFX/USD"], // Conflux
   [EthChainId.MANTLE, "Crypto.MNT/USD"], // mantle
   [EthChainId.LINEA, "Crypto.ETH/USD"], // linea
-  [EthChainId.BASE, "Crypto.ETH/USD"], // linea
+  [EthChainId.BASE, "Crypto.ETH/USD"], // base
+  [EthChainId.BLAST, "Crypto.ETH/USD"], // blast
+  [EthChainId.MODE, "Crypto.ETH/USD"], // mode
 
 ]);
 
