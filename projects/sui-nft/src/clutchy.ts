@@ -27,7 +27,7 @@ orderbook.bind({
       const nft_type = event.data_decoded.nft_type
       const ft_type = event.data_decoded.ft_type
       const collectionName = getCollectionName(nft_type)
-      const nftName = await getNftName(ctx, nft)
+      const [nftName, _] = await getNftName(ctx, nft)
 
       ctx.meter.Gauge("order_filled_gauge").record(price, { coin_symbol: "SUI" })
       ctx.meter.Counter("order_filled_counter").add(price, { coin_symbol: "SUI" })
@@ -118,24 +118,26 @@ listing.bind({
     .onEventNftSoldEvent(async (event, ctx) => {
       ctx.meter.Counter("nft_sold_counter").add(1, { project: "clutchy" })
       const nft = event.data_decoded.nft
-      const price = Number(event.data_decoded.price) / Math.pow(10, 9)
+      const price = event.data_decoded.price.scaleDown(9)
       const ft_type = event.data_decoded.ft_type
       const nft_type = event.data_decoded.nft_type
       const buyer = event.data_decoded.buyer
       const collectionName = getCollectionName(nft_type)
-      const nftName = await getNftName(ctx, nft)
+      const [nftName, _] = await getNftName(ctx, nft)
 
       // TODO what is ft_type
       // TODO what is seler
       const trade: Trade = {
         project: "clutchy",
-        collection_name: nftName,
+        collection_name: collectionName,
+        nft_name: nftName,
         collection_id: "", // TODO,
         object_id: "", // TODO
         nft_type,
         buyer,
+        seller:"", // TODO
         amount: 1n,
-        price: event.data_decoded.price
+        price
       }
 
       ctx.eventLogger.emit("Trade", { ...trade, ft_type })

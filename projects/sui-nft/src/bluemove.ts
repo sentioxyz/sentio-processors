@@ -3,6 +3,7 @@ import { bluemove_launchpad } from "./types/sui/bluemove_launchpad.js";
 import { SuiNetwork } from "@sentio/sdk/sui";
 import { getCollectionName, getNftName } from "./helper/nft-helper.js";
 import { Mint, MintType, Trade } from "./model.js";
+import { BigDecimal } from "@sentio/sdk";
 
 export const BLUEMOVE_MARKETPLACE = "0xd5dd28cc24009752905689b2ba2bf90bfc8de4549b9123f93519bb8ba9bf9981"
 export const BLUEMOVE_LAUNCHPAD = "0x305fdc899f4d5d13a1e03ea784eed9bc5bdcb3e3550a32466ff34518aa4627a3"
@@ -39,20 +40,22 @@ marketplace.bind({
       const buyer = event.data_decoded.buyer
       const nft_type = event.data_decoded.nft_type
       const collectionName = getCollectionName(nft_type)
-      const nftName = await getNftName(ctx, item_id)
+      const [nftName, _] = await getNftName(ctx, item_id)
 
 
       // TODO what is ft_type
       // TODO what is seler
       const trade: Trade = {
         project: "bluemove",
-        collection_name: nftName,
+        collection_name: collectionName,
+        nft_name: nftName,
         collection_id: "", // TODO
         object_id: item_id,
         nft_type,
         buyer,
+        seller: "", // TODO
         amount: event.data_decoded.amount,
-        price: 0n
+        price: BigDecimal(0)
       }
 
       ctx.eventLogger.emit("Trade", { ...trade })

@@ -7,14 +7,18 @@ export function getCollectionName(type: string) {
     return collectionName
 }
 
-
 export async function getNftName(ctx: SuiContext, nft: string) {
-    let NFTName = "unknown"
+    let NFTName = ""
+    let type = ""
     try {
-        const obj = await ctx.client.getObject({ id: nft, options: { showContent: true } })
+        const obj = await ctx.client.getObject({ id: nft, options: {
+                showType: true,
+                showContent: true
+        } })
         // @ts-ignore
         NFTName = obj.data?.content?.fields.name
+        type = obj.data?.type || ""
     }
     catch (e) { console.log(`${e.message}, getNftName error at ${ctx.transaction.digest}`) }
-    return NFTName
+    return [NFTName, type]
 }

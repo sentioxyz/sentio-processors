@@ -1,3 +1,4 @@
+import { BigDecimal } from "@sentio/sdk";
 
 export enum MintType {
   MINT = 'mint',
@@ -23,13 +24,15 @@ export interface Trade {
   project: string
   collection_name: string
   collection_id: string
+  nft_name: string
   object_id: string
 
   nft_type: string
 
   buyer: string
+  seller: string
 
   amount: bigint
-  price: bigint
+  price: BigDecimal
 
 }
