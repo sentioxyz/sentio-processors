@@ -32,12 +32,14 @@ marketplace.bind({
       const item_id = event.data_decoded.item_id
       const amount = event.data_decoded.amount.scaleDown(9)
       const buyer = event.data_decoded.buyer
-      const nft_type = event.data_decoded.nft_type
+      const nft_type = "0x" + event.data_decoded.nft_type
       const collectionName = getCollectionName(nft_type)
       const [nftName, _] = await getNftName(ctx, item_id)
 
       const seller = await getSeller(item_id)
-
+      if (!seller) {
+        console.warn("bluemove can't find seller", seller)
+      }
       // TODO what is ft_type
       // TODO what is seler
       const trade: Trade = {

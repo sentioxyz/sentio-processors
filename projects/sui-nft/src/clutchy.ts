@@ -112,18 +112,18 @@ listing.bind({
     //   })
     // })
     .onEventNftSoldEvent(async (event, ctx) => {
-      ctx.meter.Counter("nft_sold_counter").add(1, { project: "clutchy" })
+      // ctx.meter.Counter("nft_sold_counter").add(1, { project: "clutchy" })
       const nft_id = event.data_decoded.nft
       const price = event.data_decoded.price.scaleDown(9)
       const ft_type = event.data_decoded.ft_type
-      const nft_type = event.data_decoded.nft_type
+      const nft_type = "0x" + event.data_decoded.nft_type
       const buyer = event.data_decoded.buyer
       const collectionName = getCollectionName(nft_type)
       const [nftName, _] = await getNftName(ctx, nft_id)
 
       const seller = await getSeller(nft_id)
       if (!seller) {
-        console.warn("can't find seller", nft_id)
+        console.warn("clutch can't find seller", nft_id)
       }
 
       // TODO what is seler

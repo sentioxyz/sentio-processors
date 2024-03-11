@@ -16,5 +16,8 @@ export function setSeller(id: string, seller: string) {
 
 export async function getSeller(id: string) {
   const listing = await db.asyncFindOne<NFTListing>({ _id: id });
+  if (listing === null || listing === undefined) {
+    return "";
+  }
   return listing.seller
 }
