@@ -10,7 +10,7 @@ hyperspace.bind()
   })
   .onEventItemPurchased(async (event, ctx) => {
 
-    const [nftName, nft_type] = await getNftName(ctx, event.data_decoded.id)
+    const [nft_name, nft_type, nft_link] = await getNftName(ctx, event.data_decoded.id)
     const collectionName = getCollectionName(nft_type)
     const seller = await getSeller(event.data_decoded.id)
 
@@ -18,8 +18,9 @@ hyperspace.bind()
       project: "hyperspace",
       object_id: event.data_decoded.id,
       collection_name: collectionName,
-      nft_name: nftName,
-      nft_type: nft_type,
+      nft_name,
+      nft_type,
+      nft_link,
       buyer: ctx.transaction.transaction?.data.sender || "",
       seller,
       amount: BigDecimal(1),

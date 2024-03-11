@@ -26,6 +26,7 @@ export interface Trade {
   collection_id?: string
   nft_name: string
   object_id: string
+  nft_link: string
 
   nft_type: string
 

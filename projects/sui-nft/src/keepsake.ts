@@ -12,7 +12,7 @@ keepsake_marketplace.bind()
       if (!event.data_decoded.sold) {
         return // not sold
       }
-      const [nftName, nft_type] = await getNftName(ctx, event.data_decoded.item_id)
+      const [nft_name, nft_type, nft_link] = await getNftName(ctx, event.data_decoded.item_id)
       const collectionName = getCollectionName(nft_type)
 
       const seller = await getSeller(event.data_decoded.item_id)
@@ -21,8 +21,9 @@ keepsake_marketplace.bind()
         project: "keepsake",
         object_id: event.data_decoded.item_id,
         collection_name: collectionName,
-        nft_name: nftName,
-        nft_type: nft_type,
+        nft_name,
+        nft_type,
+        nft_link,
         buyer: ctx.transaction.transaction?.data.sender || "",
         seller,
         amount: BigDecimal(1),

@@ -29,7 +29,7 @@ orderbook.bind({
       const nft_type = event.data_decoded.nft_type
       const ft_type = event.data_decoded.ft_type
       const collectionName = getCollectionName(nft_type)
-      const [nftName, _] = await getNftName(ctx, nft)
+      const [nftName, _, nft_link] = await getNftName(ctx, nft)
 
       ctx.meter.Gauge("order_filled_gauge").record(price, { coin_symbol: "SUI" })
       ctx.meter.Counter("order_filled_counter").add(price, { coin_symbol: "SUI" })
@@ -119,7 +119,7 @@ listing.bind({
       const nft_type = "0x" + event.data_decoded.nft_type
       const buyer = event.data_decoded.buyer
       const collectionName = getCollectionName(nft_type)
-      const [nftName, _] = await getNftName(ctx, nft_id)
+      const [nftName, _, nft_link] = await getNftName(ctx, nft_id)
 
       const seller = await getSeller(nft_id)
       if (!seller) {
@@ -132,6 +132,7 @@ listing.bind({
         collection_name: collectionName,
         nft_name: nftName,
         object_id: nft_id,
+        nft_link,
         nft_type,
         buyer,
         seller,

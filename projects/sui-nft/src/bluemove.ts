@@ -34,7 +34,7 @@ marketplace.bind({
       const buyer = event.data_decoded.buyer
       const nft_type = "0x" + event.data_decoded.nft_type
       const collectionName = getCollectionName(nft_type)
-      const [nftName, _] = await getNftName(ctx, item_id)
+      const [nftName, _, nft_link] = await getNftName(ctx, item_id)
 
       const seller = await getSeller(item_id)
       if (!seller) {
@@ -49,6 +49,7 @@ marketplace.bind({
         collection_id: "",
         object_id: item_id,
         nft_type,
+        nft_link,
         buyer,
         seller,
         amount: amount,
