@@ -2,8 +2,9 @@ import { SuiNetwork } from "@sentio/sdk/sui";
 import { orderbook } from "./types/sui/clutchy.js";
 import { mint_event } from "./types/sui/mint.js";
 import { listing } from "./types/sui/list.js";
-import { getCollectionName, getNftName } from "./helper/nft-helper.js";
+import { getCollectionName, getNftName } from "./nft-helper.js";
 import { Mint, MintType, Trade } from "./model.js";
+import { BigDecimal } from "@sentio/sdk";
 export const CLUTCHY_ORDER = "0x4e0629fa51a62b0c1d7c7b9fc89237ec5b6f630d7798ad3f06d820afb93a995a"
 export const CLUTCHY_MINT = "0xbc3df36be17f27ac98e3c839b2589db8475fa07b20657b08e8891e3aaf5ee5f9"
 export const CLUTCHY_LIST = "0xc74531639fadfb02d30f05f37de4cf1e1149ed8d23658edd089004830068180b"
@@ -97,24 +98,24 @@ listing.bind({
       network: SuiNetwork.MAIN_NET,
       startCheckpoint: 1500000n // TODO check startCheckpoint
     })
-    .onEventCreateListingEvent(async (event, ctx) => {
-      ctx.meter.Counter("create_listing_counter").add(1, { project: "clutchy" })
-      const listing_id = event.data_decoded.listing_id
-      ctx.eventLogger.emit("List", {
-        distinctId: ctx.transaction.transaction?.data.sender,
-        listing_id,
-        project: "clutchy"
-      })
-    })
-    .onEventDeleteListingEvent(async (event, ctx) => {
-      ctx.meter.Counter("delete_listing_counter").add(1, { project: "clutchy" })
-      const listing_id = event.data_decoded.listing_id
-      ctx.eventLogger.emit("Delist", {
-        distinctId: ctx.transaction.transaction?.data.sender,
-        listing_id,
-        project: "clutchy"
-      })
-    })
+    // .onEventCreateListingEvent(async (event, ctx) => {
+    //   ctx.meter.Counter("create_listing_counter").add(1, { project: "clutchy" })
+    //   const listing_id = event.data_decoded.listing_id
+    //   ctx.eventLogger.emit("List", {
+    //     distinctId: ctx.transaction.transaction?.data.sender,
+    //     listing_id,
+    //     project: "clutchy"
+    //   })
+    // })
+    // .onEventDeleteListingEvent(async (event, ctx) => {
+    //   ctx.meter.Counter("delete_listing_counter").add(1, { project: "clutchy" })
+    //   const listing_id = event.data_decoded.listing_id
+    //   ctx.eventLogger.emit("Delist", {
+    //     distinctId: ctx.transaction.transaction?.data.sender,
+    //     listing_id,
+    //     project: "clutchy"
+    //   })
+    // })
     .onEventNftSoldEvent(async (event, ctx) => {
       ctx.meter.Counter("nft_sold_counter").add(1, { project: "clutchy" })
       const nft = event.data_decoded.nft
@@ -136,7 +137,7 @@ listing.bind({
         nft_type,
         buyer,
         seller:"", // TODO
-        amount: 1n,
+        amount: BigDecimal(1),
         price
       }
 

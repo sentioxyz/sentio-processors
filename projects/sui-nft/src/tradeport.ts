@@ -1,7 +1,8 @@
 
 import { kiosk_listings } from './types/sui/tradeport.js'
 import { Trade } from "./model.js";
-import { getCollectionName, getNftName } from "./helper/nft-helper.js";
+import { getCollectionName, getNftName } from "./nft-helper.js";
+import { BigDecimal } from "@sentio/sdk";
 
 kiosk_listings.bind()
     .onEventBuyEvent(async (event, ctx) => {
@@ -17,7 +18,7 @@ kiosk_listings.bind()
         nft_type: nft_type,
         buyer: event.data_decoded.buyer,
         seller: event.data_decoded.seller,
-        amount: 1n,
+        amount: BigDecimal(1),
         price: event.data_decoded.price.scaleDown(9)
       }
 

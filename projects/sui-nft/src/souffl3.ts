@@ -1,23 +1,22 @@
-import { hyperspace } from './types/sui/hyperspace.js'
-import { Trade } from "./model.js";
+import { Market } from './types/sui/souffl3.js'
 import { getCollectionName, getNftName } from "./nft-helper.js";
+import { Trade } from "./model.js";
 import { BigDecimal } from "@sentio/sdk";
 
-hyperspace.bind()
-  .onEventItemPurchased(async (event, ctx) => {
-
-    const [nftName, nft_type] = await getNftName(ctx, event.data_decoded.id)
+Market.bind()
+  .onEventBuyEvent(async (event, ctx) => {
+    const [nftName, nft_type] = await getNftName(ctx, event.data_decoded.nft_id)
     const collectionName = getCollectionName(nft_type)
 
     const trade: Trade = {
-      project: "hyperspace",
-      object_id: event.data_decoded.id,
+      project: "souffl3",
+      object_id: event.data_decoded.nft_id,
       collection_name: collectionName,
       nft_name: nftName,
       collection_id: "",
       nft_type: nft_type,
-      buyer: "",
-      seller: "",
+      buyer: event.data_decoded.buyer,
+      seller: event.data_decoded.seller,
       amount: BigDecimal(1),
       price: event.data_decoded.price.scaleDown(9)
     }

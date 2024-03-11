@@ -1,7 +1,7 @@
 import { marketplace } from "./types/sui/bluemove.js";
 import { bluemove_launchpad } from "./types/sui/bluemove_launchpad.js";
 import { SuiNetwork } from "@sentio/sdk/sui";
-import { getCollectionName, getNftName } from "./helper/nft-helper.js";
+import { getCollectionName, getNftName } from "./nft-helper.js";
 import { Mint, MintType, Trade } from "./model.js";
 import { BigDecimal } from "@sentio/sdk";
 
@@ -13,30 +13,30 @@ marketplace.bind({
       network: SuiNetwork.MAIN_NET,
       startCheckpoint: 1500000n
     })
-    .onEventListingEvent(async (event, ctx) => {
-      ctx.meter.Counter("listing_counter").add(1, { project: "bluemove" })
-      ctx.eventLogger.emit("List", {
-        distinctId: event.data_decoded.seller,
-        amount: Number(event.data_decoded.amount) / Math.pow(10, 9),
-        item_id: event.data_decoded.item_id,
-        nft_type: event.data_decoded.nft_type,
-        project: "bluemove"
-      })
-
-    })
-    .onEventDeListEvent(async (event, ctx) => {
-      ctx.meter.Counter("delist_counter").add(1, { project: "bluemove" })
-      ctx.eventLogger.emit("Delist", {
-        distinctId: event.data_decoded.seller,
-        item_id: event.data_decoded.item_id,
-        nft_type: event.data_decoded.nft_type,
-        project: "bluemove"
-      })
-    })
+    // .onEventListingEvent(async (event, ctx) => {
+    //   ctx.meter.Counter("listing_counter").add(1, { project: "bluemove" })
+    //   ctx.eventLogger.emit("List", {
+    //     distinctId: event.data_decoded.seller,
+    //     amount: Number(event.data_decoded.amount) / Math.pow(10, 9),
+    //     item_id: event.data_decoded.item_id,
+    //     nft_type: event.data_decoded.nft_type,
+    //     project: "bluemove"
+    //   })
+    //
+    // })
+    // .onEventDeListEvent(async (event, ctx) => {
+    //   ctx.meter.Counter("delist_counter").add(1, { project: "bluemove" })
+    //   ctx.eventLogger.emit("Delist", {
+    //     distinctId: event.data_decoded.seller,
+    //     item_id: event.data_decoded.item_id,
+    //     nft_type: event.data_decoded.nft_type,
+    //     project: "bluemove"
+    //   })
+    // })
     .onEventBuyEvent(async (event, ctx) => {
       ctx.meter.Counter("buy_counter").add(1, { project: "bluemove" })
       const item_id = event.data_decoded.item_id
-      const amount = Number(event.data_decoded.amount) / Math.pow(10, 9)
+      const amount = event.data_decoded.amount.scaleDown(9)
       const buyer = event.data_decoded.buyer
       const nft_type = event.data_decoded.nft_type
       const collectionName = getCollectionName(nft_type)
@@ -54,7 +54,7 @@ marketplace.bind({
         nft_type,
         buyer,
         seller: "", // TODO
-        amount: event.data_decoded.amount,
+        amount: amount,
         price: BigDecimal(0)
       }
 
