@@ -14,11 +14,11 @@ export interface Mint {
   object_id: string
 }
 
-export enum TradeType {
-  BUY = 'buy',
-  LIST = 'list',
-  DELIST = 'delist'
-}
+// export enum TradeType {
+//   BUY = 'buy',
+//   LIST = 'list',
+//   DELIST = 'delist'
+// }
 
 export interface Trade {
   project: string

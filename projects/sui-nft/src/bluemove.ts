@@ -4,26 +4,20 @@ import { SuiNetwork } from "@sentio/sdk/sui";
 import { getCollectionName, getNftName } from "./nft-helper.js";
 import { Mint, MintType, Trade } from "./model.js";
 import { BigDecimal } from "@sentio/sdk";
+import { getSeller, setSeller } from "./localdb.js";
 
-export const BLUEMOVE_MARKETPLACE = "0xd5dd28cc24009752905689b2ba2bf90bfc8de4549b9123f93519bb8ba9bf9981"
-export const BLUEMOVE_LAUNCHPAD = "0x305fdc899f4d5d13a1e03ea784eed9bc5bdcb3e3550a32466ff34518aa4627a3"
+// export const BLUEMOVE_MARKETPLACE = "0xd5dd28cc24009752905689b2ba2bf90bfc8de4549b9123f93519bb8ba9bf9981"
+// export const BLUEMOVE_LAUNCHPAD = "0x305fdc899f4d5d13a1e03ea784eed9bc5bdcb3e3550a32466ff34518aa4627a3"
+
 
 marketplace.bind({
-      address: BLUEMOVE_MARKETPLACE,
-      network: SuiNetwork.MAIN_NET,
+      // address: BLUEMOVE_MARKETPLACE,
+      // network: SuiNetwork.MAIN_NET,
       startCheckpoint: 1500000n
     })
-    // .onEventListingEvent(async (event, ctx) => {
-    //   ctx.meter.Counter("listing_counter").add(1, { project: "bluemove" })
-    //   ctx.eventLogger.emit("List", {
-    //     distinctId: event.data_decoded.seller,
-    //     amount: Number(event.data_decoded.amount) / Math.pow(10, 9),
-    //     item_id: event.data_decoded.item_id,
-    //     nft_type: event.data_decoded.nft_type,
-    //     project: "bluemove"
-    //   })
-    //
-    // })
+    .onEventListingEvent(async (event, ctx) => {
+      await setSeller(event.data_decoded.item_id, event.data_decoded.seller)
+    })
     // .onEventDeListEvent(async (event, ctx) => {
     //   ctx.meter.Counter("delist_counter").add(1, { project: "bluemove" })
     //   ctx.eventLogger.emit("Delist", {
@@ -42,6 +36,7 @@ marketplace.bind({
       const collectionName = getCollectionName(nft_type)
       const [nftName, _] = await getNftName(ctx, item_id)
 
+      const seller = await getSeller(item_id)
 
       // TODO what is ft_type
       // TODO what is seler
@@ -49,11 +44,11 @@ marketplace.bind({
         project: "bluemove",
         collection_name: collectionName,
         nft_name: nftName,
-        collection_id: "", // TODO
+        collection_id: "",
         object_id: item_id,
         nft_type,
         buyer,
-        seller: "", // TODO
+        seller,
         amount: amount,
         price: BigDecimal(0)
       }
@@ -79,8 +74,8 @@ marketplace.bind({
 
 
 bluemove_launchpad.bind({
-      address: BLUEMOVE_LAUNCHPAD,
-      network: SuiNetwork.MAIN_NET,
+      // address: BLUEMOVE_LAUNCHPAD,
+      // network: SuiNetwork.MAIN_NET,
       startCheckpoint: 1500000n
     })
     .onEventMintNFTEvent(async (event, ctx) => {
@@ -108,7 +103,7 @@ bluemove_launchpad.bind({
         sender: event.data_decoded.sender,
         project: "bluemove",
         collection_name: nft_name,
-        collection_id: "", // TODO
+        collection_id: "",
         object_id,
       }
 
