@@ -23,7 +23,7 @@ export enum TradeType {
 export interface Trade {
   project: string
   collection_name: string
-  collection_id: string
+  collection_id?: string
   nft_name: string
   object_id: string
 

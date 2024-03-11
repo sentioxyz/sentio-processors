@@ -94,8 +94,8 @@ mint_event.bind({
 
 
 listing.bind({
-      address: CLUTCHY_LIST,
-      network: SuiNetwork.MAIN_NET,
+      // address: CLUTCHY_LIST,
+      // network: SuiNetwork.MAIN_NET,
       startCheckpoint: 1500000n // TODO check startCheckpoint
     })
     // .onEventCreateListingEvent(async (event, ctx) => {
@@ -126,19 +126,21 @@ listing.bind({
       const collectionName = getCollectionName(nft_type)
       const [nftName, _] = await getNftName(ctx, nft)
 
-      // TODO what is ft_type
       // TODO what is seler
       const trade: Trade = {
         project: "clutchy",
         collection_name: collectionName,
         nft_name: nftName,
-        collection_id: "", // TODO,
-        object_id: "", // TODO
+        object_id: nft,
         nft_type,
         buyer,
         seller:"", // TODO
         amount: BigDecimal(1),
         price
+      }
+
+      if (!ft_type.endsWith("2::sui::SUI")) {
+        console.error("DETECT NON sui SELL", ft_type, nft)
       }
 
       ctx.eventLogger.emit("Trade", { ...trade, ft_type })

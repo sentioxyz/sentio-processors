@@ -14,7 +14,6 @@ hyperspace.bind()
       object_id: event.data_decoded.id,
       collection_name: collectionName,
       nft_name: nftName,
-      collection_id: "",
       nft_type: nft_type,
       buyer: "",
       seller: "",

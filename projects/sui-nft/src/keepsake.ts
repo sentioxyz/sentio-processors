@@ -16,7 +16,6 @@ keepsake_marketplace.bind()
         object_id: event.data_decoded.item_id,
         collection_name: collectionName,
         nft_name: nftName,
-        collection_id: "",
         nft_type: nft_type,
         buyer: "", // TODO
         seller: "", // TODO
