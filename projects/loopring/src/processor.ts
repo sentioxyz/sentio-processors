@@ -28,12 +28,12 @@ import { deposit, withdraw } from "./metrics.js";
 import { BigDecimal } from "@sentio/sdk";
 // import {INFO} from "@sentio/loopring-protocols/src/logs";
 
-GenericProcessor.bind(EVENT1, {address: LOOPRING_WALLET_MODULE}).onAllEvents(walletCounter)
-GenericProcessor.bind(EVENT, {address: LOOPRING_WALLET_FACTORY1}).onAllEvents(walletCounter)
-GenericProcessor.bind(EVENT, {address: LOOPRING_WALLET_FACTORY2}).onAllEvents(walletCounter)
-GenericProcessor.bind(EVENT, {address: LOOPRING_WALLET_FACTORY3}).onAllEvents(walletCounter)
-GenericProcessor.bind(EVENT, {address: LOOPRING_WALLET_FACTORY4}).onAllEvents(walletCounter)
-GenericProcessor.bind(EVENT2, {address: LOOPRING_WALLET_FACTORY5}).onAllEvents(walletCounter)
+GenericProcessor.bind(EVENT1, {address: LOOPRING_WALLET_MODULE}).onEvent(walletCounter)
+GenericProcessor.bind(EVENT, {address: LOOPRING_WALLET_FACTORY1}).onEvent(walletCounter)
+GenericProcessor.bind(EVENT, {address: LOOPRING_WALLET_FACTORY2}).onEvent(walletCounter)
+GenericProcessor.bind(EVENT, {address: LOOPRING_WALLET_FACTORY3}).onEvent(walletCounter)
+GenericProcessor.bind(EVENT, {address: LOOPRING_WALLET_FACTORY4}).onEvent(walletCounter)
+GenericProcessor.bind(EVENT2, {address: LOOPRING_WALLET_FACTORY5}).onEvent(walletCounter)
 
 async function getTokenDetails(ctx: ExchangeV3Context, address: string): Promise<[token.TokenInfo, bigint]> {
   const tokenInfo = await getTokenInfo(address)
@@ -47,7 +47,7 @@ async function getTokenDetails(ctx: ExchangeV3Context, address: string): Promise
     }
   } else {
     try {
-      amount = await getERC20Contract(ctx, address).balanceOf("0x674bdf20a0f284d710bc40872100128e2d66bd3f",
+      amount = await getERC20Contract(ctx.chainId, address).balanceOf("0x674bdf20a0f284d710bc40872100128e2d66bd3f",
           {blockTag: Number(ctx.blockNumber)})
     } catch (e) {
       console.log("error", e)
@@ -106,7 +106,7 @@ ExchangeV3Processor.bind({address: LOOPRING_EXCHANGE})
 
 
 async function walletCounter(event: any, ctx: ContractContext<BaseContract, BoundContractView<BaseContract, ContractView<BaseContract>>>) {
-  ctx.meter.Counter("wallet_count").add(1)
+  ctx.meter.Counter("wallet_counter").add(1)
 }
 
 async function depositGauge(event: DepositRequestedEvent, ctx: ExchangeV3Context) {
