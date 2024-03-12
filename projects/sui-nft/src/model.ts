@@ -33,7 +33,7 @@ export interface Trade {
   buyer: string
   seller: string
 
-  amount: BigDecimal
+  // amount: BigDecimal
   price: BigDecimal
 
 }

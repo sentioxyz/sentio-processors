@@ -10,11 +10,7 @@ import { getSeller, setSeller } from "./localdb.js";
 // export const BLUEMOVE_LAUNCHPAD = "0x305fdc899f4d5d13a1e03ea784eed9bc5bdcb3e3550a32466ff34518aa4627a3"
 
 
-marketplace.bind({
-      // address: BLUEMOVE_MARKETPLACE,
-      // network: SuiNetwork.MAIN_NET,
-      startCheckpoint: 1500000n
-    })
+marketplace.bind()
     .onEventListingEvent(async (event, ctx) => {
       await setSeller(event.data_decoded.item_id, event.data_decoded.seller)
     })
@@ -52,8 +48,7 @@ marketplace.bind({
         nft_link,
         buyer,
         seller,
-        amount: amount,
-        price: BigDecimal(0)
+        price: amount
       }
 
       ctx.eventLogger.emit("Trade", { ...trade })

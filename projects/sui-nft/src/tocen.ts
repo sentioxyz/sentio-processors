@@ -17,7 +17,6 @@ tocen_marketplace.bind()
       nft_link,
       buyer: event.data_decoded.sender,
       seller: event.data_decoded.receiver,
-      amount: BigDecimal(1),
       price: event.data_decoded.paid.scaleDown(9) // TODO double check this
     }
 

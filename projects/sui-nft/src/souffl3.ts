@@ -17,7 +17,6 @@ Market.bind()
       nft_link,
       buyer: event.data_decoded.buyer,
       seller: event.data_decoded.seller,
-      amount: BigDecimal(1),
       price: event.data_decoded.price.scaleDown(9)
     }
 

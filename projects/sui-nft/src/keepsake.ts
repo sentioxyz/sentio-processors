@@ -26,7 +26,6 @@ keepsake_marketplace.bind()
         nft_link,
         buyer: ctx.transaction.transaction?.data.sender || "",
         seller,
-        amount: BigDecimal(1),
         price: event.data_decoded.sale_price.scaleDown(9)
       }
 
