@@ -68,7 +68,7 @@ const tvl = async function (_: any, ctx: ExchangeV3Context) {
     }
     ctx.meter.Gauge("tvl").record(scaledAmount.multipliedBy(price),
         {token: tokenInfo.symbol, address: TOKEN_ARRAY[i]})
-    ctx.meter.Counter("tvl_count").add(1)
+    ctx.meter.Counter("tvl_counter").add(1)
   }
 }
 
