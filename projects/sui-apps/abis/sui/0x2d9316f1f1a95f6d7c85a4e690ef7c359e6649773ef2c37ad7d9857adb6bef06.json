@@ -1,0 +1,458 @@
+[
+	{
+		"fileFormatVersion": 6,
+		"address": "0x2d9316f1f1a95f6d7c85a4e690ef7c359e6649773ef2c37ad7d9857adb6bef06",
+		"name": "vault",
+		"friends": [],
+		"structs": {
+			"ChangeFeeCap": {
+				"abilities": {
+					"abilities": [
+						"Key"
+					]
+				},
+				"typeParameters": [],
+				"fields": [
+					{
+						"name": "id",
+						"type": {
+							"Struct": {
+								"address": "0x2",
+								"module": "object",
+								"name": "UID",
+								"typeArguments": []
+							}
+						}
+					},
+					{
+						"name": "last_used_epoch",
+						"type": "U64"
+					}
+				]
+			},
+			"FeePercentages": {
+				"abilities": {
+					"abilities": [
+						"Store"
+					]
+				},
+				"typeParameters": [],
+				"fields": [
+					{
+						"name": "total_protocol_fee",
+						"type": "U64"
+					},
+					{
+						"name": "treasury",
+						"type": "U64"
+					},
+					{
+						"name": "insurance_fund",
+						"type": "U64"
+					},
+					{
+						"name": "dev_wallet",
+						"type": "U64"
+					},
+					{
+						"name": "referee_discount",
+						"type": "U64"
+					}
+				]
+			},
+			"ProtocolFeeVault": {
+				"abilities": {
+					"abilities": [
+						"Store",
+						"Key"
+					]
+				},
+				"typeParameters": [],
+				"fields": [
+					{
+						"name": "id",
+						"type": {
+							"Struct": {
+								"address": "0x2",
+								"module": "object",
+								"name": "UID",
+								"typeArguments": []
+							}
+						}
+					},
+					{
+						"name": "version",
+						"type": "U64"
+					},
+					{
+						"name": "dev_wallet",
+						"type": "Address"
+					},
+					{
+						"name": "fee_percentages",
+						"type": {
+							"Struct": {
+								"address": "0x2d9316f1f1a95f6d7c85a4e690ef7c359e6649773ef2c37ad7d9857adb6bef06",
+								"module": "vault",
+								"name": "FeePercentages",
+								"typeArguments": []
+							}
+						}
+					}
+				]
+			}
+		},
+		"exposedFunctions": {
+			"assert_version": {
+				"visibility": "Public",
+				"isEntry": false,
+				"typeParameters": [],
+				"parameters": [
+					{
+						"Reference": {
+							"Struct": {
+								"address": "0x2d9316f1f1a95f6d7c85a4e690ef7c359e6649773ef2c37ad7d9857adb6bef06",
+								"module": "vault",
+								"name": "ProtocolFeeVault",
+								"typeArguments": []
+							}
+						}
+					}
+				],
+				"return": []
+			},
+			"change_fee_percentages": {
+				"visibility": "Public",
+				"isEntry": true,
+				"typeParameters": [],
+				"parameters": [
+					{
+						"MutableReference": {
+							"Struct": {
+								"address": "0x2d9316f1f1a95f6d7c85a4e690ef7c359e6649773ef2c37ad7d9857adb6bef06",
+								"module": "vault",
+								"name": "ChangeFeeCap",
+								"typeArguments": []
+							}
+						}
+					},
+					{
+						"MutableReference": {
+							"Struct": {
+								"address": "0x2d9316f1f1a95f6d7c85a4e690ef7c359e6649773ef2c37ad7d9857adb6bef06",
+								"module": "vault",
+								"name": "ProtocolFeeVault",
+								"typeArguments": []
+							}
+						}
+					},
+					{
+						"Struct": {
+							"address": "0x1",
+							"module": "option",
+							"name": "Option",
+							"typeArguments": [
+								"U64"
+							]
+						}
+					},
+					{
+						"Struct": {
+							"address": "0x1",
+							"module": "option",
+							"name": "Option",
+							"typeArguments": [
+								"U64"
+							]
+						}
+					},
+					{
+						"Struct": {
+							"address": "0x1",
+							"module": "option",
+							"name": "Option",
+							"typeArguments": [
+								"U64"
+							]
+						}
+					},
+					{
+						"Struct": {
+							"address": "0x1",
+							"module": "option",
+							"name": "Option",
+							"typeArguments": [
+								"U64"
+							]
+						}
+					},
+					{
+						"Struct": {
+							"address": "0x1",
+							"module": "option",
+							"name": "Option",
+							"typeArguments": [
+								"U64"
+							]
+						}
+					},
+					{
+						"MutableReference": {
+							"Struct": {
+								"address": "0x2",
+								"module": "tx_context",
+								"name": "TxContext",
+								"typeArguments": []
+							}
+						}
+					}
+				],
+				"return": []
+			},
+			"collect_fees": {
+				"visibility": "Public",
+				"isEntry": false,
+				"typeParameters": [
+					{
+						"abilities": []
+					}
+				],
+				"parameters": [
+					{
+						"Reference": {
+							"Struct": {
+								"address": "0x2d9316f1f1a95f6d7c85a4e690ef7c359e6649773ef2c37ad7d9857adb6bef06",
+								"module": "vault",
+								"name": "ProtocolFeeVault",
+								"typeArguments": []
+							}
+						}
+					},
+					{
+						"MutableReference": {
+							"Struct": {
+								"address": "0x64213b0e4a52bac468d4ac3f140242f70714381653a1919a6d57cd49c628207a",
+								"module": "treasury",
+								"name": "Treasury",
+								"typeArguments": []
+							}
+						}
+					},
+					{
+						"MutableReference": {
+							"Struct": {
+								"address": "0xa6baab1e668c7868991c1c3c11e144100f5734c407d020f72a01b9d1a8bcb97f",
+								"module": "insurance_fund",
+								"name": "InsuranceFund",
+								"typeArguments": []
+							}
+						}
+					},
+					{
+						"Reference": {
+							"Struct": {
+								"address": "0xc66fabf1a9253e43c70f1cc02d40a1d18db183140ecaae2a3f58fa6b66c55acf",
+								"module": "referral_vault",
+								"name": "ReferralVault",
+								"typeArguments": []
+							}
+						}
+					},
+					{
+						"MutableReference": {
+							"Struct": {
+								"address": "0x2",
+								"module": "coin",
+								"name": "Coin",
+								"typeArguments": [
+									{
+										"TypeParameter": 0
+									}
+								]
+							}
+						}
+					},
+					"Address",
+					{
+						"MutableReference": {
+							"Struct": {
+								"address": "0x2",
+								"module": "tx_context",
+								"name": "TxContext",
+								"typeArguments": []
+							}
+						}
+					}
+				],
+				"return": []
+			},
+			"dev_wallet_fee": {
+				"visibility": "Public",
+				"isEntry": false,
+				"typeParameters": [],
+				"parameters": [
+					{
+						"Reference": {
+							"Struct": {
+								"address": "0x2d9316f1f1a95f6d7c85a4e690ef7c359e6649773ef2c37ad7d9857adb6bef06",
+								"module": "vault",
+								"name": "ProtocolFeeVault",
+								"typeArguments": []
+							}
+						}
+					}
+				],
+				"return": [
+					"U64"
+				]
+			},
+			"insurance_fund_fee": {
+				"visibility": "Public",
+				"isEntry": false,
+				"typeParameters": [],
+				"parameters": [
+					{
+						"Reference": {
+							"Struct": {
+								"address": "0x2d9316f1f1a95f6d7c85a4e690ef7c359e6649773ef2c37ad7d9857adb6bef06",
+								"module": "vault",
+								"name": "ProtocolFeeVault",
+								"typeArguments": []
+							}
+						}
+					}
+				],
+				"return": [
+					"U64"
+				]
+			},
+			"minimum_before_fees": {
+				"visibility": "Public",
+				"isEntry": false,
+				"typeParameters": [],
+				"parameters": [
+					{
+						"Reference": {
+							"Struct": {
+								"address": "0x2d9316f1f1a95f6d7c85a4e690ef7c359e6649773ef2c37ad7d9857adb6bef06",
+								"module": "vault",
+								"name": "ProtocolFeeVault",
+								"typeArguments": []
+							}
+						}
+					},
+					"U64"
+				],
+				"return": [
+					"U64"
+				]
+			},
+			"referee_discount": {
+				"visibility": "Public",
+				"isEntry": false,
+				"typeParameters": [],
+				"parameters": [
+					{
+						"Reference": {
+							"Struct": {
+								"address": "0x2d9316f1f1a95f6d7c85a4e690ef7c359e6649773ef2c37ad7d9857adb6bef06",
+								"module": "vault",
+								"name": "ProtocolFeeVault",
+								"typeArguments": []
+							}
+						}
+					}
+				],
+				"return": [
+					"U64"
+				]
+			},
+			"total_protocol_fee": {
+				"visibility": "Public",
+				"isEntry": false,
+				"typeParameters": [],
+				"parameters": [
+					{
+						"Reference": {
+							"Struct": {
+								"address": "0x2d9316f1f1a95f6d7c85a4e690ef7c359e6649773ef2c37ad7d9857adb6bef06",
+								"module": "vault",
+								"name": "ProtocolFeeVault",
+								"typeArguments": []
+							}
+						}
+					}
+				],
+				"return": [
+					"U64"
+				]
+			},
+			"transfer": {
+				"visibility": "Public",
+				"isEntry": false,
+				"typeParameters": [],
+				"parameters": [
+					{
+						"Struct": {
+							"address": "0x2d9316f1f1a95f6d7c85a4e690ef7c359e6649773ef2c37ad7d9857adb6bef06",
+							"module": "vault",
+							"name": "ChangeFeeCap",
+							"typeArguments": []
+						}
+					},
+					"Address"
+				],
+				"return": []
+			},
+			"treasury_fee": {
+				"visibility": "Public",
+				"isEntry": false,
+				"typeParameters": [],
+				"parameters": [
+					{
+						"Reference": {
+							"Struct": {
+								"address": "0x2d9316f1f1a95f6d7c85a4e690ef7c359e6649773ef2c37ad7d9857adb6bef06",
+								"module": "vault",
+								"name": "ProtocolFeeVault",
+								"typeArguments": []
+							}
+						}
+					}
+				],
+				"return": [
+					"U64"
+				]
+			},
+			"update_dev_wallet_address": {
+				"visibility": "Public",
+				"isEntry": true,
+				"typeParameters": [],
+				"parameters": [
+					{
+						"MutableReference": {
+							"Struct": {
+								"address": "0x2d9316f1f1a95f6d7c85a4e690ef7c359e6649773ef2c37ad7d9857adb6bef06",
+								"module": "vault",
+								"name": "ProtocolFeeVault",
+								"typeArguments": []
+							}
+						}
+					},
+					"Address",
+					{
+						"MutableReference": {
+							"Struct": {
+								"address": "0x2",
+								"module": "tx_context",
+								"name": "TxContext",
+								"typeArguments": []
+							}
+						}
+					}
+				],
+				"return": []
+			}
+		}
+	}
+]

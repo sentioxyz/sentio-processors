@@ -1,0 +1,124 @@
+[
+	{
+		"fileFormatVersion": 6,
+		"address": "0x64213b0e4a52bac468d4ac3f140242f70714381653a1919a6d57cd49c628207a",
+		"name": "treasury",
+		"friends": [],
+		"structs": {
+			"Treasury": {
+				"abilities": {
+					"abilities": [
+						"Key"
+					]
+				},
+				"typeParameters": [],
+				"fields": [
+					{
+						"name": "id",
+						"type": {
+							"Struct": {
+								"address": "0x2",
+								"module": "object",
+								"name": "UID",
+								"typeArguments": []
+							}
+						}
+					},
+					{
+						"name": "version",
+						"type": "U64"
+					},
+					{
+						"name": "funds",
+						"type": {
+							"Struct": {
+								"address": "0x2",
+								"module": "bag",
+								"name": "Bag",
+								"typeArguments": []
+							}
+						}
+					}
+				]
+			}
+		},
+		"exposedFunctions": {
+			"assert_version": {
+				"visibility": "Public",
+				"isEntry": false,
+				"typeParameters": [],
+				"parameters": [
+					{
+						"Reference": {
+							"Struct": {
+								"address": "0x64213b0e4a52bac468d4ac3f140242f70714381653a1919a6d57cd49c628207a",
+								"module": "treasury",
+								"name": "Treasury",
+								"typeArguments": []
+							}
+						}
+					}
+				],
+				"return": []
+			},
+			"balance_of": {
+				"visibility": "Public",
+				"isEntry": false,
+				"typeParameters": [
+					{
+						"abilities": []
+					}
+				],
+				"parameters": [
+					{
+						"MutableReference": {
+							"Struct": {
+								"address": "0x64213b0e4a52bac468d4ac3f140242f70714381653a1919a6d57cd49c628207a",
+								"module": "treasury",
+								"name": "Treasury",
+								"typeArguments": []
+							}
+						}
+					}
+				],
+				"return": [
+					"U64"
+				]
+			},
+			"deposit": {
+				"visibility": "Public",
+				"isEntry": false,
+				"typeParameters": [
+					{
+						"abilities": []
+					}
+				],
+				"parameters": [
+					{
+						"MutableReference": {
+							"Struct": {
+								"address": "0x64213b0e4a52bac468d4ac3f140242f70714381653a1919a6d57cd49c628207a",
+								"module": "treasury",
+								"name": "Treasury",
+								"typeArguments": []
+							}
+						}
+					},
+					{
+						"Struct": {
+							"address": "0x2",
+							"module": "coin",
+							"name": "Coin",
+							"typeArguments": [
+								{
+									"TypeParameter": 0
+								}
+							]
+						}
+					}
+				],
+				"return": []
+			}
+		}
+	}
+]

@@ -1,0 +1,323 @@
+[
+	{
+		"fileFormatVersion": 6,
+		"address": "0xa6baab1e668c7868991c1c3c11e144100f5734c407d020f72a01b9d1a8bcb97f",
+		"name": "insurance_fund",
+		"friends": [],
+		"structs": {
+			"AdminCap": {
+				"abilities": {
+					"abilities": [
+						"Key"
+					]
+				},
+				"typeParameters": [],
+				"fields": [
+					{
+						"name": "id",
+						"type": {
+							"Struct": {
+								"address": "0x2",
+								"module": "object",
+								"name": "UID",
+								"typeArguments": []
+							}
+						}
+					}
+				]
+			},
+			"AdminReceipt": {
+				"abilities": {
+					"abilities": []
+				},
+				"typeParameters": [
+					{
+						"constraints": {
+							"abilities": []
+						},
+						"isPhantom": true
+					},
+					{
+						"constraints": {
+							"abilities": []
+						},
+						"isPhantom": true
+					}
+				],
+				"fields": [
+					{
+						"name": "dummy_field",
+						"type": "Bool"
+					}
+				]
+			},
+			"InsuranceFund": {
+				"abilities": {
+					"abilities": [
+						"Key"
+					]
+				},
+				"typeParameters": [],
+				"fields": [
+					{
+						"name": "id",
+						"type": {
+							"Struct": {
+								"address": "0x2",
+								"module": "object",
+								"name": "UID",
+								"typeArguments": []
+							}
+						}
+					},
+					{
+						"name": "version",
+						"type": "U64"
+					},
+					{
+						"name": "funds",
+						"type": {
+							"Struct": {
+								"address": "0x2",
+								"module": "bag",
+								"name": "Bag",
+								"typeArguments": []
+							}
+						}
+					}
+				]
+			}
+		},
+		"exposedFunctions": {
+			"admin_deposit": {
+				"visibility": "Public",
+				"isEntry": false,
+				"typeParameters": [
+					{
+						"abilities": []
+					},
+					{
+						"abilities": []
+					}
+				],
+				"parameters": [
+					{
+						"Reference": {
+							"Struct": {
+								"address": "0xa6baab1e668c7868991c1c3c11e144100f5734c407d020f72a01b9d1a8bcb97f",
+								"module": "insurance_fund",
+								"name": "AdminCap",
+								"typeArguments": []
+							}
+						}
+					},
+					{
+						"MutableReference": {
+							"Struct": {
+								"address": "0xa6baab1e668c7868991c1c3c11e144100f5734c407d020f72a01b9d1a8bcb97f",
+								"module": "insurance_fund",
+								"name": "InsuranceFund",
+								"typeArguments": []
+							}
+						}
+					},
+					{
+						"Struct": {
+							"address": "0xa6baab1e668c7868991c1c3c11e144100f5734c407d020f72a01b9d1a8bcb97f",
+							"module": "insurance_fund",
+							"name": "AdminReceipt",
+							"typeArguments": [
+								{
+									"TypeParameter": 0
+								},
+								{
+									"TypeParameter": 1
+								}
+							]
+						}
+					},
+					{
+						"Struct": {
+							"address": "0x2",
+							"module": "coin",
+							"name": "Coin",
+							"typeArguments": [
+								{
+									"TypeParameter": 0
+								}
+							]
+						}
+					}
+				],
+				"return": []
+			},
+			"admin_withdraw": {
+				"visibility": "Public",
+				"isEntry": false,
+				"typeParameters": [
+					{
+						"abilities": []
+					},
+					{
+						"abilities": []
+					}
+				],
+				"parameters": [
+					{
+						"Reference": {
+							"Struct": {
+								"address": "0xa6baab1e668c7868991c1c3c11e144100f5734c407d020f72a01b9d1a8bcb97f",
+								"module": "insurance_fund",
+								"name": "AdminCap",
+								"typeArguments": []
+							}
+						}
+					},
+					{
+						"MutableReference": {
+							"Struct": {
+								"address": "0xa6baab1e668c7868991c1c3c11e144100f5734c407d020f72a01b9d1a8bcb97f",
+								"module": "insurance_fund",
+								"name": "InsuranceFund",
+								"typeArguments": []
+							}
+						}
+					},
+					"U64",
+					{
+						"MutableReference": {
+							"Struct": {
+								"address": "0x2",
+								"module": "tx_context",
+								"name": "TxContext",
+								"typeArguments": []
+							}
+						}
+					}
+				],
+				"return": [
+					{
+						"Struct": {
+							"address": "0x2",
+							"module": "coin",
+							"name": "Coin",
+							"typeArguments": [
+								{
+									"TypeParameter": 1
+								}
+							]
+						}
+					},
+					{
+						"Struct": {
+							"address": "0xa6baab1e668c7868991c1c3c11e144100f5734c407d020f72a01b9d1a8bcb97f",
+							"module": "insurance_fund",
+							"name": "AdminReceipt",
+							"typeArguments": [
+								{
+									"TypeParameter": 0
+								},
+								{
+									"TypeParameter": 1
+								}
+							]
+						}
+					}
+				]
+			},
+			"assert_version": {
+				"visibility": "Public",
+				"isEntry": false,
+				"typeParameters": [],
+				"parameters": [
+					{
+						"Reference": {
+							"Struct": {
+								"address": "0xa6baab1e668c7868991c1c3c11e144100f5734c407d020f72a01b9d1a8bcb97f",
+								"module": "insurance_fund",
+								"name": "InsuranceFund",
+								"typeArguments": []
+							}
+						}
+					}
+				],
+				"return": []
+			},
+			"balance_of": {
+				"visibility": "Public",
+				"isEntry": false,
+				"typeParameters": [
+					{
+						"abilities": []
+					}
+				],
+				"parameters": [
+					{
+						"MutableReference": {
+							"Struct": {
+								"address": "0xa6baab1e668c7868991c1c3c11e144100f5734c407d020f72a01b9d1a8bcb97f",
+								"module": "insurance_fund",
+								"name": "InsuranceFund",
+								"typeArguments": []
+							}
+						}
+					}
+				],
+				"return": [
+					"U64"
+				]
+			},
+			"deposit": {
+				"visibility": "Public",
+				"isEntry": false,
+				"typeParameters": [
+					{
+						"abilities": []
+					}
+				],
+				"parameters": [
+					{
+						"MutableReference": {
+							"Struct": {
+								"address": "0xa6baab1e668c7868991c1c3c11e144100f5734c407d020f72a01b9d1a8bcb97f",
+								"module": "insurance_fund",
+								"name": "InsuranceFund",
+								"typeArguments": []
+							}
+						}
+					},
+					{
+						"Struct": {
+							"address": "0x2",
+							"module": "coin",
+							"name": "Coin",
+							"typeArguments": [
+								{
+									"TypeParameter": 0
+								}
+							]
+						}
+					}
+				],
+				"return": []
+			},
+			"transfer": {
+				"visibility": "Public",
+				"isEntry": false,
+				"typeParameters": [],
+				"parameters": [
+					{
+						"Struct": {
+							"address": "0xa6baab1e668c7868991c1c3c11e144100f5734c407d020f72a01b9d1a8bcb97f",
+							"module": "insurance_fund",
+							"name": "AdminCap",
+							"typeArguments": []
+						}
+					},
+					"Address"
+				],
+				"return": []
+			}
+		}
+	}
+]
