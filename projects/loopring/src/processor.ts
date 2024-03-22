@@ -66,6 +66,7 @@ const tvl = async function (_: any, ctx: ExchangeV3Context) {
     if (!price) {
       continue
     }
+    ctx.meter.Gauge("price").record(price, {token: tokenInfo.symbol, address: TOKEN_ARRAY[i]})
     ctx.meter.Gauge("tvl").record(scaledAmount.multipliedBy(price),
         {token: tokenInfo.symbol, address: TOKEN_ARRAY[i]})
     ctx.meter.Counter("tvl_counter").add(1)
@@ -73,7 +74,7 @@ const tvl = async function (_: any, ctx: ExchangeV3Context) {
 }
 
 ExchangeV3Processor.bind({address: LOOPRING_EXCHANGE})
-    .onTimeInterval(tvl, 60, 24 * 60 * 30)
+    .onTimeInterval(tvl, 60, 24 * 60)
     .onEventDepositRequested(depositGauge)
     .onEventWithdrawalCompleted(withdrawGauge)
     .onCallSubmitBlocks(async (call: SubmitBlocksCallTrace, ctx: ExchangeV3Context) => {
