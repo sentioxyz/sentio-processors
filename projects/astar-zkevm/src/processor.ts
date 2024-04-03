@@ -2,22 +2,26 @@ import { EthChainId, EthContext, GenericProcessor, GlobalContext, GlobalProcesso
 import { POL_TRANSFER_TOPIC, PolygonRollupManager, PolygonValidiumEtrog, PolygonZkEVMBridgeV2 } from './constant.js'
 import { PolygonZkEVMBridgeV2Processor } from './types/eth/polygonzkevmbridgev2.js'
 import { PolygonValidiumEtrogProcessor } from './types/eth/polygonvalidiumetrog.js'
+import { getProvider } from '@sentio/sdk/eth'
+import { JsonRpcProvider } from 'ethers'
 
 GlobalProcessor.bind({ network: EthChainId.ASTAR_ZKEVM }).onTransaction(
   async (tx, ctx) => {
-    // const provider = ctx.contract.provider
-    // const hexBlockNumber = tx.blockNumber?.toString(16)
-    // const batch = hexBlockNumber
-    //   ? await provider.send('zkevm_batchNumberByBlockNumber', ['0x' + hexBlockNumber])
-    //   : undefined
+    const provider = getProvider(EthChainId.ASTAR_ZKEVM) as JsonRpcProvider
+    const hexBlockNumber = tx.blockNumber?.toString(16)
+    const batch = hexBlockNumber
+      ? await provider.send('zkevm_batchNumberByBlockNumber', ['0x' + hexBlockNumber])
+      : undefined
+    const { sendSequencesTxHash, verifyBatchTxHash } = batch
+      ? await provider.send('zkevm_getBatchByNumber', [batch])
+      : { sendSequencesTxHash: undefined, verifyBatchTxHash: undefined }
     ctx.eventLogger.emit('l2_tx', {
-      distinctId: tx.hash,
+      distinctId: tx.from,
       value: tx.value,
       gasCost: gasCost(ctx),
-    })
-    ctx.eventLogger.emit('user', {
-      distinctId: tx.hash,
-      wallet: tx.from,
+      batch: Number(batch),
+      sendSequencesTxHash,
+      verifyBatchTxHash,
     })
   },
   {
@@ -36,7 +40,7 @@ PolygonZkEVMBridgeV2Processor.bind({
       return
     }
     const payload = {
-      distinctId: tx.hash,
+      distinctId: tx.from,
       token: 'eth',
       amount: event.args.amount,
     }
@@ -64,7 +68,7 @@ PolygonZkEVMBridgeV2Processor.bind({
       return
     }
     const payload: Record<string, string | bigint> = {
-      distinctId: tx.hash,
+      distinctId: tx.from,
       token: 'eth',
       amount: event.args.amount,
     }
@@ -92,7 +96,6 @@ PolygonValidiumEtrogProcessor.bind({
       return
     }
     const payload: Record<string, any> = {
-      distinctId: tx.hash,
       value: tx.value,
       gasCost: gasCost(ctx),
       batch: event.args.numBatch,
@@ -124,7 +127,6 @@ PolygonValidiumEtrogProcessor.bind({
       return
     }
     const payload: Record<string, any> = {
-      distinctId: tx.hash,
       value: tx.value,
       gasCost: gasCost(ctx),
       batch: event.args.numBatch,
