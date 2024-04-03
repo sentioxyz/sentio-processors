@@ -42,7 +42,7 @@ marketplace.bind()
         project: "bluemove",
         collection_name: collectionName,
         nft_name: nftName,
-        collection_id: "",
+        // collection_id: "",
         object_id: item_id,
         nft_type,
         nft_link,
@@ -86,7 +86,7 @@ bluemove_launchpad.bind({
         sender: event.data_decoded.creator,
         project: "bluemove",
         collection_name: name,
-        collection_id: "", // TODO
+        // collection_id: "", // TODO
         object_id,
       }
       ctx.eventLogger.emit("Mint", { ...mint })
@@ -101,7 +101,7 @@ bluemove_launchpad.bind({
         sender: event.data_decoded.sender,
         project: "bluemove",
         collection_name: nft_name,
-        collection_id: "",
+        // collection_id: "",
         object_id,
       }
 

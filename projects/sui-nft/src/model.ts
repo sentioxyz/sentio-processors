@@ -10,7 +10,7 @@ export interface Mint {
   sender: string
   project: string
   collection_name: string
-  collection_id: string
+  // collection_id: string
   object_id: string
 }
 
@@ -23,7 +23,7 @@ export interface Mint {
 export interface Trade {
   project: string
   collection_name: string
-  collection_id?: string
+  // collection_id?: string
   nft_name: string
   object_id: string
   nft_link: string

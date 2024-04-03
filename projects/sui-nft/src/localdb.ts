@@ -5,6 +5,8 @@ export const db = new AsyncNedb({
   autoload: true,
 });
 
+db.persistence.setAutocompactionInterval(60 * 1000);
+
 type NFTListing = {
   _id: string;
   seller: string;

@@ -57,7 +57,7 @@ mint_event.bind()
         sender: ctx.transaction.transaction?.data.sender!,
         project: "clutchy",
         collection_name: "", // TODO
-        collection_id: collection_id,
+        // collection_id: collection_id,
         object_id: object,
       }
 
@@ -73,7 +73,7 @@ mint_event.bind()
         sender: ctx.transaction.transaction?.data.sender!,
         project: "clutchy",
         collection_name: "", // TODO
-        collection_id: collection_id,
+        // collection_id: collection_id,
         object_id: object,
       }
 
