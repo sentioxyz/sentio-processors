@@ -66,24 +66,6 @@ const template = new SuiObjectProcessorTemplate()
                 project
             })
 
-            ctx.meter.Gauge("one_side_tvl").record(tvl_a, {
-                pool: poolInfo.pool,
-                type: poolInfo.type_a,
-                amount: coin_a_balance.toString(),
-                symbol: poolInfo.symbol_a,
-                pairName: poolInfo.pairName,
-                project
-            })
-
-            ctx.meter.Gauge("one_side_tvl").record(tvl_b, {
-                pool: poolInfo.pool,
-                type: poolInfo.type_b,
-                amount: coin_b_balance.toString(),
-                symbol: poolInfo.symbol_b,
-                pairName: poolInfo.pairName,
-                project
-            })
-
 
         }
         catch (e) {

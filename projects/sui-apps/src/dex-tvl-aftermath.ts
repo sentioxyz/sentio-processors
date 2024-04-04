@@ -41,15 +41,6 @@ const template = new SuiObjectProcessorTemplate()
                     project
                 })
 
-                ctx.meter.Gauge("one_side_tvl").record(tvl, {
-                    pool: poolInfo.pool,
-                    type: coinType,
-                    amount: coinBalance.toString(),
-                    symbol: coinInfo.symbol,
-                    pairName: poolInfo.pairName,
-                    project
-                })
-
             }
 
             ctx.eventLogger.emit("tvl_gauge", {
