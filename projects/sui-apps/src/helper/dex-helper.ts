@@ -80,20 +80,31 @@ let poolInfoMap = new Map<string, Promise<poolInfo>>()
 let multiAssetPoolInfoMap = new Map<string, Promise<multiAssetPoolInfo>>()
 let coinInfoMap = new Map<string, Promise<token.TokenInfo>>()
 
+export function delay(ms: number) {
+    return new Promise((resolve) => setTimeout(resolve, ms))
+}
+
 export async function buildCoinInfo(ctx: SuiContext | SuiObjectContext, coinAddress: string): Promise<token.TokenInfo> {
     let [symbol, name, decimal] = ["unk", "unk", 0]
-    try {
-        const metadata = await ctx.client.getCoinMetadata({ coinType: coinAddress })
-        //@ts-ignore
-        symbol = metadata.symbol
-        //@ts-ignore
-        decimal = metadata.decimals
-        //@ts-ignore
-        name = metadata.name
-        console.log(`build coin metadata ${symbol} ${decimal} ${name}`)
-    }
-    catch (e) {
-        console.log(`${e.message} get coin metadata error ${coinAddress} `)
+
+    let retryCounter = 0;
+    while (retryCounter++ <= 50) {
+        try {
+            const metadata = await ctx.client.getCoinMetadata({ coinType: coinAddress })
+            if (metadata == null) {
+                break
+            }
+
+            symbol = metadata.symbol
+            decimal = metadata.decimals
+            name = metadata.name
+            console.log(`build coin metadata ${symbol} ${decimal} ${name}`)
+        } catch (e) {
+            console.log(`${e.message} get coin metadata error ${coinAddress}, retry: ${retryCounter}`)
+            await delay(10000)
+            continue
+        }
+        break
     }
 
     return {
