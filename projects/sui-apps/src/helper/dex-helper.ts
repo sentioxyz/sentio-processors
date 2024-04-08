@@ -162,7 +162,7 @@ export async function buildPoolInfo(ctx: SuiContext | SuiObjectContext, pool: st
         }
         if (type.includes(constant.TURBOS_POOL_TYPE)) {
             //@ts-ignore
-            fee = Number(obj.data?.content.fields.feee) / 10 ** 6
+            fee = Number(obj.data?.content.fields.fee) / 10 ** 6
         }
         if (type.includes(constant.IPX_POOL_TYPE)) {
             //@ts-ignore
