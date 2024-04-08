@@ -26,7 +26,7 @@ const template = new SuiObjectProcessorTemplate()
                 const coinType = `0x${self.fields.type_names[i]}`
                 const coinInfo = await helper.getOrCreateCoin(ctx, coinType)
                 //@ts-ignore
-                const coinBalance = Number(self.fields.normalized_balances[i]) / (Math.pow(10, self.fields.coin_decimals[i]) * self.fields.decimal_scalars[i])
+                const coinBalance = Number(self.fields.normalized_balances[i]) / (Math.pow(10, Number(self.fields.coin_decimals[i])) * Number(self.fields.decimal_scalars[i]))
                 const tvl = await helper.calculateSingleTypeValueUSD(ctx, coinType, coinBalance)
                 total_tvl += tvl
 
