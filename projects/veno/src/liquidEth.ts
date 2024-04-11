@@ -3,8 +3,8 @@ import { EthChainId } from "@sentio/sdk/eth";
 
 const EthStakeEventHandler = async (event: StakeEvent, ctx: LiquidAtomContext) => {
     const receiver = event.args.receiver
-    const tokenAmount = Number(event.args.tokenAmount) / Math.pow(10, 6)
-    const shareAmount = Number(event.args.shareAmount) / Math.pow(10, 6)
+    const tokenAmount = Number(event.args.tokenAmount) / Math.pow(10, 18)
+    const shareAmount = Number(event.args.shareAmount) / Math.pow(10, 18)
     ctx.meter.Counter(`eth_staked_counter`).add(tokenAmount)
 
     ctx.eventLogger.emit("StakeEth", {
@@ -17,7 +17,7 @@ const EthStakeEventHandler = async (event: StakeEvent, ctx: LiquidAtomContext) =
 const EthRequestUnbondEventHandler = async (event: RequestUnbondEvent, ctx: LiquidAtomContext) => {
     const receiver = event.args.receiver
     const tokenId = Number(event.args.tokenId)
-    const shareAmount = Number(event.args.shareAmount) / Math.pow(10, 6)
+    const shareAmount = Number(event.args.shareAmount) / Math.pow(10, 18)
     const liquidToken2TokenExchangeRate = Number(event.args.liquidToken2TokenExchangeRate)
     const batchNo = Number(event.args.batchNo)
     try {
@@ -44,8 +44,8 @@ const EthRequestUnbondEventHandler = async (event: RequestUnbondEvent, ctx: Liqu
 const EthUnbondEventHandler = async (event: UnbondEvent, ctx: LiquidAtomContext) => {
     const receiver = event.args.receiver
     const tokenId = Number(event.args.tokenId)
-    const tokenAmount = Number(event.args.tokenAmount) / Math.pow(10, 6)
-    const tokenFeeAmount = Number(event.args.tokenFeeAmount) / Math.pow(10, 6)
+    const tokenAmount = Number(event.args.tokenAmount) / Math.pow(10, 18)
+    const tokenFeeAmount = Number(event.args.tokenFeeAmount) / Math.pow(10, 18)
     ctx.meter.Counter(`eth_claimed`).add(tokenAmount)
     ctx.meter.Counter(`eth_withdrawal_fees`).add(tokenFeeAmount)
 
@@ -58,7 +58,7 @@ const EthUnbondEventHandler = async (event: UnbondEvent, ctx: LiquidAtomContext)
     })
 }
 const EthAccrueRewardEventHandler = async (event: AccrueRewardEvent, ctx: LiquidAtomContext) => {
-    const amount = Number(event.args.amount) / Math.pow(10, 6)
+    const amount = Number(event.args.amount) / Math.pow(10, 18)
     const txnHash = event.args.txnHash
     ctx.meter.Counter(`accrueReward_counter`).add(amount)
     ctx.eventLogger.emit("AccrueReward", {
