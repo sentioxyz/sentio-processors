@@ -2,13 +2,14 @@ import {
   SuiContext,
   SuiObjectContext,
 } from "@sentio/sdk/sui"
-import { incentive_v2, lending, flash_loan } from "../types/sui/navxFlashLoan.js";
+import { lending } from "../types/sui/navxFlashLoan.js";
 import { token } from "@sentio/sdk/utils"
 import { ProtocolProcessor } from "./storage.js";
 import { PoolProcessor } from "./pool.js";
 import { OracleProcessor } from "./oracle.js";
 import { AddressProcessor } from "./address.js";
 import { scaleDown } from "@sentio/sdk";
+import { lending as lending_new_liquidation_event, incentive_v2, flash_loan } from '../types/sui/navi_new_liq.js';
 
 let coinInfoMap = new Map<string, Promise<token.TokenInfo>>()
 
@@ -96,6 +97,33 @@ async function onLiquidationEvent(event: lending.LiquidationCallEventInstance, c
   })
 }
 
+async function onLiquidationNewEvent(event: lending_new_liquidation_event.LiquidationEventInstance, ctx: SuiContext) {
+  const sender = event.data_decoded.sender
+  const user = event.data_decoded.user
+  const collateral_asset = event.data_decoded.collateral_asset
+  const collateral_price = event.data_decoded.collateral_price
+  const collateral_amount = event.data_decoded.collateral_amount
+  const treasury = event.data_decoded.treasury
+  const debt_asset = event.data_decoded.debt_asset
+  const debt_price = event.data_decoded.debt_price
+  const debt_amount = event.data_decoded.debt_amount
+  const typeArray = event.type.split("::")
+  const type = typeArray[typeArray.length - 1]
+
+  ctx.eventLogger.emit("Liquidation", {
+    liquidation_sender: sender,
+    user: user,
+    collateral_asset,
+    collateral_price,
+    collateral_amount,
+    treasury,
+    debt_asset,
+    debt_price,
+    debt_amount,
+    type,
+    env: "mainnet"
+  })
+}
 
 // async function onRewardsClaimedEvent(event: incentive_v2.RewardsClaimedInstance, ctx: SuiContext) {
 
@@ -215,13 +243,17 @@ flash_loan.bind({ startCheckpoint: 28205630n })
   .onEventFlashRepay(flashoanRepayHandler)
 
 lending.bind({startCheckpoint: 7800000n})
+  .onEventLiquidationCallEvent(onLiquidationEvent)
+  
+
+lending_new_liquidation_event.bind({startCheckpoint: 7800000n})
+  .onEventLiquidationEvent(onLiquidationNewEvent)
+  .onEventDepositOnBehalfOfEvent(depositOnBehalfOfHandler)
+  .onEventRepayOnBehalfOfEvent(repayOnBehalfOfHandler)
   .onEventBorrowEvent(onEvent)
   .onEventDepositEvent(onEvent)
   .onEventRepayEvent(onEvent)
   .onEventWithdrawEvent(onEvent)
-  .onEventLiquidationCallEvent(onLiquidationEvent)
-  .onEventDepositOnBehalfOfEvent(depositOnBehalfOfHandler)
-  .onEventRepayOnBehalfOfEvent(repayOnBehalfOfHandler)
 
 // incentive_v2.bind({startCheckpoint: 7800000n})
 //   .onEventRewardsClaimed(onRewardsClaimedEvent)

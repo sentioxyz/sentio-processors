@@ -91,6 +91,6 @@ export function ProtocolProcessor() {
                 console.log(e)
                 console.log(JSON.stringify(self))
             }
-        }, 10)
+        }, 10, 10)
     }
 }
