@@ -16,3 +16,7 @@ export const PolygonZkEVMBridgeV2 = {
   proxy: '0x2a3DD3EB832aF982ec71669E178424b10Dca2EDe',
   implementation: '0x5ac4182A1dd41AeEf465E40B82fd326BF66AB82C',
 }
+
+export const LayerswapWallet = '0x2Fc617E933a52713247CE25730f6695920B3befe'
+
+export const RelayLinkWallet = '0xf70da97812CB96acDF810712Aa562db8dfA3dbEF'

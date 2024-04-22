@@ -1,24 +1,51 @@
 import { EthChainId, EthContext, GenericProcessor, GlobalContext, GlobalProcessor } from '@sentio/sdk/eth'
-import { POL_TRANSFER_TOPIC, PolygonRollupManager, PolygonValidiumEtrog, PolygonZkEVMBridgeV2 } from './constant.js'
+import {
+  LayerswapWallet,
+  POL_TRANSFER_TOPIC,
+  PolygonRollupManager,
+  PolygonValidiumEtrog,
+  PolygonZkEVMBridgeV2,
+  RelayLinkWallet,
+} from './constant.js'
 import { PolygonZkEVMBridgeV2Processor } from './types/eth/polygonzkevmbridgev2.js'
 import { PolygonValidiumEtrogProcessor } from './types/eth/polygonvalidiumetrog.js'
+import { getProvider } from '@sentio/sdk/eth'
+import { scaleDown } from '@sentio/sdk'
+import { JsonRpcProvider } from 'ethers'
+import { getERC20ContractOnContext } from '@sentio/sdk/eth/builtin/erc20'
 
 GlobalProcessor.bind({ network: EthChainId.ASTAR_ZKEVM }).onTransaction(
   async (tx, ctx) => {
-    // const provider = ctx.contract.provider
+    const provider = getProvider(EthChainId.ASTAR_ZKEVM) as JsonRpcProvider
     // const hexBlockNumber = tx.blockNumber?.toString(16)
     // const batch = hexBlockNumber
     //   ? await provider.send('zkevm_batchNumberByBlockNumber', ['0x' + hexBlockNumber])
     //   : undefined
+    // const { sendSequencesTxHash, verifyBatchTxHash } = batch
+    //   ? await provider.send('zkevm_getBatchByNumber', [batch])
+    //   : { sendSequencesTxHash: undefined, verifyBatchTxHash: undefined }
     ctx.eventLogger.emit('l2_tx', {
-      distinctId: tx.hash,
-      value: tx.value,
+      distinctId: tx.from,
+      value: scaleDown(tx.value, 18),
       gasCost: gasCost(ctx),
+      // batch: Number(batch),
+      // sendSequencesTxHash,
+      // verifyBatchTxHash,
     })
-    ctx.eventLogger.emit('user', {
-      distinctId: tx.hash,
-      wallet: tx.from,
-    })
+
+    const bridgeName = {
+      [LayerswapWallet]: 'layerswap',
+      [RelayLinkWallet]: 'relaylink',
+    }[tx.from]
+    if (bridgeName) {
+      ctx.eventLogger.emit('bridge', {
+        distinctId: tx.from,
+        type: 'in',
+        bridgeName,
+        token: 'eth',
+        amount: scaleDown(tx.value, 18),
+      })
+    }
   },
   {
     transaction: true,
@@ -30,19 +57,25 @@ PolygonZkEVMBridgeV2Processor.bind({
   network: EthChainId.ASTAR_ZKEVM,
   address: PolygonZkEVMBridgeV2.proxy,
 }).onEventBridgeEvent(
-  (event, ctx) => {
+  async (event, ctx) => {
     const tx = ctx.transaction
     if (!tx) {
       return
     }
-    const payload = {
-      distinctId: tx.hash,
+    const payload: Record<string, any> = {
+      distinctId: tx.from,
+      type: 'out',
+      bridgeName: 'polygonzkevmv2',
       token: 'eth',
-      amount: event.args.amount,
+      amount: scaleDown(event.args.amount, 18),
     }
     const logs = ctx.transactionReceipt?.logs || []
     if (logs.length > 1) {
-      payload.token = logs[0].address
+      payload.tokenAddress = logs[0].address
+      const contract = getERC20ContractOnContext(ctx, logs[0].address)
+      payload.token = await contract.symbol()
+      const decimals = await contract.decimals()
+      payload.amount = scaleDown(event.args.amount, decimals)
     }
     ctx.eventLogger.emit('bridge', payload)
   },
@@ -58,21 +91,27 @@ PolygonZkEVMBridgeV2Processor.bind({
   network: EthChainId.ASTAR_ZKEVM,
   address: PolygonZkEVMBridgeV2.proxy,
 }).onEventClaimEvent(
-  (event, ctx) => {
+  async (event, ctx) => {
     const tx = ctx.transaction
     if (!tx) {
       return
     }
-    const payload: Record<string, string | bigint> = {
-      distinctId: tx.hash,
+    const payload: Record<string, any> = {
+      distinctId: tx.from,
+      type: 'in',
+      bridgeName: 'polygonzkevmv2',
       token: 'eth',
-      amount: event.args.amount,
+      amount: scaleDown(event.args.amount, 18),
     }
     const logs = ctx.transactionReceipt?.logs || []
     if (logs.length > 1) {
-      payload.token = logs[0].address
+      payload.tokenAddress = logs[0].address
+      const contract = getERC20ContractOnContext(ctx, logs[0].address)
+      payload.token = await contract.symbol()
+      const decimals = await contract.decimals()
+      payload.amount = scaleDown(event.args.amount, decimals)
     }
-    ctx.eventLogger.emit('claim', payload)
+    ctx.eventLogger.emit('bridge', payload)
   },
   undefined,
   {
@@ -92,8 +131,7 @@ PolygonValidiumEtrogProcessor.bind({
       return
     }
     const payload: Record<string, any> = {
-      distinctId: tx.hash,
-      value: tx.value,
+      value: scaleDown(tx.value, 18),
       gasCost: gasCost(ctx),
       batch: event.args.numBatch,
     }
@@ -103,7 +141,7 @@ PolygonValidiumEtrogProcessor.bind({
     if (transferPOL && transferPOL.topics[0] == POL_TRANSFER_TOPIC) {
       payload.from = transferPOL.topics[1]
       payload.to = transferPOL.topics[2]
-      payload.polAmount = Number(transferPOL.data)
+      payload.polAmount = scaleDown(BigInt(transferPOL.data), 18)
     }
     ctx.eventLogger.emit('sequence_tx', payload)
   },
@@ -124,8 +162,7 @@ PolygonValidiumEtrogProcessor.bind({
       return
     }
     const payload: Record<string, any> = {
-      distinctId: tx.hash,
-      value: tx.value,
+      value: scaleDown(tx.value, 18),
       gasCost: gasCost(ctx),
       batch: event.args.numBatch,
     }
@@ -135,7 +172,7 @@ PolygonValidiumEtrogProcessor.bind({
     if (transferPOL && transferPOL.topics[0] == POL_TRANSFER_TOPIC) {
       payload.from = transferPOL.topics[1]
       payload.to = transferPOL.topics[2]
-      payload.polAmount = Number(transferPOL.data)
+      payload.polAmount = scaleDown(BigInt(transferPOL.data), 18)
     }
     ctx.eventLogger.emit('verify_tx', payload)
   },
@@ -147,9 +184,9 @@ PolygonValidiumEtrogProcessor.bind({
 )
 
 function gasCost(ctx: EthContext) {
-  return (
+  const gas =
     BigInt(
       ctx.transactionReceipt?.effectiveGasPrice || ctx.transactionReceipt?.gasPrice || ctx.transaction?.gasPrice || 0n,
     ) * BigInt(ctx.transactionReceipt?.gasUsed || 0)
-  )
+  return scaleDown(gas, 18)
 }
