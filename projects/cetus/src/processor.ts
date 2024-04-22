@@ -5,7 +5,7 @@ import * as constant from './constant-cetus.js'
 import { SuiNetwork } from "@sentio/sdk/sui"
 // import './cetus-launchpad.js'
 import * as helper from './helper/cetus-clmm.js'
-
+import './stablefarming.js'
 
 factory.bind({
   // address: constant.CLMM_MAINNET,
@@ -20,8 +20,7 @@ factory.bind({
     const tick_spacing = event.data_decoded.tick_spacing
 
     ctx.eventLogger.emit("CreatePoolEvent", {
-      //@ts-ignore
-      distinctId: ctx.transaction.transaction.data.sender,
+      distinctId: event.sender,
       pool_id,
       coin_type_a,
       coin_type_b,
@@ -68,8 +67,7 @@ pool.bind({
     const fee_amount_usd = await helper.calculateFee_USD(ctx, pool, fee_amount, atob, ctx.timestamp)
 
     ctx.eventLogger.emit("SwapEvent", {
-      //@ts-ignore
-      distinctId: ctx.transaction.transaction.data.sender,
+      distinctId: event.sender,
       pool,
       before_sqrt_price,
       after_sqrt_price,
@@ -118,8 +116,7 @@ pool.bind({
     const value = value_a + value_b
 
     ctx.eventLogger.emit("AddLiquidityEvent", {
-      //@ts-ignore
-      distinctId: ctx.transaction.transaction.data.sender,
+      distinctId: event.sender,
       pool,
       position,
       tick_lower,
@@ -159,8 +156,7 @@ pool.bind({
     const value = value_a + value_b
 
     ctx.eventLogger.emit("RemoveLiquidityEvent", {
-      //@ts-ignore
-      distinctId: ctx.transaction.transaction.data.sender,
+      distinctId: event.sender,
       pool,
       position,
       tick_lower,
@@ -176,6 +172,14 @@ pool.bind({
     })
     ctx.meter.Gauge("remove_liquidity_gauge").record(value, { pairName })
 
+  })
+  .onEventCollectRewardEvent(async (event, ctx) => {
+    ctx.eventLogger.emit("CollectRewardEvent", {
+      distinctId: event.sender,
+      pool: event.data_decoded.pool,
+      position: event.data_decoded.position,
+      amount: Number(event.data_decoded.amount) / 10 ** 9
+    })
   })
 
 
