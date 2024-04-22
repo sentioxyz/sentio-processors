@@ -14,44 +14,45 @@ import { scaleDown } from '@sentio/sdk'
 import { JsonRpcProvider } from 'ethers'
 import { getERC20ContractOnContext } from '@sentio/sdk/eth/builtin/erc20'
 
-GlobalProcessor.bind({ network: EthChainId.ASTAR_ZKEVM }).onTransaction(
-  async (tx, ctx) => {
-    const provider = getProvider(EthChainId.ASTAR_ZKEVM) as JsonRpcProvider
-    // const hexBlockNumber = tx.blockNumber?.toString(16)
-    // const batch = hexBlockNumber
-    //   ? await provider.send('zkevm_batchNumberByBlockNumber', ['0x' + hexBlockNumber])
-    //   : undefined
-    // const { sendSequencesTxHash, verifyBatchTxHash } = batch
-    //   ? await provider.send('zkevm_getBatchByNumber', [batch])
-    //   : { sendSequencesTxHash: undefined, verifyBatchTxHash: undefined }
-    ctx.eventLogger.emit('l2_tx', {
-      distinctId: tx.from,
-      value: scaleDown(tx.value, 18),
-      gasCost: gasCost(ctx),
-      // batch: Number(batch),
-      // sendSequencesTxHash,
-      // verifyBatchTxHash,
-    })
-
-    const bridgeName = {
-      [LayerswapWallet]: 'layerswap',
-      [RelayLinkWallet]: 'relaylink',
-    }[tx.from]
-    if (bridgeName) {
-      ctx.eventLogger.emit('bridge', {
+GlobalProcessor.bind({ network: EthChainId.ASTAR_ZKEVM })
+  .onTransaction(
+    async (tx, ctx) => {
+      // const hexBlockNumber = tx.blockNumber?.toString(16)
+      // const batch = hexBlockNumber
+      //   ? await provider.send('zkevm_batchNumberByBlockNumber', ['0x' + hexBlockNumber])
+      //   : undefined
+      // const { sendSequencesTxHash, verifyBatchTxHash } = batch
+      //   ? await provider.send('zkevm_getBatchByNumber', [batch])
+      //   : { sendSequencesTxHash: undefined, verifyBatchTxHash: undefined }
+      ctx.eventLogger.emit('l2_tx', {
         distinctId: tx.from,
-        type: 'in',
-        bridgeName,
-        token: 'eth',
-        amount: scaleDown(tx.value, 18),
+        value: scaleDown(tx.value, 18),
+        gasCost: gasCost(ctx),
+        // batch: Number(batch),
+        // sendSequencesTxHash,
+        // verifyBatchTxHash,
       })
+
+      const bridgeName = {
+        [LayerswapWallet]: 'layerswap',
+        [RelayLinkWallet]: 'relaylink',
+      }[tx.from]
+
+      if (bridgeName) {
+        ctx.eventLogger.emit('bridge', {
+          distinctId: tx.from,
+          to: tx.to,
+          type: 'in',
+          bridgeName,
+          coin_symbol: 'eth',
+          amount: scaleDown(tx.value, 18),
+        })
+      }
+    },
+    {
+      transaction: true
     }
-  },
-  {
-    transaction: true,
-    transactionReceipt: true,
-  },
-)
+  )
 
 PolygonZkEVMBridgeV2Processor.bind({
   network: EthChainId.ASTAR_ZKEVM,
@@ -64,16 +65,17 @@ PolygonZkEVMBridgeV2Processor.bind({
     }
     const payload: Record<string, any> = {
       distinctId: tx.from,
+      to: event.args.destinationAddress,
       type: 'out',
       bridgeName: 'polygonzkevmv2',
-      token: 'eth',
+      coin_symbol: 'eth',
       amount: scaleDown(event.args.amount, 18),
     }
     const logs = ctx.transactionReceipt?.logs || []
     if (logs.length > 1) {
       payload.tokenAddress = logs[0].address
       const contract = getERC20ContractOnContext(ctx, logs[0].address)
-      payload.token = await contract.symbol()
+      payload.coin_symbol = await contract.symbol()
       const decimals = await contract.decimals()
       payload.amount = scaleDown(event.args.amount, decimals)
     }
@@ -98,16 +100,17 @@ PolygonZkEVMBridgeV2Processor.bind({
     }
     const payload: Record<string, any> = {
       distinctId: tx.from,
+      to: event.args.destinationAddress,
       type: 'in',
       bridgeName: 'polygonzkevmv2',
-      token: 'eth',
+      coin_symbol: 'eth',
       amount: scaleDown(event.args.amount, 18),
     }
     const logs = ctx.transactionReceipt?.logs || []
     if (logs.length > 1) {
       payload.tokenAddress = logs[0].address
       const contract = getERC20ContractOnContext(ctx, logs[0].address)
-      payload.token = await contract.symbol()
+      payload.coin_symbol = await contract.symbol()
       const decimals = await contract.decimals()
       payload.amount = scaleDown(event.args.amount, decimals)
     }
