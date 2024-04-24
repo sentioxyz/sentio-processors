@@ -41,6 +41,7 @@ export const chainConfigs = [
     nativeTokenWrappedAddress:
       "0x0d500B1d8E8eF31E21C99d1Db9A6444d3ADf1270".toLowerCase(),
     blackListedAddresses: new Set<string>([
+      "0xf18f923480dc144326e6c65d4f3d47aa459bb41c".toLowerCase(), // usdc minter?
       "0xa63D57042B2d462B8dcf1570F8288dba405Cc909".toLowerCase(), // tdex
       "0xBF65023BcF48Ad0ab5537Ea39C9242de499386c9".toLowerCase(), // yieldwolf vaults
       "0x8F5BBB2BB8c2Ee94639E55d5F41de9b4839C1280".toLowerCase(), // synapse bridge
