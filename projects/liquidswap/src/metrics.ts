@@ -45,5 +45,10 @@ export const thalaTvl = Gauge.register("thala_tvl", commonOptions)
 export const thalaVolume = Gauge.register("thala_vol", volOptions)
 export const thalaVolumeByCoin = Gauge.register("thala_by_coin", volOptions)
 
-export const recordAccount = true
+export const cellanaTvlAll = Gauge.register("cellana_tvl_all", commonOptions)
+export const cellanaTvlByPool = Gauge.register("cellana_tvl_by_pool", commonOptions)
+export const cellanaTvl = Gauge.register("cellana_tvl", commonOptions)
+export const cellanaVolume = Gauge.register("cellana_vol", volOptions)
+export const cellanaVolumeByCoin = Gauge.register("cellana_by_coin", volOptions)
 
+export const recordAccount = true
