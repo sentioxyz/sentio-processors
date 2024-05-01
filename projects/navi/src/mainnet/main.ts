@@ -10,6 +10,9 @@ import { OracleProcessor } from "./oracle.js";
 import { AddressProcessor } from "./address.js";
 import { scaleDown } from "@sentio/sdk";
 import { lending as lending_new_liquidation_event, incentive_v2, flash_loan } from '../types/sui/navi_new_liq.js';
+import { PythOracleProcessor } from './pyth.js'
+import {SupraSValueFeed} from '../types/sui/0xc7abe17a209fcab08e2d7d939cf3df11f5b80cf03d10b50893f38df12fdebb07.js'
+import {getSupraPrice} from './supra.js'
 
 let coinInfoMap = new Map<string, Promise<token.TokenInfo>>()
 
@@ -45,6 +48,7 @@ PoolProcessor()
 ProtocolProcessor()
 OracleProcessor()
 AddressProcessor()
+PythOracleProcessor()
 
 async function onEvent(event: LendingEvent, ctx: SuiContext) {
   const sender = event.data_decoded.sender
@@ -128,28 +132,37 @@ async function onLiquidationNewEvent(event: lending_new_liquidation_event.Liquid
 // async function onRewardsClaimedEvent(event: incentive_v2.RewardsClaimedInstance, ctx: SuiContext) {
 
 //   const Coins: any = {
-//     "0xbb94b9f03ce414c3c26c9794c2113a4b287b0723ffbe285799f789abf72844e3":0,
-//     "0x1d5acfb2972ca8777961d2f93d6419df02fa9ec179e24391bbc74b436ea08448":1,
-//     "0xaa8251828fe6beed766d13b347d2789bb84594f825f59dd0e44653d46da3b9a2":2,
-//     "0x342f963896542702564432236ad487685f4e6d918a0dfff587a0b5eeb2e2b214":3,
-//     "0xd5f2755fefb3911a68cd5c253fc76027cfa1dd275781ba3621435ee5b184c9d0":4,
-//     "0x493fe9365747b70d19a2ced9865aae5b59887dc1cbf21a3fdef2fb69c64d778f":5,
-//     "0x9a7f58895dfc3a6c4eaf686a4216fd7483e985ba617f69844ba1e606cd6f7025":6,
-//     "0x34b3c70773568d2cfeb3390c7ea6e0c72c4a4d39632b8fc42c36710c7e42954f":7
+//     0: "0xbb94b9f03ce414c3c26c9794c2113a4b287b0723ffbe285799f789abf72844e3",
+//     1:"0x1d5acfb2972ca8777961d2f93d6419df02fa9ec179e24391bbc74b436ea08448",
+//     2:"0xaa8251828fe6beed766d13b347d2789bb84594f825f59dd0e44653d46da3b9a2",
+//     3:"0x342f963896542702564432236ad487685f4e6d918a0dfff587a0b5eeb2e2b214",
+//     4:"0xd5f2755fefb3911a68cd5c253fc76027cfa1dd275781ba3621435ee5b184c9d0",
+//     5:"0x493fe9365747b70d19a2ced9865aae5b59887dc1cbf21a3fdef2fb69c64d778f",
+//     6:"0x9a7f58895dfc3a6c4eaf686a4216fd7483e985ba617f69844ba1e606cd6f7025",
+//     7: "0x34b3c70773568d2cfeb3390c7ea6e0c72c4a4d39632b8fc42c36710c7e42954f"
 //   }
-//   const coinAddress = Coins[event.data_decoded.pool]
-//   const coinDecimal = getOrCreateCoin(ctx, coinAddress)
-//   const amount = scaleDown(event.data_decoded.amount, (await coinDecimal).decimal)
 //   const pool = event.data_decoded.pool
+//   const resp = await ctx.client.getDynamicFieldObject({
+//     parentId: 'Oxcc4aac9caf533d5b293b34e378c838e835bde9bd4c7d191aa5040773ae2bf444',
+//     name: {
+//       type: 'address',
+//       value: pool,
+//     },
+//   });
+//   const result:any = JSON.stringify(resp, null, 2);
+//   console.log(`RewardsClaimedEvent: ${result}`)
+//   const coinDecimal = getOrCreateCoin(ctx, Coins[parseInt(result['asset_id'])])
+//   const amount = scaleDown(event.data_decoded.amount, (await coinDecimal).decimal)
 //   const sender = event.data_decoded.sender
 
 //   const typeArray = event.type.split("::")
 //   const type = typeArray[typeArray.length - 1]
 
-//   ctx.eventLogger.emit("UserInteraction", {
+//   ctx.eventLogger.emit("RewardsClaimed", {
 //     distinctId: sender,
 //     sender,
 //     amount,
+//     asset_id: result['asset_id'],
 //     pool,
 //     type,
 //     env: "mainnet"
@@ -157,13 +170,10 @@ async function onLiquidationNewEvent(event: lending_new_liquidation_event.Liquid
 // }
 
 
-
-
-
 async function flashLoanHandler(event: flash_loan.FlashLoanInstance, ctx: SuiContext) {
   const sender = event.data_decoded.sender
   const amount = event.data_decoded.amount
-  const asset:string = event.data_decoded.asset as string
+  const asset: string = event.data_decoded.asset as string
 
 
   const FlashLoanCoins: Record<string, string> = {
@@ -172,7 +182,7 @@ async function flashLoanHandler(event: flash_loan.FlashLoanInstance, ctx: SuiCon
     "0x168728630433e1b2494e037b2d38801461260295e9ca38efed4157e1a9cc6b91": "Sui",
     "0xff307af2ebe087ca693a136a7cb6e767564c1498224b4fbb608df765743743ff": "USDT"
   }
-  
+
   const coinType = FlashLoanCoins[asset] || "unknown";
   ctx.eventLogger.emit("flashloan", {
     sender: sender,
@@ -238,15 +248,31 @@ async function repayOnBehalfOfHandler(event: lending.RepayOnBehalfOfEventInstanc
   })
 }
 
+
+async function supraEventHandler(event: SupraSValueFeed.SCCProcessedEventInstance, ctx: SuiContext) {
+  
+  getSupraPrice().then((data) => {
+    for (let i = 0; i < 8; i++) {
+      ctx.eventLogger.emit("supraPriceEvent", {
+        asset_id: data[i].asset_id,
+        asset_name: data[i].asset_name,
+        price: data[i].price,
+        timestamp: data[i].timestamp,
+      });
+    }
+  })
+  
+}
+
 flash_loan.bind({ startCheckpoint: 28205630n })
   .onEventFlashLoan(flashLoanHandler)
   .onEventFlashRepay(flashoanRepayHandler)
 
-lending.bind({startCheckpoint: 7800000n})
+lending.bind({ startCheckpoint: 7800000n })
   .onEventLiquidationCallEvent(onLiquidationEvent)
-  
 
-lending_new_liquidation_event.bind({startCheckpoint: 7800000n})
+
+lending_new_liquidation_event.bind({ startCheckpoint: 7800000n })
   .onEventLiquidationEvent(onLiquidationNewEvent)
   .onEventDepositOnBehalfOfEvent(depositOnBehalfOfHandler)
   .onEventRepayOnBehalfOfEvent(repayOnBehalfOfHandler)
@@ -255,5 +281,8 @@ lending_new_liquidation_event.bind({startCheckpoint: 7800000n})
   .onEventRepayEvent(onEvent)
   .onEventWithdrawEvent(onEvent)
 
-// incentive_v2.bind({startCheckpoint: 7800000n})
+SupraSValueFeed.bind({ startCheckpoint: 32862600n })
+  .onEventSCCProcessedEvent(supraEventHandler)
+
+// incentive_v2.bind({ startCheckpoint: 7800000n })
 //   .onEventRewardsClaimed(onRewardsClaimedEvent)

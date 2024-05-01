@@ -35,5 +35,5 @@ export function OracleProcessor() {
                 console.log("Oracle Error: ", e, " Entry: ", entry)
             }
         })
-    }, 60, 240, "", {owned:true})
+    }, 10, 10, "", {owned:true})
 }

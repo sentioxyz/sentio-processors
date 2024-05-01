@@ -1,0 +1,103 @@
+syntax = "proto3";
+
+package pull_service;
+
+message PullResponse {
+  oneof resp {
+    PullResponseEvm evm = 1;
+    PullResponseSui sui = 2;
+    PullResponseAptos aptos = 3;
+  }
+}
+
+service PullService {
+  rpc GetProof(PullRequest) returns (PullResponse);
+}
+
+message PullRequest {
+  repeated uint32 pair_indexes = 1;
+  string chain_type = 2;
+}
+
+message PullResponseEvm {
+  repeated uint32 pair_indexes = 1;
+  bytes proof_bytes = 2;
+}
+
+message PullResponseSui {
+  repeated uint32 pair_indexes = 1;
+
+  string dkg_object = 2;
+  string oracle_holder_object = 3;
+
+  bytes vote_smr_block_round = 5;
+  bytes vote_smr_block_timestamp = 6;
+  bytes vote_smr_block_author = 7;
+  bytes vote_smr_block_qc_hash = 8;
+  bytes vote_smr_block_batch_hashes = 9;
+  bytes vote_round = 10;
+
+  bytes min_batch_protocol = 11;
+  bytes min_batch_txn_hashes = 12;
+
+  bytes min_txn_cluster_hashes = 13;
+  bytes min_txn_sender = 14;
+  bytes min_txn_protocol = 15;
+  bytes min_txn_tx_sub_type = 16;
+
+  bytes scc_data_hash = 17;
+  bytes scc_pair = 18;
+  bytes scc_prices = 19;
+  bytes scc_timestamp = 20;
+  bytes scc_decimals = 21;
+  bytes scc_qc = 22;
+  bytes scc_round = 23;
+  bytes scc_id = 24;
+  bytes scc_member_index = 25;
+  bytes scc_committee_index = 26;
+
+  bytes batch_idx = 27;
+  bytes txn_idx = 28;
+  bytes cluster_idx = 29;
+  bytes sig = 30;
+  bytes pair_mask = 31;
+}
+
+message PullResponseAptos {
+  repeated uint32 pair_indexes = 1;
+
+  string dkg_object = 2;
+  string oracle_holder_object = 3;
+
+  bytes vote_smr_block_round = 5;
+  bytes vote_smr_block_timestamp = 6;
+  bytes vote_smr_block_author = 7;
+  bytes vote_smr_block_qc_hash = 8;
+  bytes vote_smr_block_batch_hashes = 9;
+  bytes vote_round = 10;
+
+  bytes min_batch_protocol = 11;
+  bytes min_batch_txn_hashes = 12;
+
+  bytes min_txn_cluster_hashes = 13;
+  bytes min_txn_sender = 14;
+  bytes min_txn_protocol = 15;
+  bytes min_txn_tx_sub_type = 16;
+
+  bytes scc_data_hash = 17;
+  bytes scc_pair = 18;
+  bytes scc_prices = 19;
+  bytes scc_timestamp = 20;
+  bytes scc_decimals = 21;
+  bytes scc_qc = 22;
+  bytes scc_round = 23;
+  bytes scc_id = 24;
+  bytes scc_member_index = 25;
+  bytes scc_committee_index = 26;
+
+  bytes batch_idx = 27;
+  bytes txn_idx = 28;
+  bytes cluster_idx = 29;
+  bytes sig = 30;
+  bytes pair_mask = 31;
+}
