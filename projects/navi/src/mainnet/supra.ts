@@ -120,6 +120,6 @@ async function decodeLocal(response: any): Promise<PriceData[]> {
 
 
 
-getSupraPrice().then((prices) => {
-  console.log(prices);
-});
+// getSupraPrice().then((prices) => {
+//   console.log(prices);
+// });
