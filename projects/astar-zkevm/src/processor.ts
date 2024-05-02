@@ -50,7 +50,8 @@ GlobalProcessor.bind({ network: EthChainId.ASTAR_ZKEVM })
       }
     },
     {
-      transaction: true
+      transaction: true,
+      transactionReceipt: true
     }
   )
 
@@ -152,7 +153,7 @@ PolygonValidiumEtrogProcessor.bind({
   {
     transaction: true,
     transactionReceipt: true,
-  },
+  }
 )
 
 PolygonValidiumEtrogProcessor.bind({

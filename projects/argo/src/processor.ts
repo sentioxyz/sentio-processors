@@ -14,6 +14,8 @@ import { StardustProcessor } from './types/eth/stardust.js'
 import { XARGOProcessor } from './types/eth/xargo.js'
 import { scaleDown } from '@sentio/sdk'
 import { EthChainId } from '@sentio/sdk/eth'
+import { LRUCache } from 'lru-cache'
+
 import * as config from './constant.js'
 
 

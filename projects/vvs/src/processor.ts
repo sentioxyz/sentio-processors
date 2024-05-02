@@ -4,16 +4,19 @@ import { EthChainId } from "@sentio/sdk/eth";
 import { getPriceByType, token } from "@sentio/sdk/utils"
 import { ERC20Context, ERC20Processor, getERC20Contract } from "@sentio/sdk/eth/builtin/erc20";
 import { VVSFactoryProcessor, VVSFactoryContext, PairCreatedEvent } from "./types/eth/vvsfactory.js";
-import { CORE_POOLS } from "./constant.js";
+import { CORE_POOLS_V2, CORE_POOLS_V3 } from "./constant.js";
 import { ContractContext, EthContext, TypedCallTrace } from "@sentio/sdk/eth";
 import { CraftsmanContext, CraftsmanProcessor, DepositEvent, getCraftsmanContractOnContext, WithdrawEvent } from "./types/eth/craftsman.js";
+import './v3pool.js'
+import { V3PoolContext } from "./types/eth/v3pool.js";
+
 interface poolInfo {
   token0: token.TokenInfo
   token1: token.TokenInfo
   token0Address: string
   token1Address: string
   poolName: string
-  // fee: string
+  fee: number
 }
 
 let poolInfoMap = new Map<string, Promise<poolInfo>>()
@@ -60,23 +63,28 @@ const dummyPoolInfo = {
     symbol: "",
     name: "",
     decimal: 0
-  }
+  },
+  fee: 0
 }
 
-async function buildPoolInfo(token0Promise: Promise<string>,
-  token1Promise: Promise<string>): Promise<poolInfo> {
+async function buildPoolInfo(ctx: VVSPairContext | V3PoolContext, poolType: string): Promise<poolInfo> {
   try {
-    const address0 = await token0Promise
-    const address1 = await token1Promise
+    const address0 = await ctx.contract.token0()
+    const address1 = await ctx.contract.token1()
     const tokenInfo0 = await getTokenInfo(address0)
     const tokenInfo1 = await getTokenInfo(address1)
+    let fee = 3000
+    if (poolType == "v3") {
+      //@ts-ignore
+      fee = Number(await ctx.contract.fee())
+    }
     return {
       token0: tokenInfo0,
       token1: tokenInfo1,
       token0Address: address0,
       token1Address: address1,
-      poolName: tokenInfo0.symbol + "-" + tokenInfo1.symbol
-      // fee: (await feePromise).toString(),
+      poolName: tokenInfo0.symbol + "-" + tokenInfo1.symbol,
+      fee
     }
   } catch (e) {
     return dummyPoolInfo
@@ -91,28 +99,28 @@ async function getTokenInfo(address: string): Promise<token.TokenInfo> {
   }
 }
 
-const getOrCreatePool = async function (ctx: VVSPairContext): Promise<poolInfo> {
+export const getOrCreatePool = async function (ctx: VVSPairContext | V3PoolContext, poolType: string): Promise<poolInfo> {
   let infoPromise = poolInfoMap.get(ctx.address)
   if (!infoPromise) {
-    infoPromise = buildPoolInfo(ctx.contract.token0(), ctx.contract.token1())
+    infoPromise = buildPoolInfo(ctx, poolType)
     poolInfoMap.set(ctx.address, infoPromise)
     console.log("set poolInfoMap for " + ctx.address)
   }
   return await infoPromise
 }
 
-const getOrCreatePoolForCraftsman = async function (poolAddress: string, ctx: CraftsmanContext): Promise<poolInfo> {
-  let infoPromise = poolInfoMap.get(poolAddress)
-  if (!infoPromise) {
-    let poolContract = getVVSPairContractOnContext(ctx, poolAddress)
-    const token0 = poolContract.token0()
-    const token1 = poolContract.token1()
-    infoPromise = buildPoolInfo(token0, token1)
-    poolInfoMap.set(ctx.address, infoPromise)
-    console.log("set poolInfoMap for " + ctx.address)
-  }
-  return await infoPromise
-}
+// const getOrCreatePoolForCraftsman = async function (poolAddress: string, ctx: CraftsmanContext): Promise<poolInfo> {
+//   let infoPromise = poolInfoMap.get(poolAddress)
+//   if (!infoPromise) {
+//     let poolContract = getVVSPairContractOnContext(ctx, poolAddress)
+//     const token0 = poolContract.token0()
+//     const token1 = poolContract.token1()
+//     infoPromise = buildPoolInfo(token0, token1)
+//     poolInfoMap.set(ctx.address, infoPromise)
+//     console.log("set poolInfoMap for " + ctx.address)
+//   }
+//   return await infoPromise
+// }
 
 async function getUsdValue(ctx: VVSPairContext | CraftsmanContext, info: token.TokenInfo, token: string, amount: BigDecimal): Promise<BigDecimal> {
   const price = await getPriceByType(EthChainId.CRONOS, token, ctx.timestamp) || 0
@@ -133,7 +141,7 @@ function maxBigInt(a: BigInt, b: BigInt): BigInt {
 
 async function onSwap(evt: SwapEvent, ctx: VVSPairContext) {
   try {
-    const poolInfo = await getOrCreatePool(ctx)
+    const poolInfo = await getOrCreatePool(ctx, "v2")
     const amount0 = maxBigInt(evt.args.amount0In, evt.args.amount0Out).scaleDown(poolInfo.token0.decimal)
     const amount1 = maxBigInt(evt.args.amount1In, evt.args.amount1Out).scaleDown(poolInfo.token1.decimal)
     const price0 = await getPriceByType(EthChainId.CRONOS, poolInfo.token0Address, ctx.timestamp) || 0
@@ -215,7 +223,7 @@ async function onTransfer(evt: TransferEvent, ctx: VVSPairContext) {
 
 async function priceSlippageHandler(_: any, ctx: VVSPairContext) {
   try {
-    const poolInfo = await getOrCreatePool(ctx)
+    const poolInfo = await getOrCreatePool(ctx, "v2")
     const reserves = await ctx.contract.getReserves()
     // const balance0 = (await getERC20Contract(ctx.chainId, poolInfo.token0Address).balanceOf(ctx.address, {blockTag: ctx.blockNumber})).scaleDown(poolInfo.token0.decimal)	
     // const balance1 = (await getERC20Contract(ctx.chainId, poolInfo.token1Address).balanceOf(ctx.address, {blockTag: ctx.blockNumber})).scaleDown(poolInfo.token1.decimal)	
@@ -273,7 +281,7 @@ function getAmountOut(amountIn: BigDecimal, reserveIn: BigDecimal, reserveOut: B
 
 async function blockHandler(_: any, ctx: VVSPairContext) {
   try {
-    const poolInfo = await getOrCreatePool(ctx)
+    const poolInfo = await getOrCreatePool(ctx, "v2")
     const balance0 = (await getERC20Contract(ctx.chainId, poolInfo.token0Address).balanceOf(ctx.address, { blockTag: ctx.blockNumber })).scaleDown(poolInfo.token0.decimal)
     const balance1 = (await getERC20Contract(ctx.chainId, poolInfo.token1Address).balanceOf(ctx.address, { blockTag: ctx.blockNumber })).scaleDown(poolInfo.token1.decimal)
 
@@ -319,6 +327,7 @@ async function craftsmanHandler(_: any, ctx: CraftsmanContext) {
     console.log(e)
   }
 }
+
 
 async function onCraftsmanDeposit(evt: DepositEvent, ctx: CraftsmanContext) {
   try {
@@ -429,8 +438,10 @@ function gasCost(ctx: EthContext) {
 }
 
 
-for (var i = 0; i < CORE_POOLS.length; i++) {
-  const pool = CORE_POOLS[i]
+
+
+for (var i = 0; i < CORE_POOLS_V2.length; i++) {
+  const pool = CORE_POOLS_V2[i]
   VVSPairProcessor.bind({
     address: pool,
     network: EthChainId.CRONOS,
@@ -461,3 +472,6 @@ ERC20Processor.bind({
 // VVSPairProcessor.bind({ address: "0xfd0Cd0C651569D1e2e3c768AC0FFDAB3C8F4844f", network: EthChainId.CRONOS})
 // .onEventSwap(onSwap)
 // .onBlockInterval(blockHandler)
+
+
+

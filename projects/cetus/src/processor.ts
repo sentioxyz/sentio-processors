@@ -4,6 +4,8 @@ import { getPriceBySymbol, getPriceByType, token } from "@sentio/sdk/utils"
 import * as constant from './constant-cetus.js'
 import { SuiNetwork } from "@sentio/sdk/sui"
 // import './cetus-launchpad.js'
+import { LRUCache } from 'lru-cache'
+
 import * as helper from './helper/cetus-clmm.js'
 import './stablefarming.js'
 
@@ -36,10 +38,20 @@ factory.bind({
 
   })
 
+
+const ttl = 6 * 60 * 60 * 1000 // 6 hour in milliseconds
+const processedMap = new LRUCache<string, Promise<any>>({
+  max: 1000000,
+  ttl: ttl
+})
+
+
 pool.bind({
   // address: constant.CLMM_MAINNET,
   // network: SuiNetwork.MAIN_NET,
   // startCheckpoint: 19548548n
+  // startCheckpoint: 28851331n
+
 })
   .onEventSwapEvent(async (event, ctx) => {
     ctx.meter.Counter("swap_counter").add(1, { project: "cetus" })
@@ -174,13 +186,75 @@ pool.bind({
 
   })
   .onEventCollectRewardEvent(async (event, ctx) => {
-    ctx.eventLogger.emit("CollectRewardEvent", {
-      distinctId: event.sender,
-      pool: event.data_decoded.pool,
-      position: event.data_decoded.position,
-      amount: Number(event.data_decoded.amount) / 10 ** 9
+
+    if (processedMap.has(ctx.transaction.digest)) {
+      return
+    }
+    processedMap.set(ctx.transaction.digest, Promise.resolve())
+
+    //debug
+    // if (ctx.transaction.digest != "HeFFdLQu5ZX3Aqzk935kPf3TXTBuZ9usKFecAYCxv8DR") return
+
+
+    let rewardCoinCallInfo: token.TokenInfo[] = []
+    let rewardCoinEventInfo: any[] = []
+
+    //@ts-ignore
+    const transactions = ctx.transaction.transaction?.data.transaction.transactions
+    for (let i = 0; i < transactions.length; i++) {
+      if (transactions[i].MoveCall
+        && (transactions[i].MoveCall.package == "0xd43348b8879c1457f882b02555ba862f2bc87bcc31b16294ca14a82f608875d2")
+        && (transactions[i].MoveCall.module == "pool_script_v2")
+        && (transactions[i].MoveCall.function == "collect_reward")) {
+        const coinType = transactions[i].MoveCall.type_arguments[transactions[i].MoveCall.type_arguments.length - 1]
+        console.log(`call i=${i} coinType ${coinType}`)
+        const tokenInfo = await helper.getOrCreateCoin(ctx, coinType)
+        rewardCoinCallInfo.push(tokenInfo)
+      }
+    }
+
+    const events = ctx.transaction.events
+    if (events) {
+      for (let i = 0; i < events.length; i++) {
+        if (events[i].type == "0x1eabed72c53feb3805120a081dc15963c204dc8d091542592abaf7a35689b2fb::pool::CollectRewardEvent") {
+          interface EventInfo {
+            amount: number,
+            pool: string,
+            position: string
+          }
+          //@ts-ignore
+          const {
+            amount,
+            pool,
+            position
+          }: EventInfo = events[i].parsedJson
+          console.log(`event i=${i} amount ${amount} pool ${pool} position ${position}`)
+
+          rewardCoinEventInfo.push({
+            amount,
+            pool,
+            position
+          })
+        }
+      }
+    }
+
+    if (rewardCoinEventInfo.length == rewardCoinCallInfo.length) {
+      for (let i = 0; i < rewardCoinEventInfo.length; i++) {
+        ctx.eventLogger.emit("CollectRewardEvent", {
+          distinctId: event.sender,
+          pool: rewardCoinEventInfo[i].pool,
+          position: rewardCoinEventInfo[i].position,
+          amount: Number(rewardCoinEventInfo[i].amount) / 10 ** Number(rewardCoinCallInfo[i].decimal),
+          coin_symbol: rewardCoinCallInfo[i].symbol
+        })
+      }
+    }
+  },
+    {
+      inputs: true,
+      allEvents: true
     })
-  })
 
 
 //pool object
