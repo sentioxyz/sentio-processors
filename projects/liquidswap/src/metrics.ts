@@ -1,4 +1,4 @@
-import {Gauge, MetricOptions} from "@sentio/sdk";
+import {Counter, Gauge, MetricOptions} from "@sentio/sdk";
 
 export const commonOptions = {sparse: true}
 export const volOptions: MetricOptions = {
@@ -23,6 +23,8 @@ export const priceImpact = Gauge.register("price_impact", commonOptions)
 
 export const priceGauge = Gauge.register("price", commonOptions)
 export const priceGaugeNew = Gauge.register("price_new", commonOptions)
+
+export const farmValue = Counter.register('farm_value', commonOptions)
 
 export const auxTvlAll = Gauge.register("aux_tvl_all", commonOptions)
 export const auxTvlByPool = Gauge.register("aux_tvl_by_pool", commonOptions)
