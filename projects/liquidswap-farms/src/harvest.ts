@@ -1,6 +1,7 @@
-import {Counter} from "@sentio/sdk";
+import { Counter } from '@sentio/sdk'
 import { AptosContext } from '@sentio/sdk/aptos'
 import { scripts } from './types/aptos/harvest.js'
+import { accountTypeString } from '@sentio/sdk/move'
 
 const startVersion = 70250898
 
@@ -51,27 +52,41 @@ const functionList = [
 
 scripts
   .bind({ startVersion })
-  .onEntryStake(handleStake)
-  .onEntryStakeAndBoost(handleStake)
-  .onEntryUnstake(handleUnstake)
-  .onEntryUnstakeAndRemoveBoost(handleUnstake)
-  .onTransaction((tx, ctx) => {
-    if (!('function' in tx.payload)) {
-      return
-    }
-    const functionName = tx.payload.function.split('::')[2]
-    if (!functionList.includes(functionName)) {
-      return
-    }
+  // .onEntryStake(handleStake)
+  // .onEntryStakeAndBoost(handleStake)
+  // .onEntryUnstake(handleUnstake)
+  // .onEntryUnstakeAndRemoveBoost(handleUnstake)
+  .onTransaction(
+    (tx, ctx) => {
+      if (!('function' in tx.payload)) {
+        return
+      }
+      const functionName = tx.payload.function.split('::')[2]
+      if (!functionList.includes(functionName)) {
+        return
+      }
 
-    const pair = getLPPair(tx.payload.type_arguments[0])
-    if (!pair) {
-      console.log('tx without LP pair', tx.payload.type_arguments, tx.hash)
-    }
-    ctx.eventLogger.emit('farm_tx', {
-      distinctId: tx.sender,
-      pool: tx.payload.arguments[0],
-      pair,
-      function: functionName,
-    })
-  })
+      const pool = accountTypeString(tx.payload.arguments[0])
+      const pair = getLPPair(tx.payload.type_arguments[0])
+      const event = tx.events.find((evt) => ['StakeEvent', 'UnstakeEvent'].includes(evt.type.split('::')[2]))
+      let amount
+      if (event) {
+        amount = event.data.amount
+        if (event.type.endsWith('StakeEvent')) {
+          farmValue.add(ctx, amount, { pair, pool })
+        } else {
+          farmValue.sub(ctx, amount, { pair, pool })
+        }
+      }
+
+      ctx.eventLogger.emit('farm_tx', {
+        distinctId: tx.sender,
+        pool,
+        amount,
+        pair,
+        function: functionName,
+      })
+    },
+    false,
+    { allEvents: true },
+  )
