@@ -189,7 +189,7 @@ for (const env of [v0, v05]) {
         const volumeByCoin = new Map<string, BigDecimal>()
         const timestamp = ctx.timestampInMicros
 
-        console.log("num of pools: ", pools.length, ctx.version.toString())
+        console.log("liquidswap num of pools: ", pools.length, ctx.version.toString())
 
         function debugCoin(coin: string) {
             const coinInfo = getCoinInfo(coin)
@@ -221,35 +221,35 @@ for (const env of [v0, v05]) {
             const coinYInfo = getCoinInfo(coiny)
             let priceX = BigDecimal(0)
             let priceY = BigDecimal(0)
-            if (whitelistx) {
-                if (!updated.has(coinx)) {
-                    updated.add(coinx)
-                    priceX = calcPrice(coinx, pools) ?? BigDecimal(0)
-                    if (priceX.eq(BigDecimal(0))) {
-//                    debugCoin(coinx)
-                        priceX = priceInUsd.get(coinx) ?? BigDecimal(0)
-                    } else {
-                        priceInUsd.set(coinx, priceX)
-                    }
-                } else {
-                    priceX = priceInUsd.get(coinx) ?? BigDecimal(0)
-                }
-                priceGaugeNew.record(ctx, priceX, {coin: coinXInfo.symbol, ver})
-            }
-            if (whitelisty) {
-                if (!updated.has(coiny)) {
-                    updated.add(coiny)
-                    priceY = calcPrice(coiny, pools) ?? BigDecimal(0)
-                    if (priceY.eq(BigDecimal(0))) {
-                        priceY = priceInUsd.get(coiny) ?? BigDecimal(0)
-                    } else {
-                        priceInUsd.set(coiny, priceY)
-                    }
-                } else {
-                    priceY = priceInUsd.get(coiny) ?? BigDecimal(0)
-                }
-                priceGaugeNew.record(ctx, priceY, {coin: coinYInfo.symbol, ver})
-            }
+//             if (whitelistx) {
+//                 if (!updated.has(coinx)) {
+//                     updated.add(coinx)
+//                     priceX = calcPrice(coinx, pools) ?? BigDecimal(0)
+//                     if (priceX.eq(BigDecimal(0))) {
+// //                    debugCoin(coinx)
+//                         priceX = priceInUsd.get(coinx) ?? BigDecimal(0)
+//                     } else {
+//                         priceInUsd.set(coinx, priceX)
+//                     }
+//                 } else {
+//                     priceX = priceInUsd.get(coinx) ?? BigDecimal(0)
+//                 }
+//                 priceGaugeNew.record(ctx, priceX, {coin: coinXInfo.symbol, ver})
+//             }
+//             if (whitelisty) {
+//                 if (!updated.has(coiny)) {
+//                     updated.add(coiny)
+//                     priceY = calcPrice(coiny, pools) ?? BigDecimal(0)
+//                     if (priceY.eq(BigDecimal(0))) {
+//                         priceY = priceInUsd.get(coiny) ?? BigDecimal(0)
+//                     } else {
+//                         priceInUsd.set(coiny, priceY)
+//                     }
+//                 } else {
+//                     priceY = priceInUsd.get(coiny) ?? BigDecimal(0)
+//                 }
+//                 priceGaugeNew.record(ctx, priceY, {coin: coinYInfo.symbol, ver})
+//             }
 
             if (!whitelistx && !whitelisty) {
                 continue

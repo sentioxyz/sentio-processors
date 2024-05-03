@@ -337,7 +337,7 @@ AptosResourcesProcessor.bind({
         thalaTvl.record(ctx, tvl, { poolType: pool.type });
       }
     },
-    5,
-    60
+    60,
+    60 * 24
   );
 

@@ -13,7 +13,7 @@ import { AptosContext, AptosResourcesProcessor } from '@sentio/sdk/aptos'
 import { BigDecimal } from '@sentio/sdk'
 import { MoveAddressType } from '@aptos-labs/ts-sdk'
 
-const startVersion = 10000
+const startVersion = undefined
 
 async function getPair(coinx: string, coiny: string, coinList: any): Promise<string> {
   const coinXInfo = await coinList.getCoinInfo(coinx)
