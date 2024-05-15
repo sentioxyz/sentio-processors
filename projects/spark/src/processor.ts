@@ -17,15 +17,27 @@ OrderbookProcessor.bind({
 //   }
 // })
     .onLogTradeEvent(async (trade, ctx) => {
-        const pool = trade.data.base_token.value
+        const vol = BigInt(trade.data.trade_price.toString()) * BigInt(trade.data.trade_size.toString())
         ctx.eventLogger.emit('trade', {
           distinctId: ctx.transaction?.sender,
-          ...trade
+          ...trade,
+          vol: vol.scaleDown(2 * 10)
         })
     })
-    .onLogMarketCreateEvent(async (order, ctx) => {
-        ctx.eventLogger.emit('order', {
+    .onLogOrderChangeEvent(async (order, ctx) => {
+      ctx.eventLogger.emit('order', {
+        distinctId: ctx.transaction?.sender,
+        ...order,
+      })
+    })
+    .onLogMarketCreateEvent(async (market, ctx) => {
+        ctx.eventLogger.emit('market', {
           distinctId: ctx.transaction?.sender,
-          ...order
+          ...market
         })
     })
+    // .onCallOpen_order(async (order, ctx) => {
+    //   ctx.eventLogger.emit('openOrder', {
+    //     distinctId: ctx.transaction?.sender,
+    //   })
+    // })
