@@ -17,7 +17,8 @@ OrderbookProcessor.bind({
 //   }
 // })
     .onLogTradeEvent(async (trade, ctx) => {
-        const vol = BigInt(trade.data.trade_price.toString()) * BigInt(trade.data.trade_size.toString())
+        
+        const vol = trade.data.trade_price.mul(trade.data.trade_size)
         ctx.eventLogger.emit('trade', {
           distinctId: ctx.transaction?.sender,
           ...trade,
