@@ -4,9 +4,10 @@ import {
   SuiContext,
   SuiObjectContext,
 } from "@sentio/sdk/sui";
-import { getPriceBySymbol, getPriceByType, token } from "@sentio/sdk/utils"
+import { getPriceByType, token } from "@sentio/sdk/utils";
 import * as constant from "../constant-turbos.js";
 import { SuiNetwork } from "@sentio/sdk/sui";
+import axios from "axios";
 
 export const MAX_TICK_INDEX = 443636;
 export const MIN_TICK_INDEX = -443636;
@@ -100,7 +101,7 @@ export async function buildCoinInfo(
     name = metadata!.name;
     console.log(`build coin metadata ${symbol} ${decimal} ${name}`);
   } catch (e) {
-    console.log(`Build coin error ${e.message} at ${JSON.stringify(ctx)}`);
+    console.log(`Build coin error ${e.message}}`);
   }
   return {
     symbol,
@@ -181,7 +182,7 @@ export async function buildPoolInfo(
     pairName = symbol_a + "-" + symbol_b + " " + fee_label;
     pairFullName = coinInfo_a.name + "-" + coinInfo_b.name + " " + fee_label;
   } catch (e) {
-    console.log(`Build pool error ${e.message} at ${JSON.stringify(ctx)}`);
+    console.log(`Build pool error ${e.message}}`);
   }
 
   return {
@@ -244,7 +245,7 @@ export async function getPoolPrice(
       .Gauge("b2a_price")
       .record(coin_b2a_price, { pairName, pairFullName });
   } catch (e) {
-    console.log(`get pool price error ${e.message} at ${JSON.stringify(ctx)}`);
+    console.log(`get pool price error ${e.message}}`);
   }
   return coin_a2b_price;
 }
@@ -262,8 +263,16 @@ export async function calculateValue_USD(
     const [coin_a_full_address, coin_b_full_address] = getCoinFullAddress(
       poolInfo.type
     );
-    const price_a = await getPriceBySymbol(poolInfo.symbol_a, date);
-    const price_b = await getPriceBySymbol(poolInfo.symbol_b, date);
+    const price_a = await getPriceByType(
+      SuiNetwork.MAIN_NET,
+      coin_a_full_address,
+      date
+    );
+    const price_b = await getPriceByType(
+      SuiNetwork.MAIN_NET,
+      coin_b_full_address,
+      date
+    );
     console.log(`price_a ${price_a}, price_b ${price_b}`);
     const coin_a2b_price = await getPoolPrice(ctx, pool);
 
@@ -280,20 +289,17 @@ export async function calculateValue_USD(
       value_b = amount_b * price_b;
     } else {
       console.log(
-        `price not in sui coinlist, calculate value failed at coin_a: ${coin_a_full_address},coin_b: ${coin_b_full_address} at ${pool}`
+        `price not in sui coinlist, calculate value failed at coin_a: ${coin_a_full_address},coin_b: ${coin_b_full_address}}`
       );
     }
   } catch (e) {
-    console.log(
-      ` calculate value error ${e.message} at ${pool}`
-    );
+    console.log(` calculate value error ${e.message}}`);
   }
   return [value_a, value_b];
 }
 
 export async function calculateSwapVol_USD(
-  ctx: SuiContext | SuiObjectContext,
-  pool: string,
+  type: string,
   amount_a: number,
   amount_b: number,
   atob: Boolean,
@@ -304,9 +310,17 @@ export async function calculateSwapVol_USD(
   let price_b;
 
   try {
-    const poolInfo = await getOrCreatePool(ctx, pool);
-    price_a = await getPriceBySymbol(poolInfo.symbol_a, date);
-    price_b = await getPriceBySymbol(poolInfo.symbol_b, date);
+    const [coin_a_full_address, coin_b_full_address] = getCoinFullAddress(type);
+    price_a = await getPriceByType(
+      SuiNetwork.MAIN_NET,
+      coin_a_full_address,
+      date
+    );
+    price_b = await getPriceByType(
+      SuiNetwork.MAIN_NET,
+      coin_b_full_address,
+      date
+    );
 
     if (price_a) {
       vol = amount_a * price_a;
@@ -318,11 +332,11 @@ export async function calculateSwapVol_USD(
       }
     } else {
       console.log(
-        `price not in sui coinlist, calculate vol failed for pool w/ ${pool}`
+        `price not in sui coinlist, calculate vol failed for pool w/ ${type}`
       );
     }
   } catch (e) {
-    console.log(` calculate swap value error ${e.message} at ${pool}`);
+    console.log(` calculate swap value error ${e.message} at ${type}`);
   }
   return [vol, price_a, price_b];
 }
@@ -351,9 +365,7 @@ export async function getPoolRewardCoinType(
     rewardCoin.symbol = coin!.symbol;
     rewardCoin.decimals = coin!.decimals;
   } catch (e) {
-    console.log(
-      `get pool reward coin type error ${e.message} at ${JSON.stringify(ctx)}`
-    );
+    console.log(`get pool reward coin type error ${e.message}}`);
   }
   return rewardCoin;
 }
@@ -364,6 +376,9 @@ export async function calculateTokenValue_USD(
   date: Date
 ) {
   let [value_a, value_b] = [0, 0];
+
+  console.log("entering calculate function", "pool", pool, "date", date)
+  if (pool.toLowerCase() != "0x2ce764106ace913ff43f3c1fd6a91454898a42710464cd60d220130eb78ca5ca") return
 
   // When the pool is broken through, it is not recorded
   if (await getCurrentTickStatus(ctx, pool)) {
@@ -390,12 +405,22 @@ export async function calculateTokenValue_USD(
     const name_a = poolInfo.name_a;
     const name_b = poolInfo.name_b;
 
-    const price_a = await getPriceBySymbol(poolInfo.symbol_a, date);
-    const price_b = await getPriceBySymbol(poolInfo.symbol_b, date);
+    const price_a = await getPriceByType(
+      SuiNetwork.MAIN_NET,
+      coin_a_full_address,
+      date
+    );
+    const price_b = await getPriceByType(
+      SuiNetwork.MAIN_NET,
+      coin_b_full_address,
+      date
+    );
     const coin_a2b_price = await getPoolPrice(ctx, pool);
+
 
     const amount_a = Number(coin_a) / 10 ** poolInfo.decimal_a;
     const amount_b = Number(coin_b) / 10 ** poolInfo.decimal_b;
+
 
     if (price_a) {
       value_a = amount_a * price_a;
@@ -410,87 +435,82 @@ export async function calculateTokenValue_USD(
       value_b = amount_b * price_b;
     } else {
       console.log(
-        `price not in sui coinlist, calculate value failed at coin_a: ${coin_a_full_address},coin_b: ${coin_b_full_address} at ${JSON.stringify(
-          ctx
-        )}`
+        `price not in sui coinlist, calculate value failed at coin_a: ${coin_a_full_address},coin_b: ${coin_b_full_address}}`
       );
     }
 
-    ctx.meter
-      .Gauge("TVL_by_Token_USD")
-      .record(value_a, {
-        pairName,
-        pairFullName,
-        name: name_a,
-        symbol: poolInfo.symbol_a,
-        type: poolInfo.type_a,
-      });
-    ctx.meter
-      .Gauge("TVL_by_Token_USD")
-      .record(value_b, {
-        pairName,
-        pairFullName,
-        name: name_b,
-        symbol: poolInfo.symbol_b,
-        type: poolInfo.type_b,
-      });
+    console.log("inside try catch calculate function", "pool", pool, "date", date, "amount_a", amount_a, "amount_b", amount_b, "price_a", price_a, "price_b", price_b, "price_a2b", coin_a2b_price, "value_a", value_a, "value_b", value_b)
 
-    ctx.meter
-      .Counter("TVL_by_Token_USD_Counter")
-      .add(value_b!, {
-        pairName,
-        pairFullName,
-        name: name_b,
-        symbol: poolInfo.symbol_b,
-        type: poolInfo.type_a,
-      });
-    ctx.meter
-      .Counter("TVL_by_Token_USD_Counter")
-      .add(value_a!, {
-        pairName,
-        pairFullName,
-        name: name_a,
-        symbol: poolInfo.symbol_a,
-        type: poolInfo.type_b,
-      });
+    const turbosPool = await getTurbosPool(pool)
+    if (turbosPool) {
+      console.log("turbosPool", JSON.stringify(turbosPool), ctx.timestamp)
+    }
+    else { console.log("turbosPool undefined") }
 
-    ctx.meter
-      .Gauge("TVL_by_Token")
-      .record(amount_a, {
-        pairName,
-        pairFullName,
-        name: name_a,
-        symbol: poolInfo.symbol_a,
-        type: poolInfo.type_a,
-      });
-    ctx.meter
-      .Gauge("TVL_by_Token")
-      .record(amount_b, {
-        pairName,
-        pairFullName,
-        name: name_b,
-        symbol: poolInfo.symbol_b,
-        type: poolInfo.type_b,
-      });
+    if (turbosPool.data?.is_risk || turbosPool.data?.flag !== 1) {
+      value_a = 0;
+      value_b = 0;
+    }
 
-    ctx.meter
-      .Counter("TVL_by_Token_Counter")
-      .add(amount_a!, {
-        pairName,
-        pairFullName,
-        name: name_a,
-        symbol: poolInfo.symbol_a,
-        type: poolInfo.type_a,
-      });
-    ctx.meter
-      .Counter("TVL_by_Token_Counter")
-      .add(amount_b!, {
-        pairName,
-        pairFullName,
-        name: name_b,
-        symbol: poolInfo.symbol_b,
-        type: poolInfo.type_b,
-      });
+    ctx.meter.Gauge("TVL_by_Token_USD").record(value_a, {
+      pairName,
+      pairFullName,
+      name: name_a,
+      symbol: poolInfo.symbol_a,
+      type: poolInfo.type_a,
+    });
+    ctx.meter.Gauge("TVL_by_Token_USD").record(value_b, {
+      pairName,
+      pairFullName,
+      name: name_b,
+      symbol: poolInfo.symbol_b,
+      type: poolInfo.type_b,
+    });
+
+    ctx.meter.Counter("TVL_by_Token_USD_Counter").add(value_b!, {
+      pairName,
+      pairFullName,
+      name: name_b,
+      symbol: poolInfo.symbol_b,
+      type: poolInfo.type_b,
+    });
+    ctx.meter.Counter("TVL_by_Token_USD_Counter").add(value_a!, {
+      pairName,
+      pairFullName,
+      name: name_a,
+      symbol: poolInfo.symbol_a,
+      type: poolInfo.type_a,
+    });
+
+    ctx.meter.Gauge("TVL_by_Token").record(amount_a, {
+      pairName,
+      pairFullName,
+      name: name_a,
+      symbol: poolInfo.symbol_a,
+      type: poolInfo.type_a,
+    });
+    ctx.meter.Gauge("TVL_by_Token").record(amount_b, {
+      pairName,
+      pairFullName,
+      name: name_b,
+      symbol: poolInfo.symbol_b,
+      type: poolInfo.type_b,
+    });
+
+    ctx.meter.Counter("TVL_by_Token_Counter").add(amount_a!, {
+      pairName,
+      pairFullName,
+      name: name_a,
+      symbol: poolInfo.symbol_a,
+      type: poolInfo.type_a,
+    });
+    ctx.meter.Counter("TVL_by_Token_Counter").add(amount_b!, {
+      pairName,
+      pairFullName,
+      name: name_b,
+      symbol: poolInfo.symbol_b,
+      type: poolInfo.type_b,
+    });
   } catch (e) {
     console.log(`calculate token liquidity usd error ${e.message} at ${pool}`);
   }
@@ -512,4 +532,81 @@ export async function getCurrentTickStatus(
   }
 
   return current_tick === MAX_TICK_INDEX || current_tick === MIN_TICK_INDEX;
+}
+
+let cachePool = {};
+
+export async function getTurbosPool(pool: string) {
+  console.log("entering getTurbosPool")
+  if (!pool) {
+    return {
+      error: true,
+    };
+  }
+  try {
+    console.log("entering get pool try catch")
+
+    const now = Date.now();
+    if (cachePool[pool]
+      // && now - cachePool[pool].time < 1000 * 60 * 30
+    ) {
+      return {
+        data: cachePool[pool].data,
+      };
+    }
+
+    const response = await axios.get(
+      `https://api.turbos.finance/pools/ids?ids=${pool}`
+    );
+
+    console.log(
+      `pools ${pool} res status ${response.status} data ${JSON.stringify(response.data)} `
+    );
+    console.log(
+      `pools ${pool} res ${JSON.stringify(response.data)} value : ${response.data.data},${response.data.code},${response.data.data.code}`
+    );
+
+    cachePool[pool] = {
+      data: response.data.data[0],
+      time: now,
+    };
+    return {
+      data: response.data.data[0],
+    };
+  } catch (err) {
+    console.log(`get pools info error, ${err.message}`);
+    throw new Error(`error in getTurbosPool fetch function, throw to upstream function ${err.message}`)
+    return {
+      error: true,
+    };
+  }
+}
+
+export async function getVaultCoinType(
+  ctx: SuiContext | SuiObjectContext,
+  objectId: string
+) {
+  const rewardCoin = {
+    type: "",
+    symbol: "",
+    decimals: 9,
+  };
+  try {
+    // @ts-ignore
+    const obj = await ctx.client.getObject({
+      id: objectId,
+      options: { showType: true, showContent: true },
+    });
+    const type = obj!.data.content.type;
+    const typeArray = type.match(/\<([^)]*)\>/);
+    const coinType = typeArray[1];
+    const coin = await ctx.client.getCoinMetadata({ coinType });
+
+    rewardCoin.type = coinType;
+    rewardCoin.symbol = coin!.symbol;
+    rewardCoin.decimals = coin!.decimals;
+  } catch (e) {
+    console.log(`get pool reward coin type error ${e.message}}`);
+  }
+  return rewardCoin;
 }
