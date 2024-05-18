@@ -132,7 +132,7 @@ export async function getTurbosPool(pool: string) {
     if (!response) {
       console.log(`response error ${key}, pools ${pool} res ${response} value`)
     }
-    console.log("get data success", response.data.data[0].slice(0.50))
+    console.log("get data success", JSON.stringify(response.data.data[0]).slice(0, 50))
     return {
       data: response.data.data[0],
     }
