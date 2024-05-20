@@ -1,11 +1,15 @@
 import { OrderbookProcessor } from "./types/fuel/OrderbookProcessor.js";
 import { FuelNetwork } from "@sentio/sdk/fuel";
-import { BigDecimal } from "@sentio/sdk";
 
 OrderbookProcessor.bind({
   chainId: FuelNetwork.TEST_NET,
   address: '0x0f0c1065a7b82d026069c5cf070b21ee65713fd1ac92ec1d25eacc3100187f78'
 })
+    // .onCallMatch_orders(async (order, ctx) => {
+    //   for (const log of order.getLogsOfTypeTradeEvent()) {
+    //     // record trade event
+    //   }
+    // })
     .onLogTradeEvent(async (trade, ctx) => {
         const vol = trade.data.trade_price.mul(trade.data.trade_size).scaleDown(2 * 10)
         ctx.eventLogger.emit('trade', {
