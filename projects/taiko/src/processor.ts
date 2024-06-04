@@ -1,14 +1,31 @@
-import { EthChainId, EthContext, GlobalContext, GlobalProcessor } from '@sentio/sdk/eth'
+import { EthChainId, GlobalProcessor } from '@sentio/sdk/eth'
+import { gasCost } from './helper.js'
 
 GlobalProcessor.bind({
-  network: EthChainId.TAIKO_KATLA,
+  //@ts-ignore
+  network: '167000',
 }).onTransaction(
-  (tx, ctx) => {
+  async (tx, ctx) => {
+    let txStatus = "fail"
+    if (ctx.transactionReceipt) {
+      txStatus = "success"
+      console.log("status", ctx.transactionReceipt?.status)
+    }
+
+    // const txStatus = (!ctx.transactionReceipt || ctx.transactionReceipt?.status != 1) ? "fail" : "success"
+    const gas = gasCost(ctx)
+
     ctx.eventLogger.emit('tx', {
-      distinctId: tx.hash,
+      distinctId: tx.from,
+      to: tx.to,
       value: tx.value,
-      gasCost: gasCost(ctx),
+      gas,
+      txStatus
     })
+
+    ctx.meter.Counter("tx_counter").add(1, { txStatus })
+    ctx.meter.Counter("gas_counter").add(gas, { txStatus })
+
   },
   {
     transaction: true,
@@ -16,10 +33,3 @@ GlobalProcessor.bind({
   },
 )
 
-function gasCost(ctx: EthContext) {
-  return (
-    BigInt(
-      ctx.transactionReceipt?.effectiveGasPrice || ctx.transactionReceipt?.gasPrice || ctx.transaction?.gasPrice || 0n,
-    ) * BigInt(ctx.transactionReceipt?.gasUsed || 0)
-  )
-}
