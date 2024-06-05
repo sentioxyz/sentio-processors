@@ -3,7 +3,7 @@ import * as protoLoader from '@grpc/proto-loader';
 import { bcs } from "@mysten/bcs";
 import { ServiceClientConstructor, ServiceError } from "@grpc/grpc-js";
 import path from 'path';
-
+import protoJson from "./client.proto.json";
 
 const pairIndexes: number[] = [19, 48, 89, 90, 93, 158, 159, 408]; //ETH, USDT, USDC, Sui, CETUS, haSui, vSui, NAVX
 const assetDictionary: { [index: number]: string } = {
@@ -36,8 +36,15 @@ class PullServiceClient {
   };
 
   constructor(address: string) {
-    const PROTO_PATH = path.join(__dirname, '/client.proto');
-    const packageDefinition = protoLoader.loadSync(PROTO_PATH, {
+    // const PROTO_PATH = path.join(__dirname, '/client.proto');
+    // const packageDefinition = protoLoader.loadSync(PROTO_PATH, {
+    //   keepCase: true,
+    //   longs: String,
+    //   enums: String,
+    //   defaults: true,
+    //   oneofs: true,
+    // });
+    const packageDefinition = protoLoader.fromJSON(protoJson as any, {
       keepCase: true,
       longs: String,
       enums: String,

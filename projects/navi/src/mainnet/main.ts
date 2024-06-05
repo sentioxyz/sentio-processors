@@ -10,7 +10,7 @@ import { OracleProcessor } from "./oracle.js";
 import { AddressProcessor } from "./address.js";
 import { scaleDown } from "@sentio/sdk";
 import { lending as lending_new_liquidation_event, incentive_v2, flash_loan } from '../types/sui/navi_new_liq.js';
-import { PythOracleProcessor } from './pyth.js'
+// import { PythOracleProcessor } from './pyth.js'
 import {SupraSValueFeed} from '../types/sui/0xc7abe17a209fcab08e2d7d939cf3df11f5b80cf03d10b50893f38df12fdebb07.js'
 import {getSupraPrice} from './supra.js'
 
@@ -48,7 +48,7 @@ PoolProcessor()
 ProtocolProcessor()
 OracleProcessor()
 AddressProcessor()
-PythOracleProcessor()
+// PythOracleProcessor()
 
 async function onEvent(event: LendingEvent, ctx: SuiContext) {
   const sender = event.data_decoded.sender
@@ -250,6 +250,7 @@ async function repayOnBehalfOfHandler(event: lending.RepayOnBehalfOfEventInstanc
 
 
 async function supraEventHandler(event: SupraSValueFeed.SCCProcessedEventInstance, ctx: SuiContext) {
+  const hash = event.data_decoded.hash
   
   getSupraPrice().then((data) => {
     for (let i = 0; i < 8; i++) {
@@ -258,6 +259,7 @@ async function supraEventHandler(event: SupraSValueFeed.SCCProcessedEventInstanc
         asset_name: data[i].asset_name,
         price: data[i].price,
         timestamp: data[i].timestamp,
+        hash: hash,
       });
     }
   })
