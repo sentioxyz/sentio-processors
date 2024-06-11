@@ -3,7 +3,7 @@ import { FuelNetwork } from "@sentio/sdk/fuel";
 
 OrderbookProcessor.bind({
   chainId: FuelNetwork.TEST_NET,
-  address: '0x0f0c1065a7b82d026069c5cf070b21ee65713fd1ac92ec1d25eacc3100187f78'
+  address: '0x4a2ce054e3e94155f7092f7365b212f7f45105b74819c623744ebcc5d065c6ac'
 })
     // .onCallMatch_orders(async (order, ctx) => {
     //   for (const log of order.getLogsOfTypeTradeEvent()) {
