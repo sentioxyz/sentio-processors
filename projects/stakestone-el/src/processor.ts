@@ -4,7 +4,7 @@ import { AsyncNedb } from "nedb-async";
 import { EthChainId, isNullAddress } from "@sentio/sdk/eth";
 import { EigenLSTRestakingContext, EigenLSTRestakingProcessor } from "./types/eth/eigenlstrestaking.js";
 import { getStEthContractOnContext } from "./types/eth/steth.js";
-
+import { AccountSnapshot } from "./schema/schema.js";
 
 const TOKEN_DECIMALS = 18
 // const MULTIPLIER_FACTOR = 1
@@ -17,15 +17,7 @@ GLOBAL_CONFIG.execution = {
   sequential: true
 }
 
-type AccountSnapshot = {
-  _id: string,
-  epochMilli: number,
-  stETHBalance: string
-}
 
-
-const db = new AsyncNedb({ filename: "/data/accounts.db", autoload: true })
-db.persistence.setAutocompactionInterval(60 * 1000)
 
 
 //TODO: only assumed stETH Deposit for restaking manager
@@ -34,39 +26,38 @@ EigenLSTRestakingProcessor.bind({
   network: EthChainId.ETHEREUM,
   startBlock: 19954474 //May-26-2024 01:53:59 PM +UTC
 }).onEventDepositIntoStrategy(async (event, ctx) => {
-  const accountSnapshot: AccountSnapshot | null = await db.asyncFindOne({ _id: STAKESTONE_MANAGER })
-  const depositAmount = BigInt(event.args.amount).scaleDown(TOKEN_DECIMALS).toString()
-  await processAccount(ctx, STAKESTONE_MANAGER, accountSnapshot, depositAmount, "DepositIntoStrategy")
+  const accountSnapshot = await ctx.store.get(AccountSnapshot, STAKESTONE_MANAGER)
+  await processAccount(ctx, STAKESTONE_MANAGER, accountSnapshot, "DepositIntoStrategy")
 })
+  .onEventWithdrawalCompleted(async (event, ctx) => {
+    const accountSnapshot = await ctx.store.get(AccountSnapshot, STAKESTONE_MANAGER)
+    await processAccount(ctx, STAKESTONE_MANAGER, accountSnapshot, "WithDrawCompleted")
+  })
   .onTimeInterval(async (event, ctx) => {
-    const accountSnapshot: AccountSnapshot | null = await db.asyncFindOne({ _id: STAKESTONE_MANAGER })
-    await processAccount(ctx, STAKESTONE_MANAGER, accountSnapshot, null, "onTimeInterval")
+    const accountSnapshot = await ctx.store.get(AccountSnapshot, STAKESTONE_MANAGER)
+    await processAccount(ctx, STAKESTONE_MANAGER, accountSnapshot, "onTimeInterval")
   }, 60, 60)
 
 async function processAccount(
   ctx: EigenLSTRestakingContext,
   accountAddress: string,
-  accountSnapshot: AccountSnapshot | null,
-  deltaAmount: string | null,
+  accountSnapshot: AccountSnapshot | undefined,
   triggerEvent: string
 ) {
   const elPoints = accountSnapshot ? calcPoints(ctx.timestamp.getTime(), accountSnapshot) : BigDecimal(0)
+  const stEthNominal = (await ctx.contract.getRestakingValue()) + (await ctx.contract.getUnstakingValue())
+  let stETHBalance = stEthNominal.scaleDown(18)
 
-  let stETHBalance = accountSnapshot ? BigDecimal(accountSnapshot.stETHBalance) : BigDecimal(0)
-  if (triggerEvent == "DepositIntoStrategy") {
-    const depositAmount = deltaAmount ? BigDecimal(deltaAmount) : BigDecimal(0)
-    stETHBalance = stETHBalance.plus(depositAmount)
-  }
-
-  const latestAccount = {
-    _id: STAKESTONE_MANAGER,
-    epochMilli: ctx.timestamp.getTime(),
+  const latestAccount = new AccountSnapshot({
+    id: STAKESTONE_MANAGER,
+    epochMilli: BigInt(ctx.timestamp.getTime()),
     stETHBalance: stETHBalance.toString()
-  }
-
-  await db.asyncUpdate({ _id: accountAddress }, latestAccount, {
-    upsert: true,
   })
+
+
+
+  await ctx.store.upsert(latestAccount)
+
 
   ctx.eventLogger.emit("point_update", {
     account: accountAddress,
@@ -90,28 +81,10 @@ function calcPoints(
     return new BigDecimal(0)
   }
 
-  const deltaHour = (nowMilli - accountSnapshot.epochMilli) / MILLISECOND_PER_HOUR
+  const deltaHour = (nowMilli - Number(accountSnapshot.epochMilli)) / MILLISECOND_PER_HOUR
   const { stETHBalance } = accountSnapshot
 
   const elPoints = BigDecimal(stETHBalance).times(BigDecimal(deltaHour))
   return elPoints
 }
 
-// async function getLatestAccountSnapshot(
-//   ctx: EigenLSTRestakingContext,
-//   accountAddress: string,
-// ): Promise<AccountSnapshot> {
-//   let stETHContract = getStEthContractOnContext(ctx, stETH)
-//   let stETHBalance = await stETHContract.balanceOf(accountAddress)
-
-//   return {
-//     _id: accountAddress,
-//     epochMilli: ctx.timestamp.getTime(),
-//     stETHBalance: stETHBalance.scaleDown(TOKEN_DECIMALS).toString()
-//   }
-// }
-
-
-// function isStETH(token: string) {
-//   return token === stETH;
-// }
