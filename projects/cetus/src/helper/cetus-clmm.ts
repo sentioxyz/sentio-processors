@@ -35,6 +35,8 @@ export function getCoinFullAddress(type: string) {
 }
 
 interface poolInfo {
+    type_a: string,
+    type_b: string,
     symbol_a: string,
     symbol_b: string,
     decimal_a: number,
@@ -91,6 +93,8 @@ export const getOrCreateCoin = async function (ctx: SuiContext | SuiObjectContex
 
 export async function buildPoolInfo(ctx: SuiContext | SuiObjectContext, pool: string): Promise<poolInfo> {
     let [symbol_a, symbol_b, decimal_a, decimal_b, pairName, type, fee_label] = ["", "", 0, 0, "", "", "", "NaN"]
+    let [coin_a_full_address, coin_b_full_address] = ["", ""]
+
     try {
         const obj = await ctx.client.getObject({ id: pool, options: { showType: true, showContent: true } })
         //@ts-ignore
@@ -103,7 +107,6 @@ export async function buildPoolInfo(ctx: SuiContext | SuiObjectContext, pool: st
         else {
             console.log(`no fee label ${pool}`)
         }
-        let [coin_a_full_address, coin_b_full_address] = ["", ""]
         if (type) {
             [coin_a_full_address, coin_b_full_address] = getCoinFullAddress(type)
         }
@@ -119,6 +122,8 @@ export async function buildPoolInfo(ctx: SuiContext | SuiObjectContext, pool: st
         console.log(`${e.message} get pool object error ${pool}`)
     }
     return {
+        type_a: coin_a_full_address,
+        type_b: coin_b_full_address,
         symbol_a,
         symbol_b,
         decimal_a,
@@ -148,12 +153,13 @@ export const getOrCreatePool = async function (ctx: SuiContext | SuiObjectContex
 
 export async function buildIDOPoolInfo(ctx: SuiContext | SuiObjectContext, pool: string): Promise<poolInfo> {
     let [symbol_a, symbol_b, decimal_a, decimal_b, pairName, type] = ["", "", 0, 0, "", "", ""]
+    let [coin_a_full_address, coin_b_full_address] = ["", ""]
+
     try {
         const obj = await ctx.client.getObject({ id: pool, options: { showType: true, showContent: true } })
         //@ts-ignore
         type = obj.data.type
 
-        let [coin_a_full_address, coin_b_full_address] = ["", ""]
         if (type) {
             [coin_a_full_address, coin_b_full_address] = getCoinFullAddress(type)
         }
@@ -169,6 +175,8 @@ export async function buildIDOPoolInfo(ctx: SuiContext | SuiObjectContext, pool:
         console.log(`${e.message} get IDO pool object error ${pool}`)
     }
     return {
+        type_a: coin_a_full_address,
+        type_b: coin_b_full_address,
         symbol_a,
         symbol_b,
         decimal_a,

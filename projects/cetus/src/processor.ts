@@ -21,12 +21,16 @@ factory.bind({
     const pool_id = event.data_decoded.pool_id
     const tick_spacing = event.data_decoded.tick_spacing
 
+    const poolInfo = await helper.getOrCreatePool(ctx, pool_id)
+
+
     ctx.eventLogger.emit("CreatePoolEvent", {
       distinctId: event.sender,
       pool_id,
       coin_type_a,
       coin_type_b,
       tick_spacing,
+      pairName: poolInfo.pairName,
       project: "cetus"
     })
 
@@ -95,6 +99,8 @@ pool.bind({
       vault_a_amount,
       vault_b_amount,
       coin_symbol: atob ? symbol_a : symbol_b, //for amount_in
+      coin_type_a: poolInfo.type_a,
+      coin_type_b: poolInfo.type_b,
       pairName,
       project: "cetus",
       message: `Swap ${amount_in} ${atob ? symbol_a : symbol_b} to ${amount_out} ${atob ? symbol_b : symbol_a}. USD value: ${usd_volume} in Pool ${pairName} `
@@ -314,8 +320,8 @@ const template = new SuiObjectProcessorTemplate()
       const tvl = tvl_a + tvl_b
 
       ctx.meter.Gauge("tvl").record(tvl, { pairName, project: "cetus" })
-      ctx.meter.Gauge("tvl_oneside").record(tvl_a, { pairName, coin_symbol: symbol_a })
-      ctx.meter.Gauge("tvl_oneside").record(tvl_b, { pairName, coin_symbol: symbol_b })
+      ctx.meter.Gauge("tvl_oneside").record(tvl_a, { pairName, coin_type: poolInfo.type_a, coin_symbol: symbol_a })
+      ctx.meter.Gauge("tvl_oneside").record(tvl_b, { pairName, coin_type: poolInfo.type_b, coin_symbol: symbol_b })
 
     }
     catch (e) {
