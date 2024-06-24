@@ -24,7 +24,8 @@ const DepositEventHandler = async (event: any, ctx: any) => {
   const decimals = pid == 3 ? 8 : 18
 
   //venostorm
-  if (ctx.address.toLowerCase() == "0x579206e4e49581ca8ada619e9e42641f61a84ac3") {
+  if (ctx.address.toLowerCase() == "0x579206e4e49581ca8ada619e9e42641f61a84ac3" ||
+    ctx.address.toLowerCase() == "0xbddd1aa977acd01510a9e9627eee8ac1c5e20aca") {
     ctx.meter.Counter(`deposit_counter`).add(scaleDown(amount, decimals), {
       pid: pid.toString()
     })
@@ -57,7 +58,8 @@ const WithdrawEventHandler = async (event: any, ctx: any) => {
   const amount = event.args.amount
 
   //venostorm
-  if (ctx.address.toLowerCase() == "0x579206e4e49581ca8ada619e9e42641f61a84ac3") {
+  if (ctx.address.toLowerCase() == "0x579206e4e49581ca8ada619e9e42641f61a84ac3" ||
+    ctx.address.toLowerCase() == "0xbddd1aa977acd01510a9e9627eee8ac1c5e20aca") {
     const pid = Number(event.args.pid)
     const decimals = pid == 3 ? 8 : 18
 
