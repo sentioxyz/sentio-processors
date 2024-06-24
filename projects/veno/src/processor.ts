@@ -15,6 +15,7 @@ import { getOrCreateERC721 } from './helper/nft-helper.js'
 import { CHAINS, FOUNDTAIN_ADDRESS_MAP, VENOSTORM_ADDRESS_MAP, } from './helper/constant.js'
 import './croLiquidityStrategy.js'
 import './liquidEth.js'
+import './liquidTia.js'
 
 
 const DepositEventHandler = async (event: any, ctx: any) => {
