@@ -109,12 +109,12 @@ for (const key in POOL_MAP) {
         //   tickLower: { $lte: tick },
         //   tickUpper: { $gte: tick },
         // })
-        const positionSnapshots = ctx.store.list(PositionSnapshot)
+        const positionSnapshots = await ctx.store.list(PositionSnapshot, [])
         console.log("on event get ", JSON.stringify(positionSnapshots))
 
         try {
           const promises = []
-          for await (const snapshot of positionSnapshots) {
+          for (const snapshot of positionSnapshots) {
             if (snapshot.poolAddress == poolInfo.poolAddress)
               promises.push(processPosition(ctx, snapshot.id, snapshot, event.name, poolInfo, { liquidity, sqrtPriceX96, tick: Number(tick) }))
           }
@@ -127,12 +127,12 @@ for (const key in POOL_MAP) {
       })
       .onTimeInterval(
         async (_, ctx) => {
-          const positionSnapshots = ctx.store.list(PositionSnapshot)
+          const positionSnapshots = await ctx.store.list(PositionSnapshot, [])
           console.log("on time interval get ", JSON.stringify(positionSnapshots))
 
           try {
             const promises = [];
-            for await (const snapshot of positionSnapshots) {
+            for (const snapshot of positionSnapshots) {
               if (snapshot.poolAddress == poolInfo.poolAddress)
                 promises.push(processPosition(ctx, snapshot.id, snapshot, "TimeInterval", poolInfo));
             }

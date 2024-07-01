@@ -113,9 +113,9 @@ export const POOL_MAP: { [key: string]: PoolInfo } = {
     startBlock: 19150472,
     token: "insfrxETH"
   },
-  "mETH-InmETH": {
-    token0: "0xd5F7838F5C461fefF7FE49ea5ebaF7728bB0ADfa",
-    token1: "0xeCf3672A6d2147E2A77f07069Fb48d8Cf6F6Fbf9",
+  "InmETH-mETH": {
+    token0: "0xeCf3672A6d2147E2A77f07069Fb48d8Cf6F6Fbf9",
+    token1: "0xd5F7838F5C461fefF7FE49ea5ebaF7728bB0ADfa",
     fee: 500,
     token0InceptionEthToken: true,
     poolAddress: "0xf3fd078d7d76a579d3063c8c66204bfd8f1d0c2e",

@@ -90,7 +90,7 @@ UniswapV3PoolProcessor.bind({
     //   tickLower: { $lte: tick },
     //   tickUpper: { $gte: tick },
     // })
-    const positionSnapshots = ctx.store.list(PositionSnapshot)
+    const positionSnapshots = ctx.store.list(PositionSnapshot, [])
     console.log("on event swap get ", JSON.stringify(positionSnapshots))
 
     try {
@@ -108,7 +108,7 @@ UniswapV3PoolProcessor.bind({
   })
   .onTimeInterval(
     async (_, ctx) => {
-      const positionSnapshots = ctx.store.list(PositionSnapshot)
+      const positionSnapshots = ctx.store.list(PositionSnapshot, [])
       console.log("on time interval get ", JSON.stringify(positionSnapshots))
 
       try {
