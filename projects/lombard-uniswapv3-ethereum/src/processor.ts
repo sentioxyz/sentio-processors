@@ -90,12 +90,12 @@ UniswapV3PoolProcessor.bind({
     //   tickLower: { $lte: tick },
     //   tickUpper: { $gte: tick },
     // })
-    const positionSnapshots = ctx.store.list(PositionSnapshot, [])
+    const positionSnapshots = await ctx.store.list(PositionSnapshot, [])
     console.log("on event swap get ", JSON.stringify(positionSnapshots))
 
     try {
       const promises = []
-      for await (const snapshot of positionSnapshots) {
+      for (const snapshot of positionSnapshots) {
         promises.push(processPosition(ctx, snapshot.id, snapshot, event.name, { liquidity, sqrtPriceX96, tick: Number(tick) })
         )
       }
@@ -108,12 +108,12 @@ UniswapV3PoolProcessor.bind({
   })
   .onTimeInterval(
     async (_, ctx) => {
-      const positionSnapshots = ctx.store.list(PositionSnapshot, [])
+      const positionSnapshots = await ctx.store.list(PositionSnapshot, [])
       console.log("on time interval get ", JSON.stringify(positionSnapshots))
 
       try {
         const promises = [];
-        for await (const snapshot of positionSnapshots) {
+        for (const snapshot of positionSnapshots) {
           promises.push(processPosition(ctx, snapshot.id, snapshot, "TimeInterval"));
         }
         await Promise.all(promises)
@@ -122,7 +122,7 @@ UniswapV3PoolProcessor.bind({
         console.log("onTimeInterval error", e.message, ctx.timestamp)
       }
     },
-    60,
+    60 * 24,
     60
   )
 
@@ -188,6 +188,7 @@ async function processPosition(
       newTimestampMilli,
       newLbtcBalance,
       newWbtcBalance,
+      multiplier: MULTIPLIER
     }
 
     ctx.eventLogger.emit("point_update", log)

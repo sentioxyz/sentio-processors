@@ -1,5 +1,5 @@
 import { GLOBAL_CONFIG } from "@sentio/runtime"
-import { BigDecimal } from "@sentio/sdk"
+import { BigDecimal, scaleDown } from "@sentio/sdk"
 import { isNullAddress } from "@sentio/sdk/eth"
 import { AccountSnapshot } from "./schema/schema.js"
 import { NETWORK, LBTC_ADDRESS, PROTOCOL_ADDRESSES } from "./config.js"
@@ -9,6 +9,7 @@ import { ERC20Context } from "@sentio/sdk/eth/builtin/erc20"
 const MILLISECOND_PER_DAY = 60 * 60 * 1000 * 24
 const DAILY_POINTS = 2100
 const TOKEN_DECIMALS = 8
+const MULTIPLIER = 1
 
 GLOBAL_CONFIG.execution = {
   sequential: true,
@@ -24,23 +25,23 @@ ERC20Processor.bind({
     await Promise.all(
       accounts.map((account) => {
         if (account == from) {
-          return process(ctx, account, -value, event.name)
+          return process(ctx, account, scaleDown(-value, TOKEN_DECIMALS), event.name)
         } else if (account == to) {
-          return process(ctx, account, value, event.name)
+          return process(ctx, account, scaleDown(value, TOKEN_DECIMALS), event.name)
         }
-        return process(ctx, account, 0n, event.name)
+        return process(ctx, account, new BigDecimal(0), event.name)
       })
     )
   })
   .onTimeInterval(
     async (_, ctx) => {
-      const positionSnapshots = ctx.store.listIterator(AccountSnapshot)
+      const positionSnapshots = await ctx.store.list(AccountSnapshot, [])
       // console.log("on time interval get ", JSON.stringify(positionSnapshots))
 
       try {
         const promises = []
-        for await (const snapshot of positionSnapshots) {
-          promises.push(process(ctx, snapshot.id, 0n, "TimeInterval")
+        for (const snapshot of positionSnapshots) {
+          promises.push(process(ctx, snapshot.id, new BigDecimal(0), "TimeInterval")
           )
         }
         await Promise.all(promises)
@@ -58,7 +59,7 @@ ERC20Processor.bind({
 async function process(
   ctx: ERC20Context,
   account: string,
-  balanceDelta: bigint,
+  balanceDelta: BigDecimal,
   triggerEvent: string
 ) {
   if (isProtocolAddress(account)) return
@@ -73,7 +74,7 @@ async function process(
   )
 
   const newTimestampMilli = BigInt(ctx.timestamp.getTime())
-  const newLbtcBalance = snapshotLbtcBalance.plus(new BigDecimal(balanceDelta.toString()))
+  const newLbtcBalance = snapshotLbtcBalance.plus(balanceDelta)
   const newSnapshot = new AccountSnapshot({
     id: account,
     timestampMilli: newTimestampMilli,
@@ -89,6 +90,7 @@ async function process(
     snapshotLbtcBalance,
     newTimestampMilli,
     newLbtcBalance,
+    multiplier: MULTIPLIER,
     triggerEvent,
   })
 }
@@ -115,7 +117,6 @@ function calculatePoints(
   const deltaDay = (nowMilli - snapshotMilli) / MILLISECOND_PER_DAY
 
   const lPoints = snapshotLbtcBalance
-    .div(10 ** TOKEN_DECIMALS)
     .multipliedBy(deltaDay).multipliedBy(DAILY_POINTS)
 
   const bPoints = new BigDecimal(0)

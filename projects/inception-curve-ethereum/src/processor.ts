@@ -45,7 +45,7 @@ for (const key in map) {
         )
       })
       .onEventTokenExchange(async (event, ctx) => {
-        const accountSnapshots = await ctx.store.list(AccountSnapshot);
+        const accountSnapshots = await ctx.store.list(AccountSnapshot, []);
         await Promise.all(
           accountSnapshots.map((snapshot) => {
             //check corresponding pool only
@@ -70,7 +70,7 @@ for (const key in map) {
       })
       .onTimeInterval(
         async (_, ctx) => {
-          const accountSnapshots = await ctx.store.list(AccountSnapshot);
+          const accountSnapshots = await ctx.store.list(AccountSnapshot, []);
           await Promise.all(
             accountSnapshots.map((snapshot) => {
               //check corresponding pool only

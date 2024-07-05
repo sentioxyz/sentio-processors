@@ -64,7 +64,9 @@ async function processAccount(
     triggerEvent,
     elPoints,
     newEpochMilli: latestAccount.epochMilli,
-    newStETHBalance: latestAccount.stETHBalance
+    newStETHBalance: latestAccount.stETHBalance,
+    lastEpochMilli: accountSnapshot?.epochMilli ?? "0",
+    lastStETHBalance: accountSnapshot?.stETHBalance ?? "0"
   })
 }
 
