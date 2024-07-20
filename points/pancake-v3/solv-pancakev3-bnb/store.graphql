@@ -1,0 +1,17 @@
+type PositionSnapshot @entity {
+  id: ID!
+  tickLower: BigInt!
+  tickUpper: BigInt!
+  owner: String!
+  timestampMilli: BigInt!
+  amount0: BigDecimal!
+  amount1: BigDecimal!
+  isStaked: Boolean!
+}
+
+type PoolArgs @entity {
+  id: ID!
+  sqrtPriceX96: BigInt!
+  liquidity: BigInt!
+  tick: BigInt!
+}
