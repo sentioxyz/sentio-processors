@@ -167,15 +167,15 @@ async function processPosition(
 
     const snapshotOwner = positionSnapshot?.owner ?? "none"
     const snapshotTimestampMilli = positionSnapshot?.timestampMilli ?? 0
-    const snapshotETHBalance = positionSnapshot?.amount0 ?? "0"
-    const snapshotStoneBalance = positionSnapshot?.amount1 ?? "0"
+    const snapshotSolvBtcBalance = positionSnapshot?.amount0 ?? "0"
+    const snapshotBtcbBalance = positionSnapshot?.amount1 ?? "0"
     const snapshotIsStaked = positionSnapshot?.isStaked ?? false
 
     const {
       owner: newOwner,
       timestampMilli: newTimestampMilli,
-      amount0: newETHBalance,
-      amount1: newStoneBalance,
+      amount0: newSolvBtcBalance,
+      amount1: newBtcbBalance,
       isStaked: isStaked
     } = latestPositionSnapshot
 
@@ -186,15 +186,15 @@ async function processPosition(
       triggerEvent,
       snapshotOwner,
       snapshotTimestampMilli,
-      snapshotETHBalance: snapshotETHBalance.toString(),
-      snapshotStoneBalance: snapshotStoneBalance.toString(),
+      snapshotSolvBtcBalance: snapshotSolvBtcBalance.toString(),
+      snapshotBtcbBalance: snapshotBtcbBalance.toString(),
       snapshotIsStaked,
 
       newOwner,
       newTimestampMilli,
-      newETHBalance: newETHBalance.toString(),
-      newStoneBalance: newStoneBalance.toString(),
-      newStoneIsStaked: isStaked
+      newSolvBtcBalance: newSolvBtcBalance.toString(),
+      newBtcbBalance: newBtcbBalance.toString(),
+      newIsStaked: isStaked
     })
     return latestPositionSnapshot
   } catch (e) {
@@ -207,8 +207,8 @@ async function processPosition(
       const {
         owner: snapshotOwner,
         timestampMilli: snapshotTimestampMilli,
-        amount0: snapshotETHBalance,
-        amount1: snapshotStoneBalance,
+        amount0: snapshotSolvBtcBalance,
+        amount1: snapshotBtcbBalance,
       } = positionSnapshot!
 
       ctx.eventLogger.emit("point_update", {
@@ -218,12 +218,12 @@ async function processPosition(
         triggerEvent,
         snapshotOwner,
         snapshotTimestampMilli,
-        snapshotETHBalance: snapshotETHBalance.toString(),
-        snapshotStoneBalance: snapshotStoneBalance.toString(),
+        snapshotSolvBtcBalance: snapshotSolvBtcBalance.toString(),
+        snapshotBtcbBalance: snapshotBtcbBalance.toString(),
         newOwner: "noone",
         newTimestampMilli: ctx.timestamp.getTime(),
-        newETHBalance: "0",
-        newStoneBalance: "0",
+        newSolvBtcBalance: "0",
+        newBtcbBalance: "0",
       })
     }
   }
@@ -248,9 +248,9 @@ async function calcPoints(
     return new BigDecimal(0)
   }
   const deltaHour = (nowMilli - snapshotMilli) / MILLISECOND_PER_HOUR
-  const stoneBalance = snapshot.amount1
+  const BtcbBalance = snapshot.amount1
 
-  const points = stoneBalance
+  const points = BtcbBalance
     .multipliedBy(deltaHour)
 
   return points
