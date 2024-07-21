@@ -53,7 +53,7 @@ NonfungiblePositionManagerProcessor.bind({
     const positionSnapshot = await ctx.store.get(PositionSnapshot, tokenId)
     if (!positionSnapshot && !(await checkNFT(ctx, tokenId))) return
 
-    const newSnapshot = await processPosition(ctx, tokenId, positionSnapshot, event.name)
+    const newSnapshot = await processPosition(ctx, tokenId, positionSnapshot, event.name, undefined)
     if (newSnapshot) {
       await ctx.store.upsert(newSnapshot)
     }
@@ -68,7 +68,7 @@ NonfungiblePositionManagerProcessor.bind({
     // then positions(tokenId) reverts and we will skip the event
     if (!positionSnapshot) return
 
-    const newSnapshot = await processPosition(ctx, tokenId, positionSnapshot, event.name)
+    const newSnapshot = await processPosition(ctx, tokenId, positionSnapshot, event.name, undefined)
     if (newSnapshot) {
       await ctx.store.upsert(newSnapshot)
     }
@@ -80,15 +80,27 @@ NonfungiblePositionManagerProcessor.bind({
     const accounts = [event.args.from, event.args.to]
 
     if (accounts.some(isNullAddress)) return
+    //transfer btw staking contract and masterchef contract, skip
+    if (accounts.some(isStakingAddress) && accounts.some(isMasterChefAddress)) return
 
-    // do nothing while staking transfer, handle staking flag in staking processor
-    if (accounts.some(isStakingAddress)) return
+    let triggerEvent = event.name
+    let isStaked = undefined
+    //staking: user address (!master chef contract address) transfer to staking contract address    
+    if (!isMasterChefAddress(accounts[0]) && isStakingAddress(accounts[1])) {
+      isStaked = true
+      triggerEvent = "Stake"
+    }
+    //unstaking: staking contract address to user address (!master chef contractaddress)
+    if (isStakingAddress(accounts[0]) && !isMasterChefAddress(accounts[1])) {
+      isStaked = false
+      triggerEvent = "Unstake"
+    }
 
     const tokenId = event.args.tokenId.toString()
     const positionSnapshot = await ctx.store.get(PositionSnapshot, tokenId)
     if (!positionSnapshot) return
 
-    const newSnapshot = await processPosition(ctx, tokenId, positionSnapshot, event.name)
+    const newSnapshot = await processPosition(ctx, tokenId, positionSnapshot, triggerEvent, isStaked)
     if (newSnapshot) {
       await ctx.store.upsert(newSnapshot)
     }
@@ -96,14 +108,14 @@ NonfungiblePositionManagerProcessor.bind({
 
 PancakeV3PoolProcessor.bind({
   network: NETWORK,
-  address: POOL_ADDRESS,
+  address: POOL_ADDRESS
 })
   .onTimeInterval(
     async (_, ctx) => {
       const positionSnapshots = await ctx.store.list(PositionSnapshot, [])
       const newSnapshots = await Promise.all(
         positionSnapshots.map((snapshot) =>
-          processPosition(ctx, snapshot.id.toString(), snapshot, "TimeInterval")
+          processPosition(ctx, snapshot.id.toString(), snapshot, "TimeInterval", undefined)
         )
       )
       const filteredSnapshots = newSnapshots.filter((s): s is PositionSnapshot => s !== undefined);
@@ -115,29 +127,25 @@ PancakeV3PoolProcessor.bind({
   .onEventSwap(async (event, ctx) => {
     const { liquidity, sqrtPriceX96, tick } = event.args
     await updatePoolArgs(ctx, { liquidity, sqrtPriceX96, tick })
-  })
-
-PancakeStakingBNBChainProcessor.bind({
-  network: NETWORK,
-  address: PANCAKE_STAKING_BNB
-})
-  .onEventNewTokenStaked(async (event, ctx) => {
-    const tokenId = event.args._tokenID.toString()
-    const positionSnapshot = await ctx.store.get(PositionSnapshot, tokenId)
-    //update isStaked = true
-    const newSnapshot = await processPosition(ctx, tokenId, positionSnapshot, event.name, true)
-    if (newSnapshot) {
-      await ctx.store.upsert(newSnapshot)
-    }
-  })
-  .onEventNewTokenUnstaked(async (event, ctx) => {
-    const tokenId = event.args._tokenID.toString()
-    const positionSnapshot = await ctx.store.get(PositionSnapshot, tokenId)
-    //update isStaked = false
-    const newSnapshot = await processPosition(ctx, tokenId, positionSnapshot, event.name)
-    if (newSnapshot) {
-      await ctx.store.upsert(newSnapshot)
-    }
+    const positionSnapshots = await ctx.store.list(PositionSnapshot, [
+      {
+        field: "tickLower",
+        op: "<=",
+        value: tick,
+      },
+      {
+        field: "tickUpper",
+        op: ">=",
+        value: tick,
+      },
+    ])
+    const newSnapshots = await Promise.all(
+      positionSnapshots.map((snapshot) =>
+        processPosition(ctx, snapshot.id.toString(), snapshot, event.name, undefined)
+      )
+    )
+    const filteredSnapshots = newSnapshots.filter((s): s is PositionSnapshot => s !== undefined);
+    await ctx.store.upsert(filteredSnapshots)
   })
 
 
@@ -149,20 +157,18 @@ async function processPosition(
   tokenId: string,
   positionSnapshot: PositionSnapshot | undefined,
   triggerEvent: string,
-  staked?: boolean
+  staked: boolean | undefined
 ) {
-  const isStaked = staked ?? false
+  //follow previous snapshot isStaked value if there's no change action
+  const isStaked = staked ?? (positionSnapshot?.isStaked ?? false)
 
-  const points = positionSnapshot
+  const xpPoints = positionSnapshot
     ? await calcPoints(ctx, positionSnapshot)
     : new BigDecimal(0)
 
   try {
     // the position is not burned
-    const latestPositionSnapshot = await getLatestPositionSnapshot(
-      ctx,
-      tokenId
-    )
+    const latestPositionSnapshot = await getLatestPositionSnapshot(ctx, tokenId, isStaked)
 
     const snapshotOwner = positionSnapshot?.owner ?? "none"
     const snapshotTimestampMilli = positionSnapshot?.timestampMilli ?? 0
@@ -175,13 +181,13 @@ async function processPosition(
       timestampMilli: newTimestampMilli,
       amount0: newSolvBtcBalance,
       amount1: newBtcbBalance,
-      isStaked: isStaked
+      isStaked: newIsStaked
     } = latestPositionSnapshot
 
     ctx.eventLogger.emit("point_update", {
       account: positionSnapshot?.owner ?? latestPositionSnapshot.owner,
       tokenId,
-      points,
+      xpPoints,
       triggerEvent,
       snapshotOwner,
       snapshotTimestampMilli,
@@ -193,7 +199,7 @@ async function processPosition(
       newTimestampMilli,
       newSolvBtcBalance: newSolvBtcBalance.toString(),
       newBtcbBalance: newBtcbBalance.toString(),
-      newIsStaked: isStaked
+      newIsStaked
     })
     return latestPositionSnapshot
   } catch (e) {
@@ -213,7 +219,7 @@ async function processPosition(
       ctx.eventLogger.emit("point_update", {
         account: snapshotOwner,
         tokenId,
-        points,
+        xpPoints,
         triggerEvent,
         snapshotOwner,
         snapshotTimestampMilli,
@@ -247,18 +253,19 @@ async function calcPoints(
     return new BigDecimal(0)
   }
   const deltaHour = (nowMilli - snapshotMilli) / MILLISECOND_PER_HOUR
+  const SolvBtcBalance = snapshot.amount0
   const BtcbBalance = snapshot.amount1
 
-  const points = BtcbBalance
-    .multipliedBy(deltaHour)
+  const xpPoints = (BtcbBalance.plus(SolvBtcBalance)).multipliedBy(deltaHour)
 
-  return points
+  return xpPoints
 }
 
 // This method could throw exception if the position (tokenId) is burned
 async function getLatestPositionSnapshot(
   ctx: EthContext,
-  tokenId: string
+  tokenId: string,
+  isStaked: boolean
 ): Promise<PositionSnapshot> {
   const pool = await getPool(ctx)
   const { tickLower, tickUpper, liquidity } = await getPositionInfo(
@@ -277,6 +284,7 @@ async function getLatestPositionSnapshot(
     timestampMilli: BigInt(ctx.timestamp.getTime()),
     amount0,
     amount1,
+    isStaked
   })
 }
 
@@ -367,7 +375,15 @@ async function checkNFT(ctx: EthContext, tokenId: string): Promise<boolean> {
 
 export function isStakingAddress(address: string) {
   try {
-    return address === PANCAKE_STAKING_BNB || address === PANCAKE_MASTERCHEF_V3
+    return address === PANCAKE_STAKING_BNB
+  } catch (error) {
+    return false
+  }
+}
+
+export function isMasterChefAddress(address: string) {
+  try {
+    return address === PANCAKE_MASTERCHEF_V3
   } catch (error) {
     return false
   }
