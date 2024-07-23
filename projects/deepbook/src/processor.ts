@@ -91,4 +91,3 @@ clob_v2.bind()
   .onEventOrderFilled(orderFilledHandler)
   .onEventWithdrawAsset(WithdrawAssetHandler)
   .onEventDepositAsset(DepositAssetHandler)
-\
