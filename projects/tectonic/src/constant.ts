@@ -19,7 +19,8 @@ export const MAIN_POOLS = [
     "0x29984c47b0bac5a59290ef082e1f651a7019ec4a",
     "0xb075a3590c9ffc8332c47db49f5c6ee1dbcdf804",
     "0x53b4112cba389302b065d2a92bb249d27f51c680",
-    "0xe3e2cea8dffa592eadab7d9c7f1e0cc6700490aa"
+    "0xe3e2cea8dffa592eadab7d9c7f1e0cc6700490aa",
+    "0xf4f21a4990acd891d05dface12a2b8f57e61d1ee"
 ]
 
 export const TOKEN_SYMBOL: Map<string, string> = new Map([
@@ -49,7 +50,8 @@ export const TOKEN_SYMBOL: Map<string, string> = new Map([
     ["0x2c5515be5bb123b8088843e85789e3e294670cad", "tFERd"],
     ["0x5f2e412392a317b8b80234b8a6941e0282161a25", "tVNOd"],
     ["0x0ba8683fb1d8f66d9ebbe3634b67da623188ac84", "tUSDTd"],
-    ["0x131b6f908395f4f43a5a9320b7f96e755df86f8c", "tCDCETHd"]
+    ["0x131b6f908395f4f43a5a9320b7f96e755df86f8c", "tCDCETHd"],
+    ["0xf4f21a4990acd891d05dface12a2b8f57e61d1ee", "tLCRO"]
 ])
 
 
@@ -81,7 +83,8 @@ export const COLLATERAL_TOKENS: Map<string, string> = new Map([
     ["tUSDCd", "usdc"],
     ["tVNOd", "vno"],
     ["tUSDTd", "usdt"],
-    ["tCDCETHd", "cdceth"]
+    ["tCDCETHd", "cdceth"],
+    ["tLCRO", "lcro"]
 ])
 
 export const COLLATERAL_ADDRESSES: Map<string, string> = new Map([
