@@ -3,7 +3,7 @@
 /* tslint:disable */
 /* eslint-disable */
 import type { String, Int, BigInt, Float, ID, Bytes, Timestamp, Boolean } from '@sentio/sdk/store'
-import { Entity, Required, One, Many, Column, ListColumn } from '@sentio/sdk/store'
+import { Entity, Required, One, Many, Column, ListColumn, AbstractEntity } from '@sentio/sdk/store'
 import { BigDecimal } from '@sentio/bigdecimal'
 import { DatabaseSchema } from '@sentio/sdk'
 
@@ -13,7 +13,7 @@ import { DatabaseSchema } from '@sentio/sdk'
 
 
 @Entity("AccountSnapshot")
-export class AccountSnapshot  {
+export class AccountSnapshot extends AbstractEntity  {
 
 	@Required
 	@Column("String")
@@ -38,9 +38,7 @@ export class AccountSnapshot  {
 	@Required
 	@Column("String")
 	poolPzEthBalance: String
-
-  constructor(data: Partial<AccountSnapshot>) {}
-
+  constructor(data: Partial<AccountSnapshot>) {super()}
 }
 
 

@@ -3,7 +3,7 @@
 /* tslint:disable */
 /* eslint-disable */
 import type { String, Int, BigInt, Float, ID, Bytes, Timestamp, Boolean } from '@sentio/sdk/store'
-import { Entity, Required, One, Many, Column, ListColumn } from '@sentio/sdk/store'
+import { Entity, Required, One, Many, Column, ListColumn, AbstractEntity } from '@sentio/sdk/store'
 import { BigDecimal } from '@sentio/bigdecimal'
 import { DatabaseSchema } from '@sentio/sdk'
 
@@ -13,7 +13,7 @@ import { DatabaseSchema } from '@sentio/sdk'
 
 
 @Entity("PositionSnapshot")
-export class PositionSnapshot  {
+export class PositionSnapshot extends AbstractEntity  {
 
 	@Required
 	@Column("String")
@@ -42,9 +42,7 @@ export class PositionSnapshot  {
 	@Required
 	@Column("BigDecimal")
 	lbtcBalance: BigDecimal
-
-  constructor(data: Partial<PositionSnapshot>) {}
-
+  constructor(data: Partial<PositionSnapshot>) {super()}
 }
 
 
