@@ -6,7 +6,13 @@ import {
   HypervisorProcessor,
 } from "./types/eth/hypervisor.js";
 import { AccountSnapshot } from "./schema/store.js";
-import { HYPERVISOR_ADDRESS, NETWORK } from "./config.js";
+import {
+  GAUGE_ADDRESS,
+  GAUGE_START_BLOCK,
+  HYPERVISOR_ADDRESS,
+  NETWORK,
+} from "./config.js";
+import { getGaugeV2CLContractOnContext } from "./types/eth/gaugev2cl.js";
 
 const MILLISECOND_PER_HOUR = 60 * 60 * 1000;
 const TOKEN_DECIMALS = 18;
@@ -22,7 +28,9 @@ HypervisorProcessor.bind({
   .onEventTransfer(async (event, ctx) => {
     const { from, to } = event.args;
     const accounts = [from, to].filter(
-      (account) => !isNullAddress(account)
+      (account) =>
+        !isNullAddress(account) &&
+        account.toLowerCase() != GAUGE_ADDRESS.toLowerCase()
     );
     const newSnapshots = (
       await Promise.all(
@@ -38,13 +46,7 @@ HypervisorProcessor.bind({
     const newSnapshots = (
       await Promise.all(
         snapshots.map((snapshot) =>
-          process(
-            ctx,
-            snapshot.vault,
-            snapshot.account,
-            snapshot,
-            event.name
-          )
+          process(ctx, snapshot.vault, snapshot.account, snapshot, event.name)
         )
       )
     ).filter((ret) => ret != undefined);
@@ -55,13 +57,7 @@ HypervisorProcessor.bind({
     const newSnapshots = (
       await Promise.all(
         snapshots.map((snapshot) =>
-          process(
-            ctx,
-            snapshot.vault,
-            snapshot.account,
-            snapshot,
-            event.name
-          )
+          process(ctx, snapshot.vault, snapshot.account, snapshot, event.name)
         )
       )
     ).filter((ret) => ret != undefined);
@@ -87,22 +83,23 @@ HypervisorProcessor.bind({
     },
     4 * 60,
     24 * 60
-  )
+  );
 
 async function getAccountSnapshot(
   ctx: HypervisorContext,
   account: string,
   vault: string,
-  timestampMilli: number,
-  blockNumber?: number
+  timestampMilli: number
 ) {
-  const overrides = blockNumber ? { blockTag: blockNumber } : undefined;
-  const [totalShares, { total0 }, shares] = await Promise.all([
-    ctx.contract.totalSupply(overrides),
-    ctx.contract.getTotalAmounts(overrides),
-    ctx.contract.balanceOf(account, overrides),
+  const [totalShares, { total0 }, share, gaugeShare] = await Promise.all([
+    ctx.contract.totalSupply(),
+    ctx.contract.getTotalAmounts(),
+    ctx.contract.balanceOf(account),
+    ctx.blockNumber >= GAUGE_START_BLOCK
+      ? getGaugeV2CLContractOnContext(ctx, GAUGE_ADDRESS).balanceOf(account)
+      : Promise.resolve(0n),
   ]);
-  const balance = (total0 * shares) / totalShares;
+  const balance = (total0 * (share + gaugeShare)) / totalShares;
   return new AccountSnapshot({
     id: vault + "." + account,
     vault,
