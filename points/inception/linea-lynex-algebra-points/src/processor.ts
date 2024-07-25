@@ -117,35 +117,6 @@ configs.forEach((config) =>
     network: NETWORK,
     address: config.address,
   })
-    .onTimeInterval(
-      async (_, ctx) => {
-        const poolInfo = getPoolInfo(ctx.address);
-        if (!poolInfo) {
-          throw new Error(`pool info not found: ${ctx.address}`);
-        }
-        const positionSnapshots = await ctx.store.list(PositionSnapshot, [
-          {
-            field: "poolAddress",
-            op: "=",
-            value: poolInfo.address,
-          },
-        ]);
-        const newSnapshots = await Promise.all(
-          positionSnapshots.map((snapshot) =>
-            processPosition(
-              ctx,
-              snapshot.id.toString(),
-              poolInfo,
-              snapshot,
-              "TimeInterval"
-            )
-          )
-        );
-        await ctx.store.upsert(newSnapshots.filter((s) => s != undefined));
-      },
-      4 * 60,
-      24 * 60
-    )
     .onEventSwap(async (event, ctx) => {
       const { liquidity, price: sqrtPriceX96, tick } = event.args;
       const poolInfo = getPoolInfo(ctx.address);
@@ -188,6 +159,41 @@ configs.forEach((config) =>
       );
       await ctx.store.upsert(newSnapshots.filter((s) => s != undefined));
     })
+    .onEventMint(async (event, ctx) => {
+      // can be NonfungiblePositionManager or Hypervisor
+      ctx.eventLogger.emit(event.name, {
+        mintOwner: event.args.owner
+      });
+    })
+    .onTimeInterval(
+      async (_, ctx) => {
+        const poolInfo = getPoolInfo(ctx.address);
+        if (!poolInfo) {
+          throw new Error(`pool info not found: ${ctx.address}`);
+        }
+        const positionSnapshots = await ctx.store.list(PositionSnapshot, [
+          {
+            field: "poolAddress",
+            op: "=",
+            value: poolInfo.address,
+          },
+        ]);
+        const newSnapshots = await Promise.all(
+          positionSnapshots.map((snapshot) =>
+            processPosition(
+              ctx,
+              snapshot.id.toString(),
+              poolInfo,
+              snapshot,
+              "TimeInterval"
+            )
+          )
+        );
+        await ctx.store.upsert(newSnapshots.filter((s) => s != undefined));
+      },
+      4 * 60,
+      24 * 60
+    )
 );
 
 // Handles the position snapshot and point calculation
