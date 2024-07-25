@@ -149,7 +149,7 @@ async function process(
 async function calculatePoints(
   ctx: HypervisorContext,
   snapshotTimestampMilli: bigint,
-  snapshotStoneBalance: bigint
+  snapshotBalance: bigint
 ): Promise<BigDecimal> {
   const nowMilli = ctx.timestamp.getTime();
   const snapshotMilli = Number(snapshotTimestampMilli);
@@ -158,7 +158,7 @@ async function calculatePoints(
       "unexpected account snapshot from the future",
       nowMilli,
       snapshotTimestampMilli,
-      snapshotStoneBalance
+      snapshotBalance
     );
     return new BigDecimal(0);
   } else if (nowMilli == snapshotMilli) {
@@ -167,7 +167,7 @@ async function calculatePoints(
   }
   const deltaHour = (nowMilli - snapshotMilli) / MILLISECOND_PER_HOUR;
 
-  const points = snapshotStoneBalance
+  const points = snapshotBalance
     .scaleDown(TOKEN_DECIMALS)
     .multipliedBy(deltaHour);
 
