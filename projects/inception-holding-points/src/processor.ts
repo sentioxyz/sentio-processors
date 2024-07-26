@@ -35,12 +35,12 @@ INCEPTION_TOKEN_MAP.forEach((config) =>
     })
     .onTimeInterval(
       async (_, ctx) => {
-        const positionSnapshots = ctx.store.listIterator(AccountSnapshot, [])
+        const accountSnapshots = await ctx.store.list(AccountSnapshot, [])
         // console.log("on time interval get ", JSON.stringify(positionSnapshots))
 
         try {
           const promises = []
-          for await (const snapshot of positionSnapshots) {
+          for (const snapshot of accountSnapshots) {
             //check relevant chain only
             if (snapshot.id.includes(ctx.address))
               promises.push(process(ctx, snapshot.account, 0n, "TimeInterval")
