@@ -17,15 +17,15 @@ const commonOptions: MetricOptions = {
     types: [AggregationType.LAST]
   }
 }
-const priceGauage = Gauge.register("pyth_price", commonOptions)
-const priceEMAGauage = Gauge.register("pyth_price_ema", commonOptions)
-const evmPriceGauage = Gauge.register("pyth_evm_price_unsafe", commonOptions)
-const price_update_occur = Gauge.register("pyth_price_update_occur", commonOptions)
-const price_update_counter = Counter.register("pyth_price_update_counter", {
-  resolutionConfig: {
-    intervalInMinutes: 5,
-  }
-})
+// const priceGauage = Gauge.register("pyth_price", commonOptions)
+// const priceEMAGauage = Gauge.register("pyth_price_ema", commonOptions)
+// const evmPriceGauage = Gauge.register("pyth_evm_price_unsafe", commonOptions)
+// const price_update_occur = Gauge.register("pyth_price_update_occur", commonOptions)
+// const price_update_counter = Counter.register("pyth_price_update_counter", {
+//   resolutionConfig: {
+//     intervalInMinutes: 5,
+//   }
+// })
 function decodeBytesArray(bytes: number[]): string {
   return "0x" + Buffer.from(bytes).toString("hex")
 }
@@ -53,13 +53,15 @@ async function onPriceUpdateEvent(event: event.PriceFeedUpdateEventInstance, ctx
   } else {
     isNative = "false"
   }
+  // if (symbol != "not listed") {
+  //   const labels = { priceId, symbol, isNative }
+  //   priceGauage.record(ctx, getPrice(event.data_decoded.price_feed.price), labels)
 
-  const labels = { priceId, symbol, isNative }
-  priceGauage.record(ctx, getPrice(event.data_decoded.price_feed.price), labels)
-  evmPriceGauage.record(ctx, getPrice(event.data_decoded.price_feed.price), labels)
-  priceEMAGauage.record(ctx, getPrice(event.data_decoded.price_feed.ema_price), labels)
-  price_update_occur.record(ctx, 1, labels)
-  price_update_counter.add(ctx, 1, labels)
+  // }
+  // evmPriceGauage.record(ctx, getPrice(event.data_decoded.price_feed.price), labels)
+  // priceEMAGauage.record(ctx, getPrice(event.data_decoded.price_feed.ema_price), labels)
+  // price_update_occur.record(ctx, 1, labels)
+  // price_update_counter.add(ctx, 1, labels)
 }
 
 export function PythOracleProcessor() {
