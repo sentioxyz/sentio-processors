@@ -25,7 +25,6 @@ import {
   whitelistCoins,
   whiteListed,
 } from '@sentio/sdk/aptos/ext'
-// } from "@sentio-processor/common/aptos"
 
 import { AccountEventTracker, BigDecimal, scaleDown } from '@sentio/sdk'
 
@@ -135,6 +134,7 @@ for (const env of [v05]) {
     .onEventSwapEvent(async (evt, ctx) => {
       accountTracker.trackEvent(ctx, { distinctId: ctx.transaction.sender })
 
+      ctx.network = AptosNetwork.MAIN_NET
       const value = await liquidSwap.recordTradingVolume(
         ctx,
         evt.type_arguments[0],
@@ -291,7 +291,7 @@ for (const env of [v05]) {
       let poolValue = BigDecimal(0)
       let poolValueNew = BigDecimal(0)
       if (whitelistx) {
-        const value = await calculateValueInUsd(coinx_amount, coinXInfo, timestamp)
+        const value = await calculateValueInUsd(coinx_amount, coinXInfo, timestamp, AptosNetwork.MAIN_NET)
         poolValue = poolValue.plus(value)
         const valueNew = coinx_amount.scaleDown(coinXInfo.decimals).multipliedBy(priceX)
         poolValueNew = poolValueNew.plus(valueNew)
@@ -312,7 +312,7 @@ for (const env of [v05]) {
         }
       }
       if (whitelisty) {
-        const value = await calculateValueInUsd(coiny_amount, coinYInfo, timestamp)
+        const value = await calculateValueInUsd(coiny_amount, coinYInfo, timestamp, AptosNetwork.MAIN_NET)
         poolValue = poolValue.plus(value)
         const valueNew = scaleDown(coiny_amount, coinYInfo.decimals).multipliedBy(priceY)
         poolValueNew = poolValueNew.plus(valueNew)
