@@ -1,0 +1,862 @@
+[
+  {
+    "inputs": [
+      {
+        "internalType": "uint256",
+        "name": "_MCR",
+        "type": "uint256"
+      },
+      {
+        "internalType": "uint256",
+        "name": "_CCR",
+        "type": "uint256"
+      }
+    ],
+    "stateMutability": "nonpayable",
+    "type": "constructor"
+  },
+  {
+    "anonymous": false,
+    "inputs": [
+      {
+        "indexed": false,
+        "internalType": "address",
+        "name": "_activePoolAddress",
+        "type": "address"
+      }
+    ],
+    "name": "ActivePoolAddressChanged",
+    "type": "event"
+  },
+  {
+    "anonymous": false,
+    "inputs": [
+      {
+        "indexed": false,
+        "internalType": "address",
+        "name": "_colTokenAddress",
+        "type": "address"
+      }
+    ],
+    "name": "COLTokenAddressChanged",
+    "type": "event"
+  },
+  {
+    "anonymous": false,
+    "inputs": [
+      {
+        "indexed": false,
+        "internalType": "address",
+        "name": "_collSurplusPoolAddress",
+        "type": "address"
+      }
+    ],
+    "name": "CollSurplusPoolAddressChanged",
+    "type": "event"
+  },
+  {
+    "anonymous": false,
+    "inputs": [
+      {
+        "indexed": false,
+        "internalType": "address",
+        "name": "_defaultPoolAddress",
+        "type": "address"
+      }
+    ],
+    "name": "DefaultPoolAddressChanged",
+    "type": "event"
+  },
+  {
+    "anonymous": false,
+    "inputs": [
+      {
+        "indexed": true,
+        "internalType": "address",
+        "name": "_borrower",
+        "type": "address"
+      },
+      {
+        "indexed": false,
+        "internalType": "uint256",
+        "name": "_GAIFee",
+        "type": "uint256"
+      }
+    ],
+    "name": "GAIBorrowingFeePaid",
+    "type": "event"
+  },
+  {
+    "anonymous": false,
+    "inputs": [
+      {
+        "indexed": false,
+        "internalType": "address",
+        "name": "_gaiTokenAddress",
+        "type": "address"
+      }
+    ],
+    "name": "GAITokenAddressChanged",
+    "type": "event"
+  },
+  {
+    "anonymous": false,
+    "inputs": [
+      {
+        "indexed": false,
+        "internalType": "address",
+        "name": "_gokStakingAddress",
+        "type": "address"
+      }
+    ],
+    "name": "GOKStakingAddressChanged",
+    "type": "event"
+  },
+  {
+    "anonymous": false,
+    "inputs": [
+      {
+        "indexed": false,
+        "internalType": "address",
+        "name": "_gasPoolAddress",
+        "type": "address"
+      }
+    ],
+    "name": "GasPoolAddressChanged",
+    "type": "event"
+  },
+  {
+    "anonymous": false,
+    "inputs": [
+      {
+        "indexed": true,
+        "internalType": "address",
+        "name": "owner",
+        "type": "address"
+      },
+      {
+        "indexed": true,
+        "internalType": "uint256",
+        "name": "isOwned",
+        "type": "uint256"
+      }
+    ],
+    "name": "OwnershipChanged",
+    "type": "event"
+  },
+  {
+    "anonymous": false,
+    "inputs": [
+      {
+        "indexed": false,
+        "internalType": "address",
+        "name": "_newPriceFeedAddress",
+        "type": "address"
+      }
+    ],
+    "name": "PriceFeedAddressChanged",
+    "type": "event"
+  },
+  {
+    "anonymous": false,
+    "inputs": [
+      {
+        "indexed": false,
+        "internalType": "address",
+        "name": "_sortedVaultsAddress",
+        "type": "address"
+      }
+    ],
+    "name": "SortedVaultsAddressChanged",
+    "type": "event"
+  },
+  {
+    "anonymous": false,
+    "inputs": [
+      {
+        "indexed": false,
+        "internalType": "address",
+        "name": "_stabilityPoolAddress",
+        "type": "address"
+      }
+    ],
+    "name": "StabilityPoolAddressChanged",
+    "type": "event"
+  },
+  {
+    "anonymous": false,
+    "inputs": [
+      {
+        "indexed": true,
+        "internalType": "address",
+        "name": "_borrower",
+        "type": "address"
+      },
+      {
+        "indexed": false,
+        "internalType": "uint256",
+        "name": "arrayIndex",
+        "type": "uint256"
+      }
+    ],
+    "name": "VaultCreated",
+    "type": "event"
+  },
+  {
+    "anonymous": false,
+    "inputs": [
+      {
+        "indexed": false,
+        "internalType": "address",
+        "name": "_newVaultManagerAddress",
+        "type": "address"
+      }
+    ],
+    "name": "VaultManagerAddressChanged",
+    "type": "event"
+  },
+  {
+    "anonymous": false,
+    "inputs": [
+      {
+        "indexed": true,
+        "internalType": "address",
+        "name": "_borrower",
+        "type": "address"
+      },
+      {
+        "indexed": false,
+        "internalType": "uint256",
+        "name": "_debt",
+        "type": "uint256"
+      },
+      {
+        "indexed": false,
+        "internalType": "uint256",
+        "name": "_coll",
+        "type": "uint256"
+      },
+      {
+        "indexed": false,
+        "internalType": "uint256",
+        "name": "stake",
+        "type": "uint256"
+      },
+      {
+        "indexed": false,
+        "internalType": "enum BorrowerOperations.BorrowerOperation",
+        "name": "operation",
+        "type": "uint8"
+      }
+    ],
+    "name": "VaultUpdated",
+    "type": "event"
+  },
+  {
+    "inputs": [],
+    "name": "BORROWING_FEE_FLOOR",
+    "outputs": [
+      {
+        "internalType": "uint256",
+        "name": "",
+        "type": "uint256"
+      }
+    ],
+    "stateMutability": "view",
+    "type": "function"
+  },
+  {
+    "inputs": [],
+    "name": "CCR",
+    "outputs": [
+      {
+        "internalType": "uint256",
+        "name": "",
+        "type": "uint256"
+      }
+    ],
+    "stateMutability": "view",
+    "type": "function"
+  },
+  {
+    "inputs": [],
+    "name": "COLToken",
+    "outputs": [
+      {
+        "internalType": "contract IERC20",
+        "name": "",
+        "type": "address"
+      }
+    ],
+    "stateMutability": "view",
+    "type": "function"
+  },
+  {
+    "inputs": [],
+    "name": "DECIMAL_PRECISION",
+    "outputs": [
+      {
+        "internalType": "uint256",
+        "name": "",
+        "type": "uint256"
+      }
+    ],
+    "stateMutability": "view",
+    "type": "function"
+  },
+  {
+    "inputs": [],
+    "name": "GAI_GAS_COMPENSATION",
+    "outputs": [
+      {
+        "internalType": "uint256",
+        "name": "",
+        "type": "uint256"
+      }
+    ],
+    "stateMutability": "view",
+    "type": "function"
+  },
+  {
+    "inputs": [],
+    "name": "MCR",
+    "outputs": [
+      {
+        "internalType": "uint256",
+        "name": "",
+        "type": "uint256"
+      }
+    ],
+    "stateMutability": "view",
+    "type": "function"
+  },
+  {
+    "inputs": [],
+    "name": "MIN_NET_DEBT",
+    "outputs": [
+      {
+        "internalType": "uint256",
+        "name": "",
+        "type": "uint256"
+      }
+    ],
+    "stateMutability": "view",
+    "type": "function"
+  },
+  {
+    "inputs": [],
+    "name": "NAME",
+    "outputs": [
+      {
+        "internalType": "string",
+        "name": "",
+        "type": "string"
+      }
+    ],
+    "stateMutability": "view",
+    "type": "function"
+  },
+  {
+    "inputs": [],
+    "name": "PERCENT_DIVISOR",
+    "outputs": [
+      {
+        "internalType": "uint256",
+        "name": "",
+        "type": "uint256"
+      }
+    ],
+    "stateMutability": "view",
+    "type": "function"
+  },
+  {
+    "inputs": [],
+    "name": "_100pct",
+    "outputs": [
+      {
+        "internalType": "uint256",
+        "name": "",
+        "type": "uint256"
+      }
+    ],
+    "stateMutability": "view",
+    "type": "function"
+  },
+  {
+    "inputs": [],
+    "name": "activePool",
+    "outputs": [
+      {
+        "internalType": "contract IActivePool",
+        "name": "",
+        "type": "address"
+      }
+    ],
+    "stateMutability": "view",
+    "type": "function"
+  },
+  {
+    "inputs": [
+      {
+        "internalType": "uint256",
+        "name": "_amount",
+        "type": "uint256"
+      },
+      {
+        "internalType": "address",
+        "name": "_upperHint",
+        "type": "address"
+      },
+      {
+        "internalType": "address",
+        "name": "_lowerHint",
+        "type": "address"
+      }
+    ],
+    "name": "addColl",
+    "outputs": [],
+    "stateMutability": "nonpayable",
+    "type": "function"
+  },
+  {
+    "inputs": [
+      {
+        "internalType": "uint256",
+        "name": "_maxFeePercentage",
+        "type": "uint256"
+      },
+      {
+        "internalType": "uint256",
+        "name": "_collChange",
+        "type": "uint256"
+      },
+      {
+        "internalType": "bool",
+        "name": "_isCollIncrease",
+        "type": "bool"
+      },
+      {
+        "internalType": "uint256",
+        "name": "_GAIChange",
+        "type": "uint256"
+      },
+      {
+        "internalType": "bool",
+        "name": "_isDebtIncrease",
+        "type": "bool"
+      },
+      {
+        "internalType": "address",
+        "name": "_upperHint",
+        "type": "address"
+      },
+      {
+        "internalType": "address",
+        "name": "_lowerHint",
+        "type": "address"
+      }
+    ],
+    "name": "adjustVault",
+    "outputs": [],
+    "stateMutability": "nonpayable",
+    "type": "function"
+  },
+  {
+    "inputs": [],
+    "name": "claimCollateral",
+    "outputs": [],
+    "stateMutability": "nonpayable",
+    "type": "function"
+  },
+  {
+    "inputs": [],
+    "name": "closeVault",
+    "outputs": [],
+    "stateMutability": "nonpayable",
+    "type": "function"
+  },
+  {
+    "inputs": [],
+    "name": "defaultPool",
+    "outputs": [
+      {
+        "internalType": "contract IDefaultPool",
+        "name": "",
+        "type": "address"
+      }
+    ],
+    "stateMutability": "view",
+    "type": "function"
+  },
+  {
+    "inputs": [],
+    "name": "gaiToken",
+    "outputs": [
+      {
+        "internalType": "contract IGAIToken",
+        "name": "",
+        "type": "address"
+      }
+    ],
+    "stateMutability": "view",
+    "type": "function"
+  },
+  {
+    "inputs": [
+      {
+        "internalType": "uint256",
+        "name": "_debt",
+        "type": "uint256"
+      }
+    ],
+    "name": "getCompositeDebt",
+    "outputs": [
+      {
+        "internalType": "uint256",
+        "name": "",
+        "type": "uint256"
+      }
+    ],
+    "stateMutability": "pure",
+    "type": "function"
+  },
+  {
+    "inputs": [],
+    "name": "getEntireSystemColl",
+    "outputs": [
+      {
+        "internalType": "uint256",
+        "name": "entireSystemColl",
+        "type": "uint256"
+      }
+    ],
+    "stateMutability": "view",
+    "type": "function"
+  },
+  {
+    "inputs": [],
+    "name": "getEntireSystemDebt",
+    "outputs": [
+      {
+        "internalType": "uint256",
+        "name": "entireSystemDebt",
+        "type": "uint256"
+      }
+    ],
+    "stateMutability": "view",
+    "type": "function"
+  },
+  {
+    "inputs": [],
+    "name": "gokStaking",
+    "outputs": [
+      {
+        "internalType": "contract IGOKStaking",
+        "name": "",
+        "type": "address"
+      }
+    ],
+    "stateMutability": "view",
+    "type": "function"
+  },
+  {
+    "inputs": [],
+    "name": "gokStakingAddress",
+    "outputs": [
+      {
+        "internalType": "address",
+        "name": "",
+        "type": "address"
+      }
+    ],
+    "stateMutability": "view",
+    "type": "function"
+  },
+  {
+    "inputs": [],
+    "name": "isOwner",
+    "outputs": [
+      {
+        "internalType": "bool",
+        "name": "",
+        "type": "bool"
+      }
+    ],
+    "stateMutability": "view",
+    "type": "function"
+  },
+  {
+    "inputs": [
+      {
+        "internalType": "uint256",
+        "name": "_amount",
+        "type": "uint256"
+      },
+      {
+        "internalType": "address",
+        "name": "_borrower",
+        "type": "address"
+      },
+      {
+        "internalType": "address",
+        "name": "_upperHint",
+        "type": "address"
+      },
+      {
+        "internalType": "address",
+        "name": "_lowerHint",
+        "type": "address"
+      }
+    ],
+    "name": "moveCOLGainToVault",
+    "outputs": [],
+    "stateMutability": "nonpayable",
+    "type": "function"
+  },
+  {
+    "inputs": [
+      {
+        "internalType": "uint256",
+        "name": "_maxFeePercentage",
+        "type": "uint256"
+      },
+      {
+        "internalType": "uint256",
+        "name": "_collateralAmount",
+        "type": "uint256"
+      },
+      {
+        "internalType": "uint256",
+        "name": "_GAIAmount",
+        "type": "uint256"
+      },
+      {
+        "internalType": "address",
+        "name": "_upperHint",
+        "type": "address"
+      },
+      {
+        "internalType": "address",
+        "name": "_lowerHint",
+        "type": "address"
+      }
+    ],
+    "name": "openVault",
+    "outputs": [],
+    "stateMutability": "nonpayable",
+    "type": "function"
+  },
+  {
+    "inputs": [
+      {
+        "internalType": "address",
+        "name": "",
+        "type": "address"
+      }
+    ],
+    "name": "owners",
+    "outputs": [
+      {
+        "internalType": "uint256",
+        "name": "",
+        "type": "uint256"
+      }
+    ],
+    "stateMutability": "view",
+    "type": "function"
+  },
+  {
+    "inputs": [],
+    "name": "priceFeed",
+    "outputs": [
+      {
+        "internalType": "contract IPriceFeed",
+        "name": "",
+        "type": "address"
+      }
+    ],
+    "stateMutability": "view",
+    "type": "function"
+  },
+  {
+    "inputs": [
+      {
+        "internalType": "uint256",
+        "name": "_GAIAmount",
+        "type": "uint256"
+      },
+      {
+        "internalType": "address",
+        "name": "_upperHint",
+        "type": "address"
+      },
+      {
+        "internalType": "address",
+        "name": "_lowerHint",
+        "type": "address"
+      }
+    ],
+    "name": "repayGAI",
+    "outputs": [],
+    "stateMutability": "nonpayable",
+    "type": "function"
+  },
+  {
+    "inputs": [
+      {
+        "internalType": "address",
+        "name": "_vaultManagerAddress",
+        "type": "address"
+      },
+      {
+        "internalType": "address",
+        "name": "_activePoolAddress",
+        "type": "address"
+      },
+      {
+        "internalType": "address",
+        "name": "_defaultPoolAddress",
+        "type": "address"
+      },
+      {
+        "internalType": "address",
+        "name": "_stabilityPoolAddress",
+        "type": "address"
+      },
+      {
+        "internalType": "address",
+        "name": "_gasPoolAddress",
+        "type": "address"
+      },
+      {
+        "internalType": "address",
+        "name": "_collSurplusPoolAddress",
+        "type": "address"
+      },
+      {
+        "internalType": "address",
+        "name": "_priceFeedAddress",
+        "type": "address"
+      },
+      {
+        "internalType": "address",
+        "name": "_sortedVaultsAddress",
+        "type": "address"
+      },
+      {
+        "internalType": "address",
+        "name": "_colTokenAddress",
+        "type": "address"
+      },
+      {
+        "internalType": "address",
+        "name": "_gaiTokenAddress",
+        "type": "address"
+      },
+      {
+        "internalType": "address",
+        "name": "_gokStakingAddress",
+        "type": "address"
+      }
+    ],
+    "name": "setAddresses",
+    "outputs": [],
+    "stateMutability": "nonpayable",
+    "type": "function"
+  },
+  {
+    "inputs": [
+      {
+        "internalType": "address",
+        "name": "_address",
+        "type": "address"
+      },
+      {
+        "internalType": "uint256",
+        "name": "_isOwned",
+        "type": "uint256"
+      }
+    ],
+    "name": "setOwnership",
+    "outputs": [],
+    "stateMutability": "nonpayable",
+    "type": "function"
+  },
+  {
+    "inputs": [],
+    "name": "sortedVaults",
+    "outputs": [
+      {
+        "internalType": "contract ISortedVaults",
+        "name": "",
+        "type": "address"
+      }
+    ],
+    "stateMutability": "view",
+    "type": "function"
+  },
+  {
+    "inputs": [],
+    "name": "vaultManager",
+    "outputs": [
+      {
+        "internalType": "contract IVaultManager",
+        "name": "",
+        "type": "address"
+      }
+    ],
+    "stateMutability": "view",
+    "type": "function"
+  },
+  {
+    "inputs": [
+      {
+        "internalType": "uint256",
+        "name": "_collWithdrawal",
+        "type": "uint256"
+      },
+      {
+        "internalType": "address",
+        "name": "_upperHint",
+        "type": "address"
+      },
+      {
+        "internalType": "address",
+        "name": "_lowerHint",
+        "type": "address"
+      }
+    ],
+    "name": "withdrawColl",
+    "outputs": [],
+    "stateMutability": "nonpayable",
+    "type": "function"
+  },
+  {
+    "inputs": [
+      {
+        "internalType": "uint256",
+        "name": "_maxFeePercentage",
+        "type": "uint256"
+      },
+      {
+        "internalType": "uint256",
+        "name": "_GAIAmount",
+        "type": "uint256"
+      },
+      {
+        "internalType": "address",
+        "name": "_upperHint",
+        "type": "address"
+      },
+      {
+        "internalType": "address",
+        "name": "_lowerHint",
+        "type": "address"
+      }
+    ],
+    "name": "withdrawGAI",
+    "outputs": [],
+    "stateMutability": "nonpayable",
+    "type": "function"
+  }
+]
