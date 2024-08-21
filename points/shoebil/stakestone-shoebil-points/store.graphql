@@ -1,0 +1,28 @@
+ type AccountSnapshot @entity {
+    id: ID!
+    network: String!
+    balance: BigInt!
+    borrowBalance: BigInt!
+    netBalance: BigInt!
+    timestampMilli: BigInt!
+}
+
+type GlobalState @entity {
+    id: ID!
+    network: String!
+    exchangeRateRaw: BigInt!
+    totalSupply: BigInt!
+    totalBorrow: BigInt!
+    totalPositiveNetBalance: BigInt!
+}
+
+type TempEvent @entity {
+    id: ID!
+    network: String!
+    eventName: String!
+    args: String!
+    blockNumber: Int!
+    txIdx: Int!
+    eventIdx: Int!
+    timestampMilli: BigInt!
+}
