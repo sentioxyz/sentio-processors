@@ -78,6 +78,7 @@ for (const env of [v05]) {
       ctx.eventLogger.emit('lp', { distinctId: ctx.transaction.sender, ver })
 
       if (recordAccount) {
+        ctx.network = AptosNetwork.MAIN_NET
         const value = await getPairValue(
           ctx,
           evt.type_arguments[0],
@@ -105,6 +106,7 @@ for (const env of [v05]) {
       ctx.meter.Counter('event_liquidity_removed').add(1, { ver })
       ctx.eventLogger.emit('lp', { distinctId: ctx.transaction.sender, ver })
       if (recordAccount) {
+        ctx.network = AptosNetwork.MAIN_NET
         const value = await getPairValue(
           ctx,
           evt.type_arguments[0],
