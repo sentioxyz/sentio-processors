@@ -50,6 +50,26 @@ export const lps = AccountEventTracker.register('lps')
 // type PoolType<T0, T1, T2> = v0.liquidity_pool.LiquidityPool<T0, T1, T2> | v05.liquidity_pool.LiquidityPool<T0, T1, T2>
 type PoolType<T0, T1, T2> = v05.liquidity_pool.LiquidityPool<T0, T1, T2>
 
+const coinsByName = new Map<string, SimpleCoinInfo>()
+
+for (const coinInfo of whitelistCoins().values()) {
+  const name = (coinInfo.token_type as any).struct_name
+  if (name) {
+    coinsByName.set(name, coinInfo)
+  }
+}
+
+function getCoinType(coin: string) {
+  let name = coin.split('::').at(-1)
+  name =
+    {
+      ETH: 'WETH',
+      BTC: 'WbtcCoin',
+      WBTC: 'WbtcCoin',
+    }[name || ''] || name
+  return name ? coinsByName.get(name)?.token_type.type || coin : coin
+}
+
 // for (const env of [v0, v05]) {
 for (const env of [v05]) {
   const liquidity_pool = env.liquidity_pool
@@ -81,8 +101,8 @@ for (const env of [v05]) {
         ctx.network = AptosNetwork.MAIN_NET
         const value = await getPairValue(
           ctx,
-          evt.type_arguments[0],
-          evt.type_arguments[1],
+          getCoinType(evt.type_arguments[0]),
+          getCoinType(evt.type_arguments[1]),
           evt.data_decoded.added_x_val,
           evt.data_decoded.added_y_val,
         )
@@ -109,8 +129,8 @@ for (const env of [v05]) {
         ctx.network = AptosNetwork.MAIN_NET
         const value = await getPairValue(
           ctx,
-          evt.type_arguments[0],
-          evt.type_arguments[1],
+          getCoinType(evt.type_arguments[0]),
+          getCoinType(evt.type_arguments[1]),
           evt.data_decoded.returned_x_val,
           evt.data_decoded.returned_y_val,
         )
@@ -139,8 +159,8 @@ for (const env of [v05]) {
       ctx.network = AptosNetwork.MAIN_NET
       const value = await liquidSwap.recordTradingVolume(
         ctx,
-        evt.type_arguments[0],
-        evt.type_arguments[1],
+        getCoinType(evt.type_arguments[0]),
+        getCoinType(evt.type_arguments[1]),
         evt.data_decoded.x_in + evt.data_decoded.x_out,
         evt.data_decoded.y_in + evt.data_decoded.y_out,
         { curve: getCurve(evt.type_arguments[2]), ver },
