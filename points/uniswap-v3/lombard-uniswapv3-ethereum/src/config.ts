@@ -9,4 +9,4 @@ export const token0LBTCToken = false
 export const POOL_ADDRESS = "0x87428a53e14d24Ab19c6Ca4939B4df93B8996cA9"
 export const POOL_FEE = 500
 export const START_BLOCK = 20118107
-
+export const VAULT_ADDRESS = "0x5401b8620E5FB570064CA9114fd1e135fd77D57c"
