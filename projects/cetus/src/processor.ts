@@ -2,11 +2,10 @@ import { pool, factory } from "./types/sui/0x1eabed72c53feb3805120a081dc15963c20
 import { SuiObjectProcessor, SuiContext, SuiObjectContext, SuiObjectProcessorTemplate, SuiWrappedObjectProcessor } from "@sentio/sdk/sui"
 import { getPriceBySymbol, getPriceByType, token } from "@sentio/sdk/utils"
 import * as constant from './constant-cetus.js'
-import { SuiNetwork } from "@sentio/sdk/sui"
 // import './cetus-launchpad.js'
 import { LRUCache } from 'lru-cache'
 
-import * as helper from './helper/cetus-clmm.js'
+import * as helper from './helper/dex-helper.js'
 import './stablefarming.js'
 
 factory.bind({
@@ -16,10 +15,7 @@ factory.bind({
 })
   .onEventCreatePoolEvent(async (event, ctx) => {
     ctx.meter.Counter("create_pool_counter").add(1, { project: "cetus" })
-    const coin_type_a = event.data_decoded.coin_type_a
-    const coin_type_b = event.data_decoded.coin_type_b
     const pool_id = event.data_decoded.pool_id
-    const tick_spacing = event.data_decoded.tick_spacing
 
     const poolInfo = await helper.getOrCreatePool(ctx, pool_id)
 
@@ -27,20 +23,18 @@ factory.bind({
     ctx.eventLogger.emit("CreatePoolEvent", {
       distinctId: event.sender,
       pool_id,
-      coin_type_a,
-      coin_type_b,
-      tick_spacing,
+      type_a: poolInfo.type_a,
+      type_b: poolInfo.type_a,
       pairName: poolInfo.pairName,
       project: "cetus"
     })
-
-    helper.getOrCreatePool(ctx, pool_id)
 
     template.bind({
       objectId: pool_id
     }, ctx)
 
   })
+
 
 
 const ttl = 6 * 60 * 60 * 1000 // 6 hour in milliseconds
@@ -61,32 +55,26 @@ pool.bind({
     ctx.meter.Counter("swap_counter").add(1, { project: "cetus" })
     const pool = event.data_decoded.pool
     const poolInfo = await helper.getOrCreatePool(ctx, pool)
-    const before_sqrt_price = Number(event.data_decoded.before_sqrt_price)
-    const after_sqrt_price = Number(event.data_decoded.after_sqrt_price)
+
     const atob = event.data_decoded.atob
-    const symbol_a = poolInfo.symbol_a
-    const symbol_b = poolInfo.symbol_b
-    const decimal_a = poolInfo.decimal_a
-    const decimal_b = poolInfo.decimal_b
-    const pairName = poolInfo.pairName
-    const amount_in = Number(event.data_decoded.amount_in) / Math.pow(10, atob ? decimal_a : decimal_b)
-    const amount_out = Number(event.data_decoded.amount_out) / Math.pow(10, atob ? decimal_b : decimal_a)
-    const fee_amount = Number(event.data_decoded.fee_amount) / Math.pow(10, atob ? decimal_a : decimal_b)
+    const amount_in = Number(event.data_decoded.amount_in) / Math.pow(10, atob ? poolInfo.decimal_a : poolInfo.decimal_b)
+    const amount_out = Number(event.data_decoded.amount_out) / Math.pow(10, atob ? poolInfo.decimal_b : poolInfo.decimal_a)
+    const fee_amount = Number(event.data_decoded.fee_amount) / Math.pow(10, atob ? poolInfo.decimal_a : poolInfo.decimal_b)
+
     const partner = event.data_decoded.partner
     const ref_amount = event.data_decoded.ref_amount
     const steps = event.data_decoded.steps
+
     const vault_a_amount = event.data_decoded.vault_a_amount
     const vault_b_amount = event.data_decoded.vault_b_amount
 
-    const usd_volume = await helper.calculateSwapVol_USD(event, poolInfo.type, amount_in, amount_out, atob, ctx.timestamp)
+    const usd_volume = await helper.calculateSwapVol_USD(ctx, poolInfo, amount_in, amount_out, atob)
 
     const fee_amount_usd = await helper.calculateFee_USD(ctx, pool, fee_amount, atob, ctx.timestamp)
 
     ctx.eventLogger.emit("SwapEvent", {
       distinctId: event.sender,
       pool,
-      before_sqrt_price,
-      after_sqrt_price,
       amount_in,
       amount_out,
       usd_volume,
@@ -98,16 +86,18 @@ pool.bind({
       steps,
       vault_a_amount,
       vault_b_amount,
-      coin_symbol: atob ? symbol_a : symbol_b, //for amount_in
+      coin_symbol: atob ? poolInfo.symbol_a : poolInfo.symbol_b, //for amount_in
       coin_type_a: poolInfo.type_a,
       coin_type_b: poolInfo.type_b,
-      pairName,
+      type_in: atob ? poolInfo.symbol_a : poolInfo.symbol_b,
+      type_out: atob ? poolInfo.symbol_b : poolInfo.symbol_a,
+      pairName: poolInfo.pairName,
       project: "cetus",
-      message: `Swap ${amount_in} ${atob ? symbol_a : symbol_b} to ${amount_out} ${atob ? symbol_b : symbol_a}. USD value: ${usd_volume} in Pool ${pairName} `
+      message: `Swap ${amount_in} ${atob ? poolInfo.symbol_a : poolInfo.symbol_b} to ${amount_out} ${atob ? poolInfo.symbol_b : poolInfo.symbol_a}. USD value: ${usd_volume} in Pool ${poolInfo.pairName} `
     })
 
-    ctx.meter.Gauge("trading_vol_gauge").record(usd_volume, { pairName, project: "cetus" })
-    ctx.meter.Counter("trading_vol_counter").add(usd_volume, { pairName, project: "cetus" })
+    ctx.meter.Gauge("trading_vol_gauge").record(usd_volume, { pairName: poolInfo.pairName, project: "cetus" })
+    ctx.meter.Counter("trading_vol_counter").add(usd_volume, { pairName: poolInfo.pairName, project: "cetus" })
 
 
   })
@@ -129,9 +119,7 @@ pool.bind({
     const amount_a = Number(event.data_decoded.amount_a) / Math.pow(10, decimal_a)
     const amount_b = Number(event.data_decoded.amount_b) / Math.pow(10, decimal_b)
 
-    const [value_a, value_b] = await helper.calculateValue_USD(ctx, pool, amount_a, amount_b, ctx.timestamp)
-
-    const value = value_a + value_b
+    const value = await helper.calculateValueUSD(ctx, poolInfo, amount_a, amount_b)
 
     ctx.eventLogger.emit("AddLiquidityEvent", {
       distinctId: event.sender,
@@ -170,8 +158,7 @@ pool.bind({
     const amount_b = Number(event.data_decoded.amount_b) / Math.pow(10, decimal_b)
 
 
-    const [value_a, value_b] = await helper.calculateValue_USD(ctx, pool, amount_a, amount_b, ctx.timestamp)
-    const value = value_a + value_b
+    const value = await helper.calculateValueUSD(ctx, poolInfo, amount_a, amount_b)
 
     ctx.eventLogger.emit("RemoveLiquidityEvent", {
       distinctId: event.sender,
@@ -276,7 +263,7 @@ pool.bind({
 
 const template = new SuiObjectProcessorTemplate()
   .onTimeInterval(async (self, _, ctx) => {
-    if (!self || constant.POOLS_TVL_BLACK_LIST.includes(ctx.objectId)) { return }
+    if (!self) { return }
     try {
       //get coin addresses
       const poolInfo = await helper.getOrCreatePool(ctx, ctx.objectId)
@@ -316,12 +303,39 @@ const template = new SuiObjectProcessorTemplate()
       // const tvl = await helper.calculateValue_USD(ctx, ctx.objectId, coin_a_balance, coin_b_balance, ctx.timestamp)
 
       //record one side tvl
-      const [tvl_a, tvl_b] = await helper.calculateValue_USD(ctx, ctx.objectId, coin_a_balance, coin_b_balance, ctx.timestamp)
+      const tvl_a = await helper.calculateSingleTypeValueUSD(ctx, poolInfo.type_a, coin_a_balance)
+      const tvl_b = await helper.calculateSingleTypeValueUSD(ctx, poolInfo.type_b, coin_b_balance)
       const tvl = tvl_a + tvl_b
 
       ctx.meter.Gauge("tvl").record(tvl, { pairName, project: "cetus" })
       ctx.meter.Gauge("tvl_oneside").record(tvl_a, { pairName, coin_type: poolInfo.type_a, coin_symbol: symbol_a })
       ctx.meter.Gauge("tvl_oneside").record(tvl_b, { pairName, coin_type: poolInfo.type_b, coin_symbol: symbol_b })
+
+
+      //eventlogs
+      ctx.eventLogger.emit("one_side_tvl", {
+        pool: poolInfo.pool,
+        tvl: tvl_a,
+        type: poolInfo.type_a,
+        amount: coin_a_balance,
+        symbol: poolInfo.symbol_a,
+        pairName: poolInfo.pairName,
+      })
+
+      ctx.eventLogger.emit("one_side_tvl", {
+        pool: poolInfo.pool,
+        tvl: tvl_b,
+        type: poolInfo.type_b,
+        amount: coin_b_balance,
+        symbol: poolInfo.symbol_b,
+        pairName: poolInfo.pairName,
+      })
+
+      ctx.eventLogger.emit("tvl", {
+        pool: poolInfo.pool,
+        tvl,
+        pairName: poolInfo.pairName,
+      })
 
     }
     catch (e) {
