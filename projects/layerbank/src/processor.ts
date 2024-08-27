@@ -3,19 +3,19 @@ import { EthChainId } from '@sentio/sdk/eth'
 import { token } from '@sentio/sdk/utils'
 import {
   BorrowCallTrace,
+  getLayerbankContract,
   LayerbankContext,
   LayerbankProcessor,
   MarketRedeemEvent,
   MarketSupplyEvent,
   RepayBorrowCallTrace
 } from './types/eth/layerbank.js'
-import { getLtokenContractOnContext } from './types/eth/ltoken.js'
+import { getLtokenContractOnContext, LtokenContext, LtokenProcessor } from './types/eth/ltoken.js'
 
 const address = '0xEC53c830f4444a8A56455c6836b5D2aA794289Aa'
-// const startBlock = 152083
-const startBlock = 8730000
+const startBlock = 152083
 
-async function recordBalance(ctx: LayerbankContext, lToken: string, user: string, type: 'supply' | 'borrow') {
+async function recordBalance(ctx: LayerbankContext | LtokenContext, lToken: string, user: string, type: string) {
   const contract = getLtokenContractOnContext(ctx, lToken)
   const [supply, borrow, tokenInfo] = await Promise.all([
     contract.balanceOf(user),
@@ -33,29 +33,25 @@ async function recordBalance(ctx: LayerbankContext, lToken: string, user: string
   })
 }
 
-async function recordBalanceOnCall(call: BorrowCallTrace | RepayBorrowCallTrace, ctx: LayerbankContext) {
-  const { lToken, amount } = call.args
-  const sender = ctx.transaction?.from
-  if (sender) {
-    await recordBalance(ctx, lToken, sender, 'borrow')
-  }
-}
+const layerbank = getLayerbankContract(EthChainId.SCROLL, address)
+const markets = await layerbank.allMarkets()
 
-async function recordBalanceOnEvent(event: MarketSupplyEvent | MarketRedeemEvent, ctx: LayerbankContext) {
-  const { user, lToken, uAmount } = event.args
-  await recordBalance(ctx, lToken, user, 'supply')
+for (const market of markets) {
+  LtokenProcessor.bind({ address: market, startBlock, network: EthChainId.SCROLL })
+    .onEventMint(async (evt, ctx) => {
+      const { minter } = evt.args
+      await recordBalance(ctx, market, minter, 'mint')
+    })
+    .onEventRedeem(async (evt, ctx) => {
+      const { account } = evt.args
+      await recordBalance(ctx, market, account, 'redeem')
+    })
+    .onEventBorrow(async (evt, ctx) => {
+      const { account } = evt.args
+      await recordBalance(ctx, market, account, 'borrow')
+    })
+    .onEventRepayBorrow(async (evt, ctx) => {
+      const { borrower } = evt.args
+      await recordBalance(ctx, market, borrower, 'repay')
+    })
 }
-
-LayerbankProcessor.bind({ address, startBlock, network: EthChainId.SCROLL })
-  .onCallBorrow(recordBalanceOnCall, { transaction: true })
-  .onCallRepayBorrow(recordBalanceOnCall, { transaction: true })
-  .onEventMarketSupply(recordBalanceOnEvent)
-  .onEventMarketRedeem(recordBalanceOnEvent)
-  .onCallBorrowBehalf(async (call, ctx) => {
-    const { borrower, lToken } = call.args
-    await recordBalance(ctx, lToken, borrower, 'borrow')
-  })
-  .onCallLiquidateBorrow(async (call, ctx) => {
-    const { borrower, lTokenBorrowed } = call.args
-    await recordBalance(ctx, lTokenBorrowed, borrower, 'borrow')
-  })
