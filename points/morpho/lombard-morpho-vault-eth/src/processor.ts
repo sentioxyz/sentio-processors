@@ -8,7 +8,7 @@ import {
   MORPHO_ADDRESS,
   MULTIPLIER,
   NETWORK,
-  VAULT_ADDRESS,
+  VAULT_ADDRESSES,
 } from "./config.js";
 import {
   MetaMorphoContext,
@@ -26,37 +26,45 @@ GLOBAL_CONFIG.execution = {
   sequential: true,
 };
 
-MetaMorphoProcessor.bind({
-  network: NETWORK,
-  address: VAULT_ADDRESS,
-})
-  .onEventReallocateSupply(
-    async (event, ctx) => {
-      await updateAll(ctx, event.name);
-    },
-    MetaMorphoProcessor.filters.ReallocateSupply(null, LBTC_WBTC_MARKET_ID)
-  )
-  .onEventTransfer(async (event, ctx) => {
-    const newSnapshots = await Promise.all(
-      [event.args.from, event.args.to]
-        .filter((account) => !isNullAddress(account))
-        .map((account) => process(ctx, account, undefined, event.name))
-    );
-    await ctx.store.upsert(newSnapshots);
+VAULT_ADDRESSES.forEach((address) =>
+  MetaMorphoProcessor.bind({
+    network: NETWORK,
+    address: address,
   })
-  .onTimeInterval(
-    async (_, ctx) => {
-      await updateAll(ctx, "TimeInterval");
-    },
-    60,
-    4 * 60
-  );
+    .onEventTransfer(async (event, ctx) => {
+      const newSnapshots = await Promise.all(
+        [event.args.from, event.args.to]
+          .filter((account) => !isNullAddress(account))
+          .map((account) => process(ctx, account, undefined, event.name))
+      );
+      await ctx.store.upsert(newSnapshots);
+    })
+    .onEventReallocateSupply(
+      async (event, ctx) => {
+        await updateAll(ctx, event.name);
+      },
+      MetaMorphoProcessor.filters.ReallocateSupply(null, LBTC_WBTC_MARKET_ID)
+    )
+    .onTimeInterval(
+      async (_, ctx) => {
+        await updateAll(ctx, "TimeInterval");
+      },
+      60,
+      4 * 60
+    )
+);
 
 async function updateAll(ctx: MetaMorphoContext, triggerEvent: string) {
-  const accounts = await ctx.store.list(AccountSnapshot, []);
+  const accounts = await ctx.store.list(AccountSnapshot, [
+    {
+      field: "vault",
+      op: "=",
+      value: ctx.address,
+    },
+  ]);
   const newSnapshots = await Promise.all(
     accounts.map((account) =>
-      process(ctx, account.id.toString(), account, "TimeInterval")
+      process(ctx, account.id.toString().split(".")[1], account, triggerEvent)
     )
   );
   await ctx.store.upsert(newSnapshots);
@@ -68,8 +76,10 @@ async function process(
   snapshot: AccountSnapshot | undefined,
   triggerEvent: string
 ) {
+  const vault = ctx.address;
+  const id = vault + "." + account;
   if (!snapshot) {
-    snapshot = await ctx.store.get(AccountSnapshot, account);
+    snapshot = await ctx.store.get(AccountSnapshot, id);
   }
   const points = snapshot ? await calcPoints(ctx, snapshot) : new BigDecimal(0);
 
@@ -80,13 +90,15 @@ async function process(
   ]);
   const newBalance = (lbtcTotal * lpBalance) / lpTotalSupply;
   const newSnapshot = new AccountSnapshot({
-    id: account,
+    id,
+    vault,
     timestampMilli: BigInt(ctx.timestamp.getTime()),
     lbtcBalance: newBalance,
   });
 
   ctx.eventLogger.emit("point_update", {
     account,
+    vault,
     bPoints: 0,
     lPoints: points,
     lbtcTotal: lbtcTotal.scaleDown(TOKEN_DECIMALS),
@@ -128,11 +140,11 @@ async function calcPoints(
   return points;
 }
 
-async function getVaultAssetsInMarket(ctx: EthContext) {
+async function getVaultAssetsInMarket(ctx: MetaMorphoContext) {
   // get the amount of LBTC the vault allocated to the market
   const morpho = getMorphoContractOnContext(ctx, MORPHO_ADDRESS);
   const [position, market] = await Promise.all([
-    morpho.position(LBTC_WBTC_MARKET_ID, VAULT_ADDRESS),
+    morpho.position(LBTC_WBTC_MARKET_ID, ctx.address),
     morpho.market(LBTC_WBTC_MARKET_ID),
   ]);
   return toAssetsDown(
