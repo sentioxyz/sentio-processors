@@ -20,6 +20,10 @@ export class AccountSnapshot extends AbstractEntity  {
 	id: String
 
 	@Required
+	@Column("String")
+	vault: String
+
+	@Required
 	@Column("BigInt")
 	timestampMilli: BigInt
 
@@ -32,6 +36,7 @@ export class AccountSnapshot extends AbstractEntity  {
 
 const source = `type AccountSnapshot @entity {
   id: String!
+  vault: String!
   timestampMilli: BigInt!
   lbtcBalance: BigInt!
 }`
