@@ -1,9 +1,9 @@
 import { EthChainId, getProvider } from "@sentio/sdk/eth";
 
 export const NETWROK = EthChainId.ETHEREUM;
-export const POOL_ADDRESS = "0xF130E387e2083EE79f3588e678c9B446A07860cb";
-export const GAUGE_ADDRESS = "0xf5e3077173e4c21df78d8712c41c8daea9040481";
-export const GAUGE_START_BLOCK = await getCreationBlock(NETWROK, GAUGE_ADDRESS);
+export const POOL_ADDRESS = "0x2f3bc4c27a4437aeca13de0e37cdf1028f3706f0";
+// export const GAUGE_ADDRESS = "0xf5e3077173e4c21df78d8712c41c8daea9040481";
+// export const GAUGE_START_BLOCK = await getCreationBlock(NETWROK, GAUGE_ADDRESS);
 
 export const VAULT_ADDRESS = "0x5401b8620E5FB570064CA9114fd1e135fd77D57c";
 

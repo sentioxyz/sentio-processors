@@ -8,8 +8,8 @@ import {
 } from "./types/eth/curvestableswapng.js";
 import {
   DAILY_POINTS,
-  GAUGE_ADDRESS,
-  GAUGE_START_BLOCK,
+  // GAUGE_ADDRESS,
+  // GAUGE_START_BLOCK,
   MULTIPLIER,
   NETWROK,
   POOL_ADDRESS,
@@ -169,10 +169,10 @@ async function getAccountSnapshot(
   account: string
 ) {
   let lpBalance = await ctx.contract.balanceOf(account);
-  if (ctx.blockNumber > GAUGE_START_BLOCK) {
-    const gaugeContract = getCurveGaugeContractOnContext(ctx, GAUGE_ADDRESS);
-    lpBalance += await gaugeContract.balanceOf(account);
-  }
+  // if (ctx.blockNumber > GAUGE_START_BLOCK) {
+  //   const gaugeContract = getCurveGaugeContractOnContext(ctx, GAUGE_ADDRESS);
+  //   lpBalance += await gaugeContract.balanceOf(account);
+  // }
   const lpSupply = await ctx.contract.totalSupply();
   const share = BigInt(lpBalance)
     .asBigDecimal()
@@ -194,8 +194,7 @@ async function getAccountSnapshot(
 
 function isProtocolAddress(address: string): boolean {
   return (
-    isNullAddress(address) ||
-    address.toLowerCase() == POOL_ADDRESS ||
-    address.toLowerCase() == GAUGE_ADDRESS
+    isNullAddress(address) || address.toLowerCase() == POOL_ADDRESS // ||
+    // address.toLowerCase() == GAUGE_ADDRESS
   );
 }
