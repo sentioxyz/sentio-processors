@@ -142,9 +142,9 @@ async function processCreditAccount(
     lPoints: points,
     bPoints: 0,
     creditAccount: id,
-    snapshotLbtcBalance,
+    snapshotLbtcBalance: snapshotLbtcBalance.scaleDown(TOKEN_DECIMALS),
     snapshotTimestampMilli,
-    newLbtcBalance,
+    newLbtcBalance: newLbtcBalance.scaleDown(TOKEN_DECIMALS),
     newTimestampMilli,
     multiplier: MULTIPLIER,
   });
