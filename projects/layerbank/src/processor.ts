@@ -1,27 +1,23 @@
 import { scaleDown } from '@sentio/sdk'
 import { EthChainId } from '@sentio/sdk/eth'
-import { token } from '@sentio/sdk/utils'
-import {
-  BorrowCallTrace,
-  getLayerbankContract,
-  LayerbankContext,
-  LayerbankProcessor,
-  MarketRedeemEvent,
-  MarketSupplyEvent,
-  RepayBorrowCallTrace
-} from './types/eth/layerbank.js'
-import { getLtokenContractOnContext, LtokenContext, LtokenProcessor } from './types/eth/ltoken.js'
+import { token as tokens } from '@sentio/sdk/utils'
+import { getLayerbankContract, LayerbankContext, LayerbankProcessor } from './types/eth/layerbank.js'
+import { getLtokenContract, getLtokenContractOnContext, LtokenContext, LtokenProcessor } from './types/eth/ltoken.js'
 
 const address = '0xEC53c830f4444a8A56455c6836b5D2aA794289Aa'
 const startBlock = 152083
+// const startBlock = 8144000
 
-async function recordBalance(ctx: LayerbankContext | LtokenContext, lToken: string, user: string, type: string) {
+const tokenInfos = new Map<string, tokens.TokenInfo>()
+
+async function recordBalance(ctx: LtokenContext, lToken: string, user: string, type: string) {
+  const tokenInfo = tokenInfos.get(lToken)
+  if (!tokenInfo) {
+    console.warn('no token info', ctx.transactionHash, lToken)
+    return
+  }
   const contract = getLtokenContractOnContext(ctx, lToken)
-  const [supply, borrow, tokenInfo] = await Promise.all([
-    contract.balanceOf(user),
-    contract.borrowBalanceOf(user),
-    token.getERC20TokenInfo(ctx, lToken)
-  ])
+  const [supply, borrow] = await Promise.all([contract.balanceOf(user), contract.borrowBalanceOf(user)])
 
   ctx.eventLogger.emit('balance', {
     lToken,
@@ -37,6 +33,17 @@ const layerbank = getLayerbankContract(EthChainId.SCROLL, address)
 const markets = await layerbank.allMarkets()
 
 for (const market of markets) {
+  const contract = getLtokenContract(EthChainId.SCROLL, market)
+  let info
+  try {
+    const underlying = await contract.underlying()
+    info = await tokens.getERC20TokenInfo(EthChainId.SCROLL, underlying)
+  } catch (e) {
+    info = await tokens.getERC20TokenInfo(EthChainId.SCROLL, market)
+  }
+  tokenInfos.set(market, info)
+  console.log('market', market, info.symbol, info.decimal)
+
   LtokenProcessor.bind({ address: market, startBlock, network: EthChainId.SCROLL })
     .onEventMint(async (evt, ctx) => {
       const { minter } = evt.args
