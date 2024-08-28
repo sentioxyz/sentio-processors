@@ -31,46 +31,38 @@ CurveStableSwapNGProcessor.bind({
   .onEventAddLiquidity(async (event, ctx) => {
     const accountAddress = event.args.provider;
     const accounts = [accountAddress].filter(
-      (account) => !isNullAddress(account)
+      (address) => !isProtocolAddress(address)
     );
     const newSnapshots = await Promise.all(
       accounts.map((account) =>
         processAccount(ctx, account, undefined, event.name)
       )
     );
-    await ctx.store.upsert(
-      newSnapshots.filter((snapshot) => snapshot != undefined) as any
-    );
+    await ctx.store.upsert(newSnapshots);
   })
   .onEventRemoveLiquidity(async (event, ctx) => {
     const accountAddress = event.args.provider;
     const accounts = [accountAddress].filter(
-      (account) => !isNullAddress(account)
+      (address) => !isProtocolAddress(address)
     );
     const newSnapshots = await Promise.all(
       accounts.map((account) =>
         processAccount(ctx, account, undefined, event.name)
       )
     );
-    await ctx.store.upsert(
-      newSnapshots.filter((snapshot) => snapshot != undefined) as any
-    );
+    await ctx.store.upsert(newSnapshots);
   })
   .onEventTransfer(async (event, ctx) => {
-    const accounts = [event.args.sender, event.args.receiver];
-
-    if (accounts.some(isProtocolAddress)) {
-      return;
-    }
+    const accounts = [event.args.sender, event.args.receiver].filter(
+      (address) => !isProtocolAddress(address)
+    );
 
     const newSnapshots = await Promise.all(
       accounts.map((account) =>
         processAccount(ctx, account, undefined, event.name)
       )
     );
-    await ctx.store.upsert(
-      newSnapshots.filter((snapshot) => snapshot != undefined) as any
-    );
+    await ctx.store.upsert(newSnapshots);
   })
   .onEventTokenExchange(async (event, ctx) => {
     const accountSnapshots = await ctx.store.list(AccountSnapshot, []);
@@ -79,9 +71,7 @@ CurveStableSwapNGProcessor.bind({
         processAccount(ctx, snapshot.id.toString(), snapshot, event.name)
       )
     );
-    await ctx.store.upsert(
-      newSnapshots.filter((snapshot) => snapshot != undefined) as any
-    );
+    await ctx.store.upsert(newSnapshots);
   })
   .onTimeInterval(
     async (_, ctx) => {
@@ -91,9 +81,7 @@ CurveStableSwapNGProcessor.bind({
           processAccount(ctx, snapshot.id.toString(), snapshot, "TimeInterval")
         )
       );
-      await ctx.store.upsert(
-        newSnapshots.filter((snapshot) => snapshot != undefined) as any
-      );
+      await ctx.store.upsert(newSnapshots);
     },
     60,
     4 * 60
@@ -105,9 +93,6 @@ async function processAccount(
   snapshot: AccountSnapshot | undefined,
   triggerEvent: string
 ) {
-  if (account.toLowerCase() == VAULT_ADDRESS.toLowerCase()) {
-    return;
-  }
   if (!snapshot) {
     snapshot = await ctx.store.get(AccountSnapshot, account);
   }
@@ -174,9 +159,10 @@ async function getAccountSnapshot(
   //   lpBalance += await gaugeContract.balanceOf(account);
   // }
   const lpSupply = await ctx.contract.totalSupply();
-  const share = BigInt(lpBalance)
-    .asBigDecimal()
-    .div(BigInt(lpSupply).asBigDecimal());
+  const share =
+    lpSupply > 0
+      ? BigInt(lpBalance).asBigDecimal().div(BigInt(lpSupply).asBigDecimal())
+      : new BigDecimal(0);
 
   const [token0Total, token1Total] = await ctx.contract.get_balances();
 
@@ -194,7 +180,9 @@ async function getAccountSnapshot(
 
 function isProtocolAddress(address: string): boolean {
   return (
-    isNullAddress(address) || address.toLowerCase() == POOL_ADDRESS // ||
+    isNullAddress(address) ||
+    address.toLowerCase() == VAULT_ADDRESS.toLowerCase() ||
+    address.toLowerCase() == POOL_ADDRESS // ||
     // address.toLowerCase() == GAUGE_ADDRESS
   );
 }

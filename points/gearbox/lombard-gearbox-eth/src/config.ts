@@ -6,4 +6,4 @@ export const CREDIT_MANAGER_ADDRESS =
 export const LBTC_ADDRESS = "0x8236a87084f8B84306f72007F36F2618A5634494";
 
 export const DAILY_POINTS = 1000;
-export const MULTIPLIER = 4;
+export const MULTIPLIER = 2;

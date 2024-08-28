@@ -83,17 +83,23 @@ async function process(
   }
   const points = snapshot ? await calcPoints(ctx, snapshot) : new BigDecimal(0);
 
-  const [lbtcTotal, lpTotalSupply, lpBalance] = await Promise.all([
-    getVaultAssetsInMarket(ctx),
+  // const [lbtcTotal, lpTotalSupply, lpBalance] = await Promise.all([
+  //   getVaultAssetsInMarket(ctx),
+  //   ctx.contract.totalSupply(),
+  //   ctx.contract.balanceOf(account),
+  // ]);
+  const [wbtcTotal, lpTotalSupply, lpBalance] = await Promise.all([
+    ctx.contract.totalAssets(),
     ctx.contract.totalSupply(),
     ctx.contract.balanceOf(account),
   ]);
-  const newBalance = (lbtcTotal * lpBalance) / lpTotalSupply;
+  // const newBalance = (lbtcTotal * lpBalance) / lpTotalSupply;
+  const newBalance = (wbtcTotal * lpBalance) / lpTotalSupply;
   const newSnapshot = new AccountSnapshot({
     id,
     vault,
     timestampMilli: BigInt(ctx.timestamp.getTime()),
-    lbtcBalance: newBalance,
+    wbtcBalance: newBalance,
   });
 
   ctx.eventLogger.emit("point_update", {
@@ -101,11 +107,14 @@ async function process(
     vault,
     bPoints: 0,
     lPoints: points,
-    lbtcTotal: lbtcTotal.scaleDown(TOKEN_DECIMALS),
+    // lbtcTotal: lbtcTotal.scaleDown(TOKEN_DECIMALS),
+    wbtcTotal: wbtcTotal.scaleDown(TOKEN_DECIMALS),
     snapshotTimestampMilli: snapshot?.timestampMilli ?? 0n,
-    snapshotLbtcBalance: snapshot?.lbtcBalance.scaleDown(TOKEN_DECIMALS) ?? 0,
+    snapshotWbtcBalance: snapshot?.wbtcBalance.scaleDown(TOKEN_DECIMALS) ?? 0,
+    // snapshotLbtcBalance: snapshot?.lbtcBalance.scaleDown(TOKEN_DECIMALS) ?? 0,
     newTimestampMilli: newSnapshot.timestampMilli,
-    newLbtcBalance: newSnapshot.lbtcBalance.scaleDown(TOKEN_DECIMALS),
+    newWbtcBalance: newSnapshot.wbtcBalance.scaleDown(TOKEN_DECIMALS),
+    // newLbtcBalance: newSnapshot.lbtcBalance.scaleDown(TOKEN_DECIMALS),
     multiplier: MULTIPLIER,
     triggerEvent,
   });
@@ -131,7 +140,8 @@ async function calcPoints(
   }
   const deltaDay = (nowMilli - snapshotMilli) / MILLISECOND_PER_DAY;
 
-  const points = snapshot.lbtcBalance
+  // const points = snapshot.lbtcBalance
+  const points = snapshot.wbtcBalance
     .scaleDown(TOKEN_DECIMALS)
     .multipliedBy(DAILY_POINTS)
     .multipliedBy(deltaDay)
