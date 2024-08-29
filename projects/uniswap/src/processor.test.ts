@@ -1,22 +1,24 @@
+import { before, describe, test } from 'node:test'
+import assert from 'assert'
 import { TestProcessorServer } from '@sentio/sdk/testing'
 
 describe('Test Processor', () => {
   const service = new TestProcessorServer(() => import('./processor.js'))
 
-  beforeAll(async () => {
+  before(async () => {
     await service.start()
   })
 
   test('has valid config', async () => {
     const config = await service.getConfig({})
-    expect(config.contractConfigs.length > 0).toBeTruthy()
+    assert.ok(config.contractConfigs.length > 0)
   })
 
   test('check transfer event handling', async () => {
 
     const x = await service.eth.testTrace(data)
     console.log(x)
-    // expect(tokenCounter).toEqual(10n)
+    // assert.equal(tokenCounter, 10n)
   })
 })
 

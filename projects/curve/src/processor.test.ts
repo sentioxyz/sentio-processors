@@ -1,3 +1,5 @@
+import { before, describe, test } from 'node:test'
+import assert from 'assert'
 import { TestProcessorServer } from '@sentio/sdk/testing'
 import { HandlerType } from '@sentio/sdk'
 import { Log } from '@ethersproject/abstract-provider'
@@ -7,13 +9,13 @@ describe('Test Processor', () => {
     1: "https://eth-mainnet.g.alchemy.com/v2/SAow9F_73wmx_Uj5yEcI_au8y9GXYYd5",
   })
 
-  beforeAll(async () => {
+  before(async () => {
     await service.start()
   })
 
   test('has config', async () => {
     const config = await service.getConfig({})
-    expect(config.contractConfigs.length > 0)
+    assert.ok(config.contractConfigs.length > 0)
   })
 
   test('test block', async () => {

@@ -1,3 +1,5 @@
+import { before, describe, test } from 'node:test'
+import assert from 'assert'
 import assert from 'assert'
 import { describe, test, before } from 'node:test'
 import { TestProcessorServer } from '@sentio/sdk/testing'

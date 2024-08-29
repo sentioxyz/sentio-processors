@@ -1,3 +1,5 @@
+import { before, describe, test } from 'node:test'
+import assert from 'assert'
 import { TestProcessorServer } from '@sentio/sdk/testing'
 
 describe('Test Processor', () => {
@@ -5,13 +7,13 @@ describe('Test Processor', () => {
     1: "https://eth-mainnet.g.alchemy.com/v2/xcYv7bcyPkul-4_ZtfZPAly_q5zxcNs3",
   })
 
-  beforeAll(async () => {
+  before(async () => {
     await service.start()
   })
 
   test('has config', async () => {
     const config = await service.getConfig({})
-    expect(config.contractConfigs.length > 0)
+    assert.ok(config.contractConfigs.length > 0)
   })
 
   test('strange log', async () => {

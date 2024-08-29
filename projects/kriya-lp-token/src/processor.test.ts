@@ -1,10 +1,12 @@
+import { before, describe, test } from 'node:test'
+import assert from 'assert'
 import { TestProcessorServer, firstCounterValue } from '@sentio/sdk/testing'
 import { SuiNetwork } from "@sentio/sdk/sui"
 
 describe('Test Processor', () => {
   const service = new TestProcessorServer(() => import('./processor.js'))
 
-  beforeAll(async () => {
+  before(async () => {
     await service.start()
   })
 

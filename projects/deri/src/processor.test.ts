@@ -1,3 +1,5 @@
+import { before, describe, test } from 'node:test'
+import assert from 'assert'
 import { TestProcessorServer, firstCounterValue } from '@sentio/sdk/testing'
 // import { mockTransferLog } from '@sentio/sdk/eth/builtin/erc20'
 // import { mockTradeLog} from "./types/eth/internal/symbolmanagerimplementation-test-utils.js";
@@ -7,13 +9,13 @@ jest.setTimeout(10000000)
 describe('Test Processor', () => {
   const service = new TestProcessorServer(() => import('./processor.js'), {56: "https://bsc-mainnet.blastapi.io/dca2d284-1aea-495f-a50e-7750acdc2ec1"})
 
-  beforeAll(async () => {
+  before(async () => {
     await service.start()
   })
 
   test('has valid config', async () => {
     const config = await service.getConfig({})
-    expect(config.contractConfigs.length > 0).toBeTruthy()
+    assert.ok(config.contractConfigs.length > 0)
   })
 
   test('check transfer event handling', async () => {
@@ -35,6 +37,6 @@ describe('Test Processor', () => {
     // )
 
     // const tokenCounter = firstCounterValue(resp.result, 'token')
-    // expect(tokenCounter).toEqual(10n)
+    // assert.equal(tokenCounter, 10n)
   })
 })
