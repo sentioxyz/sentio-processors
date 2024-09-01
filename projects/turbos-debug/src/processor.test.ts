@@ -1,4 +1,6 @@
 import { TestProcessorServer, firstCounterValue } from '@sentio/sdk/testing'
+import { before, describe, test } from 'node:test'
+import { expect } from 'chai'
 import { mockTransferLog } from '@sentio/sdk/eth/builtin/erc20'
 import { SuiNetwork } from '@sentio/sdk/sui'
 import 'dotenv/config'
@@ -9,7 +11,7 @@ describe('Test Processor', () => {
   })
 
 
-  beforeAll(async () => {
+  before(async () => {
     await service.start()
   })
 

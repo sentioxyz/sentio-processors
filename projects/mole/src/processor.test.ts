@@ -1,11 +1,13 @@
 import { TestProcessorServer, firstCounterValue } from '@sentio/sdk/testing'
+import { before, describe, test } from 'node:test'
+import { expect } from 'chai'
 import { SuiNetwork } from "@sentio/sdk/sui"
 import { getPriceByType, getPriceBySymbol } from '@sentio/sdk/utils'
 
 describe('Test Processor', () => {
   const service = new TestProcessorServer(() => import('./processor.js'))
 
-  beforeAll(async () => {
+  before(async () => {
     await service.start()
   })
 

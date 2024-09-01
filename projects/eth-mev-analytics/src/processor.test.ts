@@ -74,7 +74,7 @@ function compute(
 describe("Test MEV", () => {
   const service = new TestProcessorServer(() => import("./processor.js"));
 
-  beforeAll(async () => {
+  before(async () => {
     await service.start();
   });
 
@@ -260,7 +260,7 @@ describe("Test MEV", () => {
 describe("Test hack", () => {
   const service = new TestProcessorServer(() => import("./processor.js"));
 
-  beforeAll(async () => {
+  before(async () => {
     await service.start();
   });
 

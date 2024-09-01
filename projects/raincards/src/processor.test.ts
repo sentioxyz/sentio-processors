@@ -3,7 +3,7 @@ import { TestProcessorServer } from '@sentio/sdk/lib/testing'
 describe('Test Processor', () => {
   const service = new TestProcessorServer(()=> require('./processor'))
 
-  beforeAll(async () => {
+  before(async () => {
     await service.start()
   })
 

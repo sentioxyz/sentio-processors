@@ -1,4 +1,6 @@
 import { TestProcessorServer } from '@sentio/sdk/testing'
+import { before, describe, test } from 'node:test'
+import { expect } from 'chai'
 import { BorshInstructionCoder, Idl } from "@project-serum/anchor";
 import { pyth_oracle_idl } from "./types/solana/pyth_oracle";
 // import bs58 from "bs58";
@@ -8,7 +10,7 @@ import { PythOracle } from '@pythnetwork/client/lib/anchor';
 describe('Test Processor', () => {
   const service = new TestProcessorServer(() => import('./processor'))
 
-  beforeAll(async () => {
+  before(async () => {
     await service.start()
   })
 

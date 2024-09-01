@@ -4,7 +4,7 @@ import {HandlerType} from "@sentio/sdk";
 describe('Test Processor', () => {
     const service = new TestProcessorServer(() => import('./processor.js'))
 
-    beforeAll(async () => {
+    before(async () => {
         await service.start()
     })
 

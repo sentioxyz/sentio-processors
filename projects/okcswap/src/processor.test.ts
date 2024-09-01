@@ -1,10 +1,12 @@
 import { TestProcessorServer } from '@sentio/sdk/testing'
+import { before, describe, test } from 'node:test'
+import { expect } from 'chai'
 import { mockTransferLog } from '@sentio/sdk/eth/builtin/erc20'
 
 describe('Test Processor', () => {
   const service = new TestProcessorServer(() => import('./processor.js'))
 
-  beforeAll(async () => {
+  before(async () => {
     await service.start()
   })
 

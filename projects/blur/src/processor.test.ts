@@ -5,7 +5,7 @@ import fetch from "node-fetch";
 describe('Test Processor', () => {
     const service = new TestProcessorServer(() => import('./processor.js'))
 
-    beforeAll(async () => {
+    before(async () => {
         await service.start()
     })
 

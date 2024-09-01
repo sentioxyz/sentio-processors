@@ -1,6 +1,8 @@
 import assert from 'assert'
 import { describe, test, before } from 'node:test'
 import { TestProcessorServer } from '@sentio/sdk/testing'
+import { before, describe, test } from 'node:test'
+import { expect } from 'chai'
 import { HandlerType } from '@sentio/sdk'
 
 describe('Test Processor', () => {
