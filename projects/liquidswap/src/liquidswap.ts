@@ -47,7 +47,7 @@ for (const env of [v0, v05]) {
     const resourceAddress = env == v0 ? resourceAddress_v0 : resourceAddress_v05
     const ver = env == v0 ? "v0" : "v0.5"
 
-    const liquidSwap = new AptosDex(volume, volumeByCoin,
+    const liquidSwap = new AptosDex<PoolType<any, any, any>>(volume, volumeByCoin,
         tvlAll, tvl, tvlByPool, {
             getXReserve: pool => pool.coin_x_reserve.value,
             getYReserve: pool => pool.coin_y_reserve.value,
@@ -184,7 +184,7 @@ for (const env of [v0, v05]) {
 
 // TODO refactor this
     async function syncLiquidSwapPools(resources: MoveResource[], ctx: AptosResourcesContext) {
-        let pools = await defaultMoveCoder().filterAndDecodeResources(liquidity_pool.LiquidityPool.type(), resources)
+        let pools = await defaultMoveCoder().filterAndDecodeResources<PoolType<any, any, any>>(liquidity_pool.LiquidityPool.type(), resources)
 
         const volumeByCoin = new Map<string, BigDecimal>()
         const timestamp = ctx.timestampInMicros

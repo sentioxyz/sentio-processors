@@ -143,7 +143,11 @@ liquidity_pool.bind({ startVersion }).onEventSwapEvent(async (evt, ctx) => {
   // LP-USDC-WBTC, e.g. https://aptoscan.com/objects/0x1e9cf70ab184026fa1eafc3cc4a4bd0012418425049e60856ea249f72f94ba8a#resources
   const [, token1, token2] = poolName?.split('-') || []
   let reserveX, reserveY
-  if (coinXInfo.symbol.endsWith(token1)) {
+  if (
+    coinXInfo.symbol?.endsWith(token1) ||
+    coinYInfo.symbol?.endsWith(token2) ||
+    (!coinXInfo.symbol && !coinYInfo.symbol)
+  ) {
     reserveX = syncEvent.reserves_1
     reserveY = syncEvent.reserves_2
   } else {
