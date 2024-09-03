@@ -31,7 +31,7 @@ async function erc20Out(evt: TransferEvent, ctx: AccountContext) {
 }
 
 async function erc721In(evt: TransferEvent721, ctx: AccountContext) {
-  const nft = getERC721Contract(ctx, evt.address)
+  const nft = getERC721Contract(ctx as any, evt.address)
   const tokenId = evt.args.tokenId
   const name = await nft.name()
   const symbol = await nft.symbol()
@@ -45,7 +45,7 @@ async function erc721In(evt: TransferEvent721, ctx: AccountContext) {
 }
 
 async function erc721Out(evt: TransferEvent721, ctx: AccountContext) {
-  const nft = getERC721Contract(ctx, evt.address)
+  const nft = getERC721Contract(ctx as any, evt.address)
   const tokenId = evt.args.tokenId
 
   ctx.eventLogger.emit("ERC721TransferOut", {

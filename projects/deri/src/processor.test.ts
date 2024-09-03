@@ -1,11 +1,10 @@
+import assert from 'assert'
 import { TestProcessorServer, firstCounterValue } from '@sentio/sdk/testing'
 import { before, describe, test } from 'node:test'
 import { expect } from 'chai'
 // import { mockTransferLog } from '@sentio/sdk/eth/builtin/erc20'
 // import { mockTradeLog} from "./types/eth/internal/symbolmanagerimplementation-test-utils.js";
-import {EthChainId} from "@sentio/sdk";
-import { jest } from '@jest/globals'
-jest.setTimeout(10000000)
+import {EthChainId} from "@sentio/sdk/eth";
 describe('Test Processor', () => {
   const service = new TestProcessorServer(() => import('./processor.js'), {56: "https://bsc-mainnet.blastapi.io/dca2d284-1aea-495f-a50e-7750acdc2ec1"})
 

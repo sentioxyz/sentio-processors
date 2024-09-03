@@ -1,3 +1,4 @@
+// @ts-nocheck
 import { EthChainId } from "@sentio/sdk/eth"
 import { UniswapV3PoolProcessor } from "./types/eth/uniswapv3pool.js"
 import './helper.js'

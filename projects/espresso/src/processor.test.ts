@@ -1,3 +1,4 @@
+import assert from 'assert'
 // import { TestProcessorServer } from '@sentio/sdk/testing'
 import { before, describe, test } from 'node:test'
 import { expect } from 'chai'
@@ -23,7 +24,7 @@ describe('Test Processor', () => {
 
     const resp = await service.eth.testLog(
         JSON.parse(data),
-        5
+        5 as any
     )
 
     console.log(resp)

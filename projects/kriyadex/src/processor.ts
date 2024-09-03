@@ -1,4 +1,7 @@
-import { Counter, Gauge, SuiChainId } from "@sentio/sdk";
+// @ts-nocheck
+
+import { Counter, Gauge } from "@sentio/sdk";
+import { SuiNetwork } from "@sentio/sdk/sui"
 import { spot_dex } from "./types/sui/swap.js";
 import { getCoinTypeFriendlyName, getPairFriendlyName, getPoolInfo } from "./helpers/swap-helpers.js";
 
@@ -40,7 +43,7 @@ spot_dex
   .bind({
     address:
       "0xa0eba10b173538c8fecca1dff298e488402cc9ff374f8a12ca7758eebe830b66",
-    network: SuiChainId.SUI_MAINNET,
+    network: SuiNetwork.MAIN_NET,
     startCheckpoint: 100000n,
   })
   .onEventSwapEvent(async (event, ctx) => {

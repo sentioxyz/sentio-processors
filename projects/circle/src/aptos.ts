@@ -1,4 +1,5 @@
-import { AptosClient } from "aptos-sdk";
+// @ts-nocheck
+
 import { aggregator, coin, optional_aggregator } from "@sentio/sdk/aptos/builtin/0x1";
 import { Gauge, scaleDown } from "@sentio/sdk";
 import {

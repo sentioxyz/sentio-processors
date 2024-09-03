@@ -14,7 +14,7 @@ for (const token of whitelistCoins().values()) {
   const coinInfoType = `0x1::coin::CoinInfo<${token.token_type.type}>`
   AptosResourcesProcessor.bind({
     address: token.token_type.account_address,
-    network: AptosNetwork.M2_TEST_NET,
+    network: AptosNetwork.MOVEMENT_TEST_NET
   }).onTimeInterval(
     async (resources, ctx) => {
       const coinInfoRes = await defaultMoveCoder().filterAndDecodeResources(coin.CoinInfo.type(), resources)
@@ -40,11 +40,11 @@ for (const token of whitelistCoins().values()) {
               data: {
                 key: agg.key,
                 key_type: 'address',
-                value_type: 'u128',
+                value_type: 'u128'
               },
               options: {
-                ledgerVersion: ctx.version,
-              },
+                ledgerVersion: ctx.version
+              }
             })
           } catch (e) {
             if (e.status === 429) {
@@ -66,7 +66,7 @@ for (const token of whitelistCoins().values()) {
     },
     60,
     60 * 12,
-    coinInfoType,
+    coinInfoType
   )
 }
 // })

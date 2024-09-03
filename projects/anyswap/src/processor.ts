@@ -1,4 +1,4 @@
-import "./ftmAnalysis.js"
+// import "./ftmAnalysis.js"
 // import { ERC20Context, ERC20Processor } from '@sentio/sdk/eth/builtin/erc20'
 // // import { chain, conversion } from '@sentio/sdk/utils';
 
@@ -124,4 +124,3 @@ import "./ftmAnalysis.js"
 // // BscAnyswapRouterProcessor.bind({address: routerAddress_BSC, network: 56, startBlock: startBlock_BSC})
 // //   .onEventLogAnySwapIn(handleSwapInBSC, inFilterBSC)
 // //   .onEventLogAnySwapOut(handleSwapOutBSC, outFilterBSC)
-

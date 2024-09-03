@@ -60,7 +60,7 @@ mint_event.bind({
     const collection_id = event.data_decoded.collection_id
     const object = event.data_decoded.object
     ctx.eventLogger.emit("MintEvent", {
-      distinctId: ctx.transaction.transaction.data.sender,
+      distinctId: ctx.transaction.transaction?.data.sender,
       collection_id,
       object,
       project: "clutchy"
@@ -71,7 +71,7 @@ mint_event.bind({
     const collection_id = event.data_decoded.collection_id
     const object = event.data_decoded.object
     ctx.eventLogger.emit("BurnEvent", {
-      distinctId: ctx.transaction.transaction.data.sender,
+      distinctId: ctx.transaction.transaction?.data.sender,
       collection_id,
       object,
       project: "clutchy"
@@ -88,7 +88,7 @@ listing.bind({
     ctx.meter.Counter("create_listing_counter").add(1, { project: "clutchy" })
     const listing_id = event.data_decoded.listing_id
     ctx.eventLogger.emit("CreateListing", {
-      distinctId: ctx.transaction.transaction.data.sender,
+      distinctId: ctx.transaction.transaction?.data.sender,
       listing_id,
       project: "clutchy"
     })
@@ -97,7 +97,7 @@ listing.bind({
     ctx.meter.Counter("delete_listing_counter").add(1, { project: "clutchy" })
     const listing_id = event.data_decoded.listing_id
     ctx.eventLogger.emit("DeleteListing", {
-      distinctId: ctx.transaction.transaction.data.sender,
+      distinctId: ctx.transaction.transaction?.data.sender,
       listing_id,
       project: "clutchy"
     })

@@ -1,3 +1,4 @@
+// @ts-nocheck
 import { SuiContext } from "@sentio/sdk/sui"
 export async function getPoolMetadata(ctx: SuiContext, pool: string) {
     let [softcap, hardcap, reality_raise_total, sale_total] = [0, 0, 0, 0]

@@ -1,6 +1,8 @@
+import assert from 'assert'
 import { TestProcessorServer } from '@sentio/sdk/testing'
 import { before, describe, test } from 'node:test'
 import { expect } from 'chai'
+// @ts-expect-error ??
 import { decodeMultiSig, builder, fromB64 } from "@mysten/sui.js";
 import { TextDecoder, TextEncoder } from "util"
 

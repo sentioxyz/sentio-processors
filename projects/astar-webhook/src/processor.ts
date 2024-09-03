@@ -1,4 +1,5 @@
-import {CHAIN_IDS, Counter, Exporter, Gauge} from '@sentio/sdk'
+import {Counter, Exporter, Gauge} from '@sentio/sdk'
+import { EthChainId } from "@sentio/sdk/eth"
 import { ERC20Processor } from '@sentio/sdk/eth/builtin'
 import { getPriceBySymbol,  token } from "@sentio/sdk/utils"
 
@@ -31,7 +32,7 @@ const exporter = Exporter.register('astaralert', 'astaralert')
 async function getTokenInfo(address: string): Promise<token.TokenInfo> {
 
     try {
-      return await token.getERC20TokenInfo(CHAIN_IDS.ASTAR, address)
+      return await token.getERC20TokenInfo(EthChainId.ASTAR, address)
     } catch (error) {
       console.log(error, address)
       return token.NATIVE_ETH
@@ -49,7 +50,7 @@ async function getOrCreateToken(address: string) : Promise<token.TokenInfo> {
 }
 
 for (const token of tokenWatching) {
-  ERC20Processor.bind({ address: token , network: CHAIN_IDS.ASTAR, startBlock: 3050000})
+  ERC20Processor.bind({ address: token , network: EthChainId.ASTAR, startBlock: 3050000})
       .onEventTransfer(
     async (event, ctx) => {
         let token = await getOrCreateToken(ctx.address)

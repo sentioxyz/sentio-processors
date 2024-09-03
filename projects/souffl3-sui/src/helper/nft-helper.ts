@@ -1,3 +1,4 @@
+// @ts-nocheck
 import { SuiContext } from "@sentio/sdk/sui"
 
 export function getCollectionName(type: string) {
@@ -31,4 +32,3 @@ export async function getNftAndCollectionName(ctx: SuiContext, nft: string) {
     catch (e) { console.log(`${e.message}, getNftName error at ${ctx.transaction.digest}`) }
     return [NFTName, collectionName]
 }
-

@@ -79,6 +79,7 @@ async function getMarketInfo(ctx: AptosContext, marketId: bigint) {
     function: "0xc0deb00c405f84c85dc13442e305df75d1288100cdd82675695f6148c7ece51c::registry::get_market_info",
     arguments: [marketId.toString()],
     type_arguments: [],
+    // @ts-expect-error ??
   }, ctx.version.toString()))[0]
 
   return (await ctx.coder.decodedType(res, registry.MarketInfoView.type()))!

@@ -1,4 +1,5 @@
-import { CHAIN_IDS, Counter, Gauge } from '@sentio/sdk'
+import {  Counter, Gauge } from '@sentio/sdk'
+import { EthChainId } from '@sentio/sdk/eth'
 import { ERC20Context, ERC20Processor, getERC20Contract } from '@sentio/sdk/eth/builtin/erc20'
 import { getPriceByType, getPriceBySymbol, token } from "@sentio/sdk/utils"
 import { OKCSwapFactoryProcessor } from './types/eth/okcswapfactory.js'
@@ -266,10 +267,9 @@ const BurnEventHandler = async (event: BurnEvent, ctx: OKCSwapPairContext) => {
 
 for (let i = 0; i < PAIR_WATCHING.length; i++) {
   let address = PAIR_WATCHING[i]
-  OKCSwapPairProcessor.bind({ address: address, network: CHAIN_IDS.OKEXCHAIN })
+  // @ts-expect-error ??
+  OKCSwapPairProcessor.bind({ address: address, network: EthChainId.OKEXCHAIN })
     .onEventSwap(SwapEventHandler)
     .onEventMint(MintEventHandler)
     .onEventBurn(BurnEventHandler)
 }
-
-

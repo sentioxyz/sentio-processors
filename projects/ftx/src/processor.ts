@@ -1,6 +1,7 @@
 import {aptos_account, coin} from "@sentio/sdk/aptos/builtin/0x1";
 
-import { SimpleCoinInfo, whitelistCoins } from "@sentio/sdk/aptos/ext";
+import { SimpleCoinInfo } from "@sentio/sdk/move/ext";
+import { whitelistCoins } from "@sentio/sdk/aptos/ext";
 import { scaleDown } from "@sentio/sdk";
 
 const coinInfoMap = new Map<string, SimpleCoinInfo>()

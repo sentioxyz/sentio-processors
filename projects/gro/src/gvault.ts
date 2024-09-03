@@ -113,7 +113,7 @@ GVaultProcessor.bind({address: "0x1402c1cAa002354fC2C4a4cD2b4045A5b9625EF3"})
 .onEventWithdraw(withdrawHandler)
 .onEventDeposit(depositHandler)
 .onBlockInterval(blockHandler)
-.onAllEvents(genericEventHandler)
+// .onAllEvents(genericEventHandler)
 
 GStrategyGuardProcessor.bind({address: "0xe09de1b49118bb197b2ea45d4d7054d48d1c3224"})
 .onEventLogStopLossEscalated(logStopLossEscalated)
