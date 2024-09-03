@@ -27,7 +27,7 @@ async function getTokenWithPrice(
     timestamp: Date, amount: bigint): Promise<TokenWithPrice | undefined> {
     let tokenInfo: token.TokenInfo
     try {
-        tokenInfo = await token.getERC20TokenInfo(chainID, tokenAddr)
+        tokenInfo = await token.getERC20TokenInfo(chainID as any, tokenAddr)
     } catch (e) {
         console.log("get token failed", e, tokenAddr, chainID)
         return undefined
@@ -39,7 +39,7 @@ async function getTokenWithPrice(
         scaledAmount: BigDecimal(0),
     }
     try {
-        price = await getPriceByType(chainID, tokenAddr, timestamp)
+        price = await getPriceByType(chainID as any, tokenAddr, timestamp)
         if (isNaN(price)) {
             console.log("price is NaN", tokenAddr, chainID, timestamp)
             return undefined

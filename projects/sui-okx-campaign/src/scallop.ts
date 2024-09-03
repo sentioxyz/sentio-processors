@@ -1,7 +1,7 @@
 
 import { SuiContext } from "@sentio/sdk/sui";
 import { mint } from "./types/sui/scallop.js"
-import { normalizeSuiAddress } from "@mysten/sui.js";
+import { normalizeSuiAddress } from "@mysten/sui.js/utils";
 
 const mintEventHandler = async (
     event: mint.MintEventInstance,

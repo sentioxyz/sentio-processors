@@ -1,6 +1,6 @@
 import { typus_dov_single } from "./types/sui/typus.js";
 import { SuiContext } from "@sentio/sdk/sui";
-import { normalizeSuiAddress } from "@mysten/sui.js";
+import { normalizeSuiAddress } from "@mysten/sui.js/utils";
 
 function getCoinSymbol(name: string): string {
     let typeArgs = name.split("::");
@@ -13,7 +13,7 @@ function getCoinSymbol(name: string): string {
 const depositEventHandler = async (event: typus_dov_single.DepositInstance, ctx: SuiContext) => {
     const { amount, index, signer } = event.data_decoded
     const regex = /Deposit<([^>]+)>/
-    const type = event.type.match(regex)[1]
+    const type = event.type.match(regex)?.[1] as string
     const coin_symbol = getCoinSymbol(type)
     let decimal = 0
     if (coin_symbol == "usdc") decimal = 8
@@ -35,6 +35,3 @@ const depositEventHandler = async (event: typus_dov_single.DepositInstance, ctx:
 typus_dov_single.bind({
 })
     .onEventDeposit(depositEventHandler)
-
-
-

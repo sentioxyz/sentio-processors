@@ -1,4 +1,4 @@
-import { CHAIN_IDS, Counter, Gauge } from "@sentio/sdk";
+import { Counter, Gauge } from "@sentio/sdk";
 import { events } from "./types/aptos/switchboard.js";
 
 events.bind().onEventAggregatorUpdateEvent(async (event, ctx) => {

@@ -17,6 +17,6 @@ stable_pool.bind()
         .sub(event.data_decoded.burned_lp_coin_amount, { pool: getPoolName("stable", event.type_arguments) })
   })
 
-account.bind({network: AptosNetwork.M2_TEST_NET}).onEventCoinRegisterEvent(async (event, ctx) => {
+account.bind({network: AptosNetwork.MOVEMENT_TEST_NET}).onEventCoinRegisterEvent(async (event, ctx) => {
   ctx.meter.Counter("coin_register").add(1)
 })

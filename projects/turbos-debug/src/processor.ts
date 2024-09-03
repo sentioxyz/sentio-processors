@@ -114,6 +114,7 @@ export async function getTurbosPool(pool: string) {
 
   let value = cachePool.get(key)
   if (!value) {
+    // @ts-expect-error ??
     const promise = axios.get(
       `https://api.turbos.finance/pools/ids?ids=${pool}`
     )

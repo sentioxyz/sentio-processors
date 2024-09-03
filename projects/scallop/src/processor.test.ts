@@ -1,3 +1,4 @@
+import assert from 'assert'
 // import { TestProcessorServer, firstCounterValue } from '@sentio/sdk/testing'
 import { before, describe, test } from 'node:test'
 import { expect } from 'chai'

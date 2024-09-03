@@ -1,3 +1,4 @@
+// @ts-nocheck
 import { SuiObjectProcessor, SuiContext, SuiObjectContext } from "@sentio/sdk/sui"
 import { getPriceByType, token } from "@sentio/sdk/utils"
 import { SuiNetwork } from "@sentio/sdk/sui"
@@ -212,4 +213,3 @@ export async function calculateSwapVol_USD(type: string, amount_a: number, amoun
     return [vol, price_a, price_b]
 
 }
-

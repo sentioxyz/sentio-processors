@@ -1,6 +1,7 @@
 import { StakedTokenV1Context, StakedTokenV1Processor, MintEvent, BurnEvent, TransferEvent  } from './types/eth/stakedtokenv1.js'
 import {getPriceByType, token} from "@sentio/sdk/utils"
-import {BigDecimal, EthChainId, Counter, Gauge} from "@sentio/sdk"
+import {BigDecimal, Counter, Gauge} from "@sentio/sdk"
+import {EthChainId} from "@sentio/sdk/eth"
 import {
     CBETH_PROXY,
 } from "./constant.js"

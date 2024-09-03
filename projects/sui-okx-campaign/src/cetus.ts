@@ -35,7 +35,7 @@ pool.bind({
             if (usd_volume >= 5) {
                 ctx.meter.Counter("swap_counter").add(1, { project: "cetus" })
                 ctx.eventLogger.emit("SwapEvent", {
-                    distinctId: ctx.transaction.transaction.data.sender,
+                    distinctId: ctx.transaction.transaction?.data.sender,
                     pool,
                     before_sqrt_price,
                     after_sqrt_price,
@@ -78,7 +78,7 @@ pool.bind({
                 ctx.meter.Counter("add_liquidity_counter").add(1, { project: "cetus" })
 
                 ctx.eventLogger.emit("AddLiquidityEvent", {
-                    distinctId: ctx.transaction.transaction.data.sender,
+                    distinctId: ctx.transaction.transaction?.data.sender,
                     pool,
                     position,
                     tick_lower,

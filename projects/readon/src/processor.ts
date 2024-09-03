@@ -1,7 +1,7 @@
 import { StarNFTProcessor, StarNFTContext, ApprovalForAllEvent, TransferEvent } from './types/eth/starnft.js'
 import { ReadOnArchiveProcessor, ReadOnArchiveContext, TransferEvent as ReadOnTransferEvent } from './types/eth/readonarchive.js'
 import { CattoProcessor, CattoContext, TransferEvent as CattoTransferEvent,  } from './types/eth/catto.js'
-import { EthChainId } from "@sentio/sdk";
+import { EthChainId } from "@sentio/sdk/eth";
 
 const BSC_ADDR = "0xf2e0ac05157a2843c53c6295c0edea6c9ac65c72"
 const ARB_ADDR = "0xD6e5E55e342236D4044Fd071E710b7545d9e45DE"
@@ -67,6 +67,3 @@ CattoProcessor.bind({ address: CATTO_ADDR, network: EthChainId.ARBITRUM })
 
 ReadOnArchiveProcessor.bind( {address: READON_ARCHIVE_ADDR, network: EthChainId.ARBITRUM})
 .onEventTransfer(handleReadonTransfer)
-
-
-

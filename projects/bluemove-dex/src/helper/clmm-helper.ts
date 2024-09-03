@@ -1,3 +1,5 @@
+// @ts-nocheck
+
 import { SuiObjectProcessor, SuiContext, SuiObjectContext } from "@sentio/sdk/sui"
 import { getPriceByType, token } from "@sentio/sdk/utils"
 import * as constant from '../constant.js'

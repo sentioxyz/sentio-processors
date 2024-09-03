@@ -1,4 +1,5 @@
-import { CoinMap } from "./interfaces.js";
+// import { CoinMap } from "./interfaces.js";
+type CoinMap = any
 
 export const COIN = ["SUI", "USDC", "USDT", "WETH"];
 

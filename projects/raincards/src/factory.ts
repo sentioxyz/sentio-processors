@@ -1,7 +1,7 @@
-import { CHAIN_IDS } from "@sentio/sdk";
+import { EthChainId } from "@sentio/sdk/eth";
 import { CONTROLLER_GOERLI, FACTORY_GOERLI } from "./constant.js";
-import { 
-    RainCollateralControllerProcessor, 
+import {
+    RainCollateralControllerProcessor,
     RainCollateralControllerContext,
     LiquidationEvent,
     PaymentEvent
@@ -64,9 +64,11 @@ async function newRainCollateral(evt: NewRainCollateralEvent, ctx: RainCollatera
     ctx.meter.Counter("new_collateral_counter").add(1)
 }
 
-RainCollateralControllerProcessor.bind({address: CONTROLLER_GOERLI, network: CHAIN_IDS.GOERLI})
+// @ts-expect-error ??
+RainCollateralControllerProcessor.bind({address: CONTROLLER_GOERLI, network: EthChainId.GOERLI})
 .onEventLiquidation(liquidationEventHandler)
 .onEventPayment(paymentEventHandler)
 
-RainCollateralFactoryProcessor.bind({address: FACTORY_GOERLI, network: CHAIN_IDS.GOERLI})
+// @ts-expect-error ??
+RainCollateralFactoryProcessor.bind({address: FACTORY_GOERLI, network: EthChainId.GOERLI})
 .onEventNewRainCollateral(newRainCollateral)

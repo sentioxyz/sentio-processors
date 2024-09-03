@@ -31,7 +31,7 @@ pool.bind({
             const sale_total = metadata.sale_total / Math.pow(10, poolInfo.decimal_a)
 
             ctx.eventLogger.emit("PurchaseEvent", {
-                distinctId: ctx.transaction.transaction.data.sender,
+                distinctId: ctx.transaction.transaction?.data.sender,
                 pool_id,
                 amount,
                 softcap,
@@ -47,4 +47,3 @@ pool.bind({
             ctx.meter.Gauge("raise_status_percentage").record(reality_raise_total / hardcap, { pairName })
         }
     })
-

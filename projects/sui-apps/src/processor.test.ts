@@ -1,4 +1,5 @@
-import { TestProcessorServer, firstCounterValue } from '@sentio/sdk/testing'yar
+import assert from 'assert'
+import { TestProcessorServer, firstCounterValue } from '@sentio/sdk/testing'
 import { mockTransferLog } from '@sentio/sdk/eth/builtin/erc20'
 import { before, describe, test } from 'node:test'
 import { expect } from 'chai'

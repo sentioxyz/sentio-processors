@@ -87,7 +87,7 @@ for (const env of [v05]) {
   })
 
   liquidity_pool
-    .bind({ baseLabels: { ver }, network: AptosNetwork.M2_TEST_NET })
+    .bind({ baseLabels: { ver }, network: AptosNetwork.MOVEMENT_TEST_NET })
     .onEventPoolCreatedEvent(async (evt, ctx) => {
       ctx.meter.Counter('num_pools').add(1, { ver })
       ctx.eventLogger.emit('lp', { distinctId: ctx.transaction.sender, ver })
@@ -473,6 +473,6 @@ for (const env of [v05]) {
   AptosResourcesProcessor.bind({
     address: resourceAddress,
     baseLabels: { ver },
-    network: AptosNetwork.M2_TEST_NET,
+    network: AptosNetwork.MOVEMENT_TEST_NET,
   }).onTimeInterval(async (resources, ctx) => syncLiquidSwapPools(resources, ctx), 60, 12 * 60)
 }
