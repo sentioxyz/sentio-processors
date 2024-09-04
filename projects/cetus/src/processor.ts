@@ -23,8 +23,10 @@ factory.bind({
     ctx.eventLogger.emit("CreatePoolEvent", {
       distinctId: event.sender,
       pool_id,
-      type_a: poolInfo.type_a,
-      type_b: poolInfo.type_a,
+      coin_type_a: poolInfo.type_a,
+      coin_type_b: poolInfo.type_a,
+      symbol_a: poolInfo.symbol_a,
+      symbol_b: poolInfo.symbol_b,
       pairName: poolInfo.pairName,
       project: "cetus"
     })
@@ -89,6 +91,8 @@ pool.bind({
       coin_symbol: atob ? poolInfo.symbol_a : poolInfo.symbol_b, //for amount_in
       coin_type_a: poolInfo.type_a,
       coin_type_b: poolInfo.type_b,
+      symbol_a: poolInfo.symbol_a,
+      symbol_b: poolInfo.symbol_b,
       type_in: atob ? poolInfo.symbol_a : poolInfo.symbol_b,
       type_out: atob ? poolInfo.symbol_b : poolInfo.symbol_a,
       pairName: poolInfo.pairName,
@@ -132,6 +136,10 @@ pool.bind({
       amount_a,
       amount_b,
       value,
+      coin_type_a: poolInfo.type_a,
+      coin_type_b: poolInfo.type_b,
+      symbol_a: poolInfo.symbol_a,
+      symbol_b: poolInfo.symbol_b,
       pairName,
       project: "cetus",
       message: `Add USD$${value} Liquidity in ${pairName}`
@@ -171,6 +179,10 @@ pool.bind({
       amount_a,
       amount_b,
       value,
+      coin_type_a: poolInfo.type_a,
+      coin_type_b: poolInfo.type_b,
+      symbol_a: poolInfo.symbol_a,
+      symbol_b: poolInfo.symbol_b,
       pairName,
       project: "cetus",
       message: `Remove USD$${value} Liquidity in ${pairName}`
@@ -334,6 +346,10 @@ const template = new SuiObjectProcessorTemplate()
       ctx.eventLogger.emit("tvl", {
         pool: poolInfo.pool,
         tvl,
+        coin_type_a: poolInfo.type_a,
+        coin_type_b: poolInfo.type_b,
+        symbol_a: poolInfo.symbol_a,
+        symbol_b: poolInfo.symbol_b,
         pairName: poolInfo.pairName,
       })
 
