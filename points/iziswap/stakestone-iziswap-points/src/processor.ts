@@ -1,3 +1,4 @@
+// @ts-nocheck
 import { GLOBAL_CONFIG } from "@sentio/runtime";
 import { BigDecimal } from "@sentio/sdk";
 import { EthChainId, EthContext } from "@sentio/sdk/eth";

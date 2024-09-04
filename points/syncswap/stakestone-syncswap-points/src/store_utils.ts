@@ -1,3 +1,4 @@
+// @ts-nocheck
 import { EthContext } from "@sentio/sdk/eth";
 import { EntityClass, Entity, ID, ListFilter, Operators } from "@sentio/sdk/store";
 

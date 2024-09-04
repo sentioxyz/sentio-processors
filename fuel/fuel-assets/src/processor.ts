@@ -1,4 +1,4 @@
-import { BaseAssetId } from '@fuel-ts/address/configs'
+import { ZeroBytes32 as BaseAssetId } from '@fuel-ts/address/configs'
 import { FuelAssetProcessor, FuelNetwork } from "@sentio/sdk/fuel";
 
 FuelAssetProcessor.bind({
