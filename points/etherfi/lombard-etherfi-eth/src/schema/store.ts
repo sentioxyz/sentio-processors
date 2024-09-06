@@ -26,6 +26,14 @@ export class AccountSnapshot extends AbstractEntity  {
 	@Required
 	@Column("BigInt")
 	lbtcBalance: BigInt
+
+	@Required
+	@Column("BigInt")
+	ebtcBalance: BigInt
+
+	@Required
+	@Column("BigInt")
+	ebtcTotalSupply: BigInt
   constructor(data: Partial<AccountSnapshot>) {super()}
 }
 
@@ -34,6 +42,8 @@ const source = `type AccountSnapshot @entity {
   id: String!
   timestampMilli: BigInt!
   lbtcBalance: BigInt!
+  ebtcBalance: BigInt!
+  ebtcTotalSupply: BigInt!
 }`
 DatabaseSchema.register({
   source,
