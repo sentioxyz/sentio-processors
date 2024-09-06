@@ -13,7 +13,7 @@ import {
   BoringVaultContext,
   BoringVaultProcessor,
 } from "./types/eth/boringvault.js";
-import { ERC20Processor, getERC20ContractOnContext } from "@sentio/sdk/eth/builtin/erc20";
+import { getERC20ContractOnContext } from "@sentio/sdk/eth/builtin/erc20";
 
 const MILLISECOND_PER_DAY = 60 * 60 * 1000 * 24;
 const TOKEN_DECIMALS = 8;
@@ -64,7 +64,19 @@ async function processAccount(
   }
   const points = snapshot ? calcPoints(ctx, snapshot) : new BigDecimal(0);
 
-  const newSnapshot = await getAccountSnapshot(ctx, account);
+  const [lbtcTotal, lpBalance, lpTotalSupply] = await Promise.all([
+    getERC20ContractOnContext(ctx, LBTC_ADDRESS).balanceOf(ctx.address),
+    ctx.contract.balanceOf(account),
+    ctx.contract.totalSupply(),
+  ]);
+  const lbtcBalance = (lbtcTotal * lpBalance) / lpTotalSupply;
+  const newSnapshot = new AccountSnapshot({
+    id: account,
+    timestampMilli: BigInt(ctx.timestamp.getTime()),
+    lbtcBalance,
+    ebtcBalance: lpBalance,
+    ebtcTotalSupply: lpTotalSupply,
+  });
 
   ctx.eventLogger.emit("point_update", {
     account,
@@ -73,8 +85,13 @@ async function processAccount(
     bPoints: 0n,
     snapshotTimestampMilli: snapshot?.timestampMilli ?? 0n,
     snapshotLbtcBalance: snapshot?.lbtcBalance.scaleDown(TOKEN_DECIMALS) ?? 0,
+    snapshotEbtcBalance: snapshot?.ebtcBalance.scaleDown(TOKEN_DECIMALS) ?? 0,
+    snapshotEbtcTotalSupply:
+      snapshot?.ebtcTotalSupply.scaleDown(TOKEN_DECIMALS) ?? 0,
     newTimestampMilli: newSnapshot.timestampMilli,
     newLbtcBalance: newSnapshot.lbtcBalance.scaleDown(TOKEN_DECIMALS),
+    newEbtcBalance: newSnapshot.ebtcBalance.scaleDown(TOKEN_DECIMALS),
+    newEbtcTotalSupply: newSnapshot.ebtcTotalSupply.scaleDown(TOKEN_DECIMALS),
     multiplier: MULTIPLIER,
   });
   return newSnapshot;
@@ -105,18 +122,4 @@ function calcPoints(
     .multipliedBy(DAILY_POINTS)
     .multipliedBy(MULTIPLIER);
   return points;
-}
-
-async function getAccountSnapshot(ctx: BoringVaultContext, account: string) {
-  const [lbtcTotal, lpBalance, lpTotalSupply] = await Promise.all([
-    getERC20ContractOnContext(ctx, LBTC_ADDRESS).balanceOf(ctx.address),
-    ctx.contract.balanceOf(account),
-    ctx.contract.totalSupply(),
-  ]);
-  const lbtcBalance = (lbtcTotal * lpBalance) / lpTotalSupply;
-  return new AccountSnapshot({
-    id: account,
-    timestampMilli: BigInt(ctx.timestamp.getTime()),
-    lbtcBalance,
-  });
 }
