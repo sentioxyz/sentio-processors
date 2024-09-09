@@ -8,6 +8,8 @@ import {
   LBTC_ADDRESS,
   MULTIPLIER,
   NETWROK,
+  SYM_LBTC_ADDRESS,
+  SYM_LBTC_START_BLOCK,
 } from "./config.js";
 import {
   BoringVaultContext,
@@ -64,12 +66,19 @@ async function processAccount(
   }
   const points = snapshot ? calcPoints(ctx, snapshot) : new BigDecimal(0);
 
-  const [lbtcTotal, lpBalance, lpTotalSupply] = await Promise.all([
-    getERC20ContractOnContext(ctx, LBTC_ADDRESS).balanceOf(ctx.address),
-    ctx.contract.balanceOf(account),
-    ctx.contract.totalSupply(),
-  ]);
-  const lbtcBalance = (lbtcTotal * lpBalance) / lpTotalSupply;
+  const [lbtcTotal, symLbtcTotal, lpBalance, lpTotalSupply] = await Promise.all(
+    [
+      getERC20ContractOnContext(ctx, LBTC_ADDRESS).balanceOf(ctx.address),
+      ctx.blockNumber >= SYM_LBTC_START_BLOCK
+        ? getERC20ContractOnContext(ctx, SYM_LBTC_ADDRESS).balanceOf(
+            ctx.address
+          )
+        : Promise.resolve(0n),
+      ctx.contract.balanceOf(account),
+      ctx.contract.totalSupply(),
+    ]
+  );
+  const lbtcBalance = ((lbtcTotal + symLbtcTotal) * lpBalance) / lpTotalSupply;
   const newSnapshot = new AccountSnapshot({
     id: account,
     timestampMilli: BigInt(ctx.timestamp.getTime()),
