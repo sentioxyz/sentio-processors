@@ -27,7 +27,10 @@ factory.bind({
       coin_type_b: poolInfo.type_a,
       symbol_a: poolInfo.symbol_a,
       symbol_b: poolInfo.symbol_b,
+      decimal_a: poolInfo.decimal_a,
+      decimal_b: poolInfo.decimal_b,
       pairName: poolInfo.pairName,
+      fee: poolInfo.fee,
       project: "cetus"
     })
 
@@ -93,6 +96,9 @@ pool.bind({
       coin_type_b: poolInfo.type_b,
       symbol_a: poolInfo.symbol_a,
       symbol_b: poolInfo.symbol_b,
+      decimal_a: poolInfo.decimal_a,
+      decimal_b: poolInfo.decimal_b,
+      fee: poolInfo.fee,
       type_in: atob ? poolInfo.symbol_a : poolInfo.symbol_b,
       type_out: atob ? poolInfo.symbol_b : poolInfo.symbol_a,
       pairName: poolInfo.pairName,
@@ -140,7 +146,10 @@ pool.bind({
       coin_type_b: poolInfo.type_b,
       symbol_a: poolInfo.symbol_a,
       symbol_b: poolInfo.symbol_b,
+      decimal_a: poolInfo.decimal_a,
+      decimal_b: poolInfo.decimal_b,
       pairName,
+      fee: poolInfo.fee,
       project: "cetus",
       message: `Add USD$${value} Liquidity in ${pairName}`
     })
@@ -183,6 +192,9 @@ pool.bind({
       coin_type_b: poolInfo.type_b,
       symbol_a: poolInfo.symbol_a,
       symbol_b: poolInfo.symbol_b,
+      decimal_a: poolInfo.decimal_a,
+      decimal_b: poolInfo.decimal_b,
+      fee: poolInfo.fee,
       pairName,
       project: "cetus",
       message: `Remove USD$${value} Liquidity in ${pairName}`
@@ -331,7 +343,9 @@ const template = new SuiObjectProcessorTemplate()
         type: poolInfo.type_a,
         amount: coin_a_balance,
         symbol: poolInfo.symbol_a,
+        decimal: poolInfo.decimal_a,
         pairName: poolInfo.pairName,
+        fee: poolInfo.fee
       })
 
       ctx.eventLogger.emit("one_side_tvl", {
@@ -340,7 +354,9 @@ const template = new SuiObjectProcessorTemplate()
         type: poolInfo.type_b,
         amount: coin_b_balance,
         symbol: poolInfo.symbol_b,
+        decimal: poolInfo.decimal_b,
         pairName: poolInfo.pairName,
+        fee: poolInfo.fee
       })
 
       ctx.eventLogger.emit("tvl", {
@@ -350,7 +366,10 @@ const template = new SuiObjectProcessorTemplate()
         coin_type_b: poolInfo.type_b,
         symbol_a: poolInfo.symbol_a,
         symbol_b: poolInfo.symbol_b,
+        decimal_a: poolInfo.decimal_a,
+        decimal_b: poolInfo.decimal_b,
         pairName: poolInfo.pairName,
+        fee: poolInfo.fee
       })
 
     }
