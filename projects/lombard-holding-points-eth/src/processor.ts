@@ -7,7 +7,7 @@ import { ERC20Processor } from "@sentio/sdk/eth/builtin"
 import { ERC20Context } from "@sentio/sdk/eth/builtin/erc20"
 
 const MILLISECOND_PER_DAY = 60 * 60 * 1000 * 24
-const DAILY_POINTS = 2100
+const DAILY_POINTS = 1000
 const TOKEN_DECIMALS = 8
 const MULTIPLIER = 1
 
