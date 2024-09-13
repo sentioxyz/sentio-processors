@@ -31,6 +31,10 @@ const PRICE_ID_LIST =
         {
             "Symbol": "Crypto.NAVX/USD",
             "PriceID": "0x88250f854c019ef4f88a5c073d52a18bb1c6ac437033f5932cd017d24917ab46"
+        },
+        {
+            "Symbol": "Crypto.WBTC/USD",
+            "PriceID": "0xc9d8b075a5c69303365ae23633d4e085199bf5c520a3b90fed1322a0342ffc33"
         }
     ]
 

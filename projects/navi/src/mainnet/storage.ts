@@ -11,7 +11,8 @@ const reserves = [
     "0x66a807c06212537fe46aa6719a00e4fa1e85a932d0b53ce7c4b1041983645133",  // Reserve For CETUS
     "0xd4fd7e094af9819b06ea3136c13a6ae8da184016b78cf19773ac26d2095793e2",  // Reserve For VoloSui
     "0x0c9f7a6ca561dc566bd75744bcc71a6af1dc3caf7bd32c099cd640bb5f3bb0e3", // Reserve For haSUI
-    "0x2e13b2f1f714c0c5fa72264f147ef7632b48ec2501f810c07df3ccb59d6fdc81"  // Reserve For NAVX
+    "0x2e13b2f1f714c0c5fa72264f147ef7632b48ec2501f810c07df3ccb59d6fdc81",  // Reserve For NAVX
+    "0x8b4d81f004e4e9faf4540951a896b6d96e42598a270e6375f598b99742db767e", // Reserve For WBTC
 ]
 
 export function ProtocolProcessor() {
@@ -30,7 +31,7 @@ export function ProtocolProcessor() {
                 //@ts-ignore
                 const ltv = BigDecimal(self.fields.value.fields.ltv).div(Math.pow(10, DECIMAL_RAY))
                 const coin_symbol = COIN[i]
-                
+
                 //@ts-ignore
                 const totalSupply = BigDecimal(self.fields.value.fields.supply_balance.fields.total_supply).div(Math.pow(10, DEFAULT_COIN_DECIMAL))
                 //@ts-ignore
@@ -85,7 +86,7 @@ export function ProtocolProcessor() {
                     ltv: ltv,
                     treasuryBalance: treasuryBalance,
                     env: "mainnet"
-                  })
+                })
 
             } catch (e) {
                 console.log(e)

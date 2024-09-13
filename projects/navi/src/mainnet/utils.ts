@@ -1,6 +1,6 @@
 import { CoinMap } from "./interfaces.js";
 
-export const COIN = ["SUI", "USDC", "USDT", "WETH", "CETUS","VoloSui","HASUI", "NAVX"];
+export const COIN = ["SUI", "USDC", "USDT", "WETH", "CETUS", "VoloSui", "HASUI", "NAVX"];
 
 export const DECIMAL_RAY = 27;
 export const DEFAULT_COIN_DECIMAL = 9;
@@ -19,9 +19,10 @@ export const COIN_MAP: CoinMap = {
   "0x549e8b69270defbfafd4f94e17ec44cdbdd99820b33bda2278dea3b9a32d3f55::cert::CERT":
     "VoloSui",
   "0xbde4ba4c2e274a60ce15c1cfff9e5c42e41654ac8b6d906a57efa4bd3c29f47d::hasui::HASUI":
-  "HASUI",
+    "HASUI",
   "0xa99b8952d4f7d947ea77fe0ecdcc9e5fc0bcab2841d6e2a5aa00c3044e5544b5::navx::NAVX":
     "NAVX",
+  "0x027792d9fed7f9844eb4839566001bb6f6cb4804f66aa2da6fe1ee242d896881::coin::COIN": "WBTC",
 };
 
 export function SymbolMatcher(objectType: string) {

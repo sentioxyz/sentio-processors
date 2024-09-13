@@ -62,7 +62,8 @@ async function onEvent(event: LendingEvent, ctx: SuiContext) {
     '4': "0x06864a6f921804860930db6ddbe2e16acdf8504495ea7481637a1c8b9a8fe54b::cetus::CETUS",
     '5': "0x549e8b69270defbfafd4f94e17ec44cdbdd99820b33bda2278dea3b9a32d3f55::cert::CERT",
     '6': "0xbde4ba4c2e274a60ce15c1cfff9e5c42e41654ac8b6d906a57efa4bd3c29f47d::hasui::HASUI",
-    '7': "0xa99b8952d4f7d947ea77fe0ecdcc9e5fc0bcab2841d6e2a5aa00c3044e5544b5::navx::NAVX"
+    '7': "0xa99b8952d4f7d947ea77fe0ecdcc9e5fc0bcab2841d6e2a5aa00c3044e5544b5::navx::NAVX",
+    '8': "0x027792d9fed7f9844eb4839566001bb6f6cb4804f66aa2da6fe1ee242d896881::coin::COIN" //wbtc
   }
   const coinAddress = Coins[reserve]
   // const coinAddress = event.data_decoded.pool;
@@ -131,7 +132,7 @@ async function onLiquidationNewEvent(event: lending_new_liquidation_event.Liquid
 
 async function onRewardsClaimedEvent(event: incentive_v2.RewardsClaimedInstance, ctx: SuiContext) {
 
-  
+
   ctx.eventLogger.emit("RewardsClaimed", {
     sender: event.data_decoded.sender,
     amount: event.data_decoded.amount,
@@ -222,7 +223,7 @@ async function repayOnBehalfOfHandler(event: lending.RepayOnBehalfOfEventInstanc
 
 // async function supraEventHandler(event: SupraSValueFeed.SCCProcessedEventInstance, ctx: SuiContext) {
 //   const hash = event.data_decoded.hash
-  
+
 //   getSupraPrice().then((data) => {
 //     for (let i = 0; i < 8; i++) {
 //       ctx.eventLogger.emit("supraPriceEvent", {
@@ -234,7 +235,7 @@ async function repayOnBehalfOfHandler(event: lending.RepayOnBehalfOfEventInstanc
 //       });
 //     }
 //   })
-  
+
 // }
 
 flash_loan.bind({ startCheckpoint: 28205630n })
