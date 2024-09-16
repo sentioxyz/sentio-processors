@@ -42,7 +42,7 @@ async function processAccount(account: string, ctx: ERC20Context) {
   const newSnapshot = new AccountSnapshot({
     id: accountId,
     lastUpdatedAt: BigInt(timestamp),
-    lastImpliedHolding: snapshot ? snapshot.lastImpliedHolding.toString() : "",
+    lastImpliedHolding: snapshot ? snapshot.lastImpliedHolding.toString() : "0",
     lastBalance: newBalance.toString(),
   });
 

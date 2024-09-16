@@ -22,9 +22,13 @@ export async function handleYTTransfer(
   evt: TransferEvent,
   ctx: PendleYieldTokenContext
 ) {
+  ctx.eventLogger.emit("entering transfer", { log: JSON.stringify(evt.args) })
+  //@ts-ignore
+  ctx.eventLogger.emit("evt.args", { 0: evt.args[0], 1: evt.args[1] })
   await processAllYTAccounts(
     ctx,
-    [evt.args.from.toLowerCase(), evt.args.to.toLowerCase()],
+    //@ts-ignore
+    [evt.args[0], evt.args[1]],
     false
   );
 }
@@ -41,6 +45,9 @@ export async function processAllYTAccounts(
   addressesToAdd: string[] = [],
   shouldIncludeDb: boolean = true
 ) {
+  //debug
+  ctx.eventLogger.emit("entering process all accounts", { message: JSON.stringify(addressesToAdd) })
+
   if (await ctx.contract.isExpired()) {
     return;
   }
@@ -53,6 +60,9 @@ export async function processAllYTAccounts(
     }
   }
 
+  console.log("allAddresses", allAddresses)
+
+
   const timestamp = getUnixTimestamp(ctx.timestamp);
   const allYTBalances = await readAllUserERC20Balances(
     ctx,
@@ -60,6 +70,9 @@ export async function processAllYTAccounts(
     ctx.contract.address
   );
   const allYTPositions = await readAllYTPositions(ctx, allAddresses);
+
+  console.log("allYTBalances", allYTBalances)
+
 
   for (let i = 0; i < allAddresses.length; i++) {
     const address = allAddresses[i];
@@ -99,11 +112,13 @@ export async function processAllYTAccounts(
       (balance * MISC_CONSTS.ONE_E8) / interestData.lastPYIndex +
       interestData.accruedInterest;
 
+    console.log("impliedHolding of", address, impliedHolding)
+
     const newSnapshot = new AccountSnapshot({
       id: accountId,
       lastUpdatedAt: BigInt(timestamp),
       lastImpliedHolding: impliedHolding.toString(),
-      lastBalance: snapshot ? snapshot.lastBalance.toString() : "",
+      lastBalance: snapshot ? snapshot.lastBalance.toString() : "0",
     });
 
     if (BigInt(snapshot ? snapshot.lastImpliedHolding : 0) != impliedHolding) {

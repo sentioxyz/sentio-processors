@@ -135,7 +135,7 @@ async function updateAccount(
     id: accountId,
     lastUpdatedAt: ts,
     lastImpliedHolding: impliedSy.toString(),
-    lastBalance: snapshot ? snapshot.lastBalance.toString() : "",
+    lastBalance: snapshot ? snapshot.lastBalance.toString() : "0",
   });
 
   if (BigInt(snapshot ? snapshot.lastImpliedHolding : 0) != impliedSy) {
