@@ -88,12 +88,12 @@ export async function buildCoinInfo(ctx: SuiContext | SuiObjectContext, coinAddr
     let [symbol, name, decimal] = ["unk", "unk", 0]
 
     let retryCounter = 0;
-    while (retryCounter++ <= 50) {
+    while (retryCounter++ <= 5) {
         try {
             const metadata = await ctx.client.getCoinMetadata({ coinType: coinAddress })
-            if (metadata == null) {
+            if (metadata == null)
                 break
-            }
+
 
             symbol = metadata.symbol
             decimal = metadata.decimals
@@ -101,7 +101,11 @@ export async function buildCoinInfo(ctx: SuiContext | SuiObjectContext, coinAddr
             console.log(`build coin metadata ${symbol} ${decimal} ${name}`)
         } catch (e) {
             console.log(`${e.message} get coin metadata error ${coinAddress}, retry: ${retryCounter}`)
-            await delay(10000)
+            //handle unknown coin
+            if (e.message.startsWith("Unbound named address"))
+                break
+
+            await delay(10000 * (2 ** retryCounter))
             continue
         }
         break
