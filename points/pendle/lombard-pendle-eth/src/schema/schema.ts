@@ -26,10 +26,6 @@ export class AccountSnapshot extends AbstractEntity  {
 	@Required
 	@Column("String")
 	lastImpliedHolding: String
-
-	@Required
-	@Column("String")
-	lastBalance: String
   constructor(data: Partial<AccountSnapshot>) {super()}
 }
 
@@ -38,7 +34,6 @@ const source = `type AccountSnapshot @entity {
   id: ID!
   lastUpdatedAt: BigInt!
   lastImpliedHolding: String!
-  lastBalance: String!
 }`
 DatabaseSchema.register({
   source,

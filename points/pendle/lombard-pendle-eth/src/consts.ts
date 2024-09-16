@@ -6,7 +6,7 @@ export const CONFIG = {
 };
 
 export const MISC_CONSTS = {
-  ONE_E8: BigInt("100000000"),
+  ONE_E18: BigInt("1000000000000000000"),
   ONE_DAY_IN_MINUTE: 60 * 24,
   ZERO_ADDRESS: "0x0000000000000000000000000000000000000000",
   MULTICALL_BATCH: 256,
@@ -17,9 +17,9 @@ export const MULTIPLIER = 3
 
 export const PENDLE_POOL_ADDRESSES = {
   // retrieved from Pendle pool contract readTokens()
-  SY: "0x9d6Ec7a7B051B32205F74B140A0fa6f09D7F223E",
+  SY: "0x9d6ec7a7b051b32205f74b140a0fa6f09d7f223e",
   // retrieved from Pendle pool contract readTokens()
-  YT: "0x1caE47aA3e10A77C55Ee32f8623D6B5ACC947344",
+  YT: "0x1cae47aa3e10a77c55ee32f8623d6b5acc947344",
   // using new pool contract
   LP: "0xcae62858db831272a03768f5844cbe1b40bb381f",
   SY_START_BLOCK: 20712286,

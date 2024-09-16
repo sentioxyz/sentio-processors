@@ -134,9 +134,8 @@ async function updateAccount(
   const newSnapshot = new AccountSnapshot({
     id: accountId,
     lastUpdatedAt: ts,
-    lastImpliedHolding: impliedSy.toString(),
-    lastBalance: snapshot ? snapshot.lastBalance.toString() : "0",
-  });
+    lastImpliedHolding: impliedSy.toString()
+  })
 
   if (BigInt(snapshot ? snapshot.lastImpliedHolding : 0) != impliedSy) {
     ctx.eventLogger.emit(EVENT_USER_SHARE, {

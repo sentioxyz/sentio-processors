@@ -5,9 +5,6 @@ import { getUnixTimestamp, isPendleAddress, getAllAddresses } from "../helper.ts
 import { updatePoints } from "../points/point-manager.ts";
 import { EVENT_USER_SHARE, POINT_SOURCE_SY } from "../types.ts";
 
-/**
- * @dev 1 SY ETH = 1 ETH
- */
 
 export async function handleSYTransfer(evt: TransferEvent, ctx: ERC20Context) {
   await processAccount(evt.args.from, ctx);
@@ -31,7 +28,7 @@ async function processAccount(account: string, ctx: ERC20Context) {
       ctx,
       POINT_SOURCE_SY,
       account,
-      BigInt(snapshot.lastBalance),
+      BigInt(snapshot.lastImpliedHolding),
       BigInt(ts.valueOf() - snapshot.lastUpdatedAt.valueOf()),
       timestamp
     );
@@ -42,11 +39,10 @@ async function processAccount(account: string, ctx: ERC20Context) {
   const newSnapshot = new AccountSnapshot({
     id: accountId,
     lastUpdatedAt: BigInt(timestamp),
-    lastImpliedHolding: snapshot ? snapshot.lastImpliedHolding.toString() : "0",
-    lastBalance: newBalance.toString(),
-  });
+    lastImpliedHolding: newBalance.toString()
+  })
 
-  if (BigInt(snapshot ? snapshot.lastBalance : 0) != newBalance) {
+  if (BigInt(snapshot ? snapshot.lastImpliedHolding : 0) != newBalance) {
     ctx.eventLogger.emit(EVENT_USER_SHARE, {
       label: POINT_SOURCE_SY,
       account,
@@ -54,5 +50,5 @@ async function processAccount(account: string, ctx: ERC20Context) {
     })
   }
 
-  await ctx.store.upsert(newSnapshot);
+  await ctx.store.upsert(newSnapshot)
 }

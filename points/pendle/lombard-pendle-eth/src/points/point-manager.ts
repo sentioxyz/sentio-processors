@@ -11,14 +11,14 @@ export async function updatePoints(
   ctx: EthContext,
   label: POINT_SOURCE,
   account: string,
-  amountHolding: bigint,
+  impliedAmountHolding: bigint,
   holdingPeriod: bigint,
   updatedAt: number
 ) {
 
-  const lPoints = (amountHolding * holdingPeriod / 86400n) * BigInt(DAILY_POINTS * MULTIPLIER)
+  const lPoints = (impliedAmountHolding * holdingPeriod / 86400n) * BigInt(DAILY_POINTS * MULTIPLIER)
   const bPoints = 0n
-  // console.log("entering update points", amountHolding, holdingPeriod, lPoints)
+  // console.log("entering update points", impliedAmountHolding, holdingPeriod, lPoints)
 
 
   if (label == POINT_SOURCE_YT) {
@@ -28,7 +28,7 @@ export async function updatePoints(
       ctx,
       label,
       account,
-      amountHolding,
+      impliedAmountHolding,
       holdingPeriod,
       lPoints - lPointsTreasuryFee,
       bPoints - bPointsTreasuryFee,
@@ -49,7 +49,7 @@ export async function updatePoints(
       ctx,
       label,
       account,
-      amountHolding,
+      impliedAmountHolding,
       holdingPeriod,
       lPoints,
       bPoints,
@@ -62,7 +62,7 @@ function increasePoint(
   ctx: EthContext,
   label: POINT_SOURCE,
   account: string,
-  amountHolding: bigint,
+  impliedAmountHolding: bigint,
   holdingPeriod: bigint,
   lPoints: bigint,
   bPoints: bigint,
@@ -71,12 +71,13 @@ function increasePoint(
   ctx.eventLogger.emit(EVENT_POINT_INCREASE, {
     label,
     account: account.toLowerCase(),
-    lbtcBalance: amountHolding.scaleDown(8),
+    impliedLbtcBalance: impliedAmountHolding.scaleDown(8),
     holdingPeriod,
     lPoints: lPoints.scaleDown(8),
     bPoints: bPoints.scaleDown(8),
     updatedAt,
     severity: LogLevel.INFO,
+    multiplier: MULTIPLIER
   });
 }
 
