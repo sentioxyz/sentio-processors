@@ -16,11 +16,11 @@ export async function getCurrentVaultAmount(ctx: EthContext, deriveAddress: stri
 
     try {
         const lyraProvider = getProvider(deriveChainId)
-        const lyraBlock = await estimateBlockNumberAtDate(lyraProvider, new Date(nowMs))
+        // const lyraBlock = await estimateBlockNumberAtDate(lyraProvider, new Date(nowMs))
 
         const latestBlock = await lyraProvider.getBlock("latest")
         ctx.eventLogger.emit("debuglog9", {
-            lyraBlock,
+            // lyraBlock,
             latestBlock
         })
         // const accountValue = (await vaultTokenContract.getAccountValue(true, { blockTag: lyraBlock }, undefined)).scaleDown(8)

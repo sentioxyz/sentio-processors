@@ -26,7 +26,7 @@ import {
   WBTC_BTC_PRICE_FEED,
   ZEROLEND_LBTC,
   ZIRCUIT_POOL,
-} from "./config.js";
+} from "./config.js"
 import { getMetaMorphoContractOnContext } from "./types/eth/metamorpho.js";
 import { getMorphoContractOnContext } from "./types/eth/morpho.js";
 import { getERC20ContractOnContext } from "@sentio/sdk/eth/builtin/erc20";
