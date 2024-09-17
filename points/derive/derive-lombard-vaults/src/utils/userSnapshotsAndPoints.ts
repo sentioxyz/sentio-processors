@@ -62,13 +62,13 @@ export function emitUserPointUpdate(ctx: EthContext, lastSnapshot: DeriveVaultUs
 
     const elapsedDays = (Number(newSnapshot.timestampMs) - Number(lastSnapshot.timestampMs)) / MILLISECONDS_PER_DAY
     const LOMBARD_POINTS_PER_DAY = LOMBARD_DAILY_POINTS * MULTIPLIER
-    const earnedLombardPoints = elapsedDays * LOMBARD_POINTS_PER_DAY * lastSnapshot.underlyingEffectiveBalance.toNumber()
-    const earnedBabylonPoints = elapsedDays * BABYLON_POINTS_PER_DAY * lastSnapshot.underlyingEffectiveBalance.toNumber()
+    const lPoints = elapsedDays * LOMBARD_POINTS_PER_DAY * lastSnapshot.underlyingEffectiveBalance.toNumber()
+    const bPoints = elapsedDays * BABYLON_POINTS_PER_DAY * lastSnapshot.underlyingEffectiveBalance.toNumber()
     ctx.eventLogger.emit("point_update", {
         account: lastSnapshot.owner,
         vaultAddress: lastSnapshot.vaultAddress,
-        earnedLombardPoints: earnedLombardPoints,
-        earnedBabylonPoints: earnedBabylonPoints,
+        lPoints: lPoints,
+        bPoints: bPoints,
         // last snapshot
         lastTimestampMs: lastSnapshot.timestampMs,
         lastVaultBalance: lastSnapshot.vaultBalance,
@@ -82,6 +82,7 @@ export function emitUserPointUpdate(ctx: EthContext, lastSnapshot: DeriveVaultUs
         // testnet vs prod
         is_mainnet: ctx.chainId === EthChainId.ETHEREUM,
         // season
-        season: getCurrentSeason(ctx)
+        season: getCurrentSeason(ctx),
+        multiplier: MULTIPLIER
     });
 }

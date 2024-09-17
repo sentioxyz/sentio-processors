@@ -20,11 +20,13 @@ import {
   NETWORK,
   PELL_LBTC_STRATEGY,
   PENDLE_SY,
+  PTLBTC_USD_PRICE_FEED,
   SATLAYER_POOL,
   SATLAYER_TOKEN_LIST,
   SYMBIOTIC_LBTC,
   WBTC_BTC_PRICE_FEED,
   ZEROLEND_LBTC,
+  ZEROLEND_PT_LBTC,
   ZIRCUIT_POOL,
 } from "./config.js"
 import { getMetaMorphoContractOnContext } from "./types/eth/metamorpho.js";
@@ -36,10 +38,12 @@ import { getATokenContractOnContext } from "./types/eth/atoken.js";
 import { getDeriveVaultTokenContractOnContext } from "./types/eth/derivevaulttoken.js";
 import { getCurrentVaultAmount } from "./derive-helper.js";
 import { getPriceBySymbol } from "@sentio/sdk/utils";
+import { getPTLBTCDec262024OracleContractOnContext } from "./types/eth/ptlbtcdec262024oracle.js";
 
 GLOBAL_CONFIG.execution = {
   sequential: true,
 };
+const ETH_STARTBLOCK = 20771090n
 
 const gaugeBTCPrice = Gauge.register("btc_price");
 const gaugeLBTCPrice = Gauge.register("lbtc_price");
@@ -63,10 +67,11 @@ const KarakTVL = Gauge.register("karak_tvl");
 const CornLBTCTVL = Gauge.register("corn_lbtc_tvl");
 const PendleTVL = Gauge.register("pendle_tvl");
 const ZerolendTVL = Gauge.register("zerolend_tvl");
+const ZerolendPTLBTCTVL = Gauge.register("zerolendPTLBTCTVL");
 
 GlobalProcessor.bind({
   network: NETWORK,
-  startBlock: 20764260,
+  startBlock: ETH_STARTBLOCK,
 }).onTimeInterval(
   async (_, ctx) => {
     const [
@@ -89,6 +94,7 @@ GlobalProcessor.bind({
       cornLBTCTVL,
       pendleTVL,
       zerolendTVL,
+      zerolendPTLBTCTVL
     ] = await Promise.all([
       getBTCPrice(ctx),
       getLBTCPrice(ctx),
@@ -109,6 +115,7 @@ GlobalProcessor.bind({
       getSimpleLBTCTVL(ctx, CORN_SILO),
       getPendleTVL(ctx),
       getZerolendTVL(ctx),
+      getZerolendPTLBTCTVL(ctx)
     ]);
 
     gaugeBTCPrice.record(ctx, btcPrice);
@@ -132,6 +139,7 @@ GlobalProcessor.bind({
     CornLBTCTVL.record(ctx, cornLBTCTVL);
     PendleTVL.record(ctx, pendleTVL);
     ZerolendTVL.record(ctx, zerolendTVL);
+    ZerolendPTLBTCTVL.record(ctx, zerolendPTLBTCTVL)
   },
   10,
   60
@@ -151,6 +159,18 @@ async function getBTCPrice(ctx: EthContext) {
 async function getLBTCPrice(ctx: EthContext) {
   const lbtcPrice = await getPriceBySymbol("lbtc", ctx.timestamp)
   return lbtcPrice ?? 0
+}
+
+async function getPTLBTCPrice(ctx: EthContext) {
+  if (ctx.blockNumber <= creationBlocks[PTLBTC_USD_PRICE_FEED]) {
+    return 0;
+  }
+  const p = await getPTLBTCDec262024OracleContractOnContext(
+    ctx,
+    PTLBTC_USD_PRICE_FEED
+  ).usdPrice()
+
+  return Number(p) / 1e8;
 }
 
 async function getWBTCPrice(ctx: EthContext) {
@@ -304,6 +324,21 @@ async function getZerolendTVL(ctx: EthContext) {
   return (Number(lbtcBalance) / 1e8) * lbtcPrice;
 }
 
+async function getZerolendPTLBTCTVL(ctx: EthContext) {
+  if (ctx.blockNumber < creationBlocks[ZEROLEND_PT_LBTC]) {
+    return 0;
+  }
+  const c = getATokenContractOnContext(ctx, ZEROLEND_PT_LBTC);
+  const [lbtcBalance, ptLbtcPrice] = await Promise.all([
+    c.scaledTotalSupply(),
+    getPTLBTCPrice(ctx),
+  ])
+
+  return (Number(lbtcBalance) / 1e8) * ptLbtcPrice;
+}
+
+
+
 
 const DeriveMaxiTVL = Gauge.register("derive_maxi_tvl")
 const DeriveHarvestTVL = Gauge.register("derive_harvest_tvl")
@@ -311,7 +346,7 @@ const DeriveHarvestTVL = Gauge.register("derive_harvest_tvl")
 
 GlobalProcessor.bind({
   network: EthChainId.ETHEREUM,
-  startBlock: 20764260
+  startBlock: ETH_STARTBLOCK
 }).onTimeInterval(
   async (_, ctx) => {
 
