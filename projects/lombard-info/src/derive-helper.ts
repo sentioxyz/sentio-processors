@@ -6,7 +6,6 @@ import { getDeriveVaultTokenContract, getDeriveVaultTokenContractOnContext } fro
 
 
 export async function getCurrentVaultAmount(ctx: EthContext, deriveAddress: string) {
-
     const vaultTokenAddress = getAddress(deriveAddress)
     const nowMs = ctx.timestamp.getTime()
     // This is taken exclusively from the Lyra Chain
@@ -16,23 +15,18 @@ export async function getCurrentVaultAmount(ctx: EthContext, deriveAddress: stri
 
     try {
         const lyraProvider = getProvider(deriveChainId)
-        // const lyraBlock = await estimateBlockNumberAtDate(lyraProvider, new Date(nowMs))
+        const lyraBlock = await estimateBlockNumberAtDate(lyraProvider, new Date(nowMs))
 
-        const latestBlock = await lyraProvider.getBlock("latest")
-        ctx.eventLogger.emit("debuglog9", {
-            // lyraBlock,
-            latestBlock
-        })
-        // const accountValue = (await vaultTokenContract.getAccountValue(true, { blockTag: lyraBlock }, undefined)).scaleDown(8)
-
+        const accountValue = (await vaultTokenContract.getAccountValue(true, { blockTag: lyraBlock }, undefined)).scaleDown(8)
+        console.log("accountValue", accountValue)
         // ctx.eventLogger.emit("debuglog", {
         //     accountValue
         // })
 
         // return accountValue
-        return 1
+        return accountValue
     } catch (e) {
-        console.log(`Error calling getAccountValue for ${ctx.timestamp} ${deriveAddress}: ${e.message}`)
+        console.log(`Error calling getAccountValue for  ${ctx.timestamp} ${deriveAddress}: ${e.message}`)
         return 0
     }
 }
