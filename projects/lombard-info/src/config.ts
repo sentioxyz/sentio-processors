@@ -5,10 +5,12 @@ export const NETWORK = EthChainId.ETHEREUM;
 
 export const WBTC = "0x2260fac5e5542a773aa44fbcfedf7c193bc2c599";
 export const LBTC = "0x8236a87084f8B84306f72007F36F2618A5634494";
+export const EBTC = "0x657e8c867d8b37dcc18fa4caead9c45eb088c642";
 
 export const WBTC_BTC_PRICE_FEED = "0xfdFD9C85aD200c506Cf9e21F1FD8dd01932FBB23";
 export const BTC_USD_PRICE_FEED = "0xF4030086522a5bEEa4988F8cA5B36dbC97BeE88c";
-export const PTLBTC_USD_PRICE_FEED = "0x802fc5ABC3c0e3428a833cF459c9EcF4673B4915"
+export const PTLBTC_USD_PRICE_FEED =
+  "0x802fc5ABC3c0e3428a833cF459c9EcF4673B4915";
 export const MORPHO_GAUNTLET = "0x443df5eEE3196e9b2Dd77CaBd3eA76C3dee8f9b2";
 export const MORPHO_RE7 = "0xE0C98605f279e4D7946d25B75869c69802823763";
 export const MORPHO_MARKET_ID =
@@ -26,7 +28,7 @@ export const CORN_SILO = "0x8bc93498b861fd98277c3b51d240e7E56E48F23c";
 export const PENDLE_SY = "0x9d6Ec7a7B051B32205F74B140A0fa6f09D7F223E";
 
 export const ZEROLEND_LBTC = "0xcABB8fa209CcdF98a7A0DC30b1979fC855Cb3Eb3";
-export const ZEROLEND_PT_LBTC = "0xD9484f9d140f3300C6527B50ff81d46a9D53AcCa"
+export const ZEROLEND_PT_LBTC = "0xD9484f9d140f3300C6527B50ff81d46a9D53AcCa";
 
 export const SATLAYER_TOKEN_LIST = [
   "0x004e9c3ef86bc1ca1f0bb5c7662861ee93350568", // uniBTC
@@ -37,9 +39,12 @@ export const SATLAYER_TOKEN_LIST = [
   LBTC,
 ];
 
-export const LBTCCPS_DERIVE = "0x5Fc48A32437Ff4BBab2A22646c3c9344ba003971"
-export const LBTCCS_DERIVE = "0xbCab1f8BbA323BC55EA8cfaC34edAcf8DBE92dD4"
+export const LBTCCPS_DERIVE = "0x5Fc48A32437Ff4BBab2A22646c3c9344ba003971";
+export const LBTCCS_DERIVE = "0xbCab1f8BbA323BC55EA8cfaC34edAcf8DBE92dD4";
 
+export const CURVE_LBTC_WBTC = "0x2f3bc4c27a4437aeca13de0e37cdf1028f3706f0";
+export const CURVE_TRI_BTC = "0xabaf76590478f2fe0b396996f55f0b61101e9502";
+export const CURVE_TRI_BTC_GAUGE = "0x8d666daed20b502e5cf692b101028fc0058a5d4e";
 
 export const DECIMALS = Object.fromEntries(
   await Promise.all(
@@ -63,6 +68,8 @@ export const creationBlocks = Object.fromEntries(
       GEARBOX_WBTC_POOL,
       ETHERFI_VAULT,
       LBTC,
+      WBTC,
+      EBTC,
       ZIRCUIT_POOL,
       SATLAYER_POOL,
       ...SATLAYER_TOKEN_LIST,
@@ -71,6 +78,12 @@ export const creationBlocks = Object.fromEntries(
       PELL_LBTC_STRATEGY,
       KARAK_LBTC,
       ZEROLEND_LBTC,
+      ZEROLEND_PT_LBTC,
+      CURVE_LBTC_WBTC,
+      CURVE_TRI_BTC,
+      PTLBTC_USD_PRICE_FEED,
+      LBTCCS_DERIVE,
+      LBTCCPS_DERIVE,
     ].map((addr) =>
       getCreationBlock(NETWORK, addr).then((v) => [addr, v] as [string, number])
     )

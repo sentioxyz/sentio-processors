@@ -1,12 +1,20 @@
 import { GLOBAL_CONFIG } from "@sentio/runtime";
 import { BigDecimal, Gauge } from "@sentio/sdk";
-import { EthChainId, EthContext, GlobalProcessor, isNullAddress } from "@sentio/sdk/eth";
+import {
+  EthChainId,
+  EthContext,
+  GlobalProcessor,
+  isNullAddress,
+} from "@sentio/sdk/eth";
 import { getEACAggregatorProxyContractOnContext } from "@sentio/sdk/eth/builtin/eacaggregatorproxy";
 import {
   BTC_USD_PRICE_FEED,
   CORN_SILO,
   creationBlocks,
+  CURVE_LBTC_WBTC,
+  CURVE_TRI_BTC,
   DECIMALS,
+  EBTC,
   ETHERFI_VAULT,
   GEARBOX_WBTC_POOL,
   KARAK_LBTC,
@@ -24,11 +32,12 @@ import {
   SATLAYER_POOL,
   SATLAYER_TOKEN_LIST,
   SYMBIOTIC_LBTC,
+  WBTC,
   WBTC_BTC_PRICE_FEED,
   ZEROLEND_LBTC,
   ZEROLEND_PT_LBTC,
   ZIRCUIT_POOL,
-} from "./config.js"
+} from "./config.js";
 import { getMetaMorphoContractOnContext } from "./types/eth/metamorpho.js";
 import { getMorphoContractOnContext } from "./types/eth/morpho.js";
 import { getERC20ContractOnContext } from "@sentio/sdk/eth/builtin/erc20";
@@ -43,7 +52,7 @@ import { getPTLBTCDec262024OracleContractOnContext } from "./types/eth/ptlbtcdec
 GLOBAL_CONFIG.execution = {
   sequential: true,
 };
-const ETH_STARTBLOCK = 20771090n
+const ETH_STARTBLOCK = 20614590;
 
 const gaugeBTCPrice = Gauge.register("btc_price");
 const gaugeLBTCPrice = Gauge.register("lbtc_price");
@@ -68,6 +77,9 @@ const CornLBTCTVL = Gauge.register("corn_lbtc_tvl");
 const PendleTVL = Gauge.register("pendle_tvl");
 const ZerolendTVL = Gauge.register("zerolend_tvl");
 const ZerolendPTLBTCTVL = Gauge.register("zerolendPTLBTCTVL");
+
+const CurveLBTCWBTCTVL = Gauge.register("curve_lbtc_wbtc_tvl");
+const CurveTriBTCTVL = Gauge.register("curve_tri_btc_tvl");
 
 GlobalProcessor.bind({
   network: NETWORK,
@@ -94,7 +106,9 @@ GlobalProcessor.bind({
       cornLBTCTVL,
       pendleTVL,
       zerolendTVL,
-      zerolendPTLBTCTVL
+      zerolendPTLBTCTVL,
+      curveLBTCWBTCTVL,
+      curveTriBTCTVL,
     ] = await Promise.all([
       getBTCPrice(ctx),
       getLBTCPrice(ctx),
@@ -115,7 +129,9 @@ GlobalProcessor.bind({
       getSimpleLBTCTVL(ctx, CORN_SILO),
       getPendleTVL(ctx),
       getZerolendTVL(ctx),
-      getZerolendPTLBTCTVL(ctx)
+      getZerolendPTLBTCTVL(ctx),
+      getCurvePoolTVL(ctx, CURVE_LBTC_WBTC),
+      getCurvePoolTVL(ctx, CURVE_TRI_BTC),
     ]);
 
     gaugeBTCPrice.record(ctx, btcPrice);
@@ -139,7 +155,9 @@ GlobalProcessor.bind({
     CornLBTCTVL.record(ctx, cornLBTCTVL);
     PendleTVL.record(ctx, pendleTVL);
     ZerolendTVL.record(ctx, zerolendTVL);
-    ZerolendPTLBTCTVL.record(ctx, zerolendPTLBTCTVL)
+    ZerolendPTLBTCTVL.record(ctx, zerolendPTLBTCTVL);
+    CurveLBTCWBTCTVL.record(ctx, curveLBTCWBTCTVL);
+    CurveTriBTCTVL.record(ctx, curveTriBTCTVL);
   },
   10,
   60
@@ -157,8 +175,8 @@ async function getBTCPrice(ctx: EthContext) {
 }
 
 async function getLBTCPrice(ctx: EthContext) {
-  const lbtcPrice = await getPriceBySymbol("lbtc", ctx.timestamp)
-  return lbtcPrice ?? 0
+  const lbtcPrice = await getPriceBySymbol("lbtc", ctx.timestamp);
+  return lbtcPrice ?? 0;
 }
 
 async function getPTLBTCPrice(ctx: EthContext) {
@@ -168,7 +186,7 @@ async function getPTLBTCPrice(ctx: EthContext) {
   const p = await getPTLBTCDec262024OracleContractOnContext(
     ctx,
     PTLBTC_USD_PRICE_FEED
-  ).usdPrice()
+  ).usdPrice();
 
   return Number(p) / 1e8;
 }
@@ -183,6 +201,11 @@ async function getWBTCPrice(ctx: EthContext) {
   ).latestAnswer();
   const btc_usd = await getBTCPrice(ctx);
   return (btc_usd * Number(p)) / 1e8;
+}
+
+async function getEBTCPrice(ctx: EthContext) {
+  // TODO
+  return getWBTCPrice(ctx);
 }
 
 async function getMorphoVaultTVL(ctx: EthContext, vault: string) {
@@ -325,41 +348,33 @@ async function getZerolendTVL(ctx: EthContext) {
 }
 
 async function getZerolendPTLBTCTVL(ctx: EthContext) {
-  if (ctx.blockNumber < creationBlocks[ZEROLEND_PT_LBTC]) {
+  if (ctx.blockNumber <= creationBlocks[ZEROLEND_PT_LBTC]) {
     return 0;
   }
   const c = getATokenContractOnContext(ctx, ZEROLEND_PT_LBTC);
   const [lbtcBalance, ptLbtcPrice] = await Promise.all([
     c.scaledTotalSupply(),
     getPTLBTCPrice(ctx),
-  ])
+  ]);
 
   return (Number(lbtcBalance) / 1e8) * ptLbtcPrice;
 }
 
-
-
-
-const DeriveMaxiTVL = Gauge.register("derive_maxi_tvl")
-const DeriveHarvestTVL = Gauge.register("derive_harvest_tvl")
-
+const DeriveMaxiTVL = Gauge.register("derive_maxi_tvl");
+const DeriveHarvestTVL = Gauge.register("derive_harvest_tvl");
 
 GlobalProcessor.bind({
   network: EthChainId.ETHEREUM,
-  startBlock: ETH_STARTBLOCK
+  startBlock: ETH_STARTBLOCK,
 }).onTimeInterval(
   async (_, ctx) => {
-
-    const [
-      deriveMaxiTVL,
-      deriveHarvestTVL
-    ] = await Promise.all([
+    const [deriveMaxiTVL, deriveHarvestTVL] = await Promise.all([
       getDeriveMaxiTVL(ctx),
-      getDeriveHarvestTVL(ctx)
+      getDeriveHarvestTVL(ctx),
     ]);
 
-    DeriveMaxiTVL.record(ctx, deriveMaxiTVL)
-    DeriveHarvestTVL.record(ctx, deriveHarvestTVL)
+    DeriveMaxiTVL.record(ctx, deriveMaxiTVL);
+    DeriveHarvestTVL.record(ctx, deriveHarvestTVL);
   },
   10,
   60
@@ -367,17 +382,42 @@ GlobalProcessor.bind({
 
 async function getDeriveMaxiTVL(ctx: EthContext) {
   const [vaultAmount, lbtcPrice] = await Promise.all([
-    getCurrentVaultAmount(ctx, LBTCCPS_DERIVE),
+    ctx.blockNumber >= creationBlocks[LBTCCPS_DERIVE]
+      ? getCurrentVaultAmount(ctx, LBTCCPS_DERIVE)
+      : 0n,
     getLBTCPrice(ctx),
-  ])
-  return Number(vaultAmount) * lbtcPrice
+  ]);
+  return Number(vaultAmount) * lbtcPrice;
 }
 
 async function getDeriveHarvestTVL(ctx: EthContext) {
   const [vaultAmount, lbtcPrice] = await Promise.all([
-    getCurrentVaultAmount(ctx, LBTCCS_DERIVE),
+    ctx.blockNumber >= creationBlocks[LBTCCS_DERIVE]
+      ? getCurrentVaultAmount(ctx, LBTCCS_DERIVE)
+      : 0n,
     getLBTCPrice(ctx),
-  ])
-  return Number(vaultAmount) * lbtcPrice
+  ]);
+  return Number(vaultAmount) * lbtcPrice;
 }
 
+const priceGetter: Record<string, (ctx: EthContext) => Promise<number>> = {
+  [LBTC]: getLBTCPrice,
+  [WBTC]: getWBTCPrice,
+  [EBTC]: getEBTCPrice,
+};
+
+async function getCurvePoolTVL(ctx: EthContext, address: string) {
+  if (ctx.blockNumber < creationBlocks[address]) {
+    return 0;
+  }
+  let ret = 0;
+  for (const token of [WBTC, LBTC, EBTC]) {
+    const balance =
+      ctx.blockNumber >= creationBlocks[token]
+        ? await getERC20ContractOnContext(ctx, token).balanceOf(address)
+        : 0n;
+    const price = await priceGetter[token](ctx);
+    ret += (Number(balance) / 1e8) * price;
+  }
+  return ret;
+}
