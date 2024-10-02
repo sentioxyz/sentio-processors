@@ -1,0 +1,1911 @@
+{
+  "programType": "contract",
+  "specVersion": "1",
+  "encodingVersion": "1",
+  "concreteTypes": [
+    {
+      "type": "()",
+      "concreteTypeId": "2e38e77b22c314a449e91fafed92a43826ac6aa403ae6a8acb6cf58239fbaf5d"
+    },
+    {
+      "type": "(struct std::asset_id::AssetId, u64)",
+      "concreteTypeId": "229de6686c9c66098e7188f64d380a851d5ebacacaf90d991adf5b5952a70f7b",
+      "metadataTypeId": 0
+    },
+    {
+      "type": "(u256, u256)",
+      "concreteTypeId": "2770d9f762bf8ec295d5c253193cd2897c893401f1f438769f92d212641ec779",
+      "metadataTypeId": 1
+    },
+    {
+      "type": "b256",
+      "concreteTypeId": "7c5ee1cecf5f8eacd1284feb5f0bf2bdea533a51e2f0c9aabe9236d335989f3b"
+    },
+    {
+      "type": "bool",
+      "concreteTypeId": "b760f44fa5965c2474a3b471467a22c43185152129295af588b022ae50b50903"
+    },
+    {
+      "type": "enum market_abi::structs::Error",
+      "concreteTypeId": "4e6aabd209068d31558291cfd07cff9366801b052a1767bd0a9eb34bf55e8a0e",
+      "metadataTypeId": 2
+    },
+    {
+      "type": "enum standards::src5::AccessError",
+      "concreteTypeId": "3f702ea3351c9c1ece2b84048006c8034a24cbc2bad2e740d0412b4172951d3d",
+      "metadataTypeId": 3
+    },
+    {
+      "type": "enum standards::src5::State",
+      "concreteTypeId": "192bc7098e2fe60635a9918afb563e4e5419d386da2bdbf0d716b4bc8549802c",
+      "metadataTypeId": 4
+    },
+    {
+      "type": "enum std::identity::Identity",
+      "concreteTypeId": "ab7cd04e05be58e3fc15d424c2c4a57f824a2a2d97d67252440a3925ebdc1335",
+      "metadataTypeId": 5
+    },
+    {
+      "type": "enum sway_libs::ownership::errors::InitializationError",
+      "concreteTypeId": "1dfe7feadc1d9667a4351761230f948744068a090fe91b1bc6763a90ed5d3893",
+      "metadataTypeId": 6
+    },
+    {
+      "type": "enum sway_libs::reentrancy::errors::ReentrancyError",
+      "concreteTypeId": "4d216c57b3357523323f59401c7355785b41bdf832f6e1106272186b94797038",
+      "metadataTypeId": 7
+    },
+    {
+      "type": "struct events::AbsorbCollateralEvent",
+      "concreteTypeId": "31d6845ccbeb9e71f30bf07140659072ce92db76041efd6861d6895dace9e658",
+      "metadataTypeId": 10
+    },
+    {
+      "type": "struct events::BuyCollateralEvent",
+      "concreteTypeId": "a95331d2168897d0f550d1c4f7fc582926a79b3e825866ecf8c11ef8dfb692c6",
+      "metadataTypeId": 11
+    },
+    {
+      "type": "struct events::CollateralAssetAdded",
+      "concreteTypeId": "ea2a9368cd82d633fcc3411dbff6c25a78c7ccf550034427221102b74d7926db",
+      "metadataTypeId": 12
+    },
+    {
+      "type": "struct events::CollateralAssetPaused",
+      "concreteTypeId": "457cc10e18076b4e7a0ccc563fd089b256767bb56a148450f7e58f0d7cbf54ef",
+      "metadataTypeId": 13
+    },
+    {
+      "type": "struct events::CollateralAssetResumed",
+      "concreteTypeId": "81fb1b4fe81422099de81384a1f433aac8964b267aac0428e6bf423e46b88df9",
+      "metadataTypeId": 14
+    },
+    {
+      "type": "struct events::CollateralAssetUpdated",
+      "concreteTypeId": "6b698723a311c1005f7846d11d7ce209d68d00c120ee855364c14656ffb5b5a7",
+      "metadataTypeId": 15
+    },
+    {
+      "type": "struct events::MarketBasicEvent",
+      "concreteTypeId": "6a4af7c6d1aa3fedf33604a44da789ba359bf8f662a56fbc4de9603b8e732291",
+      "metadataTypeId": 16
+    },
+    {
+      "type": "struct events::MarketConfigurationEvent",
+      "concreteTypeId": "61d1473d8ec7f29c9b7f67ec6b840b973400d6af66df556a4fb5ea9884f780b7",
+      "metadataTypeId": 17
+    },
+    {
+      "type": "struct events::PauseConfigurationEvent",
+      "concreteTypeId": "ecf750cd9cc44add1b8fc9f1b11bb65d0981711b42c84d20aec21ef32bab7682",
+      "metadataTypeId": 18
+    },
+    {
+      "type": "struct events::ReservesWithdrawnEvent",
+      "concreteTypeId": "27b6995841bd520fff14deec990e8d66c03d8df59a510fa25e505694b0bc6ebe",
+      "metadataTypeId": 19
+    },
+    {
+      "type": "struct events::UserBasicEvent",
+      "concreteTypeId": "496e403bcde15a6d2d8a6ac3ae964a1db2145d27464fad7ae2b0dd4390c90c19",
+      "metadataTypeId": 20
+    },
+    {
+      "type": "struct events::UserLiquidatedEvent",
+      "concreteTypeId": "92d691781932f1848ba9433a9b1c09a97f985b331d88a1a289fc54569161d639",
+      "metadataTypeId": 21
+    },
+    {
+      "type": "struct events::UserSupplyBaseEvent",
+      "concreteTypeId": "1aed7a0722d2031e0bce0b49bb46e0f91a2237480a9d928eb696c7d1a6d7250c",
+      "metadataTypeId": 22
+    },
+    {
+      "type": "struct events::UserSupplyCollateralEvent",
+      "concreteTypeId": "61825e22a76ff7a0ca3ce1004c7d128c7844a8dde36cf7ea9077f8a57ef1f88a",
+      "metadataTypeId": 23
+    },
+    {
+      "type": "struct events::UserWithdrawBaseEvent",
+      "concreteTypeId": "3bbf66e44a782b08497502f3c67b5e181f14ef16755805fd800040f902019de1",
+      "metadataTypeId": 24
+    },
+    {
+      "type": "struct events::UserWithdrawCollateralEvent",
+      "concreteTypeId": "76ac511aac239f80b30e11716c2a730f0a814ea3acc85a13abb1777519465a4a",
+      "metadataTypeId": 25
+    },
+    {
+      "type": "struct i256::I256",
+      "concreteTypeId": "2c1b573de37da8020776e36206aa54a3020ad03063bf219d626b6c1cdd82c65d",
+      "metadataTypeId": 26
+    },
+    {
+      "type": "struct market_abi::structs::CollateralConfiguration",
+      "concreteTypeId": "027212d4a883f4144f8043ef93fee6aa9d766041c7735fa37fae71d45ab6d92d",
+      "metadataTypeId": 27
+    },
+    {
+      "type": "struct market_abi::structs::MarketBasics",
+      "concreteTypeId": "8f0ca9732dda82407f3d36328a5e4b89421c5f1c404a9568afa856df6efb5802",
+      "metadataTypeId": 28
+    },
+    {
+      "type": "struct market_abi::structs::MarketConfiguration",
+      "concreteTypeId": "788c494dd193488709eb7174a5299c17819b0c2e68089b18e0474d616080cc9c",
+      "metadataTypeId": 29
+    },
+    {
+      "type": "struct market_abi::structs::PauseConfiguration",
+      "concreteTypeId": "8ec71ec402ef77ffda0627839b31dd1444fad8b4a95507e86bfa89f0517dbc3d",
+      "metadataTypeId": 30
+    },
+    {
+      "type": "struct market_abi::structs::PriceDataUpdate",
+      "concreteTypeId": "60b16a7d7d88977a17d1cbc5d1d741c4872c833abbe5cd6eaa5e2d741cd8bf19",
+      "metadataTypeId": 31
+    },
+    {
+      "type": "struct market_abi::structs::UserBasic",
+      "concreteTypeId": "2878312d8fe9af45fe59b9252d6afa651128c8f755ca8f26ae4d67ede06b8ea1",
+      "metadataTypeId": 32
+    },
+    {
+      "type": "struct pyth_interface::data_structures::price::Price",
+      "concreteTypeId": "8aba92fff7345309d4313706ed7db3a811609f62da8f0d2859819db43d461ff8",
+      "metadataTypeId": 33
+    },
+    {
+      "type": "struct std::asset_id::AssetId",
+      "concreteTypeId": "c0710b6731b1dd59799cf6bef33eee3b3b04a2e40e80a0724090215bbf2ca974",
+      "metadataTypeId": 35
+    },
+    {
+      "type": "struct std::bytes::Bytes",
+      "concreteTypeId": "cdd87b7d12fe505416570c294c884bca819364863efe3bf539245fa18515fbbb",
+      "metadataTypeId": 36
+    },
+    {
+      "type": "struct std::contract_id::ContractId",
+      "concreteTypeId": "29c10735d33b5159f0c71ee1dbd17b36a3e69e41f00fab0d42e1bd9f428d8a54",
+      "metadataTypeId": 38
+    },
+    {
+      "type": "struct std::vec::Vec<(struct std::asset_id::AssetId, u64)>",
+      "concreteTypeId": "d0540b5a00688e21ad7a3f5d7db93636c18f3ef7aed40d4e48f0cffc74683bcb",
+      "metadataTypeId": 40,
+      "typeArguments": [
+        "229de6686c9c66098e7188f64d380a851d5ebacacaf90d991adf5b5952a70f7b"
+      ]
+    },
+    {
+      "type": "struct std::vec::Vec<enum std::identity::Identity>",
+      "concreteTypeId": "2f79033d0d3729398611309f48578b56cf5162ba85e50f4d8fb79c9d9d1abc7b",
+      "metadataTypeId": 40,
+      "typeArguments": [
+        "ab7cd04e05be58e3fc15d424c2c4a57f824a2a2d97d67252440a3925ebdc1335"
+      ]
+    },
+    {
+      "type": "struct std::vec::Vec<struct market_abi::structs::CollateralConfiguration>",
+      "concreteTypeId": "135bedc713ecdc7e568f13811c40a9df6a62b44f54789c3f87066e7ccaedcc14",
+      "metadataTypeId": 40,
+      "typeArguments": [
+        "027212d4a883f4144f8043ef93fee6aa9d766041c7735fa37fae71d45ab6d92d"
+      ]
+    },
+    {
+      "type": "struct std::vec::Vec<struct std::bytes::Bytes>",
+      "concreteTypeId": "2601885b27af3627b8910876fc176d900cec2b16ec78c538f5f312e785d915f5",
+      "metadataTypeId": 40,
+      "typeArguments": [
+        "cdd87b7d12fe505416570c294c884bca819364863efe3bf539245fa18515fbbb"
+      ]
+    },
+    {
+      "type": "struct sway_libs::ownership::events::OwnershipRenounced",
+      "concreteTypeId": "43c4fa7b3297401afbf300127e59ea913e5c8f0c7ae69abbec789ab0bb872bed",
+      "metadataTypeId": 41
+    },
+    {
+      "type": "struct sway_libs::ownership::events::OwnershipSet",
+      "concreteTypeId": "e1ef35033ea9d2956f17c3292dea4a46ce7d61fdf37bbebe03b7b965073f43b5",
+      "metadataTypeId": 42
+    },
+    {
+      "type": "struct sway_libs::ownership::events::OwnershipTransferred",
+      "concreteTypeId": "b3fffbcb3158d7c010c31b194b60fb7857adb4ad61bdcf4b8b42958951d9f308",
+      "metadataTypeId": 43
+    },
+    {
+      "type": "u256",
+      "concreteTypeId": "1b5759d94094368cfd443019e7ca5ec4074300e544e5ea993a979f5da627261e"
+    },
+    {
+      "type": "u64",
+      "concreteTypeId": "1506e6f44c1d6291cdf46395a8e573276a4fa79e8ace3fc891e092ef32d1b0a0"
+    }
+  ],
+  "metadataTypes": [
+    {
+      "type": "(_, _)",
+      "metadataTypeId": 0,
+      "components": [
+        {
+          "name": "__tuple_element",
+          "typeId": 35
+        },
+        {
+          "name": "__tuple_element",
+          "typeId": "1506e6f44c1d6291cdf46395a8e573276a4fa79e8ace3fc891e092ef32d1b0a0"
+        }
+      ]
+    },
+    {
+      "type": "(_, _)",
+      "metadataTypeId": 1,
+      "components": [
+        {
+          "name": "__tuple_element",
+          "typeId": "1b5759d94094368cfd443019e7ca5ec4074300e544e5ea993a979f5da627261e"
+        },
+        {
+          "name": "__tuple_element",
+          "typeId": "1b5759d94094368cfd443019e7ca5ec4074300e544e5ea993a979f5da627261e"
+        }
+      ]
+    },
+    {
+      "type": "enum market_abi::structs::Error",
+      "metadataTypeId": 2,
+      "components": [
+        {
+          "name": "AlreadyInitialized",
+          "typeId": "2e38e77b22c314a449e91fafed92a43826ac6aa403ae6a8acb6cf58239fbaf5d"
+        },
+        {
+          "name": "Paused",
+          "typeId": "2e38e77b22c314a449e91fafed92a43826ac6aa403ae6a8acb6cf58239fbaf5d"
+        },
+        {
+          "name": "Unauthorized",
+          "typeId": "2e38e77b22c314a449e91fafed92a43826ac6aa403ae6a8acb6cf58239fbaf5d"
+        },
+        {
+          "name": "InsufficientReserves",
+          "typeId": "2e38e77b22c314a449e91fafed92a43826ac6aa403ae6a8acb6cf58239fbaf5d"
+        },
+        {
+          "name": "NotLiquidatable",
+          "typeId": "2e38e77b22c314a449e91fafed92a43826ac6aa403ae6a8acb6cf58239fbaf5d"
+        },
+        {
+          "name": "NotForSale",
+          "typeId": "2e38e77b22c314a449e91fafed92a43826ac6aa403ae6a8acb6cf58239fbaf5d"
+        },
+        {
+          "name": "TooMuchSlippage",
+          "typeId": "2e38e77b22c314a449e91fafed92a43826ac6aa403ae6a8acb6cf58239fbaf5d"
+        },
+        {
+          "name": "SupplyCapExceeded",
+          "typeId": "2e38e77b22c314a449e91fafed92a43826ac6aa403ae6a8acb6cf58239fbaf5d"
+        },
+        {
+          "name": "NotCollateralized",
+          "typeId": "2e38e77b22c314a449e91fafed92a43826ac6aa403ae6a8acb6cf58239fbaf5d"
+        },
+        {
+          "name": "BorrowTooSmall",
+          "typeId": "2e38e77b22c314a449e91fafed92a43826ac6aa403ae6a8acb6cf58239fbaf5d"
+        },
+        {
+          "name": "NotPermitted",
+          "typeId": "2e38e77b22c314a449e91fafed92a43826ac6aa403ae6a8acb6cf58239fbaf5d"
+        },
+        {
+          "name": "InvalidPayment",
+          "typeId": "2e38e77b22c314a449e91fafed92a43826ac6aa403ae6a8acb6cf58239fbaf5d"
+        },
+        {
+          "name": "UnknownAsset",
+          "typeId": "2e38e77b22c314a449e91fafed92a43826ac6aa403ae6a8acb6cf58239fbaf5d"
+        },
+        {
+          "name": "DebuggingDisabled",
+          "typeId": "2e38e77b22c314a449e91fafed92a43826ac6aa403ae6a8acb6cf58239fbaf5d"
+        },
+        {
+          "name": "NotYetActive",
+          "typeId": "2e38e77b22c314a449e91fafed92a43826ac6aa403ae6a8acb6cf58239fbaf5d"
+        },
+        {
+          "name": "AlreadyActive",
+          "typeId": "2e38e77b22c314a449e91fafed92a43826ac6aa403ae6a8acb6cf58239fbaf5d"
+        },
+        {
+          "name": "OracleContractIdNotSet",
+          "typeId": "2e38e77b22c314a449e91fafed92a43826ac6aa403ae6a8acb6cf58239fbaf5d"
+        },
+        {
+          "name": "OraclePriceValidationError",
+          "typeId": "2e38e77b22c314a449e91fafed92a43826ac6aa403ae6a8acb6cf58239fbaf5d"
+        }
+      ]
+    },
+    {
+      "type": "enum standards::src5::AccessError",
+      "metadataTypeId": 3,
+      "components": [
+        {
+          "name": "NotOwner",
+          "typeId": "2e38e77b22c314a449e91fafed92a43826ac6aa403ae6a8acb6cf58239fbaf5d"
+        }
+      ]
+    },
+    {
+      "type": "enum standards::src5::State",
+      "metadataTypeId": 4,
+      "components": [
+        {
+          "name": "Uninitialized",
+          "typeId": "2e38e77b22c314a449e91fafed92a43826ac6aa403ae6a8acb6cf58239fbaf5d"
+        },
+        {
+          "name": "Initialized",
+          "typeId": 5
+        },
+        {
+          "name": "Revoked",
+          "typeId": "2e38e77b22c314a449e91fafed92a43826ac6aa403ae6a8acb6cf58239fbaf5d"
+        }
+      ]
+    },
+    {
+      "type": "enum std::identity::Identity",
+      "metadataTypeId": 5,
+      "components": [
+        {
+          "name": "Address",
+          "typeId": 34
+        },
+        {
+          "name": "ContractId",
+          "typeId": 38
+        }
+      ]
+    },
+    {
+      "type": "enum sway_libs::ownership::errors::InitializationError",
+      "metadataTypeId": 6,
+      "components": [
+        {
+          "name": "CannotReinitialized",
+          "typeId": "2e38e77b22c314a449e91fafed92a43826ac6aa403ae6a8acb6cf58239fbaf5d"
+        }
+      ]
+    },
+    {
+      "type": "enum sway_libs::reentrancy::errors::ReentrancyError",
+      "metadataTypeId": 7,
+      "components": [
+        {
+          "name": "NonReentrant",
+          "typeId": "2e38e77b22c314a449e91fafed92a43826ac6aa403ae6a8acb6cf58239fbaf5d"
+        }
+      ]
+    },
+    {
+      "type": "generic T",
+      "metadataTypeId": 8
+    },
+    {
+      "type": "raw untyped ptr",
+      "metadataTypeId": 9
+    },
+    {
+      "type": "struct events::AbsorbCollateralEvent",
+      "metadataTypeId": 10,
+      "components": [
+        {
+          "name": "account",
+          "typeId": 5
+        },
+        {
+          "name": "asset_id",
+          "typeId": 35
+        },
+        {
+          "name": "amount",
+          "typeId": "1506e6f44c1d6291cdf46395a8e573276a4fa79e8ace3fc891e092ef32d1b0a0"
+        },
+        {
+          "name": "seize_value",
+          "typeId": "1b5759d94094368cfd443019e7ca5ec4074300e544e5ea993a979f5da627261e"
+        },
+        {
+          "name": "decimals",
+          "typeId": 44
+        }
+      ]
+    },
+    {
+      "type": "struct events::BuyCollateralEvent",
+      "metadataTypeId": 11,
+      "components": [
+        {
+          "name": "caller",
+          "typeId": 5
+        },
+        {
+          "name": "recipient",
+          "typeId": 5
+        },
+        {
+          "name": "asset_id",
+          "typeId": 35
+        },
+        {
+          "name": "amount",
+          "typeId": "1506e6f44c1d6291cdf46395a8e573276a4fa79e8ace3fc891e092ef32d1b0a0"
+        },
+        {
+          "name": "price",
+          "typeId": "1506e6f44c1d6291cdf46395a8e573276a4fa79e8ace3fc891e092ef32d1b0a0"
+        }
+      ]
+    },
+    {
+      "type": "struct events::CollateralAssetAdded",
+      "metadataTypeId": 12,
+      "components": [
+        {
+          "name": "asset_id",
+          "typeId": 35
+        },
+        {
+          "name": "configuration",
+          "typeId": 27
+        }
+      ]
+    },
+    {
+      "type": "struct events::CollateralAssetPaused",
+      "metadataTypeId": 13,
+      "components": [
+        {
+          "name": "asset_id",
+          "typeId": 35
+        }
+      ]
+    },
+    {
+      "type": "struct events::CollateralAssetResumed",
+      "metadataTypeId": 14,
+      "components": [
+        {
+          "name": "asset_id",
+          "typeId": 35
+        }
+      ]
+    },
+    {
+      "type": "struct events::CollateralAssetUpdated",
+      "metadataTypeId": 15,
+      "components": [
+        {
+          "name": "asset_id",
+          "typeId": 35
+        },
+        {
+          "name": "configuration",
+          "typeId": 27
+        }
+      ]
+    },
+    {
+      "type": "struct events::MarketBasicEvent",
+      "metadataTypeId": 16,
+      "components": [
+        {
+          "name": "market_basic",
+          "typeId": 28
+        }
+      ]
+    },
+    {
+      "type": "struct events::MarketConfigurationEvent",
+      "metadataTypeId": 17,
+      "components": [
+        {
+          "name": "market_config",
+          "typeId": 29
+        }
+      ]
+    },
+    {
+      "type": "struct events::PauseConfigurationEvent",
+      "metadataTypeId": 18,
+      "components": [
+        {
+          "name": "pause_config",
+          "typeId": 30
+        }
+      ]
+    },
+    {
+      "type": "struct events::ReservesWithdrawnEvent",
+      "metadataTypeId": 19,
+      "components": [
+        {
+          "name": "caller",
+          "typeId": 5
+        },
+        {
+          "name": "to",
+          "typeId": 5
+        },
+        {
+          "name": "amount",
+          "typeId": "1506e6f44c1d6291cdf46395a8e573276a4fa79e8ace3fc891e092ef32d1b0a0"
+        }
+      ]
+    },
+    {
+      "type": "struct events::UserBasicEvent",
+      "metadataTypeId": 20,
+      "components": [
+        {
+          "name": "account",
+          "typeId": 5
+        },
+        {
+          "name": "user_basic",
+          "typeId": 32
+        }
+      ]
+    },
+    {
+      "type": "struct events::UserLiquidatedEvent",
+      "metadataTypeId": 21,
+      "components": [
+        {
+          "name": "account",
+          "typeId": 5
+        },
+        {
+          "name": "liquidator",
+          "typeId": 5
+        },
+        {
+          "name": "base_paid_out",
+          "typeId": "1b5759d94094368cfd443019e7ca5ec4074300e544e5ea993a979f5da627261e"
+        },
+        {
+          "name": "base_paid_out_value",
+          "typeId": "1b5759d94094368cfd443019e7ca5ec4074300e544e5ea993a979f5da627261e"
+        },
+        {
+          "name": "total_base",
+          "typeId": "1b5759d94094368cfd443019e7ca5ec4074300e544e5ea993a979f5da627261e"
+        },
+        {
+          "name": "total_base_value",
+          "typeId": "1b5759d94094368cfd443019e7ca5ec4074300e544e5ea993a979f5da627261e"
+        },
+        {
+          "name": "decimals",
+          "typeId": 44
+        }
+      ]
+    },
+    {
+      "type": "struct events::UserSupplyBaseEvent",
+      "metadataTypeId": 22,
+      "components": [
+        {
+          "name": "account",
+          "typeId": 5
+        },
+        {
+          "name": "supply_amount",
+          "typeId": "1b5759d94094368cfd443019e7ca5ec4074300e544e5ea993a979f5da627261e"
+        },
+        {
+          "name": "repay_amount",
+          "typeId": "1b5759d94094368cfd443019e7ca5ec4074300e544e5ea993a979f5da627261e"
+        }
+      ]
+    },
+    {
+      "type": "struct events::UserSupplyCollateralEvent",
+      "metadataTypeId": 23,
+      "components": [
+        {
+          "name": "account",
+          "typeId": 5
+        },
+        {
+          "name": "asset_id",
+          "typeId": 35
+        },
+        {
+          "name": "amount",
+          "typeId": "1506e6f44c1d6291cdf46395a8e573276a4fa79e8ace3fc891e092ef32d1b0a0"
+        }
+      ]
+    },
+    {
+      "type": "struct events::UserWithdrawBaseEvent",
+      "metadataTypeId": 24,
+      "components": [
+        {
+          "name": "account",
+          "typeId": 5
+        },
+        {
+          "name": "withdraw_amount",
+          "typeId": "1b5759d94094368cfd443019e7ca5ec4074300e544e5ea993a979f5da627261e"
+        },
+        {
+          "name": "borrow_amount",
+          "typeId": "1b5759d94094368cfd443019e7ca5ec4074300e544e5ea993a979f5da627261e"
+        }
+      ]
+    },
+    {
+      "type": "struct events::UserWithdrawCollateralEvent",
+      "metadataTypeId": 25,
+      "components": [
+        {
+          "name": "account",
+          "typeId": 5
+        },
+        {
+          "name": "asset_id",
+          "typeId": 35
+        },
+        {
+          "name": "amount",
+          "typeId": "1506e6f44c1d6291cdf46395a8e573276a4fa79e8ace3fc891e092ef32d1b0a0"
+        }
+      ]
+    },
+    {
+      "type": "struct i256::I256",
+      "metadataTypeId": 26,
+      "components": [
+        {
+          "name": "value",
+          "typeId": "1b5759d94094368cfd443019e7ca5ec4074300e544e5ea993a979f5da627261e"
+        },
+        {
+          "name": "negative",
+          "typeId": "b760f44fa5965c2474a3b471467a22c43185152129295af588b022ae50b50903"
+        }
+      ]
+    },
+    {
+      "type": "struct market_abi::structs::CollateralConfiguration",
+      "metadataTypeId": 27,
+      "components": [
+        {
+          "name": "asset_id",
+          "typeId": 35
+        },
+        {
+          "name": "price_feed_id",
+          "typeId": "7c5ee1cecf5f8eacd1284feb5f0bf2bdea533a51e2f0c9aabe9236d335989f3b"
+        },
+        {
+          "name": "decimals",
+          "typeId": 44
+        },
+        {
+          "name": "borrow_collateral_factor",
+          "typeId": "1b5759d94094368cfd443019e7ca5ec4074300e544e5ea993a979f5da627261e"
+        },
+        {
+          "name": "liquidate_collateral_factor",
+          "typeId": "1b5759d94094368cfd443019e7ca5ec4074300e544e5ea993a979f5da627261e"
+        },
+        {
+          "name": "liquidation_penalty",
+          "typeId": "1b5759d94094368cfd443019e7ca5ec4074300e544e5ea993a979f5da627261e"
+        },
+        {
+          "name": "supply_cap",
+          "typeId": "1506e6f44c1d6291cdf46395a8e573276a4fa79e8ace3fc891e092ef32d1b0a0"
+        },
+        {
+          "name": "paused",
+          "typeId": "b760f44fa5965c2474a3b471467a22c43185152129295af588b022ae50b50903"
+        }
+      ]
+    },
+    {
+      "type": "struct market_abi::structs::MarketBasics",
+      "metadataTypeId": 28,
+      "components": [
+        {
+          "name": "base_supply_index",
+          "typeId": "1b5759d94094368cfd443019e7ca5ec4074300e544e5ea993a979f5da627261e"
+        },
+        {
+          "name": "base_borrow_index",
+          "typeId": "1b5759d94094368cfd443019e7ca5ec4074300e544e5ea993a979f5da627261e"
+        },
+        {
+          "name": "tracking_supply_index",
+          "typeId": "1b5759d94094368cfd443019e7ca5ec4074300e544e5ea993a979f5da627261e"
+        },
+        {
+          "name": "tracking_borrow_index",
+          "typeId": "1b5759d94094368cfd443019e7ca5ec4074300e544e5ea993a979f5da627261e"
+        },
+        {
+          "name": "total_supply_base",
+          "typeId": "1b5759d94094368cfd443019e7ca5ec4074300e544e5ea993a979f5da627261e"
+        },
+        {
+          "name": "total_borrow_base",
+          "typeId": "1b5759d94094368cfd443019e7ca5ec4074300e544e5ea993a979f5da627261e"
+        },
+        {
+          "name": "last_accrual_time",
+          "typeId": "1b5759d94094368cfd443019e7ca5ec4074300e544e5ea993a979f5da627261e"
+        }
+      ]
+    },
+    {
+      "type": "struct market_abi::structs::MarketConfiguration",
+      "metadataTypeId": 29,
+      "components": [
+        {
+          "name": "base_token",
+          "typeId": 35
+        },
+        {
+          "name": "base_token_decimals",
+          "typeId": 44
+        },
+        {
+          "name": "base_token_price_feed_id",
+          "typeId": "7c5ee1cecf5f8eacd1284feb5f0bf2bdea533a51e2f0c9aabe9236d335989f3b"
+        },
+        {
+          "name": "supply_kink",
+          "typeId": "1b5759d94094368cfd443019e7ca5ec4074300e544e5ea993a979f5da627261e"
+        },
+        {
+          "name": "borrow_kink",
+          "typeId": "1b5759d94094368cfd443019e7ca5ec4074300e544e5ea993a979f5da627261e"
+        },
+        {
+          "name": "supply_per_second_interest_rate_slope_low",
+          "typeId": "1b5759d94094368cfd443019e7ca5ec4074300e544e5ea993a979f5da627261e"
+        },
+        {
+          "name": "supply_per_second_interest_rate_slope_high",
+          "typeId": "1b5759d94094368cfd443019e7ca5ec4074300e544e5ea993a979f5da627261e"
+        },
+        {
+          "name": "supply_per_second_interest_rate_base",
+          "typeId": "1b5759d94094368cfd443019e7ca5ec4074300e544e5ea993a979f5da627261e"
+        },
+        {
+          "name": "borrow_per_second_interest_rate_slope_low",
+          "typeId": "1b5759d94094368cfd443019e7ca5ec4074300e544e5ea993a979f5da627261e"
+        },
+        {
+          "name": "borrow_per_second_interest_rate_slope_high",
+          "typeId": "1b5759d94094368cfd443019e7ca5ec4074300e544e5ea993a979f5da627261e"
+        },
+        {
+          "name": "borrow_per_second_interest_rate_base",
+          "typeId": "1b5759d94094368cfd443019e7ca5ec4074300e544e5ea993a979f5da627261e"
+        },
+        {
+          "name": "store_front_price_factor",
+          "typeId": "1b5759d94094368cfd443019e7ca5ec4074300e544e5ea993a979f5da627261e"
+        },
+        {
+          "name": "base_tracking_index_scale",
+          "typeId": "1b5759d94094368cfd443019e7ca5ec4074300e544e5ea993a979f5da627261e"
+        },
+        {
+          "name": "base_tracking_supply_speed",
+          "typeId": "1b5759d94094368cfd443019e7ca5ec4074300e544e5ea993a979f5da627261e"
+        },
+        {
+          "name": "base_tracking_borrow_speed",
+          "typeId": "1b5759d94094368cfd443019e7ca5ec4074300e544e5ea993a979f5da627261e"
+        },
+        {
+          "name": "base_min_for_rewards",
+          "typeId": "1b5759d94094368cfd443019e7ca5ec4074300e544e5ea993a979f5da627261e"
+        },
+        {
+          "name": "base_borrow_min",
+          "typeId": "1b5759d94094368cfd443019e7ca5ec4074300e544e5ea993a979f5da627261e"
+        },
+        {
+          "name": "target_reserves",
+          "typeId": "1b5759d94094368cfd443019e7ca5ec4074300e544e5ea993a979f5da627261e"
+        }
+      ]
+    },
+    {
+      "type": "struct market_abi::structs::PauseConfiguration",
+      "metadataTypeId": 30,
+      "components": [
+        {
+          "name": "supply_paused",
+          "typeId": "b760f44fa5965c2474a3b471467a22c43185152129295af588b022ae50b50903"
+        },
+        {
+          "name": "withdraw_paused",
+          "typeId": "b760f44fa5965c2474a3b471467a22c43185152129295af588b022ae50b50903"
+        },
+        {
+          "name": "absorb_paused",
+          "typeId": "b760f44fa5965c2474a3b471467a22c43185152129295af588b022ae50b50903"
+        },
+        {
+          "name": "buy_paused",
+          "typeId": "b760f44fa5965c2474a3b471467a22c43185152129295af588b022ae50b50903"
+        }
+      ]
+    },
+    {
+      "type": "struct market_abi::structs::PriceDataUpdate",
+      "metadataTypeId": 31,
+      "components": [
+        {
+          "name": "update_fee",
+          "typeId": "1506e6f44c1d6291cdf46395a8e573276a4fa79e8ace3fc891e092ef32d1b0a0"
+        },
+        {
+          "name": "publish_times",
+          "typeId": 40,
+          "typeArguments": [
+            {
+              "name": "",
+              "typeId": "1506e6f44c1d6291cdf46395a8e573276a4fa79e8ace3fc891e092ef32d1b0a0"
+            }
+          ]
+        },
+        {
+          "name": "price_feed_ids",
+          "typeId": 40,
+          "typeArguments": [
+            {
+              "name": "",
+              "typeId": "7c5ee1cecf5f8eacd1284feb5f0bf2bdea533a51e2f0c9aabe9236d335989f3b"
+            }
+          ]
+        },
+        {
+          "name": "update_data",
+          "typeId": 40,
+          "typeArguments": [
+            {
+              "name": "",
+              "typeId": 36
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "type": "struct market_abi::structs::UserBasic",
+      "metadataTypeId": 32,
+      "components": [
+        {
+          "name": "principal",
+          "typeId": 26
+        },
+        {
+          "name": "base_tracking_index",
+          "typeId": "1b5759d94094368cfd443019e7ca5ec4074300e544e5ea993a979f5da627261e"
+        },
+        {
+          "name": "base_tracking_accrued",
+          "typeId": "1b5759d94094368cfd443019e7ca5ec4074300e544e5ea993a979f5da627261e"
+        }
+      ]
+    },
+    {
+      "type": "struct pyth_interface::data_structures::price::Price",
+      "metadataTypeId": 33,
+      "components": [
+        {
+          "name": "confidence",
+          "typeId": "1506e6f44c1d6291cdf46395a8e573276a4fa79e8ace3fc891e092ef32d1b0a0"
+        },
+        {
+          "name": "exponent",
+          "typeId": 44
+        },
+        {
+          "name": "price",
+          "typeId": "1506e6f44c1d6291cdf46395a8e573276a4fa79e8ace3fc891e092ef32d1b0a0"
+        },
+        {
+          "name": "publish_time",
+          "typeId": "1506e6f44c1d6291cdf46395a8e573276a4fa79e8ace3fc891e092ef32d1b0a0"
+        }
+      ]
+    },
+    {
+      "type": "struct std::address::Address",
+      "metadataTypeId": 34,
+      "components": [
+        {
+          "name": "bits",
+          "typeId": "7c5ee1cecf5f8eacd1284feb5f0bf2bdea533a51e2f0c9aabe9236d335989f3b"
+        }
+      ]
+    },
+    {
+      "type": "struct std::asset_id::AssetId",
+      "metadataTypeId": 35,
+      "components": [
+        {
+          "name": "bits",
+          "typeId": "7c5ee1cecf5f8eacd1284feb5f0bf2bdea533a51e2f0c9aabe9236d335989f3b"
+        }
+      ]
+    },
+    {
+      "type": "struct std::bytes::Bytes",
+      "metadataTypeId": 36,
+      "components": [
+        {
+          "name": "buf",
+          "typeId": 37
+        },
+        {
+          "name": "len",
+          "typeId": "1506e6f44c1d6291cdf46395a8e573276a4fa79e8ace3fc891e092ef32d1b0a0"
+        }
+      ]
+    },
+    {
+      "type": "struct std::bytes::RawBytes",
+      "metadataTypeId": 37,
+      "components": [
+        {
+          "name": "ptr",
+          "typeId": 9
+        },
+        {
+          "name": "cap",
+          "typeId": "1506e6f44c1d6291cdf46395a8e573276a4fa79e8ace3fc891e092ef32d1b0a0"
+        }
+      ]
+    },
+    {
+      "type": "struct std::contract_id::ContractId",
+      "metadataTypeId": 38,
+      "components": [
+        {
+          "name": "bits",
+          "typeId": "7c5ee1cecf5f8eacd1284feb5f0bf2bdea533a51e2f0c9aabe9236d335989f3b"
+        }
+      ]
+    },
+    {
+      "type": "struct std::vec::RawVec",
+      "metadataTypeId": 39,
+      "components": [
+        {
+          "name": "ptr",
+          "typeId": 9
+        },
+        {
+          "name": "cap",
+          "typeId": "1506e6f44c1d6291cdf46395a8e573276a4fa79e8ace3fc891e092ef32d1b0a0"
+        }
+      ],
+      "typeParameters": [8]
+    },
+    {
+      "type": "struct std::vec::Vec",
+      "metadataTypeId": 40,
+      "components": [
+        {
+          "name": "buf",
+          "typeId": 39,
+          "typeArguments": [
+            {
+              "name": "",
+              "typeId": 8
+            }
+          ]
+        },
+        {
+          "name": "len",
+          "typeId": "1506e6f44c1d6291cdf46395a8e573276a4fa79e8ace3fc891e092ef32d1b0a0"
+        }
+      ],
+      "typeParameters": [8]
+    },
+    {
+      "type": "struct sway_libs::ownership::events::OwnershipRenounced",
+      "metadataTypeId": 41,
+      "components": [
+        {
+          "name": "previous_owner",
+          "typeId": 5
+        }
+      ]
+    },
+    {
+      "type": "struct sway_libs::ownership::events::OwnershipSet",
+      "metadataTypeId": 42,
+      "components": [
+        {
+          "name": "new_owner",
+          "typeId": 5
+        }
+      ]
+    },
+    {
+      "type": "struct sway_libs::ownership::events::OwnershipTransferred",
+      "metadataTypeId": 43,
+      "components": [
+        {
+          "name": "new_owner",
+          "typeId": 5
+        },
+        {
+          "name": "previous_owner",
+          "typeId": 5
+        }
+      ]
+    },
+    {
+      "type": "u32",
+      "metadataTypeId": 44
+    }
+  ],
+  "functions": [
+    {
+      "inputs": [
+        {
+          "name": "accounts",
+          "concreteTypeId": "2f79033d0d3729398611309f48578b56cf5162ba85e50f4d8fb79c9d9d1abc7b"
+        },
+        {
+          "name": "price_data_update",
+          "concreteTypeId": "60b16a7d7d88977a17d1cbc5d1d741c4872c833abbe5cd6eaa5e2d741cd8bf19"
+        }
+      ],
+      "name": "absorb",
+      "output": "2e38e77b22c314a449e91fafed92a43826ac6aa403ae6a8acb6cf58239fbaf5d",
+      "attributes": [
+        {
+          "name": "payable",
+          "arguments": []
+        },
+        {
+          "name": "storage",
+          "arguments": ["write"]
+        }
+      ]
+    },
+    {
+      "inputs": [
+        {
+          "name": "market_configuration",
+          "concreteTypeId": "788c494dd193488709eb7174a5299c17819b0c2e68089b18e0474d616080cc9c"
+        },
+        {
+          "name": "owner",
+          "concreteTypeId": "ab7cd04e05be58e3fc15d424c2c4a57f824a2a2d97d67252440a3925ebdc1335"
+        }
+      ],
+      "name": "activate_contract",
+      "output": "2e38e77b22c314a449e91fafed92a43826ac6aa403ae6a8acb6cf58239fbaf5d",
+      "attributes": [
+        {
+          "name": "storage",
+          "arguments": ["write"]
+        }
+      ]
+    },
+    {
+      "inputs": [
+        {
+          "name": "configuration",
+          "concreteTypeId": "027212d4a883f4144f8043ef93fee6aa9d766041c7735fa37fae71d45ab6d92d"
+        }
+      ],
+      "name": "add_collateral_asset",
+      "output": "2e38e77b22c314a449e91fafed92a43826ac6aa403ae6a8acb6cf58239fbaf5d",
+      "attributes": [
+        {
+          "name": "storage",
+          "arguments": ["write"]
+        }
+      ]
+    },
+    {
+      "inputs": [
+        {
+          "name": "account",
+          "concreteTypeId": "ab7cd04e05be58e3fc15d424c2c4a57f824a2a2d97d67252440a3925ebdc1335"
+        }
+      ],
+      "name": "available_to_borrow",
+      "output": "1b5759d94094368cfd443019e7ca5ec4074300e544e5ea993a979f5da627261e",
+      "attributes": [
+        {
+          "name": "storage",
+          "arguments": ["read"]
+        }
+      ]
+    },
+    {
+      "inputs": [
+        {
+          "name": "asset_id",
+          "concreteTypeId": "c0710b6731b1dd59799cf6bef33eee3b3b04a2e40e80a0724090215bbf2ca974"
+        }
+      ],
+      "name": "balance_of",
+      "output": "1506e6f44c1d6291cdf46395a8e573276a4fa79e8ace3fc891e092ef32d1b0a0",
+      "attributes": null
+    },
+    {
+      "inputs": [
+        {
+          "name": "asset_id",
+          "concreteTypeId": "c0710b6731b1dd59799cf6bef33eee3b3b04a2e40e80a0724090215bbf2ca974"
+        },
+        {
+          "name": "min_amount",
+          "concreteTypeId": "1506e6f44c1d6291cdf46395a8e573276a4fa79e8ace3fc891e092ef32d1b0a0"
+        },
+        {
+          "name": "recipient",
+          "concreteTypeId": "ab7cd04e05be58e3fc15d424c2c4a57f824a2a2d97d67252440a3925ebdc1335"
+        }
+      ],
+      "name": "buy_collateral",
+      "output": "2e38e77b22c314a449e91fafed92a43826ac6aa403ae6a8acb6cf58239fbaf5d",
+      "attributes": [
+        {
+          "name": "payable",
+          "arguments": []
+        },
+        {
+          "name": "storage",
+          "arguments": ["read"]
+        }
+      ]
+    },
+    {
+      "inputs": [
+        {
+          "name": "asset_id",
+          "concreteTypeId": "c0710b6731b1dd59799cf6bef33eee3b3b04a2e40e80a0724090215bbf2ca974"
+        },
+        {
+          "name": "collateral_amount",
+          "concreteTypeId": "1506e6f44c1d6291cdf46395a8e573276a4fa79e8ace3fc891e092ef32d1b0a0"
+        }
+      ],
+      "name": "collateral_value_to_sell",
+      "output": "1506e6f44c1d6291cdf46395a8e573276a4fa79e8ace3fc891e092ef32d1b0a0",
+      "attributes": [
+        {
+          "name": "storage",
+          "arguments": ["read"]
+        }
+      ]
+    },
+    {
+      "inputs": [],
+      "name": "debug_increment_timestamp",
+      "output": "2e38e77b22c314a449e91fafed92a43826ac6aa403ae6a8acb6cf58239fbaf5d",
+      "attributes": [
+        {
+          "name": "storage",
+          "arguments": ["write"]
+        }
+      ]
+    },
+    {
+      "inputs": [],
+      "name": "get_all_totals_collateral",
+      "output": "d0540b5a00688e21ad7a3f5d7db93636c18f3ef7aed40d4e48f0cffc74683bcb",
+      "attributes": [
+        {
+          "name": "storage",
+          "arguments": ["read"]
+        }
+      ]
+    },
+    {
+      "inputs": [
+        {
+          "name": "account",
+          "concreteTypeId": "ab7cd04e05be58e3fc15d424c2c4a57f824a2a2d97d67252440a3925ebdc1335"
+        }
+      ],
+      "name": "get_all_user_collateral",
+      "output": "d0540b5a00688e21ad7a3f5d7db93636c18f3ef7aed40d4e48f0cffc74683bcb",
+      "attributes": [
+        {
+          "name": "storage",
+          "arguments": ["read"]
+        }
+      ]
+    },
+    {
+      "inputs": [
+        {
+          "name": "utilization",
+          "concreteTypeId": "1b5759d94094368cfd443019e7ca5ec4074300e544e5ea993a979f5da627261e"
+        }
+      ],
+      "name": "get_borrow_rate",
+      "output": "1b5759d94094368cfd443019e7ca5ec4074300e544e5ea993a979f5da627261e",
+      "attributes": [
+        {
+          "name": "storage",
+          "arguments": ["read"]
+        }
+      ]
+    },
+    {
+      "inputs": [],
+      "name": "get_collateral_configurations",
+      "output": "135bedc713ecdc7e568f13811c40a9df6a62b44f54789c3f87066e7ccaedcc14",
+      "attributes": [
+        {
+          "name": "storage",
+          "arguments": ["read"]
+        }
+      ]
+    },
+    {
+      "inputs": [
+        {
+          "name": "asset_id",
+          "concreteTypeId": "c0710b6731b1dd59799cf6bef33eee3b3b04a2e40e80a0724090215bbf2ca974"
+        }
+      ],
+      "name": "get_collateral_reserves",
+      "output": "2c1b573de37da8020776e36206aa54a3020ad03063bf219d626b6c1cdd82c65d",
+      "attributes": [
+        {
+          "name": "storage",
+          "arguments": ["read"]
+        }
+      ]
+    },
+    {
+      "inputs": [],
+      "name": "get_market_basics",
+      "output": "8f0ca9732dda82407f3d36328a5e4b89421c5f1c404a9568afa856df6efb5802",
+      "attributes": [
+        {
+          "name": "storage",
+          "arguments": ["read"]
+        }
+      ]
+    },
+    {
+      "inputs": [],
+      "name": "get_market_basics_with_interest",
+      "output": "8f0ca9732dda82407f3d36328a5e4b89421c5f1c404a9568afa856df6efb5802",
+      "attributes": [
+        {
+          "name": "storage",
+          "arguments": ["read"]
+        }
+      ]
+    },
+    {
+      "inputs": [],
+      "name": "get_market_configuration",
+      "output": "788c494dd193488709eb7174a5299c17819b0c2e68089b18e0474d616080cc9c",
+      "attributes": [
+        {
+          "name": "storage",
+          "arguments": ["read"]
+        }
+      ]
+    },
+    {
+      "inputs": [
+        {
+          "name": "price_feed_id",
+          "concreteTypeId": "7c5ee1cecf5f8eacd1284feb5f0bf2bdea533a51e2f0c9aabe9236d335989f3b"
+        }
+      ],
+      "name": "get_price",
+      "output": "8aba92fff7345309d4313706ed7db3a811609f62da8f0d2859819db43d461ff8",
+      "attributes": [
+        {
+          "name": "storage",
+          "arguments": ["read"]
+        }
+      ]
+    },
+    {
+      "inputs": [],
+      "name": "get_reserves",
+      "output": "2c1b573de37da8020776e36206aa54a3020ad03063bf219d626b6c1cdd82c65d",
+      "attributes": [
+        {
+          "name": "storage",
+          "arguments": ["read"]
+        }
+      ]
+    },
+    {
+      "inputs": [
+        {
+          "name": "utilization",
+          "concreteTypeId": "1b5759d94094368cfd443019e7ca5ec4074300e544e5ea993a979f5da627261e"
+        }
+      ],
+      "name": "get_supply_rate",
+      "output": "1b5759d94094368cfd443019e7ca5ec4074300e544e5ea993a979f5da627261e",
+      "attributes": [
+        {
+          "name": "storage",
+          "arguments": ["read"]
+        }
+      ]
+    },
+    {
+      "inputs": [
+        {
+          "name": "account",
+          "concreteTypeId": "ab7cd04e05be58e3fc15d424c2c4a57f824a2a2d97d67252440a3925ebdc1335"
+        }
+      ],
+      "name": "get_user_balance_with_interest",
+      "output": "2c1b573de37da8020776e36206aa54a3020ad03063bf219d626b6c1cdd82c65d",
+      "attributes": [
+        {
+          "name": "storage",
+          "arguments": ["read"]
+        }
+      ]
+    },
+    {
+      "inputs": [
+        {
+          "name": "account",
+          "concreteTypeId": "ab7cd04e05be58e3fc15d424c2c4a57f824a2a2d97d67252440a3925ebdc1335"
+        }
+      ],
+      "name": "get_user_basic",
+      "output": "2878312d8fe9af45fe59b9252d6afa651128c8f755ca8f26ae4d67ede06b8ea1",
+      "attributes": [
+        {
+          "name": "storage",
+          "arguments": ["read"]
+        }
+      ]
+    },
+    {
+      "inputs": [
+        {
+          "name": "account",
+          "concreteTypeId": "ab7cd04e05be58e3fc15d424c2c4a57f824a2a2d97d67252440a3925ebdc1335"
+        },
+        {
+          "name": "asset_id",
+          "concreteTypeId": "c0710b6731b1dd59799cf6bef33eee3b3b04a2e40e80a0724090215bbf2ca974"
+        }
+      ],
+      "name": "get_user_collateral",
+      "output": "1506e6f44c1d6291cdf46395a8e573276a4fa79e8ace3fc891e092ef32d1b0a0",
+      "attributes": [
+        {
+          "name": "storage",
+          "arguments": ["read"]
+        }
+      ]
+    },
+    {
+      "inputs": [
+        {
+          "name": "account",
+          "concreteTypeId": "ab7cd04e05be58e3fc15d424c2c4a57f824a2a2d97d67252440a3925ebdc1335"
+        }
+      ],
+      "name": "get_user_supply_borrow",
+      "output": "2770d9f762bf8ec295d5c253193cd2897c893401f1f438769f92d212641ec779",
+      "attributes": [
+        {
+          "name": "storage",
+          "arguments": ["read"]
+        }
+      ]
+    },
+    {
+      "inputs": [],
+      "name": "get_utilization",
+      "output": "1b5759d94094368cfd443019e7ca5ec4074300e544e5ea993a979f5da627261e",
+      "attributes": [
+        {
+          "name": "storage",
+          "arguments": ["read"]
+        }
+      ]
+    },
+    {
+      "inputs": [
+        {
+          "name": "account",
+          "concreteTypeId": "ab7cd04e05be58e3fc15d424c2c4a57f824a2a2d97d67252440a3925ebdc1335"
+        }
+      ],
+      "name": "is_liquidatable",
+      "output": "b760f44fa5965c2474a3b471467a22c43185152129295af588b022ae50b50903",
+      "attributes": [
+        {
+          "name": "storage",
+          "arguments": ["read"]
+        }
+      ]
+    },
+    {
+      "inputs": [
+        {
+          "name": "pause_config",
+          "concreteTypeId": "8ec71ec402ef77ffda0627839b31dd1444fad8b4a95507e86bfa89f0517dbc3d"
+        }
+      ],
+      "name": "pause",
+      "output": "2e38e77b22c314a449e91fafed92a43826ac6aa403ae6a8acb6cf58239fbaf5d",
+      "attributes": [
+        {
+          "name": "storage",
+          "arguments": ["write"]
+        }
+      ]
+    },
+    {
+      "inputs": [
+        {
+          "name": "asset_id",
+          "concreteTypeId": "c0710b6731b1dd59799cf6bef33eee3b3b04a2e40e80a0724090215bbf2ca974"
+        }
+      ],
+      "name": "pause_collateral_asset",
+      "output": "2e38e77b22c314a449e91fafed92a43826ac6aa403ae6a8acb6cf58239fbaf5d",
+      "attributes": [
+        {
+          "name": "storage",
+          "arguments": ["write"]
+        }
+      ]
+    },
+    {
+      "inputs": [
+        {
+          "name": "asset_id",
+          "concreteTypeId": "c0710b6731b1dd59799cf6bef33eee3b3b04a2e40e80a0724090215bbf2ca974"
+        },
+        {
+          "name": "base_amount",
+          "concreteTypeId": "1506e6f44c1d6291cdf46395a8e573276a4fa79e8ace3fc891e092ef32d1b0a0"
+        }
+      ],
+      "name": "quote_collateral",
+      "output": "1506e6f44c1d6291cdf46395a8e573276a4fa79e8ace3fc891e092ef32d1b0a0",
+      "attributes": [
+        {
+          "name": "storage",
+          "arguments": ["read"]
+        }
+      ]
+    },
+    {
+      "inputs": [],
+      "name": "renounce_ownership",
+      "output": "2e38e77b22c314a449e91fafed92a43826ac6aa403ae6a8acb6cf58239fbaf5d",
+      "attributes": [
+        {
+          "name": "storage",
+          "arguments": ["write"]
+        }
+      ]
+    },
+    {
+      "inputs": [
+        {
+          "name": "asset_id",
+          "concreteTypeId": "c0710b6731b1dd59799cf6bef33eee3b3b04a2e40e80a0724090215bbf2ca974"
+        }
+      ],
+      "name": "resume_collateral_asset",
+      "output": "2e38e77b22c314a449e91fafed92a43826ac6aa403ae6a8acb6cf58239fbaf5d",
+      "attributes": [
+        {
+          "name": "storage",
+          "arguments": ["write"]
+        }
+      ]
+    },
+    {
+      "inputs": [
+        {
+          "name": "contract_id",
+          "concreteTypeId": "29c10735d33b5159f0c71ee1dbd17b36a3e69e41f00fab0d42e1bd9f428d8a54"
+        }
+      ],
+      "name": "set_pyth_contract_id",
+      "output": "2e38e77b22c314a449e91fafed92a43826ac6aa403ae6a8acb6cf58239fbaf5d",
+      "attributes": [
+        {
+          "name": "storage",
+          "arguments": ["write"]
+        }
+      ]
+    },
+    {
+      "inputs": [],
+      "name": "supply_base",
+      "output": "2e38e77b22c314a449e91fafed92a43826ac6aa403ae6a8acb6cf58239fbaf5d",
+      "attributes": [
+        {
+          "name": "payable",
+          "arguments": []
+        },
+        {
+          "name": "storage",
+          "arguments": ["write"]
+        }
+      ]
+    },
+    {
+      "inputs": [],
+      "name": "supply_collateral",
+      "output": "2e38e77b22c314a449e91fafed92a43826ac6aa403ae6a8acb6cf58239fbaf5d",
+      "attributes": [
+        {
+          "name": "payable",
+          "arguments": []
+        },
+        {
+          "name": "storage",
+          "arguments": ["write"]
+        }
+      ]
+    },
+    {
+      "inputs": [
+        {
+          "name": "asset_id",
+          "concreteTypeId": "c0710b6731b1dd59799cf6bef33eee3b3b04a2e40e80a0724090215bbf2ca974"
+        }
+      ],
+      "name": "totals_collateral",
+      "output": "1506e6f44c1d6291cdf46395a8e573276a4fa79e8ace3fc891e092ef32d1b0a0",
+      "attributes": [
+        {
+          "name": "storage",
+          "arguments": ["read"]
+        }
+      ]
+    },
+    {
+      "inputs": [
+        {
+          "name": "new_owner",
+          "concreteTypeId": "ab7cd04e05be58e3fc15d424c2c4a57f824a2a2d97d67252440a3925ebdc1335"
+        }
+      ],
+      "name": "transfer_ownership",
+      "output": "2e38e77b22c314a449e91fafed92a43826ac6aa403ae6a8acb6cf58239fbaf5d",
+      "attributes": [
+        {
+          "name": "storage",
+          "arguments": ["write"]
+        }
+      ]
+    },
+    {
+      "inputs": [
+        {
+          "name": "asset_id",
+          "concreteTypeId": "c0710b6731b1dd59799cf6bef33eee3b3b04a2e40e80a0724090215bbf2ca974"
+        },
+        {
+          "name": "configuration",
+          "concreteTypeId": "027212d4a883f4144f8043ef93fee6aa9d766041c7735fa37fae71d45ab6d92d"
+        }
+      ],
+      "name": "update_collateral_asset",
+      "output": "2e38e77b22c314a449e91fafed92a43826ac6aa403ae6a8acb6cf58239fbaf5d",
+      "attributes": [
+        {
+          "name": "storage",
+          "arguments": ["write"]
+        }
+      ]
+    },
+    {
+      "inputs": [
+        {
+          "name": "update_data",
+          "concreteTypeId": "2601885b27af3627b8910876fc176d900cec2b16ec78c538f5f312e785d915f5"
+        }
+      ],
+      "name": "update_fee",
+      "output": "1506e6f44c1d6291cdf46395a8e573276a4fa79e8ace3fc891e092ef32d1b0a0",
+      "attributes": [
+        {
+          "name": "storage",
+          "arguments": ["read"]
+        }
+      ]
+    },
+    {
+      "inputs": [
+        {
+          "name": "configuration",
+          "concreteTypeId": "788c494dd193488709eb7174a5299c17819b0c2e68089b18e0474d616080cc9c"
+        }
+      ],
+      "name": "update_market_configuration",
+      "output": "2e38e77b22c314a449e91fafed92a43826ac6aa403ae6a8acb6cf58239fbaf5d",
+      "attributes": [
+        {
+          "name": "storage",
+          "arguments": ["write"]
+        }
+      ]
+    },
+    {
+      "inputs": [
+        {
+          "name": "price_data_update",
+          "concreteTypeId": "60b16a7d7d88977a17d1cbc5d1d741c4872c833abbe5cd6eaa5e2d741cd8bf19"
+        }
+      ],
+      "name": "update_price_feeds_if_necessary",
+      "output": "2e38e77b22c314a449e91fafed92a43826ac6aa403ae6a8acb6cf58239fbaf5d",
+      "attributes": [
+        {
+          "name": "payable",
+          "arguments": []
+        },
+        {
+          "name": "storage",
+          "arguments": ["read"]
+        }
+      ]
+    },
+    {
+      "inputs": [
+        {
+          "name": "amount",
+          "concreteTypeId": "1506e6f44c1d6291cdf46395a8e573276a4fa79e8ace3fc891e092ef32d1b0a0"
+        },
+        {
+          "name": "price_data_update",
+          "concreteTypeId": "60b16a7d7d88977a17d1cbc5d1d741c4872c833abbe5cd6eaa5e2d741cd8bf19"
+        }
+      ],
+      "name": "withdraw_base",
+      "output": "2e38e77b22c314a449e91fafed92a43826ac6aa403ae6a8acb6cf58239fbaf5d",
+      "attributes": [
+        {
+          "name": "payable",
+          "arguments": []
+        },
+        {
+          "name": "storage",
+          "arguments": ["write"]
+        }
+      ]
+    },
+    {
+      "inputs": [
+        {
+          "name": "asset_id",
+          "concreteTypeId": "c0710b6731b1dd59799cf6bef33eee3b3b04a2e40e80a0724090215bbf2ca974"
+        },
+        {
+          "name": "amount",
+          "concreteTypeId": "1506e6f44c1d6291cdf46395a8e573276a4fa79e8ace3fc891e092ef32d1b0a0"
+        },
+        {
+          "name": "price_data_update",
+          "concreteTypeId": "60b16a7d7d88977a17d1cbc5d1d741c4872c833abbe5cd6eaa5e2d741cd8bf19"
+        }
+      ],
+      "name": "withdraw_collateral",
+      "output": "2e38e77b22c314a449e91fafed92a43826ac6aa403ae6a8acb6cf58239fbaf5d",
+      "attributes": [
+        {
+          "name": "payable",
+          "arguments": []
+        },
+        {
+          "name": "storage",
+          "arguments": ["write"]
+        }
+      ]
+    },
+    {
+      "inputs": [
+        {
+          "name": "to",
+          "concreteTypeId": "ab7cd04e05be58e3fc15d424c2c4a57f824a2a2d97d67252440a3925ebdc1335"
+        },
+        {
+          "name": "amount",
+          "concreteTypeId": "1506e6f44c1d6291cdf46395a8e573276a4fa79e8ace3fc891e092ef32d1b0a0"
+        }
+      ],
+      "name": "withdraw_reserves",
+      "output": "2e38e77b22c314a449e91fafed92a43826ac6aa403ae6a8acb6cf58239fbaf5d",
+      "attributes": [
+        {
+          "name": "storage",
+          "arguments": ["read"]
+        }
+      ]
+    },
+    {
+      "inputs": [],
+      "name": "owner",
+      "output": "192bc7098e2fe60635a9918afb563e4e5419d386da2bdbf0d716b4bc8549802c",
+      "attributes": [
+        {
+          "name": "storage",
+          "arguments": ["read"]
+        }
+      ]
+    }
+  ],
+  "loggedTypes": [
+    {
+      "logId": "5557842539076482339",
+      "concreteTypeId": "4d216c57b3357523323f59401c7355785b41bdf832f6e1106272186b94797038"
+    },
+    {
+      "logId": "5650517601072614705",
+      "concreteTypeId": "4e6aabd209068d31558291cfd07cff9366801b052a1767bd0a9eb34bf55e8a0e"
+    },
+    {
+      "logId": "7659206549590130669",
+      "concreteTypeId": "6a4af7c6d1aa3fedf33604a44da789ba359bf8f662a56fbc4de9603b8e732291"
+    },
+    {
+      "logId": "3591203286967623281",
+      "concreteTypeId": "31d6845ccbeb9e71f30bf07140659072ce92db76041efd6861d6895dace9e658"
+    },
+    {
+      "logId": "5291237237808257645",
+      "concreteTypeId": "496e403bcde15a6d2d8a6ac3ae964a1db2145d27464fad7ae2b0dd4390c90c19"
+    },
+    {
+      "logId": "10580804319558431108",
+      "concreteTypeId": "92d691781932f1848ba9433a9b1c09a97f985b331d88a1a289fc54569161d639"
+    },
+    {
+      "logId": "2161305517876418151",
+      "concreteTypeId": "1dfe7feadc1d9667a4351761230f948744068a090fe91b1bc6763a90ed5d3893"
+    },
+    {
+      "logId": "16280289466020123285",
+      "concreteTypeId": "e1ef35033ea9d2956f17c3292dea4a46ce7d61fdf37bbebe03b7b965073f43b5"
+    },
+    {
+      "logId": "17075205356227152605",
+      "concreteTypeId": "ecf750cd9cc44add1b8fc9f1b11bb65d0981711b42c84d20aec21ef32bab7682"
+    },
+    {
+      "logId": "7048493221525582492",
+      "concreteTypeId": "61d1473d8ec7f29c9b7f67ec6b840b973400d6af66df556a4fb5ea9884f780b7"
+    },
+    {
+      "logId": "4571204900286667806",
+      "concreteTypeId": "3f702ea3351c9c1ece2b84048006c8034a24cbc2bad2e740d0412b4172951d3d"
+    },
+    {
+      "logId": "16873461032230770227",
+      "concreteTypeId": "ea2a9368cd82d633fcc3411dbff6c25a78c7ccf550034427221102b74d7926db"
+    },
+    {
+      "logId": "12201150593867749328",
+      "concreteTypeId": "a95331d2168897d0f550d1c4f7fc582926a79b3e825866ecf8c11ef8dfb692c6"
+    },
+    {
+      "logId": "5007089152005991246",
+      "concreteTypeId": "457cc10e18076b4e7a0ccc563fd089b256767bb56a148450f7e58f0d7cbf54ef"
+    },
+    {
+      "logId": "4883303303013154842",
+      "concreteTypeId": "43c4fa7b3297401afbf300127e59ea913e5c8f0c7ae69abbec789ab0bb872bed"
+    },
+    {
+      "logId": "9366109880057078281",
+      "concreteTypeId": "81fb1b4fe81422099de81384a1f433aac8964b267aac0428e6bf423e46b88df9"
+    },
+    {
+      "logId": "1940341185534100254",
+      "concreteTypeId": "1aed7a0722d2031e0bce0b49bb46e0f91a2237480a9d928eb696c7d1a6d7250c"
+    },
+    {
+      "logId": "7026281871582427040",
+      "concreteTypeId": "61825e22a76ff7a0ca3ce1004c7d128c7844a8dde36cf7ea9077f8a57ef1f88a"
+    },
+    {
+      "logId": "12970362301975156672",
+      "concreteTypeId": "b3fffbcb3158d7c010c31b194b60fb7857adb4ad61bdcf4b8b42958951d9f308"
+    },
+    {
+      "logId": "7739866021742362880",
+      "concreteTypeId": "6b698723a311c1005f7846d11d7ce209d68d00c120ee855364c14656ffb5b5a7"
+    },
+    {
+      "logId": "4305272899477449480",
+      "concreteTypeId": "3bbf66e44a782b08497502f3c67b5e181f14ef16755805fd800040f902019de1"
+    },
+    {
+      "logId": "8551298967468744576",
+      "concreteTypeId": "76ac511aac239f80b30e11716c2a730f0a814ea3acc85a13abb1777519465a4a"
+    },
+    {
+      "logId": "2861643217579627023",
+      "concreteTypeId": "27b6995841bd520fff14deec990e8d66c03d8df59a510fa25e505694b0bc6ebe"
+    }
+  ],
+  "messagesTypes": [],
+  "configurables": [
+    {
+      "name": "DEBUG_STEP",
+      "concreteTypeId": "1506e6f44c1d6291cdf46395a8e573276a4fa79e8ace3fc891e092ef32d1b0a0",
+      "offset": 128944
+    },
+    {
+      "name": "ORACLE_MAX_STALENESS",
+      "concreteTypeId": "1506e6f44c1d6291cdf46395a8e573276a4fa79e8ace3fc891e092ef32d1b0a0",
+      "offset": 128992
+    },
+    {
+      "name": "ORACLE_MAX_AHEADNESS",
+      "concreteTypeId": "1506e6f44c1d6291cdf46395a8e573276a4fa79e8ace3fc891e092ef32d1b0a0",
+      "offset": 128952
+    },
+    {
+      "name": "ORACLE_MAX_CONF_WIDTH",
+      "concreteTypeId": "1b5759d94094368cfd443019e7ca5ec4074300e544e5ea993a979f5da627261e",
+      "offset": 128960
+    }
+  ]
+}
