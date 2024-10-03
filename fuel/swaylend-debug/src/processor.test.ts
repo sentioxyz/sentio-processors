@@ -7,7 +7,7 @@ import { getRpcEndpoint } from "@sentio/sdk/fuel"
 import { Provider, Contract } from "fuels"
 
 describe('Test Processor', () => {
-  const service = new TestProcessorServer(()=>import('./processor.js'),  {})
+  const service = new TestProcessorServer(() => import('./processor.js'), {})
 
   before(async () => {
     await service.start()
@@ -19,11 +19,11 @@ describe('Test Processor', () => {
   })
 
   test('test call', async () => {
-    const provider = await Provider.create("https://mainnet.fuel.network/v1/graphql")
+    const provider = await Provider.create("https://testnet.fuel.network/v1/graphql")
     const contract = new Contract(
-        "0x689bfaf54edfc433f62d06f3581998f9cb32ce864da5ff99f4be7bed3556529d",
-        Market.abi,
-        provider) as Market
+      "0x689bfaf54edfc433f62d06f3581998f9cb32ce864da5ff99f4be7bed3556529d",
+      Market.abi,
+      provider) as Market
 
     // const contract = new Market("0x689bfaf54edfc433f62d06f3581998f9cb32ce864da5ff99f4be7bed3556529d",provider)
 
