@@ -65,7 +65,9 @@ pool.bind({
     const amount_in = Number(event.data_decoded.amount_in) / Math.pow(10, atob ? poolInfo.decimal_a : poolInfo.decimal_b)
     const amount_out = Number(event.data_decoded.amount_out) / Math.pow(10, atob ? poolInfo.decimal_b : poolInfo.decimal_a)
     const fee_amount = Number(event.data_decoded.fee_amount) / Math.pow(10, atob ? poolInfo.decimal_a : poolInfo.decimal_b)
-
+    const after_sqrt_price = event.data_decoded.after_sqrt_price
+    const before_sqrt_price = event.data_decoded.before_sqrt_price
+    const a2b_price = await helper.getA2bPrice(ctx, after_sqrt_price, poolInfo)
     const partner = event.data_decoded.partner
     const ref_amount = event.data_decoded.ref_amount
     const steps = event.data_decoded.steps
@@ -89,8 +91,11 @@ pool.bind({
       partner,
       ref_amount,
       steps,
-      vault_a_amount,
-      vault_b_amount,
+      vault_a_amount: Number(vault_a_amount) / 10 ** poolInfo.decimal_a,
+      vault_b_amount: Number(vault_b_amount) / 10 ** poolInfo.decimal_b,
+      after_sqrt_price,
+      before_sqrt_price,
+      a2b_price,
       coin_symbol: atob ? poolInfo.symbol_a : poolInfo.symbol_b, //for amount_in
       coin_type_a: poolInfo.type_a,
       coin_type_b: poolInfo.type_b,

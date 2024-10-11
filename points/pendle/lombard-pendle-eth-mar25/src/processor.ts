@@ -1,21 +1,21 @@
 import { ERC20Processor } from "@sentio/sdk/eth/builtin";
-import { MISC_CONSTS, PENDLE_POOL_ADDRESSES, CONFIG } from "./consts.ts";
-import { handleSYTransfer } from "./handlers/SY.ts";
-import { PendleYieldTokenProcessor } from "./types/eth/pendleyieldtoken.ts";
+import { MISC_CONSTS, PENDLE_POOL_ADDRESSES, CONFIG } from "./consts.js";
+import { handleSYTransfer } from "./handlers/SY.js";
+import { PendleYieldTokenProcessor } from "./types/eth/pendleyieldtoken.js";
 import {
   handleYTRedeemInterest,
   handleYTTransfer,
   processAllYTAccounts,
-} from "./handlers/YT.ts";
-import { PendleMarketProcessor } from "./types/eth/pendlemarket.ts";
+} from "./handlers/YT.js";
+import { PendleMarketProcessor } from "./types/eth/pendlemarket.js";
 import {
   handleLPTransfer,
   handleMarketRedeemReward,
   handleMarketSwap,
   processAllLPAccounts,
-} from "./handlers/LP.ts";
+} from "./handlers/LP.js";
 import { GLOBAL_CONFIG } from "@sentio/runtime";
-import { EQBBaseRewardProcessor } from "./types/eth/eqbbasereward.ts";
+import { EQBBaseRewardProcessor } from "./types/eth/eqbbasereward.js";
 
 GLOBAL_CONFIG.execution = {
   sequential: true,
@@ -87,13 +87,13 @@ ERC20Processor.bind({
   ]);
 });
 
-ERC20Processor.bind({
-  address: PENDLE_POOL_ADDRESSES.STAKEDAO_RECEIPT_TOKEN,
-  startBlock: PENDLE_POOL_ADDRESSES.STAKEDAO_START_BLOCK,
-  name: "Stakedao Receipt Token",
-}).onEventTransfer(async (evt, ctx) => {
-  await processAllLPAccounts(ctx, [
-    evt.args.from.toLowerCase(),
-    evt.args.to.toLowerCase(),
-  ]);
-});
+// ERC20Processor.bind({
+//   address: PENDLE_POOL_ADDRESSES.STAKEDAO_RECEIPT_TOKEN,
+//   startBlock: PENDLE_POOL_ADDRESSES.STAKEDAO_START_BLOCK,
+//   name: "Stakedao Receipt Token",
+// }).onEventTransfer(async (evt, ctx) => {
+//   await processAllLPAccounts(ctx, [
+//     evt.args.from.toLowerCase(),
+//     evt.args.to.toLowerCase(),
+//   ]);
+// });
