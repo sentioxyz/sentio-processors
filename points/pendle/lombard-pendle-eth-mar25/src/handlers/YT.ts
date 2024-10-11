@@ -1,0 +1,125 @@
+import { AccountSnapshot } from "../schema/schema.js";
+import {
+  PendleYieldTokenContext,
+  RedeemInterestEvent,
+  TransferEvent,
+} from "../types/eth/pendleyieldtoken.js";
+import { updatePoints } from "../points/point-manager.js";
+import { MISC_CONSTS } from "../consts.js";
+import {
+  getUnixTimestamp,
+  isPendleAddress,
+  getAllAddresses,
+} from "../helper.js";
+import { readAllUserERC20Balances, readAllYTPositions } from "../multicall.js";
+import { EVENT_USER_SHARE, POINT_SOURCE_YT } from "../types.js";
+
+/**
+ * @dev 1 YT USDE is entitled to yields and points
+ */
+
+export async function handleYTTransfer(
+  evt: TransferEvent,
+  ctx: PendleYieldTokenContext
+) {
+  //@ts-ignore
+  // ctx.eventLogger.emit("evt.args", { 0: evt.args[0], 1: evt.args[1] })
+  await processAllYTAccounts(
+    ctx,
+    //@ts-ignore
+    [evt.args[0], evt.args[1]],
+    false
+  );
+}
+
+export async function handleYTRedeemInterest(
+  evt: RedeemInterestEvent,
+  ctx: PendleYieldTokenContext
+) {
+  await processAllYTAccounts(ctx, [evt.args.user.toLowerCase()], false);
+}
+
+export async function processAllYTAccounts(
+  ctx: PendleYieldTokenContext,
+  addressesToAdd: string[] = [],
+  shouldIncludeDb: boolean = true
+) {
+
+  if (await ctx.contract.isExpired()) {
+    return;
+  }
+
+  const allAddresses = shouldIncludeDb ? await getAllAddresses(ctx) : [];
+  for (let address of addressesToAdd) {
+    address = address.toLowerCase();
+    if (!allAddresses.includes(address) && !isPendleAddress(address)) {
+      allAddresses.push(address);
+    }
+  }
+
+  const timestamp = getUnixTimestamp(ctx.timestamp);
+  const allYTBalances = await readAllUserERC20Balances(
+    ctx,
+    allAddresses,
+    ctx.contract.address
+  );
+  const allYTPositions = await readAllYTPositions(ctx, allAddresses)
+
+  for (let i = 0; i < allAddresses.length; i++) {
+    const address = allAddresses[i];
+    const balance = allYTBalances[i];
+    const interestData = allYTPositions[i];
+
+    const accountId = address.toLowerCase() + POINT_SOURCE_YT;
+    const snapshot = await ctx.store.get(AccountSnapshot, accountId);
+    const ts: bigint = BigInt(timestamp).valueOf();
+    if (snapshot && snapshot.lastUpdatedAt < ts) {
+      await updatePoints(
+        ctx,
+        POINT_SOURCE_YT,
+        address,
+        BigInt(snapshot.lastImpliedHolding),
+        BigInt(ts.valueOf() - snapshot.lastUpdatedAt.valueOf()),
+        timestamp
+      );
+    }
+
+    if (interestData.lastPYIndex == 0n) continue;
+
+    /*if (interestData.lastPYIndex == 0n) {
+      if (snapshot) {
+        const newSnapshot = new AccountSnapshot({
+          id: accountId,
+          lastUpdatedAt: BigInt(timestamp),
+          lastImpliedHolding: snapshot.lastImpliedHolding,
+          lastBalance: snapshot ? snapshot.lastBalance.toString() : "",
+        });
+        await ctx.store.upsert(newSnapshot);
+      }
+      continue;
+    }*/
+
+
+    const impliedHolding =
+      (balance * MISC_CONSTS.ONE_E18) / interestData.lastPYIndex +
+      interestData.accruedInterest;
+
+
+
+    const newSnapshot = new AccountSnapshot({
+      id: accountId,
+      lastUpdatedAt: BigInt(timestamp),
+      lastImpliedHolding: impliedHolding.toString()
+    });
+
+    if (BigInt(snapshot ? snapshot.lastImpliedHolding : 0) != impliedHolding) {
+      ctx.eventLogger.emit(EVENT_USER_SHARE, {
+        label: POINT_SOURCE_YT,
+        account: address,
+        share: impliedHolding,
+      })
+    }
+
+    await ctx.store.upsert(newSnapshot);
+  }
+}

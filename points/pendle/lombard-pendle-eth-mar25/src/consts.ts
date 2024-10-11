@@ -17,38 +17,38 @@ export const MULTIPLIER = 3
 
 export const PENDLE_POOL_ADDRESSES = {
   // retrieved from Pendle pool contract readTokens()
-  SY: "0x9d6ec7a7b051b32205f74b140a0fa6f09d7f223e",
+  SY: "0xc781c0cc527cb8c351be3a64c690216c535c6f36",
   // retrieved from Pendle pool contract readTokens()
-  YT: "0x1cae47aa3e10a77c55ee32f8623d6b5acc947344",
+  YT: "0x1e30afeb27c0544f335f8aa21e0a9599c273823a",
   // using new pool contract
-  LP: "0xcae62858db831272a03768f5844cbe1b40bb381f",
-  SY_START_BLOCK: 20712286,
+  LP: "0x70b70ac0445c3ef04e314dfda6caafd825428221",
+  SY_START_BLOCK: 20861069,
   // the block which the new contract is deployed
-  START_BLOCK: 20712332,
+  START_BLOCK: 20861085,
   TREASURY: "0xc328dfcd2c8450e2487a91daa9b75629075b7a43",
 
 
   EQB_STAKING: "0x64627901dadb46ed7f275fd4fc87d086cff1e6e3",
-  EQB_RECEIPT_TOKEN: "0x08cef7af62cdc92246515a81e87cc7da633cc8b6",
-  EQB_START_BLOCK: 20728094,
+  EQB_RECEIPT_TOKEN: "0xafd39d1ee745b3a8963dd73a94cf055a19346b20",
+  EQB_START_BLOCK: 20883300,
 
-  PENPIE_START_BLOCK: 20919482,
-  PENPIE_RECEIPT_TOKEN: "0xa8DaF5Fef4d4f5620dF1BC8a72F71F4539691Fd4",
+  PENPIE_START_BLOCK: 20927198,
+  PENPIE_RECEIPT_TOKEN: "0x5d7f9e58f1ea4cedf5ae08ee81c2782ae8643d53",
 
-  STAKEDAO_RECEIPT_TOKEN: "0xa0db137445f4c8db1d4609884bc53d9e4a05bc0c",
-  STAKEDAO_START_BLOCK: 20769037,
+  // STAKEDAO_RECEIPT_TOKEN: "",
+  // STAKEDAO_START_BLOCK: ,
 
   MULTICALL: "0xca11bde05977b3631167028862be2a173976ca11",
   LIQUID_LOCKERS: [
     {
       // penpie
       address: "0x6e799758cee75dae3d84e09d40dc416ecf713652",
-      receiptToken: "0xa8DaF5Fef4d4f5620dF1BC8a72F71F4539691Fd4",
+      receiptToken: "0x5d7f9e58f1ea4cedf5ae08ee81c2782ae8643d53",
     },
     {
       // EQB
       address: "0x64627901dadb46ed7f275fd4fc87d086cff1e6e3",
-      receiptToken: "0x08cef7af62cdc92246515a81e87cc7da633cc8b6",
+      receiptToken: "0xafd39d1ee745b3a8963dd73a94cf055a19346b20",
     },
     {
       // stakeDAO

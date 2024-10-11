@@ -235,6 +235,18 @@ export async function getPoolPrice(ctx: SuiContext, pool: string) {
     return coin_a2b_price
 }
 
+export async function getA2bPrice(ctx: SuiContext, sqrt_price: bigint, poolInfo: poolInfo) {
+    if (!sqrt_price || !poolInfo) {
+        console.log(`get pool sqrt price error ${sqrt_price} ${poolInfo} at ${ctx.timestamp}`)
+        return 0
+    }
+
+    const coin_b2a_price = 1 / (Number(sqrt_price) ** 2) * (2 ** 128) * 10 ** (poolInfo.decimal_b - poolInfo.decimal_a)
+    const coin_a2b_price = 1 / coin_b2a_price
+
+    return coin_a2b_price
+}
+
 
 export async function calculateSwapVol_USD(ctx: SuiContext, poolInfo: poolInfo, amount_in: number, amount_out: number, atob: Boolean) {
     // const price_a = await getPriceBySymbol(symbol_a, date)
