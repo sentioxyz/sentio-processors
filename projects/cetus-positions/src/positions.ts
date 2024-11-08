@@ -250,8 +250,8 @@ export async function fetchPositions(ctx: SuiAddressContext) {
       (resp.result.rows as any[]).map(async (row) => ({
         id: row.position,
         owner: await getPositionOwner(ctx, row.position),
-        tickLower: BigInt(row.tick_lower),
-        tickUpper: BigInt(row.tick_upper),
+        tickLower: BigInt.asIntN(32, row.tick_lower),
+        tickUpper: BigInt.asIntN(32, row.tick_upper),
         decimalA: Number(row.decimal_a),
         decimalB: Number(row.decimal_b),
         coinTypeA: row.coin_type_a,
