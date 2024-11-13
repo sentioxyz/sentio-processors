@@ -16,12 +16,12 @@ import { Gauge } from "@sentio/sdk";
 
 import { AptosDex, getCoinInfo, getPairValue }
   from "@sentio/sdk/aptos/ext"
-  // from "@sentio-processor/common/aptos"
+// from "@sentio-processor/common/aptos"
 
-import {  AptosResourcesProcessor } from "@sentio/sdk/aptos";
+import { AptosResourcesProcessor } from "@sentio/sdk/aptos";
 // import { pool } from "./types/aptos/testnet/moar.js";
 
-const commonOptions = { sparse:  true }
+const commonOptions = { sparse: true }
 export const volOptions = {
   sparse: true,
   aggregationConfig: {
@@ -58,7 +58,7 @@ const volumeByCoin = Gauge.register("vol_by_coin", volOptions)
 //     })
 
 
-pool.bind({startVersion: startVersion})
+pool.bind({ startVersion: startVersion })
   .onEventPoolCreated(async (evt, ctx) => {
     ctx.meter.Counter("num_pools").add(1);
     // ctx.store.upsert
