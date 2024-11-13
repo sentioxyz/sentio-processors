@@ -10,7 +10,9 @@ export function OracleProcessor() {
     SuiWrappedObjectProcessor.bind({
         network: ChainId.SUI_MAINNET,
         objectId: priceOracle,
+        startCheckpoint: 7800000n
     }).onTimeInterval(async (objects, ctx) => {
+
         const decodedObjects = await ctx.coder.getDynamicFields(
             objects,
             BUILTIN_TYPES.U8_TYPE,
@@ -30,9 +32,8 @@ export function OracleProcessor() {
             try {
                 ctx.meter.Gauge("oracle").record(result, { id: name, name, coin_symbol })
             } catch (e) {
-                console.log(e)
-                console.log(entry)
+                console.log("Oracle Error: ", e, " Entry: ", entry)
             }
         })
-    })
+    }, 10, 10, "", {owned:true})
 }

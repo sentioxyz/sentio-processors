@@ -244,12 +244,20 @@ export class BasePositionSnapshot extends AbstractEntity  {
 	@Column("BigInt")
 	suppliedAmount: BigInt
 
+	@Required
+	@Column("BigDecimal")
+	suppliedAmountNormalized: BigDecimal
+
 	@Column("BigDecimal")
 	suppliedAmountUsd?: BigDecimal
 
 	@Required
 	@Column("BigInt")
 	borrowedAmount: BigInt
+
+	@Required
+	@Column("BigDecimal")
+	borrowedAmountNormalized: BigDecimal
 
 	@Column("BigDecimal")
 	borrowedAmountUsd?: BigDecimal
@@ -258,9 +266,60 @@ export class BasePositionSnapshot extends AbstractEntity  {
 	@Column("BigInt")
 	collateralAmount: BigInt
 
+	@Required
+	@Column("BigDecimal")
+	collateralAmountNormalized: BigDecimal
+
 	@Column("BigDecimal")
 	collateralAmountUsd?: BigDecimal
   constructor(data: Partial<BasePositionSnapshot>) {super()}
+}
+
+@Entity("BasePool")
+export class BasePool extends AbstractEntity  {
+
+	@Required
+	@Column("ID")
+	id: ID
+
+	@Required
+	@Column("Int")
+	chainId: Int
+
+	@Required
+	@Column("String")
+	poolAddress: String
+
+	@Required
+	@Column("BigInt")
+	suppliedAmount: BigInt
+
+	@Required
+	@Column("BigDecimal")
+	suppliedAmountNormalized: BigDecimal
+
+	@Column("BigDecimal")
+	suppliedAmountUsd?: BigDecimal
+
+	@Required
+	@Column("BigDecimal")
+	supplyApr: BigDecimal
+
+	@Required
+	@Column("BigInt")
+	borrowedAmount: BigInt
+
+	@Required
+	@Column("BigDecimal")
+	borrowedAmountNormalized: BigDecimal
+
+	@Column("BigDecimal")
+	borrowedAmountUsd?: BigDecimal
+
+	@Required
+	@Column("BigDecimal")
+	borrowApr: BigDecimal
+  constructor(data: Partial<BasePool>) {super()}
 }
 
 @Entity("BasePoolSnapshot")
@@ -301,6 +360,10 @@ export class BasePoolSnapshot extends AbstractEntity  {
 	@Column("BigInt")
 	availableAmount: BigInt
 
+	@Required
+	@Column("BigDecimal")
+	availableAmountNormalized: BigDecimal
+
 	@Column("BigDecimal")
 	availableAmountUsd?: BigDecimal
 
@@ -308,12 +371,20 @@ export class BasePoolSnapshot extends AbstractEntity  {
 	@Column("BigInt")
 	suppliedAmount: BigInt
 
+	@Required
+	@Column("BigDecimal")
+	suppliedAmountNormalized: BigDecimal
+
 	@Column("BigDecimal")
 	suppliedAmountUsd?: BigDecimal
 
 	@Required
 	@Column("BigInt")
 	collateralAmount: BigInt
+
+	@Required
+	@Column("BigDecimal")
+	collateralAmountNormalized: BigDecimal
 
 	@Column("BigDecimal")
 	collateralAmountUsd?: BigDecimal
@@ -323,27 +394,31 @@ export class BasePoolSnapshot extends AbstractEntity  {
 	collateralFactor: BigDecimal
 
 	@Required
-	@Column("BigInt")
-	supplyIndex: BigInt
+	@Column("BigDecimal")
+	supplyIndex: BigDecimal
 
 	@Required
-	@Column("BigInt")
-	supplyApr: BigInt
+	@Column("BigDecimal")
+	supplyApr: BigDecimal
 
 	@Required
 	@Column("BigInt")
 	borrowedAmount: BigInt
 
+	@Required
+	@Column("BigDecimal")
+	borrowedAmountNormalized: BigDecimal
+
 	@Column("BigDecimal")
 	borrowedAmountUsd?: BigDecimal
 
 	@Required
-	@Column("BigInt")
-	borrowIndex: BigInt
+	@Column("BigDecimal")
+	borrowIndex: BigDecimal
 
 	@Required
-	@Column("BigInt")
-	borrowApr: BigInt
+	@Column("BigDecimal")
+	borrowApr: BigDecimal
 
 	@Column("BigDecimal")
 	totalFeesUsd?: BigDecimal
@@ -387,6 +462,10 @@ export class CollateralPosition extends AbstractEntity  {
 	@Column("BigInt")
 	suppliedAmount: BigInt
 
+	@Required
+	@Column("BigDecimal")
+	suppliedAmountNormalized: BigDecimal
+
 	@Column("BigDecimal")
 	suppliedAmountUsd?: BigDecimal
 
@@ -394,12 +473,20 @@ export class CollateralPosition extends AbstractEntity  {
 	@Column("BigInt")
 	borrowedAmount: BigInt
 
+	@Required
+	@Column("BigDecimal")
+	borrowedAmountNormalized: BigDecimal
+
 	@Column("BigDecimal")
 	borrowedAmountUsd?: BigDecimal
 
 	@Required
 	@Column("BigInt")
 	collateralAmount: BigInt
+
+	@Required
+	@Column("BigDecimal")
+	collateralAmountNormalized: BigDecimal
 
 	@Column("BigDecimal")
 	collateralAmountUsd?: BigDecimal
@@ -436,6 +523,10 @@ export class CollateralPool extends AbstractEntity  {
 	@Column("BigInt")
 	availableAmount: BigInt
 
+	@Required
+	@Column("BigDecimal")
+	availableAmountNormalized: BigDecimal
+
 	@Column("BigDecimal")
 	availableAmountUsd?: BigDecimal
 
@@ -443,12 +534,20 @@ export class CollateralPool extends AbstractEntity  {
 	@Column("BigInt")
 	suppliedAmount: BigInt
 
+	@Required
+	@Column("BigDecimal")
+	suppliedAmountNormalized: BigDecimal
+
 	@Column("BigDecimal")
 	suppliedAmountUsd?: BigDecimal
 
 	@Required
 	@Column("BigInt")
 	collateralAmount: BigInt
+
+	@Required
+	@Column("BigDecimal")
+	collateralAmountNormalized: BigDecimal
 
 	@Column("BigDecimal")
 	collateralAmountUsd?: BigDecimal
@@ -458,27 +557,35 @@ export class CollateralPool extends AbstractEntity  {
 	collateralFactor: BigDecimal
 
 	@Required
-	@Column("BigInt")
-	supplyIndex: BigInt
+	@Column("BigDecimal")
+	liquidationFactor: BigDecimal
 
 	@Required
-	@Column("BigInt")
-	supplyApr: BigInt
+	@Column("BigDecimal")
+	supplyIndex: BigDecimal
+
+	@Required
+	@Column("BigDecimal")
+	supplyApr: BigDecimal
 
 	@Required
 	@Column("BigInt")
 	borrowedAmount: BigInt
 
+	@Required
+	@Column("BigDecimal")
+	borrowedAmountNormalized: BigDecimal
+
 	@Column("BigDecimal")
 	borrowedAmountUsd?: BigDecimal
 
 	@Required
-	@Column("BigInt")
-	borrowIndex: BigInt
+	@Column("BigDecimal")
+	borrowIndex: BigDecimal
 
 	@Required
-	@Column("BigInt")
-	borrowApr: BigInt
+	@Column("BigDecimal")
+	borrowApr: BigDecimal
 
 	@Column("BigDecimal")
 	totalFeesUsd?: BigDecimal
@@ -530,6 +637,10 @@ export class CollateralPositionSnapshot extends AbstractEntity  {
 	@Column("BigInt")
 	suppliedAmount: BigInt
 
+	@Required
+	@Column("BigDecimal")
+	suppliedAmountNormalized: BigDecimal
+
 	@Column("BigDecimal")
 	suppliedAmountUsd?: BigDecimal
 
@@ -537,12 +648,20 @@ export class CollateralPositionSnapshot extends AbstractEntity  {
 	@Column("BigInt")
 	borrowedAmount: BigInt
 
+	@Required
+	@Column("BigDecimal")
+	borrowedAmountNormalized: BigDecimal
+
 	@Column("BigDecimal")
 	borrowedAmountUsd?: BigDecimal
 
 	@Required
 	@Column("BigInt")
 	collateralAmount: BigInt
+
+	@Required
+	@Column("BigDecimal")
+	collateralAmountNormalized: BigDecimal
 
 	@Column("BigDecimal")
 	collateralAmountUsd?: BigDecimal
@@ -587,6 +706,10 @@ export class CollateralPoolSnapshot extends AbstractEntity  {
 	@Column("BigInt")
 	availableAmount: BigInt
 
+	@Required
+	@Column("BigDecimal")
+	availableAmountNormalized: BigDecimal
+
 	@Column("BigDecimal")
 	availableAmountUsd?: BigDecimal
 
@@ -594,12 +717,20 @@ export class CollateralPoolSnapshot extends AbstractEntity  {
 	@Column("BigInt")
 	suppliedAmount: BigInt
 
+	@Required
+	@Column("BigDecimal")
+	suppliedAmountNormalized: BigDecimal
+
 	@Column("BigDecimal")
 	suppliedAmountUsd?: BigDecimal
 
 	@Required
 	@Column("BigInt")
 	collateralAmount: BigInt
+
+	@Required
+	@Column("BigDecimal")
+	collateralAmountNormalized: BigDecimal
 
 	@Column("BigDecimal")
 	collateralAmountUsd?: BigDecimal
@@ -609,27 +740,35 @@ export class CollateralPoolSnapshot extends AbstractEntity  {
 	collateralFactor: BigDecimal
 
 	@Required
-	@Column("BigInt")
-	supplyIndex: BigInt
+	@Column("BigDecimal")
+	liquidationFactor: BigDecimal
 
 	@Required
-	@Column("BigInt")
-	supplyApr: BigInt
+	@Column("BigDecimal")
+	supplyIndex: BigDecimal
+
+	@Required
+	@Column("BigDecimal")
+	supplyApr: BigDecimal
 
 	@Required
 	@Column("BigInt")
 	borrowedAmount: BigInt
 
+	@Required
+	@Column("BigDecimal")
+	borrowedAmountNormalized: BigDecimal
+
 	@Column("BigDecimal")
 	borrowedAmountUsd?: BigDecimal
 
 	@Required
-	@Column("BigInt")
-	borrowIndex: BigInt
+	@Column("BigDecimal")
+	borrowIndex: BigDecimal
 
 	@Required
-	@Column("BigInt")
-	borrowApr: BigInt
+	@Column("BigDecimal")
+	borrowApr: BigDecimal
 
 	@Column("BigDecimal")
 	totalFeesUsd?: BigDecimal
@@ -710,11 +849,28 @@ type BasePositionSnapshot @entity {
     underlyingTokenSymbol: String!
     userAddress: String!
     suppliedAmount: BigInt!
+    suppliedAmountNormalized: BigDecimal!
     suppliedAmountUsd: BigDecimal
     borrowedAmount: BigInt!
+    borrowedAmountNormalized: BigDecimal!
     borrowedAmountUsd: BigDecimal
     collateralAmount: BigInt!
+    collateralAmountNormalized: BigDecimal!
     collateralAmountUsd: BigDecimal
+}
+
+type BasePool @entity {
+    id: ID!
+    chainId: Int!
+    poolAddress: String!
+    suppliedAmount: BigInt!
+    suppliedAmountNormalized: BigDecimal!
+    suppliedAmountUsd: BigDecimal
+    supplyApr: BigDecimal!
+    borrowedAmount: BigInt!
+    borrowedAmountNormalized: BigDecimal!
+    borrowedAmountUsd: BigDecimal
+    borrowApr: BigDecimal!
 }
 
 type BasePoolSnapshot @entity {
@@ -727,18 +883,22 @@ type BasePoolSnapshot @entity {
     underlyingTokenSymbol: String!
     underlyingTokenPriceUsd: BigDecimal
     availableAmount: BigInt!
+    availableAmountNormalized: BigDecimal!
     availableAmountUsd: BigDecimal
     suppliedAmount: BigInt!
+    suppliedAmountNormalized: BigDecimal!
     suppliedAmountUsd: BigDecimal
     collateralAmount: BigInt!
+    collateralAmountNormalized: BigDecimal!
     collateralAmountUsd: BigDecimal
     collateralFactor: BigDecimal!
-    supplyIndex: BigInt!
-    supplyApr: BigInt!
+    supplyIndex: BigDecimal!
+    supplyApr: BigDecimal!
     borrowedAmount: BigInt!
+    borrowedAmountNormalized: BigDecimal!
     borrowedAmountUsd: BigDecimal
-    borrowIndex: BigInt!
-    borrowApr: BigInt!
+    borrowIndex: BigDecimal!
+    borrowApr: BigDecimal!
     totalFeesUsd: BigDecimal
     userFeesUsd: BigDecimal
     protocolFeesUsd: BigDecimal
@@ -752,10 +912,13 @@ type CollateralPosition @entity {
     underlyingTokenSymbol: String!
     userAddress: String!
     suppliedAmount: BigInt!
+    suppliedAmountNormalized: BigDecimal!
     suppliedAmountUsd: BigDecimal
     borrowedAmount: BigInt!
+    borrowedAmountNormalized: BigDecimal!
     borrowedAmountUsd: BigDecimal
     collateralAmount: BigInt!
+    collateralAmountNormalized: BigDecimal!
     collateralAmountUsd: BigDecimal
 }
 
@@ -767,18 +930,23 @@ type CollateralPool @entity {
     underlyingTokenSymbol: String!
     underlyingTokenPriceUsd: BigDecimal
     availableAmount: BigInt!
+    availableAmountNormalized: BigDecimal!
     availableAmountUsd: BigDecimal
     suppliedAmount: BigInt!
+    suppliedAmountNormalized: BigDecimal!
     suppliedAmountUsd: BigDecimal
     collateralAmount: BigInt!
+    collateralAmountNormalized: BigDecimal!
     collateralAmountUsd: BigDecimal
     collateralFactor: BigDecimal!
-    supplyIndex: BigInt!
-    supplyApr: BigInt!
+    liquidationFactor: BigDecimal!
+    supplyIndex: BigDecimal!
+    supplyApr: BigDecimal!
     borrowedAmount: BigInt!
+    borrowedAmountNormalized: BigDecimal!
     borrowedAmountUsd: BigDecimal
-    borrowIndex: BigInt!
-    borrowApr: BigInt!
+    borrowIndex: BigDecimal!
+    borrowApr: BigDecimal!
     totalFeesUsd: BigDecimal
     userFeesUsd: BigDecimal
     protocolFeesUsd: BigDecimal
@@ -794,10 +962,13 @@ type CollateralPositionSnapshot @entity {
     underlyingTokenSymbol: String!
     userAddress: String!
     suppliedAmount: BigInt!
+    suppliedAmountNormalized: BigDecimal!
     suppliedAmountUsd: BigDecimal
     borrowedAmount: BigInt!
+    borrowedAmountNormalized: BigDecimal!
     borrowedAmountUsd: BigDecimal
     collateralAmount: BigInt!
+    collateralAmountNormalized: BigDecimal!
     collateralAmountUsd: BigDecimal
 }
 
@@ -811,18 +982,23 @@ type CollateralPoolSnapshot @entity {
     underlyingTokenSymbol: String!
     underlyingTokenPriceUsd: BigDecimal
     availableAmount: BigInt!
+    availableAmountNormalized: BigDecimal!
     availableAmountUsd: BigDecimal
     suppliedAmount: BigInt!
+    suppliedAmountNormalized: BigDecimal!
     suppliedAmountUsd: BigDecimal
     collateralAmount: BigInt!
+    collateralAmountNormalized: BigDecimal!
     collateralAmountUsd: BigDecimal
     collateralFactor: BigDecimal!
-    supplyIndex: BigInt!
-    supplyApr: BigInt!
+    liquidationFactor: BigDecimal!
+    supplyIndex: BigDecimal!
+    supplyApr: BigDecimal!
     borrowedAmount: BigInt!
+    borrowedAmountNormalized: BigDecimal!
     borrowedAmountUsd: BigDecimal
-    borrowIndex: BigInt!
-    borrowApr: BigInt!
+    borrowIndex: BigDecimal!
+    borrowApr: BigDecimal!
     totalFeesUsd: BigDecimal
     userFeesUsd: BigDecimal
     protocolFeesUsd: BigDecimal
@@ -836,6 +1012,7 @@ DatabaseSchema.register({
 		"CollateralConfiguration": CollateralConfiguration,
 		"Pool": Pool,
 		"BasePositionSnapshot": BasePositionSnapshot,
+		"BasePool": BasePool,
 		"BasePoolSnapshot": BasePoolSnapshot,
 		"CollateralPosition": CollateralPosition,
 		"CollateralPool": CollateralPool,

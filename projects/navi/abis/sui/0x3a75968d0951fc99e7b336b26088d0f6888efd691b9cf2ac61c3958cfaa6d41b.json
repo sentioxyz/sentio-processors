@@ -1,0 +1,647 @@
+[
+	{
+		"fileFormatVersion": 6,
+		"address": "0x3a75968d0951fc99e7b336b26088d0f6888efd691b9cf2ac61c3958cfaa6d41b",
+		"name": "validator",
+		"friends": [],
+		"structs": {
+			"ClusterInfo": {
+				"abilities": {
+					"abilities": [
+						"Drop"
+					]
+				},
+				"typeParameters": [],
+				"fields": [
+					{
+						"name": "cc",
+						"type": {
+							"Struct": {
+								"address": "0x3a75968d0951fc99e7b336b26088d0f6888efd691b9cf2ac61c3958cfaa6d41b",
+								"module": "validator",
+								"name": "CoherentCluster",
+								"typeArguments": []
+							}
+						}
+					},
+					{
+						"name": "round",
+						"type": "U64"
+					},
+					{
+						"name": "cluster_hashes",
+						"type": {
+							"Vector": {
+								"Vector": "U8"
+							}
+						}
+					},
+					{
+						"name": "cluster_idx",
+						"type": "U64"
+					}
+				]
+			},
+			"CoherentCluster": {
+				"abilities": {
+					"abilities": [
+						"Drop"
+					]
+				},
+				"typeParameters": [],
+				"fields": [
+					{
+						"name": "data_hash",
+						"type": {
+							"Vector": "U8"
+						}
+					},
+					{
+						"name": "pair",
+						"type": {
+							"Vector": "U32"
+						}
+					},
+					{
+						"name": "prices",
+						"type": {
+							"Vector": "U128"
+						}
+					},
+					{
+						"name": "timestamp",
+						"type": {
+							"Vector": "U128"
+						}
+					},
+					{
+						"name": "decimals",
+						"type": {
+							"Vector": "U16"
+						}
+					}
+				]
+			},
+			"DkgState": {
+				"abilities": {
+					"abilities": [
+						"Store",
+						"Key"
+					]
+				},
+				"typeParameters": [],
+				"fields": [
+					{
+						"name": "id",
+						"type": {
+							"Struct": {
+								"address": "0x2",
+								"module": "object",
+								"name": "UID",
+								"typeArguments": []
+							}
+						}
+					},
+					{
+						"name": "public_key",
+						"type": {
+							"Vector": "U8"
+						}
+					},
+					{
+						"name": "is_set",
+						"type": "Bool"
+					}
+				]
+			},
+			"MinBatch": {
+				"abilities": {
+					"abilities": [
+						"Drop"
+					]
+				},
+				"typeParameters": [],
+				"fields": [
+					{
+						"name": "protocol",
+						"type": {
+							"Vector": "U8"
+						}
+					},
+					{
+						"name": "txn_hashes",
+						"type": {
+							"Vector": {
+								"Vector": "U8"
+							}
+						}
+					}
+				]
+			},
+			"MinBlock": {
+				"abilities": {
+					"abilities": [
+						"Drop"
+					]
+				},
+				"typeParameters": [],
+				"fields": [
+					{
+						"name": "round",
+						"type": {
+							"Vector": "U8"
+						}
+					},
+					{
+						"name": "timestamp",
+						"type": {
+							"Vector": "U8"
+						}
+					},
+					{
+						"name": "author",
+						"type": {
+							"Vector": "U8"
+						}
+					},
+					{
+						"name": "qc_hash",
+						"type": {
+							"Vector": "U8"
+						}
+					},
+					{
+						"name": "batch_hashes",
+						"type": {
+							"Vector": {
+								"Vector": "U8"
+							}
+						}
+					}
+				]
+			},
+			"MinTxn": {
+				"abilities": {
+					"abilities": [
+						"Drop"
+					]
+				},
+				"typeParameters": [],
+				"fields": [
+					{
+						"name": "cluster_hashes",
+						"type": {
+							"Vector": {
+								"Vector": "U8"
+							}
+						}
+					},
+					{
+						"name": "sender",
+						"type": {
+							"Vector": "U8"
+						}
+					},
+					{
+						"name": "protocol",
+						"type": {
+							"Vector": "U8"
+						}
+					},
+					{
+						"name": "tx_sub_type",
+						"type": "U8"
+					}
+				]
+			},
+			"Origin": {
+				"abilities": {
+					"abilities": [
+						"Drop"
+					]
+				},
+				"typeParameters": [],
+				"fields": [
+					{
+						"name": "id",
+						"type": {
+							"Vector": "U8"
+						}
+					},
+					{
+						"name": "member_index",
+						"type": "U64"
+					},
+					{
+						"name": "committee_index",
+						"type": "U64"
+					}
+				]
+			},
+			"OwnerCap": {
+				"abilities": {
+					"abilities": [
+						"Key"
+					]
+				},
+				"typeParameters": [],
+				"fields": [
+					{
+						"name": "id",
+						"type": {
+							"Struct": {
+								"address": "0x2",
+								"module": "object",
+								"name": "UID",
+								"typeArguments": []
+							}
+						}
+					}
+				]
+			},
+			"SignedCoherentCluster": {
+				"abilities": {
+					"abilities": [
+						"Drop"
+					]
+				},
+				"typeParameters": [],
+				"fields": [
+					{
+						"name": "cc",
+						"type": {
+							"Struct": {
+								"address": "0x3a75968d0951fc99e7b336b26088d0f6888efd691b9cf2ac61c3958cfaa6d41b",
+								"module": "validator",
+								"name": "CoherentCluster",
+								"typeArguments": []
+							}
+						}
+					},
+					{
+						"name": "qc",
+						"type": {
+							"Vector": "U8"
+						}
+					},
+					{
+						"name": "round",
+						"type": "U64"
+					},
+					{
+						"name": "origin",
+						"type": {
+							"Struct": {
+								"address": "0x3a75968d0951fc99e7b336b26088d0f6888efd691b9cf2ac61c3958cfaa6d41b",
+								"module": "validator",
+								"name": "Origin",
+								"typeArguments": []
+							}
+						}
+					}
+				]
+			},
+			"UpdatePublicKeyEvent": {
+				"abilities": {
+					"abilities": [
+						"Copy",
+						"Drop"
+					]
+				},
+				"typeParameters": [],
+				"fields": [
+					{
+						"name": "public_key",
+						"type": {
+							"Vector": "U8"
+						}
+					}
+				]
+			},
+			"Vote": {
+				"abilities": {
+					"abilities": [
+						"Drop"
+					]
+				},
+				"typeParameters": [],
+				"fields": [
+					{
+						"name": "smr_block",
+						"type": {
+							"Struct": {
+								"address": "0x3a75968d0951fc99e7b336b26088d0f6888efd691b9cf2ac61c3958cfaa6d41b",
+								"module": "validator",
+								"name": "MinBlock",
+								"typeArguments": []
+							}
+						}
+					},
+					{
+						"name": "round",
+						"type": "U64"
+					}
+				]
+			}
+		},
+		"exposedFunctions": {
+			"cluster_info_split": {
+				"visibility": "Public",
+				"isEntry": false,
+				"typeParameters": [],
+				"parameters": [
+					{
+						"Reference": {
+							"Struct": {
+								"address": "0x3a75968d0951fc99e7b336b26088d0f6888efd691b9cf2ac61c3958cfaa6d41b",
+								"module": "validator",
+								"name": "ClusterInfo",
+								"typeArguments": []
+							}
+						}
+					}
+				],
+				"return": [
+					{
+						"Reference": {
+							"Struct": {
+								"address": "0x3a75968d0951fc99e7b336b26088d0f6888efd691b9cf2ac61c3958cfaa6d41b",
+								"module": "validator",
+								"name": "CoherentCluster",
+								"typeArguments": []
+							}
+						}
+					},
+					"U64"
+				]
+			},
+			"coherent_cluster_split": {
+				"visibility": "Public",
+				"isEntry": false,
+				"typeParameters": [],
+				"parameters": [
+					{
+						"Reference": {
+							"Struct": {
+								"address": "0x3a75968d0951fc99e7b336b26088d0f6888efd691b9cf2ac61c3958cfaa6d41b",
+								"module": "validator",
+								"name": "CoherentCluster",
+								"typeArguments": []
+							}
+						}
+					}
+				],
+				"return": [
+					{
+						"Vector": "U32"
+					},
+					{
+						"Vector": "U128"
+					},
+					{
+						"Vector": "U16"
+					},
+					{
+						"Vector": "U128"
+					}
+				]
+			},
+			"get_public_key": {
+				"visibility": "Public",
+				"isEntry": false,
+				"typeParameters": [],
+				"parameters": [
+					{
+						"Reference": {
+							"Struct": {
+								"address": "0x3a75968d0951fc99e7b336b26088d0f6888efd691b9cf2ac61c3958cfaa6d41b",
+								"module": "validator",
+								"name": "DkgState",
+								"typeArguments": []
+							}
+						}
+					}
+				],
+				"return": [
+					{
+						"Vector": "U8"
+					}
+				]
+			},
+			"oracle_ssc_processed_event": {
+				"visibility": "Public",
+				"isEntry": false,
+				"typeParameters": [],
+				"parameters": [
+					{
+						"Reference": {
+							"Struct": {
+								"address": "0x3a75968d0951fc99e7b336b26088d0f6888efd691b9cf2ac61c3958cfaa6d41b",
+								"module": "validator",
+								"name": "ClusterInfo",
+								"typeArguments": []
+							}
+						}
+					}
+				],
+				"return": [
+					{
+						"Reference": {
+							"Vector": "U8"
+						}
+					}
+				]
+			},
+			"update_public_key": {
+				"visibility": "Private",
+				"isEntry": true,
+				"typeParameters": [],
+				"parameters": [
+					{
+						"MutableReference": {
+							"Struct": {
+								"address": "0x3a75968d0951fc99e7b336b26088d0f6888efd691b9cf2ac61c3958cfaa6d41b",
+								"module": "validator",
+								"name": "OwnerCap",
+								"typeArguments": []
+							}
+						}
+					},
+					{
+						"MutableReference": {
+							"Struct": {
+								"address": "0x3a75968d0951fc99e7b336b26088d0f6888efd691b9cf2ac61c3958cfaa6d41b",
+								"module": "validator",
+								"name": "DkgState",
+								"typeArguments": []
+							}
+						}
+					},
+					{
+						"Vector": "U8"
+					},
+					{
+						"MutableReference": {
+							"Struct": {
+								"address": "0x2",
+								"module": "tx_context",
+								"name": "TxContext",
+								"typeArguments": []
+							}
+						}
+					}
+				],
+				"return": []
+			},
+			"validate_then_get_cluster_info_list": {
+				"visibility": "Public",
+				"isEntry": false,
+				"typeParameters": [],
+				"parameters": [
+					{
+						"Reference": {
+							"Struct": {
+								"address": "0x3a75968d0951fc99e7b336b26088d0f6888efd691b9cf2ac61c3958cfaa6d41b",
+								"module": "validator",
+								"name": "DkgState",
+								"typeArguments": []
+							}
+						}
+					},
+					{
+						"Vector": {
+							"Vector": "U8"
+						}
+					},
+					{
+						"Vector": {
+							"Vector": "U8"
+						}
+					},
+					{
+						"Vector": {
+							"Vector": "U8"
+						}
+					},
+					{
+						"Vector": {
+							"Vector": "U8"
+						}
+					},
+					{
+						"Vector": {
+							"Vector": {
+								"Vector": "U8"
+							}
+						}
+					},
+					{
+						"Vector": "U64"
+					},
+					{
+						"Vector": {
+							"Vector": "U8"
+						}
+					},
+					{
+						"Vector": {
+							"Vector": {
+								"Vector": "U8"
+							}
+						}
+					},
+					{
+						"Vector": {
+							"Vector": {
+								"Vector": "U8"
+							}
+						}
+					},
+					{
+						"Vector": {
+							"Vector": "U8"
+						}
+					},
+					{
+						"Vector": {
+							"Vector": "U8"
+						}
+					},
+					{
+						"Vector": "U8"
+					},
+					{
+						"Vector": {
+							"Vector": "U8"
+						}
+					},
+					{
+						"Vector": {
+							"Vector": "U32"
+						}
+					},
+					{
+						"Vector": {
+							"Vector": "U128"
+						}
+					},
+					{
+						"Vector": {
+							"Vector": "U128"
+						}
+					},
+					{
+						"Vector": {
+							"Vector": "U16"
+						}
+					},
+					{
+						"Vector": {
+							"Vector": "U8"
+						}
+					},
+					{
+						"Vector": "U64"
+					},
+					{
+						"Vector": {
+							"Vector": "U8"
+						}
+					},
+					{
+						"Vector": "U64"
+					},
+					{
+						"Vector": "U64"
+					},
+					{
+						"Vector": "U64"
+					},
+					{
+						"Vector": "U64"
+					},
+					{
+						"Vector": "U64"
+					},
+					{
+						"Vector": {
+							"Vector": "U8"
+						}
+					}
+				],
+				"return": [
+					{
+						"Vector": {
+							"Struct": {
+								"address": "0x3a75968d0951fc99e7b336b26088d0f6888efd691b9cf2ac61c3958cfaa6d41b",
+								"module": "validator",
+								"name": "ClusterInfo",
+								"typeArguments": []
+							}
+						}
+					}
+				]
+			}
+		}
+	}
+]
