@@ -1,10 +1,13 @@
 import { EthChainId } from '@sentio/sdk/eth'
 import { ERC20Processor } from '@sentio/sdk/eth/builtin'
-import { DERIVE_VAULTS, MAINNET_VAULT_PRICE_START_BLOCK, OP_SEPOLIA_VAULT_PRICE_START_BLOCK, VaultName } from '../src/config.js'
-import { DeriveVaultUserSnapshot } from '../src/schema/store.js'
-import { updateUserSnapshotAndEmitPointUpdate } from './utils/userSnapshotsAndPoints.js'
-import { saveCurrentVaultTokenPrice } from './utils/vaultTokenPrice.js'
+import { DERIVE_V2_DEPOSIT_START_BLOCK, DERIVE_VAULTS, excludedSubaccounts, MAINNET_VAULT_PRICE_START_BLOCK, V2_ASSETS } from './config.js'
 import { GlobalProcessor } from '@sentio/sdk/eth'
+import { pools, schemas, v2, vaults } from '@derivefinance/derive-sentio-utils'
+import { emitVaultUserPoints } from './utils/vaults.js'
+import { saveCurrentVaultTokenPrice } from '@derivefinance/derive-sentio-utils/dist/vaults/tokenPrice.js'
+import { SubaccountsProcessor } from '@derivefinance/derive-sentio-utils/dist/types/eth/subaccounts.js'
+import { emitUserExchangePoints } from './utils/exchange.js'
+import { DERIVE_V2_SUBACCOUNTS_ADDRESS } from '@derivefinance/derive-sentio-utils/dist/v2/constants.js'
 
 /////////////////
 // Methodology //
@@ -19,76 +22,92 @@ import { GlobalProcessor } from '@sentio/sdk/eth'
 // 4. At every time interval, save `token_price_update`
 
 
-/////////////////////////////////
-// Mainnet or OP Sepolia Binds //
-/////////////////////////////////
+///////////////////
+// Mainnet Binds //
+///////////////////
 
-for (const params of [
-  DERIVE_VAULTS.LBTCPS,
-  // DERIVE_VAULTS.LBTCPS_TESTNET,
-]) {
-  ERC20Processor.bind(
-    { address: params.mainnet_or_opsep, network: params.destinationChainId }
-  )
+ERC20Processor.bind(
+    { address: DERIVE_VAULTS.LBTCPS.destinationChainAddress, network: DERIVE_VAULTS.LBTCPS.destinationChainId }
+)
     .onEventTransfer(async (event, ctx) => {
-      for (const user of [event.args.from, event.args.to]) {
-        await updateUserSnapshotAndEmitPointUpdate(ctx, params.vaultName, ctx.address, user)
-      }
+        for (const user of [event.args.from, event.args.to]) {
+            let [oldSnapshot, newSnapshot] = await vaults.updateVaultUserSnapshot(ctx, DERIVE_VAULTS.LBTCPS, ctx.address, user, [], pools.swellL2.getSwellL2Balance)
+            emitVaultUserPoints(ctx, DERIVE_VAULTS.LBTCPS, oldSnapshot, newSnapshot)
+        }
     })
     // this time interval handles all three vaults (weETHC, weETHCS, weETHBULL)
     .onTimeInterval(async (_, ctx) => {
-      const userSnapshots: DeriveVaultUserSnapshot[] = await ctx.store.list(DeriveVaultUserSnapshot, []);
+        const userSnapshots: schemas.DeriveVaultUserSnapshot[] = await ctx.store.list(schemas.DeriveVaultUserSnapshot, []);
 
-      try {
-        const promises = [];
-        for (const snapshot of userSnapshots) {
-          promises.push(
-            await updateUserSnapshotAndEmitPointUpdate(ctx, snapshot.vaultName as VaultName, snapshot.vaultAddress, snapshot.owner)
-          );
+        try {
+            const promises = [];
+            for (const snapshot of userSnapshots) {
+                promises.push(
+                    (async () => {
+                        let [oldSnapshot, newSnapshot] = await vaults.updateVaultUserSnapshot(ctx, DERIVE_VAULTS[snapshot.vaultName], snapshot.vaultAddress, snapshot.owner, [], pools.swellL2.getSwellL2Balance)
+                        emitVaultUserPoints(ctx, DERIVE_VAULTS[snapshot.vaultName], oldSnapshot, newSnapshot)
+                    })()
+                );
+            }
+            await Promise.all(promises);
+        } catch (e) {
+            console.log("onTimeInterval error", e.message, ctx.timestamp);
         }
-        await Promise.all(promises);
-      } catch (e) {
-        console.log("onTimeInterval error", e.message, ctx.timestamp);
-      }
     },
-      60 * 1,
-      60 * 1 // backfill at 1 hour
+        60,
+        60  // backfill at 1 hour
+    )
+
+
+
+ERC20Processor.bind({ address: DERIVE_VAULTS.LBTCCS.destinationChainAddress, network: DERIVE_VAULTS.LBTCCS.destinationChainId })
+    .onEventTransfer(async (event, ctx) => {
+        for (const user of [event.args.from, event.args.to]) {
+            let [oldSnapshot, newSnapshot] = await vaults.updateVaultUserSnapshot(ctx, DERIVE_VAULTS.LBTCCS, ctx.address, user, [], pools.swellL2.getSwellL2Balance)
+            emitVaultUserPoints(ctx, DERIVE_VAULTS.LBTCCS, oldSnapshot, newSnapshot)
+        }
+    })
+
+
+//////////////////////////////////////////
+// Derive Chain Vault Token Price Binds //
+//////////////////////////////////////////
+
+for (const params of [
+    { network: EthChainId.ETHEREUM, startBlock: MAINNET_VAULT_PRICE_START_BLOCK },
+]) {
+
+    GlobalProcessor.bind(
+        params
+    ).onTimeInterval(async (_, ctx) => {
+        await saveCurrentVaultTokenPrice(ctx, DERIVE_VAULTS.LBTCPS)
+        await saveCurrentVaultTokenPrice(ctx, DERIVE_VAULTS.LBTCCS)
+    },
+        60,
+        60
     )
 }
 
 
-for (const params of [
-  DERIVE_VAULTS.LBTCCS,
-  // DERIVE_VAULTS.LBTCCS_TESTNET,
-]) {
-  ERC20Processor.bind({ address: params.mainnet_or_opsep, network: params.destinationChainId })
-    .onEventTransfer(async (event, ctx) => {
-      for (const user of [event.args.from, event.args.to]) {
-        await updateUserSnapshotAndEmitPointUpdate(ctx, params.vaultName, ctx.address, user)
-      }
-    })
-}
 
+/////////////////////////////////////////
+// Derive Chain Exchange Balance Binds //
 ////////////////////////////////////////
-// Lyra Chain Vault Token Price Binds //
-////////////////////////////////////////
-for (const params of [
-  { network: EthChainId.ETHEREUM, startBlock: MAINNET_VAULT_PRICE_START_BLOCK },
-  // { network: EthChainId.BOB, startBlock: OP_SEPOLIA_VAULT_PRICE_START_BLOCK },
-]) {
 
-  GlobalProcessor.bind(
-    params
-  ).onTimeInterval(async (_, ctx) => {
-    if (params.network === EthChainId.ETHEREUM) {
-      await saveCurrentVaultTokenPrice(ctx, DERIVE_VAULTS.LBTCPS)
-      await saveCurrentVaultTokenPrice(ctx, DERIVE_VAULTS.LBTCCS)
-    } else {
-      // await saveCurrentVaultTokenPrice(ctx, DERIVE_VAULTS.LBTCPS_TESTNET)
-      // await saveCurrentVaultTokenPrice(ctx, DERIVE_VAULTS.LBTCCS_TESTNET)
-    }
-  },
-    60 * 1,
-    60 * 1
-  )
-}
+const ebtc_filter = SubaccountsProcessor.filters.BalanceAdjusted(null, null, V2_ASSETS.LBTC.assetAndSubId, null, null, null, null)
+SubaccountsProcessor.bind(
+    { address: DERIVE_V2_SUBACCOUNTS_ADDRESS, network: EthChainId.LYRA, startBlock: DERIVE_V2_DEPOSIT_START_BLOCK }
+)
+    .onEventBalanceAdjusted(async (event, ctx) => {
+        await v2.snapshot.updateExchangeBalance(ctx, V2_ASSETS.LBTC, event.args.accountId, event.args.postBalance.scaleDown(18), excludedSubaccounts, emitUserExchangePoints)
+    }, ebtc_filter)
+
+
+GlobalProcessor.bind(
+    { network: EthChainId.LYRA, startBlock: DERIVE_V2_DEPOSIT_START_BLOCK }
+).onTimeInterval(async (_, ctx) => {
+    await v2.snapshot.updateExchangeTimestamp(ctx, V2_ASSETS, emitUserExchangePoints)
+},
+    60,
+    60
+)

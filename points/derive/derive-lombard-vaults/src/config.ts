@@ -1,38 +1,23 @@
 import { EthChainId } from "@sentio/sdk/eth";
+import { IntegratorSeason, vaults } from "@derivefinance/derive-sentio-utils";
+import { VaultConfig } from "@derivefinance/derive-sentio-utils/dist/vaults/vaultConfig.js";
+import { BigDecimal } from "@sentio/sdk";
 
 export const MILLISECONDS_PER_DAY = 60 * 60 * 1000 * 24;
-export const LOMBARD_DAILY_POINTS = 1000
 export const MULTIPLIER = 2
-export const BABYLON_POINTS_PER_DAY = 100 // TBD
 
-export const SEASONS: [string, number | undefined][] = [
-    ["season_1", undefined] // end of each season in UTC ms
+export const SEASONS: IntegratorSeason[] = [
+    {
+        name: "season_1",
+        seasonEndMs: undefined // end of each season in UTC ms
+    }
 ]
-
-export enum VaultName {
-    LBTCPS = "LBTCPS",
-    LBTCCS = "LBTCCS",
-    // LBTCPS_TESTNET = "LBTCPS_TESTNET",
-    // LBTCCS_TESTNET = "LBTCCS_TESTNET"
-}
-
-export type VaultDetails = {
-    vaultName: VaultName;
-    destinationChainId: EthChainId;
-    deriveChainId: EthChainId;
-    mainnet_or_opsep: string;
-    // arb: string;
-    derive: string;
-    predepositUpgradeTimestampMs: number | undefined;
-    vaultDecimals: number;
-    underlyingDecimals: number;
-};
 
 /////////////
 // Testnet //
 /////////////
 
-export const OP_SEPOLIA_VAULT_PRICE_START_BLOCK = 16800000; // [OP sepolia] Start calculating from September 3rd
+// export const OP_SEPOLIA_VAULT_PRICE_START_BLOCK = 16800000; // [OP sepolia] Start calculating from September 3rd
 
 
 ////////////////
@@ -43,50 +28,79 @@ export const OP_SEPOLIA_VAULT_PRICE_START_BLOCK = 16800000; // [OP sepolia] Star
 
 export const MAINNET_VAULT_PRICE_START_BLOCK = 20670000; // Start calculating from September 3rd
 
-export const DERIVE_VAULTS: Record<VaultName, VaultDetails> = {
+export const DERIVE_VAULTS: Record<string, VaultConfig> = {
     LBTCPS: {
-        vaultName: VaultName.LBTCPS,
+        vaultName: "LBTCPS",
+        subaccountId: BigInt(10628),
         destinationChainId: EthChainId.ETHEREUM,
-        deriveChainId: EthChainId.BITLAYER,
-        mainnet_or_opsep: "0x367711f0377867b51Fe53e30F5125a9A31d3D50b",
-        // arb: "???",
+        deriveChainId: EthChainId.LYRA,
+        destinationChainAddress: "0x367711f0377867b51Fe53e30F5125a9A31d3D50b",
         derive: "0x5Fc48A32437Ff4BBab2A22646c3c9344ba003971",
         predepositUpgradeTimestampMs: undefined,
         vaultDecimals: 8,
-        underlyingDecimals: 8
+        underlyingDecimals: 8,
+        pointMultipliersPerDay: {
+            "lombard": 2000,
+            "babylon": 100
+        }
     },
     LBTCCS: {
-        vaultName: VaultName.LBTCCS,
+        vaultName: "LBTCCS",
+        subaccountId: BigInt(10629),
         destinationChainId: EthChainId.ETHEREUM,
-        deriveChainId: EthChainId.BITLAYER,
-        mainnet_or_opsep: "0x5a27765DbE2476240B1265A305c2e3554fD3f341",
-        // arb: "0xb7F56c1a952D3AE664A83971BFfa5c1706947dBD",
+        deriveChainId: EthChainId.LYRA,
+        destinationChainAddress: "0x5a27765DbE2476240B1265A305c2e3554fD3f341",
         derive: "0xbCab1f8BbA323BC55EA8cfaC34edAcf8DBE92dD4",
         predepositUpgradeTimestampMs: undefined,
         vaultDecimals: 8,
-        underlyingDecimals: 8
+        underlyingDecimals: 8,
+        pointMultipliersPerDay: {
+            "lombard": 2000, // 2x * 1000 points per day
+            "babylon": 100
+        }
     },
-    // LBTCPS_TESTNET: {
-    //     vaultName: VaultName.LBTCPS_TESTNET,
-    //     destinationChainId: EthChainId.BOB,
-    //     deriveChainId: EthChainId.TAIKO,
-    //     mainnet_or_opsep: "0x062F93b9bD9ceb50dcdb1230A9e89CBA36157C33",
-    //     // arb: "???",
-    //     derive: "0x49B9C82582B9916dE295D98b0c55373c300BbaEa",
-    //     predepositUpgradeTimestampMs: undefined,
-    //     vaultDecimals: 8,
-    //     underlyingDecimals: 8
-    // },
-    // LBTCCS_TESTNET: {
-    //     vaultName: VaultName.LBTCCS_TESTNET,
-    //     destinationChainId: EthChainId.BOB,
-    //     deriveChainId: EthChainId.TAIKO,
-    //     mainnet_or_opsep: "0x84D8b20275724f31130F76Ecf42a501eDF72C1e0",
-    //     // arb: "???",
-    //     derive: "0x65410Dd3A47f7cdfFd0486D45688F00B142029D7",
-    //     predepositUpgradeTimestampMs: undefined,
-    //     vaultDecimals: 8,
-    //     underlyingDecimals: 8
-    // }
 }
 
+
+export enum V2AssetName {
+    LBTC = "LBTC",
+}
+
+export const V2_ASSETS: Record<V2AssetName, vaults.V2AssetConfig> = {
+    LBTC: {
+        assetAndSubId: "0xeaf03bb3280c609d35e7f84d24a996c7c0b74f5f000000000000000000000000", // asset: 0xeaF03Bb3280C609d35E7F84d24a996c7C0b74F5f
+        assetName: "LBTC",
+        pointMultipliersPerDay: {
+            "lombard": 3000, // 3x * 1000 points per day
+            "babylon": 100
+        }
+    }
+}
+
+export const DERIVE_V2_DEPOSIT_START_BLOCK = 12500000; // Aug 30th -> change this
+
+// exclude all subaccounts in the vault configs
+export const excludedSubaccounts = [...new Set(Object.values(DERIVE_VAULTS).map(config => config.subaccountId))];
+
+export type PointUpdateEvent = {
+    account: string;
+    assetAndSubIdOrVaultAddress: string;
+    assetName: string;
+
+    // earned points
+    lPoints: number
+    bPoints: number;
+    // last snapshot
+    lastTimestampMs: bigint;
+    lastBalance: BigDecimal;
+    lastEffectiveBalance: BigDecimal;
+    // new snapshot
+    newTimestampMs: bigint;
+    newBalance: BigDecimal;
+    newEffectiveBalance: BigDecimal;
+
+    // season
+    season: string;
+    multiplier: number
+
+}
