@@ -63,7 +63,7 @@ PendleMarketProcessor.bind({
   });
 
 EQBBaseRewardProcessor.bind({
-  address: PENDLE_POOL_ADDRESSES.EQB_STAKING,
+  address: PENDLE_POOL_ADDRESSES.EQB_RECEIPT_TOKEN,
   startBlock: PENDLE_POOL_ADDRESSES.EQB_START_BLOCK,
   name: "Equilibria Base Reward",
   network: CONFIG.BLOCKCHAIN
