@@ -1,9 +1,9 @@
-import { AptosNetwork, MovementNetwork } from "@sentio/sdk/aptos";
+import { MovementNetwork } from "@sentio/sdk/aptos";
 import { lending } from "./types/aptos/movement-porto/0x3dc5ef372359b6ab006bb517a8df5ca1b2c8ef35ce1ff45f7db8a44e2e43e856.js";
 
 lending.bind(
   {
-    network: AptosNetwork.
+    network: MovementNetwork.TEST_NET
   })
   .onEventBorrowEvent(async (event, ctx) => {
     const market = event.data_decoded.market_obj.inner
