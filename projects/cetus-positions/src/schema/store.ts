@@ -56,6 +56,14 @@ export class PositionSnapshot extends AbstractEntity  {
 	coinTypeB: String
 
 	@Required
+	@Column("String")
+	coinSymbolA: String
+
+	@Required
+	@Column("String")
+	coinSymbolB: String
+
+	@Required
 	@Column("BigDecimal")
 	amountA: BigDecimal
 
@@ -81,6 +89,8 @@ const source = `type PositionSnapshot @entity {
   tickUpper: BigInt!
   coinTypeA: String!
   coinTypeB: String!
+  coinSymbolA: String!
+  coinSymbolB: String!
   amountA: BigDecimal!
   amountB: BigDecimal!
   usdValue: BigDecimal!

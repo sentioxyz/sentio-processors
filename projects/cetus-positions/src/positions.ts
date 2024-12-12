@@ -21,6 +21,8 @@ export interface Position {
   tickUpper: bigint;
   decimalA: number;
   decimalB: number;
+  coinSymbolA: string;
+  coinSymbolB: string;
   coinTypeA: string;
   coinTypeB: string;
   liquidity: bigint;
@@ -204,6 +206,8 @@ export async function fetchPositions(ctx: SuiAddressContext) {
           argMax(tick_upper, timestamp) as tick_upper,
           argMax(decimal_a, timestamp) as decimal_a,
           argMax(decimal_b, timestamp) as decimal_b,
+          argMax(symbol_a, timestamp) as coin_symbol_a,
+          argMax(symbol_b, timestamp) as coin_symbol_b,
           argMax(coin_type_a, timestamp) as coin_type_a,
           argMax(coin_type_b, timestamp) as coin_type_b,
           argMax(pool, timestamp) as pool,
@@ -217,6 +221,8 @@ export async function fetchPositions(ctx: SuiAddressContext) {
       tick_upper,
       decimal_a,
       decimal_b,
+      coin_symbol_a,
+      coin_symbol_b,
       coin_type_a,
       coin_type_b,
       pool, 
@@ -254,6 +260,8 @@ export async function fetchPositions(ctx: SuiAddressContext) {
         tickUpper: BigInt.asIntN(32, row.tick_upper),
         decimalA: Number(row.decimal_a),
         decimalB: Number(row.decimal_b),
+        coinSymbolA: row.coin_symbol_a,
+        coinSymbolB: row.coin_symbol_b,
         coinTypeA: row.coin_type_a,
         coinTypeB: row.coin_type_b,
         pool: row.pool,

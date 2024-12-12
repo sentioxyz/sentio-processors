@@ -21,12 +21,15 @@ SuiAddressProcessor.bind({
         price: position.price,
         tickLower: position.tickLower,
         tickUpper: position.tickUpper,
+        coinSymbolA: position.coinSymbolA,
+        coinSymbolB: position.coinSymbolB,
         coinTypeA: position.coinTypeA,
         coinTypeB: position.coinTypeB,
         liquidity: position.liquidity,
         amountA: position.amountA,
         amountB: position.amountB,
         usdValue: position.usdValue,
+        timestamp: BigInt(ctx.timestamp.getTime())
       });
       newSnapshots.push(newSnapshot);
       ctx.eventLogger.emit("position", {
@@ -36,6 +39,8 @@ SuiAddressProcessor.bind({
         price: position.price,
         tickLower: position.tickLower,
         tickUpper: position.tickUpper,
+        coinSymbolA: position.coinSymbolA,
+        coinSymbolB: position.coinSymbolB,
         coinTypeA: position.coinTypeA,
         coinTypeB: position.coinTypeB,
         liquidity: position.liquidity,
@@ -59,6 +64,8 @@ SuiAddressProcessor.bind({
         price: snapshot.price,
         tickLower: snapshot.tickLower,
         tickUpper: snapshot.tickUpper,
+        coinSymbolA: snapshot.coinSymbolA,
+        coinSymbolB: snapshot.coinSymbolB,
         coinTypeA: snapshot.coinTypeA,
         coinTypeB: snapshot.coinTypeB,
         liquidity: new BigDecimal(0),
