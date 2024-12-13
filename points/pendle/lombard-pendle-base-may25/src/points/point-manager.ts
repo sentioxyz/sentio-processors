@@ -21,7 +21,7 @@ export async function updatePoints(
   const bPoints = 0n
   // console.log("entering update points", impliedAmountHolding, holdingPeriod, lPoints)
 
-  //Market Expires all SY points go t
+  //Market Expires all SY points go to treasury
   if (label == POINT_SOURCE_SY && ctx.timestamp.getTime() > PENDLE_POOL_ADDRESSES.MARKET_EXPIRY) {
     increasePoint(
       ctx,
@@ -36,7 +36,7 @@ export async function updatePoints(
     return
   }
 
-  // Handle Treasury Fee
+  // Handle Trea
   if (label == POINT_SOURCE_YT) {
     const lPointsTreasuryFee = calcTreasuryFee(lPoints)
     const bPointsTreasuryFee = calcTreasuryFee(bPoints);
