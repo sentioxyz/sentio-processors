@@ -2,14 +2,14 @@ import {
   SuiContext,
   SuiObjectContext,
 } from "@sentio/sdk/sui"
-import { lending } from "../types/sui/navxFlashLoan.js";
+import { lending } from "../types/sui/0x834a86970ae93a73faf4fff16ae40bdb72b91c47be585fff19a2af60a19ddca3.js";
 import { token } from "@sentio/sdk/utils"
 import { ProtocolProcessor } from "./storage.js";
 import { PoolProcessor } from "./pool.js";
 import { OracleProcessor } from "./oracle.js";
 import { AddressProcessor } from "./address.js";
 import { scaleDown } from "@sentio/sdk";
-import { lending as lending_new_liquidation_event, incentive_v2, flash_loan } from '../types/sui/navi_new_liq.js';
+import { lending as lending_new_liquidation_event, incentive_v2, flash_loan } from '../types/sui/0x834a86970ae93a73faf4fff16ae40bdb72b91c47be585fff19a2af60a19ddca3.js';
 // import { PythOracleProcessor } from './pyth.js'
 // import {SupraSValueFeed} from '../types/sui/0xc7abe17a209fcab08e2d7d939cf3df11f5b80cf03d10b50893f38df12fdebb07.js'
 // import {getSupraPrice} from './supra.js'
@@ -63,7 +63,15 @@ async function onEvent(event: LendingEvent, ctx: SuiContext) {
     '5': "0x549e8b69270defbfafd4f94e17ec44cdbdd99820b33bda2278dea3b9a32d3f55::cert::CERT",
     '6': "0xbde4ba4c2e274a60ce15c1cfff9e5c42e41654ac8b6d906a57efa4bd3c29f47d::hasui::HASUI",
     '7': "0xa99b8952d4f7d947ea77fe0ecdcc9e5fc0bcab2841d6e2a5aa00c3044e5544b5::navx::NAVX",
-    '8': "0x027792d9fed7f9844eb4839566001bb6f6cb4804f66aa2da6fe1ee242d896881::coin::COIN" //wbtc
+    '8': "0x027792d9fed7f9844eb4839566001bb6f6cb4804f66aa2da6fe1ee242d896881::coin::COIN", //wbtc
+    '9': "0x2053d08c1e2bd02791056171aab0fd12bd7cd7efad2ab8f6b9c8902f14df2ff2::ausd::AUSD", //ausd
+    '10': '0xdba34672e30cb065b1f93e3ab55318768fd6fef66c15942c9f7cb846e2f900e7::usdc::USDC', //native usdc
+    '11': '0xd0e89b2af5e4910726fbcd8b8dd37bb79b29e5f83f7491bca830e94f7f226d29::eth::ETH', //native eth
+    '12': "0x960b531667636f39e85867775f52f6b1f220a058c4de786905bdf761e06a56bb::usdy::USDY", //USDY
+    '13': "0x5145494a5f5100e645e4b0aa950fa6b68f614e8c59e17bc5ded3495123a79178::ns::NS", //NS
+    '14': "0x5f496ed5d9d045c5b788dc1bb85f54100f2ede11e46f6a232c29daada4c5bdb6::coin::COIN",  //stBTC
+    '15': "0xdeeb7a4662eec9f2f3def03fb937a663dddaa2e215b8078a284d026b7946c270::deep::DEEP", //deep
+    '16': "0xf16e6b723f242ec745dfd7634ad072c42d5c1d9ac9d62a39c381303eaa57693a::fdusd::FDUSD", //FDUSD
   }
   const coinAddress = Coins[reserve]
   // const coinAddress = event.data_decoded.pool;
@@ -174,7 +182,7 @@ async function flashoanRepayHandler(event: flash_loan.FlashRepayInstance, ctx: S
     "0xb29922cca8fecabe2957833260e5a95fce343e5c299a2126414ae557fdac51a3": "USDC",
     "0xc6a2ed14c23907cba22b56fa84f7347aa36a0bb8feab47057f170860c55e7dbe": "vSui",
     "0x168728630433e1b2494e037b2d38801461260295e9ca38efed4157e1a9cc6b91": "Sui",
-    "0xff307af2ebe087ca693a136a7cb6e767564c1498224b4fbb608df765743743ff": "USDT"
+    "0xff307af2ebe087ca693a136a7cb6e767564c1498224b4fbb608df765743743ff": "USDT",
   }
 
   const coinType = FlashLoanCoins[asset] || "unknown";
@@ -238,7 +246,7 @@ async function repayOnBehalfOfHandler(event: lending.RepayOnBehalfOfEventInstanc
 
 // }
 
-flash_loan.bind({ startCheckpoint: 28205630n })
+flash_loan.bind({ startCheckpoint: 7800000n })
   .onEventFlashLoan(flashLoanHandler)
   .onEventFlashRepay(flashoanRepayHandler)
 

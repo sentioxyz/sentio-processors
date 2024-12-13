@@ -13,6 +13,14 @@ const reserves = [
     "0x0c9f7a6ca561dc566bd75744bcc71a6af1dc3caf7bd32c099cd640bb5f3bb0e3", // Reserve For haSUI
     "0x2e13b2f1f714c0c5fa72264f147ef7632b48ec2501f810c07df3ccb59d6fdc81",  // Reserve For NAVX
     "0x8b4d81f004e4e9faf4540951a896b6d96e42598a270e6375f598b99742db767e", // Reserve For WBTC
+    "0x918889c6a9d9b93108531d4d59a4ebb9cc4d41689798ffc1d4aed6e1ae816ec0", // Reserve For AUSD
+    "0x4c8a2c72a22ae8da803a8519798d312c86e74a9e0d6ec0eec2bfcf7e4b3fef5e",   // Reserve For Native USDC
+    "0x376faea6dfbffab9ea808474cb751d91222b6d664f38c0f1d23de442a8edb1ce",  // Reserve For Native ETH
+    "0xddeb55afe4860995d755fddb0b1dfb8f8011ca08edb66e43c867a21bd6e0551a", // Reserve For USDY
+    "0x03f405f4d5ed2688b8b7ab4cfbf3e0a8572622a737d615db829342131f3586f2", // Reserve For NS
+    "0x9634f9f7f8ea7236e2ad5bfbecdce9673c811a34cf8c3741edfbcaf5d9409100", // Reserve For stBTC
+    "0x0b30fe8f42a4fda168c38d734e42a36a77b3d4dd6669069b1cbe53a0c3905ba8", // Reserve For Deep
+    "0xf1737d6c6c1fffdf145c440a9fc676de0e6d0ffbacaab5fa002d30653f235a8e", // Reserve For FDUSD
 ]
 
 export function ProtocolProcessor() {
@@ -32,6 +40,9 @@ export function ProtocolProcessor() {
                 const ltv = BigDecimal(self.fields.value.fields.ltv).div(Math.pow(10, DECIMAL_RAY))
                 const coin_symbol = COIN[i]
 
+                if (coin_symbol == undefined) {
+                    console.log("Coin Symbol Mismatched, reserved ID", i)
+                }
                 //@ts-ignore
                 const totalSupply = BigDecimal(self.fields.value.fields.supply_balance.fields.total_supply).div(Math.pow(10, DEFAULT_COIN_DECIMAL))
                 //@ts-ignore
