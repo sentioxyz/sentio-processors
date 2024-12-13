@@ -2,6 +2,7 @@ import { ERC20Context, ERC20Processor, getERC20Contract } from '@sentio/sdk/eth/
 import { Counter, Gauge } from '@sentio/sdk'
 import { token } from '@sentio/sdk/utils'
 import { EthChainId } from '@sentio/sdk/eth'
+import { UserBalance } from './schema/schema.js'
 
 const wallet = Counter.register('wallet')
 
@@ -40,11 +41,34 @@ async function getTokenInfo(address: string) {
     address
   }).onEventTransfer(async (evt, ctx) => {
     const info = await getTokenInfo(address)
+    const { symbol } = info
     const { from, to, value } = evt.args
     const amount = value.scaleDown(info.decimal)
-    wallet.sub(ctx, amount, { symbol: info.symbol, wallet: from })
-    wallet.add(ctx, amount, { symbol: info.symbol, wallet: to })
+    wallet.sub(ctx, amount, { symbol, wallet: from })
+    wallet.add(ctx, amount, { symbol, wallet: to })
 
+    const [fromBalance, toBalance] = await Promise.all([
+      ctx.store.get(UserBalance, `${from}-${symbol}`),
+      ctx.store.get(UserBalance, `${to}-${symbol}`)
+    ])
+    await Promise.all([
+      ctx.store.upsert(
+        new UserBalance({
+          id: `${from}-${symbol}`,
+          wallet: from,
+          symbol,
+          balance: (fromBalance?.balance || 0n) - value
+        })
+      ),
+      ctx.store.upsert(
+        new UserBalance({
+          id: `${to}-${symbol}`,
+          wallet: to,
+          symbol,
+          balance: (toBalance?.balance || 0n) + value
+        })
+      )
+    ])
     ctx.eventLogger.emit('transfer', {
       from,
       to,
