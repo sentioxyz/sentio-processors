@@ -25,6 +25,7 @@ export const PENDLE_POOL_ADDRESSES = {
   SY_START_BLOCK: 20861069,
   // the block which the new contract is deployed
   START_BLOCK: 20861085,
+  MARKET_EXPIRY: 1743033600,
   TREASURY: "0xc328dfcd2c8450e2487a91daa9b75629075b7a43",
 
 

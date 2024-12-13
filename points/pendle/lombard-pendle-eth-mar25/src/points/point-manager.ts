@@ -4,6 +4,7 @@ import { MULTIPLIER, DAILY_POINTS, MISC_CONSTS, PENDLE_POOL_ADDRESSES } from "..
 import {
   EVENT_POINT_INCREASE,
   POINT_SOURCE,
+  POINT_SOURCE_SY,
   POINT_SOURCE_YT,
 } from "../types.js";
 
@@ -20,7 +21,22 @@ export async function updatePoints(
   const bPoints = 0n
   // console.log("entering update points", impliedAmountHolding, holdingPeriod, lPoints)
 
+  //Market Expires all SY points go t
+  if (label == POINT_SOURCE_SY && ctx.timestamp.getTime() > PENDLE_POOL_ADDRESSES.MARKET_EXPIRY) {
+    increasePoint(
+      ctx,
+      label,
+      PENDLE_POOL_ADDRESSES.TREASURY,
+      0n,
+      holdingPeriod,
+      lPoints,
+      bPoints,
+      updatedAt
+    )
+    return
+  }
 
+  // Handle Treasury Fee
   if (label == POINT_SOURCE_YT) {
     const lPointsTreasuryFee = calcTreasuryFee(lPoints)
     const bPointsTreasuryFee = calcTreasuryFee(bPoints);
