@@ -13,13 +13,13 @@ import {
 } from "./types/eth/poolimplementation.js";
 import { getVBep20DelegatorContractOnContext } from "./types/eth/vbep20delegator.js";
 import { EventLogger } from "@sentio/sdk";
-import { EthChainId, BigDecimal, Gauge } from "@sentio/sdk"
+import { BigDecimal, Gauge } from "@sentio/sdk"
 import { ignoreEthCallException, token } from "@sentio/sdk/utils"
 import { getVaultImplementationContractOnContext } from "./types/eth/vaultimplementation.js";
 import { AddSymbolEvent, getSymbolManagerImplementationContractOnContext, RemoveSymbolEvent, SymbolManagerImplementationBoundContractView, SymbolManagerImplementationContext, SymbolManagerImplementationProcessor, TradeEvent } from "./types/eth/symbolmanagerimplementation.js";
 import { getComptrollerContractOnContext } from "./types/eth/comptroller.js";
 import { getVenusChainlinkOracleContractOnContext, VenusChainlinkOracleBoundContractView } from "./types/eth/venuschainlinkoracle.js";
-import { EthContext } from "@sentio/sdk/eth";
+import { EthChainId, EthContext } from "@sentio/sdk/eth";
 import { getSymbolContractOnContext, SymbolProcessor, SymbolContext, SymbolProcessorTemplate } from "./types/eth/symbol.js";
 import { getSymbolImplementationFuturesContractOnContext } from "./types/eth/symbolimplementationfutures.js";
 import { getSymbolImplementationPowerContractOnContext } from "./types/eth/symbolimplementationpower.js"
@@ -878,5 +878,3 @@ SymbolManagerImplementationProcessor.bind({address: "0x543A9FA25ba9a16612274DD70
 .onEventTrade(onTrade)
 .onEventAddSymbol(onChangeSymbol)
 // .onEventNewImplementation(onSymbolImplementation)
-
-

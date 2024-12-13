@@ -12,7 +12,10 @@ import { ClaimRewardsCallTrace, FeeDistributorContext, FeeDistributorProcessor }
 import { ethers } from 'ethers'
 import { ERC20Context, getERC20ContractOnContext } from '@sentio/sdk/eth/builtin/erc20'
 import { getOrCreateERC721 } from './helper/nft-helper.js'
+import { CHAINS, FOUNDTAIN_ADDRESS_MAP, VENOSTORM_ADDRESS_MAP, } from './helper/constant.js'
 import './croLiquidityStrategy.js'
+import './liquidEth.js'
+import './liquidTia.js'
 
 
 const DepositEventHandler = async (event: any, ctx: any) => {
@@ -21,7 +24,8 @@ const DepositEventHandler = async (event: any, ctx: any) => {
   const decimals = pid == 3 ? 8 : 18
 
   //venostorm
-  if (ctx.address.toLowerCase() == "0x579206e4e49581ca8ada619e9e42641f61a84ac3") {
+  if (ctx.address.toLowerCase() == "0x579206e4e49581ca8ada619e9e42641f61a84ac3" ||
+    ctx.address.toLowerCase() == "0xbddd1aa977acd01510a9e9627eee8ac1c5e20aca") {
     ctx.meter.Counter(`deposit_counter`).add(scaleDown(amount, decimals), {
       pid: pid.toString()
     })
@@ -54,7 +58,8 @@ const WithdrawEventHandler = async (event: any, ctx: any) => {
   const amount = event.args.amount
 
   //venostorm
-  if (ctx.address.toLowerCase() == "0x579206e4e49581ca8ada619e9e42641f61a84ac3") {
+  if (ctx.address.toLowerCase() == "0x579206e4e49581ca8ada619e9e42641f61a84ac3" ||
+    ctx.address.toLowerCase() == "0xbddd1aa977acd01510a9e9627eee8ac1c5e20aca") {
     const pid = Number(event.args.pid)
     const decimals = pid == 3 ? 8 : 18
 
@@ -365,27 +370,29 @@ async function processLog(log: any) {
   return interfce.parseLog(log)
 }
 
+CHAINS.forEach(chain => {
+  FountainProcessor.bind({ address: FOUNDTAIN_ADDRESS_MAP.get(chain)!, network: chain })
+    .onEventDeposit(DepositEventHandler)
+    .onEventWithdraw(WithdrawEventHandler)
+    .onEventWithdrawEarly(WithdrawEarlyEventHandler)
+    .onEventClaimVaultPenalty(ClaimVaultPenaltyEventHandler)
+    .onEventUpgrade(UpgradeEventHandler)
 
-FountainProcessor.bind({ address: '0xb4be51216f4926ab09ddf4e64bc20f499fd6ca95', network: EthChainId.CRONOS })
-  .onEventDeposit(DepositEventHandler)
-  .onEventWithdraw(WithdrawEventHandler)
-  .onEventWithdrawEarly(WithdrawEarlyEventHandler)
-  .onEventClaimVaultPenalty(ClaimVaultPenaltyEventHandler)
-  .onEventUpgrade(UpgradeEventHandler)
+  VenostormProcessor.bind({ address: VENOSTORM_ADDRESS_MAP.get(chain)!, network: chain })
+    .onEventDeposit(DepositEventHandler)
+    .onEventWithdraw(WithdrawEventHandler)
+    .onCallStakeNft(StakeNftCallHandler)
+    .onCallUnstakeNft(UnstakeNftCallHandler)
+    .onEventStake(nftStakeEventHandler)
+    .onEventUnstake(nftUnstakeEventHandler)
+
+})
 
 ReservoirProcessor.bind({ address: '0x21179329c1dcfd36ffe0862cca2c7e85538cca07', network: EthChainId.CRONOS })
   .onEventDeposit(DepositEventHandler)
   .onEventWithdraw(WithdrawEventHandler)
   .onEventUpgrade(UpgradeEventHandler)
 
-
-VenostormProcessor.bind({ address: '0x579206e4e49581ca8ada619e9e42641f61a84ac3', network: EthChainId.CRONOS })
-  .onEventDeposit(DepositEventHandler)
-  .onEventWithdraw(WithdrawEventHandler)
-  .onCallStakeNft(StakeNftCallHandler)
-  .onCallUnstakeNft(UnstakeNftCallHandler)
-  .onEventStake(nftStakeEventHandler)
-  .onEventUnstake(nftUnstakeEventHandler)
 
 
 LiquidCroProcessor.bind({ address: '0x9fae23a2700feecd5b93e43fdbc03c76aa7c08a6', network: EthChainId.CRONOS })

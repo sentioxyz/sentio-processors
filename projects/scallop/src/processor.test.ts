@@ -1,4 +1,7 @@
+import assert from 'assert'
 // import { TestProcessorServer, firstCounterValue } from '@sentio/sdk/testing'
+import { before, describe, test } from 'node:test'
+import { expect } from 'chai'
 // import { mockTransferLog } from '@sentio/sdk/eth/builtin/erc20'
 
 import { SuiNetwork } from "@sentio/sdk/sui"
@@ -8,13 +11,13 @@ import { getPriceByType, getPriceBySymbol } from '@sentio/sdk/utils'
 describe('Test Processor', () => {
     // const service = new TestProcessorServer(() => import('./processor.js'))
 
-    // beforeAll(async () => {
+    // before(async () => {
     //   await service.start()
     // })
 
     // test('has valid config', async () => {
     //   const config = await service.getConfig({})
-    //   expect(config.contractConfigs.length > 0).toBeTruthy()
+    //   assert(config.contractConfigs.length > 0)
     // })
 
     test('getPriceByType', async () => {
@@ -43,7 +46,7 @@ describe('Test Processor', () => {
     //   )
     //
     //   const tokenCounter = firstCounterValue(resp.result, 'token')
-    //   expect(tokenCounter).toEqual(10n)
+    //   expect(tokenCounter).equals(10n)
     // })
 
     // test('check transaction block', async () => {

@@ -14,8 +14,16 @@ import { DepositEvent, ReplaceNftsBurnTokenEvent, ReplaceNftsMintTokenEvent, Sta
 import { CreateLongNShortPositionEvent, DeferLiquidityCheckAdapterContext, DeferLiquidityCheckAdapterProcessor, FlashLoanAndLiquidateCallTrace, SwapAndDepositCallTrace, SwapAndDepositEvent, SwapAndRepayCallTrace, SwapAndRepayEvent } from './types/eth/deferliquiditycheckadapter.js'
 
 const MintEventHandler = async (event: any, ctx: TCROContext | LCROContext) => {
-
-  const tokenType = constant.MAIN_POOLS.includes(ctx.address) ? "main_pool" : "lcro_pool"
+  let tokenType
+  if (constant.MAIN_POOLS.includes(ctx.address)) {
+    tokenType = "main_pool"
+  }
+  else if (constant.DEFI_POOLS.includes(ctx.address)) {
+    tokenType = "defi_pool"
+  }
+  else {
+    tokenType = "lcro_pool"
+  }
 
   const minter = event.args.minter
   const tSymbol = constant.TOKEN_SYMBOL.get(ctx.address.toLowerCase())!
@@ -50,8 +58,16 @@ const MintEventHandler = async (event: any, ctx: TCROContext | LCROContext) => {
 }
 
 const RedeemEventHandler = async (event: any, ctx: TCROContext | LCROContext) => {
-  const tokenType = constant.MAIN_POOLS.includes(ctx.address) ? "main_pool" : "lcro_pool"
-
+  let tokenType
+  if (constant.MAIN_POOLS.includes(ctx.address)) {
+    tokenType = "main_pool"
+  }
+  else if (constant.DEFI_POOLS.includes(ctx.address)) {
+    tokenType = "defi_pool"
+  }
+  else {
+    tokenType = "lcro_pool"
+  }
   const redeemer = event.args.redeemer
   const tSymbol = constant.TOKEN_SYMBOL.get(ctx.address.toLowerCase())!
   const collateralSymbol = (constant.COLLATERAL_TOKENS.get(tSymbol))!
@@ -88,8 +104,16 @@ const RedeemEventHandler = async (event: any, ctx: TCROContext | LCROContext) =>
 }
 
 const BorrowEventHandler = async (event: any, ctx: TCROContext | LCROContext) => {
-  const tokenType = constant.MAIN_POOLS.includes(ctx.address) ? "main_pool" : "lcro_pool"
-
+  let tokenType
+  if (constant.MAIN_POOLS.includes(ctx.address)) {
+    tokenType = "main_pool"
+  }
+  else if (constant.DEFI_POOLS.includes(ctx.address)) {
+    tokenType = "defi_pool"
+  }
+  else {
+    tokenType = "lcro_pool"
+  }
   const borrower = event.args.borrower
   const tSymbol = constant.TOKEN_SYMBOL.get(ctx.address.toLowerCase())!
   const collateralSymbol = (constant.COLLATERAL_TOKENS.get(tSymbol))!
@@ -97,7 +121,7 @@ const BorrowEventHandler = async (event: any, ctx: TCROContext | LCROContext) =>
   const borrowAmount = Number(event.args.borrowAmount) / Math.pow(10, collateralDecimal)
   const accountBorrows = Number(event.args.accountBorrows)
   const collateralPrice = (await getPriceBySymbol(collateralSymbol, ctx.timestamp))!
-  const borrowAmountUSD = borrowAmount * collateralPrice
+  const borrowAmountUSD = borrowAmount * (collateralPrice ? collateralPrice : 0)
 
   ctx.eventLogger.emit("Borrow", {
     distinctId: borrower,
@@ -125,8 +149,16 @@ const BorrowEventHandler = async (event: any, ctx: TCROContext | LCROContext) =>
 }
 
 const RepayBorrowEventHandler = async (event: any, ctx: TCROContext | LCROContext) => {
-  const tokenType = constant.MAIN_POOLS.includes(ctx.address) ? "main_pool" : "lcro_pool"
-
+  let tokenType
+  if (constant.MAIN_POOLS.includes(ctx.address)) {
+    tokenType = "main_pool"
+  }
+  else if (constant.DEFI_POOLS.includes(ctx.address)) {
+    tokenType = "defi_pool"
+  }
+  else {
+    tokenType = "lcro_pool"
+  }
   const payer = event.args.payer
   const borrower = event.args.borrower
   const tSymbol = constant.TOKEN_SYMBOL.get(ctx.address.toLowerCase())!
@@ -162,8 +194,16 @@ const RepayBorrowEventHandler = async (event: any, ctx: TCROContext | LCROContex
 }
 
 const LiquidateBorrowHandler = async (event: LiquidateBorrowEvent, ctx: TCROContext | LCROContext) => {
-  const tokenType = constant.MAIN_POOLS.includes(ctx.address) ? "main_pool" : "lcro_pool"
-
+  let tokenType
+  if (constant.MAIN_POOLS.includes(ctx.address)) {
+    tokenType = "main_pool"
+  }
+  else if (constant.DEFI_POOLS.includes(ctx.address)) {
+    tokenType = "defi_pool"
+  }
+  else {
+    tokenType = "lcro_pool"
+  }
   const liquidator = event.args.liquidator
   const borrower = event.args.borrower
   const tSymbol = constant.TOKEN_SYMBOL.get(ctx.address.toLowerCase())!
@@ -189,7 +229,16 @@ const LiquidateBorrowHandler = async (event: LiquidateBorrowEvent, ctx: TCROCont
 }
 
 const AccrueInterestHandler = async (event: AccrueInterestEvent, ctx: TCROContext | LCROContext) => {
-  const tokenType = constant.MAIN_POOLS.includes(ctx.address) ? "main_pool" : "lcro_pool"
+  let tokenType
+  if (constant.MAIN_POOLS.includes(ctx.address)) {
+    tokenType = "main_pool"
+  }
+  else if (constant.DEFI_POOLS.includes(ctx.address)) {
+    tokenType = "defi_pool"
+  }
+  else {
+    tokenType = "lcro_pool"
+  }
 
   const tSymbol = constant.TOKEN_SYMBOL.get(ctx.address.toLowerCase())!
   const collateralSymbol = (constant.COLLATERAL_TOKENS.get(tSymbol))!
@@ -216,7 +265,16 @@ const AccrueInterestHandler = async (event: AccrueInterestEvent, ctx: TCROContex
 }
 
 const ReservesAddedHandler = async (event: any, ctx: TCROContext | LCROContext) => {
-  const tokenType = constant.MAIN_POOLS.includes(ctx.address) ? "main_pool" : "lcro_pool"
+  let tokenType
+  if (constant.MAIN_POOLS.includes(ctx.address)) {
+    tokenType = "main_pool"
+  }
+  else if (constant.DEFI_POOLS.includes(ctx.address)) {
+    tokenType = "defi_pool"
+  }
+  else {
+    tokenType = "lcro_pool"
+  }
 
   const tSymbol = constant.TOKEN_SYMBOL.get(ctx.address.toLowerCase())!
   const collateralSymbol = (constant.COLLATERAL_TOKENS.get(tSymbol))!
@@ -235,8 +293,16 @@ const ReservesAddedHandler = async (event: any, ctx: TCROContext | LCROContext) 
 }
 
 const OnTimeIntervalHandler = async (_: any, ctx: TCROContext | LCROContext) => {
-  const tokenType = constant.MAIN_POOLS.includes(ctx.address) ? "main_pool" : "lcro_pool"
-
+  let tokenType
+  if (constant.MAIN_POOLS.includes(ctx.address)) {
+    tokenType = "main_pool"
+  }
+  else if (constant.DEFI_POOLS.includes(ctx.address)) {
+    tokenType = "defi_pool"
+  }
+  else {
+    tokenType = "lcro_pool"
+  }
   const tSymbol = constant.TOKEN_SYMBOL.get(ctx.address.toLowerCase())!
   const collateralSymbol = (constant.COLLATERAL_TOKENS.get(tSymbol))!
   const collateralDecimal = (constant.COLLATERAL_DECIMAL.get(collateralSymbol))!
@@ -282,6 +348,24 @@ for (let i = 0; i < constant.LCRO_POOLS.length; i++) {
     address: address,
     network: EthChainId.CRONOS,
     // startBlock: 570286
+  })
+    .onEventMint(MintEventHandler)
+    .onEventBorrow(BorrowEventHandler)
+    .onEventRepayBorrow(RepayBorrowEventHandler)
+    .onEventRedeem(RedeemEventHandler)
+    .onEventLiquidateBorrow(LiquidateBorrowHandler)
+    .onEventReservesAdded(ReservesAddedHandler)
+    .onEventAccrueInterest(AccrueInterestHandler)
+    .onTimeInterval(OnTimeIntervalHandler, 60, 10)
+}
+
+//defi_pools
+for (let i = 0; i < constant.DEFI_POOLS.length; i++) {
+  let address = constant.DEFI_POOLS[i]
+  LCROProcessor.bind({
+    address: address,
+    network: EthChainId.CRONOS,
+    // startBlock: 12672954
   })
     .onEventMint(MintEventHandler)
     .onEventBorrow(BorrowEventHandler)

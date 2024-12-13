@@ -1,16 +1,20 @@
+import assert from 'assert'
 import { TestProcessorServer, firstCounterValue } from '@sentio/sdk/testing'
 import { mockTransferLog } from '@sentio/sdk/eth/builtin/erc20'
+import { before, describe, test } from 'node:test'
+import { expect } from 'chai'
 
 describe('Test Processor', () => {
   const service = new TestProcessorServer(() => import('./processor.js'))
 
-  beforeAll(async () => {
+  before(async () => {
     await service.start()
   })
 
   test('has valid config', async () => {
     const config = await service.getConfig({})
-    expect(config.contractConfigs.length > 0).toBeTruthy()
+    // assert(config.contractConfigs.length > 0)
+    assert(config.contractConfigs.length > 0)
   })
 
   test('check transfer event handling', async () => {
@@ -23,6 +27,7 @@ describe('Test Processor', () => {
     )
 
     const tokenCounter = firstCounterValue(resp.result, 'token')
-    expect(tokenCounter).toEqual(10n)
+    expect(tokenCounter).equals(10n)
+    // expect(tokenCounter).equals(10n)
   })
 })

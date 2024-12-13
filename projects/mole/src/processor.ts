@@ -25,6 +25,8 @@ import * as helper from './utils/cetus-clmm.js'
 import { ANY_TYPE, BUILTIN_TYPES } from '@sentio/sdk/move'
 import { string_ } from "@sentio/sdk/sui/builtin/0x1";
 import BN from 'bn.js'
+import axiosInst from './utils/moleAxios.js'
+
 
 const vaultWethConfigId  = "0x7fa4aa18fc4488947dc7528b5177c4475ec478c28014e77a31dc2318fa4f125e"
 const vaultHaSuiConfigId = "0xa069ec74c6bb6d6df53e22d9bf00625a3d65da67c4d9e2868c8e348201251dd0"
@@ -70,12 +72,12 @@ SuiWrappedObjectProcessor.bind({
 
         const coinInfo = await buildCoinInfo(ctx, coinType!)
         const coin_symbol = coinInfo.symbol
-        
+
         //@ts-ignore
         const savings_debt = Number(field.value.vault_debt_val) / Math.pow(10, coinInfo.decimal)
 
         const price = await getPriceByType(SuiNetwork.MAIN_NET, coinType!, ctx.timestamp)
-        const savings_debt_usd = savings_debt * price! 
+        const savings_debt_usd = savings_debt * price!
 
         //@ts-ignore
         ctx.meter.Gauge("savings_debt_usd").record(savings_debt_usd, { coin_symbol, project: "mole" })
@@ -83,16 +85,75 @@ SuiWrappedObjectProcessor.bind({
         // savings_free_coin = deposit - debt
         //@ts-ignore
         const savings_free_coin = Number(field.value.coin) / Math.pow(10, coinInfo.decimal)
-        const savings_free_coin_usd = savings_free_coin * price! 
+        const savings_free_coin_usd = savings_free_coin * price!
         ctx.meter.Gauge("savings_free_coin_usd").record(savings_free_coin_usd, { coin_symbol, project: "mole" })
 
         console.log("savings_debt_usd:", savings_debt_usd, ", savings_free_coin_usd:", savings_free_coin_usd, ",coin_symbol:", coin_symbol)
+
+        const use_rate = savings_debt / (savings_debt + savings_free_coin)
+
+        // Borrowing interest = a * utilization + b
+        let a, b
+        if (use_rate < 0.6) {
+          a = 0.333333333
+          b = 0
+        } else if (use_rate >= 0.6 && use_rate < 0.9) {
+          a = 0
+          b = 0.2
+        } else { // use_rate >= 0.9
+          a = 13
+          b = -11.5
+        }
+        const savings_borrowing_interest =  a * use_rate + b
+        ctx.meter.Gauge("savings_borrowing_interest").record(savings_borrowing_interest, { coin_symbol, project: "mole" })
+
+        // Lending interest = Borrowing Interest * Utilization * (1 - Borrow Protocol Fee)
+        const savings_lending_interest_apr = savings_borrowing_interest * use_rate * (1 - 0.19)
+        // apr to apy
+        const savings_lending_interest_apy =  Math.pow(1 + savings_lending_interest_apr / 365, 365) - 1
+
+        ctx.meter.Gauge("savings_lending_interest").record(savings_lending_interest_apy, { coin_symbol, project: "mole" })
+
       }
     }
     catch (e) {
       console.log(`${e.message} error at ${JSON.stringify(dynamicFieldObjects)}`)
     }
   }, 60, 240, undefined, { owned: true })
+
+
+SuiObjectProcessor.bind({
+  objectId: "0xcf994611fd4c48e277ce3ffd4d4364c914af2c3cbb05f7bf6facd371de688630", // random fake id because no used in here
+  network: SuiNetwork.MAIN_NET,
+  startCheckpoint: 25721833n
+})
+.onTimeInterval(async (self, _, ctx) => {
+  try {
+
+    // get json data from mole
+    const data_url = `https://app.mole.fi/api/SuiMainnet/data.json`
+    const res = await axiosInst.get(data_url).catch((err: any) => {
+        console.error('get data error:', err)
+    })
+    if (!res) {
+      console.error('data_get got no response')
+    }
+
+    const farmsData = res!.data.farms
+
+    for (let i = 0 ; i < farmsData.length; i ++) {
+      const farmName = farmsData[i].symbol1 + '-' + farmsData[i].symbol2
+      const farmApr = farmsData[i].totalApr
+
+      ctx.meter.Gauge("lyf_apr").record(farmApr, { farmName, project: "mole" })
+    }
+  }
+catch (e) {
+      console.log(`${e.message} error at ${JSON.stringify(self)}`)
+    }
+  }, 30, 240, undefined, { owned: false })
+
+
 
 
 
@@ -140,7 +201,7 @@ for (let i = 0; i < constant.POOLS_MOLE_LIST.length; i++) {
       } else {
         console.error("Has not object : ", ctx.objectId)
       }
-     
+
       console.log("currentSqrtPrice :", currentSqrtPrice)
     }
   catch (e) {
@@ -151,7 +212,7 @@ for (let i = 0; i < constant.POOLS_MOLE_LIST.length; i++) {
 
 
 
-// Worker info    
+// Worker info
 for (let i = 0; i < constant.MOLE_WORKER_INFO_LIST.length; i++) {
   const workerInfoAddr = constant.MOLE_WORKER_INFO_LIST[i]
 
@@ -162,7 +223,7 @@ for (let i = 0; i < constant.MOLE_WORKER_INFO_LIST.length; i++) {
   })
   .onTimeInterval(async (self, _, ctx) => {
     // console.log("ctx.objectId:" , ctx.objectId, ", slef:",JSON.stringify(self))
-    
+
     try {
       let res
       if (workerInfoAddr == "0x98f354c9e166862f079aaadd5e85940c55c440a8461e8e468513e2a86106042c") {
@@ -195,8 +256,8 @@ for (let i = 0; i < constant.MOLE_WORKER_INFO_LIST.length; i++) {
         res = await ctx.coder.decodedType(self, cetus_clmm_worker_sui_hasui.WorkerInfo.type())
       } else {
         console.error("Not support workerInfoAddr:", workerInfoAddr)
-      } 
-      
+      }
+
       // console.log("ctx.objectId:" , ctx.objectId, ",res : ", JSON.stringify(res))
 
       //@ts-ignore
@@ -248,7 +309,7 @@ for (let i = 0; i < constant.MOLE_WORKER_INFO_LIST.length; i++) {
         console.error("gCurrentSqrtPrice is undefined")
         return
       }
-       
+
       // console.log("liquidity:", liquidity, ",tickLowerIndex:", tickLowerIndex, ",tickUpperIndex:", tickUpperIndex, ",poolId:", poolId, ",coinTypeA:", coinTypeA,
       //  ",coinTypeB:", coinTypeB, ",currentSqrtPrice:", currentSqrtPrice)
 
@@ -287,7 +348,7 @@ for (let i = 0; i < constant.MOLE_WORKER_INFO_LIST.length; i++) {
 
 
 
-// vault.bind({ 
+// vault.bind({
 //   address: '0x5ffa69ee4ee14d899dcc750df92de12bad4bacf81efa1ae12ee76406804dda7f',
 //   network: SuiNetwork.MAIN_NET,
 //   // startCheckpoint: 4000000n
@@ -302,7 +363,7 @@ for (let i = 0; i < constant.MOLE_WORKER_INFO_LIST.length; i++) {
 
 //       const amount = Number(event.data_decoded.amount) / Math.pow(10, coinInfo.decimal)
 //       const share = Number(event.data_decoded.share) / Math.pow(10, coinInfo.decimal)
-      
+
 //       const price = await getPriceByType(SuiNetwork.MAIN_NET, coinType, ctx.timestamp)
 //       const amount_usd = amount * price!
 
@@ -328,7 +389,7 @@ for (let i = 0; i < constant.MOLE_WORKER_INFO_LIST.length; i++) {
 
 //       const amount = Number(event.data_decoded.amount) / Math.pow(10, coinInfo.decimal)
 //       const share = Number(event.data_decoded.share) / Math.pow(10, coinInfo.decimal)
-      
+
 //       const price = await getPriceByType(SuiNetwork.MAIN_NET, coinType, ctx.timestamp)
 //       const amount_usd = amount * price!
 
@@ -353,7 +414,7 @@ for (let i = 0; i < constant.MOLE_WORKER_INFO_LIST.length; i++) {
   //     const coin_symbol = coinInfo.symbol
 
   //     const debt_share = Number(event.data_decoded.debt_share) / Math.pow(10, coinInfo.decimal)
-      
+
   //     const price = await getPriceByType(SuiNetwork.MAIN_NET, coinType, ctx.timestamp)
   //     const debt_share_usd = debt_share * price!
 
@@ -367,7 +428,7 @@ for (let i = 0; i < constant.MOLE_WORKER_INFO_LIST.length; i++) {
   //     })
   //   },
   // )
-  
+
 //   .onEventRemoveDebtEvent(
 //     async (event, ctx) => {
 //       const coinType = event.type_arguments[0]
@@ -376,7 +437,7 @@ for (let i = 0; i < constant.MOLE_WORKER_INFO_LIST.length; i++) {
 //       const coin_symbol = coinInfo.symbol
 
 //       const debt_share = Number(event.data_decoded.debt_share) / Math.pow(10, coinInfo.decimal)
-      
+
 //       const price = await getPriceByType(SuiNetwork.MAIN_NET, coinType, ctx.timestamp)
 //       const debt_share_usd = debt_share * price!
 
@@ -391,7 +452,7 @@ for (let i = 0; i < constant.MOLE_WORKER_INFO_LIST.length; i++) {
 
 //     },
 //   )
-  
+
 //   .onEventWorkEvent(
 //     async (event, ctx) => {
 //       const coinType = event.type_arguments[0]
@@ -423,14 +484,14 @@ for (let i = 0; i < constant.MOLE_WORKER_INFO_LIST.length; i++) {
 //       const coinInfo = await buildCoinInfo(ctx, coinType)
 //       const coin_symbol = coinInfo.symbol
 //       const price = await getPriceByType(SuiNetwork.MAIN_NET, coinType, ctx.timestamp)
-      
+
 //       const debt = Number(event.data_decoded.debt) / Math.pow(10, coinInfo.decimal)
 
 //       const posVal = Number(event.data_decoded.posVal) / Math.pow(10, coinInfo.decimal)
 //       const posVal_usd = posVal * price!
 
 //       const prize = Number(event.data_decoded.prize) / Math.pow(10, coinInfo.decimal)
-      
+
 //       ctx.meter.Counter("kill_posVal_usd").add(posVal_usd, { coin_symbol,  project: "mole" })
 //       ctx.meter.Counter("kill_counter").add(1, { coin_symbol,  project: "mole" })
 
@@ -444,7 +505,7 @@ for (let i = 0; i < constant.MOLE_WORKER_INFO_LIST.length; i++) {
 //       })
 //     },
 //   )
-  
+
 //   .onEventAddCollateralEvent(
 //     async (event, ctx) => {
 //       const coinType = event.type_arguments[0]
@@ -468,4 +529,3 @@ for (let i = 0; i < constant.MOLE_WORKER_INFO_LIST.length; i++) {
 //       })
 //     },
 //   )
-

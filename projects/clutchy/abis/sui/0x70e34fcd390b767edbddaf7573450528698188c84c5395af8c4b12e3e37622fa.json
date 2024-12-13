@@ -1,0 +1,1021 @@
+[
+	{
+		"fileFormatVersion": 6,
+		"address": "0x70e34fcd390b767edbddaf7573450528698188c84c5395af8c4b12e3e37622fa",
+		"name": "allowlist",
+		"friends": [],
+		"structs": {
+			"ALLOWLIST": {
+				"abilities": {
+					"abilities": [
+						"Drop"
+					]
+				},
+				"typeParameters": [],
+				"fields": [
+					{
+						"name": "dummy_field",
+						"type": "Bool"
+					}
+				]
+			},
+			"Allowlist": {
+				"abilities": {
+					"abilities": [
+						"Store",
+						"Key"
+					]
+				},
+				"typeParameters": [],
+				"fields": [
+					{
+						"name": "id",
+						"type": {
+							"Struct": {
+								"address": "0x2",
+								"module": "object",
+								"name": "UID",
+								"typeArguments": []
+							}
+						}
+					},
+					{
+						"name": "version",
+						"type": "U64"
+					},
+					{
+						"name": "admin_witness",
+						"type": {
+							"Struct": {
+								"address": "0x1",
+								"module": "option",
+								"name": "Option",
+								"typeArguments": [
+									{
+										"Struct": {
+											"address": "0x1",
+											"module": "type_name",
+											"name": "TypeName",
+											"typeArguments": []
+										}
+									}
+								]
+							}
+						}
+					},
+					{
+						"name": "authorities",
+						"type": {
+							"Struct": {
+								"address": "0x2",
+								"module": "vec_set",
+								"name": "VecSet",
+								"typeArguments": [
+									{
+										"Struct": {
+											"address": "0x1",
+											"module": "type_name",
+											"name": "TypeName",
+											"typeArguments": []
+										}
+									}
+								]
+							}
+						}
+					}
+				]
+			},
+			"AllowlistOwnerCap": {
+				"abilities": {
+					"abilities": [
+						"Store",
+						"Key"
+					]
+				},
+				"typeParameters": [],
+				"fields": [
+					{
+						"name": "id",
+						"type": {
+							"Struct": {
+								"address": "0x2",
+								"module": "object",
+								"name": "UID",
+								"typeArguments": []
+							}
+						}
+					},
+					{
+						"name": "for",
+						"type": {
+							"Struct": {
+								"address": "0x2",
+								"module": "object",
+								"name": "ID",
+								"typeArguments": []
+							}
+						}
+					}
+				]
+			},
+			"CollectionKey": {
+				"abilities": {
+					"abilities": []
+				},
+				"typeParameters": [],
+				"fields": [
+					{
+						"name": "type_name",
+						"type": {
+							"Struct": {
+								"address": "0x1",
+								"module": "type_name",
+								"name": "TypeName",
+								"typeArguments": []
+							}
+						}
+					}
+				]
+			}
+		},
+		"exposedFunctions": {
+			"assert_admin_witness": {
+				"visibility": "Public",
+				"isEntry": false,
+				"typeParameters": [
+					{
+						"abilities": [
+							"Drop"
+						]
+					}
+				],
+				"parameters": [
+					{
+						"Reference": {
+							"Struct": {
+								"address": "0x70e34fcd390b767edbddaf7573450528698188c84c5395af8c4b12e3e37622fa",
+								"module": "allowlist",
+								"name": "Allowlist",
+								"typeArguments": []
+							}
+						}
+					}
+				],
+				"return": []
+			},
+			"assert_authority": {
+				"visibility": "Public",
+				"isEntry": false,
+				"typeParameters": [],
+				"parameters": [
+					{
+						"Reference": {
+							"Struct": {
+								"address": "0x70e34fcd390b767edbddaf7573450528698188c84c5395af8c4b12e3e37622fa",
+								"module": "allowlist",
+								"name": "Allowlist",
+								"typeArguments": []
+							}
+						}
+					},
+					{
+						"Reference": {
+							"Struct": {
+								"address": "0x1",
+								"module": "type_name",
+								"name": "TypeName",
+								"typeArguments": []
+							}
+						}
+					}
+				],
+				"return": []
+			},
+			"assert_cap": {
+				"visibility": "Public",
+				"isEntry": false,
+				"typeParameters": [],
+				"parameters": [
+					{
+						"Reference": {
+							"Struct": {
+								"address": "0x70e34fcd390b767edbddaf7573450528698188c84c5395af8c4b12e3e37622fa",
+								"module": "allowlist",
+								"name": "Allowlist",
+								"typeArguments": []
+							}
+						}
+					},
+					{
+						"Reference": {
+							"Struct": {
+								"address": "0x70e34fcd390b767edbddaf7573450528698188c84c5395af8c4b12e3e37622fa",
+								"module": "allowlist",
+								"name": "AllowlistOwnerCap",
+								"typeArguments": []
+							}
+						}
+					}
+				],
+				"return": []
+			},
+			"assert_collection": {
+				"visibility": "Public",
+				"isEntry": false,
+				"typeParameters": [],
+				"parameters": [
+					{
+						"Reference": {
+							"Struct": {
+								"address": "0x70e34fcd390b767edbddaf7573450528698188c84c5395af8c4b12e3e37622fa",
+								"module": "allowlist",
+								"name": "Allowlist",
+								"typeArguments": []
+							}
+						}
+					},
+					{
+						"Struct": {
+							"address": "0x1",
+							"module": "type_name",
+							"name": "TypeName",
+							"typeArguments": []
+						}
+					}
+				],
+				"return": []
+			},
+			"assert_publisher": {
+				"visibility": "Public",
+				"isEntry": false,
+				"typeParameters": [
+					{
+						"abilities": []
+					}
+				],
+				"parameters": [
+					{
+						"Reference": {
+							"Struct": {
+								"address": "0x2",
+								"module": "package",
+								"name": "Publisher",
+								"typeArguments": []
+							}
+						}
+					}
+				],
+				"return": []
+			},
+			"assert_transferable": {
+				"visibility": "Public",
+				"isEntry": false,
+				"typeParameters": [],
+				"parameters": [
+					{
+						"Reference": {
+							"Struct": {
+								"address": "0x70e34fcd390b767edbddaf7573450528698188c84c5395af8c4b12e3e37622fa",
+								"module": "allowlist",
+								"name": "Allowlist",
+								"typeArguments": []
+							}
+						}
+					},
+					{
+						"Struct": {
+							"address": "0x1",
+							"module": "type_name",
+							"name": "TypeName",
+							"typeArguments": []
+						}
+					},
+					{
+						"Reference": {
+							"Struct": {
+								"address": "0x1",
+								"module": "type_name",
+								"name": "TypeName",
+								"typeArguments": []
+							}
+						}
+					}
+				],
+				"return": []
+			},
+			"borrow_authorities": {
+				"visibility": "Public",
+				"isEntry": false,
+				"typeParameters": [],
+				"parameters": [
+					{
+						"Reference": {
+							"Struct": {
+								"address": "0x70e34fcd390b767edbddaf7573450528698188c84c5395af8c4b12e3e37622fa",
+								"module": "allowlist",
+								"name": "Allowlist",
+								"typeArguments": []
+							}
+						}
+					}
+				],
+				"return": [
+					{
+						"Reference": {
+							"Struct": {
+								"address": "0x2",
+								"module": "vec_set",
+								"name": "VecSet",
+								"typeArguments": [
+									{
+										"Struct": {
+											"address": "0x1",
+											"module": "type_name",
+											"name": "TypeName",
+											"typeArguments": []
+										}
+									}
+								]
+							}
+						}
+					}
+				]
+			},
+			"clone": {
+				"visibility": "Public",
+				"isEntry": false,
+				"typeParameters": [],
+				"parameters": [
+					{
+						"Reference": {
+							"Struct": {
+								"address": "0x70e34fcd390b767edbddaf7573450528698188c84c5395af8c4b12e3e37622fa",
+								"module": "allowlist",
+								"name": "Allowlist",
+								"typeArguments": []
+							}
+						}
+					},
+					{
+						"MutableReference": {
+							"Struct": {
+								"address": "0x2",
+								"module": "tx_context",
+								"name": "TxContext",
+								"typeArguments": []
+							}
+						}
+					}
+				],
+				"return": [
+					{
+						"Struct": {
+							"address": "0x70e34fcd390b767edbddaf7573450528698188c84c5395af8c4b12e3e37622fa",
+							"module": "allowlist",
+							"name": "Allowlist",
+							"typeArguments": []
+						}
+					},
+					{
+						"Struct": {
+							"address": "0x70e34fcd390b767edbddaf7573450528698188c84c5395af8c4b12e3e37622fa",
+							"module": "allowlist",
+							"name": "AllowlistOwnerCap",
+							"typeArguments": []
+						}
+					}
+				]
+			},
+			"contains_authority": {
+				"visibility": "Public",
+				"isEntry": false,
+				"typeParameters": [],
+				"parameters": [
+					{
+						"Reference": {
+							"Struct": {
+								"address": "0x70e34fcd390b767edbddaf7573450528698188c84c5395af8c4b12e3e37622fa",
+								"module": "allowlist",
+								"name": "Allowlist",
+								"typeArguments": []
+							}
+						}
+					},
+					{
+						"Reference": {
+							"Struct": {
+								"address": "0x1",
+								"module": "type_name",
+								"name": "TypeName",
+								"typeArguments": []
+							}
+						}
+					}
+				],
+				"return": [
+					"Bool"
+				]
+			},
+			"contains_collection": {
+				"visibility": "Public",
+				"isEntry": false,
+				"typeParameters": [],
+				"parameters": [
+					{
+						"Reference": {
+							"Struct": {
+								"address": "0x70e34fcd390b767edbddaf7573450528698188c84c5395af8c4b12e3e37622fa",
+								"module": "allowlist",
+								"name": "Allowlist",
+								"typeArguments": []
+							}
+						}
+					},
+					{
+						"Struct": {
+							"address": "0x1",
+							"module": "type_name",
+							"name": "TypeName",
+							"typeArguments": []
+						}
+					}
+				],
+				"return": [
+					"Bool"
+				]
+			},
+			"delete_allowlist": {
+				"visibility": "Public",
+				"isEntry": true,
+				"typeParameters": [],
+				"parameters": [
+					{
+						"Struct": {
+							"address": "0x70e34fcd390b767edbddaf7573450528698188c84c5395af8c4b12e3e37622fa",
+							"module": "allowlist",
+							"name": "Allowlist",
+							"typeArguments": []
+						}
+					}
+				],
+				"return": []
+			},
+			"delete_owner_cap": {
+				"visibility": "Public",
+				"isEntry": true,
+				"typeParameters": [],
+				"parameters": [
+					{
+						"Struct": {
+							"address": "0x70e34fcd390b767edbddaf7573450528698188c84c5395af8c4b12e3e37622fa",
+							"module": "allowlist",
+							"name": "AllowlistOwnerCap",
+							"typeArguments": []
+						}
+					}
+				],
+				"return": []
+			},
+			"init_allowlist": {
+				"visibility": "Public",
+				"isEntry": false,
+				"typeParameters": [],
+				"parameters": [
+					{
+						"MutableReference": {
+							"Struct": {
+								"address": "0x2",
+								"module": "tx_context",
+								"name": "TxContext",
+								"typeArguments": []
+							}
+						}
+					}
+				],
+				"return": [
+					{
+						"Struct": {
+							"address": "0x2",
+							"module": "object",
+							"name": "ID",
+							"typeArguments": []
+						}
+					},
+					{
+						"Struct": {
+							"address": "0x2",
+							"module": "object",
+							"name": "ID",
+							"typeArguments": []
+						}
+					}
+				]
+			},
+			"init_cloned": {
+				"visibility": "Public",
+				"isEntry": false,
+				"typeParameters": [],
+				"parameters": [
+					{
+						"Reference": {
+							"Struct": {
+								"address": "0x70e34fcd390b767edbddaf7573450528698188c84c5395af8c4b12e3e37622fa",
+								"module": "allowlist",
+								"name": "Allowlist",
+								"typeArguments": []
+							}
+						}
+					},
+					{
+						"MutableReference": {
+							"Struct": {
+								"address": "0x2",
+								"module": "tx_context",
+								"name": "TxContext",
+								"typeArguments": []
+							}
+						}
+					}
+				],
+				"return": [
+					{
+						"Struct": {
+							"address": "0x2",
+							"module": "object",
+							"name": "ID",
+							"typeArguments": []
+						}
+					},
+					{
+						"Struct": {
+							"address": "0x2",
+							"module": "object",
+							"name": "ID",
+							"typeArguments": []
+						}
+					}
+				]
+			},
+			"insert_authority": {
+				"visibility": "Public",
+				"isEntry": true,
+				"typeParameters": [
+					{
+						"abilities": []
+					}
+				],
+				"parameters": [
+					{
+						"Reference": {
+							"Struct": {
+								"address": "0x70e34fcd390b767edbddaf7573450528698188c84c5395af8c4b12e3e37622fa",
+								"module": "allowlist",
+								"name": "AllowlistOwnerCap",
+								"typeArguments": []
+							}
+						}
+					},
+					{
+						"MutableReference": {
+							"Struct": {
+								"address": "0x70e34fcd390b767edbddaf7573450528698188c84c5395af8c4b12e3e37622fa",
+								"module": "allowlist",
+								"name": "Allowlist",
+								"typeArguments": []
+							}
+						}
+					}
+				],
+				"return": []
+			},
+			"insert_authority_with_witness": {
+				"visibility": "Public",
+				"isEntry": false,
+				"typeParameters": [
+					{
+						"abilities": [
+							"Drop"
+						]
+					},
+					{
+						"abilities": []
+					}
+				],
+				"parameters": [
+					{
+						"TypeParameter": 0
+					},
+					{
+						"MutableReference": {
+							"Struct": {
+								"address": "0x70e34fcd390b767edbddaf7573450528698188c84c5395af8c4b12e3e37622fa",
+								"module": "allowlist",
+								"name": "Allowlist",
+								"typeArguments": []
+							}
+						}
+					}
+				],
+				"return": []
+			},
+			"insert_collection": {
+				"visibility": "Public",
+				"isEntry": true,
+				"typeParameters": [
+					{
+						"abilities": []
+					}
+				],
+				"parameters": [
+					{
+						"MutableReference": {
+							"Struct": {
+								"address": "0x70e34fcd390b767edbddaf7573450528698188c84c5395af8c4b12e3e37622fa",
+								"module": "allowlist",
+								"name": "Allowlist",
+								"typeArguments": []
+							}
+						}
+					},
+					{
+						"Reference": {
+							"Struct": {
+								"address": "0x2",
+								"module": "package",
+								"name": "Publisher",
+								"typeArguments": []
+							}
+						}
+					}
+				],
+				"return": []
+			},
+			"migrate": {
+				"visibility": "Private",
+				"isEntry": true,
+				"typeParameters": [],
+				"parameters": [
+					{
+						"MutableReference": {
+							"Struct": {
+								"address": "0x70e34fcd390b767edbddaf7573450528698188c84c5395af8c4b12e3e37622fa",
+								"module": "allowlist",
+								"name": "Allowlist",
+								"typeArguments": []
+							}
+						}
+					},
+					{
+						"Reference": {
+							"Struct": {
+								"address": "0x70e34fcd390b767edbddaf7573450528698188c84c5395af8c4b12e3e37622fa",
+								"module": "allowlist",
+								"name": "AllowlistOwnerCap",
+								"typeArguments": []
+							}
+						}
+					}
+				],
+				"return": []
+			},
+			"new": {
+				"visibility": "Public",
+				"isEntry": false,
+				"typeParameters": [],
+				"parameters": [
+					{
+						"MutableReference": {
+							"Struct": {
+								"address": "0x2",
+								"module": "tx_context",
+								"name": "TxContext",
+								"typeArguments": []
+							}
+						}
+					}
+				],
+				"return": [
+					{
+						"Struct": {
+							"address": "0x70e34fcd390b767edbddaf7573450528698188c84c5395af8c4b12e3e37622fa",
+							"module": "allowlist",
+							"name": "Allowlist",
+							"typeArguments": []
+						}
+					},
+					{
+						"Struct": {
+							"address": "0x70e34fcd390b767edbddaf7573450528698188c84c5395af8c4b12e3e37622fa",
+							"module": "allowlist",
+							"name": "AllowlistOwnerCap",
+							"typeArguments": []
+						}
+					}
+				]
+			},
+			"new_embedded": {
+				"visibility": "Public",
+				"isEntry": false,
+				"typeParameters": [
+					{
+						"abilities": [
+							"Drop"
+						]
+					}
+				],
+				"parameters": [
+					{
+						"TypeParameter": 0
+					},
+					{
+						"MutableReference": {
+							"Struct": {
+								"address": "0x2",
+								"module": "tx_context",
+								"name": "TxContext",
+								"typeArguments": []
+							}
+						}
+					}
+				],
+				"return": [
+					{
+						"Struct": {
+							"address": "0x70e34fcd390b767edbddaf7573450528698188c84c5395af8c4b12e3e37622fa",
+							"module": "allowlist",
+							"name": "Allowlist",
+							"typeArguments": []
+						}
+					}
+				]
+			},
+			"new_embedded_with_authorities": {
+				"visibility": "Public",
+				"isEntry": false,
+				"typeParameters": [
+					{
+						"abilities": [
+							"Drop"
+						]
+					}
+				],
+				"parameters": [
+					{
+						"TypeParameter": 0
+					},
+					{
+						"Struct": {
+							"address": "0x2",
+							"module": "vec_set",
+							"name": "VecSet",
+							"typeArguments": [
+								{
+									"Struct": {
+										"address": "0x1",
+										"module": "type_name",
+										"name": "TypeName",
+										"typeArguments": []
+									}
+								}
+							]
+						}
+					},
+					{
+						"MutableReference": {
+							"Struct": {
+								"address": "0x2",
+								"module": "tx_context",
+								"name": "TxContext",
+								"typeArguments": []
+							}
+						}
+					}
+				],
+				"return": [
+					{
+						"Struct": {
+							"address": "0x70e34fcd390b767edbddaf7573450528698188c84c5395af8c4b12e3e37622fa",
+							"module": "allowlist",
+							"name": "Allowlist",
+							"typeArguments": []
+						}
+					}
+				]
+			},
+			"new_with_authorities": {
+				"visibility": "Public",
+				"isEntry": false,
+				"typeParameters": [],
+				"parameters": [
+					{
+						"Struct": {
+							"address": "0x2",
+							"module": "vec_set",
+							"name": "VecSet",
+							"typeArguments": [
+								{
+									"Struct": {
+										"address": "0x1",
+										"module": "type_name",
+										"name": "TypeName",
+										"typeArguments": []
+									}
+								}
+							]
+						}
+					},
+					{
+						"MutableReference": {
+							"Struct": {
+								"address": "0x2",
+								"module": "tx_context",
+								"name": "TxContext",
+								"typeArguments": []
+							}
+						}
+					}
+				],
+				"return": [
+					{
+						"Struct": {
+							"address": "0x70e34fcd390b767edbddaf7573450528698188c84c5395af8c4b12e3e37622fa",
+							"module": "allowlist",
+							"name": "Allowlist",
+							"typeArguments": []
+						}
+					},
+					{
+						"Struct": {
+							"address": "0x70e34fcd390b767edbddaf7573450528698188c84c5395af8c4b12e3e37622fa",
+							"module": "allowlist",
+							"name": "AllowlistOwnerCap",
+							"typeArguments": []
+						}
+					}
+				]
+			},
+			"remove_authority": {
+				"visibility": "Public",
+				"isEntry": true,
+				"typeParameters": [
+					{
+						"abilities": []
+					}
+				],
+				"parameters": [
+					{
+						"Reference": {
+							"Struct": {
+								"address": "0x70e34fcd390b767edbddaf7573450528698188c84c5395af8c4b12e3e37622fa",
+								"module": "allowlist",
+								"name": "AllowlistOwnerCap",
+								"typeArguments": []
+							}
+						}
+					},
+					{
+						"MutableReference": {
+							"Struct": {
+								"address": "0x70e34fcd390b767edbddaf7573450528698188c84c5395af8c4b12e3e37622fa",
+								"module": "allowlist",
+								"name": "Allowlist",
+								"typeArguments": []
+							}
+						}
+					}
+				],
+				"return": []
+			},
+			"remove_authority_with_witness": {
+				"visibility": "Public",
+				"isEntry": false,
+				"typeParameters": [
+					{
+						"abilities": [
+							"Drop"
+						]
+					},
+					{
+						"abilities": []
+					}
+				],
+				"parameters": [
+					{
+						"TypeParameter": 0
+					},
+					{
+						"MutableReference": {
+							"Struct": {
+								"address": "0x70e34fcd390b767edbddaf7573450528698188c84c5395af8c4b12e3e37622fa",
+								"module": "allowlist",
+								"name": "Allowlist",
+								"typeArguments": []
+							}
+						}
+					}
+				],
+				"return": []
+			},
+			"remove_collection": {
+				"visibility": "Public",
+				"isEntry": true,
+				"typeParameters": [
+					{
+						"abilities": []
+					}
+				],
+				"parameters": [
+					{
+						"MutableReference": {
+							"Struct": {
+								"address": "0x70e34fcd390b767edbddaf7573450528698188c84c5395af8c4b12e3e37622fa",
+								"module": "allowlist",
+								"name": "Allowlist",
+								"typeArguments": []
+							}
+						}
+					},
+					{
+						"Reference": {
+							"Struct": {
+								"address": "0x2",
+								"module": "package",
+								"name": "Publisher",
+								"typeArguments": []
+							}
+						}
+					}
+				],
+				"return": []
+			},
+			"remove_collection_": {
+				"visibility": "Public",
+				"isEntry": true,
+				"typeParameters": [
+					{
+						"abilities": []
+					}
+				],
+				"parameters": [
+					{
+						"MutableReference": {
+							"Struct": {
+								"address": "0x70e34fcd390b767edbddaf7573450528698188c84c5395af8c4b12e3e37622fa",
+								"module": "allowlist",
+								"name": "Allowlist",
+								"typeArguments": []
+							}
+						}
+					}
+				],
+				"return": []
+			}
+		}
+	},
+	{
+		"fileFormatVersion": 6,
+		"address": "0x70e34fcd390b767edbddaf7573450528698188c84c5395af8c4b12e3e37622fa",
+		"name": "frozen_pub",
+		"friends": [],
+		"structs": {
+			"FROZEN_PUB": {
+				"abilities": {
+					"abilities": [
+						"Drop"
+					]
+				},
+				"typeParameters": [],
+				"fields": [
+					{
+						"name": "dummy_field",
+						"type": "Bool"
+					}
+				]
+			}
+		},
+		"exposedFunctions": {}
+	},
+	{
+		"fileFormatVersion": 6,
+		"address": "0x70e34fcd390b767edbddaf7573450528698188c84c5395af8c4b12e3e37622fa",
+		"name": "ob_allowlist",
+		"friends": [],
+		"structs": {
+			"OB_ALLOWLIST": {
+				"abilities": {
+					"abilities": [
+						"Drop"
+					]
+				},
+				"typeParameters": [],
+				"fields": [
+					{
+						"name": "dummy_field",
+						"type": "Bool"
+					}
+				]
+			}
+		},
+		"exposedFunctions": {}
+	}
+]

@@ -1,0 +1,802 @@
+[
+	{
+		"fileFormatVersion": 6,
+		"address": "0xaa0baef686525169f13ac793e08fb02e2fb9d9c614de46be24e8d4f3abd07d66",
+		"name": "souffl3",
+		"friends": [],
+		"structs": {
+			"NFT": {
+				"abilities": {
+					"abilities": [
+						"Store",
+						"Key"
+					]
+				},
+				"typeParameters": [
+					{
+						"constraints": {
+							"abilities": []
+						},
+						"isPhantom": true
+					}
+				],
+				"fields": [
+					{
+						"name": "id",
+						"type": {
+							"Struct": {
+								"address": "0x2",
+								"module": "object",
+								"name": "UID",
+								"typeArguments": []
+							}
+						}
+					},
+					{
+						"name": "index",
+						"type": "U64"
+					},
+					{
+						"name": "name",
+						"type": {
+							"Struct": {
+								"address": "0x1",
+								"module": "string",
+								"name": "String",
+								"typeArguments": []
+							}
+						}
+					},
+					{
+						"name": "image_url",
+						"type": {
+							"Struct": {
+								"address": "0x1",
+								"module": "string",
+								"name": "String",
+								"typeArguments": []
+							}
+						}
+					},
+					{
+						"name": "properties",
+						"type": {
+							"Struct": {
+								"address": "0x2",
+								"module": "vec_map",
+								"name": "VecMap",
+								"typeArguments": [
+									{
+										"Struct": {
+											"address": "0x1",
+											"module": "string",
+											"name": "String",
+											"typeArguments": []
+										}
+									},
+									{
+										"Struct": {
+											"address": "0x1",
+											"module": "string",
+											"name": "String",
+											"typeArguments": []
+										}
+									}
+								]
+							}
+						}
+					}
+				]
+			},
+			"SOUFFL3": {
+				"abilities": {
+					"abilities": [
+						"Drop"
+					]
+				},
+				"typeParameters": [],
+				"fields": [
+					{
+						"name": "dummy_field",
+						"type": "Bool"
+					}
+				]
+			},
+			"SharedPublisher": {
+				"abilities": {
+					"abilities": [
+						"Store",
+						"Key"
+					]
+				},
+				"typeParameters": [],
+				"fields": [
+					{
+						"name": "id",
+						"type": {
+							"Struct": {
+								"address": "0x2",
+								"module": "object",
+								"name": "UID",
+								"typeArguments": []
+							}
+						}
+					},
+					{
+						"name": "publisher",
+						"type": {
+							"Struct": {
+								"address": "0x2",
+								"module": "package",
+								"name": "Publisher",
+								"typeArguments": []
+							}
+						}
+					}
+				]
+			}
+		},
+		"exposedFunctions": {
+			"burn": {
+				"visibility": "Public",
+				"isEntry": false,
+				"typeParameters": [
+					{
+						"abilities": []
+					},
+					{
+						"abilities": [
+							"Drop"
+						]
+					}
+				],
+				"parameters": [
+					{
+						"TypeParameter": 1
+					},
+					{
+						"Struct": {
+							"address": "0xaa0baef686525169f13ac793e08fb02e2fb9d9c614de46be24e8d4f3abd07d66",
+							"module": "souffl3",
+							"name": "NFT",
+							"typeArguments": [
+								{
+									"TypeParameter": 0
+								}
+							]
+						}
+					}
+				],
+				"return": []
+			},
+			"create_display": {
+				"visibility": "Public",
+				"isEntry": false,
+				"typeParameters": [
+					{
+						"abilities": []
+					}
+				],
+				"parameters": [
+					{
+						"Reference": {
+							"Struct": {
+								"address": "0x56714d6578dafaaec566c1483ac0fc5fb206b506455a8d59b043d67d243243eb",
+								"module": "version",
+								"name": "Version",
+								"typeArguments": []
+							}
+						}
+					},
+					{
+						"Reference": {
+							"Struct": {
+								"address": "0xbc3df36be17f27ac98e3c839b2589db8475fa07b20657b08e8891e3aaf5ee5f9",
+								"module": "mint_cap",
+								"name": "MintCap",
+								"typeArguments": [
+									{
+										"TypeParameter": 0
+									}
+								]
+							}
+						}
+					},
+					{
+						"Reference": {
+							"Struct": {
+								"address": "0xaa0baef686525169f13ac793e08fb02e2fb9d9c614de46be24e8d4f3abd07d66",
+								"module": "souffl3",
+								"name": "SharedPublisher",
+								"typeArguments": []
+							}
+						}
+					},
+					{
+						"MutableReference": {
+							"Struct": {
+								"address": "0x2",
+								"module": "tx_context",
+								"name": "TxContext",
+								"typeArguments": []
+							}
+						}
+					}
+				],
+				"return": [
+					{
+						"Struct": {
+							"address": "0x2",
+							"module": "display",
+							"name": "Display",
+							"typeArguments": [
+								{
+									"Struct": {
+										"address": "0xaa0baef686525169f13ac793e08fb02e2fb9d9c614de46be24e8d4f3abd07d66",
+										"module": "souffl3",
+										"name": "NFT",
+										"typeArguments": [
+											{
+												"TypeParameter": 0
+											}
+										]
+									}
+								}
+							]
+						}
+					}
+				]
+			},
+			"create_then_set_display_and_transfer_policy_then_royalty_rule": {
+				"visibility": "Public",
+				"isEntry": true,
+				"typeParameters": [
+					{
+						"abilities": []
+					}
+				],
+				"parameters": [
+					{
+						"Reference": {
+							"Struct": {
+								"address": "0x56714d6578dafaaec566c1483ac0fc5fb206b506455a8d59b043d67d243243eb",
+								"module": "version",
+								"name": "Version",
+								"typeArguments": []
+							}
+						}
+					},
+					{
+						"Reference": {
+							"Struct": {
+								"address": "0xbc3df36be17f27ac98e3c839b2589db8475fa07b20657b08e8891e3aaf5ee5f9",
+								"module": "mint_cap",
+								"name": "MintCap",
+								"typeArguments": [
+									{
+										"TypeParameter": 0
+									}
+								]
+							}
+						}
+					},
+					{
+						"Reference": {
+							"Struct": {
+								"address": "0xaa0baef686525169f13ac793e08fb02e2fb9d9c614de46be24e8d4f3abd07d66",
+								"module": "souffl3",
+								"name": "SharedPublisher",
+								"typeArguments": []
+							}
+						}
+					},
+					{
+						"Struct": {
+							"address": "0x1",
+							"module": "string",
+							"name": "String",
+							"typeArguments": []
+						}
+					},
+					{
+						"Struct": {
+							"address": "0x1",
+							"module": "string",
+							"name": "String",
+							"typeArguments": []
+						}
+					},
+					"U16",
+					"U64",
+					{
+						"MutableReference": {
+							"Struct": {
+								"address": "0x2",
+								"module": "tx_context",
+								"name": "TxContext",
+								"typeArguments": []
+							}
+						}
+					}
+				],
+				"return": []
+			},
+			"create_then_set_display_and_transfer_policy_then_royalty_rule_v1": {
+				"visibility": "Public",
+				"isEntry": true,
+				"typeParameters": [
+					{
+						"abilities": []
+					}
+				],
+				"parameters": [
+					{
+						"Reference": {
+							"Struct": {
+								"address": "0x56714d6578dafaaec566c1483ac0fc5fb206b506455a8d59b043d67d243243eb",
+								"module": "version",
+								"name": "Version",
+								"typeArguments": []
+							}
+						}
+					},
+					{
+						"Reference": {
+							"Struct": {
+								"address": "0xbc3df36be17f27ac98e3c839b2589db8475fa07b20657b08e8891e3aaf5ee5f9",
+								"module": "mint_cap",
+								"name": "MintCap",
+								"typeArguments": [
+									{
+										"TypeParameter": 0
+									}
+								]
+							}
+						}
+					},
+					{
+						"Reference": {
+							"Struct": {
+								"address": "0xaa0baef686525169f13ac793e08fb02e2fb9d9c614de46be24e8d4f3abd07d66",
+								"module": "souffl3",
+								"name": "SharedPublisher",
+								"typeArguments": []
+							}
+						}
+					},
+					{
+						"Struct": {
+							"address": "0x1",
+							"module": "string",
+							"name": "String",
+							"typeArguments": []
+						}
+					},
+					{
+						"Struct": {
+							"address": "0x1",
+							"module": "string",
+							"name": "String",
+							"typeArguments": []
+						}
+					},
+					{
+						"Struct": {
+							"address": "0x1",
+							"module": "string",
+							"name": "String",
+							"typeArguments": []
+						}
+					},
+					{
+						"Struct": {
+							"address": "0x1",
+							"module": "string",
+							"name": "String",
+							"typeArguments": []
+						}
+					},
+					"Address",
+					{
+						"Struct": {
+							"address": "0x1",
+							"module": "string",
+							"name": "String",
+							"typeArguments": []
+						}
+					},
+					{
+						"Struct": {
+							"address": "0x1",
+							"module": "string",
+							"name": "String",
+							"typeArguments": []
+						}
+					},
+					"U16",
+					"U64",
+					{
+						"MutableReference": {
+							"Struct": {
+								"address": "0x2",
+								"module": "tx_context",
+								"name": "TxContext",
+								"typeArguments": []
+							}
+						}
+					}
+				],
+				"return": []
+			},
+			"mint_nft_with_cap": {
+				"visibility": "Public",
+				"isEntry": false,
+				"typeParameters": [
+					{
+						"abilities": []
+					}
+				],
+				"parameters": [
+					{
+						"Reference": {
+							"Struct": {
+								"address": "0x56714d6578dafaaec566c1483ac0fc5fb206b506455a8d59b043d67d243243eb",
+								"module": "version",
+								"name": "Version",
+								"typeArguments": []
+							}
+						}
+					},
+					"U64",
+					{
+						"Struct": {
+							"address": "0x1",
+							"module": "string",
+							"name": "String",
+							"typeArguments": []
+						}
+					},
+					{
+						"Struct": {
+							"address": "0x1",
+							"module": "string",
+							"name": "String",
+							"typeArguments": []
+						}
+					},
+					{
+						"Reference": {
+							"Struct": {
+								"address": "0xbc3df36be17f27ac98e3c839b2589db8475fa07b20657b08e8891e3aaf5ee5f9",
+								"module": "mint_cap",
+								"name": "MintCap",
+								"typeArguments": [
+									{
+										"TypeParameter": 0
+									}
+								]
+							}
+						}
+					},
+					{
+						"Vector": {
+							"Struct": {
+								"address": "0x1",
+								"module": "string",
+								"name": "String",
+								"typeArguments": []
+							}
+						}
+					},
+					{
+						"Vector": {
+							"Struct": {
+								"address": "0x1",
+								"module": "string",
+								"name": "String",
+								"typeArguments": []
+							}
+						}
+					},
+					{
+						"MutableReference": {
+							"Struct": {
+								"address": "0x2",
+								"module": "tx_context",
+								"name": "TxContext",
+								"typeArguments": []
+							}
+						}
+					}
+				],
+				"return": [
+					{
+						"Struct": {
+							"address": "0xaa0baef686525169f13ac793e08fb02e2fb9d9c614de46be24e8d4f3abd07d66",
+							"module": "souffl3",
+							"name": "NFT",
+							"typeArguments": [
+								{
+									"TypeParameter": 0
+								}
+							]
+						}
+					}
+				]
+			},
+			"mutate_name_and_image_url": {
+				"visibility": "Public",
+				"isEntry": false,
+				"typeParameters": [
+					{
+						"abilities": []
+					},
+					{
+						"abilities": [
+							"Drop"
+						]
+					}
+				],
+				"parameters": [
+					{
+						"TypeParameter": 1
+					},
+					{
+						"MutableReference": {
+							"Struct": {
+								"address": "0xaa0baef686525169f13ac793e08fb02e2fb9d9c614de46be24e8d4f3abd07d66",
+								"module": "souffl3",
+								"name": "NFT",
+								"typeArguments": [
+									{
+										"TypeParameter": 0
+									}
+								]
+							}
+						}
+					},
+					{
+						"Struct": {
+							"address": "0x1",
+							"module": "string",
+							"name": "String",
+							"typeArguments": []
+						}
+					},
+					{
+						"Struct": {
+							"address": "0x1",
+							"module": "string",
+							"name": "String",
+							"typeArguments": []
+						}
+					}
+				],
+				"return": []
+			},
+			"new_version": {
+				"visibility": "Public",
+				"isEntry": false,
+				"typeParameters": [],
+				"parameters": [
+					{
+						"Reference": {
+							"Struct": {
+								"address": "0xaa0baef686525169f13ac793e08fb02e2fb9d9c614de46be24e8d4f3abd07d66",
+								"module": "souffl3",
+								"name": "SharedPublisher",
+								"typeArguments": []
+							}
+						}
+					},
+					{
+						"MutableReference": {
+							"Struct": {
+								"address": "0x56714d6578dafaaec566c1483ac0fc5fb206b506455a8d59b043d67d243243eb",
+								"module": "version",
+								"name": "Version",
+								"typeArguments": []
+							}
+						}
+					},
+					{
+						"MutableReference": {
+							"Struct": {
+								"address": "0x2",
+								"module": "tx_context",
+								"name": "TxContext",
+								"typeArguments": []
+							}
+						}
+					}
+				],
+				"return": []
+			},
+			"set_collection_info": {
+				"visibility": "Public",
+				"isEntry": false,
+				"typeParameters": [
+					{
+						"abilities": []
+					}
+				],
+				"parameters": [
+					{
+						"Reference": {
+							"Struct": {
+								"address": "0x56714d6578dafaaec566c1483ac0fc5fb206b506455a8d59b043d67d243243eb",
+								"module": "version",
+								"name": "Version",
+								"typeArguments": []
+							}
+						}
+					},
+					{
+						"MutableReference": {
+							"Struct": {
+								"address": "0x2",
+								"module": "display",
+								"name": "Display",
+								"typeArguments": [
+									{
+										"Struct": {
+											"address": "0xaa0baef686525169f13ac793e08fb02e2fb9d9c614de46be24e8d4f3abd07d66",
+											"module": "souffl3",
+											"name": "NFT",
+											"typeArguments": [
+												{
+													"TypeParameter": 0
+												}
+											]
+										}
+									}
+								]
+							}
+						}
+					},
+					{
+						"Struct": {
+							"address": "0x1",
+							"module": "string",
+							"name": "String",
+							"typeArguments": []
+						}
+					},
+					{
+						"Struct": {
+							"address": "0x1",
+							"module": "string",
+							"name": "String",
+							"typeArguments": []
+						}
+					},
+					{
+						"Struct": {
+							"address": "0x1",
+							"module": "string",
+							"name": "String",
+							"typeArguments": []
+						}
+					},
+					{
+						"Struct": {
+							"address": "0x1",
+							"module": "string",
+							"name": "String",
+							"typeArguments": []
+						}
+					},
+					"Address",
+					{
+						"MutableReference": {
+							"Struct": {
+								"address": "0x2",
+								"module": "tx_context",
+								"name": "TxContext",
+								"typeArguments": []
+							}
+						}
+					}
+				],
+				"return": []
+			},
+			"set_version": {
+				"visibility": "Public",
+				"isEntry": false,
+				"typeParameters": [],
+				"parameters": [
+					{
+						"Reference": {
+							"Struct": {
+								"address": "0xaa0baef686525169f13ac793e08fb02e2fb9d9c614de46be24e8d4f3abd07d66",
+								"module": "souffl3",
+								"name": "SharedPublisher",
+								"typeArguments": []
+							}
+						}
+					},
+					{
+						"MutableReference": {
+							"Struct": {
+								"address": "0x56714d6578dafaaec566c1483ac0fc5fb206b506455a8d59b043d67d243243eb",
+								"module": "version",
+								"name": "Version",
+								"typeArguments": []
+							}
+						}
+					},
+					"U64",
+					{
+						"MutableReference": {
+							"Struct": {
+								"address": "0x2",
+								"module": "tx_context",
+								"name": "TxContext",
+								"typeArguments": []
+							}
+						}
+					}
+				],
+				"return": []
+			}
+		}
+	},
+	{
+		"fileFormatVersion": 6,
+		"address": "0xaa0baef686525169f13ac793e08fb02e2fb9d9c614de46be24e8d4f3abd07d66",
+		"name": "utils",
+		"friends": [],
+		"structs": {
+			"UTILS": {
+				"abilities": {
+					"abilities": [
+						"Drop"
+					]
+				},
+				"typeParameters": [],
+				"fields": [
+					{
+						"name": "dummy_field",
+						"type": "Bool"
+					}
+				]
+			}
+		},
+		"exposedFunctions": {
+			"check_version": {
+				"visibility": "Public",
+				"isEntry": false,
+				"typeParameters": [],
+				"parameters": [
+					{
+						"Reference": {
+							"Struct": {
+								"address": "0x56714d6578dafaaec566c1483ac0fc5fb206b506455a8d59b043d67d243243eb",
+								"module": "version",
+								"name": "Version",
+								"typeArguments": []
+							}
+						}
+					}
+				],
+				"return": []
+			},
+			"from_same_package": {
+				"visibility": "Public",
+				"isEntry": false,
+				"typeParameters": [
+					{
+						"abilities": []
+					},
+					{
+						"abilities": []
+					}
+				],
+				"parameters": [],
+				"return": [
+					"Bool"
+				]
+			}
+		}
+	}
+]

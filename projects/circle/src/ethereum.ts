@@ -7,7 +7,8 @@ import { MintEvent, BurnEvent } from "./types/eth/fiattokenv2.js"
 import { FiatTokenV2Context, FiatTokenV2Processor } from "./types/eth/fiattokenv2.js"
 import { UChildAdministrableERC20Processor, UChildAdministrableERC20Context } from "./types/eth/uchildadministrableerc20.js"
 import { token } from "@sentio/sdk/utils"
-import { EthChainId, Gauge } from "@sentio/sdk";
+import { Gauge } from "@sentio/sdk";
+import { EthChainId } from "@sentio/sdk/eth";
 const DECIMAL = 6
 
 const totalSupplyHandler = async function(_:any, ctx: FiatTokenV2Context) {

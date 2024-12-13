@@ -1,17 +1,19 @@
+import assert from 'assert'
 import {TestProcessorServer} from '@sentio/sdk/testing'
+import { before, describe, test } from 'node:test'
 import {HandlerType} from "@sentio/sdk";
 import fetch from "node-fetch";
 
 describe('Test Processor', () => {
     const service = new TestProcessorServer(() => import('./processor.js'))
 
-    beforeAll(async () => {
+    before(async () => {
         await service.start()
     })
 
     test('has config', async () => {
         const config = await service.getConfig({})
-        expect(config.contractConfigs.length > 0)
+        assert(config.contractConfigs.length > 0)
     })
 
     test('test fetch', async () => {
@@ -22,4 +24,3 @@ describe('Test Processor', () => {
 
     })
 })
-

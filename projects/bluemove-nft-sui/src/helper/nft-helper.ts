@@ -1,3 +1,5 @@
+// @ts-nocheck
+
 import { SuiContext } from "@sentio/sdk/sui"
 
 export function getCollectionName(type: string) {

@@ -1,9 +1,12 @@
+import assert from 'assert'
 import { TestProcessorServer } from '@sentio/sdk/testing'
+import { before, describe, test } from 'node:test'
+import { expect } from 'chai'
 
 describe('Test Processor', () => {
   const service = new TestProcessorServer(() => import('./processor.js'))
 
-  beforeAll(async () => {
+  before(async () => {
     await service.start()
   })
 
@@ -12,9 +15,8 @@ describe('Test Processor', () => {
     expect(config.contractConfigs.length > 0)
   })
 
-  jest.setTimeout(1000000000)
   test('test aux event', async () => {
-    const res = await service.aptos.testEvent(testData3 as any, 0)
+    const res = await service.aptos.testEvent(testData3 as any, 0 as any)
     console.log(res)
   })
 })

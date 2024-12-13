@@ -1,0 +1,21 @@
+ type AccountSnapshot @entity {
+    id: ID!
+    lpBalance: BigInt!
+    timestampMilli: BigInt!
+}
+
+type GlobalState @entity {
+    id: ID!
+    lpTotalSupply: BigInt!
+    totalStoneBalance: BigInt!
+}
+
+type TempEvent @entity {
+    id: ID!
+    eventName: String!
+    args: String!
+    blockNumber: Int!
+    txIdx: Int!
+    eventIdx: Int!
+    timestampMilli: BigInt!
+}

@@ -1,12 +1,13 @@
-import { pool } from './types/aptos/testnet/0x73a2aa302e5e40dd9781a3b2d43ab45b3617a562416c16becfbfe66dcf378141.js'
+import { pool } from './types/aptos/0x54cb0bb2c18564b86e34539b9f89cfe1186e39d89fce54e1cd007b8e61673a85.js'
 import { AptosDex, getCoinInfo, getPairValue, whiteListed } from "@sentio/sdk/aptos/ext";
 import { Gauge, MetricOptions } from "@sentio/sdk";
 import { type_info } from "@sentio/sdk/aptos/builtin/0x1";
-import { AptosNetwork, AptosResourcesProcessor, Transaction_UserTransaction } from "@sentio/sdk/aptos";
+import { AptosNetwork, AptosResourcesProcessor } from "@sentio/sdk/aptos";
 import { MoveFetchConfig, parseMoveType, TypeDescriptor } from "@sentio/sdk/move";
-import { Types } from 'aptos-sdk'
+// import { Types } from 'aptos-sdk'
 import { whitelistCoins } from "@sentio/sdk/aptos/ext";
 import { SimpleCoinInfo } from "@sentio/sdk/move/ext";
+import { UserTransactionResponse, WriteSetChangeWriteResource } from "@aptos-labs/ts-sdk";
 
 export const commonOptions = {sparse: true}
 export const volOptions: MetricOptions = {
@@ -67,12 +68,13 @@ const POOL_PREFIX = pool.Pool.TYPE_QNAME
 const fetchConfig: MoveFetchConfig = {
   resourceChanges: true,
   allEvents: false,
+  inputs: true,
   resourceConfig: {
     moveTypePrefix: POOL_PREFIX,
   }
 }
 
-pool.bind({  startVersion: 638615642 })
+pool.bind()
     .onEventPoolCreatedEvent(async (evt, ctx) => {
       const coinx = toTypeString(evt.data_decoded.x)
       const coiny = toTypeString(evt.data_decoded.y)
@@ -162,9 +164,8 @@ pool.bind({  startVersion: 638615642 })
     }, fetchConfig)
 
 AptosResourcesProcessor.bind({
-  address: "0xe747d92f105d23dbcd47630ac03ddf3c60ea86d7030ec2170897cd499eb89aa1",
-  network: AptosNetwork.TEST_NET,
-  startVersion: 638615642
+  address: "0xa0d8702b7c696d989675cd2f894f44e79361531cff115c0063390922f5463883",
+  // startVersion: 638615642
 })
     .onTimeInterval(async (rs, ctx) => {
       console.log("sync pools outter", rs)
@@ -175,12 +176,12 @@ function toTypeString(typ: type_info.TypeInfo) {
   return typ.account_address + "::" + typ.module_name + "::" + typ.struct_name
 }
 
-function getPool(tx: Transaction_UserTransaction): TypeDescriptor<pool.Pool<any, any, any>>  {
+function getPool(tx: UserTransactionResponse): TypeDescriptor<pool.Pool<any, any, any>>  {
   for (const change of tx.changes) {
     if (change.type !== 'write_resource') {
       continue
     }
-    const writeResource = change as Types.WriteSetChange_WriteResource
+    const writeResource = change as WriteSetChangeWriteResource
     if (!writeResource.data.type.startsWith(POOL_PREFIX)) {
       // console.error("wrong resource type get fetched", writeResource.data.type)
       continue

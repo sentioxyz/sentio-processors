@@ -21,6 +21,11 @@ export const Gauge_3FER_TVL = async (_: any, ctx: SwapContext) => {
         ctx.meter.Gauge("tvl").record(tvl_DAI, { poolName, coin_symbol: "DAI", project: "ferro" })
         ctx.meter.Gauge("tvl").record(tvl_USDT, { poolName, coin_symbol: "USDT", project: "ferro" })
         ctx.meter.Gauge("tvl").record(tvl_USDC, { poolName, coin_symbol: "USDC", project: "ferro" })
+
+        ctx.meter.Gauge("poolComposition").record(DAI_balance, { poolName, coin_symbol: "DAI", project: "ferro" })
+        ctx.meter.Gauge("poolComposition").record(USDT_balance, { poolName, coin_symbol: "USDT", project: "ferro" })
+        ctx.meter.Gauge("poolComposition").record(USDC_balance, { poolName, coin_symbol: "USDC", project: "ferro" })
+
         ctx.meter.Gauge("totalTVL").record(tvl, { poolName, project: "ferro" })
     }
     catch (e) { console.log(`gauge 3fer tvl error at ${ctx.transactionHash}`) }
@@ -38,6 +43,10 @@ export const Gauge_2FER_TVL = async (_: any, ctx: SwapContext) => {
         const tvl = tvl_USDT + tvl_USDC
         ctx.meter.Gauge("tvl").record(tvl_USDT, { poolName, coin_symbol: "USDT", project: "ferro" })
         ctx.meter.Gauge("tvl").record(tvl_USDC, { poolName, coin_symbol: "USDC", project: "ferro" })
+
+        ctx.meter.Gauge("poolComposition").record(USDT_balance, { poolName, coin_symbol: "USDT", project: "ferro" })
+        ctx.meter.Gauge("poolComposition").record(USDC_balance, { poolName, coin_symbol: "USDC", project: "ferro" })
+
         ctx.meter.Gauge("totalTVL").record(tvl, { poolName, project: "ferro" })
     }
     catch (e) { console.log(`gauge 2fer tvl error at ${ctx.transactionHash}`) }
@@ -55,6 +64,10 @@ export const Gauge_LCRO_WCRO_TVL = async (_: any, ctx: SwapContext) => {
         const tvl = tvl_LCRO + tvl_WCRO
         ctx.meter.Gauge("tvl").record(tvl_LCRO, { poolName, coin_symbol: "LCRO", project: "ferro" })
         ctx.meter.Gauge("tvl").record(tvl_WCRO, { poolName, coin_symbol: "CRO", project: "ferro" })
+
+        ctx.meter.Gauge("poolComposition").record(LCRO_balance, { poolName, coin_symbol: "LCRO", project: "ferro" })
+        ctx.meter.Gauge("poolComposition").record(WCRO_balance, { poolName, coin_symbol: "CRO", project: "ferro" })
+
         ctx.meter.Gauge("totalTVL").record(tvl, { poolName, project: "ferro" })
     }
     catch (e) { console.log(`gauge lcro-wcro tvl error at ${ctx.transactionHash}`) }
@@ -72,9 +85,43 @@ export const Gauge_LATOM_ATOM_TVL = async (_: any, ctx: SwapContext) => {
         const tvl = tvl_LATOM + tvl_AOTM
         ctx.meter.Gauge("tvl").record(tvl_LATOM, { poolName, coin_symbol: "LATOM", project: "ferro" })
         ctx.meter.Gauge("tvl").record(tvl_AOTM, { poolName, coin_symbol: "ATOM", project: "ferro" })
+
+        ctx.meter.Gauge("poolComposition").record(LATOM_balance, { poolName, coin_symbol: "LATOM", project: "ferro" })
+        ctx.meter.Gauge("poolComposition").record(ATOM_balance, { poolName, coin_symbol: "ATOM", project: "ferro" })
+
         ctx.meter.Gauge("totalTVL").record(tvl, { poolName, project: "ferro" })
     }
     catch (e) { console.log(`gauge latom-atom tvl error at ${ctx.transactionHash}`) }
 }
+
+export const Gauge_2FER_USC_TVL = async (_: any, ctx: SwapContext) => {
+    try {
+        const poolName = "Ferro 2FER/USC"
+        const USDT_balance = Number(await getERC20Contract(EthChainId.CRONOS, "0x66e428c3f67a68878562e79A0234c1F83c208770").balanceOf(constant.SWAP_2FER_USC, { blockTag: Number(ctx.blockNumber) })) / Math.pow(10, 6)
+        const USDC_balance = Number(await getERC20Contract(EthChainId.CRONOS, "0xc21223249CA28397B4B6541dfFaEcC539BfF0c59").balanceOf(constant.SWAP_2FER_USC, { blockTag: Number(ctx.blockNumber) })) / Math.pow(10, 6)
+        const USC_balance = Number(await getERC20Contract(EthChainId.CRONOS, "0xD42E078ceA2bE8D03cd9dFEcC1f0d28915Edea78").balanceOf(constant.SWAP_2FER_USC, { blockTag: Number(ctx.blockNumber) })) / Math.pow(10, 18)
+
+        const USDT_price = Number(await getPriceBySymbol("USDT", ctx.timestamp))
+        const USDC_price = Number(await getPriceBySymbol("USDC", ctx.timestamp))
+        const USC_price = Number(await getPriceBySymbol("USC", ctx.timestamp))
+
+        const tvl_USDT = USDT_balance * USDT_price
+        const tvl_USDC = USDC_balance * USDC_price
+        const tvl_USC = USC_balance * USDC_price
+
+        const tvl = tvl_USDT + tvl_USDC + tvl_USC
+        ctx.meter.Gauge("tvl").record(tvl_USDT, { poolName, coin_symbol: "USDT", project: "ferro" })
+        ctx.meter.Gauge("tvl").record(tvl_USDC, { poolName, coin_symbol: "USDC ", project: "ferro" })
+        ctx.meter.Gauge("tvl").record(tvl_USC, { poolName, coin_symbol: "USC ", project: "ferro" })
+
+        ctx.meter.Gauge("poolComposition").record(USDT_balance, { poolName, coin_symbol: "USDT", project: "ferro" })
+        ctx.meter.Gauge("poolComposition").record(USDC_balance, { poolName, coin_symbol: "USDC", project: "ferro" })
+        ctx.meter.Gauge("poolComposition").record(USC_balance, { poolName, coin_symbol: "USC", project: "ferro" })
+
+        ctx.meter.Gauge("totalTVL").record(tvl, { poolName, project: "ferro" })
+    }
+    catch (e) { console.log(`gauge 2fer-usc tvl error at ${ctx.transactionHash}`) }
+}
+
 
 

@@ -1,14 +1,16 @@
-import { TestProcessorServer } from '@sentio/sdk/lib/testing'
+import assert from 'assert'
+import { before, describe, test } from 'node:test'
+import { TestProcessorServer } from '@sentio/sdk/testing'
 
 describe('Test Processor', () => {
   const service = new TestProcessorServer(()=> require('./processor'))
 
-  beforeAll(async () => {
+  before(async () => {
     await service.start()
   })
 
   test('has config', async () => {
     const config = await service.getConfig({})
-    expect(config.contractConfigs.length > 0)
+    assert(config.contractConfigs.length > 0)
   })
 })

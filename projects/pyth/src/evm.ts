@@ -27,6 +27,7 @@ const price_update_counter = Counter.register("price_update_counter", {
   }
 })
 
+// https://docs.pyth.network/price-feeds/contract-addresses/evm
 const CHAIN_ADDRESS_MAP = new Map<EthChainId, string>([
   [EthChainId.ETHEREUM, "0x4305FB66699C3B2702D4d05CF36551390A4c69C6"], //ETH
   [EthChainId.OPTIMISM, "0xff1a0f4744e8582df1ae09d5611b887b6a12925c"], //Optimism
@@ -45,6 +46,8 @@ const CHAIN_ADDRESS_MAP = new Map<EthChainId, string>([
   [EthChainId.MANTLE, "0xA2aa501b19aff244D90cc15a4Cf739D2725B5729"], // mantle
   [EthChainId.LINEA, "0xA2aa501b19aff244D90cc15a4Cf739D2725B5729"], // linea
   [EthChainId.BASE, "0x8250f4aF4B972684F7b336503E2D6dFeDeB1487a"], // base
+  [EthChainId.BLAST, "0xA2aa501b19aff244D90cc15a4Cf739D2725B5729"],
+  [EthChainId.MODE, "0xA2aa501b19aff244D90cc15a4Cf739D2725B5729"]
 ]);
 
 const CHAIN_NATIVE_MAP = new Map<EthChainId, string>([
@@ -64,7 +67,9 @@ const CHAIN_NATIVE_MAP = new Map<EthChainId, string>([
   [EthChainId.CONFLUX, "Crypto.CFX/USD"], // Conflux
   [EthChainId.MANTLE, "Crypto.MNT/USD"], // mantle
   [EthChainId.LINEA, "Crypto.ETH/USD"], // linea
-  [EthChainId.BASE, "Crypto.ETH/USD"], // linea
+  [EthChainId.BASE, "Crypto.ETH/USD"], // base
+  [EthChainId.BLAST, "Crypto.ETH/USD"], // blast
+  [EthChainId.MODE, "Crypto.ETH/USD"], // mode
 
 ]);
 
@@ -190,7 +195,7 @@ CHAIN_ADDRESS_MAP.forEach((addr, chainId) => {
       .onCallUpdatePriceFeeds(updatePriceFeeds)
       .onCallUpdatePriceFeedsIfNecessary(updatePriceFeedsIfNecessary)
       .onEventBatchPriceFeedUpdate(batchPriceUpdate)
-      .onBlockInterval(blockHandler, 10000);
+      .onTimeInterval(blockHandler, 60, 60 * 24);
   }
   // else if (chainId == 250) { // TODO: individually pulling fantom eth_balance
   //     PythEVMProcessor.bind({address: addr, network: chainId})
@@ -206,7 +211,7 @@ CHAIN_ADDRESS_MAP.forEach((addr, chainId) => {
       .onCallUpdatePriceFeeds(updatePriceFeeds)
       .onCallUpdatePriceFeedsIfNecessary(updatePriceFeedsIfNecessary)
       .onEventBatchPriceFeedUpdate(batchPriceUpdate)
-      .onBlockInterval(blockHandler);
+      .onTimeInterval(blockHandler, 60, 60 * 24);
   }
 });
 

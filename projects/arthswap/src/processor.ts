@@ -2,7 +2,8 @@ import { PancakeRouterProcessor } from './types/eth/pancakerouter.js'
 import { PancakePairProcessor, PancakePairContext } from './types/eth/pancakepair.js'
 
 import { getPriceByType, getPriceBySymbol, token } from "@sentio/sdk/utils"
-import { CHAIN_IDS, Gauge, Counter } from "@sentio/sdk"
+import { Gauge, Counter } from "@sentio/sdk"
+import { EthChainId } from "@sentio/sdk/eth"
 import { ERC20Context, ERC20Processor, getERC20Contract } from '@sentio/sdk/eth/builtin/erc20'
 import { MasterChefProcessor } from './types/eth/masterchef.js'
 
@@ -137,7 +138,7 @@ const tradingVolume_gauge = Gauge.register('tradingVolume', volOptions)
 //first pair created at 1647497
 for (let i = 0; i < PairWatching.length; i++) {
   let address = PairWatching[i]
-  PancakePairProcessor.bind({ address: address, network: CHAIN_IDS.ASTAR, startBlock: 2700000 })
+  PancakePairProcessor.bind({ address: address, network: EthChainId.ASTAR, startBlock: 2700000 })
     .onEventSwap(async (event, ctx) => {
       const info = await getOrCreatePool(ctx)
 
@@ -299,13 +300,12 @@ for (let i = 0; i < PairWatching.length; i++) {
       ctx.meter.Counter('burn').add(1, { pairName: pairName })
 
     })
-    .onAllEvents(async (event, ctx) => { })
 
 }
 
 
 
-MasterChefProcessor.bind({ address: '0xc5b016c5597D298Fe9eD22922CE290A048aA5B75', network: CHAIN_IDS.ASTAR })
+MasterChefProcessor.bind({ address: '0xc5b016c5597D298Fe9eD22922CE290A048aA5B75', network: EthChainId.ASTAR })
   .onEventDeposit(async (event, ctx) => {
     const user = event.args.user
     const pid = Number(event.args.pid)

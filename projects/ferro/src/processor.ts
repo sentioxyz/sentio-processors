@@ -11,7 +11,7 @@ import { FerContext, TransferEvent } from "./types/eth/fer.js"
 import { FerroBarContext } from "./types/eth/ferrobar.js"
 import { getERC20Contract } from '@sentio/sdk/eth/builtin/erc20';
 import { PoolProcessor } from "./types/eth/pool.js"
-import { Gauge_3FER_TVL, Gauge_2FER_TVL, Gauge_LCRO_WCRO_TVL, Gauge_LATOM_ATOM_TVL } from './helper/gaugeTVL.js'
+import { Gauge_3FER_TVL, Gauge_2FER_TVL, Gauge_LCRO_WCRO_TVL, Gauge_LATOM_ATOM_TVL, Gauge_2FER_USC_TVL } from './helper/gaugeTVL.js'
 import './pancake.js'
 
 //Ferro DAI/USDC/USDT Swap
@@ -421,6 +421,15 @@ SwapProcessor.bind({
   })
   .onTimeInterval(Gauge_LATOM_ATOM_TVL, 60, 120)
 
+
+
+//2FER_USDC Swap
+SwapProcessor.bind({
+  address: constant.SWAP_2FER_USC,
+  network: EthChainId.CRONOS,
+  //startBlock: 8400000
+})
+  .onTimeInterval(Gauge_2FER_USC_TVL, 60, 120)
 
 
 

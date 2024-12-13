@@ -12,7 +12,8 @@ import { PoolCreatedEvent, UniswapFactoryContext, UniswapFactoryProcessor } from
 import { ERC20Context, ERC20Processor, getERC20Contract } from '@sentio/sdk/eth/builtin/erc20'
 import { getPriceByType,  token } from "@sentio/sdk/utils"
 import { Status, ClientError } from "nice-grpc-common";
-import { BigDecimal, EthChainId, Gauge, MetricOptions } from "@sentio/sdk";
+import { BigDecimal, Gauge, MetricOptions } from "@sentio/sdk";
+import { EthChainId } from "@sentio/sdk/eth";
 
 
 const poolWatching = [
@@ -119,7 +120,7 @@ async function getValue(ctx: UniswapContext, address: string, info: token.TokenI
     }
   } else {
     try {
-      amount = await getERC20Contract(ctx, address).balanceOf(ctx.address,
+      amount = await getERC20Contract(ctx as any, address).balanceOf(ctx.address,
           {blockTag: Number(ctx.blockNumber)})
     } catch (e) {
       console.log("error", e)
@@ -253,4 +254,3 @@ for (let i = 0; i < poolWatching.length; i++) {
         {token: info.token1.symbol, poolName: name})
   })
 }
-

@@ -92,6 +92,7 @@ export async function buildPoolInfo(ctx: SuiContext | SuiObjectContext, pool: st
         }
         let [coin_a_full_address, coin_b_full_address] = ["", ""]
         if (type) {
+            // @ts-expect-error ??
             [coin_a_full_address, coin_b_full_address] = getCoinFullAddress(type)
         }
         const coinInfo_a = await getOrCreateCoin(ctx, coin_a_full_address)

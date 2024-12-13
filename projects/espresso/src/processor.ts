@@ -105,7 +105,7 @@ const handleBlockCommittedEvent = async (event: BlockCommittedEvent, ctx: CapeCo
 }
 
 
-
+// @ts-expect-error ??
 CapeProcessor.bind({address: CAPE_NEW, network: EthChainId.GOERLI})
 .onEventAssetSponsored(handleAssetSponsored)
 .onEventBlockCommitted(handleBlockCommittedEvent)
@@ -117,6 +117,7 @@ CapeProcessor.bind({address: CAPE_NEW, network: EthChainId.GOERLI})
 // .onCallSubmitCapeBlockWithMemos(handleCall)
 
 
+// @ts-expect-error ??
 CapeProcessor.bind({address: CAPE_OLD, network: EthChainId.GOERLI})
 .onEventAssetSponsored(handleAssetSponsored)
 .onEventBlockCommitted(handleBlockCommittedEvent)

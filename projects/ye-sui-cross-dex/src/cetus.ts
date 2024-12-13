@@ -36,7 +36,7 @@ pool.bind({
         const usd_volume = await helper.calculateSwapVol_USD(poolInfo.type, amount_in, amount_out, atob, ctx.timestamp)
 
         ctx.eventLogger.emit("SwapEvent", {
-            distinctId: ctx.transaction.transaction.data.sender,
+            distinctId: ctx.transaction.transaction?.data.sender,
             pool,
             before_sqrt_price,
             after_sqrt_price,
@@ -82,7 +82,7 @@ pool.bind({
         const value = await helper.calculateValue_USD(ctx, pool, amount_a, amount_b, ctx.timestamp)
 
         ctx.eventLogger.emit("AddLiquidityEvent", {
-            distinctId: ctx.transaction.transaction.data.sender,
+            distinctId: ctx.transaction.transaction?.data.sender,
             pool,
             position,
             tick_lower,
@@ -122,7 +122,7 @@ pool.bind({
         const value = await helper.calculateValue_USD(ctx, pool, amount_a, amount_b, ctx.timestamp)
 
         ctx.eventLogger.emit("RemoveLiquidityEvent", {
-            distinctId: ctx.transaction.transaction.data.sender,
+            distinctId: ctx.transaction.transaction?.data.sender,
             pool,
             position,
             tick_lower,
@@ -196,7 +196,3 @@ pool.bind({
 //             console.log(`${e.message} error at ${JSON.stringify(self)}`)
 //         }
 //     }, 240, 60, undefined, { owned: false })
-
-
-
-

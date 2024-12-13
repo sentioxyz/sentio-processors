@@ -1,0 +1,221 @@
+type MarketBasic @entity {
+    id: ID! # Constructed as chainId_marketAddress
+    chainId: Int!
+    contractAddress: String!
+    baseSupplyIndex: BigInt!
+    baseBorrowIndex: BigInt!
+    totalSupplyBase: BigInt!
+    totalBorrowBase: BigInt!
+    lastAccrualTime: BigInt!
+}
+
+type UserBasic @entity {
+    id: ID!
+    chainId: Int!
+    contractAddress: String!
+    address: String!
+    principal: BigInt!
+    isNegative: Boolean!
+}
+
+type MarketConfiguration @entity {
+    id: ID!
+    chainId: Int!
+    contractAddress: String!
+    baseTokenAddress: String!
+    baseTokenDecimals: Int!
+    supplyKink: BigInt!
+    borrowKink: BigInt!
+    supplyPerSecondInterestRateBase: BigInt!
+    supplyPerSecondInterestRateSlopeLow: BigInt!
+    supplyPerSecondInterestRateSlopeHigh: BigInt!
+    borrowPerSecondInterestRateBase: BigInt!
+    borrowPerSecondInterestRateSlopeLow: BigInt!
+    borrowPerSecondInterestRateSlopeHigh: BigInt!
+}
+
+type CollateralConfiguration @entity {
+    id: ID!
+    chainId: Int!
+    contractAddress: String!
+    assetAddress: String!
+    decimals: Int!
+}
+
+type Pool @entity {
+    id: ID! # Constructed as chainId_poolAddress_underlyingTokenAddress
+    chainId: Int!
+    creationBlockNumber: Int!
+    creationTimestamp: Int!
+    underlyingTokenAddress: String! # Address of the underlying token (collateral, base)
+    underlyingTokenSymbol: String!
+    receiptTokenAddress: String!
+    receiptTokenSymbol: String!
+    poolAddress: String! # Contract address of the pool (market)
+    poolType: String! # collteral_only or supply_only
+}
+
+type BasePositionSnapshot @entity {
+    id: ID!
+    timestamp: Int!
+    blockDate: String!
+    chainId: Int!
+    poolAddress: String!
+    underlyingTokenAddress: String!
+    underlyingTokenSymbol: String!
+    userAddress: String!
+    suppliedAmount: BigInt!
+    suppliedAmountNormalized: BigDecimal!
+    suppliedAmountUsd: BigDecimal
+    borrowedAmount: BigInt!
+    borrowedAmountNormalized: BigDecimal!
+    borrowedAmountUsd: BigDecimal
+    collateralAmount: BigInt!
+    collateralAmountNormalized: BigDecimal!
+    collateralAmountUsd: BigDecimal
+}
+
+type BasePool @entity {
+    id: ID!
+    chainId: Int!
+    poolAddress: String!
+    suppliedAmount: BigInt!
+    suppliedAmountNormalized: BigDecimal!
+    suppliedAmountUsd: BigDecimal
+    supplyApr: BigDecimal!
+    borrowedAmount: BigInt!
+    borrowedAmountNormalized: BigDecimal!
+    borrowedAmountUsd: BigDecimal
+    borrowApr: BigDecimal!
+}
+
+type BasePoolSnapshot @entity {
+    id: ID!
+    timestamp: Int!
+    blockDate: String!
+    chainId: Int!
+    poolAddress: String!
+    underlyingTokenAddress: String!
+    underlyingTokenSymbol: String!
+    underlyingTokenPriceUsd: BigDecimal
+    availableAmount: BigInt!
+    availableAmountNormalized: BigDecimal!
+    availableAmountUsd: BigDecimal
+    suppliedAmount: BigInt!
+    suppliedAmountNormalized: BigDecimal!
+    suppliedAmountUsd: BigDecimal
+    collateralAmount: BigInt!
+    collateralAmountNormalized: BigDecimal!
+    collateralAmountUsd: BigDecimal
+    collateralFactor: BigDecimal!
+    supplyIndex: BigDecimal!
+    supplyApr: BigDecimal!
+    borrowedAmount: BigInt!
+    borrowedAmountNormalized: BigDecimal!
+    borrowedAmountUsd: BigDecimal
+    borrowIndex: BigDecimal!
+    borrowApr: BigDecimal!
+    totalFeesUsd: BigDecimal
+    userFeesUsd: BigDecimal
+    protocolFeesUsd: BigDecimal
+}
+
+type CollateralPosition @entity {
+    id: ID!
+    chainId: Int!
+    poolAddress: String!
+    underlyingTokenAddress: String!
+    underlyingTokenSymbol: String!
+    userAddress: String!
+    suppliedAmount: BigInt!
+    suppliedAmountNormalized: BigDecimal!
+    suppliedAmountUsd: BigDecimal
+    borrowedAmount: BigInt!
+    borrowedAmountNormalized: BigDecimal!
+    borrowedAmountUsd: BigDecimal
+    collateralAmount: BigInt!
+    collateralAmountNormalized: BigDecimal!
+    collateralAmountUsd: BigDecimal
+}
+
+type CollateralPool @entity {
+    id: ID!
+    chainId: Int!
+    poolAddress: String!
+    underlyingTokenAddress: String!
+    underlyingTokenSymbol: String!
+    underlyingTokenPriceUsd: BigDecimal
+    availableAmount: BigInt!
+    availableAmountNormalized: BigDecimal!
+    availableAmountUsd: BigDecimal
+    suppliedAmount: BigInt!
+    suppliedAmountNormalized: BigDecimal!
+    suppliedAmountUsd: BigDecimal
+    collateralAmount: BigInt!
+    collateralAmountNormalized: BigDecimal!
+    collateralAmountUsd: BigDecimal
+    collateralFactor: BigDecimal!
+    liquidationFactor: BigDecimal!
+    supplyIndex: BigDecimal!
+    supplyApr: BigDecimal!
+    borrowedAmount: BigInt!
+    borrowedAmountNormalized: BigDecimal!
+    borrowedAmountUsd: BigDecimal
+    borrowIndex: BigDecimal!
+    borrowApr: BigDecimal!
+    totalFeesUsd: BigDecimal
+    userFeesUsd: BigDecimal
+    protocolFeesUsd: BigDecimal
+}
+
+type CollateralPositionSnapshot @entity {
+    id: ID!
+    timestamp: Int!
+    blockDate: String!
+    chainId: Int!
+    poolAddress: String!
+    underlyingTokenAddress: String!
+    underlyingTokenSymbol: String!
+    userAddress: String!
+    suppliedAmount: BigInt!
+    suppliedAmountNormalized: BigDecimal!
+    suppliedAmountUsd: BigDecimal
+    borrowedAmount: BigInt!
+    borrowedAmountNormalized: BigDecimal!
+    borrowedAmountUsd: BigDecimal
+    collateralAmount: BigInt!
+    collateralAmountNormalized: BigDecimal!
+    collateralAmountUsd: BigDecimal
+}
+
+type CollateralPoolSnapshot @entity {
+    id: ID!
+    timestamp: Int!
+    blockDate: String!
+    chainId: Int!
+    poolAddress: String!
+    underlyingTokenAddress: String!
+    underlyingTokenSymbol: String!
+    underlyingTokenPriceUsd: BigDecimal
+    availableAmount: BigInt!
+    availableAmountNormalized: BigDecimal!
+    availableAmountUsd: BigDecimal
+    suppliedAmount: BigInt!
+    suppliedAmountNormalized: BigDecimal!
+    suppliedAmountUsd: BigDecimal
+    collateralAmount: BigInt!
+    collateralAmountNormalized: BigDecimal!
+    collateralAmountUsd: BigDecimal
+    collateralFactor: BigDecimal!
+    liquidationFactor: BigDecimal!
+    supplyIndex: BigDecimal!
+    supplyApr: BigDecimal!
+    borrowedAmount: BigInt!
+    borrowedAmountNormalized: BigDecimal!
+    borrowedAmountUsd: BigDecimal
+    borrowIndex: BigDecimal!
+    borrowApr: BigDecimal!
+    totalFeesUsd: BigDecimal
+    userFeesUsd: BigDecimal
+    protocolFeesUsd: BigDecimal
+}

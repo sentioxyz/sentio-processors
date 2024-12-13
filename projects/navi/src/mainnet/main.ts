@@ -49,6 +49,7 @@ ProtocolProcessor()
 OracleProcessor()
 AddressProcessor()
 // PythOracleProcessor()
+// PythOracleProcessor()
 
 async function onEvent(event: LendingEvent, ctx: SuiContext) {
   const sender = event.data_decoded.sender

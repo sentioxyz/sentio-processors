@@ -1,0 +1,24 @@
+type Pool @entity {
+    id: ID!
+    base: String!
+    quote: String!
+    poolIdx: BigInt!
+}
+
+type RangePositionSnapshot @entity {
+    id: ID!
+    poolHash: String!
+    owner: String!
+    lowTick: BigInt!
+    highTick: BigInt!
+    amountStone: BigInt!
+    timestampMilli: BigInt!
+}
+
+type AmbientPositionSnapshot @entity {
+    id: ID!
+    poolHash: String!
+    owner: String!
+    amountStone: BigInt!
+    timestampMilli: BigInt!
+}

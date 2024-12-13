@@ -1,11 +1,14 @@
+import assert from 'assert'
 import { TestProcessorServer } from '@sentio/sdk/testing'
+import { before, describe, test } from 'node:test'
+import { expect } from 'chai'
 
 describe('Test Processor', () => {
   const service = new TestProcessorServer(()=> import('./processor.js'), {
     1: "https://eth-mainnet.g.alchemy.com/v2/xcYv7bcyPkul-4_ZtfZPAly_q5zxcNs3",
   })
 
-  beforeAll(async () => {
+  before(async () => {
     await service.start()
   })
 

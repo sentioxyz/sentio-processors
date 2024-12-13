@@ -47,23 +47,23 @@ const commitmentCrossChain = async function (event: CommitmentCrossChainEvent, c
   ctx.meter.Counter('deposit_count').add(1, {from: "goerli"})
 }
 
-ERC20Processor.bind({address: MTT_GOERLI, network: 5})
+ERC20Processor.bind({address: MTT_GOERLI, network: 5 as any})
 .onBlockInterval(mttBalanceProcessor)
 
-CommitmentPoolProcessor.bind({address: COMMITMENT_POOL_GOERLI_MTT, network: 5})
+CommitmentPoolProcessor.bind({address: COMMITMENT_POOL_GOERLI_MTT, network: 5 as any})
 .onEventCommitmentQueued(commitmentQueuedMtt)
 .onEventCommitmentSpent(commitmentSpentMtt)
 .onEventCommitmentIncluded(commitmentIncludedMtt)
 
-ERC20Processor.bind({address: MUSD_GOERLI, network: 5})
+ERC20Processor.bind({address: MUSD_GOERLI, network: 5 as any})
 .onBlockInterval(mUsdBalanceProcessor)
 
-CommitmentPoolProcessor.bind({address: COMMITMENT_POOL_GOERLI_MUSD, network: 5})
+CommitmentPoolProcessor.bind({address: COMMITMENT_POOL_GOERLI_MUSD, network: 5 as any})
 .onEventCommitmentQueued(commitmentQueuedMusd)
 .onEventCommitmentSpent(commitmentSpentMusd)
 .onEventCommitmentIncluded(commitmentIncludedMusd)
 
 for (var i = 0; i < GOERLO_BRIDGE_LIST.length; i++) {
-  MystikoV2BridgeProcessor.bind({address: GOERLO_BRIDGE_LIST[i], network: 5})
+  MystikoV2BridgeProcessor.bind({address: GOERLO_BRIDGE_LIST[i], network: 5 as any})
   .onEventCommitmentCrossChain(commitmentCrossChain)
 }

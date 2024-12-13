@@ -1,0 +1,1197 @@
+[
+	{
+		"fileFormatVersion": 6,
+		"address": "0x228b48911fdc05f8d80ac4334cd734d38dd7db74a0f4e423cb91f736f429ebe4",
+		"name": "authlist",
+		"friends": [],
+		"structs": {
+			"AUTHLIST": {
+				"abilities": {
+					"abilities": [
+						"Drop"
+					]
+				},
+				"typeParameters": [],
+				"fields": [
+					{
+						"name": "dummy_field",
+						"type": "Bool"
+					}
+				]
+			},
+			"Authlist": {
+				"abilities": {
+					"abilities": [
+						"Store",
+						"Key"
+					]
+				},
+				"typeParameters": [],
+				"fields": [
+					{
+						"name": "id",
+						"type": {
+							"Struct": {
+								"address": "0x2",
+								"module": "object",
+								"name": "UID",
+								"typeArguments": []
+							}
+						}
+					},
+					{
+						"name": "version",
+						"type": "U64"
+					},
+					{
+						"name": "admin_witness",
+						"type": {
+							"Struct": {
+								"address": "0x1",
+								"module": "option",
+								"name": "Option",
+								"typeArguments": [
+									{
+										"Struct": {
+											"address": "0x1",
+											"module": "type_name",
+											"name": "TypeName",
+											"typeArguments": []
+										}
+									}
+								]
+							}
+						}
+					},
+					{
+						"name": "names",
+						"type": {
+							"Struct": {
+								"address": "0x2",
+								"module": "vec_map",
+								"name": "VecMap",
+								"typeArguments": [
+									{
+										"Vector": "U8"
+									},
+									{
+										"Struct": {
+											"address": "0x1",
+											"module": "string",
+											"name": "String",
+											"typeArguments": []
+										}
+									}
+								]
+							}
+						}
+					},
+					{
+						"name": "authorities",
+						"type": {
+							"Struct": {
+								"address": "0x2",
+								"module": "vec_set",
+								"name": "VecSet",
+								"typeArguments": [
+									{
+										"Vector": "U8"
+									}
+								]
+							}
+						}
+					}
+				]
+			},
+			"AuthlistOwnerCap": {
+				"abilities": {
+					"abilities": [
+						"Store",
+						"Key"
+					]
+				},
+				"typeParameters": [],
+				"fields": [
+					{
+						"name": "id",
+						"type": {
+							"Struct": {
+								"address": "0x2",
+								"module": "object",
+								"name": "UID",
+								"typeArguments": []
+							}
+						}
+					},
+					{
+						"name": "for",
+						"type": {
+							"Struct": {
+								"address": "0x2",
+								"module": "object",
+								"name": "ID",
+								"typeArguments": []
+							}
+						}
+					}
+				]
+			},
+			"CollectionKey": {
+				"abilities": {
+					"abilities": []
+				},
+				"typeParameters": [],
+				"fields": [
+					{
+						"name": "type_name",
+						"type": {
+							"Struct": {
+								"address": "0x1",
+								"module": "type_name",
+								"name": "TypeName",
+								"typeArguments": []
+							}
+						}
+					}
+				]
+			}
+		},
+		"exposedFunctions": {
+			"address_to_bytes": {
+				"visibility": "Public",
+				"isEntry": false,
+				"typeParameters": [],
+				"parameters": [
+					"Address"
+				],
+				"return": [
+					{
+						"Vector": "U8"
+					}
+				]
+			},
+			"assert_admin_witness": {
+				"visibility": "Public",
+				"isEntry": false,
+				"typeParameters": [
+					{
+						"abilities": [
+							"Drop"
+						]
+					}
+				],
+				"parameters": [
+					{
+						"Reference": {
+							"Struct": {
+								"address": "0x228b48911fdc05f8d80ac4334cd734d38dd7db74a0f4e423cb91f736f429ebe4",
+								"module": "authlist",
+								"name": "Authlist",
+								"typeArguments": []
+							}
+						}
+					}
+				],
+				"return": []
+			},
+			"assert_authority": {
+				"visibility": "Public",
+				"isEntry": false,
+				"typeParameters": [],
+				"parameters": [
+					{
+						"Reference": {
+							"Struct": {
+								"address": "0x228b48911fdc05f8d80ac4334cd734d38dd7db74a0f4e423cb91f736f429ebe4",
+								"module": "authlist",
+								"name": "Authlist",
+								"typeArguments": []
+							}
+						}
+					},
+					{
+						"Reference": {
+							"Vector": "U8"
+						}
+					}
+				],
+				"return": []
+			},
+			"assert_cap": {
+				"visibility": "Public",
+				"isEntry": false,
+				"typeParameters": [],
+				"parameters": [
+					{
+						"Reference": {
+							"Struct": {
+								"address": "0x228b48911fdc05f8d80ac4334cd734d38dd7db74a0f4e423cb91f736f429ebe4",
+								"module": "authlist",
+								"name": "Authlist",
+								"typeArguments": []
+							}
+						}
+					},
+					{
+						"Reference": {
+							"Struct": {
+								"address": "0x228b48911fdc05f8d80ac4334cd734d38dd7db74a0f4e423cb91f736f429ebe4",
+								"module": "authlist",
+								"name": "AuthlistOwnerCap",
+								"typeArguments": []
+							}
+						}
+					}
+				],
+				"return": []
+			},
+			"assert_collection": {
+				"visibility": "Public",
+				"isEntry": false,
+				"typeParameters": [],
+				"parameters": [
+					{
+						"Reference": {
+							"Struct": {
+								"address": "0x228b48911fdc05f8d80ac4334cd734d38dd7db74a0f4e423cb91f736f429ebe4",
+								"module": "authlist",
+								"name": "Authlist",
+								"typeArguments": []
+							}
+						}
+					},
+					{
+						"Struct": {
+							"address": "0x1",
+							"module": "type_name",
+							"name": "TypeName",
+							"typeArguments": []
+						}
+					}
+				],
+				"return": []
+			},
+			"assert_publisher": {
+				"visibility": "Public",
+				"isEntry": false,
+				"typeParameters": [
+					{
+						"abilities": []
+					}
+				],
+				"parameters": [
+					{
+						"Reference": {
+							"Struct": {
+								"address": "0x2",
+								"module": "package",
+								"name": "Publisher",
+								"typeArguments": []
+							}
+						}
+					}
+				],
+				"return": []
+			},
+			"assert_transferable": {
+				"visibility": "Public",
+				"isEntry": false,
+				"typeParameters": [],
+				"parameters": [
+					{
+						"Reference": {
+							"Struct": {
+								"address": "0x228b48911fdc05f8d80ac4334cd734d38dd7db74a0f4e423cb91f736f429ebe4",
+								"module": "authlist",
+								"name": "Authlist",
+								"typeArguments": []
+							}
+						}
+					},
+					{
+						"Struct": {
+							"address": "0x1",
+							"module": "type_name",
+							"name": "TypeName",
+							"typeArguments": []
+						}
+					},
+					{
+						"Reference": {
+							"Vector": "U8"
+						}
+					},
+					{
+						"Reference": {
+							"Vector": "U8"
+						}
+					},
+					{
+						"Reference": {
+							"Vector": "U8"
+						}
+					}
+				],
+				"return": []
+			},
+			"borrow_authorities": {
+				"visibility": "Public",
+				"isEntry": false,
+				"typeParameters": [],
+				"parameters": [
+					{
+						"Reference": {
+							"Struct": {
+								"address": "0x228b48911fdc05f8d80ac4334cd734d38dd7db74a0f4e423cb91f736f429ebe4",
+								"module": "authlist",
+								"name": "Authlist",
+								"typeArguments": []
+							}
+						}
+					}
+				],
+				"return": [
+					{
+						"Reference": {
+							"Struct": {
+								"address": "0x2",
+								"module": "vec_set",
+								"name": "VecSet",
+								"typeArguments": [
+									{
+										"Vector": "U8"
+									}
+								]
+							}
+						}
+					}
+				]
+			},
+			"borrow_names": {
+				"visibility": "Public",
+				"isEntry": false,
+				"typeParameters": [],
+				"parameters": [
+					{
+						"Reference": {
+							"Struct": {
+								"address": "0x228b48911fdc05f8d80ac4334cd734d38dd7db74a0f4e423cb91f736f429ebe4",
+								"module": "authlist",
+								"name": "Authlist",
+								"typeArguments": []
+							}
+						}
+					}
+				],
+				"return": [
+					{
+						"Reference": {
+							"Struct": {
+								"address": "0x2",
+								"module": "vec_map",
+								"name": "VecMap",
+								"typeArguments": [
+									{
+										"Vector": "U8"
+									},
+									{
+										"Struct": {
+											"address": "0x1",
+											"module": "string",
+											"name": "String",
+											"typeArguments": []
+										}
+									}
+								]
+							}
+						}
+					}
+				]
+			},
+			"clone": {
+				"visibility": "Public",
+				"isEntry": false,
+				"typeParameters": [],
+				"parameters": [
+					{
+						"Reference": {
+							"Struct": {
+								"address": "0x228b48911fdc05f8d80ac4334cd734d38dd7db74a0f4e423cb91f736f429ebe4",
+								"module": "authlist",
+								"name": "Authlist",
+								"typeArguments": []
+							}
+						}
+					},
+					{
+						"MutableReference": {
+							"Struct": {
+								"address": "0x2",
+								"module": "tx_context",
+								"name": "TxContext",
+								"typeArguments": []
+							}
+						}
+					}
+				],
+				"return": [
+					{
+						"Struct": {
+							"address": "0x228b48911fdc05f8d80ac4334cd734d38dd7db74a0f4e423cb91f736f429ebe4",
+							"module": "authlist",
+							"name": "Authlist",
+							"typeArguments": []
+						}
+					},
+					{
+						"Struct": {
+							"address": "0x228b48911fdc05f8d80ac4334cd734d38dd7db74a0f4e423cb91f736f429ebe4",
+							"module": "authlist",
+							"name": "AuthlistOwnerCap",
+							"typeArguments": []
+						}
+					}
+				]
+			},
+			"contains_authority": {
+				"visibility": "Public",
+				"isEntry": false,
+				"typeParameters": [],
+				"parameters": [
+					{
+						"Reference": {
+							"Struct": {
+								"address": "0x228b48911fdc05f8d80ac4334cd734d38dd7db74a0f4e423cb91f736f429ebe4",
+								"module": "authlist",
+								"name": "Authlist",
+								"typeArguments": []
+							}
+						}
+					},
+					{
+						"Reference": {
+							"Vector": "U8"
+						}
+					}
+				],
+				"return": [
+					"Bool"
+				]
+			},
+			"contains_collection": {
+				"visibility": "Public",
+				"isEntry": false,
+				"typeParameters": [],
+				"parameters": [
+					{
+						"Reference": {
+							"Struct": {
+								"address": "0x228b48911fdc05f8d80ac4334cd734d38dd7db74a0f4e423cb91f736f429ebe4",
+								"module": "authlist",
+								"name": "Authlist",
+								"typeArguments": []
+							}
+						}
+					},
+					{
+						"Struct": {
+							"address": "0x1",
+							"module": "type_name",
+							"name": "TypeName",
+							"typeArguments": []
+						}
+					}
+				],
+				"return": [
+					"Bool"
+				]
+			},
+			"contains_name": {
+				"visibility": "Public",
+				"isEntry": false,
+				"typeParameters": [],
+				"parameters": [
+					{
+						"Reference": {
+							"Struct": {
+								"address": "0x228b48911fdc05f8d80ac4334cd734d38dd7db74a0f4e423cb91f736f429ebe4",
+								"module": "authlist",
+								"name": "Authlist",
+								"typeArguments": []
+							}
+						}
+					},
+					{
+						"Reference": {
+							"Vector": "U8"
+						}
+					}
+				],
+				"return": [
+					"Bool"
+				]
+			},
+			"delete_authlist": {
+				"visibility": "Public",
+				"isEntry": true,
+				"typeParameters": [],
+				"parameters": [
+					{
+						"Struct": {
+							"address": "0x228b48911fdc05f8d80ac4334cd734d38dd7db74a0f4e423cb91f736f429ebe4",
+							"module": "authlist",
+							"name": "Authlist",
+							"typeArguments": []
+						}
+					}
+				],
+				"return": []
+			},
+			"delete_owner_cap": {
+				"visibility": "Public",
+				"isEntry": true,
+				"typeParameters": [],
+				"parameters": [
+					{
+						"Struct": {
+							"address": "0x228b48911fdc05f8d80ac4334cd734d38dd7db74a0f4e423cb91f736f429ebe4",
+							"module": "authlist",
+							"name": "AuthlistOwnerCap",
+							"typeArguments": []
+						}
+					}
+				],
+				"return": []
+			},
+			"init_authlist": {
+				"visibility": "Public",
+				"isEntry": false,
+				"typeParameters": [],
+				"parameters": [
+					{
+						"MutableReference": {
+							"Struct": {
+								"address": "0x2",
+								"module": "tx_context",
+								"name": "TxContext",
+								"typeArguments": []
+							}
+						}
+					}
+				],
+				"return": [
+					{
+						"Struct": {
+							"address": "0x2",
+							"module": "object",
+							"name": "ID",
+							"typeArguments": []
+						}
+					},
+					{
+						"Struct": {
+							"address": "0x2",
+							"module": "object",
+							"name": "ID",
+							"typeArguments": []
+						}
+					}
+				]
+			},
+			"init_cloned": {
+				"visibility": "Public",
+				"isEntry": true,
+				"typeParameters": [],
+				"parameters": [
+					{
+						"Reference": {
+							"Struct": {
+								"address": "0x228b48911fdc05f8d80ac4334cd734d38dd7db74a0f4e423cb91f736f429ebe4",
+								"module": "authlist",
+								"name": "Authlist",
+								"typeArguments": []
+							}
+						}
+					},
+					{
+						"MutableReference": {
+							"Struct": {
+								"address": "0x2",
+								"module": "tx_context",
+								"name": "TxContext",
+								"typeArguments": []
+							}
+						}
+					}
+				],
+				"return": [
+					{
+						"Struct": {
+							"address": "0x2",
+							"module": "object",
+							"name": "ID",
+							"typeArguments": []
+						}
+					},
+					{
+						"Struct": {
+							"address": "0x2",
+							"module": "object",
+							"name": "ID",
+							"typeArguments": []
+						}
+					}
+				]
+			},
+			"insert_authority": {
+				"visibility": "Public",
+				"isEntry": true,
+				"typeParameters": [],
+				"parameters": [
+					{
+						"Reference": {
+							"Struct": {
+								"address": "0x228b48911fdc05f8d80ac4334cd734d38dd7db74a0f4e423cb91f736f429ebe4",
+								"module": "authlist",
+								"name": "AuthlistOwnerCap",
+								"typeArguments": []
+							}
+						}
+					},
+					{
+						"MutableReference": {
+							"Struct": {
+								"address": "0x228b48911fdc05f8d80ac4334cd734d38dd7db74a0f4e423cb91f736f429ebe4",
+								"module": "authlist",
+								"name": "Authlist",
+								"typeArguments": []
+							}
+						}
+					},
+					{
+						"Vector": "U8"
+					}
+				],
+				"return": []
+			},
+			"insert_authority_with_witness": {
+				"visibility": "Public",
+				"isEntry": false,
+				"typeParameters": [
+					{
+						"abilities": [
+							"Drop"
+						]
+					}
+				],
+				"parameters": [
+					{
+						"TypeParameter": 0
+					},
+					{
+						"MutableReference": {
+							"Struct": {
+								"address": "0x228b48911fdc05f8d80ac4334cd734d38dd7db74a0f4e423cb91f736f429ebe4",
+								"module": "authlist",
+								"name": "Authlist",
+								"typeArguments": []
+							}
+						}
+					},
+					{
+						"Vector": "U8"
+					}
+				],
+				"return": []
+			},
+			"insert_collection": {
+				"visibility": "Public",
+				"isEntry": true,
+				"typeParameters": [
+					{
+						"abilities": []
+					}
+				],
+				"parameters": [
+					{
+						"MutableReference": {
+							"Struct": {
+								"address": "0x228b48911fdc05f8d80ac4334cd734d38dd7db74a0f4e423cb91f736f429ebe4",
+								"module": "authlist",
+								"name": "Authlist",
+								"typeArguments": []
+							}
+						}
+					},
+					{
+						"Reference": {
+							"Struct": {
+								"address": "0x2",
+								"module": "package",
+								"name": "Publisher",
+								"typeArguments": []
+							}
+						}
+					}
+				],
+				"return": []
+			},
+			"migrate": {
+				"visibility": "Private",
+				"isEntry": true,
+				"typeParameters": [],
+				"parameters": [
+					{
+						"MutableReference": {
+							"Struct": {
+								"address": "0x228b48911fdc05f8d80ac4334cd734d38dd7db74a0f4e423cb91f736f429ebe4",
+								"module": "authlist",
+								"name": "Authlist",
+								"typeArguments": []
+							}
+						}
+					},
+					{
+						"Reference": {
+							"Struct": {
+								"address": "0x228b48911fdc05f8d80ac4334cd734d38dd7db74a0f4e423cb91f736f429ebe4",
+								"module": "authlist",
+								"name": "AuthlistOwnerCap",
+								"typeArguments": []
+							}
+						}
+					}
+				],
+				"return": []
+			},
+			"new": {
+				"visibility": "Public",
+				"isEntry": false,
+				"typeParameters": [],
+				"parameters": [
+					{
+						"MutableReference": {
+							"Struct": {
+								"address": "0x2",
+								"module": "tx_context",
+								"name": "TxContext",
+								"typeArguments": []
+							}
+						}
+					}
+				],
+				"return": [
+					{
+						"Struct": {
+							"address": "0x228b48911fdc05f8d80ac4334cd734d38dd7db74a0f4e423cb91f736f429ebe4",
+							"module": "authlist",
+							"name": "Authlist",
+							"typeArguments": []
+						}
+					},
+					{
+						"Struct": {
+							"address": "0x228b48911fdc05f8d80ac4334cd734d38dd7db74a0f4e423cb91f736f429ebe4",
+							"module": "authlist",
+							"name": "AuthlistOwnerCap",
+							"typeArguments": []
+						}
+					}
+				]
+			},
+			"new_embedded": {
+				"visibility": "Public",
+				"isEntry": false,
+				"typeParameters": [
+					{
+						"abilities": [
+							"Drop"
+						]
+					}
+				],
+				"parameters": [
+					{
+						"TypeParameter": 0
+					},
+					{
+						"MutableReference": {
+							"Struct": {
+								"address": "0x2",
+								"module": "tx_context",
+								"name": "TxContext",
+								"typeArguments": []
+							}
+						}
+					}
+				],
+				"return": [
+					{
+						"Struct": {
+							"address": "0x228b48911fdc05f8d80ac4334cd734d38dd7db74a0f4e423cb91f736f429ebe4",
+							"module": "authlist",
+							"name": "Authlist",
+							"typeArguments": []
+						}
+					}
+				]
+			},
+			"new_embedded_with_authorities": {
+				"visibility": "Public",
+				"isEntry": false,
+				"typeParameters": [
+					{
+						"abilities": [
+							"Drop"
+						]
+					}
+				],
+				"parameters": [
+					{
+						"TypeParameter": 0
+					},
+					{
+						"Struct": {
+							"address": "0x2",
+							"module": "vec_set",
+							"name": "VecSet",
+							"typeArguments": [
+								{
+									"Vector": "U8"
+								}
+							]
+						}
+					},
+					{
+						"Struct": {
+							"address": "0x2",
+							"module": "vec_map",
+							"name": "VecMap",
+							"typeArguments": [
+								{
+									"Vector": "U8"
+								},
+								{
+									"Struct": {
+										"address": "0x1",
+										"module": "string",
+										"name": "String",
+										"typeArguments": []
+									}
+								}
+							]
+						}
+					},
+					{
+						"MutableReference": {
+							"Struct": {
+								"address": "0x2",
+								"module": "tx_context",
+								"name": "TxContext",
+								"typeArguments": []
+							}
+						}
+					}
+				],
+				"return": [
+					{
+						"Struct": {
+							"address": "0x228b48911fdc05f8d80ac4334cd734d38dd7db74a0f4e423cb91f736f429ebe4",
+							"module": "authlist",
+							"name": "Authlist",
+							"typeArguments": []
+						}
+					}
+				]
+			},
+			"new_with_authorities": {
+				"visibility": "Public",
+				"isEntry": false,
+				"typeParameters": [],
+				"parameters": [
+					{
+						"Struct": {
+							"address": "0x2",
+							"module": "vec_set",
+							"name": "VecSet",
+							"typeArguments": [
+								{
+									"Vector": "U8"
+								}
+							]
+						}
+					},
+					{
+						"MutableReference": {
+							"Struct": {
+								"address": "0x2",
+								"module": "tx_context",
+								"name": "TxContext",
+								"typeArguments": []
+							}
+						}
+					}
+				],
+				"return": [
+					{
+						"Struct": {
+							"address": "0x228b48911fdc05f8d80ac4334cd734d38dd7db74a0f4e423cb91f736f429ebe4",
+							"module": "authlist",
+							"name": "Authlist",
+							"typeArguments": []
+						}
+					},
+					{
+						"Struct": {
+							"address": "0x228b48911fdc05f8d80ac4334cd734d38dd7db74a0f4e423cb91f736f429ebe4",
+							"module": "authlist",
+							"name": "AuthlistOwnerCap",
+							"typeArguments": []
+						}
+					}
+				]
+			},
+			"remove_authority": {
+				"visibility": "Public",
+				"isEntry": true,
+				"typeParameters": [],
+				"parameters": [
+					{
+						"Reference": {
+							"Struct": {
+								"address": "0x228b48911fdc05f8d80ac4334cd734d38dd7db74a0f4e423cb91f736f429ebe4",
+								"module": "authlist",
+								"name": "AuthlistOwnerCap",
+								"typeArguments": []
+							}
+						}
+					},
+					{
+						"MutableReference": {
+							"Struct": {
+								"address": "0x228b48911fdc05f8d80ac4334cd734d38dd7db74a0f4e423cb91f736f429ebe4",
+								"module": "authlist",
+								"name": "Authlist",
+								"typeArguments": []
+							}
+						}
+					},
+					{
+						"Vector": "U8"
+					}
+				],
+				"return": []
+			},
+			"remove_authority_with_witness": {
+				"visibility": "Public",
+				"isEntry": false,
+				"typeParameters": [
+					{
+						"abilities": [
+							"Drop"
+						]
+					}
+				],
+				"parameters": [
+					{
+						"TypeParameter": 0
+					},
+					{
+						"MutableReference": {
+							"Struct": {
+								"address": "0x228b48911fdc05f8d80ac4334cd734d38dd7db74a0f4e423cb91f736f429ebe4",
+								"module": "authlist",
+								"name": "Authlist",
+								"typeArguments": []
+							}
+						}
+					},
+					{
+						"Reference": {
+							"Vector": "U8"
+						}
+					}
+				],
+				"return": []
+			},
+			"remove_collection": {
+				"visibility": "Public",
+				"isEntry": true,
+				"typeParameters": [
+					{
+						"abilities": []
+					}
+				],
+				"parameters": [
+					{
+						"MutableReference": {
+							"Struct": {
+								"address": "0x228b48911fdc05f8d80ac4334cd734d38dd7db74a0f4e423cb91f736f429ebe4",
+								"module": "authlist",
+								"name": "Authlist",
+								"typeArguments": []
+							}
+						}
+					},
+					{
+						"Reference": {
+							"Struct": {
+								"address": "0x2",
+								"module": "package",
+								"name": "Publisher",
+								"typeArguments": []
+							}
+						}
+					}
+				],
+				"return": []
+			},
+			"remove_collection_": {
+				"visibility": "Public",
+				"isEntry": true,
+				"typeParameters": [
+					{
+						"abilities": []
+					}
+				],
+				"parameters": [
+					{
+						"MutableReference": {
+							"Struct": {
+								"address": "0x228b48911fdc05f8d80ac4334cd734d38dd7db74a0f4e423cb91f736f429ebe4",
+								"module": "authlist",
+								"name": "Authlist",
+								"typeArguments": []
+							}
+						}
+					}
+				],
+				"return": []
+			},
+			"set_name": {
+				"visibility": "Public",
+				"isEntry": true,
+				"typeParameters": [],
+				"parameters": [
+					{
+						"Reference": {
+							"Struct": {
+								"address": "0x228b48911fdc05f8d80ac4334cd734d38dd7db74a0f4e423cb91f736f429ebe4",
+								"module": "authlist",
+								"name": "AuthlistOwnerCap",
+								"typeArguments": []
+							}
+						}
+					},
+					{
+						"MutableReference": {
+							"Struct": {
+								"address": "0x228b48911fdc05f8d80ac4334cd734d38dd7db74a0f4e423cb91f736f429ebe4",
+								"module": "authlist",
+								"name": "Authlist",
+								"typeArguments": []
+							}
+						}
+					},
+					{
+						"Vector": "U8"
+					},
+					{
+						"Struct": {
+							"address": "0x1",
+							"module": "string",
+							"name": "String",
+							"typeArguments": []
+						}
+					}
+				],
+				"return": []
+			},
+			"set_name_with_witness": {
+				"visibility": "Public",
+				"isEntry": false,
+				"typeParameters": [
+					{
+						"abilities": [
+							"Drop"
+						]
+					}
+				],
+				"parameters": [
+					{
+						"TypeParameter": 0
+					},
+					{
+						"MutableReference": {
+							"Struct": {
+								"address": "0x228b48911fdc05f8d80ac4334cd734d38dd7db74a0f4e423cb91f736f429ebe4",
+								"module": "authlist",
+								"name": "Authlist",
+								"typeArguments": []
+							}
+						}
+					},
+					{
+						"Reference": {
+							"Vector": "U8"
+						}
+					},
+					{
+						"Struct": {
+							"address": "0x1",
+							"module": "string",
+							"name": "String",
+							"typeArguments": []
+						}
+					}
+				],
+				"return": []
+			}
+		}
+	},
+	{
+		"fileFormatVersion": 6,
+		"address": "0x228b48911fdc05f8d80ac4334cd734d38dd7db74a0f4e423cb91f736f429ebe4",
+		"name": "frozen_pub",
+		"friends": [],
+		"structs": {
+			"FROZEN_PUB": {
+				"abilities": {
+					"abilities": [
+						"Drop"
+					]
+				},
+				"typeParameters": [],
+				"fields": [
+					{
+						"name": "dummy_field",
+						"type": "Bool"
+					}
+				]
+			}
+		},
+		"exposedFunctions": {}
+	},
+	{
+		"fileFormatVersion": 6,
+		"address": "0x228b48911fdc05f8d80ac4334cd734d38dd7db74a0f4e423cb91f736f429ebe4",
+		"name": "ob_authlist",
+		"friends": [],
+		"structs": {
+			"OB_AUTHLIST": {
+				"abilities": {
+					"abilities": [
+						"Drop"
+					]
+				},
+				"typeParameters": [],
+				"fields": [
+					{
+						"name": "dummy_field",
+						"type": "Bool"
+					}
+				]
+			}
+		},
+		"exposedFunctions": {}
+	}
+]

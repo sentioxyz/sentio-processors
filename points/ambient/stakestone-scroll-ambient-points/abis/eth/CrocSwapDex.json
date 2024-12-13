@@ -1,0 +1,838 @@
+[
+  {
+      "anonymous": false,
+      "inputs": [
+          {
+              "indexed": false,
+              "internalType": "bytes",
+              "name": "input",
+              "type": "bytes"
+          },
+          {
+              "indexed": false,
+              "internalType": "int128",
+              "name": "baseFlow",
+              "type": "int128"
+          },
+          {
+              "indexed": false,
+              "internalType": "int128",
+              "name": "quoteFlow",
+              "type": "int128"
+          }
+      ],
+      "name": "CrocHotCmd",
+      "type": "event"
+  },
+  {
+      "anonymous": false,
+      "inputs": [
+          {
+              "indexed": true,
+              "internalType": "address",
+              "name": "token",
+              "type": "address"
+          },
+          {
+              "indexed": false,
+              "internalType": "uint128",
+              "name": "unitTickCollateral",
+              "type": "uint128"
+          },
+          {
+              "indexed": false,
+              "internalType": "uint16",
+              "name": "awayTickTol",
+              "type": "uint16"
+          }
+      ],
+      "name": "PriceImproveThresh",
+      "type": "event"
+  },
+  {
+      "anonymous": false,
+      "inputs": [
+          {
+              "indexed": true,
+              "internalType": "address",
+              "name": "base",
+              "type": "address"
+          },
+          {
+              "indexed": true,
+              "internalType": "address",
+              "name": "quote",
+              "type": "address"
+          },
+          {
+              "indexed": true,
+              "internalType": "uint256",
+              "name": "poolIdx",
+              "type": "uint256"
+          },
+          {
+              "indexed": false,
+              "internalType": "uint8",
+              "name": "takeRate",
+              "type": "uint8"
+          }
+      ],
+      "name": "ResyncTakeRate",
+      "type": "event"
+  },
+  {
+      "anonymous": false,
+      "inputs": [
+          {
+              "indexed": true,
+              "internalType": "uint256",
+              "name": "poolIdx",
+              "type": "uint256"
+          },
+          {
+              "indexed": false,
+              "internalType": "uint16",
+              "name": "feeRate",
+              "type": "uint16"
+          },
+          {
+              "indexed": false,
+              "internalType": "uint16",
+              "name": "tickSize",
+              "type": "uint16"
+          },
+          {
+              "indexed": false,
+              "internalType": "uint8",
+              "name": "jitThresh",
+              "type": "uint8"
+          },
+          {
+              "indexed": false,
+              "internalType": "uint8",
+              "name": "knockout",
+              "type": "uint8"
+          },
+          {
+              "indexed": false,
+              "internalType": "uint8",
+              "name": "oracleFlags",
+              "type": "uint8"
+          }
+      ],
+      "name": "SetPoolTemplate",
+      "type": "event"
+  },
+  {
+      "anonymous": false,
+      "inputs": [
+          {
+              "indexed": true,
+              "internalType": "address",
+              "name": "owner",
+              "type": "address"
+          },
+          {
+              "indexed": true,
+              "internalType": "address",
+              "name": "spender",
+              "type": "address"
+          },
+          {
+              "indexed": false,
+              "internalType": "uint256",
+              "name": "value",
+              "type": "uint256"
+          }
+      ],
+      "name": "Approval",
+      "type": "event"
+  },
+  {
+      "anonymous": false,
+      "inputs": [
+          {
+              "indexed": true,
+              "internalType": "address",
+              "name": "from",
+              "type": "address"
+          },
+          {
+              "indexed": true,
+              "internalType": "address",
+              "name": "to",
+              "type": "address"
+          },
+          {
+              "indexed": false,
+              "internalType": "uint256",
+              "name": "value",
+              "type": "uint256"
+          }
+      ],
+      "name": "Transfer",
+      "type": "event"
+  },
+  {
+      "anonymous": false,
+      "inputs": [
+          {
+              "indexed": false,
+              "internalType": "bytes",
+              "name": "input",
+              "type": "bytes"
+          },
+          {
+              "indexed": false,
+              "internalType": "bytes",
+              "name": "output",
+              "type": "bytes"
+          }
+      ],
+      "name": "CrocMicroSwap",
+      "type": "event"
+  },
+  {
+      "anonymous": false,
+      "inputs": [
+          {
+              "indexed": true,
+              "internalType": "address",
+              "name": "base",
+              "type": "address"
+          },
+          {
+              "indexed": true,
+              "internalType": "address",
+              "name": "quote",
+              "type": "address"
+          },
+          {
+              "indexed": false,
+              "internalType": "uint256",
+              "name": "poolIdx",
+              "type": "uint256"
+          },
+          {
+              "indexed": false,
+              "internalType": "bool",
+              "name": "isBuy",
+              "type": "bool"
+          },
+          {
+              "indexed": false,
+              "internalType": "bool",
+              "name": "inBaseQty",
+              "type": "bool"
+          },
+          {
+              "indexed": false,
+              "internalType": "uint128",
+              "name": "qty",
+              "type": "uint128"
+          },
+          {
+              "indexed": false,
+              "internalType": "uint16",
+              "name": "tip",
+              "type": "uint16"
+          },
+          {
+              "indexed": false,
+              "internalType": "uint128",
+              "name": "limitPrice",
+              "type": "uint128"
+          },
+          {
+              "indexed": false,
+              "internalType": "uint128",
+              "name": "minOut",
+              "type": "uint128"
+          },
+          {
+              "indexed": false,
+              "internalType": "uint8",
+              "name": "reserveFlags",
+              "type": "uint8"
+          },
+          {
+              "indexed": false,
+              "internalType": "int128",
+              "name": "baseFlow",
+              "type": "int128"
+          },
+          {
+              "indexed": false,
+              "internalType": "int128",
+              "name": "quoteFlow",
+              "type": "int128"
+          }
+      ],
+      "name": "CrocSwap",
+      "type": "event"
+  },
+  {
+      "anonymous": false,
+      "inputs": [
+          {
+              "indexed": false,
+              "internalType": "bool",
+              "name": "",
+              "type": "bool"
+          }
+      ],
+      "name": "HotPathOpen",
+      "type": "event"
+  },
+  {
+      "anonymous": false,
+      "inputs": [
+          {
+              "indexed": false,
+              "internalType": "bytes",
+              "name": "input",
+              "type": "bytes"
+          },
+          {
+              "indexed": false,
+              "internalType": "int128",
+              "name": "baseFlow",
+              "type": "int128"
+          },
+          {
+              "indexed": false,
+              "internalType": "int128",
+              "name": "quoteFlow",
+              "type": "int128"
+          }
+      ],
+      "name": "CrocWarmCmd",
+      "type": "event"
+  },
+  {
+      "anonymous": false,
+      "inputs": [
+          {
+              "indexed": true,
+              "internalType": "uint256",
+              "name": "poolIdx",
+              "type": "uint256"
+          }
+      ],
+      "name": "DisablePoolTemplate",
+      "type": "event"
+  },
+  {
+      "anonymous": false,
+      "inputs": [
+          {
+              "indexed": false,
+              "internalType": "uint8",
+              "name": "takeRate",
+              "type": "uint8"
+          }
+      ],
+      "name": "SetRelayerTakeRate",
+      "type": "event"
+  },
+  {
+      "inputs": [
+          {
+              "internalType": "uint256",
+              "name": "slot",
+              "type": "uint256"
+          }
+      ],
+      "name": "readSlot",
+      "outputs": [
+          {
+              "internalType": "uint256",
+              "name": "data",
+              "type": "uint256"
+          }
+      ],
+      "stateMutability": "view",
+      "type": "function"
+  },
+  {
+      "anonymous": false,
+      "inputs": [
+          {
+              "indexed": false,
+              "internalType": "bytes",
+              "name": "input",
+              "type": "bytes"
+          }
+      ],
+      "name": "CrocColdCmd",
+      "type": "event"
+  },
+  {
+      "anonymous": false,
+      "inputs": [
+          {
+              "indexed": false,
+              "internalType": "bytes",
+              "name": "input",
+              "type": "bytes"
+          },
+          {
+              "indexed": false,
+              "internalType": "bytes",
+              "name": "output",
+              "type": "bytes"
+          }
+      ],
+      "name": "CrocMicroBurnAmbient",
+      "type": "event"
+  },
+  {
+      "anonymous": false,
+      "inputs": [
+          {
+              "indexed": false,
+              "internalType": "bytes",
+              "name": "input",
+              "type": "bytes"
+          },
+          {
+              "indexed": false,
+              "internalType": "bytes",
+              "name": "output",
+              "type": "bytes"
+          }
+      ],
+      "name": "CrocMicroBurnRange",
+      "type": "event"
+  },
+  {
+      "anonymous": false,
+      "inputs": [
+          {
+              "indexed": false,
+              "internalType": "bool",
+              "name": "",
+              "type": "bool"
+          }
+      ],
+      "name": "SafeMode",
+      "type": "event"
+  },
+  {
+      "anonymous": false,
+      "inputs": [
+          {
+              "indexed": true,
+              "internalType": "bytes32",
+              "name": "pool",
+              "type": "bytes32"
+          },
+          {
+              "indexed": true,
+              "internalType": "int24",
+              "name": "tick",
+              "type": "int24"
+          },
+          {
+              "indexed": false,
+              "internalType": "bool",
+              "name": "isBid",
+              "type": "bool"
+          },
+          {
+              "indexed": false,
+              "internalType": "uint32",
+              "name": "pivotTime",
+              "type": "uint32"
+          },
+          {
+              "indexed": false,
+              "internalType": "uint64",
+              "name": "feeMileage",
+              "type": "uint64"
+          },
+          {
+              "indexed": false,
+              "internalType": "uint160",
+              "name": "commitEntropy",
+              "type": "uint160"
+          }
+      ],
+      "name": "CrocKnockoutCross",
+      "type": "event"
+  },
+  {
+      "inputs": [
+          {
+              "internalType": "uint16",
+              "name": "callpath",
+              "type": "uint16"
+          },
+          {
+              "internalType": "bytes",
+              "name": "cmd",
+              "type": "bytes"
+          },
+          {
+              "internalType": "bytes",
+              "name": "conds",
+              "type": "bytes"
+          },
+          {
+              "internalType": "bytes",
+              "name": "relayerTip",
+              "type": "bytes"
+          },
+          {
+              "internalType": "bytes",
+              "name": "signature",
+              "type": "bytes"
+          }
+      ],
+      "name": "userCmdRelayer",
+      "outputs": [
+          {
+              "internalType": "bytes",
+              "name": "output",
+              "type": "bytes"
+          }
+      ],
+      "stateMutability": "payable",
+      "type": "function"
+  },
+  {
+      "inputs": [
+          {
+              "internalType": "uint16",
+              "name": "callpath",
+              "type": "uint16"
+          },
+          {
+              "internalType": "bytes",
+              "name": "cmd",
+              "type": "bytes"
+          },
+          {
+              "internalType": "address",
+              "name": "client",
+              "type": "address"
+          }
+      ],
+      "name": "userCmdRouter",
+      "outputs": [
+          {
+              "internalType": "bytes",
+              "name": "",
+              "type": "bytes"
+          }
+      ],
+      "stateMutability": "payable",
+      "type": "function"
+  },
+  {
+      "anonymous": false,
+      "inputs": [
+          {
+              "indexed": true,
+              "internalType": "address",
+              "name": "authority",
+              "type": "address"
+          }
+      ],
+      "name": "AuthorityTransfer",
+      "type": "event"
+  },
+  {
+      "anonymous": false,
+      "inputs": [
+          {
+              "indexed": true,
+              "internalType": "address",
+              "name": "token",
+              "type": "address"
+          },
+          {
+              "indexed": true,
+              "internalType": "address",
+              "name": "recv",
+              "type": "address"
+          }
+      ],
+      "name": "ProtocolDividend",
+      "type": "event"
+  },
+  {
+      "anonymous": false,
+      "inputs": [
+          {
+              "indexed": false,
+              "internalType": "uint128",
+              "name": "liq",
+              "type": "uint128"
+          }
+      ],
+      "name": "SetNewPoolLiq",
+      "type": "event"
+  },
+  {
+      "inputs": [
+          {
+              "internalType": "address",
+              "name": "base",
+              "type": "address"
+          },
+          {
+              "internalType": "address",
+              "name": "quote",
+              "type": "address"
+          },
+          {
+              "internalType": "uint256",
+              "name": "poolIdx",
+              "type": "uint256"
+          },
+          {
+              "internalType": "bool",
+              "name": "isBuy",
+              "type": "bool"
+          },
+          {
+              "internalType": "bool",
+              "name": "inBaseQty",
+              "type": "bool"
+          },
+          {
+              "internalType": "uint128",
+              "name": "qty",
+              "type": "uint128"
+          },
+          {
+              "internalType": "uint16",
+              "name": "tip",
+              "type": "uint16"
+          },
+          {
+              "internalType": "uint128",
+              "name": "limitPrice",
+              "type": "uint128"
+          },
+          {
+              "internalType": "uint128",
+              "name": "minOut",
+              "type": "uint128"
+          },
+          {
+              "internalType": "uint8",
+              "name": "reserveFlags",
+              "type": "uint8"
+          }
+      ],
+      "name": "swap",
+      "outputs": [
+          {
+              "internalType": "int128",
+              "name": "baseQuote",
+              "type": "int128"
+          },
+          {
+              "internalType": "int128",
+              "name": "quoteFlow",
+              "type": "int128"
+          }
+      ],
+      "stateMutability": "payable",
+      "type": "function"
+  },
+  {
+      "anonymous": false,
+      "inputs": [
+          {
+              "indexed": false,
+              "internalType": "bytes",
+              "name": "input",
+              "type": "bytes"
+          },
+          {
+              "indexed": false,
+              "internalType": "bytes",
+              "name": "output",
+              "type": "bytes"
+          }
+      ],
+      "name": "CrocMicroMintRange",
+      "type": "event"
+  },
+  {
+      "anonymous": false,
+      "inputs": [
+          {
+              "indexed": false,
+              "internalType": "uint8",
+              "name": "takeRate",
+              "type": "uint8"
+          }
+      ],
+      "name": "SetTakeRate",
+      "type": "event"
+  },
+  {
+      "inputs": [],
+      "name": "acceptCrocDex",
+      "outputs": [
+          {
+              "internalType": "bool",
+              "name": "",
+              "type": "bool"
+          }
+      ],
+      "stateMutability": "pure",
+      "type": "function"
+  },
+  {
+      "anonymous": false,
+      "inputs": [
+          {
+              "indexed": false,
+              "internalType": "bytes",
+              "name": "input",
+              "type": "bytes"
+          }
+      ],
+      "name": "CrocColdProtocolCmd",
+      "type": "event"
+  },
+  {
+      "anonymous": false,
+      "inputs": [
+          {
+              "indexed": false,
+              "internalType": "bytes",
+              "name": "input",
+              "type": "bytes"
+          },
+          {
+              "indexed": false,
+              "internalType": "int128",
+              "name": "baseFlow",
+              "type": "int128"
+          },
+          {
+              "indexed": false,
+              "internalType": "int128",
+              "name": "quoteFlow",
+              "type": "int128"
+          }
+      ],
+      "name": "CrocKnockoutCmd",
+      "type": "event"
+  },
+  {
+      "anonymous": false,
+      "inputs": [
+          {
+              "indexed": false,
+              "internalType": "bytes",
+              "name": "input",
+              "type": "bytes"
+          },
+          {
+              "indexed": false,
+              "internalType": "bytes",
+              "name": "output",
+              "type": "bytes"
+          }
+      ],
+      "name": "CrocMicroMintAmbient",
+      "type": "event"
+  },
+  {
+      "anonymous": false,
+      "inputs": [
+          {
+              "indexed": true,
+              "internalType": "address",
+              "name": "treasury",
+              "type": "address"
+          },
+          {
+              "indexed": true,
+              "internalType": "uint64",
+              "name": "startTime",
+              "type": "uint64"
+          }
+      ],
+      "name": "TreasurySet",
+      "type": "event"
+  },
+  {
+      "anonymous": false,
+      "inputs": [
+          {
+              "indexed": true,
+              "internalType": "address",
+              "name": "proxy",
+              "type": "address"
+          },
+          {
+              "indexed": false,
+              "internalType": "uint16",
+              "name": "proxyIdx",
+              "type": "uint16"
+          }
+      ],
+      "name": "UpgradeProxy",
+      "type": "event"
+  },
+  {
+      "inputs": [],
+      "stateMutability": "nonpayable",
+      "type": "constructor"
+  },
+  {
+      "inputs": [
+          {
+              "internalType": "uint16",
+              "name": "callpath",
+              "type": "uint16"
+          },
+          {
+              "internalType": "bytes",
+              "name": "cmd",
+              "type": "bytes"
+          },
+          {
+              "internalType": "bool",
+              "name": "sudo",
+              "type": "bool"
+          }
+      ],
+      "name": "protocolCmd",
+      "outputs": [],
+      "stateMutability": "payable",
+      "type": "function"
+  },
+  {
+      "inputs": [
+          {
+              "internalType": "uint16",
+              "name": "callpath",
+              "type": "uint16"
+          },
+          {
+              "internalType": "bytes",
+              "name": "cmd",
+              "type": "bytes"
+          }
+      ],
+      "name": "userCmd",
+      "outputs": [
+          {
+              "internalType": "bytes",
+              "name": "",
+              "type": "bytes"
+          }
+      ],
+      "stateMutability": "payable",
+      "type": "function"
+  }
+]

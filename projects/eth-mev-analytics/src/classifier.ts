@@ -237,6 +237,7 @@ export interface sandwichTxnResult {
   revenue: Map<string, bigint>;
   costs: Map<string, bigint>;
   minerPayment: string;
+  usedTokens: Set<string>;
 }
 
 export function isSandwich(
@@ -257,6 +258,7 @@ export function isSandwich(
     costs: new Map<string, bigint>(),
     mevContract: back.mevContract,
     minerPayment: minerPayment,
+    usedTokens: arr[0].usedTokens,
   };
   const frontRet = getRolesCount(front.addressProperty);
   const backRet = getRolesCount(back.addressProperty);

@@ -1,3 +1,4 @@
+import assert from 'assert'
 import { TestProcessorServer, firstCounterValue } from "@sentio/sdk/testing";
 import blockJson from "./17121437.json";
 import blockJsonX from "./17126233.json";
@@ -22,6 +23,7 @@ import { RichBlock, formatRichBlock } from "@sentio/sdk/eth";
 import { txnProfitAndCost, isArbitrage, handleBlock } from "./eth_processor.js";
 import { dataByTxn, getDataByTxn } from "./eth_util.js";
 import { chainConfigs, ChainConstants } from "./common.js";
+import { before, describe, test } from 'node:test'
 
 function filterByHash(
   b: RichBlock,
@@ -74,7 +76,7 @@ function compute(
 describe("Test MEV", () => {
   const service = new TestProcessorServer(() => import("./processor.js"));
 
-  beforeAll(async () => {
+  before(async () => {
     await service.start();
   });
 
@@ -84,7 +86,7 @@ describe("Test MEV", () => {
       "0x629971cc2bceb52b73804546b76842084ef6d77c66f7b1c3b06d639760a54fd5"
     );
     console.log(ret);
-    expect(ret[0]).toBe(false);
+    assert.equal(ret[0], false);
   });
 
   test("WETH transfer duplicate", async () => {
@@ -92,7 +94,7 @@ describe("Test MEV", () => {
       blockJsonX,
       "0x33ca03529227101658f7112c243e9844d0a543ee4f8da791c8fcf29dc155708b"
     );
-    expect(ret[0]).toBe(false);
+    assert.equal(ret[0], false);
   });
 
   test("uniswap mint", async () => {
@@ -100,7 +102,7 @@ describe("Test MEV", () => {
       blockJsonUniswapMint,
       "0xfc876f3b2c2b18840d20e98ecfaaa8f716674d71ecfd793b38a3d7b5a35d6890"
     );
-    expect(ret[0]).toBe(false);
+    assert.equal(ret[0], false);
   });
 
   test("wrong revenue", async () => {
@@ -108,7 +110,7 @@ describe("Test MEV", () => {
       blockWrongRevenue,
       "0x80114900676c3c3da04ed5f4acd702acb344b0190f92a40a00dafb001fff6c71"
     );
-    expect(ret[0]).toBe(true);
+    assert.equal(ret[0], true);
   });
   // TODO(qiaokan): solve these 2 cases.
   /*
@@ -117,8 +119,8 @@ describe("Test MEV", () => {
       block2Botsfrom,
       "0xd5695fefdc8c4e00f648fe62d8e77c7f9b4ab2b98ac1fcee5cbfd529689dcd49"
     );
-    expect(ret[0]).toBe(true);
-    expect(ret[1].get("0xc02aaa39b223fe8d0a0e5c4f27ead9083c756cc2")).toBe(
+    assert.equal(ret[0], true);
+    assert.equal(ret[1].get("0xc02aaa39b223fe8d0a0e5c4f27ead9083c756cc2"),
       2939038981219406289n
     );
   });
@@ -129,7 +131,7 @@ describe("Test MEV", () => {
       "0xa8c7466e779d19c9b441ea79310ea16bff74982255d581e3d92766c768e3e1a3"
     );
     console.log(ret);
-    expect(ret[0]).toBe(true);
+    assert.equal(ret[0], true);
   });
 
   test("wrong renevue 2", async () => {
@@ -137,8 +139,8 @@ describe("Test MEV", () => {
       blockWrongRevenue2,
       "0x3135d2ffd8c7f7e6a387b0809dce37d0fabebc3055a62c425f1c2fb74dd4ae44"
     );
-    expect(ret[0]).toBe(true);
-    expect(ret[1].get("0xc02aaa39b223fe8d0a0e5c4f27ead9083c756cc2")).toBe(
+    assert.equal(ret[0], true);
+    assert.equal(ret[1].get("0xc02aaa39b223fe8d0a0e5c4f27ead9083c756cc2"),
       247338348117742464n
     );
   });
@@ -148,8 +150,8 @@ describe("Test MEV", () => {
     const block = JSON.parse(strValue) as RichBlock;
     const formattedBlock = formatRichBlock(block);
     const mevResults = handleBlock(formattedBlock, chainConfigs[0]);
-    expect(mevResults.sandwichTxns).toHaveLength(2);
-    expect(mevResults.arbTxns).toHaveLength(2);
+    assert.equal(mevResults.sandwichTxns.length, 2);
+    assert.equal(mevResults.arbTxns.length, 2);
   });
 
   test("sandwich jared", async () => {
@@ -157,8 +159,8 @@ describe("Test MEV", () => {
     const block = JSON.parse(strValue) as RichBlock;
     const formattedBlock = formatRichBlock(block);
     const mevResults = handleBlock(formattedBlock, chainConfigs[0]);
-    expect(mevResults.sandwichTxns).toHaveLength(1);
-    expect(mevResults.arbTxns).toHaveLength(2);
+    assert.equal(mevResults.sandwichTxns.length, 1);
+    assert.equal(mevResults.arbTxns.length, 2);
   });
 
   // Make sure that it does not contain "0xc7bca6c1830300aac17ff5d7d527c464d0ee8312e6611bcf37f95ff611560af3"
@@ -167,8 +169,8 @@ describe("Test MEV", () => {
     const block = JSON.parse(strValue) as RichBlock;
     const formattedBlock = formatRichBlock(block);
     const mevResults = handleBlock(formattedBlock, chainConfigs[0]);
-    expect(mevResults.sandwichTxns).toHaveLength(1);
-    expect(mevResults.sandwichTxns[0].frontTxnHash).toBe(
+    assert.equal(mevResults.sandwichTxns.length, 1);
+    assert.equal(mevResults.sandwichTxns[0].frontTxnHash,
       "0xe30faee2731b78d747287047e315f0c0b1c1ee31b40ddcb3ccca69dfa155bd85"
     );
   });
@@ -178,8 +180,8 @@ describe("Test MEV", () => {
     const block = JSON.parse(strValue) as RichBlock;
     const formattedBlock = formatRichBlock(block);
     const mevResults = handleBlock(formattedBlock, chainConfigs[0]);
-    expect(mevResults.sandwichTxns).toHaveLength(3);
-    expect(mevResults.sandwichTxns[0].frontTxnHash).toBe(
+    assert.equal(mevResults.sandwichTxns.length, 3);
+    assert.equal(mevResults.sandwichTxns[0].frontTxnHash,
       "0x1a2d66cd1ac86b63b452ee0f2f6672e1a7605c74e1e88c034d0a0f9ec66e71ed"
     );
   });
@@ -189,7 +191,7 @@ describe("Test MEV", () => {
     const block = JSON.parse(strValue) as RichBlock;
     const formattedBlock = formatRichBlock(block);
     const mevResults = handleBlock(formattedBlock, chainConfigs[0]);
-    expect(mevResults.sandwichTxns).toHaveLength(0);
+    assert.equal(mevResults.sandwichTxns.length, 0);
   });
 
   test("wrong renevue 3", async () => {
@@ -197,11 +199,11 @@ describe("Test MEV", () => {
       blockWrongArbRevenue,
       "0x8ba2aea93588d8d2977bf400148b01301dacfab47cf281a3b2345329a6158ae1"
     );
-    expect(ret[0]).toBe(true);
-    expect(ret[1].get("0xc02aaa39b223fe8d0a0e5c4f27ead9083c756cc2")).toBe(
+    assert.equal(ret[0], true);
+    assert.equal(ret[1].get("0xc02aaa39b223fe8d0a0e5c4f27ead9083c756cc2"),
       1056620760836823262n
     );
-    expect(ret[1].get("0x4e3fbd56cd56c3e72c1403e103b45db9da5b9d2b")).toBe(
+    assert.equal(ret[1].get("0x4e3fbd56cd56c3e72c1403e103b45db9da5b9d2b"),
       12618978090578852n
     );
   });
@@ -211,11 +213,11 @@ describe("Test MEV", () => {
       blockLido,
       "0xf89d9779021ef9247e35347d55a0332bf6927c5027ae63a54bd848cf2a9113b3"
     );
-    expect(ret[0]).toBe(true);
-    expect(ret[1].get("0xc02aaa39b223fe8d0a0e5c4f27ead9083c756cc2")).toBe(
+    assert.equal(ret[0], true);
+    assert.equal(ret[1].get("0xc02aaa39b223fe8d0a0e5c4f27ead9083c756cc2"),
       17596399668493445n
     );
-    expect(ret[1].get("0xae7ab96520de3a18e5e111b5eaab095312d7fe84")).toBe(0n);
+    assert.equal(ret[1].get("0xae7ab96520de3a18e5e111b5eaab095312d7fe84"), 0n);
   });
 
   test("sandwich wrong rev", async () => {
@@ -223,15 +225,15 @@ describe("Test MEV", () => {
     const block = JSON.parse(strValue) as RichBlock;
     const formattedBlock = formatRichBlock(block);
     const mevResults = handleBlock(formattedBlock, chainConfigs[0]);
-    expect(mevResults.sandwichTxns).toHaveLength(1);
-    expect(mevResults.sandwichTxns[0].frontTxnHash).toBe(
+    assert.equal(mevResults.sandwichTxns.length, 1);
+    assert.equal(mevResults.sandwichTxns[0].frontTxnHash,
       "0xdc567dd3b915f4fe0763d38690277a1d8e3b9967e0b113b936e0f0a11f3e5304"
     );
-    expect(
+    assert.equal(
       mevResults.sandwichTxns[0].revenue.get(
         "0xc02aaa39b223fe8d0a0e5c4f27ead9083c756cc2"
       )
-    ).toBe(22971036132798645n);
+    , 22971036132798645n);
   });
 
   test("huge graph", async () => {
@@ -239,8 +241,8 @@ describe("Test MEV", () => {
       blockHugeGraph,
       "0x2c434d3622428abf3e91b9a2cc491ea371d1705441ee00897c305a5adeb53068"
     );
-    expect(ret[0]).toBe(true);
-    expect(ret[1].get("0xa0b86991c6218b36c1d19d4a2e9eb0ce3606eb48")).toBe(
+    assert.equal(ret[0], true);
+    assert.equal(ret[1].get("0xa0b86991c6218b36c1d19d4a2e9eb0ce3606eb48"),
       1039187993n
     );
   });
@@ -252,7 +254,7 @@ describe("Test MEV", () => {
       1,
       true
     );
-    expect(ret[0]).toBe(false);
+    assert.equal(ret[0], false);
   });
 });
 
@@ -260,7 +262,7 @@ describe("Test MEV", () => {
 describe("Test hack", () => {
   const service = new TestProcessorServer(() => import("./processor.js"));
 
-  beforeAll(async () => {
+  before(async () => {
     await service.start();
   });
 
@@ -269,7 +271,7 @@ describe("Test hack", () => {
       blockForTubeHack,
       "0x082144b012cf4cb266569085829a12fa64fb3a4a9931289e930e14ead4a3737d"
     );
-    expect(ret[0]).toBe(false);
+    assert.equal(ret[0], false);
   });
 
   test("test euler hack", async () => {
@@ -277,6 +279,6 @@ describe("Test hack", () => {
       blockEulerHack1,
       "0x71a908be0bef6174bccc3d493becdfd28395d78898e355d451cb52f7bac38617"
     );
-    expect(ret[0]).toBe(false);
+    assert.equal(ret[0], false);
   });
 });

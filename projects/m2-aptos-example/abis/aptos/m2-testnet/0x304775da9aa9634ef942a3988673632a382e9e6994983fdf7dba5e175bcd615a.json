@@ -1,0 +1,580 @@
+[
+	{
+		"bytecode": "0xa11ceb0b060000000c010008020824032c4604720a057c7607f201fa0108ec034006ac044410f004310aa1051a0cbb0595010dd0060400000101010201030004080000050000010604010001010e0501000101100501000101120501000103150700000700010000080201000009010300000a040100000b050600000c020100021402080001070a01010003160c0d0001080e0f0100011710010100010a11120100010c02010100070909090a090b090c0902060c0b020108010001060c010103060c050302060c03010b02010801010608000105010801020b02010900060b03010900030b030108010b040108010b05010801010a0201080605060c080608060201030b030109000b040109000b0501090002050b020109000203060b05010900010b020109000a746573745f636f696e3204636f696e067369676e657206737472696e670c4361706162696c697469657305544553543204436f696e046275726e0a696e697469616c697a650b696e697469616c697a6564046d696e740d6d696e745f696e7465726e616c0872656769737465720f6275726e5f6361706162696c6974790e4275726e4361706162696c69747911667265657a655f6361706162696c69747910467265657a654361706162696c6974790f6d696e745f6361706162696c6974790e4d696e744361706162696c6974790b64756d6d795f6669656c640a616464726573735f6f6606537472696e670475746638076465706f736974304775da9aa9634ef942a3988673632a382e9e6994983fdf7dba5e175bcd615a0000000000000000000000000000000000000000000000000000000000000001030801000000000000000520304775da9aa9634ef942a3988673632a382e9e6994983fdf7dba5e175bcd615a0a020c0b544553543220546f6b656e0a0206055445535432126170746f733a3a6d657461646174615f76311d010100000000000000104552525f554e415554484f52495a45440000000002030d0b030108010f0b04010801110b050108010102011301000100010007090b0011062b000c020b010b021000380002010104000b1c0a0011060701210406050a0b00010700270a00070211080703110831080838010c030c020c010b000b010b020b0312002d00020201000001030701290002030104010006080b000b0211040c030b010b03380202040000010007090b0011062b000c020b010b0210013803020501040001030b003804020000000200",
+		"abi": {
+			"address": "0x304775da9aa9634ef942a3988673632a382e9e6994983fdf7dba5e175bcd615a",
+			"name": "test_coin2",
+			"friends": [],
+			"exposed_functions": [
+				{
+					"name": "burn",
+					"visibility": "public",
+					"is_entry": false,
+					"is_view": false,
+					"generic_type_params": [],
+					"params": [
+						"&signer",
+						"0x1::coin::Coin<0x304775da9aa9634ef942a3988673632a382e9e6994983fdf7dba5e175bcd615a::test_coin2::TEST2>"
+					],
+					"return": []
+				},
+				{
+					"name": "initialize",
+					"visibility": "public",
+					"is_entry": true,
+					"is_view": false,
+					"generic_type_params": [],
+					"params": [
+						"&signer"
+					],
+					"return": []
+				},
+				{
+					"name": "initialized",
+					"visibility": "public",
+					"is_entry": false,
+					"is_view": false,
+					"generic_type_params": [],
+					"params": [],
+					"return": [
+						"bool"
+					]
+				},
+				{
+					"name": "mint",
+					"visibility": "public",
+					"is_entry": true,
+					"is_view": false,
+					"generic_type_params": [],
+					"params": [
+						"&signer",
+						"address",
+						"u64"
+					],
+					"return": []
+				},
+				{
+					"name": "register",
+					"visibility": "public",
+					"is_entry": true,
+					"is_view": false,
+					"generic_type_params": [],
+					"params": [
+						"&signer"
+					],
+					"return": []
+				}
+			],
+			"structs": [
+				{
+					"name": "Capabilities",
+					"is_native": false,
+					"abilities": [
+						"key"
+					],
+					"generic_type_params": [],
+					"fields": [
+						{
+							"name": "burn_capability",
+							"type": "0x1::coin::BurnCapability<0x304775da9aa9634ef942a3988673632a382e9e6994983fdf7dba5e175bcd615a::test_coin2::TEST2>"
+						},
+						{
+							"name": "freeze_capability",
+							"type": "0x1::coin::FreezeCapability<0x304775da9aa9634ef942a3988673632a382e9e6994983fdf7dba5e175bcd615a::test_coin2::TEST2>"
+						},
+						{
+							"name": "mint_capability",
+							"type": "0x1::coin::MintCapability<0x304775da9aa9634ef942a3988673632a382e9e6994983fdf7dba5e175bcd615a::test_coin2::TEST2>"
+						}
+					]
+				},
+				{
+					"name": "TEST2",
+					"is_native": false,
+					"abilities": [],
+					"generic_type_params": [],
+					"fields": [
+						{
+							"name": "dummy_field",
+							"type": "bool"
+						}
+					]
+				}
+			]
+		}
+	},
+	{
+		"bytecode": "0xa11ceb0b0600000009010004020404030855055d4507a2019f0108c1022006e102bd03109e06510cef06bf0900000001010207000003000100000401000000050100000006020100000702010000080201000009020100000a020300010b010600010c050100010d020100010e060100010f02010001100201000111020100011207010001130501000202080001080002080008000201080003080008000800000104020800030208000208080004020800020404040308000208000b01080008000108000108000108000108000c6c6f675f6578705f6d6174680d66697865645f706f696e7436340c4669786564506f696e74363403657870026c6e046c6f673203706f7708706f775f646f776e0c706f775f696e7465726e616c06706f775f75700e7472795f73696d706c655f706f7707746f5f75313238036f6e65066469765f66700966726f6d5f75313238067375625f6670066d756c5f6670066164645f667003646976047a65726f304775da9aa9634ef942a3988673632a382e9e6994983fdf7dba5e175bcd615a0308000000000000000004105074b932020140855e978700000000000410ddd74ed377b582100100000000000000041099bc69e0e19812a601000000000000000410756618e8c3e3b54801000000000000000410a0cf5c6f5b04162201000000000000000410642aed8a6251e1b702000000000000000410e6726b37352e996307000000000000000410bede967d1966deb1982d31ffd04700000410dbccb0744e5c2099360000000000000004105e69f73686a33ef5a40b000000000000041000000000f81772b100000000000000000410f6057db4fbffffff0000000000000000041009fa824b040000000100000000000000041000000000000000000100000000000000020140041000000000000000000400000000000000041000000000000000000800000000000000041000000000000000001000000000000000041000000000000000002000000000000000041000000000000000004000000000000000041000000000000000800000000000000000041000000000000000400000000000000000041000000000000000200000000000000000041000000000000000100000000000000000041000000000000000000200000000000000126170746f733a3a6d657461646174615f76313d010000000000000000164552525f4558504f4e454e545f544f4f5f4c415247451a5768656e206578706f6e656e7420697320746f6f206c617267650000000100000493020a011108071423040605080700270a011108320000000000000000000000000000000021041011090c020591020b00310021041b110931010b011100110a0c020591020a011108070e2104240706110b0c0205910211090c020a01110807132604350b010713110b110c0c010b020708110b110d0c020a01110807122604440b010712110b110c0c010b020701110b110d0c020a01110807112604530b010711110b110c0c010b02070a110b110d0c020a01110807102604620b010710110b110c0c010b020709110b110d0c020a01110807192604710b010719110b110c0c010b020707110b110d0c020a011108070e260480010b01070e110b110c0c010b020706110b110d0c020a011108071526048f010b010715110b110c0c010b020703110b110d0c020a011108071626049e010b010716110b110c0c010b020704110b110d0c020a01110807172604ad010b010717110b110c0c010b020705110b110d0c020a01110807182604bc010b010718110b110c0c010b020702110b110d0c020a0111083200000000000000000000000000000000220491020a010c0411090a04110e0c030b040a01110d060200000000000000110f0c040b030a04110e0c030b040a01110d060300000000000000110f0c040b030a04110e0c030b040a01110d060400000000000000110f0c040b030a04110e0c030b040a01110d060500000000000000110f0c040b030a04110e0c030b040a01110d060600000000000000110f0c040b030a04110e0c030b040a01110d060700000000000000110f0c040b030a04110e0c030b040b01110d060800000000000000110f0c040b030b04110e0c030b020b03110d0c020b020201010000080c0b0011020c010c020b01070b110b110d0c010b020b01020201000009650b0011080c0832000000000000000000000000000000000c0632000000000000000000000000000000000c073201000000000000000000000000000000070f3101172f0c0231000c0331010c050a08071926041f05160b083101300c080b06070e160c0605110a08070e23042f052431000c050b0831012f0c080b07070e160c07051f0a03313e23045305340a083101300b0831013018313e300c080a08071926044a0b083101300c080b060a02160c060b023101300c020b033101160c03052f0a05310024045b0b06110b0c0105600b070b0617110b0c010b010c040b050b040203010000020e0a000a0111070c0304080b030c02050c0b000b0111050c020b02020401000002110a000a0111070c0304080b030c02050f0b000b011105070c110b110d0c020b0202050000000a0c0b0011010c020c030b010b02110d0c040b030b041100020601000002110a000a0111070c0304080b030c02050f0b000b011105070d110b110d0c020b0202070000000b510a011108320000000000000000000000000000000021040a0811090c030c0b054e0a00110832000000000000000000000000000000002104140811100c0a0c09054a0a011108070e21041e080b000c080c0705460a011108071921042a080a000b00110d0c060c0505420b011108071021043a0a000b00110d0c0c080a0c0b0c110d0c040c02053e0911100c040c020b020b040c060c050b050b060c080c070b070b080c0a0c090b090b0a0c030c0b0b0b0b030200",
+		"abi": {
+			"address": "0x304775da9aa9634ef942a3988673632a382e9e6994983fdf7dba5e175bcd615a",
+			"name": "log_exp_math",
+			"friends": [],
+			"exposed_functions": [
+				{
+					"name": "exp",
+					"visibility": "public",
+					"is_entry": false,
+					"is_view": false,
+					"generic_type_params": [],
+					"params": [
+						"u8",
+						"0x304775da9aa9634ef942a3988673632a382e9e6994983fdf7dba5e175bcd615a::fixed_point64::FixedPoint64"
+					],
+					"return": [
+						"0x304775da9aa9634ef942a3988673632a382e9e6994983fdf7dba5e175bcd615a::fixed_point64::FixedPoint64"
+					]
+				},
+				{
+					"name": "ln",
+					"visibility": "public",
+					"is_entry": false,
+					"is_view": false,
+					"generic_type_params": [],
+					"params": [
+						"0x304775da9aa9634ef942a3988673632a382e9e6994983fdf7dba5e175bcd615a::fixed_point64::FixedPoint64"
+					],
+					"return": [
+						"u8",
+						"0x304775da9aa9634ef942a3988673632a382e9e6994983fdf7dba5e175bcd615a::fixed_point64::FixedPoint64"
+					]
+				},
+				{
+					"name": "log2",
+					"visibility": "public",
+					"is_entry": false,
+					"is_view": false,
+					"generic_type_params": [],
+					"params": [
+						"0x304775da9aa9634ef942a3988673632a382e9e6994983fdf7dba5e175bcd615a::fixed_point64::FixedPoint64"
+					],
+					"return": [
+						"u8",
+						"0x304775da9aa9634ef942a3988673632a382e9e6994983fdf7dba5e175bcd615a::fixed_point64::FixedPoint64"
+					]
+				},
+				{
+					"name": "pow",
+					"visibility": "public",
+					"is_entry": false,
+					"is_view": false,
+					"generic_type_params": [],
+					"params": [
+						"0x304775da9aa9634ef942a3988673632a382e9e6994983fdf7dba5e175bcd615a::fixed_point64::FixedPoint64",
+						"0x304775da9aa9634ef942a3988673632a382e9e6994983fdf7dba5e175bcd615a::fixed_point64::FixedPoint64"
+					],
+					"return": [
+						"0x304775da9aa9634ef942a3988673632a382e9e6994983fdf7dba5e175bcd615a::fixed_point64::FixedPoint64"
+					]
+				},
+				{
+					"name": "pow_down",
+					"visibility": "public",
+					"is_entry": false,
+					"is_view": false,
+					"generic_type_params": [],
+					"params": [
+						"0x304775da9aa9634ef942a3988673632a382e9e6994983fdf7dba5e175bcd615a::fixed_point64::FixedPoint64",
+						"0x304775da9aa9634ef942a3988673632a382e9e6994983fdf7dba5e175bcd615a::fixed_point64::FixedPoint64"
+					],
+					"return": [
+						"0x304775da9aa9634ef942a3988673632a382e9e6994983fdf7dba5e175bcd615a::fixed_point64::FixedPoint64"
+					]
+				},
+				{
+					"name": "pow_up",
+					"visibility": "public",
+					"is_entry": false,
+					"is_view": false,
+					"generic_type_params": [],
+					"params": [
+						"0x304775da9aa9634ef942a3988673632a382e9e6994983fdf7dba5e175bcd615a::fixed_point64::FixedPoint64",
+						"0x304775da9aa9634ef942a3988673632a382e9e6994983fdf7dba5e175bcd615a::fixed_point64::FixedPoint64"
+					],
+					"return": [
+						"0x304775da9aa9634ef942a3988673632a382e9e6994983fdf7dba5e175bcd615a::fixed_point64::FixedPoint64"
+					]
+				}
+			],
+			"structs": []
+		}
+	},
+	{
+		"bytecode": "0xa11ceb0b060000000b010002020204030682010588012b07b301c60108f902200699034b10e40380020ae405050ce905bd060da60c0200000001070000020001000003020100000403040000050105000006010500000701050000080001000009020100000a050100000b030600000c070100000d080100000e030600000f030600001009060000110306000012030600001303090000140309000015000100001602010000170a010000180001000019020100001a010800001b0a0100020800030108000208000800020608000608000102010301010203030104010608000002040404040404040d66697865645f706f696e7436340c4669786564506f696e74363403616464066164645f667007636f6d70617265066465636f6465116465636f64655f726f756e645f646f776e0f6465636f64655f726f756e645f757003646976066469765f667006656e636f6465026571086672616374696f6e0966726f6d5f75313238026774036774650769735f7a65726f026c74036c7465036d6178036d696e036d756c066d756c5f6670036f6e6503737562067375625f667007746f5f75313238047a65726f0176304775da9aa9634ef942a3988673632a382e9e6994983fdf7dba5e175bcd615a020100030800000000000000000308020000000000000003080100000000000000020102020101041000000000010000000000000000000000041000000000000000000100000000000000126170746f733a3a6d657461646174615f7631eb01030000000000000000124552525f4449564944455f42595f5a45524f1e5768656e20646976696465206279207a65726f20617474656d707465642e0100000000000000154552525f44495649534f525f544f4f5f534d414c4c325768656e2064697669736f7220697320746f6f20736d616c6c20746861742077696c6c206361757365206f766572666c6f7702000000000000001b4552525f4449564944455f524553554c545f544f4f5f4c41524745385768656e2064697669646520726573756c7420697320746f6f206c6172676520746861742077696c6c206361757365206f766572666c6f7700000002011c04000100000a0a0e001000140b013531402f16120002010100000a090e001000140e0110001416120002020100000a1a0a001000140a0110001421040e0b01010b00010700020b001000140b0110001423041807050207040203010000071a0e00100014314030340c020e00100014313f3032020000000000000000000000000000001932010000000000000000000000000000002104160b02060100000000000000160c0105180b020c010b0102040100000a070e00100014314030340205010000071e0e00100014314030340c020e001000140e0010001407071a07071817320000000000000000000000000000000024041a0b02060100000000000000160c01051c0b020c010b0102060100000a0f0a0106000000000000000022040505070701270e001000140b01351a120002070100000b210e011000143120300c020a02320000000000000000000000000000000022040b050d0703270e001000140b021a0c030a03316030320000000000000000000000000000000021041a051c0702270b0331202f120002080100000a060b003531402f120002090100000a080b001000140b0110001421020a0100000a100a0106000000000000000022040505070701270b003531402f0b01351a1200020b0100000a030b001200020c0100000a060b000b011102070421020d0100000a060b000b011102070522020e0100000a060b00100014320000000000000000000000000000000021020f0100000a060b000b01110207052102100100000a060b000b011102070422021101000009110a000a011102070421040b0b01010b000c02050f0b00010b010c020b02021201000009110a000a011102070521040b0b01010b000c02050f0b00010b010c020b0202130100000a080e001000140b013518120002140100000c2d0e001000143120300c030e011000143120300c050e001000140a03070618170c020e011000140a05070618170c040a030a05180b030b0418312030160b050b021831203016120002150100000a030707120002160100000a0a0e001000140b013531402f17120002170100000a090e001000140e0110001417120002180100000a040e0010001402190100000a033200000000000000000000000000000000120002000000",
+		"abi": {
+			"address": "0x304775da9aa9634ef942a3988673632a382e9e6994983fdf7dba5e175bcd615a",
+			"name": "fixed_point64",
+			"friends": [],
+			"exposed_functions": [
+				{
+					"name": "add",
+					"visibility": "public",
+					"is_entry": false,
+					"is_view": false,
+					"generic_type_params": [],
+					"params": [
+						"0x304775da9aa9634ef942a3988673632a382e9e6994983fdf7dba5e175bcd615a::fixed_point64::FixedPoint64",
+						"u64"
+					],
+					"return": [
+						"0x304775da9aa9634ef942a3988673632a382e9e6994983fdf7dba5e175bcd615a::fixed_point64::FixedPoint64"
+					]
+				},
+				{
+					"name": "add_fp",
+					"visibility": "public",
+					"is_entry": false,
+					"is_view": false,
+					"generic_type_params": [],
+					"params": [
+						"0x304775da9aa9634ef942a3988673632a382e9e6994983fdf7dba5e175bcd615a::fixed_point64::FixedPoint64",
+						"0x304775da9aa9634ef942a3988673632a382e9e6994983fdf7dba5e175bcd615a::fixed_point64::FixedPoint64"
+					],
+					"return": [
+						"0x304775da9aa9634ef942a3988673632a382e9e6994983fdf7dba5e175bcd615a::fixed_point64::FixedPoint64"
+					]
+				},
+				{
+					"name": "compare",
+					"visibility": "public",
+					"is_entry": false,
+					"is_view": false,
+					"generic_type_params": [],
+					"params": [
+						"&0x304775da9aa9634ef942a3988673632a382e9e6994983fdf7dba5e175bcd615a::fixed_point64::FixedPoint64",
+						"&0x304775da9aa9634ef942a3988673632a382e9e6994983fdf7dba5e175bcd615a::fixed_point64::FixedPoint64"
+					],
+					"return": [
+						"u8"
+					]
+				},
+				{
+					"name": "decode",
+					"visibility": "public",
+					"is_entry": false,
+					"is_view": false,
+					"generic_type_params": [],
+					"params": [
+						"0x304775da9aa9634ef942a3988673632a382e9e6994983fdf7dba5e175bcd615a::fixed_point64::FixedPoint64"
+					],
+					"return": [
+						"u64"
+					]
+				},
+				{
+					"name": "decode_round_down",
+					"visibility": "public",
+					"is_entry": false,
+					"is_view": false,
+					"generic_type_params": [],
+					"params": [
+						"0x304775da9aa9634ef942a3988673632a382e9e6994983fdf7dba5e175bcd615a::fixed_point64::FixedPoint64"
+					],
+					"return": [
+						"u64"
+					]
+				},
+				{
+					"name": "decode_round_up",
+					"visibility": "public",
+					"is_entry": false,
+					"is_view": false,
+					"generic_type_params": [],
+					"params": [
+						"0x304775da9aa9634ef942a3988673632a382e9e6994983fdf7dba5e175bcd615a::fixed_point64::FixedPoint64"
+					],
+					"return": [
+						"u64"
+					]
+				},
+				{
+					"name": "div",
+					"visibility": "public",
+					"is_entry": false,
+					"is_view": false,
+					"generic_type_params": [],
+					"params": [
+						"0x304775da9aa9634ef942a3988673632a382e9e6994983fdf7dba5e175bcd615a::fixed_point64::FixedPoint64",
+						"u64"
+					],
+					"return": [
+						"0x304775da9aa9634ef942a3988673632a382e9e6994983fdf7dba5e175bcd615a::fixed_point64::FixedPoint64"
+					]
+				},
+				{
+					"name": "div_fp",
+					"visibility": "public",
+					"is_entry": false,
+					"is_view": false,
+					"generic_type_params": [],
+					"params": [
+						"0x304775da9aa9634ef942a3988673632a382e9e6994983fdf7dba5e175bcd615a::fixed_point64::FixedPoint64",
+						"0x304775da9aa9634ef942a3988673632a382e9e6994983fdf7dba5e175bcd615a::fixed_point64::FixedPoint64"
+					],
+					"return": [
+						"0x304775da9aa9634ef942a3988673632a382e9e6994983fdf7dba5e175bcd615a::fixed_point64::FixedPoint64"
+					]
+				},
+				{
+					"name": "encode",
+					"visibility": "public",
+					"is_entry": false,
+					"is_view": false,
+					"generic_type_params": [],
+					"params": [
+						"u64"
+					],
+					"return": [
+						"0x304775da9aa9634ef942a3988673632a382e9e6994983fdf7dba5e175bcd615a::fixed_point64::FixedPoint64"
+					]
+				},
+				{
+					"name": "eq",
+					"visibility": "public",
+					"is_entry": false,
+					"is_view": false,
+					"generic_type_params": [],
+					"params": [
+						"&0x304775da9aa9634ef942a3988673632a382e9e6994983fdf7dba5e175bcd615a::fixed_point64::FixedPoint64",
+						"&0x304775da9aa9634ef942a3988673632a382e9e6994983fdf7dba5e175bcd615a::fixed_point64::FixedPoint64"
+					],
+					"return": [
+						"bool"
+					]
+				},
+				{
+					"name": "fraction",
+					"visibility": "public",
+					"is_entry": false,
+					"is_view": false,
+					"generic_type_params": [],
+					"params": [
+						"u64",
+						"u64"
+					],
+					"return": [
+						"0x304775da9aa9634ef942a3988673632a382e9e6994983fdf7dba5e175bcd615a::fixed_point64::FixedPoint64"
+					]
+				},
+				{
+					"name": "from_u128",
+					"visibility": "public",
+					"is_entry": false,
+					"is_view": false,
+					"generic_type_params": [],
+					"params": [
+						"u128"
+					],
+					"return": [
+						"0x304775da9aa9634ef942a3988673632a382e9e6994983fdf7dba5e175bcd615a::fixed_point64::FixedPoint64"
+					]
+				},
+				{
+					"name": "gt",
+					"visibility": "public",
+					"is_entry": false,
+					"is_view": false,
+					"generic_type_params": [],
+					"params": [
+						"&0x304775da9aa9634ef942a3988673632a382e9e6994983fdf7dba5e175bcd615a::fixed_point64::FixedPoint64",
+						"&0x304775da9aa9634ef942a3988673632a382e9e6994983fdf7dba5e175bcd615a::fixed_point64::FixedPoint64"
+					],
+					"return": [
+						"bool"
+					]
+				},
+				{
+					"name": "gte",
+					"visibility": "public",
+					"is_entry": false,
+					"is_view": false,
+					"generic_type_params": [],
+					"params": [
+						"&0x304775da9aa9634ef942a3988673632a382e9e6994983fdf7dba5e175bcd615a::fixed_point64::FixedPoint64",
+						"&0x304775da9aa9634ef942a3988673632a382e9e6994983fdf7dba5e175bcd615a::fixed_point64::FixedPoint64"
+					],
+					"return": [
+						"bool"
+					]
+				},
+				{
+					"name": "is_zero",
+					"visibility": "public",
+					"is_entry": false,
+					"is_view": false,
+					"generic_type_params": [],
+					"params": [
+						"&0x304775da9aa9634ef942a3988673632a382e9e6994983fdf7dba5e175bcd615a::fixed_point64::FixedPoint64"
+					],
+					"return": [
+						"bool"
+					]
+				},
+				{
+					"name": "lt",
+					"visibility": "public",
+					"is_entry": false,
+					"is_view": false,
+					"generic_type_params": [],
+					"params": [
+						"&0x304775da9aa9634ef942a3988673632a382e9e6994983fdf7dba5e175bcd615a::fixed_point64::FixedPoint64",
+						"&0x304775da9aa9634ef942a3988673632a382e9e6994983fdf7dba5e175bcd615a::fixed_point64::FixedPoint64"
+					],
+					"return": [
+						"bool"
+					]
+				},
+				{
+					"name": "lte",
+					"visibility": "public",
+					"is_entry": false,
+					"is_view": false,
+					"generic_type_params": [],
+					"params": [
+						"&0x304775da9aa9634ef942a3988673632a382e9e6994983fdf7dba5e175bcd615a::fixed_point64::FixedPoint64",
+						"&0x304775da9aa9634ef942a3988673632a382e9e6994983fdf7dba5e175bcd615a::fixed_point64::FixedPoint64"
+					],
+					"return": [
+						"bool"
+					]
+				},
+				{
+					"name": "max",
+					"visibility": "public",
+					"is_entry": false,
+					"is_view": false,
+					"generic_type_params": [],
+					"params": [
+						"&0x304775da9aa9634ef942a3988673632a382e9e6994983fdf7dba5e175bcd615a::fixed_point64::FixedPoint64",
+						"&0x304775da9aa9634ef942a3988673632a382e9e6994983fdf7dba5e175bcd615a::fixed_point64::FixedPoint64"
+					],
+					"return": [
+						"&0x304775da9aa9634ef942a3988673632a382e9e6994983fdf7dba5e175bcd615a::fixed_point64::FixedPoint64"
+					]
+				},
+				{
+					"name": "min",
+					"visibility": "public",
+					"is_entry": false,
+					"is_view": false,
+					"generic_type_params": [],
+					"params": [
+						"&0x304775da9aa9634ef942a3988673632a382e9e6994983fdf7dba5e175bcd615a::fixed_point64::FixedPoint64",
+						"&0x304775da9aa9634ef942a3988673632a382e9e6994983fdf7dba5e175bcd615a::fixed_point64::FixedPoint64"
+					],
+					"return": [
+						"&0x304775da9aa9634ef942a3988673632a382e9e6994983fdf7dba5e175bcd615a::fixed_point64::FixedPoint64"
+					]
+				},
+				{
+					"name": "mul",
+					"visibility": "public",
+					"is_entry": false,
+					"is_view": false,
+					"generic_type_params": [],
+					"params": [
+						"0x304775da9aa9634ef942a3988673632a382e9e6994983fdf7dba5e175bcd615a::fixed_point64::FixedPoint64",
+						"u64"
+					],
+					"return": [
+						"0x304775da9aa9634ef942a3988673632a382e9e6994983fdf7dba5e175bcd615a::fixed_point64::FixedPoint64"
+					]
+				},
+				{
+					"name": "mul_fp",
+					"visibility": "public",
+					"is_entry": false,
+					"is_view": false,
+					"generic_type_params": [],
+					"params": [
+						"0x304775da9aa9634ef942a3988673632a382e9e6994983fdf7dba5e175bcd615a::fixed_point64::FixedPoint64",
+						"0x304775da9aa9634ef942a3988673632a382e9e6994983fdf7dba5e175bcd615a::fixed_point64::FixedPoint64"
+					],
+					"return": [
+						"0x304775da9aa9634ef942a3988673632a382e9e6994983fdf7dba5e175bcd615a::fixed_point64::FixedPoint64"
+					]
+				},
+				{
+					"name": "one",
+					"visibility": "public",
+					"is_entry": false,
+					"is_view": false,
+					"generic_type_params": [],
+					"params": [],
+					"return": [
+						"0x304775da9aa9634ef942a3988673632a382e9e6994983fdf7dba5e175bcd615a::fixed_point64::FixedPoint64"
+					]
+				},
+				{
+					"name": "sub",
+					"visibility": "public",
+					"is_entry": false,
+					"is_view": false,
+					"generic_type_params": [],
+					"params": [
+						"0x304775da9aa9634ef942a3988673632a382e9e6994983fdf7dba5e175bcd615a::fixed_point64::FixedPoint64",
+						"u64"
+					],
+					"return": [
+						"0x304775da9aa9634ef942a3988673632a382e9e6994983fdf7dba5e175bcd615a::fixed_point64::FixedPoint64"
+					]
+				},
+				{
+					"name": "sub_fp",
+					"visibility": "public",
+					"is_entry": false,
+					"is_view": false,
+					"generic_type_params": [],
+					"params": [
+						"0x304775da9aa9634ef942a3988673632a382e9e6994983fdf7dba5e175bcd615a::fixed_point64::FixedPoint64",
+						"0x304775da9aa9634ef942a3988673632a382e9e6994983fdf7dba5e175bcd615a::fixed_point64::FixedPoint64"
+					],
+					"return": [
+						"0x304775da9aa9634ef942a3988673632a382e9e6994983fdf7dba5e175bcd615a::fixed_point64::FixedPoint64"
+					]
+				},
+				{
+					"name": "to_u128",
+					"visibility": "public",
+					"is_entry": false,
+					"is_view": false,
+					"generic_type_params": [],
+					"params": [
+						"0x304775da9aa9634ef942a3988673632a382e9e6994983fdf7dba5e175bcd615a::fixed_point64::FixedPoint64"
+					],
+					"return": [
+						"u128"
+					]
+				},
+				{
+					"name": "zero",
+					"visibility": "public",
+					"is_entry": false,
+					"is_view": false,
+					"generic_type_params": [],
+					"params": [],
+					"return": [
+						"0x304775da9aa9634ef942a3988673632a382e9e6994983fdf7dba5e175bcd615a::fixed_point64::FixedPoint64"
+					]
+				}
+			],
+			"structs": [
+				{
+					"name": "FixedPoint64",
+					"is_native": false,
+					"abilities": [
+						"copy",
+						"drop",
+						"store"
+					],
+					"generic_type_params": [],
+					"fields": [
+						{
+							"name": "v",
+							"type": "u128"
+						}
+					]
+				}
+			]
+		}
+	}
+]

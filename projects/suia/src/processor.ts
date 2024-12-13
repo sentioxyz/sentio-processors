@@ -10,7 +10,7 @@ export async function getSuiBalance(ctx: SuiContext, address: string) {
     obj = await ctx.client.getBalance({ owner: address, coinType: "0x2::sui::SUI" })
   }
   catch (e) { console.log(e.message, `getBalance error for ${ctx.transaction.digest}`) }
-  return obj.totalBalance
+  return obj?.totalBalance
 }
 
 suia.bind({
@@ -21,7 +21,7 @@ suia.bind({
   .onEntryClaimMedal(async (call, ctx) => {
     ctx.meter.Counter("claim_medal_counter").add(1)
     const medal = call.arguments_decoded[0]
-    const sender = ctx.transaction.transaction.data.sender
+    const sender = ctx.transaction.transaction!.data.sender
     const balance = Number(await getSuiBalance(ctx, sender)) / Math.pow(10, 9)
     ctx.eventLogger.emit("ClaimMedal", {
       distinctId: sender,
@@ -29,6 +29,3 @@ suia.bind({
       balance
     })
   })
-
-
-

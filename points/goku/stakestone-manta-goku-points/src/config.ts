@@ -1,0 +1,5 @@
+import { EthChainId } from "@sentio/sdk/eth";
+
+export const NETWORK = EthChainId.MANTA_PACIFIC;
+export const VAULT_MANAGER_ADDRESS = "0xCCC9ED3be8aD468679d1Be1582F9C5a6fb50BB47"
+export const BORROWER_OPERATIONS_ADDRESS = "0xC6Bb7528Ebc3e6ecE452C1F18EE1b1C82137622a";

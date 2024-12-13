@@ -1,0 +1,4078 @@
+[
+	{
+		"fileFormatVersion": 6,
+		"address": "0xf435e16e002dd0cbe7afe9a449498ae5f589712365cad41ad0854a9cec5487e2",
+		"name": "coin_helper",
+		"friends": [],
+		"structs": {},
+		"exposedFunctions": {
+			"compare": {
+				"visibility": "Public",
+				"isEntry": false,
+				"typeParameters": [
+					{
+						"abilities": []
+					},
+					{
+						"abilities": []
+					}
+				],
+				"parameters": [],
+				"return": [
+					{
+						"Struct": {
+							"address": "0xf435e16e002dd0cbe7afe9a449498ae5f589712365cad41ad0854a9cec5487e2",
+							"module": "comparator",
+							"name": "Result",
+							"typeArguments": []
+						}
+					}
+				]
+			},
+			"is_sorted": {
+				"visibility": "Public",
+				"isEntry": false,
+				"typeParameters": [
+					{
+						"abilities": []
+					},
+					{
+						"abilities": []
+					}
+				],
+				"parameters": [],
+				"return": [
+					"Bool"
+				]
+			}
+		}
+	},
+	{
+		"fileFormatVersion": 6,
+		"address": "0xf435e16e002dd0cbe7afe9a449498ae5f589712365cad41ad0854a9cec5487e2",
+		"name": "comparator",
+		"friends": [],
+		"structs": {
+			"Result": {
+				"abilities": {
+					"abilities": [
+						"Drop"
+					]
+				},
+				"typeParameters": [],
+				"fields": [
+					{
+						"name": "inner",
+						"type": "U8"
+					}
+				]
+			}
+		},
+		"exposedFunctions": {
+			"compare": {
+				"visibility": "Public",
+				"isEntry": false,
+				"typeParameters": [
+					{
+						"abilities": []
+					}
+				],
+				"parameters": [
+					{
+						"Reference": {
+							"TypeParameter": 0
+						}
+					},
+					{
+						"Reference": {
+							"TypeParameter": 0
+						}
+					}
+				],
+				"return": [
+					{
+						"Struct": {
+							"address": "0xf435e16e002dd0cbe7afe9a449498ae5f589712365cad41ad0854a9cec5487e2",
+							"module": "comparator",
+							"name": "Result",
+							"typeArguments": []
+						}
+					}
+				]
+			},
+			"compare_u8_vector": {
+				"visibility": "Public",
+				"isEntry": false,
+				"typeParameters": [],
+				"parameters": [
+					{
+						"Vector": "U8"
+					},
+					{
+						"Vector": "U8"
+					}
+				],
+				"return": [
+					{
+						"Struct": {
+							"address": "0xf435e16e002dd0cbe7afe9a449498ae5f589712365cad41ad0854a9cec5487e2",
+							"module": "comparator",
+							"name": "Result",
+							"typeArguments": []
+						}
+					}
+				]
+			},
+			"is_equal": {
+				"visibility": "Public",
+				"isEntry": false,
+				"typeParameters": [],
+				"parameters": [
+					{
+						"Reference": {
+							"Struct": {
+								"address": "0xf435e16e002dd0cbe7afe9a449498ae5f589712365cad41ad0854a9cec5487e2",
+								"module": "comparator",
+								"name": "Result",
+								"typeArguments": []
+							}
+						}
+					}
+				],
+				"return": [
+					"Bool"
+				]
+			},
+			"is_greater_than": {
+				"visibility": "Public",
+				"isEntry": false,
+				"typeParameters": [],
+				"parameters": [
+					{
+						"Reference": {
+							"Struct": {
+								"address": "0xf435e16e002dd0cbe7afe9a449498ae5f589712365cad41ad0854a9cec5487e2",
+								"module": "comparator",
+								"name": "Result",
+								"typeArguments": []
+							}
+						}
+					}
+				],
+				"return": [
+					"Bool"
+				]
+			},
+			"is_smaller_than": {
+				"visibility": "Public",
+				"isEntry": false,
+				"typeParameters": [],
+				"parameters": [
+					{
+						"Reference": {
+							"Struct": {
+								"address": "0xf435e16e002dd0cbe7afe9a449498ae5f589712365cad41ad0854a9cec5487e2",
+								"module": "comparator",
+								"name": "Result",
+								"typeArguments": []
+							}
+						}
+					}
+				],
+				"return": [
+					"Bool"
+				]
+			}
+		}
+	},
+	{
+		"fileFormatVersion": 6,
+		"address": "0xf435e16e002dd0cbe7afe9a449498ae5f589712365cad41ad0854a9cec5487e2",
+		"name": "dao_storage",
+		"friends": [
+			{
+				"address": "0xf435e16e002dd0cbe7afe9a449498ae5f589712365cad41ad0854a9cec5487e2",
+				"name": "liquidity_pool"
+			}
+		],
+		"structs": {
+			"CoinDepositedEvent": {
+				"abilities": {
+					"abilities": [
+						"Copy",
+						"Drop"
+					]
+				},
+				"typeParameters": [
+					{
+						"constraints": {
+							"abilities": []
+						},
+						"isPhantom": true
+					},
+					{
+						"constraints": {
+							"abilities": []
+						},
+						"isPhantom": true
+					}
+				],
+				"fields": [
+					{
+						"name": "x_val",
+						"type": "U64"
+					},
+					{
+						"name": "y_val",
+						"type": "U64"
+					}
+				]
+			},
+			"CoinWithdrawnEvent": {
+				"abilities": {
+					"abilities": [
+						"Copy",
+						"Drop"
+					]
+				},
+				"typeParameters": [
+					{
+						"constraints": {
+							"abilities": []
+						},
+						"isPhantom": true
+					},
+					{
+						"constraints": {
+							"abilities": []
+						},
+						"isPhantom": true
+					}
+				],
+				"fields": [
+					{
+						"name": "x_val",
+						"type": "U64"
+					},
+					{
+						"name": "y_val",
+						"type": "U64"
+					}
+				]
+			},
+			"DaoStorageInfo": {
+				"abilities": {
+					"abilities": [
+						"Key"
+					]
+				},
+				"typeParameters": [],
+				"fields": [
+					{
+						"name": "id",
+						"type": {
+							"Struct": {
+								"address": "0x2",
+								"module": "object",
+								"name": "UID",
+								"typeArguments": []
+							}
+						}
+					}
+				]
+			},
+			"Storage": {
+				"abilities": {
+					"abilities": [
+						"Store"
+					]
+				},
+				"typeParameters": [
+					{
+						"constraints": {
+							"abilities": []
+						},
+						"isPhantom": true
+					},
+					{
+						"constraints": {
+							"abilities": []
+						},
+						"isPhantom": true
+					}
+				],
+				"fields": [
+					{
+						"name": "coin_x",
+						"type": {
+							"Struct": {
+								"address": "0x2",
+								"module": "balance",
+								"name": "Balance",
+								"typeArguments": [
+									{
+										"TypeParameter": 0
+									}
+								]
+							}
+						}
+					},
+					{
+						"name": "coin_y",
+						"type": {
+							"Struct": {
+								"address": "0x2",
+								"module": "balance",
+								"name": "Balance",
+								"typeArguments": [
+									{
+										"TypeParameter": 1
+									}
+								]
+							}
+						}
+					}
+				]
+			},
+			"StorageCreatedEvent": {
+				"abilities": {
+					"abilities": [
+						"Copy",
+						"Drop"
+					]
+				},
+				"typeParameters": [
+					{
+						"constraints": {
+							"abilities": []
+						},
+						"isPhantom": true
+					},
+					{
+						"constraints": {
+							"abilities": []
+						},
+						"isPhantom": true
+					}
+				],
+				"fields": [
+					{
+						"name": "dummy_field",
+						"type": "Bool"
+					}
+				]
+			}
+		},
+		"exposedFunctions": {
+			"deposit": {
+				"visibility": "Friend",
+				"isEntry": false,
+				"typeParameters": [
+					{
+						"abilities": []
+					},
+					{
+						"abilities": []
+					}
+				],
+				"parameters": [
+					{
+						"MutableReference": {
+							"Struct": {
+								"address": "0xf435e16e002dd0cbe7afe9a449498ae5f589712365cad41ad0854a9cec5487e2",
+								"module": "dao_storage",
+								"name": "DaoStorageInfo",
+								"typeArguments": []
+							}
+						}
+					},
+					{
+						"Struct": {
+							"address": "0x2",
+							"module": "balance",
+							"name": "Balance",
+							"typeArguments": [
+								{
+									"TypeParameter": 0
+								}
+							]
+						}
+					},
+					{
+						"Struct": {
+							"address": "0x2",
+							"module": "balance",
+							"name": "Balance",
+							"typeArguments": [
+								{
+									"TypeParameter": 1
+								}
+							]
+						}
+					}
+				],
+				"return": []
+			},
+			"getBalance": {
+				"visibility": "Friend",
+				"isEntry": false,
+				"typeParameters": [
+					{
+						"abilities": []
+					},
+					{
+						"abilities": []
+					}
+				],
+				"parameters": [
+					{
+						"MutableReference": {
+							"Struct": {
+								"address": "0xf435e16e002dd0cbe7afe9a449498ae5f589712365cad41ad0854a9cec5487e2",
+								"module": "dao_storage",
+								"name": "DaoStorageInfo",
+								"typeArguments": []
+							}
+						}
+					}
+				],
+				"return": [
+					"U64",
+					"U64"
+				]
+			},
+			"initialize": {
+				"visibility": "Friend",
+				"isEntry": false,
+				"typeParameters": [],
+				"parameters": [
+					{
+						"MutableReference": {
+							"Struct": {
+								"address": "0x2",
+								"module": "tx_context",
+								"name": "TxContext",
+								"typeArguments": []
+							}
+						}
+					}
+				],
+				"return": []
+			},
+			"register": {
+				"visibility": "Friend",
+				"isEntry": false,
+				"typeParameters": [
+					{
+						"abilities": []
+					},
+					{
+						"abilities": []
+					}
+				],
+				"parameters": [
+					{
+						"MutableReference": {
+							"Struct": {
+								"address": "0xf435e16e002dd0cbe7afe9a449498ae5f589712365cad41ad0854a9cec5487e2",
+								"module": "dao_storage",
+								"name": "DaoStorageInfo",
+								"typeArguments": []
+							}
+						}
+					}
+				],
+				"return": []
+			},
+			"withdraw": {
+				"visibility": "Public",
+				"isEntry": false,
+				"typeParameters": [
+					{
+						"abilities": []
+					},
+					{
+						"abilities": []
+					}
+				],
+				"parameters": [
+					{
+						"MutableReference": {
+							"Struct": {
+								"address": "0xf435e16e002dd0cbe7afe9a449498ae5f589712365cad41ad0854a9cec5487e2",
+								"module": "dao_storage",
+								"name": "DaoStorageInfo",
+								"typeArguments": []
+							}
+						}
+					},
+					"U64",
+					"U64",
+					{
+						"MutableReference": {
+							"Struct": {
+								"address": "0x2",
+								"module": "tx_context",
+								"name": "TxContext",
+								"typeArguments": []
+							}
+						}
+					}
+				],
+				"return": [
+					{
+						"Struct": {
+							"address": "0x2",
+							"module": "coin",
+							"name": "Coin",
+							"typeArguments": [
+								{
+									"TypeParameter": 0
+								}
+							]
+						}
+					},
+					{
+						"Struct": {
+							"address": "0x2",
+							"module": "coin",
+							"name": "Coin",
+							"typeArguments": [
+								{
+									"TypeParameter": 1
+								}
+							]
+						}
+					}
+				]
+			}
+		}
+	},
+	{
+		"fileFormatVersion": 6,
+		"address": "0xf435e16e002dd0cbe7afe9a449498ae5f589712365cad41ad0854a9cec5487e2",
+		"name": "global_config",
+		"friends": [
+			{
+				"address": "0xf435e16e002dd0cbe7afe9a449498ae5f589712365cad41ad0854a9cec5487e2",
+				"name": "liquidity_pool"
+			}
+		],
+		"structs": {
+			"GlobalConfig": {
+				"abilities": {
+					"abilities": [
+						"Key"
+					]
+				},
+				"typeParameters": [],
+				"fields": [
+					{
+						"name": "id",
+						"type": {
+							"Struct": {
+								"address": "0x2",
+								"module": "object",
+								"name": "UID",
+								"typeArguments": []
+							}
+						}
+					},
+					{
+						"name": "dao_admin_address",
+						"type": "Address"
+					},
+					{
+						"name": "emergency_admin_address",
+						"type": "Address"
+					},
+					{
+						"name": "fee_admin_address",
+						"type": "Address"
+					},
+					{
+						"name": "default_swap_fee",
+						"type": "U64"
+					},
+					{
+						"name": "default_dao_fee",
+						"type": "U64"
+					}
+				]
+			},
+			"UpdateDefaultFeeEvent": {
+				"abilities": {
+					"abilities": [
+						"Copy",
+						"Drop"
+					]
+				},
+				"typeParameters": [],
+				"fields": [
+					{
+						"name": "fee",
+						"type": "U64"
+					}
+				]
+			}
+		},
+		"exposedFunctions": {
+			"assert_valid_dao_fee": {
+				"visibility": "Public",
+				"isEntry": false,
+				"typeParameters": [],
+				"parameters": [
+					"U64"
+				],
+				"return": []
+			},
+			"assert_valid_fee": {
+				"visibility": "Public",
+				"isEntry": false,
+				"typeParameters": [],
+				"parameters": [
+					"U64"
+				],
+				"return": []
+			},
+			"get_dao_admin": {
+				"visibility": "Public",
+				"isEntry": false,
+				"typeParameters": [],
+				"parameters": [
+					{
+						"Reference": {
+							"Struct": {
+								"address": "0xf435e16e002dd0cbe7afe9a449498ae5f589712365cad41ad0854a9cec5487e2",
+								"module": "global_config",
+								"name": "GlobalConfig",
+								"typeArguments": []
+							}
+						}
+					}
+				],
+				"return": [
+					"Address"
+				]
+			},
+			"get_default_dao_fee": {
+				"visibility": "Public",
+				"isEntry": false,
+				"typeParameters": [],
+				"parameters": [
+					{
+						"Reference": {
+							"Struct": {
+								"address": "0xf435e16e002dd0cbe7afe9a449498ae5f589712365cad41ad0854a9cec5487e2",
+								"module": "global_config",
+								"name": "GlobalConfig",
+								"typeArguments": []
+							}
+						}
+					}
+				],
+				"return": [
+					"U64"
+				]
+			},
+			"get_default_fee": {
+				"visibility": "Public",
+				"isEntry": false,
+				"typeParameters": [],
+				"parameters": [
+					{
+						"Reference": {
+							"Struct": {
+								"address": "0xf435e16e002dd0cbe7afe9a449498ae5f589712365cad41ad0854a9cec5487e2",
+								"module": "global_config",
+								"name": "GlobalConfig",
+								"typeArguments": []
+							}
+						}
+					}
+				],
+				"return": [
+					"U64"
+				]
+			},
+			"get_emergency_admin": {
+				"visibility": "Public",
+				"isEntry": false,
+				"typeParameters": [],
+				"parameters": [
+					{
+						"Reference": {
+							"Struct": {
+								"address": "0xf435e16e002dd0cbe7afe9a449498ae5f589712365cad41ad0854a9cec5487e2",
+								"module": "global_config",
+								"name": "GlobalConfig",
+								"typeArguments": []
+							}
+						}
+					}
+				],
+				"return": [
+					"Address"
+				]
+			},
+			"get_fee_admin": {
+				"visibility": "Public",
+				"isEntry": false,
+				"typeParameters": [],
+				"parameters": [
+					{
+						"Reference": {
+							"Struct": {
+								"address": "0xf435e16e002dd0cbe7afe9a449498ae5f589712365cad41ad0854a9cec5487e2",
+								"module": "global_config",
+								"name": "GlobalConfig",
+								"typeArguments": []
+							}
+						}
+					}
+				],
+				"return": [
+					"Address"
+				]
+			},
+			"initialize": {
+				"visibility": "Friend",
+				"isEntry": false,
+				"typeParameters": [],
+				"parameters": [
+					{
+						"MutableReference": {
+							"Struct": {
+								"address": "0x2",
+								"module": "tx_context",
+								"name": "TxContext",
+								"typeArguments": []
+							}
+						}
+					}
+				],
+				"return": []
+			},
+			"set_dao_admin": {
+				"visibility": "Public",
+				"isEntry": true,
+				"typeParameters": [],
+				"parameters": [
+					{
+						"MutableReference": {
+							"Struct": {
+								"address": "0xf435e16e002dd0cbe7afe9a449498ae5f589712365cad41ad0854a9cec5487e2",
+								"module": "global_config",
+								"name": "GlobalConfig",
+								"typeArguments": []
+							}
+						}
+					},
+					"Address",
+					{
+						"MutableReference": {
+							"Struct": {
+								"address": "0x2",
+								"module": "tx_context",
+								"name": "TxContext",
+								"typeArguments": []
+							}
+						}
+					}
+				],
+				"return": []
+			},
+			"set_default_dao_fee": {
+				"visibility": "Public",
+				"isEntry": true,
+				"typeParameters": [],
+				"parameters": [
+					{
+						"MutableReference": {
+							"Struct": {
+								"address": "0xf435e16e002dd0cbe7afe9a449498ae5f589712365cad41ad0854a9cec5487e2",
+								"module": "global_config",
+								"name": "GlobalConfig",
+								"typeArguments": []
+							}
+						}
+					},
+					"U64",
+					{
+						"MutableReference": {
+							"Struct": {
+								"address": "0x2",
+								"module": "tx_context",
+								"name": "TxContext",
+								"typeArguments": []
+							}
+						}
+					}
+				],
+				"return": []
+			},
+			"set_default_fee": {
+				"visibility": "Public",
+				"isEntry": true,
+				"typeParameters": [],
+				"parameters": [
+					{
+						"MutableReference": {
+							"Struct": {
+								"address": "0xf435e16e002dd0cbe7afe9a449498ae5f589712365cad41ad0854a9cec5487e2",
+								"module": "global_config",
+								"name": "GlobalConfig",
+								"typeArguments": []
+							}
+						}
+					},
+					"U64",
+					{
+						"MutableReference": {
+							"Struct": {
+								"address": "0x2",
+								"module": "tx_context",
+								"name": "TxContext",
+								"typeArguments": []
+							}
+						}
+					}
+				],
+				"return": []
+			},
+			"set_emergency_admin": {
+				"visibility": "Public",
+				"isEntry": true,
+				"typeParameters": [],
+				"parameters": [
+					{
+						"MutableReference": {
+							"Struct": {
+								"address": "0xf435e16e002dd0cbe7afe9a449498ae5f589712365cad41ad0854a9cec5487e2",
+								"module": "global_config",
+								"name": "GlobalConfig",
+								"typeArguments": []
+							}
+						}
+					},
+					"Address",
+					{
+						"MutableReference": {
+							"Struct": {
+								"address": "0x2",
+								"module": "tx_context",
+								"name": "TxContext",
+								"typeArguments": []
+							}
+						}
+					}
+				],
+				"return": []
+			},
+			"set_fee_admin": {
+				"visibility": "Public",
+				"isEntry": true,
+				"typeParameters": [],
+				"parameters": [
+					{
+						"MutableReference": {
+							"Struct": {
+								"address": "0xf435e16e002dd0cbe7afe9a449498ae5f589712365cad41ad0854a9cec5487e2",
+								"module": "global_config",
+								"name": "GlobalConfig",
+								"typeArguments": []
+							}
+						}
+					},
+					"Address",
+					{
+						"MutableReference": {
+							"Struct": {
+								"address": "0x2",
+								"module": "tx_context",
+								"name": "TxContext",
+								"typeArguments": []
+							}
+						}
+					}
+				],
+				"return": []
+			}
+		}
+	},
+	{
+		"fileFormatVersion": 6,
+		"address": "0xf435e16e002dd0cbe7afe9a449498ae5f589712365cad41ad0854a9cec5487e2",
+		"name": "liquidity_pool",
+		"friends": [],
+		"structs": {
+			"Flashloan": {
+				"abilities": {
+					"abilities": []
+				},
+				"typeParameters": [
+					{
+						"constraints": {
+							"abilities": []
+						},
+						"isPhantom": true
+					},
+					{
+						"constraints": {
+							"abilities": []
+						},
+						"isPhantom": true
+					}
+				],
+				"fields": [
+					{
+						"name": "x_loan",
+						"type": "U64"
+					},
+					{
+						"name": "y_loan",
+						"type": "U64"
+					}
+				]
+			},
+			"FlashloanEvent": {
+				"abilities": {
+					"abilities": [
+						"Copy",
+						"Drop"
+					]
+				},
+				"typeParameters": [
+					{
+						"constraints": {
+							"abilities": []
+						},
+						"isPhantom": true
+					},
+					{
+						"constraints": {
+							"abilities": []
+						},
+						"isPhantom": true
+					}
+				],
+				"fields": [
+					{
+						"name": "x_in",
+						"type": "U64"
+					},
+					{
+						"name": "x_out",
+						"type": "U64"
+					},
+					{
+						"name": "y_in",
+						"type": "U64"
+					},
+					{
+						"name": "y_out",
+						"type": "U64"
+					}
+				]
+			},
+			"LPCoin": {
+				"abilities": {
+					"abilities": [
+						"Drop"
+					]
+				},
+				"typeParameters": [
+					{
+						"constraints": {
+							"abilities": []
+						},
+						"isPhantom": true
+					},
+					{
+						"constraints": {
+							"abilities": []
+						},
+						"isPhantom": true
+					}
+				],
+				"fields": [
+					{
+						"name": "dummy_field",
+						"type": "Bool"
+					}
+				]
+			},
+			"LiquidityAddedEvent": {
+				"abilities": {
+					"abilities": [
+						"Copy",
+						"Drop"
+					]
+				},
+				"typeParameters": [
+					{
+						"constraints": {
+							"abilities": []
+						},
+						"isPhantom": true
+					},
+					{
+						"constraints": {
+							"abilities": []
+						},
+						"isPhantom": true
+					}
+				],
+				"fields": [
+					{
+						"name": "added_x_val",
+						"type": "U64"
+					},
+					{
+						"name": "added_y_val",
+						"type": "U64"
+					},
+					{
+						"name": "lp_tokens_received",
+						"type": "U64"
+					}
+				]
+			},
+			"LiquidityPool": {
+				"abilities": {
+					"abilities": [
+						"Store",
+						"Key"
+					]
+				},
+				"typeParameters": [
+					{
+						"constraints": {
+							"abilities": []
+						},
+						"isPhantom": true
+					},
+					{
+						"constraints": {
+							"abilities": []
+						},
+						"isPhantom": true
+					}
+				],
+				"fields": [
+					{
+						"name": "id",
+						"type": {
+							"Struct": {
+								"address": "0x2",
+								"module": "object",
+								"name": "UID",
+								"typeArguments": []
+							}
+						}
+					},
+					{
+						"name": "coin_x_reserve",
+						"type": {
+							"Struct": {
+								"address": "0x2",
+								"module": "balance",
+								"name": "Balance",
+								"typeArguments": [
+									{
+										"TypeParameter": 0
+									}
+								]
+							}
+						}
+					},
+					{
+						"name": "coin_y_reserve",
+						"type": {
+							"Struct": {
+								"address": "0x2",
+								"module": "balance",
+								"name": "Balance",
+								"typeArguments": [
+									{
+										"TypeParameter": 1
+									}
+								]
+							}
+						}
+					},
+					{
+						"name": "lsp_supply",
+						"type": {
+							"Struct": {
+								"address": "0x2",
+								"module": "balance",
+								"name": "Supply",
+								"typeArguments": [
+									{
+										"Struct": {
+											"address": "0xf435e16e002dd0cbe7afe9a449498ae5f589712365cad41ad0854a9cec5487e2",
+											"module": "liquidity_pool",
+											"name": "LPCoin",
+											"typeArguments": [
+												{
+													"TypeParameter": 0
+												},
+												{
+													"TypeParameter": 1
+												}
+											]
+										}
+									}
+								]
+							}
+						}
+					},
+					{
+						"name": "last_block_timestamp",
+						"type": "U64"
+					},
+					{
+						"name": "last_price_x_cumulative",
+						"type": "U128"
+					},
+					{
+						"name": "last_price_y_cumulative",
+						"type": "U128"
+					},
+					{
+						"name": "locked",
+						"type": "Bool"
+					},
+					{
+						"name": "fee",
+						"type": "U64"
+					},
+					{
+						"name": "dao_fee",
+						"type": "U64"
+					}
+				]
+			},
+			"LiquidityRemovedEvent": {
+				"abilities": {
+					"abilities": [
+						"Copy",
+						"Drop"
+					]
+				},
+				"typeParameters": [
+					{
+						"constraints": {
+							"abilities": []
+						},
+						"isPhantom": true
+					},
+					{
+						"constraints": {
+							"abilities": []
+						},
+						"isPhantom": true
+					}
+				],
+				"fields": [
+					{
+						"name": "returned_x_val",
+						"type": "U64"
+					},
+					{
+						"name": "returned_y_val",
+						"type": "U64"
+					},
+					{
+						"name": "lp_tokens_burned",
+						"type": "U64"
+					}
+				]
+			},
+			"OracleUpdatedEvent": {
+				"abilities": {
+					"abilities": [
+						"Copy",
+						"Drop"
+					]
+				},
+				"typeParameters": [
+					{
+						"constraints": {
+							"abilities": []
+						},
+						"isPhantom": true
+					},
+					{
+						"constraints": {
+							"abilities": []
+						},
+						"isPhantom": true
+					}
+				],
+				"fields": [
+					{
+						"name": "last_price_x_cumulative",
+						"type": "U128"
+					},
+					{
+						"name": "last_price_y_cumulative",
+						"type": "U128"
+					}
+				]
+			},
+			"PoolCreatedEvent": {
+				"abilities": {
+					"abilities": [
+						"Copy",
+						"Drop"
+					]
+				},
+				"typeParameters": [
+					{
+						"constraints": {
+							"abilities": []
+						},
+						"isPhantom": true
+					},
+					{
+						"constraints": {
+							"abilities": []
+						},
+						"isPhantom": true
+					}
+				],
+				"fields": [
+					{
+						"name": "creator",
+						"type": "Address"
+					}
+				]
+			},
+			"SwapEvent": {
+				"abilities": {
+					"abilities": [
+						"Copy",
+						"Drop"
+					]
+				},
+				"typeParameters": [
+					{
+						"constraints": {
+							"abilities": []
+						},
+						"isPhantom": true
+					},
+					{
+						"constraints": {
+							"abilities": []
+						},
+						"isPhantom": true
+					}
+				],
+				"fields": [
+					{
+						"name": "x_in",
+						"type": "U64"
+					},
+					{
+						"name": "x_out",
+						"type": "U64"
+					},
+					{
+						"name": "y_in",
+						"type": "U64"
+					},
+					{
+						"name": "y_out",
+						"type": "U64"
+					}
+				]
+			},
+			"SwapInfo": {
+				"abilities": {
+					"abilities": [
+						"Key"
+					]
+				},
+				"typeParameters": [],
+				"fields": [
+					{
+						"name": "id",
+						"type": {
+							"Struct": {
+								"address": "0x2",
+								"module": "object",
+								"name": "UID",
+								"typeArguments": []
+							}
+						}
+					}
+				]
+			},
+			"UpdateDAOFeeEvent": {
+				"abilities": {
+					"abilities": [
+						"Copy",
+						"Drop"
+					]
+				},
+				"typeParameters": [
+					{
+						"constraints": {
+							"abilities": []
+						},
+						"isPhantom": true
+					},
+					{
+						"constraints": {
+							"abilities": []
+						},
+						"isPhantom": true
+					}
+				],
+				"fields": [
+					{
+						"name": "new_fee",
+						"type": "U64"
+					}
+				]
+			},
+			"UpdateFeeEvent": {
+				"abilities": {
+					"abilities": [
+						"Copy",
+						"Drop"
+					]
+				},
+				"typeParameters": [
+					{
+						"constraints": {
+							"abilities": []
+						},
+						"isPhantom": true
+					},
+					{
+						"constraints": {
+							"abilities": []
+						},
+						"isPhantom": true
+					}
+				],
+				"fields": [
+					{
+						"name": "new_fee",
+						"type": "U64"
+					}
+				]
+			}
+		},
+		"exposedFunctions": {
+			"assert_no_emergency": {
+				"visibility": "Public",
+				"isEntry": false,
+				"typeParameters": [],
+				"parameters": [],
+				"return": []
+			},
+			"burn": {
+				"visibility": "Public",
+				"isEntry": false,
+				"typeParameters": [
+					{
+						"abilities": []
+					},
+					{
+						"abilities": []
+					}
+				],
+				"parameters": [
+					{
+						"MutableReference": {
+							"Struct": {
+								"address": "0xf435e16e002dd0cbe7afe9a449498ae5f589712365cad41ad0854a9cec5487e2",
+								"module": "liquidity_pool",
+								"name": "SwapInfo",
+								"typeArguments": []
+							}
+						}
+					},
+					{
+						"Reference": {
+							"Struct": {
+								"address": "0x2",
+								"module": "clock",
+								"name": "Clock",
+								"typeArguments": []
+							}
+						}
+					},
+					{
+						"Struct": {
+							"address": "0x2",
+							"module": "coin",
+							"name": "Coin",
+							"typeArguments": [
+								{
+									"Struct": {
+										"address": "0xf435e16e002dd0cbe7afe9a449498ae5f589712365cad41ad0854a9cec5487e2",
+										"module": "liquidity_pool",
+										"name": "LPCoin",
+										"typeArguments": [
+											{
+												"TypeParameter": 0
+											},
+											{
+												"TypeParameter": 1
+											}
+										]
+									}
+								}
+							]
+						}
+					},
+					{
+						"MutableReference": {
+							"Struct": {
+								"address": "0x2",
+								"module": "tx_context",
+								"name": "TxContext",
+								"typeArguments": []
+							}
+						}
+					}
+				],
+				"return": [
+					{
+						"Struct": {
+							"address": "0x2",
+							"module": "coin",
+							"name": "Coin",
+							"typeArguments": [
+								{
+									"TypeParameter": 0
+								}
+							]
+						}
+					},
+					{
+						"Struct": {
+							"address": "0x2",
+							"module": "coin",
+							"name": "Coin",
+							"typeArguments": [
+								{
+									"TypeParameter": 1
+								}
+							]
+						}
+					}
+				]
+			},
+			"get_cumulative_prices": {
+				"visibility": "Public",
+				"isEntry": false,
+				"typeParameters": [
+					{
+						"abilities": []
+					},
+					{
+						"abilities": []
+					}
+				],
+				"parameters": [
+					{
+						"MutableReference": {
+							"Struct": {
+								"address": "0xf435e16e002dd0cbe7afe9a449498ae5f589712365cad41ad0854a9cec5487e2",
+								"module": "liquidity_pool",
+								"name": "SwapInfo",
+								"typeArguments": []
+							}
+						}
+					}
+				],
+				"return": [
+					"U128",
+					"U128",
+					"U64"
+				]
+			},
+			"get_dao_fee": {
+				"visibility": "Public",
+				"isEntry": false,
+				"typeParameters": [
+					{
+						"abilities": []
+					},
+					{
+						"abilities": []
+					}
+				],
+				"parameters": [
+					{
+						"MutableReference": {
+							"Struct": {
+								"address": "0xf435e16e002dd0cbe7afe9a449498ae5f589712365cad41ad0854a9cec5487e2",
+								"module": "liquidity_pool",
+								"name": "SwapInfo",
+								"typeArguments": []
+							}
+						}
+					}
+				],
+				"return": [
+					"U64"
+				]
+			},
+			"get_dao_fees_config": {
+				"visibility": "Public",
+				"isEntry": false,
+				"typeParameters": [
+					{
+						"abilities": []
+					},
+					{
+						"abilities": []
+					}
+				],
+				"parameters": [
+					{
+						"MutableReference": {
+							"Struct": {
+								"address": "0xf435e16e002dd0cbe7afe9a449498ae5f589712365cad41ad0854a9cec5487e2",
+								"module": "liquidity_pool",
+								"name": "SwapInfo",
+								"typeArguments": []
+							}
+						}
+					}
+				],
+				"return": [
+					"U64",
+					"U64"
+				]
+			},
+			"get_fee": {
+				"visibility": "Public",
+				"isEntry": false,
+				"typeParameters": [
+					{
+						"abilities": []
+					},
+					{
+						"abilities": []
+					}
+				],
+				"parameters": [
+					{
+						"MutableReference": {
+							"Struct": {
+								"address": "0xf435e16e002dd0cbe7afe9a449498ae5f589712365cad41ad0854a9cec5487e2",
+								"module": "liquidity_pool",
+								"name": "SwapInfo",
+								"typeArguments": []
+							}
+						}
+					}
+				],
+				"return": [
+					"U64"
+				]
+			},
+			"get_fees_config": {
+				"visibility": "Public",
+				"isEntry": false,
+				"typeParameters": [
+					{
+						"abilities": []
+					},
+					{
+						"abilities": []
+					}
+				],
+				"parameters": [
+					{
+						"MutableReference": {
+							"Struct": {
+								"address": "0xf435e16e002dd0cbe7afe9a449498ae5f589712365cad41ad0854a9cec5487e2",
+								"module": "liquidity_pool",
+								"name": "SwapInfo",
+								"typeArguments": []
+							}
+						}
+					}
+				],
+				"return": [
+					"U64",
+					"U64"
+				]
+			},
+			"get_lp_total": {
+				"visibility": "Public",
+				"isEntry": false,
+				"typeParameters": [
+					{
+						"abilities": []
+					},
+					{
+						"abilities": []
+					}
+				],
+				"parameters": [
+					{
+						"Reference": {
+							"Struct": {
+								"address": "0xf435e16e002dd0cbe7afe9a449498ae5f589712365cad41ad0854a9cec5487e2",
+								"module": "liquidity_pool",
+								"name": "LiquidityPool",
+								"typeArguments": [
+									{
+										"TypeParameter": 0
+									},
+									{
+										"TypeParameter": 1
+									}
+								]
+							}
+						}
+					}
+				],
+				"return": [
+					"U64"
+				]
+			},
+			"get_reserves_size": {
+				"visibility": "Public",
+				"isEntry": false,
+				"typeParameters": [
+					{
+						"abilities": []
+					},
+					{
+						"abilities": []
+					}
+				],
+				"parameters": [
+					{
+						"MutableReference": {
+							"Struct": {
+								"address": "0xf435e16e002dd0cbe7afe9a449498ae5f589712365cad41ad0854a9cec5487e2",
+								"module": "liquidity_pool",
+								"name": "SwapInfo",
+								"typeArguments": []
+							}
+						}
+					}
+				],
+				"return": [
+					"U64",
+					"U64"
+				]
+			},
+			"initialize": {
+				"visibility": "Public",
+				"isEntry": true,
+				"typeParameters": [],
+				"parameters": [
+					{
+						"MutableReference": {
+							"Struct": {
+								"address": "0x2",
+								"module": "tx_context",
+								"name": "TxContext",
+								"typeArguments": []
+							}
+						}
+					}
+				],
+				"return": []
+			},
+			"is_pool_exists": {
+				"visibility": "Public",
+				"isEntry": false,
+				"typeParameters": [
+					{
+						"abilities": []
+					},
+					{
+						"abilities": []
+					}
+				],
+				"parameters": [
+					{
+						"MutableReference": {
+							"Struct": {
+								"address": "0xf435e16e002dd0cbe7afe9a449498ae5f589712365cad41ad0854a9cec5487e2",
+								"module": "liquidity_pool",
+								"name": "SwapInfo",
+								"typeArguments": []
+							}
+						}
+					}
+				],
+				"return": [
+					"Bool"
+				]
+			},
+			"is_pool_locked": {
+				"visibility": "Public",
+				"isEntry": false,
+				"typeParameters": [
+					{
+						"abilities": []
+					},
+					{
+						"abilities": []
+					}
+				],
+				"parameters": [
+					{
+						"Reference": {
+							"Struct": {
+								"address": "0xf435e16e002dd0cbe7afe9a449498ae5f589712365cad41ad0854a9cec5487e2",
+								"module": "liquidity_pool",
+								"name": "LiquidityPool",
+								"typeArguments": [
+									{
+										"TypeParameter": 0
+									},
+									{
+										"TypeParameter": 1
+									}
+								]
+							}
+						}
+					}
+				],
+				"return": [
+					"Bool"
+				]
+			},
+			"mint": {
+				"visibility": "Public",
+				"isEntry": false,
+				"typeParameters": [
+					{
+						"abilities": []
+					},
+					{
+						"abilities": []
+					}
+				],
+				"parameters": [
+					{
+						"MutableReference": {
+							"Struct": {
+								"address": "0xf435e16e002dd0cbe7afe9a449498ae5f589712365cad41ad0854a9cec5487e2",
+								"module": "liquidity_pool",
+								"name": "SwapInfo",
+								"typeArguments": []
+							}
+						}
+					},
+					{
+						"Reference": {
+							"Struct": {
+								"address": "0x2",
+								"module": "clock",
+								"name": "Clock",
+								"typeArguments": []
+							}
+						}
+					},
+					{
+						"Struct": {
+							"address": "0x2",
+							"module": "coin",
+							"name": "Coin",
+							"typeArguments": [
+								{
+									"TypeParameter": 0
+								}
+							]
+						}
+					},
+					{
+						"Struct": {
+							"address": "0x2",
+							"module": "coin",
+							"name": "Coin",
+							"typeArguments": [
+								{
+									"TypeParameter": 1
+								}
+							]
+						}
+					},
+					{
+						"MutableReference": {
+							"Struct": {
+								"address": "0x2",
+								"module": "tx_context",
+								"name": "TxContext",
+								"typeArguments": []
+							}
+						}
+					}
+				],
+				"return": [
+					{
+						"Struct": {
+							"address": "0x2",
+							"module": "coin",
+							"name": "Coin",
+							"typeArguments": [
+								{
+									"Struct": {
+										"address": "0xf435e16e002dd0cbe7afe9a449498ae5f589712365cad41ad0854a9cec5487e2",
+										"module": "liquidity_pool",
+										"name": "LPCoin",
+										"typeArguments": [
+											{
+												"TypeParameter": 0
+											},
+											{
+												"TypeParameter": 1
+											}
+										]
+									}
+								}
+							]
+						}
+					}
+				]
+			},
+			"register": {
+				"visibility": "Public",
+				"isEntry": false,
+				"typeParameters": [
+					{
+						"abilities": []
+					},
+					{
+						"abilities": []
+					}
+				],
+				"parameters": [
+					{
+						"Struct": {
+							"address": "0x2",
+							"module": "coin",
+							"name": "Coin",
+							"typeArguments": [
+								{
+									"TypeParameter": 0
+								}
+							]
+						}
+					},
+					{
+						"Struct": {
+							"address": "0x2",
+							"module": "coin",
+							"name": "Coin",
+							"typeArguments": [
+								{
+									"TypeParameter": 1
+								}
+							]
+						}
+					},
+					{
+						"Reference": {
+							"Struct": {
+								"address": "0x2",
+								"module": "clock",
+								"name": "Clock",
+								"typeArguments": []
+							}
+						}
+					},
+					{
+						"MutableReference": {
+							"Struct": {
+								"address": "0xf435e16e002dd0cbe7afe9a449498ae5f589712365cad41ad0854a9cec5487e2",
+								"module": "liquidity_pool",
+								"name": "SwapInfo",
+								"typeArguments": []
+							}
+						}
+					},
+					{
+						"MutableReference": {
+							"Struct": {
+								"address": "0xf435e16e002dd0cbe7afe9a449498ae5f589712365cad41ad0854a9cec5487e2",
+								"module": "dao_storage",
+								"name": "DaoStorageInfo",
+								"typeArguments": []
+							}
+						}
+					},
+					{
+						"MutableReference": {
+							"Struct": {
+								"address": "0x2",
+								"module": "tx_context",
+								"name": "TxContext",
+								"typeArguments": []
+							}
+						}
+					}
+				],
+				"return": [
+					{
+						"Struct": {
+							"address": "0x2",
+							"module": "coin",
+							"name": "Coin",
+							"typeArguments": [
+								{
+									"Struct": {
+										"address": "0xf435e16e002dd0cbe7afe9a449498ae5f589712365cad41ad0854a9cec5487e2",
+										"module": "liquidity_pool",
+										"name": "LPCoin",
+										"typeArguments": [
+											{
+												"TypeParameter": 0
+											},
+											{
+												"TypeParameter": 1
+											}
+										]
+									}
+								}
+							]
+						}
+					}
+				]
+			},
+			"set_dao_fee": {
+				"visibility": "Public",
+				"isEntry": true,
+				"typeParameters": [
+					{
+						"abilities": []
+					},
+					{
+						"abilities": []
+					}
+				],
+				"parameters": [
+					{
+						"MutableReference": {
+							"Struct": {
+								"address": "0xf435e16e002dd0cbe7afe9a449498ae5f589712365cad41ad0854a9cec5487e2",
+								"module": "liquidity_pool",
+								"name": "SwapInfo",
+								"typeArguments": []
+							}
+						}
+					},
+					{
+						"MutableReference": {
+							"Struct": {
+								"address": "0xf435e16e002dd0cbe7afe9a449498ae5f589712365cad41ad0854a9cec5487e2",
+								"module": "liquidity_pool",
+								"name": "LiquidityPool",
+								"typeArguments": [
+									{
+										"TypeParameter": 0
+									},
+									{
+										"TypeParameter": 1
+									}
+								]
+							}
+						}
+					},
+					{
+						"Reference": {
+							"Struct": {
+								"address": "0xf435e16e002dd0cbe7afe9a449498ae5f589712365cad41ad0854a9cec5487e2",
+								"module": "global_config",
+								"name": "GlobalConfig",
+								"typeArguments": []
+							}
+						}
+					},
+					"U64",
+					{
+						"MutableReference": {
+							"Struct": {
+								"address": "0x2",
+								"module": "tx_context",
+								"name": "TxContext",
+								"typeArguments": []
+							}
+						}
+					}
+				],
+				"return": []
+			},
+			"set_fee": {
+				"visibility": "Public",
+				"isEntry": true,
+				"typeParameters": [
+					{
+						"abilities": []
+					},
+					{
+						"abilities": []
+					}
+				],
+				"parameters": [
+					{
+						"MutableReference": {
+							"Struct": {
+								"address": "0xf435e16e002dd0cbe7afe9a449498ae5f589712365cad41ad0854a9cec5487e2",
+								"module": "liquidity_pool",
+								"name": "SwapInfo",
+								"typeArguments": []
+							}
+						}
+					},
+					{
+						"MutableReference": {
+							"Struct": {
+								"address": "0xf435e16e002dd0cbe7afe9a449498ae5f589712365cad41ad0854a9cec5487e2",
+								"module": "liquidity_pool",
+								"name": "LiquidityPool",
+								"typeArguments": [
+									{
+										"TypeParameter": 0
+									},
+									{
+										"TypeParameter": 1
+									}
+								]
+							}
+						}
+					},
+					{
+						"Reference": {
+							"Struct": {
+								"address": "0xf435e16e002dd0cbe7afe9a449498ae5f589712365cad41ad0854a9cec5487e2",
+								"module": "global_config",
+								"name": "GlobalConfig",
+								"typeArguments": []
+							}
+						}
+					},
+					"U64",
+					{
+						"MutableReference": {
+							"Struct": {
+								"address": "0x2",
+								"module": "tx_context",
+								"name": "TxContext",
+								"typeArguments": []
+							}
+						}
+					}
+				],
+				"return": []
+			},
+			"swap": {
+				"visibility": "Public",
+				"isEntry": false,
+				"typeParameters": [
+					{
+						"abilities": []
+					},
+					{
+						"abilities": []
+					}
+				],
+				"parameters": [
+					{
+						"MutableReference": {
+							"Struct": {
+								"address": "0xf435e16e002dd0cbe7afe9a449498ae5f589712365cad41ad0854a9cec5487e2",
+								"module": "liquidity_pool",
+								"name": "SwapInfo",
+								"typeArguments": []
+							}
+						}
+					},
+					{
+						"MutableReference": {
+							"Struct": {
+								"address": "0xf435e16e002dd0cbe7afe9a449498ae5f589712365cad41ad0854a9cec5487e2",
+								"module": "dao_storage",
+								"name": "DaoStorageInfo",
+								"typeArguments": []
+							}
+						}
+					},
+					{
+						"Reference": {
+							"Struct": {
+								"address": "0x2",
+								"module": "clock",
+								"name": "Clock",
+								"typeArguments": []
+							}
+						}
+					},
+					{
+						"Struct": {
+							"address": "0x2",
+							"module": "coin",
+							"name": "Coin",
+							"typeArguments": [
+								{
+									"TypeParameter": 0
+								}
+							]
+						}
+					},
+					"U64",
+					{
+						"Struct": {
+							"address": "0x2",
+							"module": "coin",
+							"name": "Coin",
+							"typeArguments": [
+								{
+									"TypeParameter": 1
+								}
+							]
+						}
+					},
+					"U64",
+					{
+						"MutableReference": {
+							"Struct": {
+								"address": "0x2",
+								"module": "tx_context",
+								"name": "TxContext",
+								"typeArguments": []
+							}
+						}
+					}
+				],
+				"return": [
+					{
+						"Struct": {
+							"address": "0x2",
+							"module": "coin",
+							"name": "Coin",
+							"typeArguments": [
+								{
+									"TypeParameter": 0
+								}
+							]
+						}
+					},
+					{
+						"Struct": {
+							"address": "0x2",
+							"module": "coin",
+							"name": "Coin",
+							"typeArguments": [
+								{
+									"TypeParameter": 1
+								}
+							]
+						}
+					}
+				]
+			}
+		}
+	},
+	{
+		"fileFormatVersion": 6,
+		"address": "0xf435e16e002dd0cbe7afe9a449498ae5f589712365cad41ad0854a9cec5487e2",
+		"name": "math",
+		"friends": [],
+		"structs": {},
+		"exposedFunctions": {
+			"min_u64": {
+				"visibility": "Public",
+				"isEntry": false,
+				"typeParameters": [],
+				"parameters": [
+					"U64",
+					"U64"
+				],
+				"return": [
+					"U64"
+				]
+			},
+			"mul_div": {
+				"visibility": "Public",
+				"isEntry": false,
+				"typeParameters": [],
+				"parameters": [
+					"U64",
+					"U64",
+					"U64"
+				],
+				"return": [
+					"U64"
+				]
+			},
+			"mul_div_u128": {
+				"visibility": "Public",
+				"isEntry": false,
+				"typeParameters": [],
+				"parameters": [
+					"U128",
+					"U128",
+					"U128"
+				],
+				"return": [
+					"U64"
+				]
+			},
+			"mul_to_u128": {
+				"visibility": "Public",
+				"isEntry": false,
+				"typeParameters": [],
+				"parameters": [
+					"U64",
+					"U64"
+				],
+				"return": [
+					"U128"
+				]
+			},
+			"overflow_add": {
+				"visibility": "Public",
+				"isEntry": false,
+				"typeParameters": [],
+				"parameters": [
+					"U128",
+					"U128"
+				],
+				"return": [
+					"U128"
+				]
+			},
+			"pow_10": {
+				"visibility": "Public",
+				"isEntry": false,
+				"typeParameters": [],
+				"parameters": [
+					"U8"
+				],
+				"return": [
+					"U64"
+				]
+			},
+			"sqrt": {
+				"visibility": "Public",
+				"isEntry": false,
+				"typeParameters": [],
+				"parameters": [
+					"U128"
+				],
+				"return": [
+					"U64"
+				]
+			}
+		}
+	},
+	{
+		"fileFormatVersion": 6,
+		"address": "0xf435e16e002dd0cbe7afe9a449498ae5f589712365cad41ad0854a9cec5487e2",
+		"name": "router",
+		"friends": [],
+		"structs": {
+			"NoneCoin": {
+				"abilities": {
+					"abilities": []
+				},
+				"typeParameters": [],
+				"fields": [
+					{
+						"name": "dummy_field",
+						"type": "Bool"
+					}
+				]
+			}
+		},
+		"exposedFunctions": {
+			"add_liquidity": {
+				"visibility": "Public",
+				"isEntry": false,
+				"typeParameters": [
+					{
+						"abilities": []
+					},
+					{
+						"abilities": []
+					}
+				],
+				"parameters": [
+					{
+						"MutableReference": {
+							"Struct": {
+								"address": "0xf435e16e002dd0cbe7afe9a449498ae5f589712365cad41ad0854a9cec5487e2",
+								"module": "liquidity_pool",
+								"name": "SwapInfo",
+								"typeArguments": []
+							}
+						}
+					},
+					{
+						"Reference": {
+							"Struct": {
+								"address": "0x2",
+								"module": "clock",
+								"name": "Clock",
+								"typeArguments": []
+							}
+						}
+					},
+					{
+						"Struct": {
+							"address": "0x2",
+							"module": "coin",
+							"name": "Coin",
+							"typeArguments": [
+								{
+									"TypeParameter": 0
+								}
+							]
+						}
+					},
+					"U64",
+					{
+						"Struct": {
+							"address": "0x2",
+							"module": "coin",
+							"name": "Coin",
+							"typeArguments": [
+								{
+									"TypeParameter": 1
+								}
+							]
+						}
+					},
+					"U64",
+					{
+						"MutableReference": {
+							"Struct": {
+								"address": "0x2",
+								"module": "tx_context",
+								"name": "TxContext",
+								"typeArguments": []
+							}
+						}
+					}
+				],
+				"return": [
+					{
+						"Struct": {
+							"address": "0x2",
+							"module": "coin",
+							"name": "Coin",
+							"typeArguments": [
+								{
+									"TypeParameter": 0
+								}
+							]
+						}
+					},
+					{
+						"Struct": {
+							"address": "0x2",
+							"module": "coin",
+							"name": "Coin",
+							"typeArguments": [
+								{
+									"TypeParameter": 1
+								}
+							]
+						}
+					},
+					{
+						"Struct": {
+							"address": "0x2",
+							"module": "coin",
+							"name": "Coin",
+							"typeArguments": [
+								{
+									"Struct": {
+										"address": "0xf435e16e002dd0cbe7afe9a449498ae5f589712365cad41ad0854a9cec5487e2",
+										"module": "liquidity_pool",
+										"name": "LPCoin",
+										"typeArguments": [
+											{
+												"TypeParameter": 0
+											},
+											{
+												"TypeParameter": 1
+											}
+										]
+									}
+								}
+							]
+						}
+					}
+				]
+			},
+			"calc_optimal_coin_values": {
+				"visibility": "Public",
+				"isEntry": false,
+				"typeParameters": [
+					{
+						"abilities": []
+					},
+					{
+						"abilities": []
+					}
+				],
+				"parameters": [
+					{
+						"MutableReference": {
+							"Struct": {
+								"address": "0xf435e16e002dd0cbe7afe9a449498ae5f589712365cad41ad0854a9cec5487e2",
+								"module": "liquidity_pool",
+								"name": "SwapInfo",
+								"typeArguments": []
+							}
+						}
+					},
+					"U64",
+					"U64",
+					"U64",
+					"U64"
+				],
+				"return": [
+					"U64",
+					"U64"
+				]
+			},
+			"convert_with_current_price": {
+				"visibility": "Public",
+				"isEntry": false,
+				"typeParameters": [],
+				"parameters": [
+					"U64",
+					"U64",
+					"U64"
+				],
+				"return": [
+					"U64"
+				]
+			},
+			"get_amount_in": {
+				"visibility": "Public",
+				"isEntry": false,
+				"typeParameters": [
+					{
+						"abilities": []
+					},
+					{
+						"abilities": []
+					}
+				],
+				"parameters": [
+					"U64",
+					"U64",
+					"U64",
+					"U64",
+					"U64"
+				],
+				"return": [
+					"U64"
+				]
+			},
+			"get_amount_out": {
+				"visibility": "Public",
+				"isEntry": false,
+				"typeParameters": [
+					{
+						"abilities": []
+					},
+					{
+						"abilities": []
+					}
+				],
+				"parameters": [
+					"U64",
+					"U64",
+					"U64",
+					"U64",
+					"U64"
+				],
+				"return": [
+					"U64"
+				]
+			},
+			"get_cumulative_prices": {
+				"visibility": "Public",
+				"isEntry": false,
+				"typeParameters": [
+					{
+						"abilities": []
+					},
+					{
+						"abilities": []
+					}
+				],
+				"parameters": [
+					{
+						"MutableReference": {
+							"Struct": {
+								"address": "0xf435e16e002dd0cbe7afe9a449498ae5f589712365cad41ad0854a9cec5487e2",
+								"module": "liquidity_pool",
+								"name": "SwapInfo",
+								"typeArguments": []
+							}
+						}
+					}
+				],
+				"return": [
+					"U128",
+					"U128",
+					"U64"
+				]
+			},
+			"get_dao_fee": {
+				"visibility": "Public",
+				"isEntry": false,
+				"typeParameters": [
+					{
+						"abilities": []
+					},
+					{
+						"abilities": []
+					}
+				],
+				"parameters": [
+					{
+						"MutableReference": {
+							"Struct": {
+								"address": "0xf435e16e002dd0cbe7afe9a449498ae5f589712365cad41ad0854a9cec5487e2",
+								"module": "liquidity_pool",
+								"name": "SwapInfo",
+								"typeArguments": []
+							}
+						}
+					}
+				],
+				"return": [
+					"U64"
+				]
+			},
+			"get_dao_fees_config": {
+				"visibility": "Public",
+				"isEntry": false,
+				"typeParameters": [
+					{
+						"abilities": []
+					},
+					{
+						"abilities": []
+					}
+				],
+				"parameters": [
+					{
+						"MutableReference": {
+							"Struct": {
+								"address": "0xf435e16e002dd0cbe7afe9a449498ae5f589712365cad41ad0854a9cec5487e2",
+								"module": "liquidity_pool",
+								"name": "SwapInfo",
+								"typeArguments": []
+							}
+						}
+					}
+				],
+				"return": [
+					"U64",
+					"U64"
+				]
+			},
+			"get_fee": {
+				"visibility": "Public",
+				"isEntry": false,
+				"typeParameters": [
+					{
+						"abilities": []
+					},
+					{
+						"abilities": []
+					}
+				],
+				"parameters": [
+					{
+						"MutableReference": {
+							"Struct": {
+								"address": "0xf435e16e002dd0cbe7afe9a449498ae5f589712365cad41ad0854a9cec5487e2",
+								"module": "liquidity_pool",
+								"name": "SwapInfo",
+								"typeArguments": []
+							}
+						}
+					}
+				],
+				"return": [
+					"U64"
+				]
+			},
+			"get_fees_config": {
+				"visibility": "Public",
+				"isEntry": false,
+				"typeParameters": [
+					{
+						"abilities": []
+					},
+					{
+						"abilities": []
+					}
+				],
+				"parameters": [
+					{
+						"MutableReference": {
+							"Struct": {
+								"address": "0xf435e16e002dd0cbe7afe9a449498ae5f589712365cad41ad0854a9cec5487e2",
+								"module": "liquidity_pool",
+								"name": "SwapInfo",
+								"typeArguments": []
+							}
+						}
+					}
+				],
+				"return": [
+					"U64",
+					"U64"
+				]
+			},
+			"get_reserves_for_lp_coins": {
+				"visibility": "Public",
+				"isEntry": false,
+				"typeParameters": [
+					{
+						"abilities": []
+					},
+					{
+						"abilities": []
+					}
+				],
+				"parameters": [
+					{
+						"MutableReference": {
+							"Struct": {
+								"address": "0xf435e16e002dd0cbe7afe9a449498ae5f589712365cad41ad0854a9cec5487e2",
+								"module": "liquidity_pool",
+								"name": "SwapInfo",
+								"typeArguments": []
+							}
+						}
+					},
+					{
+						"MutableReference": {
+							"Struct": {
+								"address": "0xf435e16e002dd0cbe7afe9a449498ae5f589712365cad41ad0854a9cec5487e2",
+								"module": "liquidity_pool",
+								"name": "LiquidityPool",
+								"typeArguments": [
+									{
+										"TypeParameter": 0
+									},
+									{
+										"TypeParameter": 1
+									}
+								]
+							}
+						}
+					},
+					"U64"
+				],
+				"return": [
+					"U64",
+					"U64"
+				]
+			},
+			"get_reserves_size": {
+				"visibility": "Public",
+				"isEntry": false,
+				"typeParameters": [
+					{
+						"abilities": []
+					},
+					{
+						"abilities": []
+					}
+				],
+				"parameters": [
+					{
+						"MutableReference": {
+							"Struct": {
+								"address": "0xf435e16e002dd0cbe7afe9a449498ae5f589712365cad41ad0854a9cec5487e2",
+								"module": "liquidity_pool",
+								"name": "SwapInfo",
+								"typeArguments": []
+							}
+						}
+					}
+				],
+				"return": [
+					"U64",
+					"U64"
+				]
+			},
+			"is_swap_exists": {
+				"visibility": "Public",
+				"isEntry": false,
+				"typeParameters": [
+					{
+						"abilities": []
+					},
+					{
+						"abilities": []
+					}
+				],
+				"parameters": [
+					{
+						"MutableReference": {
+							"Struct": {
+								"address": "0xf435e16e002dd0cbe7afe9a449498ae5f589712365cad41ad0854a9cec5487e2",
+								"module": "liquidity_pool",
+								"name": "SwapInfo",
+								"typeArguments": []
+							}
+						}
+					}
+				],
+				"return": [
+					"Bool"
+				]
+			},
+			"register_pool": {
+				"visibility": "Public",
+				"isEntry": false,
+				"typeParameters": [
+					{
+						"abilities": []
+					},
+					{
+						"abilities": []
+					}
+				],
+				"parameters": [
+					{
+						"Struct": {
+							"address": "0x2",
+							"module": "coin",
+							"name": "Coin",
+							"typeArguments": [
+								{
+									"TypeParameter": 0
+								}
+							]
+						}
+					},
+					{
+						"Struct": {
+							"address": "0x2",
+							"module": "coin",
+							"name": "Coin",
+							"typeArguments": [
+								{
+									"TypeParameter": 1
+								}
+							]
+						}
+					},
+					{
+						"Reference": {
+							"Struct": {
+								"address": "0x2",
+								"module": "clock",
+								"name": "Clock",
+								"typeArguments": []
+							}
+						}
+					},
+					{
+						"MutableReference": {
+							"Struct": {
+								"address": "0xf435e16e002dd0cbe7afe9a449498ae5f589712365cad41ad0854a9cec5487e2",
+								"module": "liquidity_pool",
+								"name": "SwapInfo",
+								"typeArguments": []
+							}
+						}
+					},
+					{
+						"MutableReference": {
+							"Struct": {
+								"address": "0xf435e16e002dd0cbe7afe9a449498ae5f589712365cad41ad0854a9cec5487e2",
+								"module": "dao_storage",
+								"name": "DaoStorageInfo",
+								"typeArguments": []
+							}
+						}
+					},
+					{
+						"MutableReference": {
+							"Struct": {
+								"address": "0x2",
+								"module": "tx_context",
+								"name": "TxContext",
+								"typeArguments": []
+							}
+						}
+					}
+				],
+				"return": [
+					{
+						"Struct": {
+							"address": "0x2",
+							"module": "coin",
+							"name": "Coin",
+							"typeArguments": [
+								{
+									"Struct": {
+										"address": "0xf435e16e002dd0cbe7afe9a449498ae5f589712365cad41ad0854a9cec5487e2",
+										"module": "liquidity_pool",
+										"name": "LPCoin",
+										"typeArguments": [
+											{
+												"TypeParameter": 0
+											},
+											{
+												"TypeParameter": 1
+											}
+										]
+									}
+								}
+							]
+						}
+					}
+				]
+			},
+			"remove_liquidity": {
+				"visibility": "Public",
+				"isEntry": false,
+				"typeParameters": [
+					{
+						"abilities": []
+					},
+					{
+						"abilities": []
+					}
+				],
+				"parameters": [
+					{
+						"MutableReference": {
+							"Struct": {
+								"address": "0xf435e16e002dd0cbe7afe9a449498ae5f589712365cad41ad0854a9cec5487e2",
+								"module": "liquidity_pool",
+								"name": "SwapInfo",
+								"typeArguments": []
+							}
+						}
+					},
+					{
+						"Reference": {
+							"Struct": {
+								"address": "0x2",
+								"module": "clock",
+								"name": "Clock",
+								"typeArguments": []
+							}
+						}
+					},
+					{
+						"Struct": {
+							"address": "0x2",
+							"module": "coin",
+							"name": "Coin",
+							"typeArguments": [
+								{
+									"Struct": {
+										"address": "0xf435e16e002dd0cbe7afe9a449498ae5f589712365cad41ad0854a9cec5487e2",
+										"module": "liquidity_pool",
+										"name": "LPCoin",
+										"typeArguments": [
+											{
+												"TypeParameter": 0
+											},
+											{
+												"TypeParameter": 1
+											}
+										]
+									}
+								}
+							]
+						}
+					},
+					"U64",
+					"U64",
+					{
+						"MutableReference": {
+							"Struct": {
+								"address": "0x2",
+								"module": "tx_context",
+								"name": "TxContext",
+								"typeArguments": []
+							}
+						}
+					}
+				],
+				"return": [
+					{
+						"Struct": {
+							"address": "0x2",
+							"module": "coin",
+							"name": "Coin",
+							"typeArguments": [
+								{
+									"TypeParameter": 0
+								}
+							]
+						}
+					},
+					{
+						"Struct": {
+							"address": "0x2",
+							"module": "coin",
+							"name": "Coin",
+							"typeArguments": [
+								{
+									"TypeParameter": 1
+								}
+							]
+						}
+					}
+				]
+			},
+			"swap_coin_for_exact_coin": {
+				"visibility": "Public",
+				"isEntry": false,
+				"typeParameters": [
+					{
+						"abilities": []
+					},
+					{
+						"abilities": []
+					}
+				],
+				"parameters": [
+					{
+						"MutableReference": {
+							"Struct": {
+								"address": "0xf435e16e002dd0cbe7afe9a449498ae5f589712365cad41ad0854a9cec5487e2",
+								"module": "liquidity_pool",
+								"name": "SwapInfo",
+								"typeArguments": []
+							}
+						}
+					},
+					{
+						"MutableReference": {
+							"Struct": {
+								"address": "0xf435e16e002dd0cbe7afe9a449498ae5f589712365cad41ad0854a9cec5487e2",
+								"module": "dao_storage",
+								"name": "DaoStorageInfo",
+								"typeArguments": []
+							}
+						}
+					},
+					{
+						"Reference": {
+							"Struct": {
+								"address": "0x2",
+								"module": "clock",
+								"name": "Clock",
+								"typeArguments": []
+							}
+						}
+					},
+					{
+						"Struct": {
+							"address": "0x2",
+							"module": "coin",
+							"name": "Coin",
+							"typeArguments": [
+								{
+									"TypeParameter": 0
+								}
+							]
+						}
+					},
+					"U64",
+					{
+						"MutableReference": {
+							"Struct": {
+								"address": "0x2",
+								"module": "tx_context",
+								"name": "TxContext",
+								"typeArguments": []
+							}
+						}
+					}
+				],
+				"return": []
+			},
+			"swap_exact_coin_for_coin": {
+				"visibility": "Public",
+				"isEntry": false,
+				"typeParameters": [
+					{
+						"abilities": []
+					},
+					{
+						"abilities": []
+					}
+				],
+				"parameters": [
+					{
+						"MutableReference": {
+							"Struct": {
+								"address": "0xf435e16e002dd0cbe7afe9a449498ae5f589712365cad41ad0854a9cec5487e2",
+								"module": "liquidity_pool",
+								"name": "SwapInfo",
+								"typeArguments": []
+							}
+						}
+					},
+					{
+						"MutableReference": {
+							"Struct": {
+								"address": "0xf435e16e002dd0cbe7afe9a449498ae5f589712365cad41ad0854a9cec5487e2",
+								"module": "dao_storage",
+								"name": "DaoStorageInfo",
+								"typeArguments": []
+							}
+						}
+					},
+					{
+						"Reference": {
+							"Struct": {
+								"address": "0x2",
+								"module": "clock",
+								"name": "Clock",
+								"typeArguments": []
+							}
+						}
+					},
+					{
+						"Struct": {
+							"address": "0x2",
+							"module": "coin",
+							"name": "Coin",
+							"typeArguments": [
+								{
+									"TypeParameter": 0
+								}
+							]
+						}
+					},
+					"U64",
+					{
+						"MutableReference": {
+							"Struct": {
+								"address": "0x2",
+								"module": "tx_context",
+								"name": "TxContext",
+								"typeArguments": []
+							}
+						}
+					}
+				],
+				"return": []
+			}
+		}
+	},
+	{
+		"fileFormatVersion": 6,
+		"address": "0xf435e16e002dd0cbe7afe9a449498ae5f589712365cad41ad0854a9cec5487e2",
+		"name": "scripts",
+		"friends": [],
+		"structs": {},
+		"exposedFunctions": {
+			"add_liquidity": {
+				"visibility": "Public",
+				"isEntry": true,
+				"typeParameters": [
+					{
+						"abilities": []
+					},
+					{
+						"abilities": []
+					}
+				],
+				"parameters": [
+					{
+						"Vector": {
+							"Struct": {
+								"address": "0x2",
+								"module": "coin",
+								"name": "Coin",
+								"typeArguments": [
+									{
+										"TypeParameter": 0
+									}
+								]
+							}
+						}
+					},
+					"U64",
+					"U64",
+					{
+						"Vector": {
+							"Struct": {
+								"address": "0x2",
+								"module": "coin",
+								"name": "Coin",
+								"typeArguments": [
+									{
+										"TypeParameter": 1
+									}
+								]
+							}
+						}
+					},
+					"U64",
+					"U64",
+					{
+						"MutableReference": {
+							"Struct": {
+								"address": "0xf435e16e002dd0cbe7afe9a449498ae5f589712365cad41ad0854a9cec5487e2",
+								"module": "liquidity_pool",
+								"name": "SwapInfo",
+								"typeArguments": []
+							}
+						}
+					},
+					{
+						"Reference": {
+							"Struct": {
+								"address": "0x2",
+								"module": "clock",
+								"name": "Clock",
+								"typeArguments": []
+							}
+						}
+					},
+					{
+						"MutableReference": {
+							"Struct": {
+								"address": "0x2",
+								"module": "tx_context",
+								"name": "TxContext",
+								"typeArguments": []
+							}
+						}
+					}
+				],
+				"return": []
+			},
+			"register_pool": {
+				"visibility": "Public",
+				"isEntry": true,
+				"typeParameters": [
+					{
+						"abilities": []
+					},
+					{
+						"abilities": []
+					}
+				],
+				"parameters": [
+					{
+						"Vector": {
+							"Struct": {
+								"address": "0x2",
+								"module": "coin",
+								"name": "Coin",
+								"typeArguments": [
+									{
+										"TypeParameter": 0
+									}
+								]
+							}
+						}
+					},
+					"U64",
+					{
+						"Vector": {
+							"Struct": {
+								"address": "0x2",
+								"module": "coin",
+								"name": "Coin",
+								"typeArguments": [
+									{
+										"TypeParameter": 1
+									}
+								]
+							}
+						}
+					},
+					"U64",
+					{
+						"Reference": {
+							"Struct": {
+								"address": "0x2",
+								"module": "clock",
+								"name": "Clock",
+								"typeArguments": []
+							}
+						}
+					},
+					{
+						"MutableReference": {
+							"Struct": {
+								"address": "0xf435e16e002dd0cbe7afe9a449498ae5f589712365cad41ad0854a9cec5487e2",
+								"module": "liquidity_pool",
+								"name": "SwapInfo",
+								"typeArguments": []
+							}
+						}
+					},
+					{
+						"MutableReference": {
+							"Struct": {
+								"address": "0xf435e16e002dd0cbe7afe9a449498ae5f589712365cad41ad0854a9cec5487e2",
+								"module": "dao_storage",
+								"name": "DaoStorageInfo",
+								"typeArguments": []
+							}
+						}
+					},
+					{
+						"MutableReference": {
+							"Struct": {
+								"address": "0x2",
+								"module": "tx_context",
+								"name": "TxContext",
+								"typeArguments": []
+							}
+						}
+					}
+				],
+				"return": []
+			},
+			"remove_liquidity": {
+				"visibility": "Public",
+				"isEntry": true,
+				"typeParameters": [
+					{
+						"abilities": []
+					},
+					{
+						"abilities": []
+					}
+				],
+				"parameters": [
+					{
+						"Vector": {
+							"Struct": {
+								"address": "0x2",
+								"module": "coin",
+								"name": "Coin",
+								"typeArguments": [
+									{
+										"Struct": {
+											"address": "0xf435e16e002dd0cbe7afe9a449498ae5f589712365cad41ad0854a9cec5487e2",
+											"module": "liquidity_pool",
+											"name": "LPCoin",
+											"typeArguments": [
+												{
+													"TypeParameter": 0
+												},
+												{
+													"TypeParameter": 1
+												}
+											]
+										}
+									}
+								]
+							}
+						}
+					},
+					"U64",
+					"U64",
+					"U64",
+					{
+						"MutableReference": {
+							"Struct": {
+								"address": "0xf435e16e002dd0cbe7afe9a449498ae5f589712365cad41ad0854a9cec5487e2",
+								"module": "liquidity_pool",
+								"name": "SwapInfo",
+								"typeArguments": []
+							}
+						}
+					},
+					{
+						"Reference": {
+							"Struct": {
+								"address": "0x2",
+								"module": "clock",
+								"name": "Clock",
+								"typeArguments": []
+							}
+						}
+					},
+					{
+						"MutableReference": {
+							"Struct": {
+								"address": "0x2",
+								"module": "tx_context",
+								"name": "TxContext",
+								"typeArguments": []
+							}
+						}
+					}
+				],
+				"return": []
+			},
+			"swap_coin_for_exact_coin": {
+				"visibility": "Public",
+				"isEntry": true,
+				"typeParameters": [
+					{
+						"abilities": []
+					},
+					{
+						"abilities": []
+					}
+				],
+				"parameters": [
+					{
+						"Vector": {
+							"Struct": {
+								"address": "0x2",
+								"module": "coin",
+								"name": "Coin",
+								"typeArguments": [
+									{
+										"TypeParameter": 0
+									}
+								]
+							}
+						}
+					},
+					"U64",
+					"U64",
+					{
+						"MutableReference": {
+							"Struct": {
+								"address": "0xf435e16e002dd0cbe7afe9a449498ae5f589712365cad41ad0854a9cec5487e2",
+								"module": "liquidity_pool",
+								"name": "SwapInfo",
+								"typeArguments": []
+							}
+						}
+					},
+					{
+						"MutableReference": {
+							"Struct": {
+								"address": "0xf435e16e002dd0cbe7afe9a449498ae5f589712365cad41ad0854a9cec5487e2",
+								"module": "dao_storage",
+								"name": "DaoStorageInfo",
+								"typeArguments": []
+							}
+						}
+					},
+					{
+						"Reference": {
+							"Struct": {
+								"address": "0x2",
+								"module": "clock",
+								"name": "Clock",
+								"typeArguments": []
+							}
+						}
+					},
+					{
+						"MutableReference": {
+							"Struct": {
+								"address": "0x2",
+								"module": "tx_context",
+								"name": "TxContext",
+								"typeArguments": []
+							}
+						}
+					}
+				],
+				"return": []
+			},
+			"swap_exact_coin_for_coin": {
+				"visibility": "Public",
+				"isEntry": true,
+				"typeParameters": [
+					{
+						"abilities": []
+					},
+					{
+						"abilities": []
+					}
+				],
+				"parameters": [
+					{
+						"Vector": {
+							"Struct": {
+								"address": "0x2",
+								"module": "coin",
+								"name": "Coin",
+								"typeArguments": [
+									{
+										"TypeParameter": 0
+									}
+								]
+							}
+						}
+					},
+					"U64",
+					"U64",
+					{
+						"MutableReference": {
+							"Struct": {
+								"address": "0xf435e16e002dd0cbe7afe9a449498ae5f589712365cad41ad0854a9cec5487e2",
+								"module": "liquidity_pool",
+								"name": "SwapInfo",
+								"typeArguments": []
+							}
+						}
+					},
+					{
+						"MutableReference": {
+							"Struct": {
+								"address": "0xf435e16e002dd0cbe7afe9a449498ae5f589712365cad41ad0854a9cec5487e2",
+								"module": "dao_storage",
+								"name": "DaoStorageInfo",
+								"typeArguments": []
+							}
+						}
+					},
+					{
+						"Reference": {
+							"Struct": {
+								"address": "0x2",
+								"module": "clock",
+								"name": "Clock",
+								"typeArguments": []
+							}
+						}
+					},
+					{
+						"MutableReference": {
+							"Struct": {
+								"address": "0x2",
+								"module": "tx_context",
+								"name": "TxContext",
+								"typeArguments": []
+							}
+						}
+					}
+				],
+				"return": []
+			}
+		}
+	},
+	{
+		"fileFormatVersion": 6,
+		"address": "0xf435e16e002dd0cbe7afe9a449498ae5f589712365cad41ad0854a9cec5487e2",
+		"name": "u256",
+		"friends": [],
+		"structs": {
+			"DU256": {
+				"abilities": {
+					"abilities": [
+						"Copy",
+						"Drop",
+						"Store"
+					]
+				},
+				"typeParameters": [],
+				"fields": [
+					{
+						"name": "v0",
+						"type": "U64"
+					},
+					{
+						"name": "v1",
+						"type": "U64"
+					},
+					{
+						"name": "v2",
+						"type": "U64"
+					},
+					{
+						"name": "v3",
+						"type": "U64"
+					},
+					{
+						"name": "v4",
+						"type": "U64"
+					},
+					{
+						"name": "v5",
+						"type": "U64"
+					},
+					{
+						"name": "v6",
+						"type": "U64"
+					},
+					{
+						"name": "v7",
+						"type": "U64"
+					}
+				]
+			},
+			"U256": {
+				"abilities": {
+					"abilities": [
+						"Copy",
+						"Drop",
+						"Store"
+					]
+				},
+				"typeParameters": [],
+				"fields": [
+					{
+						"name": "v0",
+						"type": "U64"
+					},
+					{
+						"name": "v1",
+						"type": "U64"
+					},
+					{
+						"name": "v2",
+						"type": "U64"
+					},
+					{
+						"name": "v3",
+						"type": "U64"
+					}
+				]
+			}
+		},
+		"exposedFunctions": {
+			"add": {
+				"visibility": "Public",
+				"isEntry": false,
+				"typeParameters": [],
+				"parameters": [
+					{
+						"Struct": {
+							"address": "0xf435e16e002dd0cbe7afe9a449498ae5f589712365cad41ad0854a9cec5487e2",
+							"module": "u256",
+							"name": "U256",
+							"typeArguments": []
+						}
+					},
+					{
+						"Struct": {
+							"address": "0xf435e16e002dd0cbe7afe9a449498ae5f589712365cad41ad0854a9cec5487e2",
+							"module": "u256",
+							"name": "U256",
+							"typeArguments": []
+						}
+					}
+				],
+				"return": [
+					{
+						"Struct": {
+							"address": "0xf435e16e002dd0cbe7afe9a449498ae5f589712365cad41ad0854a9cec5487e2",
+							"module": "u256",
+							"name": "U256",
+							"typeArguments": []
+						}
+					}
+				]
+			},
+			"as_u128": {
+				"visibility": "Public",
+				"isEntry": false,
+				"typeParameters": [],
+				"parameters": [
+					{
+						"Struct": {
+							"address": "0xf435e16e002dd0cbe7afe9a449498ae5f589712365cad41ad0854a9cec5487e2",
+							"module": "u256",
+							"name": "U256",
+							"typeArguments": []
+						}
+					}
+				],
+				"return": [
+					"U128"
+				]
+			},
+			"as_u64": {
+				"visibility": "Public",
+				"isEntry": false,
+				"typeParameters": [],
+				"parameters": [
+					{
+						"Struct": {
+							"address": "0xf435e16e002dd0cbe7afe9a449498ae5f589712365cad41ad0854a9cec5487e2",
+							"module": "u256",
+							"name": "U256",
+							"typeArguments": []
+						}
+					}
+				],
+				"return": [
+					"U64"
+				]
+			},
+			"compare": {
+				"visibility": "Public",
+				"isEntry": false,
+				"typeParameters": [],
+				"parameters": [
+					{
+						"Reference": {
+							"Struct": {
+								"address": "0xf435e16e002dd0cbe7afe9a449498ae5f589712365cad41ad0854a9cec5487e2",
+								"module": "u256",
+								"name": "U256",
+								"typeArguments": []
+							}
+						}
+					},
+					{
+						"Reference": {
+							"Struct": {
+								"address": "0xf435e16e002dd0cbe7afe9a449498ae5f589712365cad41ad0854a9cec5487e2",
+								"module": "u256",
+								"name": "U256",
+								"typeArguments": []
+							}
+						}
+					}
+				],
+				"return": [
+					"U8"
+				]
+			},
+			"div": {
+				"visibility": "Public",
+				"isEntry": false,
+				"typeParameters": [],
+				"parameters": [
+					{
+						"Struct": {
+							"address": "0xf435e16e002dd0cbe7afe9a449498ae5f589712365cad41ad0854a9cec5487e2",
+							"module": "u256",
+							"name": "U256",
+							"typeArguments": []
+						}
+					},
+					{
+						"Struct": {
+							"address": "0xf435e16e002dd0cbe7afe9a449498ae5f589712365cad41ad0854a9cec5487e2",
+							"module": "u256",
+							"name": "U256",
+							"typeArguments": []
+						}
+					}
+				],
+				"return": [
+					{
+						"Struct": {
+							"address": "0xf435e16e002dd0cbe7afe9a449498ae5f589712365cad41ad0854a9cec5487e2",
+							"module": "u256",
+							"name": "U256",
+							"typeArguments": []
+						}
+					}
+				]
+			},
+			"from_u128": {
+				"visibility": "Public",
+				"isEntry": false,
+				"typeParameters": [],
+				"parameters": [
+					"U128"
+				],
+				"return": [
+					{
+						"Struct": {
+							"address": "0xf435e16e002dd0cbe7afe9a449498ae5f589712365cad41ad0854a9cec5487e2",
+							"module": "u256",
+							"name": "U256",
+							"typeArguments": []
+						}
+					}
+				]
+			},
+			"from_u64": {
+				"visibility": "Public",
+				"isEntry": false,
+				"typeParameters": [],
+				"parameters": [
+					"U64"
+				],
+				"return": [
+					{
+						"Struct": {
+							"address": "0xf435e16e002dd0cbe7afe9a449498ae5f589712365cad41ad0854a9cec5487e2",
+							"module": "u256",
+							"name": "U256",
+							"typeArguments": []
+						}
+					}
+				]
+			},
+			"get": {
+				"visibility": "Public",
+				"isEntry": false,
+				"typeParameters": [],
+				"parameters": [
+					{
+						"Reference": {
+							"Struct": {
+								"address": "0xf435e16e002dd0cbe7afe9a449498ae5f589712365cad41ad0854a9cec5487e2",
+								"module": "u256",
+								"name": "U256",
+								"typeArguments": []
+							}
+						}
+					},
+					"U64"
+				],
+				"return": [
+					"U64"
+				]
+			},
+			"mul": {
+				"visibility": "Public",
+				"isEntry": false,
+				"typeParameters": [],
+				"parameters": [
+					{
+						"Struct": {
+							"address": "0xf435e16e002dd0cbe7afe9a449498ae5f589712365cad41ad0854a9cec5487e2",
+							"module": "u256",
+							"name": "U256",
+							"typeArguments": []
+						}
+					},
+					{
+						"Struct": {
+							"address": "0xf435e16e002dd0cbe7afe9a449498ae5f589712365cad41ad0854a9cec5487e2",
+							"module": "u256",
+							"name": "U256",
+							"typeArguments": []
+						}
+					}
+				],
+				"return": [
+					{
+						"Struct": {
+							"address": "0xf435e16e002dd0cbe7afe9a449498ae5f589712365cad41ad0854a9cec5487e2",
+							"module": "u256",
+							"name": "U256",
+							"typeArguments": []
+						}
+					}
+				]
+			},
+			"shl": {
+				"visibility": "Public",
+				"isEntry": false,
+				"typeParameters": [],
+				"parameters": [
+					{
+						"Struct": {
+							"address": "0xf435e16e002dd0cbe7afe9a449498ae5f589712365cad41ad0854a9cec5487e2",
+							"module": "u256",
+							"name": "U256",
+							"typeArguments": []
+						}
+					},
+					"U8"
+				],
+				"return": [
+					{
+						"Struct": {
+							"address": "0xf435e16e002dd0cbe7afe9a449498ae5f589712365cad41ad0854a9cec5487e2",
+							"module": "u256",
+							"name": "U256",
+							"typeArguments": []
+						}
+					}
+				]
+			},
+			"shr": {
+				"visibility": "Public",
+				"isEntry": false,
+				"typeParameters": [],
+				"parameters": [
+					{
+						"Struct": {
+							"address": "0xf435e16e002dd0cbe7afe9a449498ae5f589712365cad41ad0854a9cec5487e2",
+							"module": "u256",
+							"name": "U256",
+							"typeArguments": []
+						}
+					},
+					"U8"
+				],
+				"return": [
+					{
+						"Struct": {
+							"address": "0xf435e16e002dd0cbe7afe9a449498ae5f589712365cad41ad0854a9cec5487e2",
+							"module": "u256",
+							"name": "U256",
+							"typeArguments": []
+						}
+					}
+				]
+			},
+			"sub": {
+				"visibility": "Public",
+				"isEntry": false,
+				"typeParameters": [],
+				"parameters": [
+					{
+						"Struct": {
+							"address": "0xf435e16e002dd0cbe7afe9a449498ae5f589712365cad41ad0854a9cec5487e2",
+							"module": "u256",
+							"name": "U256",
+							"typeArguments": []
+						}
+					},
+					{
+						"Struct": {
+							"address": "0xf435e16e002dd0cbe7afe9a449498ae5f589712365cad41ad0854a9cec5487e2",
+							"module": "u256",
+							"name": "U256",
+							"typeArguments": []
+						}
+					}
+				],
+				"return": [
+					{
+						"Struct": {
+							"address": "0xf435e16e002dd0cbe7afe9a449498ae5f589712365cad41ad0854a9cec5487e2",
+							"module": "u256",
+							"name": "U256",
+							"typeArguments": []
+						}
+					}
+				]
+			},
+			"zero": {
+				"visibility": "Public",
+				"isEntry": false,
+				"typeParameters": [],
+				"parameters": [],
+				"return": [
+					{
+						"Struct": {
+							"address": "0xf435e16e002dd0cbe7afe9a449498ae5f589712365cad41ad0854a9cec5487e2",
+							"module": "u256",
+							"name": "U256",
+							"typeArguments": []
+						}
+					}
+				]
+			}
+		}
+	},
+	{
+		"fileFormatVersion": 6,
+		"address": "0xf435e16e002dd0cbe7afe9a449498ae5f589712365cad41ad0854a9cec5487e2",
+		"name": "uq64x64",
+		"friends": [],
+		"structs": {
+			"UQ64x64": {
+				"abilities": {
+					"abilities": [
+						"Copy",
+						"Drop",
+						"Store"
+					]
+				},
+				"typeParameters": [],
+				"fields": [
+					{
+						"name": "v",
+						"type": "U128"
+					}
+				]
+			}
+		},
+		"exposedFunctions": {
+			"compare": {
+				"visibility": "Public",
+				"isEntry": false,
+				"typeParameters": [],
+				"parameters": [
+					{
+						"Reference": {
+							"Struct": {
+								"address": "0xf435e16e002dd0cbe7afe9a449498ae5f589712365cad41ad0854a9cec5487e2",
+								"module": "uq64x64",
+								"name": "UQ64x64",
+								"typeArguments": []
+							}
+						}
+					},
+					{
+						"Reference": {
+							"Struct": {
+								"address": "0xf435e16e002dd0cbe7afe9a449498ae5f589712365cad41ad0854a9cec5487e2",
+								"module": "uq64x64",
+								"name": "UQ64x64",
+								"typeArguments": []
+							}
+						}
+					}
+				],
+				"return": [
+					"U8"
+				]
+			},
+			"decode": {
+				"visibility": "Public",
+				"isEntry": false,
+				"typeParameters": [],
+				"parameters": [
+					{
+						"Struct": {
+							"address": "0xf435e16e002dd0cbe7afe9a449498ae5f589712365cad41ad0854a9cec5487e2",
+							"module": "uq64x64",
+							"name": "UQ64x64",
+							"typeArguments": []
+						}
+					}
+				],
+				"return": [
+					"U64"
+				]
+			},
+			"div": {
+				"visibility": "Public",
+				"isEntry": false,
+				"typeParameters": [],
+				"parameters": [
+					{
+						"Struct": {
+							"address": "0xf435e16e002dd0cbe7afe9a449498ae5f589712365cad41ad0854a9cec5487e2",
+							"module": "uq64x64",
+							"name": "UQ64x64",
+							"typeArguments": []
+						}
+					},
+					"U64"
+				],
+				"return": [
+					{
+						"Struct": {
+							"address": "0xf435e16e002dd0cbe7afe9a449498ae5f589712365cad41ad0854a9cec5487e2",
+							"module": "uq64x64",
+							"name": "UQ64x64",
+							"typeArguments": []
+						}
+					}
+				]
+			},
+			"encode": {
+				"visibility": "Public",
+				"isEntry": false,
+				"typeParameters": [],
+				"parameters": [
+					"U64"
+				],
+				"return": [
+					{
+						"Struct": {
+							"address": "0xf435e16e002dd0cbe7afe9a449498ae5f589712365cad41ad0854a9cec5487e2",
+							"module": "uq64x64",
+							"name": "UQ64x64",
+							"typeArguments": []
+						}
+					}
+				]
+			},
+			"fraction": {
+				"visibility": "Public",
+				"isEntry": false,
+				"typeParameters": [],
+				"parameters": [
+					"U64",
+					"U64"
+				],
+				"return": [
+					{
+						"Struct": {
+							"address": "0xf435e16e002dd0cbe7afe9a449498ae5f589712365cad41ad0854a9cec5487e2",
+							"module": "uq64x64",
+							"name": "UQ64x64",
+							"typeArguments": []
+						}
+					}
+				]
+			},
+			"is_zero": {
+				"visibility": "Public",
+				"isEntry": false,
+				"typeParameters": [],
+				"parameters": [
+					{
+						"Reference": {
+							"Struct": {
+								"address": "0xf435e16e002dd0cbe7afe9a449498ae5f589712365cad41ad0854a9cec5487e2",
+								"module": "uq64x64",
+								"name": "UQ64x64",
+								"typeArguments": []
+							}
+						}
+					}
+				],
+				"return": [
+					"Bool"
+				]
+			},
+			"mul": {
+				"visibility": "Public",
+				"isEntry": false,
+				"typeParameters": [],
+				"parameters": [
+					{
+						"Struct": {
+							"address": "0xf435e16e002dd0cbe7afe9a449498ae5f589712365cad41ad0854a9cec5487e2",
+							"module": "uq64x64",
+							"name": "UQ64x64",
+							"typeArguments": []
+						}
+					},
+					"U64"
+				],
+				"return": [
+					{
+						"Struct": {
+							"address": "0xf435e16e002dd0cbe7afe9a449498ae5f589712365cad41ad0854a9cec5487e2",
+							"module": "uq64x64",
+							"name": "UQ64x64",
+							"typeArguments": []
+						}
+					}
+				]
+			},
+			"to_u128": {
+				"visibility": "Public",
+				"isEntry": false,
+				"typeParameters": [],
+				"parameters": [
+					{
+						"Struct": {
+							"address": "0xf435e16e002dd0cbe7afe9a449498ae5f589712365cad41ad0854a9cec5487e2",
+							"module": "uq64x64",
+							"name": "UQ64x64",
+							"typeArguments": []
+						}
+					}
+				],
+				"return": [
+					"U128"
+				]
+			}
+		}
+	}
+]
