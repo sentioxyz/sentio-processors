@@ -1,9 +1,11 @@
-import { soulbound_nftv4 } from './types/aptos/movement-testnet/soulbound.js'
-
-soulbound_nftv4.bind({ startVersion: 8605174 }).onEventNFTMintEvent((evt, ctx) => {
-  const { token_id, owner } = evt.data_decoded
+import { collection } from "./types/aptos/movement-mainnet/0x0000000000000000000000000000000000000000000000000000000000000004.js"
+collection.bind()
+.onEventMintEvent(async (evt, ctx) => {
   ctx.eventLogger.emit('mint', {
-    token_id,
-    owner
+    //@ts-ignore
+    collection: evt.data_decoded.collection,
+    //@ts-ignore
+    id: evt.data_decoded.index.value,
+    token: evt.data_decoded.token
   })
 })
