@@ -20,7 +20,9 @@ const pools = [
     "0x2fcc6245f72795fad50f17c20583f8c6e81426ab69d7d3590420571364d080d4", // Treasury Pool For NS
     "0xd96dcd6982c45e580c83ff1d96c2b4455a874c284b637daf67c0787f25bc32dd", // Treasury Pool For stBTC
     "0x08373c5efffd07f88eace1c76abe4777489d9ec044fd4cd567f982d9c169e946", // Treasury Pool For Deep
-    "0x38d8ac76efc14035bbc8c8b38803f5bd012a0f117d9a0bad2103f8b2c6675b66" // Treasury Pool For FDUSD
+    "0x38d8ac76efc14035bbc8c8b38803f5bd012a0f117d9a0bad2103f8b2c6675b66", // Treasury Pool For FDUSD
+    "0xe2cfd1807f5b44b44d7cabff5376099e76c5f0e4b35a01bdc4b0ef465a23e32c", // Treasury Pool For BLUE
+    "0x98953e1c8af4af0cd8f59a52f9df6e60c9790b8143f556751f10949b40c76c50" // Treasury Pool For BUCK
 ]
 
 export function PoolProcessor() {

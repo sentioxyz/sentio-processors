@@ -10,6 +10,7 @@ import { OracleProcessor } from "./oracle.js";
 import { AddressProcessor } from "./address.js";
 import { scaleDown } from "@sentio/sdk";
 import { lending as lending_new_liquidation_event, incentive_v2, flash_loan } from '../types/sui/0x834a86970ae93a73faf4fff16ae40bdb72b91c47be585fff19a2af60a19ddca3.js';
+import { slippage } from "../types/sui/0x5b7d732adeb3140a2dbf2becd1e9dbe56cee0e3687379bcfe7df4357ea664313.js";
 // import { PythOracleProcessor } from './pyth.js'
 // import {SupraSValueFeed} from '../types/sui/0xc7abe17a209fcab08e2d7d939cf3df11f5b80cf03d10b50893f38df12fdebb07.js'
 // import {getSupraPrice} from './supra.js'
@@ -73,6 +74,8 @@ async function onEvent(event: LendingEvent, ctx: SuiContext) {
     '14': "0x5f496ed5d9d045c5b788dc1bb85f54100f2ede11e46f6a232c29daada4c5bdb6::coin::COIN",  //stBTC
     '15': "0xdeeb7a4662eec9f2f3def03fb937a663dddaa2e215b8078a284d026b7946c270::deep::DEEP", //deep
     '16': "0xf16e6b723f242ec745dfd7634ad072c42d5c1d9ac9d62a39c381303eaa57693a::fdusd::FDUSD", //FDUSD
+    '17': "0xe1b45a0e641b9955a20aa0ad1c1f4ad86aad8afb07296d4085e349a50e90bdca::blue::BLUE", //BLUE
+    '18': "0xce7ff77a83ea0cb6fd39bd8748e2ec89a3f41e8efdc3f4eb123e0ca37b184db2::buck::BUCK", //BUCK
   }
   const coinAddress = Coins[reserve]
   // const coinAddress = event.data_decoded.pool;
@@ -229,6 +232,32 @@ async function repayOnBehalfOfHandler(event: lending.RepayOnBehalfOfEventInstanc
   })
 }
 
+async function OnBehalfOfExSwapWithReferral(event: slippage.ExSwapWithReferralEventInstance, ctx: SuiContext) {
+  const sender = event.data_decoded.swap_initializer_address;
+  const receiver = event.data_decoded.receiver_address;
+  const fromCoinPrice = event.data_decoded.from_coin_price;
+  const fromCoinAmount = event.data_decoded.from_coin_amount;
+  const toCoinPrice = event.data_decoded.to_coin_price;
+  const toCoinAmount = event.data_decoded.to_coin_amount;
+  const rewardsAmount = event.data_decoded.reward_amount;
+  const rewardsRatio = event.data_decoded.rewards_ratio;
+  const referralId = event.data_decoded.referral_id;
+
+  ctx.eventLogger.emit("OnBehalfOfExSwapWithReferral", {
+    sender,
+    receiver,
+    fromCoinPrice,
+    fromCoinAmount,
+    toCoinPrice,
+    toCoinAmount,
+    rewardsAmount,
+    rewardsRatio,
+    referralId,
+    env: "mainnet",
+    type: "swapReferral"
+  })
+}
+
 
 // async function supraEventHandler(event: SupraSValueFeed.SCCProcessedEventInstance, ctx: SuiContext) {
 //   const hash = event.data_decoded.hash
@@ -269,3 +298,6 @@ lending_new_liquidation_event.bind({ startCheckpoint: 7800000n })
 
 incentive_v2.bind({ startCheckpoint: 7800000n })
   .onEventRewardsClaimed(onRewardsClaimedEvent)
+
+slippage.bind({ startCheckpoint: 7800000n })
+  .onEventExSwapWithReferralEvent(OnBehalfOfExSwapWithReferral)

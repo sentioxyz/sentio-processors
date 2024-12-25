@@ -21,6 +21,8 @@ const reserves = [
     "0x9634f9f7f8ea7236e2ad5bfbecdce9673c811a34cf8c3741edfbcaf5d9409100", // Reserve For stBTC
     "0x0b30fe8f42a4fda168c38d734e42a36a77b3d4dd6669069b1cbe53a0c3905ba8", // Reserve For Deep
     "0xf1737d6c6c1fffdf145c440a9fc676de0e6d0ffbacaab5fa002d30653f235a8e", // Reserve For FDUSD
+    "0xcc993cdfc8fcf421115bb4b2c2247abbfecff35bcab777bb368b4b829d39b073", // Reserve For BLUE
+    "0xe1182350b6756e664f824aa1448f5fc741ddc868168dbe09ed3a6e79b7bf249c", // Reserve For BUCK
 ]
 
 export function ProtocolProcessor() {

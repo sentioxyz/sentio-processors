@@ -1,7 +1,7 @@
 import { CoinMap } from "./interfaces.js";
 
 export const COIN = ["SUI", "wUSDC", "USDT", "WETH", "CETUS", "VoloSui",
-  "HASUI", "NAVX", "WBTC", "AUSD", "nUSDC", "nbETH", "USDY", "NS", "stBTC", "Deep", "FDUSD"];
+  "HASUI", "NAVX", "WBTC", "AUSD", "nUSDC", "nbETH", "USDY", "NS", "stBTC", "DEEP", "FDUSD", 'BLUE', 'BUCK'];
 
 export const DECIMAL_RAY = 27;
 export const DEFAULT_COIN_DECIMAL = 9;
