@@ -1,0 +1,105 @@
+{
+  "deepbook": {
+    "fileFormatVersion": 6,
+    "address": "0x88dfe5e893bc9fa984d121e4d0d5b2e873dc70ae430cf5b3228ae6cb199cb32b",
+    "name": "deepbook",
+    "friends": [],
+    "structs": {},
+    "exposedFunctions": {
+      "adjust_input_amount": {
+        "visibility": "Public",
+        "isEntry": false,
+        "typeParameters": [],
+        "parameters": [
+          "U64",
+          "U64"
+        ],
+        "return": [
+          "U64"
+        ]
+      }
+    }
+  },
+  "slippage": {
+    "fileFormatVersion": 6,
+    "address": "0x88dfe5e893bc9fa984d121e4d0d5b2e873dc70ae430cf5b3228ae6cb199cb32b",
+    "name": "slippage",
+    "friends": [],
+    "structs": {
+      "SwapEvent": {
+        "abilities": {
+          "abilities": [
+            "Copy",
+            "Drop"
+          ]
+        },
+        "typeParameters": [
+          {
+            "constraints": {
+              "abilities": []
+            },
+            "isPhantom": true
+          },
+          {
+            "constraints": {
+              "abilities": []
+            },
+            "isPhantom": true
+          }
+        ],
+        "fields": [
+          {
+            "name": "amount_in",
+            "type": "U64"
+          },
+          {
+            "name": "amount_out",
+            "type": "U64"
+          },
+          {
+            "name": "min_amount_out",
+            "type": "U64"
+          },
+          {
+            "name": "referral_code",
+            "type": "U64"
+          }
+        ]
+      }
+    },
+    "exposedFunctions": {
+      "check_slippage_v2": {
+        "visibility": "Public",
+        "isEntry": false,
+        "typeParameters": [
+          {
+            "abilities": []
+          },
+          {
+            "abilities": []
+          }
+        ],
+        "parameters": [
+          {
+            "Reference": {
+              "Struct": {
+                "address": "0x2",
+                "module": "coin",
+                "name": "Coin",
+                "typeArguments": [
+                  {
+                    "TypeParameter": 1
+                  }
+                ]
+              }
+            }
+          },
+          "U64",
+          "U64",
+          "U64"
+        ],
+        "return": []
+      }
+    }
+  }
+}
