@@ -1,5 +1,6 @@
 import { SuiContext, SuiNetwork, SuiObjectContext, SuiGlobalProcessor } from "@sentio/sdk/sui";
 import * as aggregator from "./types/sui/0x88dfe5e893bc9fa984d121e4d0d5b2e873dc70ae430cf5b3228ae6cb199cb32b.js"
+import { slippage } from "./types/sui/0x5b7d732adeb3140a2dbf2becd1e9dbe56cee0e3687379bcfe7df4357ea664313.js";
 import { SuiCoinList } from "@sentio/sdk/sui/ext";
 import { getPriceBySymbol, getPriceByType, token } from "@sentio/sdk/utils"
 
@@ -188,6 +189,35 @@ SuiGlobalProcessor.bind({
         { resourceChanges: true }
     )
 
+async function OnBehalfOfExSwapWithReferral(event: slippage.ExSwapWithReferralEventInstance, ctx: SuiContext) {
+    const sender = event.data_decoded.swap_initializer_address;
+    const receiver = event.data_decoded.receiver_address;
+    const fromCoinPrice = event.data_decoded.from_coin_price;
+    const fromCoinAmount = event.data_decoded.from_coin_amount;
+    const toCoinPrice = event.data_decoded.to_coin_price;
+    const toCoinAmount = event.data_decoded.to_coin_amount;
+    const rewardsAmount = event.data_decoded.reward_amount;
+    const rewardsRatio = event.data_decoded.rewards_ratio;
+    const referralId = event.data_decoded.referral_id;
+
+    ctx.eventLogger.emit("OnBehalfOfExSwapWithReferral", {
+        sender,
+        receiver,
+        fromCoinPrice,
+        fromCoinAmount,
+        toCoinPrice,
+        toCoinAmount,
+        rewardsAmount,
+        rewardsRatio,
+        referralId,
+        env: "mainnet",
+        type: "swapReferral"
+    })
+}
+
+
 aggregator.slippage.bind({ startCheckpoint: 67080155n })
     .onEventSwapEvent(swapEventHandler)
 
+slippage.bind({ startCheckpoint: 92365940n })
+  .onEventExSwapWithReferralEvent(OnBehalfOfExSwapWithReferral)

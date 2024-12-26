@@ -10,7 +10,6 @@ import { OracleProcessor } from "./oracle.js";
 import { AddressProcessor } from "./address.js";
 import { scaleDown } from "@sentio/sdk";
 import { lending as lending_new_liquidation_event, incentive_v2, flash_loan } from '../types/sui/0x834a86970ae93a73faf4fff16ae40bdb72b91c47be585fff19a2af60a19ddca3.js';
-import { slippage } from "../types/sui/0x5b7d732adeb3140a2dbf2becd1e9dbe56cee0e3687379bcfe7df4357ea664313.js";
 // import { PythOracleProcessor } from './pyth.js'
 // import {SupraSValueFeed} from '../types/sui/0xc7abe17a209fcab08e2d7d939cf3df11f5b80cf03d10b50893f38df12fdebb07.js'
 // import {getSupraPrice} from './supra.js'
@@ -232,31 +231,6 @@ async function repayOnBehalfOfHandler(event: lending.RepayOnBehalfOfEventInstanc
   })
 }
 
-async function OnBehalfOfExSwapWithReferral(event: slippage.ExSwapWithReferralEventInstance, ctx: SuiContext) {
-  const sender = event.data_decoded.swap_initializer_address;
-  const receiver = event.data_decoded.receiver_address;
-  const fromCoinPrice = event.data_decoded.from_coin_price;
-  const fromCoinAmount = event.data_decoded.from_coin_amount;
-  const toCoinPrice = event.data_decoded.to_coin_price;
-  const toCoinAmount = event.data_decoded.to_coin_amount;
-  const rewardsAmount = event.data_decoded.reward_amount;
-  const rewardsRatio = event.data_decoded.rewards_ratio;
-  const referralId = event.data_decoded.referral_id;
-
-  ctx.eventLogger.emit("OnBehalfOfExSwapWithReferral", {
-    sender,
-    receiver,
-    fromCoinPrice,
-    fromCoinAmount,
-    toCoinPrice,
-    toCoinAmount,
-    rewardsAmount,
-    rewardsRatio,
-    referralId,
-    env: "mainnet",
-    type: "swapReferral"
-  })
-}
 
 
 // async function supraEventHandler(event: SupraSValueFeed.SCCProcessedEventInstance, ctx: SuiContext) {
@@ -298,6 +272,3 @@ lending_new_liquidation_event.bind({ startCheckpoint: 7800000n })
 
 incentive_v2.bind({ startCheckpoint: 7800000n })
   .onEventRewardsClaimed(onRewardsClaimedEvent)
-
-slippage.bind({ startCheckpoint: 7800000n })
-  .onEventExSwapWithReferralEvent(OnBehalfOfExSwapWithReferral)
