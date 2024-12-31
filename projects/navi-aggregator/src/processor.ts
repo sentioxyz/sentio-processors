@@ -189,15 +189,35 @@ async function swapEventHandler(event: aggregator.slippage.SwapEventInstance, ct
 }
 
 async function OnBehalfOfExSwapWithReferral(event: slippage.ExSwapWithReferralEventInstance, ctx: SuiContext) {
+    const divisor = Math.pow(10, 9);
     const sender = event.data_decoded.swap_initializer_address;
     const receiver = event.data_decoded.receiver_address;
     const fromCoinPrice = event.data_decoded.from_coin_price;
-    const fromCoinAmount = event.data_decoded.from_coin_amount;
+    const fromCoinPriceNumber = Number(event.data_decoded.from_coin_price) / divisor;
+    const fromCoinAmount = event.data_decoded.from_coin_amount; 
+    const fromCoinAmountNumber = Number(event.data_decoded.from_coin_amount) / divisor; 
     const toCoinPrice = event.data_decoded.to_coin_price;
+    const toCoinPriceNumber = Number(event.data_decoded.to_coin_price) / divisor;
     const toCoinAmount = event.data_decoded.to_coin_amount;
-    const rewardsAmount = event.data_decoded.reward_amount;
+    const toCoinAmountNumber = Number(event.data_decoded.to_coin_amount)  / divisor;
+    const rewardsAmount = event.data_decoded.reward_amount ;
+    const rewardsAmountNumber =  Number(event.data_decoded.reward_amount) / divisor;
     const rewardsRatio = event.data_decoded.rewards_ratio;
     const referralId = event.data_decoded.referral_id;
+
+    let fromValueInUSD = fromCoinPriceNumber * fromCoinAmountNumber;
+    let toValueInUSD = toCoinPriceNumber * toCoinAmountNumber;
+
+    let usdGap = 0;
+
+    usdGap = Math.abs(fromValueInUSD - toValueInUSD) / Math.min(fromValueInUSD, toValueInUSD);
+    if (usdGap >= 0.5) {
+        if (fromValueInUSD > toValueInUSD) {
+            fromValueInUSD = toValueInUSD;
+        } else {
+            toValueInUSD = fromValueInUSD;
+        }
+    }
 
     ctx.eventLogger.emit("swapReferralEvent", {
         sender,
@@ -207,6 +227,13 @@ async function OnBehalfOfExSwapWithReferral(event: slippage.ExSwapWithReferralEv
         toCoinPrice,
         toCoinAmount,
         rewardsAmount,
+        fromCoinPriceNumber,
+        fromCoinAmountNumber,
+        fromValueInUSD,
+        toCoinPriceNumber,
+        toCoinAmountNumber,
+        toValueInUSD,
+        rewardsAmountNumber,
         rewardsRatio,
         referralId,
     });
