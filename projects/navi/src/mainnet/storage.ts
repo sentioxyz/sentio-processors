@@ -23,6 +23,7 @@ const reserves = [
     "0xf1737d6c6c1fffdf145c440a9fc676de0e6d0ffbacaab5fa002d30653f235a8e", // Reserve For FDUSD
     "0xcc993cdfc8fcf421115bb4b2c2247abbfecff35bcab777bb368b4b829d39b073", // Reserve For BLUE
     "0xe1182350b6756e664f824aa1448f5fc741ddc868168dbe09ed3a6e79b7bf249c", // Reserve For BUCK
+    "0x2abb6f2b007fef1e59133b027f53eca568f3af79e310e6f16d4b37bc09664a50", // Reserve For BUCK
 ]
 
 export function ProtocolProcessor() {
