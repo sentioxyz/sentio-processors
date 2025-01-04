@@ -9,15 +9,35 @@ import {
 } from './types/eth/l2standardbridge.js'
 import { L2OpUSDCBridgeAdapterProcessor } from './types/eth/l2opusdcbridgeadapter.js'
 import { token } from '@sentio/sdk/utils'
+import { User } from './schema/schema.js'
+import { LRUCache } from 'lru-cache'
 
-const network = EthChainId.SONEIUM_TESTNET
+const network = EthChainId.SONEIUM_MAINNET
 const startBlock = 0
 
+const userCache = new LRUCache<string, boolean>({
+  max: 1000000
+})
+
 GlobalProcessor.bind({ network, startBlock }).onTransaction(async (tx, ctx) => {
+  const user = tx.from
   ctx.eventLogger.emit('l2_tx', {
-    distinctId: tx.from,
+    distinctId: user,
+    to: tx.to,
     value: scaleDown(tx.value, 18)
   })
+
+  let existing = userCache.has(user)
+  if (!existing) {
+    userCache.set(user, true)
+    existing = !!(await ctx.store.get(User, user))
+    if (!existing) {
+      ctx.eventLogger.emit('new_user', {
+        distinctId: user
+      })
+      await ctx.store.upsert(new User({ id: user }))
+    }
+  }
 })
 
 const tokenMap = new Map<string, token.TokenInfo | undefined>()
