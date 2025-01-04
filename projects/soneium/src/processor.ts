@@ -9,15 +9,25 @@ import {
 } from './types/eth/l2standardbridge.js'
 import { L2OpUSDCBridgeAdapterProcessor } from './types/eth/l2opusdcbridgeadapter.js'
 import { token } from '@sentio/sdk/utils'
+import { User } from './schema/schema.js'
 
-const network = EthChainId.SONEIUM_TESTNET
+const network = EthChainId.SONEIUM_MAINNET
 const startBlock = 0
 
 GlobalProcessor.bind({ network, startBlock }).onTransaction(async (tx, ctx) => {
   ctx.eventLogger.emit('l2_tx', {
     distinctId: tx.from,
+    to: tx.to,
     value: scaleDown(tx.value, 18)
   })
+
+  const existing = await ctx.store.get(User, tx.from)
+  if (!existing) {
+    ctx.eventLogger.emit('new_user', {
+      distinctId: tx.from
+    })
+    await ctx.store.upsert(new User({ id: tx.from }))
+  }
 })
 
 const tokenMap = new Map<string, token.TokenInfo | undefined>()
