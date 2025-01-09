@@ -1,17 +1,12 @@
-// import { treasury } from "./types/sui/0x6951ee690a25857df1652cd7cd8d412913cca01ee03d87cfa1edb2db06acef24.js";
-import { SuiNetwork } from "@sentio/sdk/sui";
-import { treasury } from "./types/sui/testnet/0x325aef14e2ed83759a2969f9f9cbffca206430c2de658ec61a20866bb3f6fd51.js";
+import { treasury } from "./types/sui/0x6951ee690a25857df1652cd7cd8d412913cca01ee03d87cfa1edb2db06acef24.js";
+import './draw-ticket.js'
 
-
-treasury.bind({
-  network: SuiNetwork.TEST_NET,
-  startCheckpoint: 127311700n
-})
+treasury.bind({})
   .onEventMintEvent(async (event, ctx) => {
     const amount = event.data_decoded.amount
     const to = event.data_decoded.to
     ctx.eventLogger.emit("MintEvent", {
-      distinctId: to,
+      distinctId: event.sender,
       amount,
       to
     })
@@ -22,16 +17,16 @@ treasury.bind({
     const amount = event.data_decoded.amount
     const from = event.data_decoded.from
     ctx.eventLogger.emit("BurnEvent", {
-      distinctId: from,
+      distinctId:  event.sender,
       amount,
       from
     })
     ctx.meter.Gauge("BurnGauge").record(amount)
     ctx.meter.Counter("BurnCounter").add(amount)
   })
-  .onTransactionBlock(async (tx, ctx) => {
-    ctx.eventLogger.emit("ontxb", {
-      tx: tx.digest
-    })
-  })
+  // .onTransactionBlock(async (tx, ctx) => {
+  //   ctx.eventLogger.emit("ontxb", {
+  //     tx: tx.digest
+  //   })
+  // })
 
