@@ -19,26 +19,62 @@ const userCache = new LRUCache<string, boolean>({
   max: 1000000
 })
 
-GlobalProcessor.bind({ network, startBlock }).onTransaction(async (tx, ctx) => {
-  const user = tx.from
-  ctx.eventLogger.emit('l2_tx', {
-    distinctId: user,
-    to: tx.to,
-    value: scaleDown(tx.value, 18)
-  })
-
-  let existing = userCache.has(user)
-  if (!existing) {
-    userCache.set(user, true)
-    existing = !!(await ctx.store.get(User, user))
-    if (!existing) {
-      ctx.eventLogger.emit('new_user', {
-        distinctId: user
-      })
-      await ctx.store.upsert(new User({ id: user }))
-    }
-  }
+interface ContractInfo {
+  is_contract: boolean
+  name: string
+}
+const contractCache = new LRUCache<string, ContractInfo>({
+  max: 1000000
 })
+
+const blockscoutId = process.env.BLOCKSCOUT_ID
+
+async function getContractInfo(address: string) {
+  if (!blockscoutId) {
+    return
+  }
+  let info = contractCache.get(address)
+  if (!info) {
+    const res = await fetch(`https://${blockscoutId}.blockscout.com/api/v2/addresses/${address}`)
+    const data = await res.json()
+    info = {
+      is_contract: data.is_contract,
+      name: data.name
+    }
+    contractCache.set(address, info)
+  }
+  return info
+}
+
+GlobalProcessor.bind({ network, startBlock }).onTransaction(
+  async (tx, ctx) => {
+    const user = tx.from
+    const contractInfo = tx.to ? await getContractInfo(tx.to) : undefined
+    ctx.eventLogger.emit('l2_tx', {
+      ...contractInfo,
+      distinctId: user,
+      to: tx.to,
+      value: scaleDown(tx.value, 18),
+      gasCost: gasCost(ctx)
+    })
+
+    let existing = userCache.has(user)
+    if (!existing) {
+      userCache.set(user, true)
+      existing = !!(await ctx.store.get(User, user))
+      if (!existing) {
+        ctx.eventLogger.emit('new_user', {
+          distinctId: user
+        })
+        await ctx.store.upsert(new User({ id: user }))
+      }
+    }
+  },
+  {
+    transaction: true,
+    transactionReceipt: true
+  }
+)
 
 const tokenMap = new Map<string, token.TokenInfo | undefined>()
 
@@ -137,3 +173,11 @@ L2OpUSDCBridgeAdapterProcessor.bind({
       amount: scaleDown(amount, 6)
     })
   })
+
+function gasCost(ctx: EthContext) {
+  const gas =
+    BigInt(
+      ctx.transactionReceipt?.effectiveGasPrice || ctx.transactionReceipt?.gasPrice || ctx.transaction?.gasPrice || 0n
+    ) * BigInt(ctx.transactionReceipt?.gasUsed || 0)
+  return scaleDown(gas, 18)
+}
