@@ -8,6 +8,18 @@ let coinInfoMap = new Map<string, Promise<token.TokenInfo>>();
 
 let processedTxs = new Set<string>();
 
+const referralIdToUsernameMap: Record<string, string> = {
+    "1873161113": "NaviAG",
+    "2463850496": "Navi",
+    "9951543296": "naviTgBot",
+    "3258838016": "w6g2000",
+    "1000648704": "Binh",
+    "7289584128": "sudo",
+    "7723906048": "Jesus",
+    "4697169920": "Mayan",
+    "6541220672": "Wave",
+};
+
 export function delay(ms: number) {
     return new Promise((resolve) => setTimeout(resolve, ms));
 }
@@ -205,6 +217,9 @@ async function OnBehalfOfExSwapWithReferral(event: slippage.ExSwapWithReferralEv
     const rewardsRatio = event.data_decoded.rewards_ratio;
     const referralId = event.data_decoded.referral_id;
 
+    const referralIdStr = referralId.toString();
+    const referralName = referralIdToUsernameMap[referralIdStr] || "Unknown";
+
     let fromValueInUSD = fromCoinPriceNumber * fromCoinAmountNumber;
     let toValueInUSD = toCoinPriceNumber * toCoinAmountNumber;
 
@@ -236,6 +251,7 @@ async function OnBehalfOfExSwapWithReferral(event: slippage.ExSwapWithReferralEv
         rewardsAmountNumber,
         rewardsRatio,
         referralId,
+        referralName,
     });
 }
 
