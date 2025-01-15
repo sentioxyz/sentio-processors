@@ -1,22 +1,11 @@
-import { spot_dex } from './types/sui/0xa0eba10b173538c8fecca1dff298e488402cc9ff374f8a12ca7758eebe830b66.js';
-import { getOrCreatePool } from "./helper/dex-helper.js"
-import { SuiObjectProcessorTemplate } from "@sentio/sdk/sui"
+import { SuiObjectTypeProcessor } from "@sentio/sdk/sui"
 import * as helper from './helper/dex-helper.js'
 import { core } from './types/sui/0x5c45d10c26c5fb53bfaff819666da6bc7053d2190dfa29fec311cc666ff1f4b0.js'
 
-core.bind({})
-    .onEventPoolCreated(async (event, ctx) => {
-        const pool_id = event.data_decoded.id
-        template.bind(
-            {
-                objectId: pool_id
-            },
-            ctx
-        )
-    })
 
-const template = new SuiObjectProcessorTemplate()
-    .onTimeInterval(async (self, _, ctx) => {
+    SuiObjectTypeProcessor.bind({
+        objectType: core.Pool.type()
+      })    .onTimeInterval(async (self, _, ctx) => {
         if (!self) { return }
         try {
             const poolInfo = await helper.getOrCreatePool(ctx, ctx.objectId)
@@ -69,6 +58,6 @@ const template = new SuiObjectProcessorTemplate()
         catch (e) {
             console.log(`${e.message} error at ${JSON.stringify(self)}`)
         }
-    }, 1440, 1440, undefined, { owned: false })
+    }, 1440, 1440)
 
 

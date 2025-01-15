@@ -1,18 +1,11 @@
-import { factory } from "./types/sui/0x1eabed72c53feb3805120a081dc15963c204dc8d091542592abaf7a35689b2fb.js"
-import { pool_factory } from "./types/sui/turbos.js"
-import { SuiObjectProcessorTemplate } from "@sentio/sdk/sui"
+import { pool } from "./types/sui/0x1eabed72c53feb3805120a081dc15963c204dc8d091542592abaf7a35689b2fb.js"
+
 import * as helper from './helper/dex-helper.js'
+import { SuiObjectTypeProcessor } from "@sentio/sdk/sui"
 
-//cetus
-factory.bind({})
-    .onEventCreatePoolEvent(async (event, ctx) => {
-        const pool_id = event.data_decoded.pool_id
-        template.bind({
-            objectId: pool_id
-        }, ctx)
-    })
-
-const template = new SuiObjectProcessorTemplate()
+SuiObjectTypeProcessor.bind({
+    objectType: pool.Pool.type()
+  })
     .onTimeInterval(async (self, _, ctx) => {
         if (!self) { return }
         try {
@@ -71,6 +64,6 @@ const template = new SuiObjectProcessorTemplate()
         catch (e) {
             console.log(`${e.message} error at ${JSON.stringify(self)}`)
         }
-    }, 1440, 1440, undefined, { owned: false })
+    }, 1440, 1440)
 
 

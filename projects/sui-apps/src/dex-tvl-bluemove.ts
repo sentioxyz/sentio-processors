@@ -1,23 +1,10 @@
-import { factory } from './types/sui/0xba153169476e8c3114962261d1edc70de5ad9781b83cc617ecc8c1923191cae0.js';
-import { getFlowXPoolId, getOrCreatePool } from "./helper/dex-helper.js"
-import { SuiObjectProcessorTemplate } from "@sentio/sdk/sui"
+import { swap } from './types/sui/0xb24b6789e088b876afabca733bed2299fbc9e2d6369be4d1acfa17d8145454d9.js';
+import {  SuiObjectTypeProcessor } from "@sentio/sdk/sui"
 import * as helper from './helper/dex-helper.js'
 
-//flowx
-factory
-    .bind({}).
-    onEventPairCreated(async (event, ctx) => {
-        //@ts-ignore
-        const pool = await getFlowXPoolId(ctx, event.data_decoded.coin_x, event.data_decoded.coin_y)
-        template.bind(
-            {
-                objectId: pool
-            },
-            ctx
-        )
-    })
-
-const template = new SuiObjectProcessorTemplate()
+SuiObjectTypeProcessor.bind({
+    objectType: swap.Pool.type()
+  })
     .onTimeInterval(async (self, _, ctx) => {
         if (!self) { return }
         try {
@@ -31,7 +18,7 @@ const template = new SuiObjectProcessorTemplate()
             const tvl_a = await helper.calculateSingleTypeValueUSD(ctx, poolInfo.type_a, coin_a_balance)
             const tvl_b = await helper.calculateSingleTypeValueUSD(ctx, poolInfo.type_b, coin_b_balance)
             const tvl = tvl_a + tvl_b
-            const project = "flowx"
+            const project = "bluemove"
 
             ctx.eventLogger.emit("one_side_tvl_gauge", {
                 pool: poolInfo.pool,
@@ -70,6 +57,6 @@ const template = new SuiObjectProcessorTemplate()
         catch (e) {
             console.log(`${e.message} error at ${JSON.stringify(self)}`)
         }
-    }, 1440, 1440, undefined, { owned: false })
+    }, 1440, 1440)
 
 

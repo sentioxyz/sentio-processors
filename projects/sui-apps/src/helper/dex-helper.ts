@@ -1,7 +1,7 @@
 import { SuiContext, SuiObjectContext, SuiNetwork } from "@sentio/sdk/sui"
 import { getPriceBySymbol, getPriceByType, token } from "@sentio/sdk/utils"
 import * as constant from "./constant.js"
-import { SuiEvent } from "@mysten/sui.js/client"
+import { SuiEvent } from '@mysten/sui/client'
 import { WHITELISTED_TYPE_MAP } from "./constant.js";
 import { MoveFetchConfig, EventFilter } from "@sentio/sdk/move";
 

@@ -1,15 +1,10 @@
-import { SuiBaseProcessor, SuiContext, SuiGlobalProcessor, SuiNetwork } from "@sentio/sdk/sui"
-import { SuiEvent } from "@mysten/sui.js/client"
+import { SuiBaseProcessor, SuiContext } from "@sentio/sdk/sui"
 import * as constant from './helper/constant.js'
-import * as helper from './helper/dex-helper.js'
-import { getPriceBySymbol, getPriceByType } from "@sentio/sdk/utils"
-import { getOrCreateCoin } from "./helper/dex-helper.js";
-import { coin } from "@sentio/sdk/aptos/builtin/0x1"
-import { poolInfo, multiAssetPoolInfo } from "./helper/dex-helper.js"
 import { WHITELISTED_TYPE_MAP } from "./helper/constant.js";
 import { MoveFetchConfig, EventFilter } from "@sentio/sdk/move";
 import { recordClmmV3SwapEvent, recordAmmV2SwapEvent, recordClobSwapEvent, recordMultiAssetSwapEvent, recordClmmV3LiquidityEvent, recordAmmV2LiquidityEvent, recordClobLiquidityEvent, recordMultiAssetLiquidityEvent } from './helper/dex-helper.js'
 import { LRUCache } from 'lru-cache'
+import { SuiEvent } from '@mysten/sui/client'
 import './dex-tvl.js'
 
 class GeneralProcessor extends SuiBaseProcessor {
