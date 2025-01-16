@@ -18,9 +18,9 @@ export async function updatePoints(
   holdingPeriod: bigint,
   updatedAt: number
 ) {
-  //cal points with ratio
+  //cal points with ratio 
   const ratio = await getRatios(ctx)
-  const points = Number(impliedAmountHolding) * Number(ratio.eigenPointsPerStoneHour.toString()) * Number(holdingPeriod) / 60 
+  const points = Number(impliedAmountHolding) * Number(ratio.eigenPointsPerStoneHour.toString()) * Number(holdingPeriod) / 3600 
 
   //Market Expires all SY points go to treasury
   if (label == POINT_SOURCE_SY && ctx.timestamp.getTime() > PENDLE_POOL_ADDRESSES.MARKET_EXPIRY) {
