@@ -31,7 +31,7 @@ import { SuiContext, SuiObjectChangeContext, SuiObjectTypeProcessor } from "@sen
   //   })
   // })
 
-  
+
 
 import { ntx } from "./types/sui/0x6951ee690a25857df1652cd7cd8d412913cca01ee03d87cfa1edb2db06acef24.js";
 import { _0x2 } from "@sentio/sdk/sui/builtin";
@@ -43,28 +43,27 @@ SuiObjectTypeProcessor.bind({
   // _0x2.token.Token.type(ntx.NTX.type())
 })
 .onObjectChange(async(objectChanges, ctx)=>{
-  
-  objectChanges.forEach(async (objectChange, index) => {
-    if (objectChange.type=='published') 
+
+  for (const objectChange of objectChanges) {
+    if (objectChange.type=='published')
       return
-    if (objectChange.objectType!=_0x2.token.Token.TYPE_QNAME+'<'+ntx.NTX.TYPE_QNAME+'>') 
+    if (objectChange.objectType!=_0x2.token.Token.TYPE_QNAME+'<'+ntx.NTX.TYPE_QNAME+'>')
       return
 
 
     //handle the ntc obj change, only mutate and create op
-      const [owner, amount] =await getObjectOwnerAmount(ctx, objectChange.objectId, objectChange.version)
+    const [owner, amount] =await getObjectOwnerAmount(ctx, objectChange.objectId, objectChange.version)
 
-      
-      ctx.eventLogger.emit("NtxObjectChange", {
-        distinctId: owner,
-        sender: objectChange.sender,
-        objectId: objectChange.objectId,
-        amount,
-        version: objectChange.version
-      })
-    
-    
-  })
+
+    ctx.eventLogger.emit("NtxObjectChange", {
+      distinctId: owner,
+      sender: objectChange.sender,
+      objectId: objectChange.objectId,
+      amount,
+      version: objectChange.version
+    })
+
+  }
 })
 
 
