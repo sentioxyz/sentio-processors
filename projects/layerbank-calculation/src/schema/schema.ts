@@ -12,6 +12,18 @@ import { DatabaseSchema } from '@sentio/sdk'
 
 
 
+
+interface UserBalanceConstructorInput {
+  id: String;
+  account: String;
+  market: String;
+  lTokenBalance: BigInt;
+  borrowBalance: BigInt;
+  exchangeRate: BigInt;
+  timestamp: String;
+  txHash: String;
+  trigger: String;
+}
 @Entity("UserBalance")
 export class UserBalance extends AbstractEntity  {
 
@@ -50,7 +62,7 @@ export class UserBalance extends AbstractEntity  {
 	@Required
 	@Column("String")
 	trigger: String
-  constructor(data: Partial<UserBalance>) {super()}
+  constructor(data: UserBalanceConstructorInput) {super()}
 }
 
 

@@ -12,6 +12,17 @@ import { DatabaseSchema } from '@sentio/sdk'
 
 
 
+
+interface DeriveVaultUserSnapshotConstructorInput {
+  id: ID;
+  owner: String;
+  vaultName: String;
+  vaultAddress: String;
+  timestampMs: BigInt;
+  vaultBalance: BigDecimal;
+  underlyingEffectiveBalance: BigDecimal;
+  vaultToUnderlying: BigDecimal;
+}
 @Entity("DeriveVaultUserSnapshot")
 export class DeriveVaultUserSnapshot extends AbstractEntity  {
 
@@ -46,9 +57,17 @@ export class DeriveVaultUserSnapshot extends AbstractEntity  {
 	@Required
 	@Column("BigDecimal")
 	vaultToUnderlying: BigDecimal
-  constructor(data: Partial<DeriveVaultUserSnapshot>) {super()}
+  constructor(data: DeriveVaultUserSnapshotConstructorInput) {super()}
 }
 
+
+interface DeriveVaultTokenPriceConstructorInput {
+  id: ID;
+  vaultAddress: String;
+  vaultName: String;
+  timestampMs: BigInt;
+  vaultToUnderlying: BigDecimal;
+}
 @Entity("DeriveVaultTokenPrice")
 export class DeriveVaultTokenPrice extends AbstractEntity  {
 
@@ -71,7 +90,7 @@ export class DeriveVaultTokenPrice extends AbstractEntity  {
 	@Required
 	@Column("BigDecimal")
 	vaultToUnderlying: BigDecimal
-  constructor(data: Partial<DeriveVaultTokenPrice>) {super()}
+  constructor(data: DeriveVaultTokenPriceConstructorInput) {super()}
 }
 
 

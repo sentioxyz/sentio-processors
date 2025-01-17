@@ -1,7 +1,7 @@
 import { SuiNetwork, SuiWrappedObjectProcessor } from "@sentio/sdk/sui";
 import { typus_dov_single, tails_staking, tds_authorized_entry } from "./types/sui/typus_dov_single.js";
 import { tails_exp } from "./types/sui/exp_dice.js";
-import { normalizeSuiAddress } from "@mysten/sui.js/utils";
+import { normalizeSuiAddress } from "@mysten/sui/utils";
 
 const startCheckpoint = BigInt(15970051);
 

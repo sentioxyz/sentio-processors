@@ -12,6 +12,13 @@ import { DatabaseSchema } from '@sentio/sdk'
 
 
 
+
+interface AccountSnapshotConstructorInput {
+  id: ID;
+  network: String;
+  timestampMilli: BigInt;
+  stoneBalance: BigInt;
+}
 @Entity("AccountSnapshot")
 export class AccountSnapshot extends AbstractEntity  {
 
@@ -30,7 +37,7 @@ export class AccountSnapshot extends AbstractEntity  {
 	@Required
 	@Column("BigInt")
 	stoneBalance: BigInt
-  constructor(data: Partial<AccountSnapshot>) {super()}
+  constructor(data: AccountSnapshotConstructorInput) {super()}
 }
 
 

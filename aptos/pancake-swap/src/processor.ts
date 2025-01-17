@@ -1,7 +1,7 @@
 import { swap } from './types/aptos/pancake-swap.js'
 import { Gauge } from "@sentio/sdk";
 
-import { AptosDex, getCoinInfo, getPairValue }
+import { AptosDex, getTokenInfoWithFallback, getPairValue }
   from "@sentio/sdk/aptos/ext"
   // from "@sentio-processor/common/aptos"
 
@@ -85,8 +85,8 @@ swap.bind({startVersion: 10463608})
 
     // console.log(JSON.stringify(ctx.transaction))
     // console.log(JSON.stringify(evt))
-    const coinXInfo = await getCoinInfo(coinx)
-    const coinYInfo = await getCoinInfo(coiny)
+    const coinXInfo = await getTokenInfoWithFallback(coinx)
+    const coinYInfo = await getTokenInfoWithFallback(coiny)
     ctx.meter.Counter("event_swap_by_bridge").add(1, { bridge: coinXInfo.bridge })
     ctx.meter.Counter("event_swap_by_bridge").add(1, { bridge: coinYInfo.bridge })
 

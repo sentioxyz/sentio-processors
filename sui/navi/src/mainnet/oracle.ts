@@ -21,14 +21,14 @@ export function OracleProcessor() {
 
         decodedObjects.forEach((entry) => {
             const name = entry.name.toString()
-            const priceObject = entry.value
+            const priceObject = entry.value as any
             const value = priceObject.value
             const decimal = priceObject.decimal
             const result = value.asBigDecimal().div(Math.pow(10, Number(decimal)))
             const coin_symbol = COIN[Number(name)]
             if (!coin_symbol) {
                 coin_symbol == name
-            } 
+            }
             try {
                 ctx.meter.Gauge("oracle").record(result, { id: name, name, coin_symbol })
             } catch (e) {

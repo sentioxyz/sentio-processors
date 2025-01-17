@@ -12,6 +12,13 @@ import { DatabaseSchema } from '@sentio/sdk'
 
 
 
+
+interface PoolConstructorInput {
+  id: ID;
+  base: String;
+  quote: String;
+  poolIdx: BigInt;
+}
 @Entity("Pool")
 export class Pool extends AbstractEntity  {
 
@@ -30,9 +37,19 @@ export class Pool extends AbstractEntity  {
 	@Required
 	@Column("BigInt")
 	poolIdx: BigInt
-  constructor(data: Partial<Pool>) {super()}
+  constructor(data: PoolConstructorInput) {super()}
 }
 
+
+interface RangePositionSnapshotConstructorInput {
+  id: ID;
+  poolHash: String;
+  owner: String;
+  lowTick: BigInt;
+  highTick: BigInt;
+  amountStone: BigInt;
+  timestampMilli: BigInt;
+}
 @Entity("RangePositionSnapshot")
 export class RangePositionSnapshot extends AbstractEntity  {
 
@@ -63,9 +80,17 @@ export class RangePositionSnapshot extends AbstractEntity  {
 	@Required
 	@Column("BigInt")
 	timestampMilli: BigInt
-  constructor(data: Partial<RangePositionSnapshot>) {super()}
+  constructor(data: RangePositionSnapshotConstructorInput) {super()}
 }
 
+
+interface AmbientPositionSnapshotConstructorInput {
+  id: ID;
+  poolHash: String;
+  owner: String;
+  amountStone: BigInt;
+  timestampMilli: BigInt;
+}
 @Entity("AmbientPositionSnapshot")
 export class AmbientPositionSnapshot extends AbstractEntity  {
 
@@ -88,7 +113,7 @@ export class AmbientPositionSnapshot extends AbstractEntity  {
 	@Required
 	@Column("BigInt")
 	timestampMilli: BigInt
-  constructor(data: Partial<AmbientPositionSnapshot>) {super()}
+  constructor(data: AmbientPositionSnapshotConstructorInput) {super()}
 }
 
 
