@@ -12,13 +12,17 @@ import { DatabaseSchema } from '@sentio/sdk'
 
 
 
+
+interface UserConstructorInput {
+  id: String;
+}
 @Entity("User")
 export class User extends AbstractEntity  {
 
 	@Required
 	@Column("String")
 	id: String
-  constructor(data: Partial<User>) {super()}
+  constructor(data: UserConstructorInput) {super()}
 }
 
 
