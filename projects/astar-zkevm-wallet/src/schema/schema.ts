@@ -38,6 +38,7 @@ export class UserBalance extends AbstractEntity  {
 	@Column("BigInt")
 	balance: BigInt
   constructor(data: UserBalanceConstructorInput) {super()}
+  
 }
 
 

@@ -1,5 +1,5 @@
 import {swap} from "./types/aptos/pancake-swap.js";
-import {AptosDex, getCoinInfo, getPairValue} from "@sentio/sdk/aptos/ext"
+import {AptosDex, getTokenInfoWithFallback, getPairValue} from "@sentio/sdk/aptos/ext"
 
 import {
     pancakeTvl,
@@ -41,8 +41,8 @@ swap.bind()
                 "value": value.toNumber(),
             })
         }
-        const coinXInfo = await getCoinInfo(evt.type_arguments[0])
-        const coinYInfo = await getCoinInfo(evt.type_arguments[1])
+        const coinXInfo = await getTokenInfoWithFallback(evt.type_arguments[0])
+        const coinYInfo = await getTokenInfoWithFallback(evt.type_arguments[1])
         ctx.meter.Counter("event_swap_by_bridge").add(1, {bridge: coinXInfo.bridge})
         ctx.meter.Counter("event_swap_by_bridge").add(1, {bridge: coinYInfo.bridge})
     })

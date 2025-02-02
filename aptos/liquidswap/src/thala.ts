@@ -9,7 +9,7 @@ import {
     recordAccount,
 } from "./metrics.js";
 import { weighted_pool, stable_pool, base_pool } from "./types/aptos/thala.js";
-import {AptosDex, getCoinInfo, getPrice, getPairValue} from "@sentio/sdk/aptos/ext"
+import {AptosDex, getTokenInfoWithFallback, getPriceForToken, getPairValue} from "@sentio/sdk/aptos/ext"
 
 const START_VERSION = 110350957;
 const NULL_TYPE = `${stable_pool.DEFAULT_OPTIONS.address}::base_pool::Null`;
@@ -38,8 +38,8 @@ export async function onEventSwapEvent(
 ) {
   const timestamp = Number(ctx.transaction.timestamp);
 
-  const coinIn = getCoinInfo(coin_in);
-  const coinOut = getCoinInfo(coin_out);
+  const coinIn = await getTokenInfoWithFallback(coin_in);
+  const coinOut = await getTokenInfoWithFallback(coin_out);
 
   const swapAmountIn = amount_in.scaleDown(coinIn.decimals);
   const swapAmountOut = amount_out.scaleDown(coinOut.decimals);
@@ -54,7 +54,7 @@ export async function onEventSwapEvent(
 //   });
 
   // use coingecko price for volume and fee
-  const priceIn = await getPrice(coinIn.token_type.type, timestamp);
+  const priceIn = await getPriceForToken(coinIn.type, timestamp);
   const volumeUsd = swapAmountIn.multipliedBy(priceIn);
   const feeUsd = fee_amount.scaleDown(coinIn.decimals).multipliedBy(priceIn);
 
@@ -73,7 +73,7 @@ export async function onEventSwapEvent(
 
   ctx.eventLogger.emit("swap", swapAttributes)
 
-  thalaVolume.record(ctx, volumeUsd, { poolType, type, pairTag, pair: getPairTag2(coin_in, coin_out) });
+  thalaVolume.record(ctx, volumeUsd, { poolType, type, pairTag, pair: await getPairTag2(coin_in, coin_out) });
 }
 
 // get usd prices based on the first asset with known price (which is available via price API)
@@ -88,7 +88,7 @@ async function getActualCoinPrices(
   let knownPrice = 0;
 
   while (knownPriceIdx < coins.length) {
-    knownPrice = await getPrice(coins[knownPriceIdx], timestampMicros);
+    knownPrice = await getPriceForToken(coins[knownPriceIdx], timestampMicros);
     if (knownPrice) {
       break;
     }
@@ -117,9 +117,9 @@ function getPairTag(coin0: string, coin1: string): string {
     : coinTag1.concat("-").concat(coinTag0);
 }
 
-function getPairTag2(coin0: string, coin1: string): string {
-  const info1 = getCoinInfo(coin0)
-  const info2 = getCoinInfo(coin1)
+async function getPairTag2(coin0: string, coin1: string) {
+  const info1 = await getTokenInfoWithFallback(coin0)
+  const info2 = await  getTokenInfoWithFallback(coin1)
   return info1.symbol + "-" + info2.symbol
 }
 
@@ -284,20 +284,25 @@ AptosResourcesProcessor.bind({
 
         const coinTypes = pool.type_arguments.slice(0, numCoins);
         const coinPrices = await Promise.all(
-          coinTypes.map((coinType) => getPrice(coinType, ctx.timestampInMicros))
+          coinTypes.map((coinType) => getPriceForToken(coinType, ctx.timestampInMicros))
         );
-        const coinAmounts: BigDecimal[] = [...Array(numCoins).keys()].map((i) =>
-          // @ts-ignore
-          (pool.data_decoded[`asset_${i}`] as { value: bigint }).value.scaleDown(
-            getCoinInfo(coinTypes[i]).decimals
-          )
-        );
+        const coinAmounts: BigDecimal[] = await Promise.all([...Array(numCoins).keys()].map(async (i) => {
+              const decimals = await getTokenInfoWithFallback(coinTypes[i])
+              // @ts-ignore
+              return (pool.data_decoded[`asset_${i}`] as { value: bigint }).value.scaleDown(
+                  decimals.decimals
+              )
+            }
+        ))
+
+
         const tvl = coinAmounts.reduce(
           (acc, amount, i) => acc.plus(amount.times(coinPrices[i])),
           BigDecimal(0)
         );
 
-        thalaTvlByPool.record(ctx, tvl, { poolType: pool.type, pair: getPairTag2(coinTypes[0], coinTypes[1]) });
+        const pair = await getPairTag2(coinTypes[0], coinTypes[1])
+        thalaTvlByPool.record(ctx, tvl, { poolType: pool.type, pair  });
         thalaTvl.record(ctx, tvl, { poolType: pool.type });
       }
     },
@@ -321,14 +326,16 @@ AptosResourcesProcessor.bind({
 
         const coinTypes = pool.type_arguments.slice(0, numCoins);
         const coinPrices = await Promise.all(
-          coinTypes.map((coinType) => getPrice(coinType, ctx.timestampInMicros))
+          coinTypes.map((coinType) => getPriceForToken(coinType, ctx.timestampInMicros))
         );
-        const coinAmounts: BigDecimal[] = [...Array(numCoins).keys()].map((i) =>
-          // @ts-ignore
-          (pool.data_decoded[`asset_${i}`] as { value: bigint }).value.scaleDown(
-            getCoinInfo(coinTypes[i]).decimals
-          )
-        );
+        const coinAmounts: BigDecimal[] = await Promise.all([...Array(numCoins).keys()].map(async (i) => {
+              const decimals = await getTokenInfoWithFallback(coinTypes[i])
+              // @ts-ignore
+              return (pool.data_decoded[`asset_${i}`] as { value: bigint }).value.scaleDown(
+                  decimals.decimals
+              )
+            }
+        ))
         const tvl = coinAmounts.reduce(
           (acc, amount, i) => acc.plus(amount.times(coinPrices[i])),
           BigDecimal(0)

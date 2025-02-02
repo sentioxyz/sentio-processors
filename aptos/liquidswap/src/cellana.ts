@@ -1,5 +1,5 @@
 import { liquidity_pool } from './types/aptos/cellana.js'
-import { AptosDex, getCoinInfo, getPairValue } from '@sentio/sdk/aptos/ext'
+import { AptosDex, getTokenInfoWithFallback, getPairValue } from '@sentio/sdk/aptos/ext'
 
 import {
   cellanaTvl,
@@ -125,8 +125,8 @@ liquidity_pool.bind({ startVersion }).onEventSwapEvent(async (evt, ctx) => {
       value: value.toNumber(),
     })
   }
-  const coinXInfo = await getCoinInfo(coinX)
-  const coinYInfo = await getCoinInfo(coinY)
+  const coinXInfo = await getTokenInfoWithFallback(coinX)
+  const coinYInfo = await getTokenInfoWithFallback(coinY)
   ctx.meter.Counter('event_swap_by_bridge').add(1, { bridge: coinXInfo.bridge })
   ctx.meter.Counter('event_swap_by_bridge').add(1, { bridge: coinYInfo.bridge })
 
@@ -163,7 +163,7 @@ liquidity_pool.bind({ startVersion }).onEventSwapEvent(async (evt, ctx) => {
     cellanaTvl.record(ctx, tvlX, {
       coin: coinXInfo.symbol || coinX,
       bridge: coinXInfo.bridge,
-      type: coinXInfo.token_type.type,
+      type: coinXInfo.type,
     })
   }
   // }
@@ -173,7 +173,7 @@ liquidity_pool.bind({ startVersion }).onEventSwapEvent(async (evt, ctx) => {
     cellanaTvl.record(ctx, tvlY, {
       coin: coinYInfo.symbol || coinY,
       bridge: coinYInfo.bridge,
-      type: coinYInfo.token_type.type,
+      type: coinYInfo.type,
     })
   }
   // }

@@ -13,10 +13,7 @@ const resourceAddress_v05 = '0x61d2c22a6cb7831bee0f48363b0eec92369357aece0d11420
 
 import {
     AptosDex,
-    calculateValueInUsd,
-    getCoinInfo, getPairValue,
-    getPrice, whitelistCoins,
-    whiteListed
+    getPairValue, getPriceForToken, getTokenInfoWithFallback,
 } from "@sentio/sdk/aptos/ext"
 // } from "@sentio-processor/common/aptos"
 
@@ -33,7 +30,7 @@ import {
     tvlByPoolNew,
     volume, volumeByCoin,
 } from "./metrics.js"
-import { SimpleCoinInfo } from "@sentio/sdk/move/ext";
+// import { SimpleCoinInfo } from "@sentio/sdk/move/ext";
 
 // TODO to remove
 export const accountTracker = AccountEventTracker.register("users")
@@ -127,7 +124,7 @@ for (const env of [v0, v05]) {
             }
 
             if (value.isGreaterThan(0)) {
-                const pair = getPair(evt.type_arguments[0], evt.type_arguments[1])
+                const pair = await getPair(evt.type_arguments[0], evt.type_arguments[1])
                 ctx.eventLogger.emit('swap', {
                     distinctId: ctx.transaction.sender,
                     value: value,
@@ -137,8 +134,8 @@ for (const env of [v0, v05]) {
                     version: ver
                 })
             }
-            const coinXInfo = getCoinInfo(evt.type_arguments[0])
-            const coinYInfo = getCoinInfo(evt.type_arguments[1])
+            const coinXInfo = await getTokenInfoWithFallback(evt.type_arguments[0])
+            const coinYInfo = await getTokenInfoWithFallback(evt.type_arguments[1])
             // ctx.logger.info(`${ctx.transaction.sender} Swap ${coinXInfo.symbol} for ${coinYInfo.symbol}`, {user: ctx.transaction.sender, value: value.toNumber()})
 
             ctx.meter.Counter("event_swap_by_bridge").add(1, {bridge: coinXInfo.bridge, ver})
@@ -152,8 +149,8 @@ for (const env of [v0, v05]) {
         .onEventFlashloanEvent(async (evt, ctx) => {
             accountTracker.trackEvent(ctx, {distinctId: ctx.transaction.sender})
 
-            const coinXInfo = getCoinInfo(evt.type_arguments[0])
-            const coinYInfo = getCoinInfo(evt.type_arguments[1])
+            const coinXInfo = await getTokenInfoWithFallback(evt.type_arguments[0])
+            const coinYInfo = await getTokenInfoWithFallback(evt.type_arguments[1])
             ctx.meter.Counter("event_flashloan_by_bridge").add(1, {bridge: coinXInfo.bridge, ver})
             ctx.meter.Counter("event_flashloan_by_bridge").add(1, {bridge: coinYInfo.bridge, ver})
 
@@ -165,9 +162,9 @@ for (const env of [v0, v05]) {
         })
 
 // TODO pool name should consider not just use symbol name
-    function getPair(coinx: string, coiny: string): string {
-        const coinXInfo = getCoinInfo(coinx)
-        const coinYInfo = getCoinInfo(coiny)
+    async function getPair(coinx: string, coiny: string) {
+        const coinXInfo = await getTokenInfoWithFallback(coinx)
+        const coinYInfo = await getTokenInfoWithFallback(coiny)
         if (coinXInfo.symbol.localeCompare(coinYInfo.symbol) > 0) {
             return `${coinYInfo.symbol}-${coinXInfo.symbol}`
         }
@@ -191,23 +188,23 @@ for (const env of [v0, v05]) {
 
         console.log("liquidswap num of pools: ", pools.length, ctx.version.toString())
 
-        function debugCoin(coin: string) {
-            const coinInfo = getCoinInfo(coin)
-            if (!["WETH", "zWETH", "APT", "tAPT"].includes(coinInfo.symbol)) {
-                return
-            }
-            console.log("!!! debug", coinInfo.symbol, ", version:", ctx.version.toString())
-            for (const pool of pools) {
-                if (pool.type_arguments[0] == coin || pool.type_arguments[1] == coin) {
-                    const coinXInfo = getCoinInfo(pool.type_arguments[0])
-                    const coinYInfo = getCoinInfo(pool.type_arguments[1])
-                    console.log(`pool[${getPair(pool.type_arguments[0], pool.type_arguments[1])}] value: ${
-                        pool.data_decoded.coin_x_reserve.value.scaleDown(coinXInfo.decimals)}, ${
-                        pool.data_decoded.coin_y_reserve.value.scaleDown(coinYInfo.decimals)
-                    }`)
-                }
-            }
-        }
+        // function debugCoin(coin: string) {
+        //     const coinInfo = await getTokenInfoWithFallback(coin)
+        //     if (!["WETH", "zWETH", "APT", "tAPT"].includes(coinInfo.symbol)) {
+        //         return
+        //     }
+        //     console.log("!!! debug", coinInfo.symbol, ", version:", ctx.version.toString())
+        //     for (const pool of pools) {
+        //         if (pool.type_arguments[0] == coin || pool.type_arguments[1] == coin) {
+        //             const coinXInfo = await getTokenInfoWithFallback(pool.type_arguments[0])
+        //             const coinYInfo = await getTokenInfoWithFallback(pool.type_arguments[1])
+        //             console.log(`pool[${getPair(pool.type_arguments[0], pool.type_arguments[1])}] value: ${
+        //                 pool.data_decoded.coin_x_reserve.value.scaleDown(coinXInfo.decimals)}, ${
+        //                 pool.data_decoded.coin_y_reserve.value.scaleDown(coinYInfo.decimals)
+        //             }`)
+        //         }
+        //     }
+        // }
 
         const updated = new Set<string>()
         let tvlAllValue = BigDecimal(0)
@@ -215,10 +212,10 @@ for (const env of [v0, v05]) {
             // savePool(ctx.version, pool.type_arguments)
             const coinx = pool.type_arguments[0]
             const coiny = pool.type_arguments[1]
-            const whitelistx = whiteListed(coinx)
-            const whitelisty = whiteListed(coiny)
-            const coinXInfo = getCoinInfo(coinx)
-            const coinYInfo = getCoinInfo(coiny)
+            const whitelistx = liquidSwap.coinList.whiteListed(coinx)
+            const whitelisty = liquidSwap.coinList.whiteListed(coiny)
+            const coinXInfo = await getTokenInfoWithFallback(coinx)
+            const coinYInfo = await getTokenInfoWithFallback(coiny)
             let priceX = BigDecimal(0)
             let priceY = BigDecimal(0)
 //             if (whitelistx) {
@@ -255,7 +252,7 @@ for (const env of [v0, v05]) {
                 continue
             }
 
-            const pair = getPair(coinx, coiny)
+            const pair = await getPair(coinx, coiny)
             const curve = getCurve(pool.type_arguments[2])
 
             const coinx_amount = pool.data_decoded.coin_x_reserve.value
@@ -264,19 +261,19 @@ for (const env of [v0, v05]) {
             let poolValue = BigDecimal(0)
             let poolValueNew = BigDecimal(0)
             if (whitelistx) {
-                const value = await calculateValueInUsd(coinx_amount, coinXInfo, timestamp)
+                const value = await liquidSwap.coinList.calculateValueInUsd(coinx_amount, coinXInfo, timestamp)
                 poolValue = poolValue.plus(value)
                 const valueNew = coinx_amount.scaleDown(coinXInfo.decimals).multipliedBy(priceX)
                 poolValueNew = poolValueNew.plus(valueNew)
                 // tvlTotal.record(ctx, value, { pool: poolName, type: coinXInfo.token_type.type })
 
-                let coinXTotal = volumeByCoin.get(coinXInfo.token_type.type)
+                let coinXTotal = volumeByCoin.get(coinXInfo.type)
                 if (!coinXTotal) {
                     coinXTotal = value
                 } else {
                     coinXTotal = coinXTotal.plus(value)
                 }
-                volumeByCoin.set(coinXInfo.token_type.type, coinXTotal)
+                volumeByCoin.set(coinXInfo.type, coinXTotal)
 
                 if (!whitelisty) {
                     poolValue = poolValue.plus(value)
@@ -285,19 +282,19 @@ for (const env of [v0, v05]) {
                 }
             }
             if (whitelisty) {
-                const value = await calculateValueInUsd(coiny_amount, coinYInfo, timestamp)
+                const value = await liquidSwap.coinList.calculateValueInUsd(coiny_amount, coinYInfo, timestamp)
                 poolValue = poolValue.plus(value)
                 const valueNew = scaleDown(coiny_amount, coinYInfo.decimals).multipliedBy(priceY)
                 poolValueNew = poolValueNew.plus(valueNew)
                 // tvlTotal.record(ctx, value, { pool: poolName, type: coinYInfo.token_type.type })
 
-                let coinYTotal = volumeByCoin.get(coinYInfo.token_type.type)
+                let coinYTotal = volumeByCoin.get(coinYInfo.type)
                 if (!coinYTotal) {
                     coinYTotal = value
                 } else {
                     coinYTotal = coinYTotal.plus(value)
                 }
-                volumeByCoin.set(coinYInfo.token_type.type, coinYTotal)
+                volumeByCoin.set(coinYInfo.type, coinYTotal)
 
                 if (!whitelistx) {
                     poolValue = poolValue.plus(value)
@@ -309,8 +306,8 @@ for (const env of [v0, v05]) {
                 tvlByPoolNew.record(ctx, poolValueNew, {pair, curve, ver})
 
                 if (curve == "Uncorrelated") {
-                    const priceX = await getPrice(coinXInfo.token_type.type, timestamp)
-                    const priceY = await getPrice(coinYInfo.token_type.type, timestamp)
+                    const priceX = await getPriceForToken(coinXInfo.type, timestamp)
+                    const priceY = await getPriceForToken(coinYInfo.type, timestamp)
                     if (priceX != 0 && priceY != 0) {
                         const nX = scaleDown(coinx_amount, coinXInfo.decimals)
                         const nY = scaleDown(coiny_amount, coinYInfo.decimals)
@@ -348,14 +345,14 @@ for (const env of [v0, v05]) {
         tvlAll.record(ctx, tvlAllValue, {ver})
 
         for (const [k, v] of volumeByCoin) {
-            const coinInfo = whitelistCoins().get(k)
+            const coinInfo = liquidSwap.coinList.whitelistCoins().get(k)
             if (!coinInfo) {
                 throw Error("unexpected coin " + k)
             }
-            const price = await getPrice(coinInfo.token_type.type, timestamp)
+            const price = await getPriceForToken(coinInfo.type, timestamp)
             priceGauge.record(ctx, price, {coin: coinInfo.symbol, ver})
             if (v.isGreaterThan(0)) {
-                tvl.record(ctx, v, {coin: coinInfo.symbol, bridge: coinInfo.bridge, type: coinInfo.token_type.type, ver})
+                tvl.record(ctx, v, {coin: coinInfo.symbol, bridge: coinInfo.bridge, type: coinInfo.type, ver})
             }
         }
     }
@@ -363,9 +360,9 @@ for (const env of [v0, v05]) {
     const minLocked = 1e4
     let priceInUsd: Map<string, BigDecimal> = new Map<string, BigDecimal>()
 
-    function calcPrice(coin: string, pools: TypedMoveResource<PoolType<any, any, any>>[]) {
+    async function calcPrice(coin: string, pools: TypedMoveResource<PoolType<any, any, any>>[]) {
 
-        const coinInfo = getCoinInfo(coin)
+        const coinInfo = await getTokenInfoWithFallback(coin)
         if (coinInfo.symbol == "USDC") {
             return BigDecimal(1)
         }
@@ -380,7 +377,7 @@ for (const env of [v0, v05]) {
 
             if (pool.type_arguments[0] == coin) {
                 const coinAmount = scaleDown(pool.data_decoded.coin_x_reserve.value, coinInfo.decimals)
-                const pairedCoinInfo = getCoinInfo(pool.type_arguments[1])
+                const pairedCoinInfo = await getTokenInfoWithFallback(pool.type_arguments[1])
                 const pairedCoinPriceInUsd = priceInUsd.get(pool.type_arguments[1])
                 const pairedCoinAmount = scaleDown(pool.data_decoded.coin_y_reserve.value, pairedCoinInfo.decimals)
                 if (!pairedCoinPriceInUsd) {
@@ -390,13 +387,13 @@ for (const env of [v0, v05]) {
                 const locked = pairedCoinAmount.multipliedBy(pairedCoinPriceInUsd)
                 if (locked.gt(maxLocked) && locked.gt(minLocked)) {
                     maxLocked = locked
-                    maxFrom = getPair(pool.type_arguments[0], pool.type_arguments[1])
+                    maxFrom = await getPair(pool.type_arguments[0], pool.type_arguments[1])
                     res = pairedCoinAmount.multipliedBy(pairedCoinPriceInUsd).div(coinAmount)
                 }
 
             } else if (pool.type_arguments[1] == coin) {
                 const coinAmount = scaleDown(pool.data_decoded.coin_y_reserve.value, coinInfo.decimals)
-                const pairedCoinInfo = getCoinInfo(pool.type_arguments[0])
+                const pairedCoinInfo = await getTokenInfoWithFallback(pool.type_arguments[0])
                 const pairedCoinPriceInUsd = priceInUsd.get(pool.type_arguments[0])
                 const pairedCoinAmount = scaleDown(pool.data_decoded.coin_x_reserve.value, pairedCoinInfo.decimals)
                 if (!pairedCoinPriceInUsd) {
@@ -406,7 +403,7 @@ for (const env of [v0, v05]) {
                 const locked = pairedCoinAmount.multipliedBy(pairedCoinPriceInUsd)
                 if (locked.gt(maxLocked) && locked.gt(minLocked)) {
                     maxLocked = locked
-                    maxFrom = getPair(pool.type_arguments[0], pool.type_arguments[1])
+                    maxFrom = await getPair(pool.type_arguments[0], pool.type_arguments[1])
                     res = pairedCoinAmount.multipliedBy(pairedCoinPriceInUsd).div(coinAmount)
                 }
             }

@@ -1,7 +1,8 @@
 import { swap } from './types/aptos/pancake-swap.js'
 import { Gauge } from "@sentio/sdk";
+import { GLOBAL_CONFIG } from "@sentio/runtime";
 
-import { AptosDex, getTokenInfoWithFallback, getPairValue }
+import { AptosDex, getTokenInfoWithFallback, getPairValue, TokenInfo }
   from "@sentio/sdk/aptos/ext"
   // from "@sentio-processor/common/aptos"
 
