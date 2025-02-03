@@ -13,6 +13,7 @@ import { User } from './schema/schema.js'
 import { LRUCache } from 'lru-cache'
 import { network, startBlock, getTokenInfo } from './utils.js'
 import './ccip.js'
+import { handleACS } from './acs.js'
 
 const bridges = new Map([
   ['0x1f49a3fa2b5B5b61df8dE486aBb6F3b9df066d86'.toLowerCase(), 'Owlto Finance'],
@@ -51,12 +52,13 @@ GlobalProcessor.bind({ network, startBlock }).onTransaction(
   async (tx, ctx) => {
     const user = tx.from
     const contractInfo = tx.to ? await getContractInfo(tx.to) : undefined
+    const gasCost = getGasCost(ctx)
     ctx.eventLogger.emit('l2_tx', {
       ...contractInfo,
       distinctId: user,
       to: tx.to,
       value: scaleDown(tx.value, 18),
-      gasCost: gasCost(ctx)
+      gasCost
     })
 
     let existing = userCache.has(user)
@@ -90,6 +92,8 @@ GlobalProcessor.bind({ network, startBlock }).onTransaction(
         amount: scaleDown(tx.value, 18)
       })
     }
+
+    handleACS({ from: tx.from, to: tx.to, gasCost }, ctx)
   },
   {
     transaction: true,
@@ -187,7 +191,7 @@ L2OpUSDCBridgeAdapterProcessor.bind({
     })
   })
 
-function gasCost(ctx: EthContext) {
+function getGasCost(ctx: EthContext) {
   const gas =
     BigInt(
       ctx.transactionReceipt?.effectiveGasPrice || ctx.transactionReceipt?.gasPrice || ctx.transaction?.gasPrice || 0n
