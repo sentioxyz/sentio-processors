@@ -13,7 +13,10 @@ export const MISC_CONSTS = {
 };
 
 export const DAILY_POINTS = 1
-export const MULTIPLIER = 5 //hold wstUSR
+export const TIMESTAMP_EOD_4TH_JAN =  1736035199
+export const TIMESTAMP_EOD_31TH_JAN =  1738367999
+
+export const WSTUSR_ADDRESS = "0x1202f5c7b4b9e47a1a484e8b270be34dbbc75055"
 
 export const PENDLE_POOL_ADDRESSES = {
   // retrieved from Pendle pool contract readTokens()

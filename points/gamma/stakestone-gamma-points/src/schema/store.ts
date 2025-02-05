@@ -12,6 +12,15 @@ import { DatabaseSchema } from '@sentio/sdk'
 
 
 
+
+interface AccountSnapshotConstructorInput {
+  id: ID;
+  network: String;
+  vault: String;
+  account: String;
+  timestampMilli: BigInt;
+  balance: BigInt;
+}
 @Entity("AccountSnapshot")
 export class AccountSnapshot extends AbstractEntity  {
 
@@ -38,9 +47,18 @@ export class AccountSnapshot extends AbstractEntity  {
 	@Required
 	@Column("BigInt")
 	balance: BigInt
-  constructor(data: Partial<AccountSnapshot>) {super()}
+  constructor(data: AccountSnapshotConstructorInput) {super()}
 }
 
+
+interface BeefyAccountSnapshotConstructorInput {
+  id: ID;
+  network: String;
+  vault: String;
+  account: String;
+  timestampMilli: BigInt;
+  balance: BigInt;
+}
 @Entity("BeefyAccountSnapshot")
 export class BeefyAccountSnapshot extends AbstractEntity  {
 
@@ -67,7 +85,7 @@ export class BeefyAccountSnapshot extends AbstractEntity  {
 	@Required
 	@Column("BigInt")
 	balance: BigInt
-  constructor(data: Partial<BeefyAccountSnapshot>) {super()}
+  constructor(data: BeefyAccountSnapshotConstructorInput) {super()}
 }
 
 

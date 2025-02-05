@@ -1,0 +1,6 @@
+import './dex-tvl-cetus.js'
+import './dex-tvl-turbos.js'
+import './dex-tvl-bluemove.js'
+import './dex-tvl-kriya.js'
+import './dex-tvl-ipx.js'
+import './dex-tvl-aftermath.js'

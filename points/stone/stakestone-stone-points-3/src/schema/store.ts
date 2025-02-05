@@ -12,6 +12,13 @@ import { DatabaseSchema } from '@sentio/sdk'
 
 
 
+
+interface AccountSnapshotConstructorInput {
+  id: ID;
+  network: String;
+  timestampMilli: BigInt;
+  stoneBalance: BigInt;
+}
 @Entity("AccountSnapshot")
 export class AccountSnapshot extends AbstractEntity  {
 
@@ -30,9 +37,20 @@ export class AccountSnapshot extends AbstractEntity  {
 	@Required
 	@Column("BigInt")
 	stoneBalance: BigInt
-  constructor(data: Partial<AccountSnapshot>) {super()}
+  constructor(data: AccountSnapshotConstructorInput) {super()}
 }
 
+
+interface TempEventConstructorInput {
+  id: ID;
+  network: String;
+  eventName: String;
+  args: String;
+  blockNumber: Int;
+  txIdx: Int;
+  eventIdx: Int;
+  timestampMilli: BigInt;
+}
 @Entity("TempEvent")
 export class TempEvent extends AbstractEntity  {
 
@@ -67,7 +85,7 @@ export class TempEvent extends AbstractEntity  {
 	@Required
 	@Column("BigInt")
 	timestampMilli: BigInt
-  constructor(data: Partial<TempEvent>) {super()}
+  constructor(data: TempEventConstructorInput) {super()}
 }
 
 

@@ -12,6 +12,13 @@ import { DatabaseSchema } from '@sentio/sdk'
 
 
 
+
+interface UserBalanceConstructorInput {
+  id: String;
+  wallet: String;
+  symbol: String;
+  balance: BigInt;
+}
 @Entity("UserBalance")
 export class UserBalance extends AbstractEntity  {
 
@@ -30,7 +37,8 @@ export class UserBalance extends AbstractEntity  {
 	@Required
 	@Column("BigInt")
 	balance: BigInt
-  constructor(data: Partial<UserBalance>) {super()}
+  constructor(data: UserBalanceConstructorInput) {super()}
+  
 }
 
 

@@ -12,6 +12,16 @@ import { DatabaseSchema } from '@sentio/sdk'
 
 
 
+
+interface AccountSnapshotConstructorInput {
+  id: ID;
+  network: String;
+  balance: BigInt;
+  borrowBalance: BigInt;
+  netBalance: BigInt;
+  exchangeRateRaw: BigInt;
+  timestampMilli: BigInt;
+}
 @Entity("AccountSnapshot")
 export class AccountSnapshot extends AbstractEntity  {
 
@@ -42,9 +52,17 @@ export class AccountSnapshot extends AbstractEntity  {
 	@Required
 	@Column("BigInt")
 	timestampMilli: BigInt
-  constructor(data: Partial<AccountSnapshot>) {super()}
+  constructor(data: AccountSnapshotConstructorInput) {super()}
 }
 
+
+interface GlobalStateConstructorInput {
+  id: ID;
+  network: String;
+  totalSupply: BigInt;
+  totalBorrow: BigInt;
+  totalPositiveNetBalance: BigInt;
+}
 @Entity("GlobalState")
 export class GlobalState extends AbstractEntity  {
 
@@ -67,7 +85,7 @@ export class GlobalState extends AbstractEntity  {
 	@Required
 	@Column("BigInt")
 	totalPositiveNetBalance: BigInt
-  constructor(data: Partial<GlobalState>) {super()}
+  constructor(data: GlobalStateConstructorInput) {super()}
 }
 
 

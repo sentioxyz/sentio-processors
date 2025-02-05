@@ -12,6 +12,17 @@ import { DatabaseSchema } from '@sentio/sdk'
 
 
 
+
+interface PositionSnapshotConstructorInput {
+  id: String;
+  owner: String;
+  tickLower: BigInt;
+  tickUpper: BigInt;
+  timestampMilli: BigInt;
+  inceptionETHBalance: BigDecimal;
+  wETHBalance: BigDecimal;
+  poolAddress: String;
+}
 @Entity("PositionSnapshot")
 export class PositionSnapshot extends AbstractEntity  {
 
@@ -46,7 +57,7 @@ export class PositionSnapshot extends AbstractEntity  {
 	@Required
 	@Column("String")
 	poolAddress: String
-  constructor(data: Partial<PositionSnapshot>) {super()}
+  constructor(data: PositionSnapshotConstructorInput) {super()}
 }
 
 
