@@ -3,7 +3,7 @@ import { CoinMap } from "./interfaces.js";
 export const COIN = [
   "SUI",
   "wUSDC",
-  "USDT",
+  "wUSDT",
   "WETH",
   "CETUS",
   "VoloSui",
@@ -21,7 +21,7 @@ export const COIN = [
   "BLUE",
   "BUCK",
   "nUSDT",
-  "suiUSDT",
+  "stSUI",
   "suiBTC",
 ];
 
@@ -84,7 +84,7 @@ export const SYMBOL_MAP: Record<number, string> = {
   17: "BLUE",
   18: "BUCK",
   19: "nUSDT",
-  20: "suiUSDT",
+  20: "stSUI",
   21: "suiBTC",
 };
 
