@@ -13,6 +13,7 @@ import { User } from './schema/schema.js'
 import { LRUCache } from 'lru-cache'
 import { network, startBlock, getTokenInfo } from './utils.js'
 import './ccip.js'
+import './stargate.js'
 import { handleACS } from './acs.js'
 
 const bridges = new Map([

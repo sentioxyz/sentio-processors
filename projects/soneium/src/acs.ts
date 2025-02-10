@@ -95,7 +95,17 @@ const projects = Object.entries({
     '0x6b2249389dC3Db6B27833279F594910caa6465e7',
     '0xE9C1024746C71C6F12d19eCC85FEe139d823AD54'
   ],
-  'Posse Studios': ['0xFF4C94b6D2A89F5CA5FC46A49BE40A42f7352D18']
+  'Posse Studios': ['0xFF4C94b6D2A89F5CA5FC46A49BE40A42f7352D18'],
+  'Untitled Bank': [
+    // UntitledHub
+    '0x2469362f63e9f593087EBbb5AC395CA607B5842F',
+    // UB-USDC Bank
+    '0xc675BB95D73CA7db2C09c3dC04dAaA7944CCBA41',
+    // UB-ASTR Bank
+    '0x85A4fB48C7f9383083864D62aBECCDf318fd8E6F',
+    // UB-WETH Bank
+    '0x232554B4B291A446B4829300bec133FBB07A8f2A'
+  ]
 })
 
 const isAddressEqual = (addr1: string | null, addr2: string | null) => addr1?.toLowerCase() == addr2?.toLowerCase()
@@ -105,6 +115,7 @@ export function handleACS(tx: { from: string; to: string | null; gasCost: BigDec
     for (const address of addresses) {
       if (isAddressEqual(tx.from, address) || isAddressEqual(tx.to, address)) {
         ctx.eventLogger.emit('acs_tx', {
+          distinctId: tx.from,
           ...tx,
           project
         })

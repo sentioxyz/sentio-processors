@@ -23,6 +23,7 @@ export class User extends AbstractEntity  {
 	@Column("String")
 	id: String
   constructor(data: UserConstructorInput) {super()}
+  
 }
 
 
