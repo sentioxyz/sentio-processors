@@ -11,6 +11,12 @@ import {
   incentive_v2,
   flash_loan,
 } from "../types/sui/0x834a86970ae93a73faf4fff16ae40bdb72b91c47be585fff19a2af60a19ddca3.js";
+import {
+  lending as lending_new_liquidation_event_v3,
+  incentive_v3,
+  flash_loan as flash_loan_v3,
+} from "../types/sui/0x81c408448d0d57b3e371ea94de1d40bf852784d3e225de1e74acab3e8395c18f.js";
+
 import { DECIMAL_MAP, SYMBOL_MAP } from "./utils.js";
 // import { PythOracleProcessor } from './pyth.js'
 // import {SupraSValueFeed} from '../types/sui/0xc7abe17a209fcab08e2d7d939cf3df11f5b80cf03d10b50893f38df12fdebb07.js'
@@ -54,7 +60,11 @@ export type LendingEvent =
   | lending.BorrowEventInstance
   | lending.DepositEventInstance
   | lending.WithdrawEventInstance
-  | lending.RepayEventInstance;
+  | lending.RepayEventInstance
+  | lending_new_liquidation_event_v3.BorrowEventInstance
+  | lending_new_liquidation_event_v3.DepositEventInstance
+  | lending_new_liquidation_event_v3.WithdrawEventInstance
+  | lending_new_liquidation_event_v3.RepayEventInstance;
 
 PoolProcessor();
 ProtocolProcessor();
@@ -296,22 +306,110 @@ async function repayOnBehalfOfHandler(
   });
 }
 
-// async function supraEventHandler(event: SupraSValueFeed.SCCProcessedEventInstance, ctx: SuiContext) {
-//   const hash = event.data_decoded.hash
+async function onLiquidationNewEventV3(
+  event: lending_new_liquidation_event_v3.LiquidationEventInstance,
+  ctx: SuiContext
+) {
+  const sender = event.data_decoded.sender;
+  const user = event.data_decoded.user;
+  const collateral_asset = event.data_decoded.collateral_asset;
+  const collateral_decimal = DECIMAL_MAP[collateral_asset];
+  const collateral_symbol = SYMBOL_MAP[collateral_asset];
+  const collateral_price = event.data_decoded.collateral_price;
+  const collateral_amount = event.data_decoded.collateral_amount;
+  const treasury = event.data_decoded.treasury;
+  const debt_asset = event.data_decoded.debt_asset;
+  const debt_decimal = DECIMAL_MAP[debt_asset];
+  const debt_symbol = SYMBOL_MAP[debt_asset];
+  const debt_price = event.data_decoded.debt_price;
+  const debt_amount = event.data_decoded.debt_amount;
+  const typeArray = event.type.split("::");
+  const type = typeArray[typeArray.length - 1];
 
-//   getSupraPrice().then((data) => {
-//     for (let i = 0; i < 8; i++) {
-//       ctx.eventLogger.emit("supraPriceEvent", {
-//         asset_id: data[i].asset_id,
-//         asset_name: data[i].asset_name,
-//         price: data[i].price,
-//         timestamp: data[i].timestamp,
-//         hash: hash,
-//       });
-//     }
-//   })
+  ctx.eventLogger.emit("Liquidation", {
+    liquidation_sender: sender,
+    user: user,
+    collateral_asset,
+    collateral_decimal,
+    collateral_decimal_ray: Math.pow(10, collateral_decimal),
+    collateral_symbol,
+    collateral_price,
+    collateral_price_normalized: scaleDown(
+      collateral_price,
+      collateral_decimal
+    ),
+    collateral_amount,
+    collateral_amount_normalized: scaleDown(
+      collateral_amount,
+      collateral_decimal
+    ),
+    treasury,
+    debt_asset,
+    debt_decimal,
+    debt_decimal_ray: Math.pow(10, debt_decimal),
+    debt_symbol,
+    debt_price,
+    debt_price_normalized: scaleDown(debt_price, debt_decimal),
+    debt_amount,
+    debt_amount_normalized: scaleDown(debt_amount, debt_decimal),
+    type,
+    env: "mainnet",
+  });
+}
 
-// }
+async function depositOnBehalfOfHandlerV3(
+  event: lending_new_liquidation_event_v3.DepositOnBehalfOfEventInstance,
+  ctx: SuiContext
+) {
+  const sender = event.data_decoded.sender;
+  const user = event.data_decoded.user;
+  const amount = event.data_decoded.amount;
+  const reserve = event.data_decoded.reserve;
+
+  ctx.eventLogger.emit("OnBehalfOfInteraction", {
+    sender,
+    user,
+    reserve,
+    amount,
+    env: "mainnet",
+    type: "deposit",
+  });
+}
+
+async function repayOnBehalfOfHandlerV3(
+  event: lending_new_liquidation_event_v3.RepayOnBehalfOfEventInstance,
+  ctx: SuiContext
+) {
+  const sender = event.data_decoded.sender;
+  const user = event.data_decoded.user;
+  const amount = event.data_decoded.amount;
+  const reserve = event.data_decoded.reserve;
+
+  ctx.eventLogger.emit("OnBehalfOfInteraction", {
+    sender,
+    user,
+    reserve,
+    amount,
+    env: "mainnet",
+    type: "repay",
+  });
+}
+
+async function onRewardsClaimedEventV3(
+  event: incentive_v3.RewardClaimedInstance,
+  ctx: SuiContext
+) {
+  ctx.eventLogger.emit("RewardsClaimedV3", {
+    sender: event.data_decoded.user,
+    amount: event.data_decoded.total_claimed,
+    coinType: event.data_decoded.coin_type,
+    ruleIDs: event.data_decoded.rule_ids,
+    ruleIndices: event.data_decoded.rule_indices.map((index) =>
+      index.toString()
+    ),
+    env: "mainnet",
+  });
+}
 
 flash_loan
   .bind({ startCheckpoint: 7800000n })
@@ -338,3 +436,13 @@ lending_new_liquidation_event
 incentive_v2
   .bind({ startCheckpoint: 7800000n })
   .onEventRewardsClaimed(onRewardsClaimedEvent);
+
+lending_new_liquidation_event_v3
+  .bind({ startCheckpoint: 113837268n })
+  .onEventLiquidationEvent(onLiquidationNewEventV3)
+  .onEventDepositOnBehalfOfEvent(depositOnBehalfOfHandlerV3)
+  .onEventRepayOnBehalfOfEvent(repayOnBehalfOfHandlerV3);
+
+incentive_v3
+  .bind({ startCheckpoint: 113837268n })
+  .onEventRewardClaimed(onRewardsClaimedEventV3);
