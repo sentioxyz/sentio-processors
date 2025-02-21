@@ -38,13 +38,15 @@ const contractCache = new LRUCache<string, ContractInfo>({
 async function getContractInfo(address: string) {
   let info = contractCache.get(address)
   if (!info) {
-    const res = await fetch(`https://soneium.blockscout.com/api/v2/addresses/${address}`)
-    const data = await res.json()
-    info = {
-      is_contract: data.is_contract,
-      name: data.name
-    }
-    contractCache.set(address, info)
+    try {
+      const res = await fetch(`https://soneium.blockscout.com/api/v2/addresses/${address}`)
+      const data = await res.json()
+      info = {
+        is_contract: data.is_contract,
+        name: data.name
+      }
+      contractCache.set(address, info)
+    } catch (e) {}
   }
   return info
 }
