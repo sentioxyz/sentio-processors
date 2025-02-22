@@ -16,6 +16,7 @@ import {
   incentive_v3,
   flash_loan as flash_loan_v3,
 } from "../types/sui/0x81c408448d0d57b3e371ea94de1d40bf852784d3e225de1e74acab3e8395c18f.js";
+import { FlashLoanCoins } from "./utils.js";
 
 import { DECIMAL_MAP, SYMBOL_MAP } from "./utils.js";
 // import { PythOracleProcessor } from './pyth.js'
@@ -218,23 +219,14 @@ async function flashLoanHandler(
   const sender = event.data_decoded.sender;
   const amount = event.data_decoded.amount;
   const asset: string = event.data_decoded.asset as string;
-
-  const FlashLoanCoins: Record<string, string> = {
-    "0xb29922cca8fecabe2957833260e5a95fce343e5c299a2126414ae557fdac51a3":
-      "USDC",
-    "0xc6a2ed14c23907cba22b56fa84f7347aa36a0bb8feab47057f170860c55e7dbe":
-      "vSui",
-    "0x168728630433e1b2494e037b2d38801461260295e9ca38efed4157e1a9cc6b91": "Sui",
-    "0xff307af2ebe087ca693a136a7cb6e767564c1498224b4fbb608df765743743ff":
-      "USDT",
-  };
-
-  const coinType = FlashLoanCoins[asset] || "unknown";
+  const coinAddress = event.type_arguments[0] as string;
+  const coinSymbol = FlashLoanCoins[asset] || "unknown";
   ctx.eventLogger.emit("flashloan", {
     sender: sender,
     amount: amount,
     asset: asset,
-    coinType: coinType,
+    coinAddress: coinAddress,
+    coinType: coinSymbol,
     env: "mainnet",
   });
 }
@@ -246,21 +238,12 @@ async function flashoanRepayHandler(
   const sender = event.data_decoded.sender;
   const amount = event.data_decoded.amount;
   const asset = String(event.data_decoded.asset);
-
-  const FlashLoanCoins: Record<string, string> = {
-    "0xb29922cca8fecabe2957833260e5a95fce343e5c299a2126414ae557fdac51a3":
-      "USDC",
-    "0xc6a2ed14c23907cba22b56fa84f7347aa36a0bb8feab47057f170860c55e7dbe":
-      "vSui",
-    "0x168728630433e1b2494e037b2d38801461260295e9ca38efed4157e1a9cc6b91": "Sui",
-    "0xff307af2ebe087ca693a136a7cb6e767564c1498224b4fbb608df765743743ff":
-      "USDT",
-  };
-
+  const coinAddress = event.type_arguments[0] as string;
   const coinType = FlashLoanCoins[asset] || "unknown";
   ctx.eventLogger.emit("flashloanRepay", {
     sender: sender,
     coinType: coinType,
+    coinAddress: coinAddress,
     amount: amount,
     fee_to_supplier: event.data_decoded.fee_to_supplier,
     fee_to_treasury: event.data_decoded.fee_to_treasury,
