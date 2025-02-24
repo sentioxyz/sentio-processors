@@ -1,7 +1,7 @@
 import { BigDecimal } from '@sentio/sdk'
 import { GlobalContext } from '@sentio/sdk/eth'
 
-const projects = Object.entries({
+const projectEntries: Record<string, string[]> = {
   Biru: [
     '0xCb5367109e9d6b8C03c4DAF71740159fC85BCFce',
     '0xA313D4f11e69A320A68167E7aAfacEA8F3413593',
@@ -35,7 +35,7 @@ const projects = Object.entries({
     '0x6b2249389dC3Db6B27833279F594910caa6465e7',
     '0xE9C1024746C71C6F12d19eCC85FEe139d823AD54'
   ],
-  'Fractal Visions': '0xF87f5313E830d8E2670898e231D8701532b1eB09',
+  'Fractal Visions': ['0xF87f5313E830d8E2670898e231D8701532b1eB09'],
   'Kyo Finance': [
     '0x11feF46913EF8de4501e6B9452Ec77c26e736818',
     '0x3B574a321c7BFEF28e8021D210d063C9f72b17fC',
@@ -211,7 +211,9 @@ const projects = Object.entries({
   //   '0x392440db3BeF15ea5E9aAdE9ddf72e923556001E',
   //   '0xDE06BE7FBd67ADAA1F7c35aFAF390431Adf3B739'
   // ],
-})
+}
+
+const projects = Object.entries(projectEntries)
 
 const isAddressEqual = (addr1: string | null, addr2: string | null) => addr1?.toLowerCase() == addr2?.toLowerCase()
 

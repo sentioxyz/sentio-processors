@@ -54,10 +54,10 @@ async function getContractInfo(address: string) {
 GlobalProcessor.bind({ network, startBlock }).onTransaction(
   async (tx, ctx) => {
     const user = tx.from
-    const contractInfo = tx.to ? await getContractInfo(tx.to) : undefined
+    // const contractInfo = tx.to ? await getContractInfo(tx.to) : undefined
     const gasCost = getGasCost(ctx)
     ctx.eventLogger.emit('l2_tx', {
-      ...contractInfo,
+      // ...contractInfo,
       distinctId: user,
       to: tx.to,
       value: scaleDown(tx.value, 18),
