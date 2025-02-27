@@ -5,6 +5,7 @@ import { ProtocolProcessor } from "./storage.js";
 import { PoolProcessor } from "./pool.js";
 import { OracleProcessor } from "./oracle.js";
 import { AddressProcessor } from "./address.js";
+import { FeeProcessor } from "./fee.js";
 import { scaleDown } from "@sentio/sdk";
 import {
   lending as lending_new_liquidation_event,
@@ -71,6 +72,7 @@ PoolProcessor();
 ProtocolProcessor();
 OracleProcessor();
 AddressProcessor();
+FeeProcessor();
 // PythOracleProcessor()
 // PythOracleProcessor()
 
