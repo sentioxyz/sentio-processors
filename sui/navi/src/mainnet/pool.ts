@@ -8,9 +8,9 @@ const pools = [
   "0xa02a98f9c88db51c6f5efaaf2261c81f34dd56d86073387e0ef1805ca22e39c8", // Treasury Pool For USDC
   "0x0e060c3b5b8de00fb50511b7a45188c8e34b6995c01f69d98ea5a466fe10d103", // Treasury Pool For USDT
   "0x71b9f6e822c48ce827bceadce82201d6a7559f7b0350ed1daa1dc2ba3ac41b56", // Treasury Pool For WETH
-  "0x3c376f857ec4247b8ee456c1db19e9c74e0154d4876915e54221b5052d5b1e2e", //Treasury Pool For CETUS
+  "0x3c376f857ec4247b8ee456c1db19e9c74e0154d4876915e54221b5052d5b1e2e", // Treasury Pool For CETUS
   "0x9790c2c272e15b6bf9b341eb531ef16bcc8ed2b20dfda25d060bf47f5dd88d01", // Treasury Pool For VoloSui
-  "0x6fd9cb6ebd76bc80340a9443d72ea0ae282ee20e2fd7544f6ffcd2c070d9557a", //Treasury Pool For haSui
+  "0x6fd9cb6ebd76bc80340a9443d72ea0ae282ee20e2fd7544f6ffcd2c070d9557a", // Treasury Pool For haSui
   "0xc0e02e7a245e855dd365422faf76f87d9f5b2148a26d48dda6e8253c3fe9fa60", // Treasury Pool For NAVX
   "0xd162cbe40f8829ce71c9b3d3bf3a83859689a79fa220b23d70dc0300b777ae6e", // Treasury Pool For WBTC
   "0xc9208c1e75f990b2c814fa3a45f1bf0e85bb78404cfdb2ae6bb97de58bb30932", // Treasury Pool For AUSD
@@ -26,6 +26,7 @@ const pools = [
   "0xa3e0471746e5d35043801bce247d3b3784cc74329d39f7ed665446ddcf22a9e2", // Treasury Pool For nUSDT
   "0x0bccd5189d311002f4e10dc98270a3362fb3f7f9d48164cf40828f6c09f351e2", // Treasury Pool For stSUI
   "0x348f4049063e6c4c860064d67a170a7b3de033db9d67545d98fa5da3999966bc", // Treasury Pool For suiBTC
+  // Todo: Treasury Pool For sol
 ];
 
 export function PoolProcessor() {

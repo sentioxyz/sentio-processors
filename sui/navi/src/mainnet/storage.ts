@@ -26,6 +26,7 @@ const reserves = [
   "0x2abb6f2b007fef1e59133b027f53eca568f3af79e310e6f16d4b37bc09664a50", // Reserve For nUSDT
   "0x9a91a751ff83ef1eb940066a60900d479cbd39c6eaccdd203632c97dedd10ce9", // Reserve For stSUi
   "0xb6a8441d447dd5b7cd45ef874728a700cd05366c331f9cc1e37a4665f0929c2b", // Reserve For suiBTC
+  "0x2e2f8b1c34b23b1db894e08a87adda35b387a289fe644ca479fc4f7ec9065c8e", // Reserve For SOL
 ];
 
 export function ProtocolProcessor() {
