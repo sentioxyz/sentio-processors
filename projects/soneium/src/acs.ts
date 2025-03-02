@@ -136,7 +136,44 @@ const projectEntries: Record<string, string[]> = {
     '0xa3330A01d6F2a4efD91C1fF3451872B80296f422',
     '0xf24e57b1cb00d98C31F04f86328e22E8fcA457fb'
   ],
-  SoneFi: ['0x82d2d0aAE77967d42ACf4F30B53e2de0055338De', '0x368986EDcB1b2Ac55282752c6881c0E4A5A6b1bE'],
+  SoneFi: [
+    '0x4e26b776B5bE25F2A8454e9Bd2C1D5146e15aBCA',
+    '0x5ED8Ec213361d2418151320b52a0c8FB06B9625A',
+    '0xd8adD3010766f0fff45b838efAfA1ADAF126d2D0',
+    '0xfD17439ACD9A870bD8dce12eE79D276dba217E08',
+    '0x7155a68969147f8f25c5Fa77d118f4f915ebB368',
+    '0x6c638234f0323CD7A50138044cA469a614e0DfB5',
+
+    '0x82d2d0aAE77967d42ACf4F30B53e2de0055338De',
+    '0xeCef53F5024Dc8A0cCf0766C6775081e27448425',
+    '0x384FbEa21A74752B61362ebbaFef2360D50ac80D',
+
+    '0x972b7cC6b1d9F2445e7dB39e8cA0b2C8509701E6',
+    '0x8885bAB4C8EF84499D36F84415B297A0e7f3a9A7',
+    '0x2966CBd943dD1e838a217c40fff37CA589Fd55d9',
+
+    '0xF906E8c324Ea4129DFF715723D4010eBAB34d6d0',
+
+    '0xc2df27eB950f92A4F0C7b9CA9A06b3175d58c97F',
+    '0x4b4456A92797f4e0E1D7E86dcF19eAb45d2D33Af',
+    '0x3C8AbB1f02dD4d3740E8e8391997747D6cAd53f5',
+
+    '0x0e7f4557f1ed1f60a7ee733221404fa980843864',
+    '0x12f23f0a11274db39d761559df9779ac0c6ff023',
+    '0x325a720f35f4b3dd9ab0a484ff27a8533f5fe992',
+    '0x719cc7a104d2c7e3ba7963b99aafb77a0557d142',
+    '0x8e27e805ba3b0f2e140f2deccf4b12ba26fb1502',
+    '0x996c2ca2f15de7b5c527006553660b1592ad9a75',
+    '0x9fcdb9924c9100bd3a8ddf58ef91b51e7fbae89a',
+    '0x9ff895eb1a6d111cba64431b55b74b6a2a0b2072',
+    '0xcdb470b754dc4eaf6ff9d3fd2a904a4d6957f866',
+    '0xd90e9f6a2d4f1dea5b883a60da677a7eba31a78e',
+    '0xf46c9f65e6307b67f9b26b2b24100c4174310150',
+
+    '0x82d2d0aAE77967d42ACf4F30B53e2de0055338De',
+
+    '0x368986EDcB1b2Ac55282752c6881c0E4A5A6b1bE'
+  ],
   SoneX: ['0x3E4ff8662820E3dec3DACDb66ef1FFad5Dc5Ab83', '0xDEf357D505690F1b0032a74C3b581163c23d1535'],
   Sonova: [
     '0xbfe6a3023C92B040f95B8c2e8C237AAf0AFc92AB',
@@ -217,7 +254,10 @@ const projects = Object.entries(projectEntries)
 
 const isAddressEqual = (addr1: string | null, addr2: string | null) => addr1?.toLowerCase() == addr2?.toLowerCase()
 
-export function handleACS(tx: { from: string; to: string | null; gasCost: BigDecimal }, ctx: GlobalContext) {
+export function handleACS(
+  tx: { from: string; to: string | null; gasUsed?: bigint; gasCost: BigDecimal },
+  ctx: GlobalContext
+) {
   for (const [project, addresses] of projects) {
     for (const address of addresses) {
       if (isAddressEqual(tx.from, address) || isAddressEqual(tx.to, address)) {

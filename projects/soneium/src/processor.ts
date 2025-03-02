@@ -55,12 +55,14 @@ GlobalProcessor.bind({ network, startBlock }).onTransaction(
   async (tx, ctx) => {
     const user = tx.from
     // const contractInfo = tx.to ? await getContractInfo(tx.to) : undefined
+    const gasUsed = ctx.transactionReceipt?.gasUsed
     const gasCost = getGasCost(ctx)
     ctx.eventLogger.emit('l2_tx', {
       // ...contractInfo,
       distinctId: user,
       to: tx.to,
       value: scaleDown(tx.value, 18),
+      gasUsed,
       gasCost
     })
 
@@ -96,7 +98,7 @@ GlobalProcessor.bind({ network, startBlock }).onTransaction(
       })
     }
 
-    handleACS({ from: tx.from, to: tx.to, gasCost }, ctx)
+    handleACS({ from: tx.from, to: tx.to, gasUsed, gasCost }, ctx)
   },
   {
     transaction: true,
