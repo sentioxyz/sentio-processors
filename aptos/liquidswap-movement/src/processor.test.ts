@@ -22,10 +22,9 @@ describe('Test Processor', () => {
         {
           data: {
             aptEvent: {
-              transaction: {
-                ...testData3,
-                events: [testData3.events[0]]
-              }
+              rawTransaction: JSON.stringify(testData3),
+              rawEvent: JSON.stringify(testData3.events[0]),
+              eventIndex: 0
             }
           },
           handlerIds: [0],
