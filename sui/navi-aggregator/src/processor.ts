@@ -9,15 +9,16 @@ let coinInfoMap = new Map<string, Promise<token.TokenInfo>>();
 let processedTxs = new Set<string>();
 
 const referralIdToUsernameMap: Record<string, string> = {
-    "1873161113": "NaviAG",
-    "2463850496": "Navi",
-    "9951543296": "naviTgBot",
-    "3258838016": "w6g2000",
-    "1000648704": "Binh",
-    "7289584128": "sudo",
-    "7723906048": "Jesus",
-    "4697169920": "Mayan",
-    "6541220672": "Wave",
+  "1873161113": "NaviAG",
+  "2463850496": "Navi",
+  "9951543296": "naviTgBot",
+  "3258838016": "w6g2000",
+  "1000648704": "Binh",
+  "7289584128": "sudo",
+  "7723906048": "Jesus",
+  "4697169920": "Mayan",
+  "6541220672": "Wave",
+  "8868297728": "SuiWallet",
 };
 
 export function delay(ms: number) {
