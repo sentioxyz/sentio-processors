@@ -1,6 +1,4 @@
-import { Versions as VersionsInterface } from "../../../deployment/context/interface";
-
-export class VersionsClass implements VersionsInterface {
+export class VersionsClass {
   getSchemaVersion(): string {
     return "1.3.0";;
   }
