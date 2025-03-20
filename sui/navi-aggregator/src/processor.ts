@@ -152,10 +152,10 @@ async function swapEventHandler(event: aggregator.slippage.SwapEventInstance, ct
         targetSymbol: updateSymbol(toInfo, event.type_arguments[1]),
         amount_in: event.data_decoded.amount_in,
         amount_in_number: Number(event.data_decoded.amount_in) / Math.pow(10, fromInfo.decimal),
-        amount_in_usd: fromValue,
+        amount_in_usd: Number(fromValue),
         amount_out: event.data_decoded.amount_out,
         amount_out_number: Number(event.data_decoded.amount_out) / Math.pow(10, toInfo.decimal),
-        amount_out_usd: toValue,
+        amount_out_usd: Number(toValue),
         min_amount_out: event.data_decoded.min_amount_out,
         referral_code: event.data_decoded.referral_code,
     });
