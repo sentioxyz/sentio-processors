@@ -33,7 +33,34 @@ import {
   volume,
   volumeByCoin
 } from './metrics.js'
-// import { SimpleCoinInfo } from "@sentio/sdk/move/ext";
+import { TokenInfo, whitelistTokens } from '@sentio/sdk/aptos/ext'
+
+function addTokens() {
+  const list = whitelistTokens()
+  const tokens: TokenInfo[] = [
+    {
+      type: '0x4763c5cfde8517f48e930f7ece14806d75b98ce31b0b4eab99f49a067f5b5ef2::wrapped::WBTCe',
+      name: 'WBTCe',
+      symbol: 'WBTC.e',
+      decimals: 8,
+      bridge: 'Native',
+      category: 'Bridged'
+    },
+    {
+      type: '0x4763c5cfde8517f48e930f7ece14806d75b98ce31b0b4eab99f49a067f5b5ef2::wrapped::WETHe',
+      name: 'WETHe',
+      symbol: 'WETH.e',
+      decimals: 18,
+      bridge: 'Native',
+      category: 'Bridged'
+    }
+  ]
+  for (const token of tokens) {
+    list.set(token.type, token)
+  }
+}
+
+addTokens()
 
 // TODO to remove
 export const accountTracker = AccountEventTracker.register('users')
@@ -141,17 +168,16 @@ liquidity_pool
       })
     }
 
-    if (value.isGreaterThan(0)) {
-      const pair = await getPair(evt.type_arguments[0], evt.type_arguments[1], ctx.network)
-      ctx.eventLogger.emit('swap', {
-        distinctId: ctx.transaction.sender,
-        value: value,
-        xAmount: evt.data_decoded.x_in + evt.data_decoded.x_out,
-        yAmount: evt.data_decoded.y_in + evt.data_decoded.y_out,
-        pair,
-        version: ver
-      })
-    }
+    // if (value.isGreaterThan(0)) {
+    const pair = await getPair(evt.type_arguments[0], evt.type_arguments[1], ctx.network)
+    ctx.eventLogger.emit('swap', {
+      distinctId: ctx.transaction.sender,
+      value: value,
+      xAmount: evt.data_decoded.x_in + evt.data_decoded.x_out,
+      yAmount: evt.data_decoded.y_in + evt.data_decoded.y_out,
+      pair
+    })
+    // }
     const coinXInfo = await getTokenInfoWithFallback(evt.type_arguments[0], ctx.network)
     const coinYInfo = await getTokenInfoWithFallback(evt.type_arguments[1], ctx.network)
     // ctx.logger.info(`${ctx.transaction.sender} Swap ${coinXInfo.symbol} for ${coinYInfo.symbol}`, {user: ctx.transaction.sender, value: value.toNumber()})
@@ -443,4 +469,11 @@ AptosResourcesProcessor.bind({
   network: AptosNetwork.MOVEMENT_MAIN_NET,
   address: resourceAddress,
   baseLabels: { ver }
-}).onTimeInterval(async (resources, ctx) => syncLiquidSwapPools(resources, ctx), 60, 12 * 60)
+}).onTimeInterval(
+  async (resources, ctx) => {
+    // await syncLiquidSwapPools(resources, ctx)
+    await liquidSwap.syncPools(resources, ctx)
+  },
+  60,
+  24 * 60
+)
