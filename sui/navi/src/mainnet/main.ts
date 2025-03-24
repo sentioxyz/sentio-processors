@@ -389,10 +389,10 @@ async function onRewardsClaimedEventV3(
     sender: event.data_decoded.user,
     amount: event.data_decoded.total_claimed,
     coinType: event.data_decoded.coin_type,
-    ruleIDs: event.data_decoded.rule_ids,
-    ruleIndices: event.data_decoded.rule_indices.map((index) =>
+    ruleIDs: event.data_decoded.rule_ids.map((id: any) => id.toString()).join(','),
+    ruleIndices: event.data_decoded.rule_indices.map((index: any) =>
       index.toString()
-    ),
+    ).join(','),
     env: "mainnet",
   });
 }
