@@ -28,7 +28,7 @@ const pools = [
   "0x348f4049063e6c4c860064d67a170a7b3de033db9d67545d98fa5da3999966bc", // Treasury Pool For suiBTC
   "0xac5f6d750063244cc5abceef712b7ea1aa377f73762099b31c0051a842c13b10", // Treasury Pool For SOL
   "0x377b8322c0d349b44b5873d418192eefe871b9372bb3a86f288cafe97317de04", // Treasury Pool For LBTC
-  "0x1295de5a55511e085449c5eed9cddcb034faa86ef68820aa436f65cb574ddc54", // Treasury Pool For WAL
+  "0xef76883525f5c2ff90cd97732940dbbdba0b391e29de839b10588cee8e4fe167", // Treasury Pool For WAL
 ];
 
 export function PoolProcessor() {

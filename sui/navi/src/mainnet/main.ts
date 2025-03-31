@@ -213,6 +213,9 @@ async function onRewardsClaimedEvent(
     sender: event.data_decoded.sender,
     amount: event.data_decoded.amount,
     pool: event.data_decoded.pool,
+    coin_type: null,
+    rule_ids: null,
+    rule_indices: null,
     env: "mainnet",
   });
 }
@@ -387,14 +390,15 @@ async function onRewardsClaimedEventV3(
   event: incentive_v3.RewardClaimedInstance,
   ctx: SuiContext
 ) {
-  ctx.eventLogger.emit("RewardsClaimedV3", {
+  ctx.eventLogger.emit("RewardsClaimed", {
     sender: event.data_decoded.user,
     amount: event.data_decoded.total_claimed,
-    coinType: event.data_decoded.coin_type,
-    ruleIDs: event.data_decoded.rule_ids.map((id: any) => id.toString()).join(','),
-    ruleIndices: event.data_decoded.rule_indices.map((index: any) =>
+    pool: null,
+    coin_type: event.data_decoded.coin_type,
+    rule_ids: event.data_decoded.rule_ids,
+    rule_indices: event.data_decoded.rule_indices.map((index) =>
       index.toString()
-    ).join(','),
+    ),
     env: "mainnet",
   });
 }
