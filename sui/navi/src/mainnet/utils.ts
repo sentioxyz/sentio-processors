@@ -181,3 +181,12 @@ export function getDecimalBySymbol(coinSymbol: string): number | undefined {
 
   return undefined; // Return undefined if the symbol is not found
 }
+
+export function getIdBySymbol(coinSymbol: string): number | undefined {
+  for (const [id, symbol] of Object.entries(SYMBOL_MAP)) {
+    if (symbol === coinSymbol) {
+      return Number(id);
+    }
+  }
+  return undefined; // 如果找不到 symbol，返回 undefined
+}

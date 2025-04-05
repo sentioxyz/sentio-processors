@@ -1,7 +1,7 @@
 import { SuiObjectProcessor } from "@sentio/sdk/sui";
 import { ChainId } from "@sentio/chain";
 import { BigDecimal } from "@sentio/sdk";
-import { COIN_MAP, getDecimalBySymbol } from "./utils.js";
+import { COIN_MAP, getDecimalBySymbol, getIdBySymbol } from "./utils.js";
 
 const feeObjects = [
   "0xb50bf81444d3489d423f1fe65e862cceb6be8d9f992343f222a558975a2b6938", // Fee Pool For SUI
@@ -25,9 +25,10 @@ const feeObjects = [
   "0xcaa89fe2f9f4362097243462f2b73b1e001cdafa55da6787e76dd172957481ce", // Fee Pool For BUCK
   "0xc04210796e8c929a257fdadc34d94929a098da03fc89da5663becf147045d9d4", // Fee Pool For nUSDT
   "0xbdc7410f89443b59b98c493e59039ed07a29c55a773f19e96d5e0118faf52cbc", // Fee Pool For stSUI
+  "0x1295de5a55511e085449c5eed9cddcb034faa86ef68820aa436f65cb574ddc54", // Fee Pool For suiBTC
   "0xb7f5392003d31625f7df0bcf63f471babbd563a743e62c0bff9a200f48c18370", // Fee Pool For Sol
-  // TODO: Fee Pool For LBTC
-  // TODO: Fee Pool For WAL
+  "0x1d9c1d48435c7cbfd328cddbda6963d22ba18ff16b457e10a55a6d02015512b6", // Fee Pool For LBTC
+  "0x14771865853dabe31bc73b3172aad0095dd663023b0a53f0008ddcbed0f77d1a", // Fee Pool For WAL
 ];
 
 export function FeeProcessor() {
@@ -58,9 +59,13 @@ export function FeeProcessor() {
         value = BigDecimal(value_with_decimal);
       }
 
-      ctx.meter
-        .Gauge("feeForPool")
-        .record(value, { env: "mainnet", coin_type, coin_symbol });
+      const coin_id = getIdBySymbol(coin_symbol);
+
+      if (coin_id !== undefined) {
+        ctx.meter
+          .Gauge("feeForPool")
+          .record(value, { env: "mainnet", coin_type, coin_symbol, coin_id: coin_id.toString() });
+      }
     });
   }
 }
