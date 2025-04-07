@@ -36,7 +36,7 @@ export function PoolProcessor() {
     SuiObjectProcessor.bind({
       objectId: pool,
       network: ChainId.SUI_MAINNET,
-      startCheckpoint: 7800000n,
+      startCheckpoint: 113000000n,
     }).onTimeInterval(async (self, data, ctx) => {
       const type = String(self.type);
       const coin_type = SymbolMatcher(type);
