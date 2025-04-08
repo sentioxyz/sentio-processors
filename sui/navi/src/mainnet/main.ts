@@ -404,16 +404,16 @@ async function onRewardsClaimedEventV3(
 }
 
 flash_loan
-  .bind({ startCheckpoint: 113000000n })
+  .bind({ startCheckpoint: 7800000n })
   .onEventFlashLoan(flashLoanHandler)
   .onEventFlashRepay(flashoanRepayHandler);
 
 lending
-  .bind({ startCheckpoint: 113000000n })
+  .bind({ startCheckpoint: 7800000n })
   .onEventLiquidationCallEvent(onLiquidationEvent);
 
 lending_new_liquidation_event
-  .bind({ startCheckpoint: 113000000n })
+  .bind({ startCheckpoint: 7800000n })
   .onEventLiquidationEvent(onLiquidationNewEvent)
   .onEventDepositOnBehalfOfEvent(depositOnBehalfOfHandler)
   .onEventRepayOnBehalfOfEvent(repayOnBehalfOfHandler)
@@ -426,7 +426,7 @@ lending_new_liquidation_event
 //   .onEventSCCProcessedEvent(supraEventHandler)
 
 incentive_v2
-  .bind({ startCheckpoint: 113000000n })
+  .bind({ startCheckpoint: 7800000n })
   .onEventRewardsClaimed(onRewardsClaimedEvent);
 
 lending_new_liquidation_event_v3
