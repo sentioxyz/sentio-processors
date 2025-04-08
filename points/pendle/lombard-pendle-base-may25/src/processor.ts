@@ -61,9 +61,14 @@ PendleMarketProcessor.bind({
   .onEventRedeemRewards(async (evt, ctx) => {
     await handleMarketRedeemReward(evt, ctx);
   })
-  .onEventSwap(async (evt, ctx) => {
-    await handleMarketSwap(evt, ctx);
-  });
+  // .onEventSwap(async (evt, ctx) => {
+  //   await handleMarketSwap(evt, ctx);
+  // });
+  .onTimeInterval (async(_,ctx)=> {
+    await processAllLPAccounts(ctx),
+    MISC_CONSTS.ONE_HOUR_IN_MINUTE,
+    MISC_CONSTS.ONE_HOUR_IN_MINUTE
+  })
 
 EQBBaseRewardProcessor.bind({
   address: PENDLE_POOL_ADDRESSES.EQB_RECEIPT_TOKEN,
