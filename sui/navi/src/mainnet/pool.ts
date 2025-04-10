@@ -1,7 +1,7 @@
 import { SuiObjectProcessor } from "@sentio/sdk/sui";
 import { ChainId } from "@sentio/chain";
 import { BigDecimal } from "@sentio/sdk";
-import { COIN_MAP, SymbolMatcher } from "./utils.js";
+import { COIN_MAP, getIdBySymbol, SymbolMatcher } from "./utils.js";
 
 const pools = [
   "0x96df0fce3c471489f4debaaa762cf960b3d97820bd1f3f025ff8190730e958c5", // Treasury Pool For SUI
@@ -41,6 +41,7 @@ export function PoolProcessor() {
       const type = String(self.type);
       const coin_type = SymbolMatcher(type);
       const coin_symbol = COIN_MAP[coin_type];
+      const coin_id = getIdBySymbol(coin_symbol);
 
       //@ts-ignore
       const decimal = self.fields.decimal;
@@ -54,15 +55,18 @@ export function PoolProcessor() {
       );
 
       //TODO
-      ctx.meter
-        .Gauge("balanceForPool")
-        .record(balance, { env: "mainnet", type, coin_type, coin_symbol });
-      ctx.meter.Gauge("treasuryBalanceForPool").record(treasuryBalance, {
-        env: "mainnet",
-        type,
-        coin_type,
-        coin_symbol,
-      });
+      if (coin_id !== undefined) {
+        ctx.meter
+          .Gauge("balanceForPool")
+          .record(balance, { env: "mainnet", type, coin_type, coin_symbol, coin_id: coin_id.toString() });
+        ctx.meter.Gauge("treasuryBalanceForPool").record(treasuryBalance, {
+          env: "mainnet",
+          type,
+          coin_type,
+          coin_symbol,
+          coin_id: coin_id.toString(),
+        });
+      }
     });
   }
 }
