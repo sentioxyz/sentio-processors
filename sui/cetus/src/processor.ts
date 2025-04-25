@@ -290,11 +290,14 @@ pool.bind({
 
 
 SuiObjectTypeProcessor.bind({
-  objectType: pool.Pool.type()
+  objectType: pool.Pool.type(),
 })
   .onTimeInterval(async (self, _, ctx) => {
     if (!self) { return }
     console.log(`ctx ${ctx.objectId} ctx.timestamp ${ctx.timestamp}`)
+
+    if (constant.POOLS_TVL_BLACK_LIST.includes(ctx.objectId)) { return }
+
     try {
       //get coin addresses
       const poolInfo = await helper.getOrCreatePool(ctx, ctx.objectId)
@@ -408,4 +411,4 @@ SuiObjectTypeProcessor.bind({
     catch (e) {
       console.log(`${e.message} error at ${JSON.stringify(self)}`)
     }
-  }, 10, 1440)
+  }, 10, 1440*15)
