@@ -36,7 +36,7 @@ export function ProtocolProcessor() {
     SuiObjectProcessor.bind({
       objectId: reserves[i],
       network: ChainId.SUI_MAINNET,
-      startCheckpoint: 7800000n,
+      startCheckpoint: 114000000n,
     }).onTimeInterval(
       async (self, _, ctx) => {
         try {

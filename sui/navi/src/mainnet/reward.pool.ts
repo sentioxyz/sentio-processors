@@ -15,7 +15,7 @@ export function PoolProcessor() {
         SuiObjectProcessor.bind({
             objectId: pool,
             network: ChainId.SUI_MAINNET,
-            startCheckpoint: 7800000n
+            startCheckpoint: 114000000n
         }).onTimeInterval(async (self, data, ctx) => {
             //TODO: find out the token type
             const type = String(self.type);

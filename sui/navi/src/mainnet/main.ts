@@ -11,13 +11,14 @@ import {
   lending as lending_new_liquidation_event,
   incentive_v2,
   flash_loan,
+  storage
 } from "../types/sui/0x834a86970ae93a73faf4fff16ae40bdb72b91c47be585fff19a2af60a19ddca3.js";
 import {
   lending as lending_new_liquidation_event_v3,
   incentive_v3,
   flash_loan as flash_loan_v3,
 } from "../types/sui/0x81c408448d0d57b3e371ea94de1d40bf852784d3e225de1e74acab3e8395c18f.js";
-import { FlashLoanCoins } from "./utils.js";
+import { FlashLoanCoins, getDecimalBySymbol } from "./utils.js";
 
 import { DECIMAL_MAP, SYMBOL_MAP } from "./utils.js";
 // import { PythOracleProcessor } from './pyth.js'
@@ -248,15 +249,19 @@ async function flashoanRepayHandler(
   const asset = String(event.data_decoded.asset);
   const coinAddress = event.type_arguments[0] as string;
   const coinType = FlashLoanCoins[asset] || "unknown";
-  ctx.eventLogger.emit("flashloanRepay", {
-    sender: sender,
-    coinType: coinType,
-    coinAddress: coinAddress,
-    amount: amount,
-    fee_to_supplier: event.data_decoded.fee_to_supplier,
-    fee_to_treasury: event.data_decoded.fee_to_treasury,
-    env: "mainnet",
-  });
+  const decimals = getDecimalBySymbol(coinType);
+  if (decimals) {
+    ctx.eventLogger.emit("flashloanRepay", {
+      sender: sender,
+      coinType: coinType,
+      coinAddress: coinAddress,
+      amount: amount,
+      amount_normalized: scaleDown(amount, decimals),
+        fee_to_supplier: event.data_decoded.fee_to_supplier,
+        fee_to_treasury: event.data_decoded.fee_to_treasury,
+        env: "mainnet",
+      });
+  }
 }
 
 async function depositOnBehalfOfHandler(
@@ -294,6 +299,32 @@ async function repayOnBehalfOfHandler(
     amount,
     env: "mainnet",
     type: "repay",
+  });
+}
+
+async function withdrawTreasuryHandler(
+  event: storage.WithdrawTreasuryEventInstance,
+  ctx: SuiContext
+) {
+  const sender = event.data_decoded.sender;
+  const recipient = event.data_decoded.recipient;
+  const amount = event.data_decoded.amount;
+  const asset = event.data_decoded.asset;
+  const poolId = event.data_decoded.poolId;
+  const before = event.data_decoded.before;
+  const after = event.data_decoded.after;
+  const index = event.data_decoded.index;
+
+  ctx.eventLogger.emit("WithdrawTreasury", {
+    sender,
+    recipient,
+    asset,
+    amount,
+    poolId,
+    before,
+    after,
+    index,
+    env: "mainnet",
   });
 }
 
@@ -404,16 +435,16 @@ async function onRewardsClaimedEventV3(
 }
 
 flash_loan
-  .bind({ startCheckpoint: 7800000n })
+  .bind({ startCheckpoint: 114000000n })
   .onEventFlashLoan(flashLoanHandler)
   .onEventFlashRepay(flashoanRepayHandler);
 
 lending
-  .bind({ startCheckpoint: 7800000n })
+  .bind({ startCheckpoint: 114000000n })
   .onEventLiquidationCallEvent(onLiquidationEvent);
 
 lending_new_liquidation_event
-  .bind({ startCheckpoint: 7800000n })
+  .bind({ startCheckpoint: 114000000n })
   .onEventLiquidationEvent(onLiquidationNewEvent)
   .onEventDepositOnBehalfOfEvent(depositOnBehalfOfHandler)
   .onEventRepayOnBehalfOfEvent(repayOnBehalfOfHandler)
@@ -426,7 +457,7 @@ lending_new_liquidation_event
 //   .onEventSCCProcessedEvent(supraEventHandler)
 
 incentive_v2
-  .bind({ startCheckpoint: 7800000n })
+  .bind({ startCheckpoint: 114000000n })
   .onEventRewardsClaimed(onRewardsClaimedEvent);
 
 lending_new_liquidation_event_v3
@@ -438,3 +469,7 @@ lending_new_liquidation_event_v3
 incentive_v3
   .bind({ startCheckpoint: 113837268n })
   .onEventRewardClaimed(onRewardsClaimedEventV3);
+
+storage
+  .bind({ startCheckpoint: 114000000n })
+  .onEventWithdrawTreasuryEvent(withdrawTreasuryHandler);
