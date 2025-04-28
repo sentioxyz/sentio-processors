@@ -249,19 +249,16 @@ async function flashoanRepayHandler(
   const asset = String(event.data_decoded.asset);
   const coinAddress = event.type_arguments[0] as string;
   const coinType = FlashLoanCoins[asset] || "unknown";
-  const decimals = getDecimalBySymbol(coinType);
-  if (decimals) {
-    ctx.eventLogger.emit("flashloanRepay", {
-      sender: sender,
-      coinType: coinType,
-      coinAddress: coinAddress,
-      amount: amount,
-      amount_normalized: scaleDown(amount, decimals),
-        fee_to_supplier: event.data_decoded.fee_to_supplier,
-        fee_to_treasury: event.data_decoded.fee_to_treasury,
-        env: "mainnet",
-      });
-  }
+
+  ctx.eventLogger.emit("flashloanRepay", {
+    sender: sender,
+    coinType: coinType,
+    coinAddress: coinAddress,
+    amount: amount,
+    fee_to_supplier: event.data_decoded.fee_to_supplier,
+    fee_to_treasury: event.data_decoded.fee_to_treasury,
+    env: "mainnet",
+  });
 }
 
 async function depositOnBehalfOfHandler(
