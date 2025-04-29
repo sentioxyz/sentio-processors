@@ -227,9 +227,12 @@ async function flashLoanHandler(
 ) {
   const sender = event.data_decoded.sender;
   const amount = event.data_decoded.amount;
-  const asset: string = event.data_decoded.asset as string;
+  const asset : string = event.data_decoded.asset as string;
   const coinAddress = event.type_arguments[0] as string;
   const coinSymbol = FlashLoanCoins[asset] || "unknown";
+
+  console.log(asset);
+
   ctx.eventLogger.emit("flashloan", {
     sender: sender,
     amount: amount,
@@ -306,7 +309,7 @@ async function withdrawTreasuryHandler(
   const sender = event.data_decoded.sender;
   const recipient = event.data_decoded.recipient;
   const amount = event.data_decoded.amount;
-  const asset = event.data_decoded.asset;
+  const asset = event.data_decoded.asset.toString();
   const poolId = event.data_decoded.poolId;
   const before = event.data_decoded.before;
   const after = event.data_decoded.after;
@@ -432,16 +435,16 @@ async function onRewardsClaimedEventV3(
 }
 
 flash_loan
-  .bind({ startCheckpoint: 114000000n })
+  .bind({ startCheckpoint: 120500000n })
   .onEventFlashLoan(flashLoanHandler)
   .onEventFlashRepay(flashoanRepayHandler);
 
 lending
-  .bind({ startCheckpoint: 114000000n })
+  .bind({ startCheckpoint: 120500000n })
   .onEventLiquidationCallEvent(onLiquidationEvent);
 
 lending_new_liquidation_event
-  .bind({ startCheckpoint: 114000000n })
+  .bind({ startCheckpoint: 120500000n })
   .onEventLiquidationEvent(onLiquidationNewEvent)
   .onEventDepositOnBehalfOfEvent(depositOnBehalfOfHandler)
   .onEventRepayOnBehalfOfEvent(repayOnBehalfOfHandler)
@@ -454,7 +457,7 @@ lending_new_liquidation_event
 //   .onEventSCCProcessedEvent(supraEventHandler)
 
 incentive_v2
-  .bind({ startCheckpoint: 114000000n })
+  .bind({ startCheckpoint: 120500000n })
   .onEventRewardsClaimed(onRewardsClaimedEvent);
 
 lending_new_liquidation_event_v3
@@ -468,5 +471,5 @@ incentive_v3
   .onEventRewardClaimed(onRewardsClaimedEventV3);
 
 storage
-  .bind({ startCheckpoint: 114000000n })
+  .bind({ startCheckpoint: 120500000n })
   .onEventWithdrawTreasuryEvent(withdrawTreasuryHandler);
