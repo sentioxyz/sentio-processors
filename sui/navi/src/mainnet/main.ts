@@ -318,8 +318,9 @@ async function withdrawTreasuryHandler(
   ctx.eventLogger.emit("WithdrawTreasury", {
     sender,
     recipient,
-    asset,
+    id: asset,
     amount,
+    amount_normalized: scaleDown(amount, 9),
     poolId,
     before,
     after,
@@ -435,16 +436,16 @@ async function onRewardsClaimedEventV3(
 }
 
 flash_loan
-  .bind({ startCheckpoint: 120500000n })
+  .bind({ startCheckpoint: 7800000n })
   .onEventFlashLoan(flashLoanHandler)
   .onEventFlashRepay(flashoanRepayHandler);
 
 lending
-  .bind({ startCheckpoint: 120500000n })
+  .bind({ startCheckpoint: 7800000n })
   .onEventLiquidationCallEvent(onLiquidationEvent);
 
 lending_new_liquidation_event
-  .bind({ startCheckpoint: 120500000n })
+  .bind({ startCheckpoint: 7800000n })
   .onEventLiquidationEvent(onLiquidationNewEvent)
   .onEventDepositOnBehalfOfEvent(depositOnBehalfOfHandler)
   .onEventRepayOnBehalfOfEvent(repayOnBehalfOfHandler)
@@ -457,7 +458,7 @@ lending_new_liquidation_event
 //   .onEventSCCProcessedEvent(supraEventHandler)
 
 incentive_v2
-  .bind({ startCheckpoint: 120500000n })
+  .bind({ startCheckpoint: 7800000n })
   .onEventRewardsClaimed(onRewardsClaimedEvent);
 
 lending_new_liquidation_event_v3
@@ -471,5 +472,5 @@ incentive_v3
   .onEventRewardClaimed(onRewardsClaimedEventV3);
 
 storage
-  .bind({ startCheckpoint: 120500000n })
+  .bind({ startCheckpoint: 7800000n })
   .onEventWithdrawTreasuryEvent(withdrawTreasuryHandler);
