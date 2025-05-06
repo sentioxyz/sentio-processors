@@ -63,7 +63,8 @@ GlobalProcessor.bind({ network, startBlock }).onTransaction(
       to: tx.to,
       value: scaleDown(tx.value, 18),
       gasUsed,
-      gasCost
+      gasCost,
+      l1Fee: ctx.transactionReceipt?.l1Fee ? scaleDown(ctx.transactionReceipt.l1Fee, 18) : undefined
     })
 
     let existing = userCache.has(user)
