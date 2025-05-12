@@ -106,7 +106,8 @@ async function onEvent(event: LendingEvent, ctx: SuiContext) {
     "21": "0xaafb102dd0902f5055cadecd687fb5b71ca82ef0e0285d90afde828ec58ca96b::btc::BTC", //suiBTC
     "22": "0xb7844e289a8410e50fb3ca48d69eb9cf29e27d223ef90353fe1bd8e27ff8f3f8::coin::COIN", //SOL
     "23": "0x3e8e9423d80e1774a7ca128fccd8bf5f1f7753be658c5e645929037f7c819040::lbtc::LBTC", //LBTC
-    "24": "0x356a26eb9e012a68958082340d4c4116e7f55615cf27affcff209cf0ae544f59::wal::WAL" //WAL
+    "24": "0x356a26eb9e012a68958082340d4c4116e7f55615cf27affcff209cf0ae544f59::wal::WAL", //WAL
+    "25": "0x3a304c7feba2d819ea57c3542d68439ca2c386ba02159c740f7b406e592c62ea::haedal::HAEDAL", //HAEDAL
   };
   const coinAddress = Coins[reserve];
   // const coinAddress = event.data_decoded.pool;
@@ -436,16 +437,16 @@ async function onRewardsClaimedEventV3(
 }
 
 flash_loan
-  .bind({ startCheckpoint: 7800000n })
+  .bind({ startCheckpoint: 120500000n })
   .onEventFlashLoan(flashLoanHandler)
   .onEventFlashRepay(flashoanRepayHandler);
 
 lending
-  .bind({ startCheckpoint: 7800000n })
+  .bind({ startCheckpoint: 120500000n })
   .onEventLiquidationCallEvent(onLiquidationEvent);
 
 lending_new_liquidation_event
-  .bind({ startCheckpoint: 7800000n })
+  .bind({ startCheckpoint: 120500000n })
   .onEventLiquidationEvent(onLiquidationNewEvent)
   .onEventDepositOnBehalfOfEvent(depositOnBehalfOfHandler)
   .onEventRepayOnBehalfOfEvent(repayOnBehalfOfHandler)
@@ -458,7 +459,7 @@ lending_new_liquidation_event
 //   .onEventSCCProcessedEvent(supraEventHandler)
 
 incentive_v2
-  .bind({ startCheckpoint: 7800000n })
+  .bind({ startCheckpoint: 120500000n })
   .onEventRewardsClaimed(onRewardsClaimedEvent);
 
 lending_new_liquidation_event_v3
@@ -472,5 +473,5 @@ incentive_v3
   .onEventRewardClaimed(onRewardsClaimedEventV3);
 
 storage
-  .bind({ startCheckpoint: 7800000n })
+  .bind({ startCheckpoint: 120500000n })
   .onEventWithdrawTreasuryEvent(withdrawTreasuryHandler);

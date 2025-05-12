@@ -29,6 +29,7 @@ const feeObjects = [
   "0xb7f5392003d31625f7df0bcf63f471babbd563a743e62c0bff9a200f48c18370", // Fee Pool For Sol
   "0x1d9c1d48435c7cbfd328cddbda6963d22ba18ff16b457e10a55a6d02015512b6", // Fee Pool For LBTC
   "0x14771865853dabe31bc73b3172aad0095dd663023b0a53f0008ddcbed0f77d1a", // Fee Pool For WAL
+  "0x06328cc3f67182233ac1707f9e42674440a8216a6aee09c6c49ce427963e1f65", // Fee Pool For HAEDAL
 ];
 
 export function FeeProcessor() {

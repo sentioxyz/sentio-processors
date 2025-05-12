@@ -29,6 +29,7 @@ const pools = [
   "0xac5f6d750063244cc5abceef712b7ea1aa377f73762099b31c0051a842c13b10", // Treasury Pool For SOL
   "0x377b8322c0d349b44b5873d418192eefe871b9372bb3a86f288cafe97317de04", // Treasury Pool For LBTC
   "0xef76883525f5c2ff90cd97732940dbbdba0b391e29de839b10588cee8e4fe167", // Treasury Pool For WAL
+  "0x930f5cf61dcb66d699ba57b2eb72da6fd04c64a53073cc40f751ef12c77aaa6a" // Treasury Pool For HAEDAL
 ];
 
 export function PoolProcessor() {
@@ -36,7 +37,7 @@ export function PoolProcessor() {
     SuiObjectProcessor.bind({
       objectId: pool,
       network: ChainId.SUI_MAINNET,
-      startCheckpoint: 7800000n,
+      startCheckpoint: 120500000n,
     }).onTimeInterval(async (self, data, ctx) => {
       const type = String(self.type);
       const coin_type = SymbolMatcher(type);

@@ -29,6 +29,7 @@ const reserves = [
   "0x2e2f8b1c34b23b1db894e08a87adda35b387a289fe644ca479fc4f7ec9065c8e", // Reserve For SOL
   "0x1acee7192fe5dd422ee6e0376417f80a709172d67cec1bf0e660666eee6eb627", // Reserve For LBTC
   "0xe6824edab84affecc78646e87fe85ca8fd4374335680e9daee2c981f13dce202", // Reserve For WAL
+  "0x09c7b740981a2aa81b407e83d052a46cf1830c7470f80d053e6a49715eb29876", // Reserve For Headal
 ];
 
 export function ProtocolProcessor() {
@@ -36,7 +37,7 @@ export function ProtocolProcessor() {
     SuiObjectProcessor.bind({
       objectId: reserves[i],
       network: ChainId.SUI_MAINNET,
-      startCheckpoint: 7800000n,
+      startCheckpoint: 120500000n,
     }).onTimeInterval(
       async (self, _, ctx) => {
         try {
