@@ -26,7 +26,7 @@ export const COIN = [
   "SOL",
   "LBTC",
   "WAL",
-  "HEADAL",
+  "HAEDAL",
 ];
 
 export const DECIMAL_RAY = 27;
@@ -112,7 +112,7 @@ export const COIN_MAP: CoinMap = {
   "0x356a26eb9e012a68958082340d4c4116e7f55615cf27affcff209cf0ae544f59::wal::WAL":
     "WAL",
   "0x3a304c7feba2d819ea57c3542d68439ca2c386ba02159c740f7b406e592c62ea::haedal::HAEDAL":
-    "HEADAL",
+    "HAEDAL",
 };
 
 export const SYMBOL_MAP: Record<number, string> = {
@@ -141,7 +141,7 @@ export const SYMBOL_MAP: Record<number, string> = {
   22: "SOL",
   23: "LBTC",
   24: "WAL",
-  25: "HEADAL",
+  25: "HAEDAL",
 };
 
 export const FlashLoanCoins: Record<string, string> = {

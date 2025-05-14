@@ -67,6 +67,12 @@ export function FeeProcessor() {
           .Gauge("feeForPool")
           .record(value, { env: "mainnet", coin_type, coin_symbol, coin_id: coin_id.toString() });
       }
+
+      ctx.eventLogger.emit("BorrowFeeEvent", {
+        token: coin_symbol,
+        fee: value,
+        env: "mainnet",
+      });
     });
   }
 }

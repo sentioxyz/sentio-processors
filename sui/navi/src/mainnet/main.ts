@@ -228,7 +228,7 @@ async function flashLoanHandler(
 ) {
   const sender = event.data_decoded.sender;
   const amount = event.data_decoded.amount;
-  const asset : string = event.data_decoded.asset as string;
+  const asset: string = event.data_decoded.asset as string;
   const coinAddress = event.type_arguments[0] as string;
   const coinSymbol = FlashLoanCoins[asset] || "unknown";
 
@@ -437,16 +437,16 @@ async function onRewardsClaimedEventV3(
 }
 
 flash_loan
-  .bind({ startCheckpoint: 120500000n })
+  .bind({ startCheckpoint: 7800000n })
   .onEventFlashLoan(flashLoanHandler)
   .onEventFlashRepay(flashoanRepayHandler);
 
 lending
-  .bind({ startCheckpoint: 120500000n })
+  .bind({ startCheckpoint: 7800000n })
   .onEventLiquidationCallEvent(onLiquidationEvent);
 
 lending_new_liquidation_event
-  .bind({ startCheckpoint: 120500000n })
+  .bind({ startCheckpoint: 7800000n })
   .onEventLiquidationEvent(onLiquidationNewEvent)
   .onEventDepositOnBehalfOfEvent(depositOnBehalfOfHandler)
   .onEventRepayOnBehalfOfEvent(repayOnBehalfOfHandler)
@@ -459,19 +459,19 @@ lending_new_liquidation_event
 //   .onEventSCCProcessedEvent(supraEventHandler)
 
 incentive_v2
-  .bind({ startCheckpoint: 120500000n })
+  .bind({ startCheckpoint: 7800000n })
   .onEventRewardsClaimed(onRewardsClaimedEvent);
 
 lending_new_liquidation_event_v3
-  .bind({ startCheckpoint: 113837268n })
+  .bind({ startCheckpoint: 7800000n })
   .onEventLiquidationEvent(onLiquidationNewEventV3)
   .onEventDepositOnBehalfOfEvent(depositOnBehalfOfHandlerV3)
   .onEventRepayOnBehalfOfEvent(repayOnBehalfOfHandlerV3);
 
 incentive_v3
-  .bind({ startCheckpoint: 113837268n })
+  .bind({ startCheckpoint: 7800000n })
   .onEventRewardClaimed(onRewardsClaimedEventV3);
 
 storage
-  .bind({ startCheckpoint: 120500000n })
+  .bind({ startCheckpoint: 7800000n })
   .onEventWithdrawTreasuryEvent(withdrawTreasuryHandler);

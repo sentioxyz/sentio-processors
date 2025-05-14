@@ -15,7 +15,7 @@ export function PoolProcessor() {
         SuiObjectProcessor.bind({
             objectId: pool,
             network: ChainId.SUI_MAINNET,
-            startCheckpoint: 120500000n
+            startCheckpoint: 7800000n
         }).onTimeInterval(async (self, data, ctx) => {
             //TODO: find out the token type
             const type = String(self.type);
@@ -39,7 +39,7 @@ export function PoolProcessor() {
             ctx.meter.Gauge("balanceForRewardPool").record(balanceForRewardPool, { env: "mainnet", type, coin_type, coin_symbol });
             ctx.meter.Gauge("assetForRewardPool").record(assetForRewardPool, { env: "mainnet", type, coin_type, coin_symbol });
             ctx.meter.Gauge("currentIdxForRewardPool").record(currentIdxForRewardPool, { env: "mainnet", type, coin_type, coin_symbol });
-        
+
         })
     }
 }
