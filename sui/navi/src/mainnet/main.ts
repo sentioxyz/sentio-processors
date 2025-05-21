@@ -108,6 +108,7 @@ async function onEvent(event: LendingEvent, ctx: SuiContext) {
     "23": "0x3e8e9423d80e1774a7ca128fccd8bf5f1f7753be658c5e645929037f7c819040::lbtc::LBTC", //LBTC
     "24": "0x356a26eb9e012a68958082340d4c4116e7f55615cf27affcff209cf0ae544f59::wal::WAL", //WAL
     "25": "0x3a304c7feba2d819ea57c3542d68439ca2c386ba02159c740f7b406e592c62ea::haedal::HAEDAL", //HAEDAL
+    "26": "0x876a4b7bce8aeaef60464c11f4026903e9afacab79b9b142686158aa86560b50::xbtc::XBTC", //XBTC
   };
   const coinAddress = Coins[reserve];
   // const coinAddress = event.data_decoded.pool;

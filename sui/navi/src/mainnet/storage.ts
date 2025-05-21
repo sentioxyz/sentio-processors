@@ -30,6 +30,7 @@ const reserves = [
   "0x1acee7192fe5dd422ee6e0376417f80a709172d67cec1bf0e660666eee6eb627", // Reserve For LBTC
   "0xe6824edab84affecc78646e87fe85ca8fd4374335680e9daee2c981f13dce202", // Reserve For WAL
   "0x09c7b740981a2aa81b407e83d052a46cf1830c7470f80d053e6a49715eb29876", // Reserve For HAEDAL
+  "0x9a1a0533b157361a5cc42ed64fdee6970ab66eb4731afa6dde8e7fe27a36d24d", // Reserve For XBTC
 ];
 
 export function ProtocolProcessor() {
