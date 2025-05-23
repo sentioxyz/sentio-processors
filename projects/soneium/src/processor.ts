@@ -15,6 +15,7 @@ import { network, startBlock, getTokenInfo } from './utils.js'
 import './ccip.js'
 import './stargate.js'
 import { handleACS } from './acs.js'
+import { getDAppProject } from './dapp.js'
 
 const bridges = new Map([
   ['0x1f49a3fa2b5B5b61df8dE486aBb6F3b9df066d86'.toLowerCase(), 'Owlto Finance'],
@@ -64,7 +65,8 @@ GlobalProcessor.bind({ network, startBlock }).onTransaction(
       value: scaleDown(tx.value, 18),
       gasUsed,
       gasCost,
-      l1Fee: ctx.transactionReceipt?.l1Fee ? scaleDown(ctx.transactionReceipt.l1Fee, 18) : undefined
+      l1Fee: ctx.transactionReceipt?.l1Fee ? scaleDown(ctx.transactionReceipt.l1Fee, 18) : undefined,
+      ...getDAppProject(tx)
     })
 
     let existing = userCache.has(user)
