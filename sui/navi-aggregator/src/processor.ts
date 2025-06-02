@@ -144,21 +144,45 @@ async function swapEventHandler(event: aggregator.slippage.SwapEventInstance, ct
         }
     }
 
-    ctx.eventLogger.emit("swapEvent", {
-        user: event.sender,
-        from: event.type_arguments[0],
-        fromSymbol: updateSymbol(fromInfo, event.type_arguments[0]),
-        target: event.type_arguments[1],
-        targetSymbol: updateSymbol(toInfo, event.type_arguments[1]),
-        amount_in: event.data_decoded.amount_in,
-        amount_in_number: Number(event.data_decoded.amount_in) / Math.pow(10, fromInfo.decimal),
-        amount_in_usd: Number(fromValue),
-        amount_out: event.data_decoded.amount_out,
-        amount_out_number: Number(event.data_decoded.amount_out) / Math.pow(10, toInfo.decimal),
-        amount_out_usd: Number(toValue),
-        min_amount_out: event.data_decoded.min_amount_out,
-        referral_code: event.data_decoded.referral_code,
-    });
+
+    if (event.data_decoded.amount_out == BigInt(0)) {
+        let NAVX = '0xa99b8952d4f7d947ea77fe0ecdcc9e5fc0bcab2841d6e2a5aa00c3044e5544b5::navx::NAVX';
+        let USDC = '0xdba34672e30cb065b1f93e3ab55318768fd6fef66c15942c9f7cb846e2f900e7::usdc::USDC';
+        if (event.type_arguments[0] == NAVX && event.type_arguments[1] == USDC || event.type_arguments[0] == USDC && event.type_arguments[1] == NAVX) {
+            fromValue = (toPrice * Number(event.data_decoded.amount_in)) / Math.pow(10, toInfo.decimal);;
+            ctx.eventLogger.emit("swapEvent", {
+                user: event.sender,
+                from: event.type_arguments[1],
+                fromSymbol: updateSymbol(toInfo, event.type_arguments[1]),
+                target: event.type_arguments[0],
+                targetSymbol: updateSymbol(fromInfo, event.type_arguments[0]),
+                amount_in: event.data_decoded.amount_in,
+                amount_in_number: Number(event.data_decoded.amount_in) / Math.pow(10, toInfo.decimal),
+                amount_in_usd: Number(fromValue),
+                amount_out: 0,
+                amount_out_number: 0,
+                amount_out_usd: 0,
+                min_amount_out: 0,
+                referral_code: event.data_decoded.referral_code,
+            });
+        }
+    } else {
+        ctx.eventLogger.emit("swapEvent", {
+            user: event.sender,
+            from: event.type_arguments[0],
+            fromSymbol: updateSymbol(fromInfo, event.type_arguments[0]),
+            target: event.type_arguments[1],
+            targetSymbol: updateSymbol(toInfo, event.type_arguments[1]),
+            amount_in: event.data_decoded.amount_in,
+            amount_in_number: Number(event.data_decoded.amount_in) / Math.pow(10, fromInfo.decimal),
+            amount_in_usd: Number(fromValue),
+            amount_out: event.data_decoded.amount_out,
+            amount_out_number: Number(event.data_decoded.amount_out) / Math.pow(10, toInfo.decimal),
+            amount_out_usd: Number(toValue),
+            min_amount_out: event.data_decoded.min_amount_out,
+            referral_code: event.data_decoded.referral_code,
+        });
+    }
     
     const balanceChanges = ctx.transaction.balanceChanges;
     if (balanceChanges) {
