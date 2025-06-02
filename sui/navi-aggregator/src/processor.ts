@@ -145,7 +145,7 @@ async function swapEventHandler(event: aggregator.slippage.SwapEventInstance, ct
     }
 
 
-    if (event.data_decoded.amount_out == BigInt(0)) {
+    if (event.data_decoded.amount_out == BigInt(0)) { // hot fixed: swap NAVX to USDC
         let NAVX = '0xa99b8952d4f7d947ea77fe0ecdcc9e5fc0bcab2841d6e2a5aa00c3044e5544b5::navx::NAVX';
         let USDC = '0xdba34672e30cb065b1f93e3ab55318768fd6fef66c15942c9f7cb846e2f900e7::usdc::USDC';
         if (event.type_arguments[0] == NAVX && event.type_arguments[1] == USDC || event.type_arguments[0] == USDC && event.type_arguments[1] == NAVX) {
