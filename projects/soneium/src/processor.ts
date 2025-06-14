@@ -16,6 +16,7 @@ import './ccip.js'
 import './stargate.js'
 import { handleACS } from './acs.js'
 import { getDAppProject } from './dapp.js'
+import './tokens.js'
 
 const bridges = new Map([
   ['0x1f49a3fa2b5B5b61df8dE486aBb6F3b9df066d86'.toLowerCase(), 'Owlto Finance'],
