@@ -37,7 +37,7 @@ const tokens: [
   ['vASTR', '0x60336f9296C79dA4294A19153eC87F8E52158e5F', VASTRProcessor, getVASTRContractOnContext],
   ['wstASTR', '0x3b0DC2daC9498A024003609031D973B1171dE09E', WstASTRProcessor, getWstASTRContractOnContext],
   ['xnASTR', '0xea1e08A176528e2d7250a6F7001F18EDF0CaeCF0', XnASTRProcessor, getXnASTRContractOnContext],
-  ['nsASTR', '0xc67476893C166c537afd9bc6bc87b3f228b44337', NsASTRProcessor, getNsASTRContractOnContext],
+  // ['nsASTR', '0xc67476893C166c537afd9bc6bc87b3f228b44337', NsASTRProcessor, getNsASTRContractOnContext],
   ['yayASTR', '0x19a80F5DFE30bdf19054716E221539FC040f3b72', YayASTRProcessor, getYayASTRContractOnContext]
 ]
 
