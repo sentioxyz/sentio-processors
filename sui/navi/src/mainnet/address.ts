@@ -43,10 +43,7 @@ export function AddressProcessor() {
             coin_symbol: COIN_MAP[coin],
           });
         }
-      } catch (e) {
-        console.log(e);
-        console.log(JSON.stringify(self));
-      }
+      } catch (e) {}
     });
   }
 }

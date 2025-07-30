@@ -34,9 +34,7 @@ export function OracleProcessor() {
           ctx.meter
             .Gauge("oracle")
             .record(result, { id: name, name, coin_symbol });
-        } catch (e) {
-          console.log("Oracle Error: ", e, " Entry: ", entry);
-        }
+        } catch (e) {}
       });
     },
     10,

@@ -2,9 +2,14 @@ import { SuiObjectProcessor } from "@sentio/sdk/sui";
 import { ChainId } from "@sentio/chain";
 import { BigDecimal } from "@sentio/sdk";
 import { COIN_MAP, getDecimalBySymbol, getIdBySymbol } from "./utils.js";
+import {
+  updateFeePoolAmount,
+  updateFeePoolWithGrowthTracking,
+  getFeePoolNetGrowth,
+} from "./main.js"; // Import update functions
 
 const feeObjects = [
-  "0xb50bf81444d3489d423f1fe65e862cceb6be8d9f992343f222a558975a2b6938", // Fee Pool For SUI
+  "0xb50bf81444d3489d423f1fe65e862cceb6be8d9f992343f222a558975a2b6938", // Fee Pool For SUI, 0
   "0x3c3b0514ad15d87bad11125c75c2575d164b7eee01b9f68fde996d84d30bd361", // Fee Pool For wUSDC
   "0xae4916db851ca9c79c9083a103771a8b3c79cd04067933eeaeff34e088b30d02", // Fee Pool For USDT
   "0xeeb59a6e47fd80eb0846d127e06e8c0024af56a2c3766f0d3b38dab1808ceb24", // Fee Pool For WETH
@@ -38,41 +43,82 @@ export function FeeProcessor() {
       objectId: feeObject,
       network: ChainId.SUI_MAINNET,
       startCheckpoint: 100000000n,
-    }).onTimeInterval(async (self, data, ctx) => {
-      let coin_type = "0x" + (self.fields as any).name.fields.name;
-      if (
-        coin_type ==
-        "0x0000000000000000000000000000000000000000000000000000000000000002::sui::SUI"
-      ) {
-        coin_type = "0x2::sui::SUI";
-      }
+    }).onTimeInterval(
+      async (self, data, ctx) => {
+        let coin_type = "0x" + (self.fields as any).name.fields.name;
+        if (
+          coin_type ==
+          "0x0000000000000000000000000000000000000000000000000000000000000002::sui::SUI"
+        ) {
+          coin_type = "0x2::sui::SUI";
+        }
 
-      const coin_symbol = COIN_MAP[coin_type];
+        const coin_symbol = COIN_MAP[coin_type];
 
-      //@ts-ignore
-      const value_with_decimal = self.fields.value;
-      const decimal = getDecimalBySymbol(coin_symbol);
+        //@ts-ignore
+        const value_with_decimal = self.fields.value;
+        const decimal = getDecimalBySymbol(coin_symbol);
 
-      let value;
-      if (decimal !== undefined) {
-        value = BigDecimal(value_with_decimal).div(Math.pow(10, decimal));
-      } else {
-        value = BigDecimal(value_with_decimal);
-      }
+        let value;
+        if (decimal !== undefined) {
+          value = BigDecimal(value_with_decimal).div(Math.pow(10, decimal));
+        } else {
+          value = BigDecimal(value_with_decimal);
+        }
 
-      const coin_id = getIdBySymbol(coin_symbol);
+        const coin_id = getIdBySymbol(coin_symbol);
 
-      if (coin_id !== undefined) {
-        ctx.meter
-          .Gauge("feeForPool")
-          .record(value, { env: "mainnet", coin_type, coin_symbol, coin_id: coin_id.toString() });
-      }
+        if (coin_id !== undefined) {
+          ctx.meter.Gauge("feeForPool").record(value, {
+            env: "mainnet",
+            coin_type,
+            coin_symbol,
+            coin_id: coin_id.toString(),
+          });
+        }
 
-      ctx.eventLogger.emit("BorrowFeeEvent", {
-        token: coin_symbol,
-        fee: value,
-        env: "mainnet",
-      });
-    });
+        // Update fee pool amount cache for revenue calculation
+        if (coin_symbol) {
+          updateFeePoolAmount(coin_symbol, value);
+
+          // Update fee pool with growth tracking (only positive changes)
+          // This tracks cumulative net growth: only adds when feeForPool increases, ignores decreases
+          updateFeePoolWithGrowthTracking(coin_symbol, value);
+
+          // Get and record the net growth metric
+          const netGrowth = getFeePoolNetGrowth(coin_symbol);
+
+          // Record fee pool net growth metric (cumulative positive changes only)
+          // This metric represents the total fee accumulation excluding any withdrawals or decreases
+          if (coin_id !== undefined) {
+            ctx.meter.Gauge("feePoolNetGrowth").record(netGrowth, {
+              env: "mainnet",
+              coin_type,
+              coin_symbol,
+              coin_id: coin_id.toString(),
+            });
+          }
+
+          ctx.eventLogger.emit("BorrowFeeEvent", {
+            token: coin_symbol,
+            fee: value,
+            env: "mainnet",
+          });
+
+          ctx.eventLogger.emit("FeePoolDataEvent", {
+            token: coin_symbol,
+            coin_type: coin_type,
+            coin_id: coin_id ? coin_id.toString() : "",
+            current_fee_pool: value,
+            fee_pool_net_growth: netGrowth,
+            object_id: feeObject,
+            env: "mainnet",
+            timestamp: ctx.timestamp,
+          });
+        }
+      },
+      10, // Execute every 10 minutes
+      10 // Offset 10 minutes
+    );
   }
 }
