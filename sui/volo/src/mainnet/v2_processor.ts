@@ -174,10 +174,10 @@ export function PoolProcessorV2() {
 
 // Initialize V2 Event Handlers
 export function initializeV2Processors() {
-  // Bind V2 event handlers - IMPORTANT: Override the default address with V2 address
+  // Bind V2 event handlers
   stake_pool
     .bind({
-      address: V2_STAKE_POOL_ADDRESS, // Override DEFAULT_OPTIONS which has V1 address
+      address: V2_STAKE_POOL_ADDRESS, 
       network: ChainId.SUI_MAINNET,
       startCheckpoint: 51293457n,
     })
