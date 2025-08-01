@@ -70,6 +70,7 @@ const COIN_MAPPING: { [key: string]: string } = {
   "24": "0x356a26eb9e012a68958082340d4c4116e7f55615cf27affcff209cf0ae544f59::wal::WAL", // WAL
   "25": "0x3a304c7feba2d819ea57c3542d68439ca2c386ba02159c740f7b406e592c62ea::haedal::HAEDAL", // HAEDAL
   "26": "0x876a4b7bce8aeaef60464c11f4026903e9afacab79b9b142686158aa86560b50::xbtc::XBTC", // XBTC
+  "27": "0x7262fb2f7a3a14c888c438a3cd9b912469a58cf60f367352c46584262e8299aa::ika::IKA", //IKA
 };
 
 // Initialize historical cumulative withdrawal amounts
@@ -152,18 +153,37 @@ export async function buildCoinInfo(
   ctx: SuiContext | SuiObjectContext,
   coinAddress: string
 ): Promise<token.TokenInfo> {
-  const metadata = await ctx.client.getCoinMetadata({ coinType: coinAddress });
-  //@ts-ignore
-  const symbol = metadata.symbol;
-  //@ts-ignore
-  const decimal = metadata.decimals;
-  //@ts-ignore
-  const name = metadata.name;
-  return {
-    symbol,
-    name,
-    decimal,
-  };
+  // Add safety check for undefined or null coinAddress
+  if (!coinAddress) {
+    console.warn(`buildCoinInfo called with undefined/null coinAddress`);
+    throw new Error(`Invalid coinAddress: ${coinAddress}`);
+  }
+
+  // Additional check for "null" string
+  if (coinAddress === "null") {
+    console.warn(`buildCoinInfo called with "null" string as coinAddress`);
+    throw new Error(`Invalid coinAddress: "null"`);
+  }
+
+  try {
+    const metadata = await ctx.client.getCoinMetadata({
+      coinType: coinAddress,
+    });
+    //@ts-ignore
+    const symbol = metadata.symbol;
+    //@ts-ignore
+    const decimal = metadata.decimals;
+    //@ts-ignore
+    const name = metadata.name;
+    return {
+      symbol,
+      name,
+      decimal,
+    };
+  } catch (error) {
+    console.error(`Error getting coin metadata for ${coinAddress}:`, error);
+    throw error;
+  }
 }
 
 export type LendingEvent =
@@ -185,7 +205,32 @@ FeeProcessor();
 async function onEvent(event: LendingEvent, ctx: SuiContext) {
   const sender = event.data_decoded.sender;
   const reserve = event.data_decoded.reserve;
-  const coinAddress = COIN_MAPPING[reserve];
+
+  // Add comprehensive safety checks for reserve
+  if (reserve === null || reserve === undefined) {
+    console.warn(
+      `Reserve is null or undefined for event: ${JSON.stringify(event.data_decoded)}`
+    );
+    return;
+  }
+
+  // Additional check: if reserve.toString() returns "null", it means reserve is actually null
+  if (reserve.toString() === "null") {
+    console.warn(
+      `Reserve.toString() returns "null" for event: ${JSON.stringify(event.data_decoded)}`
+    );
+    return;
+  }
+
+  const coinAddress = COIN_MAPPING[reserve.toString()];
+
+  // Add safety check for undefined coinAddress
+  if (!coinAddress) {
+    console.warn(
+      `Coin address not found for reserve: ${reserve}, type: ${typeof reserve}, reserve.toString(): "${reserve.toString()}"`
+    );
+    return;
+  }
 
   const typeArray = event.type.split("::");
   const type = typeArray[typeArray.length - 1];

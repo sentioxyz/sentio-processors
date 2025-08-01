@@ -32,6 +32,7 @@ const pools = [
   "0xef76883525f5c2ff90cd97732940dbbdba0b391e29de839b10588cee8e4fe167", // Treasury Pool For WAL
   "0x930f5cf61dcb66d699ba57b2eb72da6fd04c64a53073cc40f751ef12c77aaa6a", // Treasury Pool For HAEDAL
   "0xd9c9a1d8a2f82d752d4f2504c1097636bbe7f0f335a89be85f65fb32dc6b1866", // Treasury Pool For XBTC
+  "0x3566577feaba2f24b9e0b315a10f1afe04e7d275c2da6f28caeba095d00dee8d", // Treasury Pool For IKA
 ];
 
 export function PoolProcessor() {

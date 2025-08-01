@@ -44,6 +44,7 @@ const reserves = [
   "0xe6824edab84affecc78646e87fe85ca8fd4374335680e9daee2c981f13dce202", // 24 - Reserve For WAL
   "0x09c7b740981a2aa81b407e83d052a46cf1830c7470f80d053e6a49715eb29876", // 25 - Reserve For HAEDAL
   "0x9a1a0533b157361a5cc42ed64fdee6970ab66eb4731afa6dde8e7fe27a36d24d", // 26 - Reserve For XBTC
+  "0x96e0827599a28f7eadeaa5165a67c4a5414d21f55070c61b5b66583b2a845d6d", // 27 - Reserve For IKA
 ];
 
 export function ProtocolProcessor() {
