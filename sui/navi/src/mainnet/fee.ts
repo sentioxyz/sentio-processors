@@ -53,7 +53,7 @@ export function FeeProcessor() {
           coin_type = "0x2::sui::SUI";
         }
 
-        const coin_symbol = COIN_MAP[coin_type];
+        const coin_symbol = COIN_MAP[coin_type] || "unknown";
 
         //@ts-ignore
         const value_with_decimal = self.fields.value;
@@ -68,54 +68,51 @@ export function FeeProcessor() {
 
         const coin_id = getIdBySymbol(coin_symbol);
 
-        if (coin_id !== undefined) {
-          ctx.meter.Gauge("feeForPool").record(value, {
-            env: "mainnet",
-            coin_type,
-            coin_symbol,
-            coin_id: coin_id.toString(),
-          });
-        }
+        // Always record fee data, even for unknown coins
+        ctx.meter.Gauge("feeForPool").record(value, {
+          env: "mainnet",
+          coin_type,
+          coin_symbol,
+          coin_id: coin_id ? coin_id.toString() : "unknown",
+        });
 
         // Update fee pool amount cache for revenue calculation
-        if (coin_symbol) {
-          updateFeePoolAmount(coin_symbol, value);
+        // Handle both known and unknown coins
+        updateFeePoolAmount(coin_symbol, value);
 
-          // Update fee pool with growth tracking (only positive changes)
-          // This tracks cumulative net growth: only adds when feeForPool increases, ignores decreases
-          updateFeePoolWithGrowthTracking(coin_symbol, value);
+        // Update fee pool with growth tracking (only positive changes)
+        // This tracks cumulative net growth: only adds when feeForPool increases, ignores decreases
+        updateFeePoolWithGrowthTracking(coin_symbol, value);
 
-          // Get and record the net growth metric
-          const netGrowth = getFeePoolNetGrowth(coin_symbol);
+        // Get and record the net growth metric
+        const netGrowth = getFeePoolNetGrowth(coin_symbol);
 
-          // Record fee pool net growth metric (cumulative positive changes only)
-          // This metric represents the total fee accumulation excluding any withdrawals or decreases
-          if (coin_id !== undefined) {
-            ctx.meter.Gauge("feePoolNetGrowth").record(netGrowth, {
-              env: "mainnet",
-              coin_type,
-              coin_symbol,
-              coin_id: coin_id.toString(),
-            });
-          }
+        // Record fee pool net growth metric (cumulative positive changes only)
+        // This metric represents the total fee accumulation excluding any withdrawals or decreases
+        ctx.meter.Gauge("feePoolNetGrowth").record(netGrowth, {
+          env: "mainnet",
+          coin_type,
+          coin_symbol,
+          coin_id: coin_id ? coin_id.toString() : "unknown",
+        });
 
-          ctx.eventLogger.emit("BorrowFeeEvent", {
-            token: coin_symbol,
-            fee: value,
-            env: "mainnet",
-          });
+        // Always emit BorrowFeeEvent for both known and unknown coins
+        ctx.eventLogger.emit("BorrowFeeEvent", {
+          token: coin_symbol,
+          fee: value,
+          env: "mainnet",
+        });
 
-          ctx.eventLogger.emit("FeePoolDataEvent", {
-            token: coin_symbol,
-            coin_type: coin_type,
-            coin_id: coin_id ? coin_id.toString() : "",
-            current_fee_pool: value,
-            fee_pool_net_growth: netGrowth,
-            object_id: feeObject,
-            env: "mainnet",
-            timestamp: ctx.timestamp,
-          });
-        }
+        ctx.eventLogger.emit("FeePoolDataEvent", {
+          token: coin_symbol,
+          coin_type: coin_type,
+          coin_id: coin_id ? coin_id.toString() : "unknown",
+          current_fee_pool: value,
+          fee_pool_net_growth: netGrowth,
+          object_id: feeObject,
+          env: "mainnet",
+          timestamp: ctx.timestamp,
+        });
       },
       10, // Execute every 10 minutes
       10 // Offset 10 minutes
