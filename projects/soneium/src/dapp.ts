@@ -406,6 +406,7 @@ export const cgProjectEntries: Record<string, string[]> = {
 }
 
 export const defiProjectEntries: Record<string, string[]> = {
+  Wowmax: ['0x2539100fAA6D9A304c5d87Ad8131644559B08450'],
   DyorSwap: ['0xE1A931937c8696aCA22f64212d8a779283b3b3Ab'],
   'Resolv Finance ': ['0x35533f54740F1F1aA4179E57bA37039dfa16868B', '0xb1b385542B6E80F77B94393Ba8342c3Af699f15c'],
   SuperVol: [
@@ -728,7 +729,24 @@ export const defiProjectEntries: Record<string, string[]> = {
 }
 
 export const infraProjectEntries: Record<string, string[]> = {
-  'Socket Protocol': ['0xb3314456567986e657d4C65Ec9e8cB736B92d11D', '0x3043Ad9C9e01664bc3A68477f0870Df35dC4bFf8'],
+  Rivalz: ['0x07bbC170f188a307161e7d0cD4Eb0CF0Cae39405'],
+  'NFT Bridges': [
+    '0xf1cb8D5ac598f03f182e0E1436Ce13583CE16FAb',
+    '0x2D3DE92956a2f80c08304EaA74013308cE663012',
+    '0x8C6fE8f42e98Eae3c61423Ee8B0E4572590Ab14a',
+    '0xBf60811Cdd44b3e80188aD4dcFA26c13D9453612',
+    '0xfE6f0bbE8C29839F1028c9444dFc4da5020cfb66',
+    '0x30338AFF8356C273aD9486c5Ff45D1E0B1f67879',
+    '0xB80A2C82747c00c510e57347FE1aDfE85a79b1b1',
+    '0x8349D91594b1AfE1F72ca1a1f44A2d125E8EB0a8'
+  ],
+  'OrbiterFinance ': ['0x3bDB03ad7363152DFBc185Ee23eBC93F0CF93fd1', '0xe530d28960d48708ccf3e62aa7b42a80bc427aef'],
+  'Socket Protocol': [
+    '0xb3314456567986e657d4C65Ec9e8cB736B92d11D',
+    '0x3043Ad9C9e01664bc3A68477f0870Df35dC4bFf8',
+    '0xb3314456567986e657d4C65Ec9e8cB736B92d11D',
+    '0x3043Ad9C9e01664bc3A68477f0870Df35dC4bFf8'
+  ],
   'Comet Bridge': ['0xb50ac92d6d8748ac42721c25a3e2c84637385a6b', '0x0fbCf4a62036E96C4F6770B38a9B536Aa14d1846'],
   Layer3: ['0x1195Cf65f83B3A5768F3C496D3A05AD6412c64B7'],
   LayerZero: [
@@ -854,8 +872,7 @@ export const infraProjectEntries: Record<string, string[]> = {
     '0x4Ee9dEBB3046139661b51E17bdfD54Fd63211de7',
     '0x93D41E41cA545a35A81d11b08D2eE8b852C768df'
   ],
-  RhinoFi: ['0x5e023c31e1d3dcd08a1b3e8c96f6ef8aa8fcacd1'],
-  'OrbiterFinance ': ['0xe530d28960d48708ccf3e62aa7b42a80bc427aef']
+  RhinoFi: ['0x5e023c31e1d3dcd08a1b3e8c96f6ef8aa8fcacd1']
 }
 
 export const miscProjectEntries: Record<string, string[]> = {
@@ -884,7 +901,7 @@ export const miscProjectEntries: Record<string, string[]> = {
   'SolvBTC.JUP': ['0xAffEb8576b927050f5a3B6fbA43F360D2883A118'],
   'Soneium OG Badge NFT': ['0x2A21B17E366836e5FFB19bd47edB03b4b551C89d'],
   'Astar Expansion NFT': ['0xAF27443284F86CBdc1fa71941e8B787e5A4440De'],
-  Unientified: [
+  Unidentified: [
     '0xC84A2115795052eeE4bbEEF51aa99287951391BB',
     '0xDd639be284d108BB77C4d6d643211B5205f6Cf13',
     '0x465454a3c72f153c5A404d0a5bC2401667455c0F',
