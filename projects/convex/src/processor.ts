@@ -45,7 +45,7 @@ async function getTokenInfo(address: string, chainID: EthChainId): Promise<token
     }
 }
 
-async function getOrCreateToken(chainID:EthChainId, token: string) : Promise<token.TokenInfo | undefined>{
+async function getOrCreateToken(chainID: EthChainId, token: string) : Promise<token.TokenInfo | undefined>{
     let infoPromise = tokenMap.get(token)
     if (!infoPromise) {
         infoPromise = getTokenInfo(token, chainID)

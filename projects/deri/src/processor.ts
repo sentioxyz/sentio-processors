@@ -854,16 +854,16 @@ async function onSymbolImplementation(evt: NewImplementationEvent, ctx: SymbolCo
     console.log(e)
   }
 }
-DTokenProcessor.bind({address: "0xc5b1dE3769921E8b43222e3C221ab495193440C0", network: EthChainId.BINANCE})
+DTokenProcessor.bind({address: "0xc5b1dE3769921E8b43222e3C221ab495193440C0", network: EthChainId.BSC})
 .onEventTransfer(onTransfer)
 
-DTokenProcessor.bind({address: "0x25d5aD687068799739FF7B0e18C7cbff403AcB64", network: EthChainId.BINANCE})
+DTokenProcessor.bind({address: "0x25d5aD687068799739FF7B0e18C7cbff403AcB64", network: EthChainId.BSC})
 .onEventTransfer(onTransfer)
 
-PoolProcessor.bind({address: "0x243681B8Cd79E3823fF574e07B2378B8Ab292c1E", network: EthChainId.BINANCE})
+PoolProcessor.bind({address: "0x243681B8Cd79E3823fF574e07B2378B8Ab292c1E", network: EthChainId.BSC})
 .onEventNewImplementation(onImplementation)
 
-PoolImplementationProcessor.bind({address: "0x243681B8Cd79E3823fF574e07B2378B8Ab292c1E", network: EthChainId.BINANCE
+PoolImplementationProcessor.bind({address: "0x243681B8Cd79E3823fF574e07B2378B8Ab292c1E", network: EthChainId.BSC
 // , startBlock: 28007586
 })
 .onEventAddMarket(onAddMarket)
@@ -872,7 +872,7 @@ PoolImplementationProcessor.bind({address: "0x243681B8Cd79E3823fF574e07B2378B8Ab
 .onEventAddMargin(onChangeMargin)
 .onEventRemoveMargin(onChangeMargin)
 
-SymbolManagerImplementationProcessor.bind({address: "0x543A9FA25ba9a16612274DD707Ac4462eD6988FA", network: EthChainId.BINANCE
+SymbolManagerImplementationProcessor.bind({address: "0x543A9FA25ba9a16612274DD707Ac4462eD6988FA", network: EthChainId.BSC
 // , startBlock: 28007586
 })
 .onEventTrade(onTrade)

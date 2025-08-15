@@ -31,7 +31,7 @@ const price_update_counter = Counter.register("price_update_counter", {
 const CHAIN_ADDRESS_MAP = new Map<EthChainId, string>([
   [EthChainId.ETHEREUM, "0x4305FB66699C3B2702D4d05CF36551390A4c69C6"], //ETH
   [EthChainId.OPTIMISM, "0xff1a0f4744e8582df1ae09d5611b887b6a12925c"], //Optimism
-  [EthChainId.BINANCE, "0x4D7E825f80bDf85e913E0DD2A2D54927e9dE1594"], //BSC
+  [EthChainId.BSC, "0x4D7E825f80bDf85e913E0DD2A2D54927e9dE1594"], //BSC
   // [97, "0xd7308b14bf4008e7c7196ec35610b1427c5702ea"], //BSC testnet
   [EthChainId.POLYGON, "0xff1a0f4744e8582DF1aE09D5611b887B6a12925C"], //Polygon
   [EthChainId.ARBITRUM, "0xff1a0f4744e8582DF1aE09D5611b887B6a12925C"], //Arbitrum
@@ -53,7 +53,7 @@ const CHAIN_ADDRESS_MAP = new Map<EthChainId, string>([
 const CHAIN_NATIVE_MAP = new Map<EthChainId, string>([
   [EthChainId.ETHEREUM, "Crypto.ETH/USD"], //ETH
   [EthChainId.OPTIMISM, "Crypto.OP/USD"], //Optimism
-  [EthChainId.BINANCE, "Crypto.BNB/USD"], //BSC
+  [EthChainId.BSC, "Crypto.BNB/USD"], //BSC
   // ["0xd7308b14bf4008e7c7196ec35610b1427c5702ea".toLowerCase(), "Crypto.BNB/USD"], //BSC testnet
   [EthChainId.POLYGON, "Crypto.MATIC/USD"], //Polygon
   [EthChainId.ARBITRUM, "Crypto.ARB/USD"], //Arbitrum

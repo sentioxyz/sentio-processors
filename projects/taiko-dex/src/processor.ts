@@ -6,8 +6,7 @@ import { UniswapV2PairProcessorTemplate } from "./types/eth/uniswapv2pair.js";
 DEX_FACTORY_ADDRESS_MAP.forEach((address, project) => {
   UniswapV2FactoryProcessor.bind({
     address,
-    //@ts-ignore
-    network: '167000'
+    network: EthChainId.TAIKO
   })
     .onEventPairCreated(async (event, ctx) => {
       ctx.meter.Counter("cumulative_pairs").add(1, { project });
@@ -20,8 +19,7 @@ DEX_FACTORY_ADDRESS_MAP.forEach((address, project) => {
 
       poolTemplate.bind({
         address: event.args.pair,
-        //@ts-ignore
-        network: '167000',
+        network: EthChainId.TAIKO,
         startBlock: ctx.blockNumber,
         baseLabels: { project }
       }, ctx)

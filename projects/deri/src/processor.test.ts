@@ -26,7 +26,7 @@ describe('Test Processor', () => {
 
     const json4 = { address: '0x543A9FA25ba9a16612274DD707Ac4462eD6988FA', blockHash: '0x8f1e191f5d416f2f19453cb90c689ca7155117dc4403ec455d8a88d099da6af3', blockNumber: 13930278, data: '0x0000000000000000000000006e3c29197064ffb48d09fc44cf7c0fb32f06dae6', index: 220, removed: false, topics: [ '0x6b70829fcbe4891157f7a7496f9870927de3c8237adbe9cd39bae09b7382c409' ], transactionHash: '0x1d2a0e529f4a0836f6884b106a3ed9b5486beb6370e6dd4162896e94cd4b0ae2', transactionIndex: 67}
 
-    const resp = await service.eth.testLog(json4, EthChainId.BINANCE)
+    const resp = await service.eth.testLog(json4, EthChainId.BSC)
 
       // mockTransferLog('0x1e4ede388cbc9f4b5c79681b7f94d36a11abebc9', {
       //   from: '0x0000000000000000000000000000000000000000',

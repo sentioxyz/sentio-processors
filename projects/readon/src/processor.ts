@@ -53,7 +53,7 @@ async function cattoOnBlock(_:any, ctx: CattoContext) {
   ctx.meter.Gauge("catto_total_supply").record(await ctx.contract.totalSupply())
 }
 
-StarNFTProcessor.bind({ address: BSC_ADDR, network: EthChainId.BINANCE })
+StarNFTProcessor.bind({ address: BSC_ADDR, network: EthChainId.BSC })
 .onEventApprovalForAll(handleApproval)
 .onEventTransfer(handleTransfer)
 

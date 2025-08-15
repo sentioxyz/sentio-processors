@@ -2,8 +2,7 @@ import { EthChainId, GlobalProcessor } from '@sentio/sdk/eth'
 import { gasCost } from './helper.js'
 
 GlobalProcessor.bind({
-  //@ts-ignore
-  network: '167000',
+  network: EthChainId.TAIKO,
 }).onTransaction(
   async (tx, ctx) => {
     let txStatus = "fail"

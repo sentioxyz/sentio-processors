@@ -6,7 +6,7 @@ export const configs = [
   //   address: "0x7122985656e38BDC0302Db86685bb972b145bD3C",
   // },
   // {
-  //   network: EthChainId.BINANCE,
+  //   network: EthChainId.BSC,
   //   address: "0x80137510979822322193FC997d400D5A6C747bf7",
   // },
   // {

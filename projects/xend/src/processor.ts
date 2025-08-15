@@ -77,11 +77,11 @@ async function getTotalStake(_: any, ctx: XendStakingContext) {
     ctx.meter.Gauge("totalStaked").record(totalStaked, {token: tokenInfo.symbol})
 }
 
-StakedTokenV1Processor.bind({address: "0x4a080377f83D669D7bB83B3184a8A5E61B500608", network: EthChainId.BINANCE})
+StakedTokenV1Processor.bind({address: "0x4a080377f83D669D7bB83B3184a8A5E61B500608", network: EthChainId.BSC})
     .onEventTransfer(transferEventHandler)
     .onEventMint(mintEventHandler)
     .onEventBurn(burnEventHandler)
     .onBlockInterval(blockHandler, 10000, 10000)
 
-XendStakingProcessor.bind({address: "0x3d4D0699C4Df1539Fdc42C6F9594A478c6929051", network: EthChainId.BINANCE})
+XendStakingProcessor.bind({address: "0x3d4D0699C4Df1539Fdc42C6F9594A478c6929051", network: EthChainId.BSC})
 .onBlockInterval(getTotalStake, 10000, 10000)
