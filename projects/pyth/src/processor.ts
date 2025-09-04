@@ -1,3 +1,5 @@
 import './aptos.js'
 import './evm.js'
+import './iota.js'
+import './movement.js'
 import './sui.js'
