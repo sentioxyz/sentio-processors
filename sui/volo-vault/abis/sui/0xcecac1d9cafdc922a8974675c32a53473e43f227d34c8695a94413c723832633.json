@@ -1,0 +1,277 @@
+{
+  "vault_fee_record": {
+    "fileFormatVersion": 6,
+    "address": "0xcecac1d9cafdc922a8974675c32a53473e43f227d34c8695a94413c723832633",
+    "name": "vault_fee_record",
+    "friends": [],
+    "structs": {
+      "AdminCap": {
+        "abilities": {
+          "abilities": [
+            "Store",
+            "Key"
+          ]
+        },
+        "typeParameters": [],
+        "fields": [
+          {
+            "name": "id",
+            "type": {
+              "Struct": {
+                "address": "0x2",
+                "module": "object",
+                "name": "UID",
+                "typeArguments": []
+              }
+            }
+          }
+        ]
+      },
+      "PerformanceFeeRecord": {
+        "abilities": {
+          "abilities": [
+            "Store"
+          ]
+        },
+        "typeParameters": [],
+        "fields": [
+          {
+            "name": "total_claimed",
+            "type": "U64"
+          },
+          {
+            "name": "total_active_cumulated",
+            "type": "U64"
+          }
+        ]
+      },
+      "RecordCap": {
+        "abilities": {
+          "abilities": [
+            "Store",
+            "Key"
+          ]
+        },
+        "typeParameters": [],
+        "fields": [
+          {
+            "name": "id",
+            "type": {
+              "Struct": {
+                "address": "0x2",
+                "module": "object",
+                "name": "UID",
+                "typeArguments": []
+              }
+            }
+          }
+        ]
+      },
+      "VaultPerformanceFeeRecord": {
+        "abilities": {
+          "abilities": [
+            "Store",
+            "Key"
+          ]
+        },
+        "typeParameters": [],
+        "fields": [
+          {
+            "name": "id",
+            "type": {
+              "Struct": {
+                "address": "0x2",
+                "module": "object",
+                "name": "UID",
+                "typeArguments": []
+              }
+            }
+          },
+          {
+            "name": "fees",
+            "type": {
+              "Struct": {
+                "address": "0x2",
+                "module": "table",
+                "name": "Table",
+                "typeArguments": [
+                  "Address",
+                  {
+                    "Struct": {
+                      "address": "0xcecac1d9cafdc922a8974675c32a53473e43f227d34c8695a94413c723832633",
+                      "module": "vault_fee_record",
+                      "name": "PerformanceFeeRecord",
+                      "typeArguments": []
+                    }
+                  }
+                ]
+              }
+            }
+          }
+        ]
+      }
+    },
+    "exposedFunctions": {
+      "claim_performance_fee": {
+        "visibility": "Public",
+        "isEntry": false,
+        "typeParameters": [],
+        "parameters": [
+          {
+            "MutableReference": {
+              "Struct": {
+                "address": "0xcecac1d9cafdc922a8974675c32a53473e43f227d34c8695a94413c723832633",
+                "module": "vault_fee_record",
+                "name": "VaultPerformanceFeeRecord",
+                "typeArguments": []
+              }
+            }
+          },
+          {
+            "Reference": {
+              "Struct": {
+                "address": "0xcecac1d9cafdc922a8974675c32a53473e43f227d34c8695a94413c723832633",
+                "module": "vault_fee_record",
+                "name": "RecordCap",
+                "typeArguments": []
+              }
+            }
+          },
+          "Address",
+          "U64"
+        ],
+        "return": []
+      },
+      "create_fee_record": {
+        "visibility": "Public",
+        "isEntry": false,
+        "typeParameters": [],
+        "parameters": [
+          {
+            "MutableReference": {
+              "Struct": {
+                "address": "0xcecac1d9cafdc922a8974675c32a53473e43f227d34c8695a94413c723832633",
+                "module": "vault_fee_record",
+                "name": "VaultPerformanceFeeRecord",
+                "typeArguments": []
+              }
+            }
+          },
+          {
+            "Reference": {
+              "Struct": {
+                "address": "0xcecac1d9cafdc922a8974675c32a53473e43f227d34c8695a94413c723832633",
+                "module": "vault_fee_record",
+                "name": "AdminCap",
+                "typeArguments": []
+              }
+            }
+          },
+          "Address"
+        ],
+        "return": []
+      },
+      "create_record_cap": {
+        "visibility": "Public",
+        "isEntry": false,
+        "typeParameters": [],
+        "parameters": [
+          {
+            "Reference": {
+              "Struct": {
+                "address": "0xcecac1d9cafdc922a8974675c32a53473e43f227d34c8695a94413c723832633",
+                "module": "vault_fee_record",
+                "name": "AdminCap",
+                "typeArguments": []
+              }
+            }
+          },
+          "Address",
+          {
+            "MutableReference": {
+              "Struct": {
+                "address": "0x2",
+                "module": "tx_context",
+                "name": "TxContext",
+                "typeArguments": []
+              }
+            }
+          }
+        ],
+        "return": []
+      },
+      "cumulate_performance_fee": {
+        "visibility": "Public",
+        "isEntry": false,
+        "typeParameters": [],
+        "parameters": [
+          {
+            "MutableReference": {
+              "Struct": {
+                "address": "0xcecac1d9cafdc922a8974675c32a53473e43f227d34c8695a94413c723832633",
+                "module": "vault_fee_record",
+                "name": "VaultPerformanceFeeRecord",
+                "typeArguments": []
+              }
+            }
+          },
+          {
+            "Reference": {
+              "Struct": {
+                "address": "0xcecac1d9cafdc922a8974675c32a53473e43f227d34c8695a94413c723832633",
+                "module": "vault_fee_record",
+                "name": "RecordCap",
+                "typeArguments": []
+              }
+            }
+          },
+          "Address",
+          "U64"
+        ],
+        "return": []
+      },
+      "get_cumulated_performance_fee": {
+        "visibility": "Public",
+        "isEntry": false,
+        "typeParameters": [],
+        "parameters": [
+          {
+            "Reference": {
+              "Struct": {
+                "address": "0xcecac1d9cafdc922a8974675c32a53473e43f227d34c8695a94413c723832633",
+                "module": "vault_fee_record",
+                "name": "VaultPerformanceFeeRecord",
+                "typeArguments": []
+              }
+            }
+          },
+          "Address"
+        ],
+        "return": [
+          "U64"
+        ]
+      },
+      "get_total_claimed_performance_fee": {
+        "visibility": "Public",
+        "isEntry": false,
+        "typeParameters": [],
+        "parameters": [
+          {
+            "Reference": {
+              "Struct": {
+                "address": "0xcecac1d9cafdc922a8974675c32a53473e43f227d34c8695a94413c723832633",
+                "module": "vault_fee_record",
+                "name": "VaultPerformanceFeeRecord",
+                "typeArguments": []
+              }
+            }
+          },
+          "Address"
+        ],
+        "return": [
+          "U64"
+        ]
+      }
+    }
+  }
+}

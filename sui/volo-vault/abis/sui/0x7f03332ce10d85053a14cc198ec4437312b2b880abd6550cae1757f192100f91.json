@@ -1,0 +1,85 @@
+{
+  "vault_event_recorder": {
+    "fileFormatVersion": 6,
+    "address": "0x7f03332ce10d85053a14cc198ec4437312b2b880abd6550cae1757f192100f91",
+    "name": "vault_event_recorder",
+    "friends": [],
+    "structs": {
+      "VaultStatusRecord": {
+        "abilities": {
+          "abilities": [
+            "Copy",
+            "Drop"
+          ]
+        },
+        "typeParameters": [],
+        "fields": [
+          {
+            "name": "total_usd_value",
+            "type": "U256"
+          },
+          {
+            "name": "principal_price",
+            "type": "U256"
+          },
+          {
+            "name": "total_shares",
+            "type": "U256"
+          },
+          {
+            "name": "share_ratio",
+            "type": "U256"
+          }
+        ]
+      }
+    },
+    "exposedFunctions": {
+      "record_vault_status": {
+        "visibility": "Public",
+        "isEntry": false,
+        "typeParameters": [
+          {
+            "abilities": []
+          }
+        ],
+        "parameters": [
+          {
+            "Reference": {
+              "Struct": {
+                "address": "0xcd86f77503a755c48fe6c87e1b8e9a137ec0c1bf37aac8878b6083262b27fefa",
+                "module": "vault",
+                "name": "Vault",
+                "typeArguments": [
+                  {
+                    "TypeParameter": 0
+                  }
+                ]
+              }
+            }
+          },
+          {
+            "Reference": {
+              "Struct": {
+                "address": "0xcd86f77503a755c48fe6c87e1b8e9a137ec0c1bf37aac8878b6083262b27fefa",
+                "module": "vault_oracle",
+                "name": "OracleConfig",
+                "typeArguments": []
+              }
+            }
+          },
+          {
+            "Reference": {
+              "Struct": {
+                "address": "0x2",
+                "module": "clock",
+                "name": "Clock",
+                "typeArguments": []
+              }
+            }
+          }
+        ],
+        "return": []
+      }
+    }
+  }
+}
