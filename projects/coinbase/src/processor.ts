@@ -77,7 +77,7 @@ const blockHandler = async function (_: any, ctx: StakedTokenV1Context) {
     }
     let cbEthPrice
     if (!exchangeRate.isEqualTo(BigDecimal(0))) {
-        cbEthPrice = BigDecimal(wethPrice).dividedBy(exchangeRate)
+        cbEthPrice = BigDecimal(wethPrice).multipliedBy(exchangeRate)
     } else {
         cbEthPrice = 0
     }
