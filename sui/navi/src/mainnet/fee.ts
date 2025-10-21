@@ -35,6 +35,8 @@ const feeObjects = [
   "0x1d9c1d48435c7cbfd328cddbda6963d22ba18ff16b457e10a55a6d02015512b6", // Fee Pool For LBTC
   "0x14771865853dabe31bc73b3172aad0095dd663023b0a53f0008ddcbed0f77d1a", // Fee Pool For WAL
   "0x06328cc3f67182233ac1707f9e42674440a8216a6aee09c6c49ce427963e1f65", // Fee Pool For HAEDAL
+  "0x5f8e20a081373e84a51fea6cb5eba4a761a016de8d8ac6170479a1da3459bb0a", // Fee Pool For XBTC
+  "0xb2fb106788d43b16fedbbb2f61cd66cb54d3503ab1eb0799eaffc1bd91e67f23", // Fee Pool For IKA
 ];
 
 export function FeeProcessor() {

@@ -4,16 +4,16 @@
 
 // const BASE_URL = "https://vault-api.volosui.com/api/v1";
 
-// // 移除重复检查机制，改为覆盖写入策略
-// // const processedTimestamps = new Set<string>(); // 不再需要
+// // Removed duplicate check mechanism, switched to overwrite strategy
+// // const processedTimestamps = new Set<string>();
 
-// // 获取过去7天的日期列表
+// // Get the list of past 7 days
 // function getPast7Days(): string[] {
 //   const dates = [];
 //   for (let i = 0; i < 7; i++) {
 //     const date = new Date();
 //     date.setDate(date.getDate() - i);
-//     dates.push(date.toISOString().split("T")[0]); // YYYY-MM-DD格式
+//     dates.push(date.toISOString().split("T")[0]);
 //   }
 //   return dates;
 // }
@@ -26,17 +26,17 @@
 //   }).onTimeInterval(
 //     async (self, _, ctx) => {
 //       try {
-//         // 获取vault列表
+//         // Fetch vault list
 //         const listResp = await fetch(`${BASE_URL}/vaults`);
 //         if (!listResp.ok) throw new Error(`GET /vaults -> ${listResp.status}`);
 //         const listJson = (await listResp.json()) as VaultListResponse;
 
-//         // 解析并记录vault列表数据
+//         // Parse and record vault list data
 //         console.log(
 //           `🔍 Processing ${listJson.data.length} vaults at ${ctx.timestamp.toISOString()}`
 //         );
 //         for (const vault of listJson.data) {
-//           // 将status转换为数字类型以匹配现有schema
+//           // Convert status to number to match existing schema
 //           const statusValue =
 //             vault.status === "open"
 //               ? 1
@@ -49,7 +49,7 @@
 //           const vaultMetricsData = {
 //             event_type: "VoloVaultMetrics",
 //             vault_id: vault.id,
-//             vault: vault.id, // 添加vault字段
+//             vault: vault.id,
 //             vaultName: vault.name || "Unknown",
 //             apy7d: Number(vault.apy7d?.value) || 0,
 //             apy30d: Number(vault.apy30d?.value) || 0,
@@ -57,7 +57,7 @@
 //             totalStaked: Number(vault.totalStaked) || 0,
 //             totalStakedUsd: String(vault.totalStakedUsd || "0"),
 //             exchangeRate: Number(vault.exchangeRate) || 0,
-//             status: statusValue, // 数字类型
+//             status: statusValue,
 //             statusText: String(vault.status || "unknown"),
 //             timestamp: ctx.timestamp.toISOString(),
 //             data_source: "volo_api",
@@ -68,7 +68,7 @@
 //           );
 //           ctx.eventLogger.emit("backendRecord", vaultMetricsData);
 
-//           // 🚀 每10分钟记录当前的instant APY
+//           // Record current instant APY every 10 minutes
 //           const instantApyData = {
 //             event_type: "VoloInstantAPY",
 //             vault_id: vault.id,
@@ -87,7 +87,7 @@
 //           );
 //         }
 
-//         // 🔄 为每个vault获取过去7天的历史数据（覆盖写入策略）
+//         // Fetch past 7 days historical data for each vault (overwrite)
 //         const past7Days = getPast7Days();
 //         console.log(
 //           `📅 Fetching historical data for past 7 days: ${past7Days.join(", ")}`
@@ -104,7 +104,7 @@
 //             if (histResp.ok) {
 //               const histJson = (await histResp.json()) as VaultHistResponse;
 
-//               // 🎯 覆盖写入处理：获取所有历史数据，每次都重新写入
+//               // Overwrite handling: fetch all historical data and rewrite each time
 //               console.log(
 //                 `📈 Found ${histJson.data?.length || 0} historical data points for ${vaultName}`
 //               );
@@ -114,22 +114,22 @@
 
 //                 for (const dataPoint of histJson.data) {
 //                   const dataTimestamp = dataPoint.timestamp;
-//                   const dataDate = dataTimestamp.split("T")[0]; // 提取日期部分 YYYY-MM-DD
+//                   const dataDate = dataTimestamp.split("T")[0];
 
-//                   // 只处理过去7天内的数据
+//                   // Only process data within the past 7 days
 //                   if (past7Days.includes(dataDate)) {
-//                     // 解析APY值（去掉%符号）
+//                     // Parse APY value (strip %)
 //                     const apyValue = parseFloat(dataPoint.apy.replace("%", ""));
 
-//                     // 🔍 数据验证
+//                     // Validate data
 //                     if (isNaN(apyValue)) {
 //                       console.log(
 //                         `⚠️ APY parsing failed: raw="${dataPoint.apy}" for ${vaultName} on ${dataDate}`
 //                       );
-//                       continue; // 跳过无效数据
+//                       continue;
 //                     }
 
-//                     // 从vault列表中获取当前的apy7d和apy30d
+//                     // Get current apy7d and apy30d from vault list
 //                     const currentVault = listJson.data.find(
 //                       (v) => v.id === vault
 //                     );
@@ -139,19 +139,19 @@
 //                       vault_id: vault,
 //                       vault: vault,
 //                       vaultName: vaultName,
-//                       apy: apyValue, // 历史APY值
-//                       apyRaw: dataPoint.apy, // 原始APY字符串
-//                       apy7d: Number(currentVault?.apy7d?.value) || 0, // 当前7天APY
-//                       apy30d: Number(currentVault?.apy30d?.value) || 0, // 当前30天APY
-//                       instantAPR: Number(currentVault?.instantAPR) || 0, // 当前即时APR
-//                       dataDate: dataDate, // 保留日期字段便于查询
-//                       timestamp: dataTimestamp, // 使用原始API时间戳
-//                       originalTimestamp: dataTimestamp, // 保留原始时间戳（与timestamp相同）
-//                       processingTimestamp: ctx.timestamp.toISOString(), // 处理时间
+//                       apy: apyValue,
+//                       apyRaw: dataPoint.apy,
+//                       apy7d: Number(currentVault?.apy7d?.value) || 0,
+//                       apy30d: Number(currentVault?.apy30d?.value) || 0,
+//                       instantAPR: Number(currentVault?.instantAPR) || 0,
+//                       dataDate: dataDate,
+//                       timestamp: dataTimestamp,
+//                       originalTimestamp: dataTimestamp,
+//                       processingTimestamp: ctx.timestamp.toISOString(),
 //                       data_source: "volo_api_historical_daily",
 //                     };
 
-//                     // 🔄 覆盖写入 - 每次都写入，不检查重复
+//                     // Overwrite on each run; do not check duplicates
 //                     ctx.eventLogger.emit("backendRecord", historicalData);
 //                     processedCount++;
 
@@ -180,7 +180,7 @@
 //     },
 //     10,
 //     0
-//   ); // 每10分钟查询一次，覆盖写入过去7天数据 + instant APY
+//   );
 // }
 
 // interface VaultListResponse {

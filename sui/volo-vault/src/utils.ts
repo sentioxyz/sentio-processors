@@ -214,19 +214,16 @@ export const VAULT_ID_MAPPING: Record<
     coinSymbol: string;
   }
 > = {
-  // suiBTC Vault实例
   "0x6e53ffe5b77a85ff609b0813955866ec98a072e4aaf628108e717143ec907bd8": {
     vaultType: "SUIBTC_VAULT",
     coinSymbol: "suiBTC",
   },
 
-  // XBTC Vault实例
   "0x041b49dc6625e074f452b9bc60a9a828aebfbef29bcba119ad90a4b11ba405bf": {
     vaultType: "XBTC_VAULT",
     coinSymbol: "XBTC",
   },
 
-  // nUSDC Vault实例
   "0xa97cc9a63710f905deb2da40d6548ce7a75ee3dfe4be0c1d553553d2059c31a3": {
     vaultType: "NUSDC_VAULT",
     coinSymbol: "nUSDC",
@@ -242,7 +239,7 @@ export const VAULT_STATUS_SENDER_MAPPING: Record<
   }
 > = {} as const;
 
-// Helper函数：根据vault ID获取vault信息
+// Helper: get vault info by vaultId
 export function getVaultInfoById(vaultId: string): {
   vaultType: string;
   coinSymbol: string;
@@ -250,7 +247,7 @@ export function getVaultInfoById(vaultId: string): {
   return VAULT_ID_MAPPING[vaultId] || null;
 }
 
-// Helper函数：根据VaultStatusRecord事件sender地址获取vault信息
+// Helper: get vault info by sender of VaultStatusRecord
 export function getVaultInfoBySender(senderAddress: string): {
   vaultType: string;
   vaultId: string;
@@ -259,14 +256,13 @@ export function getVaultInfoBySender(senderAddress: string): {
   return VAULT_STATUS_SENDER_MAPPING[senderAddress] || null;
 }
 
-// Helper函数：添加新的vault状态记录发送者映射（用于动态更新）
+// Helper: add new mapping for vault status sender (dynamic update)
 export function addVaultStatusSenderMapping(
   senderAddress: string,
   vaultType: string,
   vaultId: string,
   coinSymbol: string
 ): void {
-  // 注意：这会修改常量对象，仅用于运行时动态发现
   (VAULT_STATUS_SENDER_MAPPING as any)[senderAddress] = {
     vaultType,
     vaultId,
@@ -274,12 +270,12 @@ export function addVaultStatusSenderMapping(
   };
 }
 
-// Helper函数：获取所有已知的vault IDs
+// Helper: get all known vault IDs
 export function getAllKnownVaultIds(): string[] {
   return Object.keys(VAULT_ID_MAPPING);
 }
 
-// Helper函数：根据vault类型获取vault ID
+// Helper: get vault ID by vault type
 export function getVaultIdByType(vaultType: string): string | null {
   for (const [vaultId, info] of Object.entries(VAULT_ID_MAPPING)) {
     if (info.vaultType === vaultType) {
@@ -289,7 +285,7 @@ export function getVaultIdByType(vaultType: string): string | null {
   return null;
 }
 
-// Helper函数：根据coin symbol获取vault ID
+// Helper: get vault ID by coin symbol
 export function getVaultIdByCoinSymbol(coinSymbol: string): string | null {
   for (const [vaultId, info] of Object.entries(VAULT_ID_MAPPING)) {
     if (info.coinSymbol === coinSymbol) {
@@ -299,24 +295,22 @@ export function getVaultIdByCoinSymbol(coinSymbol: string): string | null {
   return null;
 }
 
-// PerformanceFeeRecord 统一管理地址
-// 所有vault的性能费用记录都存储在这个地址的动态字段中
+// PerformanceFeeRecord central address; dynamic fields store all vault records here
 export const PERFORMANCE_FEE_RECORD_ADDRESS =
   "0x2ae13659389ea8d146d9b6a576f073c4fdc75f5f95adbb16fe621ed6fbc7dc90";
 
-// PerformanceFeeRecord Dynamic Field 配置
-// 用于监控各个 vault 的性能费用记录
+// PerformanceFeeRecord dynamic field configuration for monitoring vault records
 export const PERFORMANCE_FEE_RECORD_MAPPING: Record<
   string,
   {
-    objectId: string; // 动态字段对象ID
-    parentObjectId: string; // 父对象ID（拥有动态字段的对象）
+    objectId: string;
+    parentObjectId: string;
     vaultId: string;
     vaultType: string;
     coinSymbol: string;
   }
 > = {
-  // XBTC Vault 的 PerformanceFeeRecord
+  // XBTC Vault PerformanceFeeRecord
   XBTC_VAULT: {
     objectId:
       "0x3511e0a0465010188fc73d4fb0b9098af27d39d10a70a0fa86fd73159e5146ef",
@@ -327,18 +321,18 @@ export const PERFORMANCE_FEE_RECORD_MAPPING: Record<
     coinSymbol: "XBTC",
   },
 
-  // suiBTC Vault 的 PerformanceFeeRecord (待发现)
+  // SUIBTC Vault PerformanceFeeRecord (TBD)
   // "SUIBTC_VAULT": {
-  //   objectId: "待发现",
+  //   objectId: "TBD",
   //   parentObjectId: PERFORMANCE_FEE_RECORD_ADDRESS,
   //   vaultId: "0x6e53ffe5b77a85ff609b0813955866ec98a072e4aaf628108e717143ec907bd8",
   //   vaultType: "SUIBTC_VAULT",
   //   coinSymbol: "suiBTC",
   // },
 
-  // nUSDC Vault 的 PerformanceFeeRecord (待发现)
+  // nUSDC Vault PerformanceFeeRecord (TBD)
   // "NUSDC_VAULT": {
-  //   objectId: "待发现",
+  //   objectId: "TBD",
   //   parentObjectId: PERFORMANCE_FEE_RECORD_ADDRESS,
   //   vaultId: "0xa97cc9a63710f905deb2da40d6548ce7a75ee3dfe4be0c1d553553d2059c31a3",
   //   vaultType: "NUSDC_VAULT",
@@ -346,7 +340,7 @@ export const PERFORMANCE_FEE_RECORD_MAPPING: Record<
   // },
 } as const;
 
-// Helper函数：获取所有 PerformanceFeeRecord 配置
+// Helper: get all PerformanceFeeRecord configs
 export function getAllPerformanceFeeRecords(): Array<{
   objectId: string;
   parentObjectId: string;
@@ -357,7 +351,7 @@ export function getAllPerformanceFeeRecords(): Array<{
   return Object.values(PERFORMANCE_FEE_RECORD_MAPPING);
 }
 
-// Helper函数：根据 vault 类型获取 PerformanceFeeRecord 配置
+// Helper: get PerformanceFeeRecord by vault type
 export function getPerformanceFeeRecordByVaultType(vaultType: string): {
   objectId: string;
   parentObjectId: string;
@@ -368,7 +362,7 @@ export function getPerformanceFeeRecordByVaultType(vaultType: string): {
   return PERFORMANCE_FEE_RECORD_MAPPING[vaultType] || null;
 }
 
-// Helper函数：根据 coin symbol 获取 PerformanceFeeRecord 配置
+// Helper: get PerformanceFeeRecord by coin symbol
 export function getPerformanceFeeRecordByCoinSymbol(coinSymbol: string): {
   objectId: string;
   parentObjectId: string;
@@ -384,7 +378,7 @@ export function getPerformanceFeeRecordByCoinSymbol(coinSymbol: string): {
   return null;
 }
 
-// Helper函数：根据 vault ID 获取 PerformanceFeeRecord 配置
+// Helper: get PerformanceFeeRecord by vault ID
 export function getPerformanceFeeRecordByVaultId(vaultId: string): {
   objectId: string;
   parentObjectId: string;
@@ -400,22 +394,20 @@ export function getPerformanceFeeRecordByVaultId(vaultId: string): {
   return null;
 }
 
-// RewardsClaimed 发送者地址到 vault_type 的映射
+// Mapping from RewardsClaimed sender address to vault_type
 export const REWARDS_SENDER_TO_VAULT_MAPPING: Record<string, string> = {
-  // SUIBTC Vault 的 Navi Account Cap 地址
   "0x84e1b26743c563fe60eb44ae56c2dd4193d9ef931159e8dbfefe365093552298":
     "SUIBTC_VAULT",
   "0xa7c97f0f7d5163bbe37be83419f212eeab9d0f7f04a23bb407b6062958e514df":
     "SUIBTC_VAULT",
 
-  // XBTC Vault 的 Navi Account Cap 地址
   "0x2653a84c3dd88cbaf481fcf3b2581943332267fe87c2cebd34c194e8105a25bb":
     "XBTC_VAULT",
   "0x5914bedd733f33443cabde42f5e95aa63569a2350448afe46c8affaf0ddbf6b4":
     "XBTC_VAULT",
 } as const;
 
-// Helper函数：根据 RewardsClaimed 发送者地址获取 vault_type
+// Helper: get vault_type by RewardsClaimed sender address
 export function getVaultTypeFromRewardsSender(senderAddress: string): string {
   const normalizedAddress = senderAddress.toLowerCase();
   return REWARDS_SENDER_TO_VAULT_MAPPING[normalizedAddress] || "UNKNOWN_VAULT";

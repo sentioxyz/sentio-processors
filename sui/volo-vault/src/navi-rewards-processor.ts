@@ -90,7 +90,7 @@ async function handleNaviRewardClaimed(
   const ruleIndices = data.rule_indices;
 
   const coinSymbol = COIN_MAP[coinType] || "UNKNOWN";
-  const decimal = getDecimalBySymbol(coinSymbol) || 9; // 默认9位小数
+  const decimal = getDecimalBySymbol(coinSymbol) || 9;
   const totalClaimed = applyTokenDecimalPrecision(
     Number(rawTotalClaimed),
     decimal

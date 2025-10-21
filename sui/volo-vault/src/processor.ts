@@ -12,7 +12,7 @@ import { vault } from "./types/sui/0xc016d83a05418430e72acb76eced534096af83628a0
 import { vault_fee_record } from "./types/sui/0xcecac1d9cafdc922a8974675c32a53473e43f227d34c8695a94413c723832633.js";
 
 // import { VoloApiProcessor } from "./backend.js";
-// Add Navi incentive imports for RewardsClaimed events (只保留 V3)
+// Add Navi incentive imports for RewardsClaimed events
 import { incentive_v3 } from "./types/sui/0x81c408448d0d57b3e371ea94de1d40bf852784d3e225de1e74acab3e8395c18f.js";
 import {
   VAULT_ADDRESSES,
@@ -183,8 +183,6 @@ function performDailyDepositorStatsRecording(
 }
 
 // Simplified daily processing - removed reconciliation logic
-
-// 基本操作事件处理函数
 async function handleDepositRequested(
   event: vault.DepositRequestedInstance,
   ctx: SuiContext
@@ -238,26 +236,21 @@ async function handleDepositExecuted(
   // Update basic statistics
   updateBasicStats(ctx);
 
-  // 🎯 更新存款人数统计
   const depositorStats = getOrCreateVaultDepositorStats(data.vault_id);
   const currentDate = getCurrentDateUTC();
   const recipientAddress = data.recipient;
 
-  // 检查是否为新存款人
   const isNewDepositor = !depositorStats.uniqueDepositors.has(recipientAddress);
 
   if (isNewDepositor) {
-    // 添加新存款人
     depositorStats.uniqueDepositors.add(recipientAddress);
     depositorStats.totalDepositors = depositorStats.uniqueDepositors.size;
 
-    // 重置每日新增存款人统计（如果是新的一天）
     if (depositorStats.lastUpdateDate !== currentDate) {
       depositorStats.dailyNewDepositors.clear();
       depositorStats.lastUpdateDate = currentDate;
     }
 
-    // 添加到每日新增存款人
     depositorStats.dailyNewDepositors.add(recipientAddress);
   }
 
@@ -275,7 +268,6 @@ async function handleDepositExecuted(
     vault_type: vaultType,
     coin_symbol: coinSymbol,
     token_decimals: tokenDecimals,
-    // 存款人统计信息
     is_new_depositor: isNewDepositor,
     total_unique_depositors: depositorStats.totalDepositors,
     daily_new_depositors_count: depositorStats.dailyNewDepositors.size,
@@ -381,7 +373,6 @@ async function handleWithdrawCancelled(
   });
 }
 
-// 资产相关事件处理函数
 async function handleNewAssetTypeAdded(
   event: vault.NewAssetTypeAddedInstance,
   ctx: SuiContext
@@ -458,14 +449,12 @@ async function handleTotalUSDValueUpdated(
   ctx.eventLogger.emit("vaultEvent", {
     vault_id: data.vault_id,
     event_type: "TotalUSDValueUpdated",
-    // 原始和标准化值
-    total_usd_value_raw: data.total_usd_value.toString(), // 原始U256值 转字符串
-    total_usd_value: totalUsdValueNormalized, // 标准化后的USD值
+    total_usd_value_raw: data.total_usd_value.toString(),
+    total_usd_value: totalUsdValueNormalized,
 
     vault_type: vaultInfo?.vaultType || "UNKNOWN_VAULT",
     coin_symbol: vaultInfo?.coinSymbol || getDefaultCoinSymbol(),
-    // 元数据
-    oracle_precision: 18, // Oracle使用18位精度
+    oracle_precision: 18,
     tx_hash: ctx.transaction.digest,
   });
 }
@@ -666,10 +655,6 @@ async function handleRewardClaimed(
   updateBasicStats(ctx);
 }
 
-// Cleanup functions removed - simplified monitoring approach
-
-// Navi RewardsClaimed event handlers (只保留 V3 版本)
-
 async function onRewardsClaimedEventV3(
   event: any, // incentive_v3.RewardClaimedInstance,
   ctx: SuiContext
@@ -677,13 +662,11 @@ async function onRewardsClaimedEventV3(
   const rawAmount = event.data_decoded.total_claimed;
   const coinType = event.data_decoded.coin_type;
 
-  // 🎯 根据coin_type从COIN_MAP获取coin_symbol，然后获取对应的精度
-  // 如果 coinType 不以 0x 开头，则添加 0x 前缀
   const normalizedCoinType = coinType.startsWith("0x")
     ? coinType
     : `0x${coinType}`;
   const coinSymbol = COIN_MAP[normalizedCoinType] || "UNKNOWN";
-  const decimal = getDecimalBySymbol(coinSymbol) || 9; // 默认9位小数
+  const decimal = getDecimalBySymbol(coinSymbol) || 9;
   const normalizedAmount = applyTokenDecimalPrecision(
     Number(rawAmount),
     decimal
@@ -691,18 +674,17 @@ async function onRewardsClaimedEventV3(
 
   // RewardsClaimed V3 processing
 
-  // 根据发送者地址确定vault_type
   const vaultType = getVaultTypeFromRewardsSender(event.data_decoded.user);
 
   ctx.eventLogger.emit("RewardsClaimed", {
     sender: event.data_decoded.user,
-    amount: rawAmount, // 原始amount
-    amount_normalized: normalizedAmount, // 根据精度映射标准化后的amount
+    amount: rawAmount,
+    amount_normalized: normalizedAmount,
     pool: null,
     coin_type: coinType,
-    coin_symbol: coinSymbol, // 从映射获取的币种符号
-    vault_type: vaultType, // 添加vault_type用于聚合
-    decimal: decimal, // 使用的精度
+    coin_symbol: coinSymbol,
+    vault_type: vaultType,
+    decimal: decimal,
     rule_ids: event.data_decoded.rule_ids,
     rule_indices: event.data_decoded.rule_indices.map((index: any) =>
       index.toString()
@@ -711,7 +693,6 @@ async function onRewardsClaimedEventV3(
   });
 }
 
-// 获取所有vault的存款人统计摘要
 export function getDepositorStatsSummary(): Array<{
   vault_id: string;
   vault_type: string;
@@ -744,7 +725,7 @@ export function getDepositorStatsSummary(): Array<{
   return summary;
 }
 
-// Bind RewardsClaimed event handlers to respective contracts (只保留 V3 版本)
+// Bind RewardsClaimed event handlers to respective contracts
 incentive_v3
   .bind({
     address:
@@ -761,10 +742,7 @@ async function handleVaultStatusRecorded(
 ) {
   const data = event.data_decoded;
 
-  // 从新事件中直接获取 vault_id
   const vaultId = data.vault_id;
-
-  // 通过 vault_id 获取 vault 信息
   const vaultInfo = getVaultInfoById(vaultId);
   const vaultType = vaultInfo?.vaultType || "UNKNOWN_VAULT";
   const coinSymbol = vaultInfo?.coinSymbol || "UNKNOWN";
@@ -781,7 +759,7 @@ async function handleVaultStatusRecorded(
   const shareRatioNormalized = applyVaultPrecision(Number(data.share_ratio));
   // total_shares: 764791982576184 (15 digits) = 764791.982576184 (10^9 precision)
   const totalSharesNormalized = applyVaultPrecision(Number(data.total_shares));
-  // total_usd_value: 764574496682453 (15 digits) - 使用vault精度而不是oracle精度
+  // total_usd_value: 764574496682453 (15 digits) - use vault precision instead of oracle precision
   const totalUsdValueNormalized = applyVaultPrecision(
     Number(data.total_usd_value)
   );
@@ -794,7 +772,6 @@ async function handleVaultStatusRecorded(
     identification_method: "EVENT_VAULT_ID",
   };
 
-  // 记录vault的核心指标
   ctx.meter
     .Gauge("vault_total_shares")
     .record(totalSharesNormalized, metricsLabels);
@@ -808,7 +785,6 @@ async function handleVaultStatusRecorded(
     .Gauge("vault_share_ratio")
     .record(shareRatioNormalized, metricsLabels);
 
-  // 计算并记录每股价格
   const sharePrice =
     totalSharesNormalized > 0
       ? totalUsdValueNormalized / totalSharesNormalized
@@ -873,7 +849,7 @@ DynamicFieldPerformanceFeeRecordProcessor();
 
 // VoloApiProcessor();
 
-// Vault addresses to monitor - 确保常量定义正确
+// Vault addresses to monitor
 const VAULT_ADDRESSES_TO_MONITOR = [
   {
     vault_id:
@@ -925,21 +901,17 @@ export function VaultStateMonitorProcessor() {
   }
 
   VAULT_ADDRESSES_TO_MONITOR.forEach((vault) => {
-    // 为每个vault创建一个监听器 - 使用SuiObjectProcessor
     SuiObjectProcessor.bind({
-      objectId: vault.vault_id, // 直接监听vault对象
+      objectId: vault.vault_id,
       network: ChainId.SUI_MAINNET,
       startCheckpoint: 175000000n,
     }).onTimeInterval(
       async (self, data, ctx) => {
-        // 直接从self.fields获取字段数据
         const fieldsMap = (self?.fields as Record<string, any>) || {};
 
-        // 获取币种精度
         const coinDecimal =
           getDecimalBySymbol(vault.coin_symbol) || DEFAULT_COIN_DECIMAL;
 
-        // 提取并标准化字段值 - 使用默认值确保始终有数据
         const depositWithdrawFeeCollected = applyTokenDecimalPrecision(
           Number(fieldsMap?.deposit_withdraw_fee_collected || 0),
           coinDecimal
@@ -965,7 +937,6 @@ export function VaultStateMonitorProcessor() {
         const curEpoch = Number(fieldsMap?.cur_epoch || 0);
         const depositFeeRate = Number(fieldsMap?.deposit_fee_rate || 0);
 
-        // 始终更新缓存
         vaultStateCache.set(vault.vault_id, {
           deposit_withdraw_fee_collected: depositWithdrawFeeCollected,
           claimable_principal: claimablePrincipal,
@@ -980,21 +951,18 @@ export function VaultStateMonitorProcessor() {
           last_updated: new Date(),
         });
 
-        // 始终发出事件日志到SQL - 这是关键的SQL记录点
         ctx.eventLogger.emit("vaultStateCache", {
           event_type: "VaultStateCache",
           vault_id: vault.vault_id,
           vault_type: vault.vault_type,
           coin_symbol: vault.coin_symbol,
           coin_decimal: coinDecimal,
-          // 原始值
           deposit_withdraw_fee_raw:
             fieldsMap?.deposit_withdraw_fee_collected || 0,
           claimable_principal_raw: fieldsMap?.claimable_principal || 0,
           cur_epoch_loss_raw: fieldsMap?.cur_epoch_loss || 0,
           total_shares_raw: fieldsMap?.total_shares || 0,
           free_principal_raw: fieldsMap?.free_principal || 0,
-          // 标准化值
           deposit_withdraw_fee_collected: depositWithdrawFeeCollected,
           claimable_principal: claimablePrincipal,
           cur_epoch_loss: curEpochLoss,
@@ -1003,7 +971,6 @@ export function VaultStateMonitorProcessor() {
           free_principal: freePrincipal,
           cur_epoch: curEpoch,
           deposit_fee_rate: depositFeeRate,
-          // 元数据
           objects_count: self ? 1 : 0,
           has_object_fields: !!self?.fields,
           checkpoint: ctx.checkpoint,
@@ -1012,8 +979,6 @@ export function VaultStateMonitorProcessor() {
           data_source: "vault_state_cache",
           cache_update_time: new Date().toISOString(),
         });
-
-        // 同时保持原有的事件日志（向后兼容）
         ctx.eventLogger.emit("vaultStateMonitor", {
           event_type: "VaultStateMonitor",
           vault_id: vault.vault_id,
@@ -1037,11 +1002,10 @@ export function VaultStateMonitorProcessor() {
       600,
       undefined,
       { owned: false }
-    ); // 每10分钟检查一次
+    );
   });
 }
 
-// VaultFeeState专用处理器 - 定期记录vault费用状态到SQL
 export function VaultFeeStateProcessor() {
   if (
     !VAULT_ADDRESSES_TO_MONITOR ||
@@ -1052,21 +1016,15 @@ export function VaultFeeStateProcessor() {
   }
 
   VAULT_ADDRESSES_TO_MONITOR.forEach((vault) => {
-    // 为每个vault创建一个定期监听器 - 使用SuiObjectProcessor
     SuiObjectProcessor.bind({
       objectId: vault.vault_id,
       network: ChainId.SUI_MAINNET,
       startCheckpoint: 175000000n,
     }).onTimeInterval(
       async (self, data, ctx) => {
-        // 直接从self.fields获取字段数据
         const fieldsMap = (self?.fields as Record<string, any>) || {};
-
-        // 获取币种精度
         const coinDecimal =
           getDecimalBySymbol(vault.coin_symbol) || DEFAULT_COIN_DECIMAL;
-
-        // 从对象字段中提取原始值
         const depositWithdrawFeeRaw =
           fieldsMap?.deposit_withdraw_fee_collected || 0;
         const claimablePrincipalRaw = fieldsMap?.claimable_principal || 0;
@@ -1074,8 +1032,6 @@ export function VaultFeeStateProcessor() {
         const curEpochLossRaw = fieldsMap?.cur_epoch_loss || 0;
         const totalSharesRaw = fieldsMap?.total_shares || 0;
         const curEpochRaw = fieldsMap?.cur_epoch || 0;
-
-        // 计算标准化值
         const depositWithdrawFeeNormalized = applyTokenDecimalPrecision(
           Number(depositWithdrawFeeRaw),
           coinDecimal
@@ -1095,8 +1051,6 @@ export function VaultFeeStateProcessor() {
         const totalSharesNormalized = applyVaultPrecision(
           Number(totalSharesRaw)
         );
-
-        // 始终发出vaultFeeState事件到SQL
         ctx.eventLogger.emit("vaultFeeState", {
           event_type: "VaultFeeState",
           env: "mainnet",
@@ -1104,30 +1058,26 @@ export function VaultFeeStateProcessor() {
           vault_type: vault.vault_type,
           coin_symbol: vault.coin_symbol,
           coin_decimal: coinDecimal,
-          // 原始值
           deposit_withdraw_fee_raw: String(depositWithdrawFeeRaw),
           claimable_principal_raw: String(claimablePrincipalRaw),
           free_principal_raw: String(freePrincipalRaw),
           cur_epoch_loss_raw: String(curEpochLossRaw),
           total_shares_raw: String(totalSharesRaw),
           cur_epoch_raw: String(curEpochRaw),
-          // 标准化值
           deposit_withdraw_fee_collected: depositWithdrawFeeNormalized,
           claimable_principal: claimablePrincipalNormalized,
           free_principal: freePrincipalNormalized,
           cur_epoch_loss: curEpochLossNormalized,
           total_shares: totalSharesNormalized,
           cur_epoch: Number(curEpochRaw),
-          // 元数据
           checkpoint: ctx.checkpoint,
           timestamp: ctx.timestamp,
           data_source: "vault_fee_state_object_processor",
           object_available: !!self,
         });
-
         // VaultFeeState processed
       },
-      1200, // 20分钟间隔（比VaultStateCache稍长一些）
+      1200,
       1200,
       undefined,
       { owned: false }
@@ -1135,18 +1085,16 @@ export function VaultFeeStateProcessor() {
   });
 }
 
-// 动态字段处理器 - 监听PerformanceFeeRecord动态字段变化
 export function DynamicFieldPerformanceFeeRecordProcessor() {
   const knownPerformanceFeeRecords = getAllPerformanceFeeRecords();
 
   knownPerformanceFeeRecords.forEach((record) => {
     SuiWrappedObjectProcessor.bind({
-      objectId: record.parentObjectId, // 父对象ID，拥有动态字段
+      objectId: record.parentObjectId,
       network: ChainId.SUI_MAINNET,
       startCheckpoint: 175000000n,
     }).onTimeInterval(
       async (dynamicFieldObjects, ctx) => {
-        // 定义动态字段类型：Field<address, PerformanceFeeRecord>
         const fieldType: TypeDescriptor<
           dynamic_field.Field<string, vault_fee_record.PerformanceFeeRecord>
         > = dynamic_field.Field.type(
@@ -1161,23 +1109,18 @@ export function DynamicFieldPerformanceFeeRecordProcessor() {
 
         for (const field of fields) {
           const fieldDecoded = field.data_decoded;
-          const vaultAddress = fieldDecoded.name; // vault地址
+          const vaultAddress = fieldDecoded.name;
           const performanceFeeData = fieldDecoded.value;
-
-          // 获取vault信息
           const vaultInfo = getVaultInfoById(vaultAddress);
           const vaultType = vaultInfo?.vaultType || "UNKNOWN_VAULT";
           const coinSymbol = vaultInfo?.coinSymbol || "UNKNOWN";
-
-          // 应用精度处理 - 根据coin_symbol获取对应的精度
-          const coinDecimal = getDecimalBySymbol(coinSymbol) || 9; // 默认9位小数
+          const coinDecimal = getDecimalBySymbol(coinSymbol) || 9;
 
           const totalActiveCumulatedRaw = Number(
             performanceFeeData.total_active_cumulated
           );
           const totalClaimedRaw = Number(performanceFeeData.total_claimed);
 
-          // 使用coin精度进行标准化
           const totalActiveCumulated = applyTokenDecimalPrecision(
             totalActiveCumulatedRaw,
             coinDecimal
@@ -1187,26 +1130,20 @@ export function DynamicFieldPerformanceFeeRecordProcessor() {
             coinDecimal
           );
           const unclaimed = totalActiveCumulated - totalClaimed;
-
-          // 发出事件日志
           ctx.eventLogger.emit("PerformanceFeeRecord", {
             event_type: "DynamicFieldPerformanceFeeRecord",
             vault_address: vaultAddress,
             vault_type: vaultType,
             coin_symbol: coinSymbol,
             coin_decimal: coinDecimal,
-            // 原始值
             total_active_cumulated_raw: totalActiveCumulatedRaw,
             total_claimed_raw: totalClaimedRaw,
-            // 标准化值
             total_active_cumulated: totalActiveCumulated,
             total_claimed: totalClaimed,
             unclaimed: unclaimed,
             timestamp: ctx.timestamp,
             data_source: "dynamic_field_monitoring",
           });
-
-          // 更新指标
           performanceFeeMetrics.performanceFeeActiveCumulated.record(
             ctx,
             totalActiveCumulated,
@@ -1233,7 +1170,7 @@ export function DynamicFieldPerformanceFeeRecordProcessor() {
       300,
       undefined,
       { owned: true }
-    ); // 每5分钟检查一次
+    );
   });
 }
 
@@ -1248,5 +1185,4 @@ export function getAllVaultStates(): Map<string, any> {
   return new Map(vaultStateCache);
 }
 
-// 在所有函数定义完成后调用VaultFeeStateProcessor
 VaultFeeStateProcessor();

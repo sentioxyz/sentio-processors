@@ -40,7 +40,7 @@ const reserves = [
   "0x9a91a751ff83ef1eb940066a60900d479cbd39c6eaccdd203632c97dedd10ce9", // 20 - Reserve For stSUi
   "0xb6a8441d447dd5b7cd45ef874728a700cd05366c331f9cc1e37a4665f0929c2b", // 21 - Reserve For suiBTC
   "0x2e2f8b1c34b23b1db894e08a87adda35b387a289fe644ca479fc4f7ec9065c8e", // 22 - Reserve For SOL
-  "0x1acee7192fe5dd422ee6e0376417f80a709172d67cec1bf0660666eee6eb627", // 23 - Reserve For LBTC
+  "0x1acee7192fe5dd422ee6e0376417f80a709172d67cec1bf0e660666eee6eb627", // 23 - Reserve For LBTC
   "0xe6824edab84affecc78646e87fe85ca8fd4374335680e9daee2c981f13dce202", // 24 - Reserve For WAL
   "0x09c7b740981a2aa81b407e83d052a46cf1830c7470f80d053e6a49715eb29876", // 25 - Reserve For HAEDAL
   "0x9a1a0533b157361a5cc42ed64fdee6970ab66eb4731afa6dde8e7fe27a36d24d", // 26 - Reserve For XBTC

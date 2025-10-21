@@ -250,101 +250,6 @@ async function onEvent(event: LendingEvent, ctx: SuiContext) {
   });
 }
 
-async function onLiquidationEvent(
-  event: lending.LiquidationCallEventInstance,
-  ctx: SuiContext
-) {
-  const sender = event.data_decoded.sender;
-  const liquidation_amount = event.data_decoded.liquidate_amount;
-  const liquidate_user = event.data_decoded.liquidate_user;
-  const reserve = event.data_decoded.reserve;
-  const reserve_Decimal = DECIMAL_MAP[reserve];
-  const reserve_Symbol = SYMBOL_MAP[reserve];
-  const typeArray = event.type.split("::");
-  const type = typeArray[typeArray.length - 1];
-
-  ctx.eventLogger.emit("UserInteraction", {
-    distinctId: sender,
-    sender,
-    liquidation_amount,
-    liquidate_user,
-    reserve,
-    reserve_Decimal,
-    reserve_Symbol,
-    type,
-    env: "mainnet",
-  });
-}
-
-async function onLiquidationNewEvent(
-  event: lending_new_liquidation_event.LiquidationEventInstance,
-  ctx: SuiContext
-) {
-  const sender = event.data_decoded.sender;
-  const user = event.data_decoded.user;
-  const collateral_asset = event.data_decoded.collateral_asset;
-  const collateral_decimal = DECIMAL_MAP[collateral_asset];
-  const collateral_symbol = SYMBOL_MAP[collateral_asset];
-  const collateral_price = event.data_decoded.collateral_price;
-  const collateral_amount = event.data_decoded.collateral_amount;
-  const treasury = event.data_decoded.treasury;
-  const debt_asset = event.data_decoded.debt_asset;
-  const debt_decimal = DECIMAL_MAP[debt_asset];
-  const debt_symbol = SYMBOL_MAP[debt_asset];
-  const debt_price = event.data_decoded.debt_price;
-  const debt_amount = event.data_decoded.debt_amount;
-  const typeArray = event.type.split("::");
-  const type = typeArray[typeArray.length - 1];
-
-  // Safety checks for undefined decimal values
-  if (collateral_decimal === undefined) {
-    return; // Skip processing this event
-  }
-
-  if (debt_decimal === undefined) {
-    return; // Skip processing this event
-  }
-
-  // Additional safety check for symbol mappings
-  if (!collateral_symbol) {
-    return;
-  }
-
-  if (!debt_symbol) {
-    return;
-  }
-
-  ctx.eventLogger.emit("Liquidation", {
-    liquidation_sender: sender,
-    user: user,
-    collateral_asset,
-    collateral_decimal,
-    collateral_decimal_ray: Math.pow(10, collateral_decimal),
-    collateral_symbol,
-    collateral_price,
-    collateral_price_normalized: scaleDown(
-      collateral_price,
-      collateral_decimal
-    ),
-    collateral_amount,
-    collateral_amount_normalized: scaleDown(
-      collateral_amount,
-      collateral_decimal
-    ),
-    treasury,
-    debt_asset,
-    debt_decimal,
-    debt_decimal_ray: Math.pow(10, debt_decimal),
-    debt_symbol,
-    debt_price,
-    debt_price_normalized: scaleDown(debt_price, debt_decimal),
-    debt_amount,
-    debt_amount_normalized: scaleDown(debt_amount, debt_decimal),
-    type,
-    env: "mainnet",
-  });
-}
-
 async function onRewardsClaimedEvent(
   event: incentive_v2.RewardsClaimedInstance,
   ctx: SuiContext
@@ -639,13 +544,8 @@ flash_loan
   .onEventFlashLoan(flashLoanHandler)
   .onEventFlashRepay(flashoanRepayHandler);
 
-lending
-  .bind({ startCheckpoint: 7800000n })
-  .onEventLiquidationCallEvent(onLiquidationEvent);
-
 lending_new_liquidation_event
   .bind({ startCheckpoint: 7800000n })
-  .onEventLiquidationEvent(onLiquidationNewEvent)
   .onEventDepositOnBehalfOfEvent(depositOnBehalfOfHandler)
   .onEventRepayOnBehalfOfEvent(repayOnBehalfOfHandler)
   .onEventBorrowEvent(onEvent)
