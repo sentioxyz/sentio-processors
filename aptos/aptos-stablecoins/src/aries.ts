@@ -7,6 +7,7 @@ async function handleEvent(
   evt:
     | controller.DepositEventInstance
     | controller.DepositRepayForEventInstance
+    | controller.WithdrawEventInstance
     | controller.BeginFlashLoanEventInstance
     | controller.EndFlashLoanEventInstance
     | reserve.MintLPEventInstance
@@ -14,17 +15,21 @@ async function handleEvent(
   ctx: AptosContext
 ) {
   const [coinX, coinY] = evt.type_arguments
-  const [infoX, infoY] = await Promise.all([getTokenInfoWithFallback(coinX), getTokenInfoWithFallback(coinY)])
-  if (infoX.symbol.includes('USD') || infoY.symbol.includes('USD')) {
+  const [infoX, infoY] = await Promise.all([
+    getTokenInfoWithFallback(coinX),
+    coinY ? getTokenInfoWithFallback(coinY) : ({} as any)
+  ])
+  if (infoX.symbol.includes('USD') || infoY.symbol?.includes('USD')) {
     const symbol = infoX.symbol.includes('USD') ? infoX.symbol : infoY.symbol
     recordTx(ctx, ctx.transaction.sender, symbol, 'aries')
   }
 }
 
 controller
-  .bind()
+  .bind({ startVersion: DEFI_START_VERSION })
   .onEventDepositEvent(handleEvent)
   .onEventDepositRepayForEvent(handleEvent)
+  .onEventWithdrawEvent(handleEvent)
   .onEventBeginFlashLoanEvent(handleEvent)
   .onEventEndFlashLoanEvent(handleEvent)
   .onEventSwapEvent(async (evt, ctx) => {
@@ -35,7 +40,8 @@ controller
       recordTx(ctx, ctx.transaction.sender, symbol, 'aries')
     }
     if (infoX.symbol.includes('USD') && infoY.symbol.includes('USD')) {
-      recordSwap(ctx, ctx.transaction.sender, infoX.symbol, infoY.symbol, 'aries')
+      const { amount_in, amount_min_out } = evt.data_decoded
+      recordSwap(ctx, ctx.transaction.sender, infoX, infoY, amount_in, amount_min_out, 'aries')
     }
   })
 

@@ -3,6 +3,7 @@ import { AptosContext, AptosGlobalProcessor, AptosNetwork, AptosResourcesProcess
 import { coin, fungible_asset } from '@sentio/sdk/aptos/builtin/0x1'
 import { getTokenInfoWithFallback, TokenInfo } from '@sentio/sdk/aptos/ext'
 import { LRUCache } from 'lru-cache'
+import { DEFI_START_VERSION } from './consts.js'
 
 const assets = [
   ['Tether USD', 'USDt', '0x357b0b74bc833e95a115ad22604854d6b0fca151cecd94111770e5d6ffc9dc2b'],
@@ -21,17 +22,13 @@ const assets = [
 assets.forEach(([, , address]) => {
   AptosResourcesProcessor.bind({
     network: AptosNetwork.MAIN_NET,
-    address
+    address,
+    startVersion: DEFI_START_VERSION
   }).onTimeInterval(
     async (resources, ctx) => {
       const concurrentSupply = resources.find((x) => x.type == fungible_asset.ConcurrentSupply.TYPE_QNAME)
       const amount = (concurrentSupply?.data as any).current.value
-      // const meta = resources.find((x) => x.type == fungible_asset.Metadata.TYPE_QNAME)
-      const { decimals, symbol } = (await getTokenInfo(address)) || {}
-      if (!amount || !decimals || !symbol) {
-        console.error('asset supply/meta not found for', address, amount, decimals, symbol)
-        return
-      }
+      const { decimals, symbol } = await getTokenInfoWithFallback(address)
       ctx.eventLogger.emit('supply', {
         symbol,
         amount: BigInt(amount).scaleDown(decimals)
@@ -41,20 +38,3 @@ assets.forEach(([, , address]) => {
     60 * 24
   )
 })
-
-const tokenCache = new LRUCache<string, TokenInfo>({
-  max: 100_000
-})
-
-async function getTokenInfo(address: string) {
-  let info = tokenCache.get(address)
-  if (!info) {
-    try {
-      info = await getTokenInfoWithFallback(address)
-      tokenCache.set(address, info)
-    } catch (e) {
-      console.error(e)
-    }
-  }
-  return info
-}

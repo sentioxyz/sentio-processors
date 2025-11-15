@@ -24,7 +24,7 @@ async function handleEvent(
 
 for (const poolProcessor of [weighted_pool, stable_pool]) {
   poolProcessor
-    .bind()
+    .bind({ startVersion: DEFI_START_VERSION })
     .onEventAddLiquidityEvent(handleEvent)
     .onEventRemoveLiquidityEvent(handleEvent)
     .onEventFlashloanEvent(handleEvent)
@@ -36,7 +36,8 @@ for (const poolProcessor of [weighted_pool, stable_pool]) {
         recordTx(ctx, ctx.transaction.sender, symbol, 'thala')
       }
       if (infoX.symbol.includes('USD') && infoY.symbol.includes('USD')) {
-        recordSwap(ctx, ctx.transaction.sender, infoX.symbol, infoY.symbol, 'thala')
+        const { amount_in, amount_out } = evt.data_decoded
+        recordSwap(ctx, ctx.transaction.sender, infoX, infoY, amount_in, amount_out, 'thala')
       }
     })
 }

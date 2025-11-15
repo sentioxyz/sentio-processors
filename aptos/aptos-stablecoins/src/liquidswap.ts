@@ -35,7 +35,7 @@ for (const env of [v0, v05]) {
   const ver = env == v0 ? 'v0' : 'v0.5'
 
   liquidity_pool
-    .bind()
+    .bind({ startVersion: DEFI_START_VERSION })
     .onEventLiquidityAddedEvent(handleEvent)
     .onEventLiquidityRemovedEvent(handleEvent)
     .onEventFlashloanEvent(handleEvent)
@@ -47,7 +47,8 @@ for (const env of [v0, v05]) {
         recordTx(ctx, ctx.transaction.sender, symbol, 'liquidswap')
       }
       if (infoX.symbol.includes('USD') && infoY.symbol.includes('USD')) {
-        recordSwap(ctx, ctx.transaction.sender, infoX.symbol, infoY.symbol, 'liquidswap')
+        const { x_in, x_out, y_in, y_out } = evt.data_decoded
+        recordSwap(ctx, ctx.transaction.sender, infoX, infoY, x_in + x_out, y_in + y_out, 'liquidswap')
       }
     })
 
