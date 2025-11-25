@@ -1,0 +1,228 @@
+[
+	{
+		"fileFormatVersion": 6,
+		"address": "0x2de81c0f5cc2aa176da9f093834efbf846d581afa46516bf4952b6efd3a44992",
+		"name": "gauge_cap",
+		"friends": [],
+		"structs": {
+			"CreateCap": {
+				"abilities": {
+					"abilities": [
+						"Store",
+						"Key"
+					]
+				},
+				"typeParameters": [],
+				"fields": [
+					{
+						"name": "id",
+						"type": {
+							"Struct": {
+								"address": "0x2",
+								"module": "object",
+								"name": "UID",
+								"typeArguments": []
+							}
+						}
+					}
+				]
+			},
+			"GAUGE_CAP": {
+				"abilities": {
+					"abilities": [
+						"Drop"
+					]
+				},
+				"typeParameters": [],
+				"fields": [
+					{
+						"name": "dummy_field",
+						"type": "Bool"
+					}
+				]
+			},
+			"GaugeCap": {
+				"abilities": {
+					"abilities": [
+						"Store",
+						"Key"
+					]
+				},
+				"typeParameters": [],
+				"fields": [
+					{
+						"name": "id",
+						"type": {
+							"Struct": {
+								"address": "0x2",
+								"module": "object",
+								"name": "UID",
+								"typeArguments": []
+							}
+						}
+					},
+					{
+						"name": "gauge_id",
+						"type": {
+							"Struct": {
+								"address": "0x2",
+								"module": "object",
+								"name": "ID",
+								"typeArguments": []
+							}
+						}
+					},
+					{
+						"name": "pool_id",
+						"type": {
+							"Struct": {
+								"address": "0x2",
+								"module": "object",
+								"name": "ID",
+								"typeArguments": []
+							}
+						}
+					}
+				]
+			}
+		},
+		"exposedFunctions": {
+			"create_gauge_cap": {
+				"visibility": "Public",
+				"isEntry": false,
+				"typeParameters": [],
+				"parameters": [
+					{
+						"Reference": {
+							"Struct": {
+								"address": "0x2de81c0f5cc2aa176da9f093834efbf846d581afa46516bf4952b6efd3a44992",
+								"module": "gauge_cap",
+								"name": "CreateCap",
+								"typeArguments": []
+							}
+						}
+					},
+					{
+						"Struct": {
+							"address": "0x2",
+							"module": "object",
+							"name": "ID",
+							"typeArguments": []
+						}
+					},
+					{
+						"Struct": {
+							"address": "0x2",
+							"module": "object",
+							"name": "ID",
+							"typeArguments": []
+						}
+					},
+					{
+						"MutableReference": {
+							"Struct": {
+								"address": "0x2",
+								"module": "tx_context",
+								"name": "TxContext",
+								"typeArguments": []
+							}
+						}
+					}
+				],
+				"return": [
+					{
+						"Struct": {
+							"address": "0x2de81c0f5cc2aa176da9f093834efbf846d581afa46516bf4952b6efd3a44992",
+							"module": "gauge_cap",
+							"name": "GaugeCap",
+							"typeArguments": []
+						}
+					}
+				]
+			},
+			"get_gauge_id": {
+				"visibility": "Public",
+				"isEntry": false,
+				"typeParameters": [],
+				"parameters": [
+					{
+						"Reference": {
+							"Struct": {
+								"address": "0x2de81c0f5cc2aa176da9f093834efbf846d581afa46516bf4952b6efd3a44992",
+								"module": "gauge_cap",
+								"name": "GaugeCap",
+								"typeArguments": []
+							}
+						}
+					}
+				],
+				"return": [
+					{
+						"Struct": {
+							"address": "0x2",
+							"module": "object",
+							"name": "ID",
+							"typeArguments": []
+						}
+					}
+				]
+			},
+			"get_pool_id": {
+				"visibility": "Public",
+				"isEntry": false,
+				"typeParameters": [],
+				"parameters": [
+					{
+						"Reference": {
+							"Struct": {
+								"address": "0x2de81c0f5cc2aa176da9f093834efbf846d581afa46516bf4952b6efd3a44992",
+								"module": "gauge_cap",
+								"name": "GaugeCap",
+								"typeArguments": []
+							}
+						}
+					}
+				],
+				"return": [
+					{
+						"Struct": {
+							"address": "0x2",
+							"module": "object",
+							"name": "ID",
+							"typeArguments": []
+						}
+					}
+				]
+			},
+			"grant_create_cap": {
+				"visibility": "Public",
+				"isEntry": false,
+				"typeParameters": [],
+				"parameters": [
+					{
+						"Reference": {
+							"Struct": {
+								"address": "0x2",
+								"module": "package",
+								"name": "Publisher",
+								"typeArguments": []
+							}
+						}
+					},
+					"Address",
+					{
+						"MutableReference": {
+							"Struct": {
+								"address": "0x2",
+								"module": "tx_context",
+								"name": "TxContext",
+								"typeArguments": []
+							}
+						}
+					}
+				],
+				"return": []
+			}
+		}
+	}
+]
