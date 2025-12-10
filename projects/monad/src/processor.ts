@@ -1,5 +1,10 @@
 import './tx.js'
 
-import './chainlink.js'
-import './circle.js'
-import './wormhole.js'
+import './curvance.js'
+import './curve.js'
+import './euler.js'
+import './gearbox.js'
+import './morpho.js'
+import './mu.js'
+import './uniswap.js'
+import './upshift.js'
