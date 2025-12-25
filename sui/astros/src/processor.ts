@@ -2,7 +2,7 @@ import { SuiContext, SuiNetwork } from "@sentio/sdk/sui";
 import * as aggregator from "./types/sui/0x88dfe5e893bc9fa984d121e4d0d5b2e873dc70ae430cf5b3228ae6cb199cb32b.js";
 import { slippage } from "./types/sui/0x5b7d732adeb3140a2dbf2becd1e9dbe56cee0e3687379bcfe7df4357ea664313.js";
 import * as newSlippage from "./types/sui/0xdd21f177ec772046619e401c7a44eb78c233c0d53b4b2213ad83122eef4147db.js";
-import * as dca from "./types/sui/0xb746ed996cff003909ef6145089b91116f5b77d7b35034adc2ad1b0c1822ef10.js";
+import * as dca from "./types/sui/0xaf08f20a6214169d5dc77c133e98b529bdb9c1db93ac8303dcd50e854504865a.js";
 import { SuiCoinList } from "@sentio/sdk/sui/ext";
 import { getPriceBySymbol, getPriceByType, token } from "@sentio/sdk/utils";
 
@@ -548,7 +548,7 @@ newSlippage.slippage
   });
 
 async function handleDcaOrderCreated(
-  event: dca.main.OrderCreatedInstance,
+  event: dca.order_registry.OrderCreatedInstance,
   ctx: SuiContext
 ) {
   const data = event.data_decoded;
@@ -570,15 +570,10 @@ async function handleDcaOrderCreated(
     toCoin.decimals
   );
 
-  const batchId = data.batch_id ?? null;
-  const batchIdNumber = batchId === null ? null : Number(batchId);
-
   ctx.eventLogger.emit("dcaOrderCreated", {
     txHash: ctx.transaction.digest,
     sender: event.sender,
-    recipe_id: data.recipe_id,
-    batch_id: batchId,
-    batch_id_number: batchIdNumber,
+    order_id: data.order_id,
     gap_duration_ms: data.gap_duration_ms,
     gap_frequency: data.gap_frequency,
     gap_unit: data.gap_unit,
@@ -599,12 +594,12 @@ async function handleDcaOrderCreated(
     from_symbol: fromCoin.symbol,
     to_coin_type: toCoin.type,
     to_symbol: toCoin.symbol,
-    created_time_ms: data.created_time_ms,
+    created_at_ms: data.created_at_ms,
   });
 }
 
 async function handleDcaOrderFilled(
-  event: dca.main.OrderFilledInstance,
+  event: dca.order_registry.OrderFilledInstance,
   ctx: SuiContext
 ) {
   const data = event.data_decoded;
@@ -630,7 +625,7 @@ async function handleDcaOrderFilled(
   ctx.eventLogger.emit("dcaOrderFilled", {
     txHash: ctx.transaction.digest,
     sender: event.sender,
-    recipe_id: data.recipe_id,
+    order_id: data.order_id,
     cycle_number: data.cycle_number,
     fulfilled_time_ms: data.fulfilled_time_ms,
     from_coin_type: fromCoin.type,
@@ -653,7 +648,7 @@ async function handleDcaOrderFilled(
 }
 
 async function handleDcaOrderFinished(
-  event: dca.main.OrderFinishedInstance,
+  event: dca.order_registry.OrderFinishedInstance,
   ctx: SuiContext
 ) {
   const data = event.data_decoded;
@@ -666,21 +661,14 @@ async function handleDcaOrderFinished(
     data.amount_in_returned,
     fromCoin.decimals
   );
-  const amountOutReturnedNumber = toDecimalAmount(
-    data.amount_out_returned,
-    toCoin.decimals
-  );
 
   ctx.eventLogger.emit("dcaOrderFinished", {
     txHash: ctx.transaction.digest,
     sender: event.sender,
-    recipe_id: data.recipe_id,
+    order_id: data.order_id,
     amount_in_returned: data.amount_in_returned,
     amount_in_returned_number: amountInReturnedNumber,
     amount_in_returned_usd: toUsdValue(amountInReturnedNumber, fromCoin.price),
-    amount_out_returned: data.amount_out_returned,
-    amount_out_returned_number: amountOutReturnedNumber,
-    amount_out_returned_usd: toUsdValue(amountOutReturnedNumber, toCoin.price),
     from_coin_type: fromCoin.type,
     from_symbol: fromCoin.symbol,
     to_coin_type: toCoin.type,
@@ -690,7 +678,7 @@ async function handleDcaOrderFinished(
 }
 
 async function handleDcaCycleRefunded(
-  event: dca.main.CycleRefundedInstance,
+  event: dca.order_registry.CycleRefundedInstance,
   ctx: SuiContext
 ) {
   const data = event.data_decoded;
@@ -700,7 +688,7 @@ async function handleDcaCycleRefunded(
   ctx.eventLogger.emit("dcaCycleRefunded", {
     txHash: ctx.transaction.digest,
     sender: event.sender,
-    recipe_id: data.recipe_id,
+    order_id: data.order_id,
     user: data.user,
     token_type: coin.type,
     token_symbol: coin.symbol,
@@ -713,7 +701,7 @@ async function handleDcaCycleRefunded(
 }
 
 async function handleDcaPayoutSent(
-  event: dca.main.PayoutSentInstance,
+  event: dca.order_registry.PayoutSentInstance,
   ctx: SuiContext
 ) {
   const data = event.data_decoded;
@@ -723,7 +711,7 @@ async function handleDcaPayoutSent(
   ctx.eventLogger.emit("dcaPayoutSent", {
     txHash: ctx.transaction.digest,
     sender: event.sender,
-    recipe_id: data.recipe_id,
+    order_id: data.order_id,
     user: data.user,
     token_type: coin.type,
     token_symbol: coin.symbol,
@@ -735,33 +723,10 @@ async function handleDcaPayoutSent(
   });
 }
 
-async function handleDcaWithdrawEvent(
-  event: dca.main.WithdrawEventInstance,
-  ctx: SuiContext
-) {
-  const data = event.data_decoded;
-  const coin = await getCoinContext(ctx, data.token_type);
-  const amountNumber = toDecimalAmount(data.amount, coin.decimals);
-
-  ctx.eventLogger.emit("dcaWithdrawEvent", {
-    txHash: ctx.transaction.digest,
-    sender: event.sender,
-    recipe_id: data.recipe_id,
-    user: data.user,
-    token_type: coin.type,
-    token_symbol: coin.symbol,
-    amount: data.amount,
-    amount_number: amountNumber,
-    amount_usd: toUsdValue(amountNumber, coin.price),
-    withdrawn_at_ms: data.withdrawn_at_ms,
-  });
-}
-
-dca.main
+dca.order_registry
   .bind({ startCheckpoint: START_CHECKPOINT })
   .onEventOrderCreated(handleDcaOrderCreated, { resourceChanges: true })
   .onEventOrderFilled(handleDcaOrderFilled, { resourceChanges: true })
   .onEventOrderFinished(handleDcaOrderFinished, { resourceChanges: true })
   .onEventCycleRefunded(handleDcaCycleRefunded, { resourceChanges: true })
-  .onEventPayoutSent(handleDcaPayoutSent, { resourceChanges: true })
-  .onEventWithdrawEvent(handleDcaWithdrawEvent, { resourceChanges: true });
+  .onEventPayoutSent(handleDcaPayoutSent, { resourceChanges: true });
