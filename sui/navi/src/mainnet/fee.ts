@@ -1,7 +1,12 @@
 import { SuiObjectProcessor } from "@sentio/sdk/sui";
 import { ChainId } from "@sentio/chain";
 import { BigDecimal } from "@sentio/sdk";
-import { COIN_MAP, getDecimalBySymbol, getIdBySymbol } from "./utils.js";
+import {
+  getCoinSymbolByType,
+  getDecimalByCoinType,
+  getIdBySymbol,
+  normalizeCoinType,
+} from "./utils.js";
 import {
   updateFeePoolAmount,
   updateFeePoolWithGrowthTracking,
@@ -44,22 +49,17 @@ export function FeeProcessor() {
     SuiObjectProcessor.bind({
       objectId: feeObject,
       network: ChainId.SUI_MAINNET,
-      startCheckpoint: 100000000n,
+      startCheckpoint: 8000000n,
     }).onTimeInterval(
       async (self, data, ctx) => {
         let coin_type = "0x" + (self.fields as any).name.fields.name;
-        if (
-          coin_type ==
-          "0x0000000000000000000000000000000000000000000000000000000000000002::sui::SUI"
-        ) {
-          coin_type = "0x2::sui::SUI";
-        }
+        coin_type = normalizeCoinType(coin_type);
 
-        const coin_symbol = COIN_MAP[coin_type] || "unknown";
+        const coin_symbol = getCoinSymbolByType(coin_type);
 
         //@ts-ignore
         const value_with_decimal = self.fields.value;
-        const decimal = getDecimalBySymbol(coin_symbol);
+        const decimal = getDecimalByCoinType(coin_type);
 
         let value;
         if (decimal !== undefined) {

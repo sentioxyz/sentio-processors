@@ -11,7 +11,7 @@ export function OracleProcessor() {
   SuiWrappedObjectProcessor.bind({
     network: ChainId.SUI_MAINNET,
     objectId: priceOracle,
-    startCheckpoint: 7800000n,
+    startCheckpoint: 8000000n,
   }).onTimeInterval(
     async (objects, ctx) => {
       const decodedObjects = await ctx.coder.getDynamicFields(
@@ -26,9 +26,10 @@ export function OracleProcessor() {
         const value = priceObject.value;
         const decimal = priceObject.decimal;
         const result = value.asBigDecimal().div(Math.pow(10, Number(decimal)));
-        const coin_symbol = COIN[Number(name)];
+        let coin_symbol = COIN[Number(name)];
+        // Fallback to the raw id when we don't have a mapped symbol
         if (!coin_symbol) {
-          coin_symbol == name;
+          coin_symbol = name;
         }
         try {
           ctx.meter

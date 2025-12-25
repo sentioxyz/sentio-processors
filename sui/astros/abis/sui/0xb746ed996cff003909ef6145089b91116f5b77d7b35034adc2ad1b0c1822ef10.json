@@ -1,0 +1,2272 @@
+{
+  "config": {
+    "fileFormatVersion": 6,
+    "address": "0xb746ed996cff003909ef6145089b91116f5b77d7b35034adc2ad1b0c1822ef10",
+    "name": "config",
+    "friends": [],
+    "structs": {
+      "AdminCap": {
+        "abilities": {
+          "abilities": [
+            "Store",
+            "Key"
+          ]
+        },
+        "typeParameters": [],
+        "fields": [
+          {
+            "name": "id",
+            "type": {
+              "Struct": {
+                "address": "0x2",
+                "module": "object",
+                "name": "UID",
+                "typeArguments": []
+              }
+            }
+          }
+        ]
+      },
+      "GlobalConfig": {
+        "abilities": {
+          "abilities": [
+            "Store",
+            "Key"
+          ]
+        },
+        "typeParameters": [],
+        "fields": [
+          {
+            "name": "id",
+            "type": {
+              "Struct": {
+                "address": "0x2",
+                "module": "object",
+                "name": "UID",
+                "typeArguments": []
+              }
+            }
+          },
+          {
+            "name": "paused",
+            "type": "Bool"
+          },
+          {
+            "name": "version",
+            "type": "U64"
+          }
+        ]
+      },
+      "OperatorCap": {
+        "abilities": {
+          "abilities": [
+            "Store",
+            "Key"
+          ]
+        },
+        "typeParameters": [],
+        "fields": [
+          {
+            "name": "id",
+            "type": {
+              "Struct": {
+                "address": "0x2",
+                "module": "object",
+                "name": "UID",
+                "typeArguments": []
+              }
+            }
+          }
+        ]
+      }
+    },
+    "exposedFunctions": {
+      "get_version": {
+        "visibility": "Public",
+        "isEntry": false,
+        "typeParameters": [],
+        "parameters": [
+          {
+            "Reference": {
+              "Struct": {
+                "address": "0xb746ed996cff003909ef6145089b91116f5b77d7b35034adc2ad1b0c1822ef10",
+                "module": "config",
+                "name": "GlobalConfig",
+                "typeArguments": []
+              }
+            }
+          }
+        ],
+        "return": [
+          "U64"
+        ]
+      },
+      "grant_operator_cap": {
+        "visibility": "Public",
+        "isEntry": false,
+        "typeParameters": [],
+        "parameters": [
+          {
+            "Reference": {
+              "Struct": {
+                "address": "0xb746ed996cff003909ef6145089b91116f5b77d7b35034adc2ad1b0c1822ef10",
+                "module": "config",
+                "name": "GlobalConfig",
+                "typeArguments": []
+              }
+            }
+          },
+          {
+            "Reference": {
+              "Struct": {
+                "address": "0xb746ed996cff003909ef6145089b91116f5b77d7b35034adc2ad1b0c1822ef10",
+                "module": "config",
+                "name": "AdminCap",
+                "typeArguments": []
+              }
+            }
+          },
+          "Address",
+          {
+            "MutableReference": {
+              "Struct": {
+                "address": "0x2",
+                "module": "tx_context",
+                "name": "TxContext",
+                "typeArguments": []
+              }
+            }
+          }
+        ],
+        "return": []
+      },
+      "is_paused": {
+        "visibility": "Public",
+        "isEntry": false,
+        "typeParameters": [],
+        "parameters": [
+          {
+            "Reference": {
+              "Struct": {
+                "address": "0xb746ed996cff003909ef6145089b91116f5b77d7b35034adc2ad1b0c1822ef10",
+                "module": "config",
+                "name": "GlobalConfig",
+                "typeArguments": []
+              }
+            }
+          }
+        ],
+        "return": [
+          "Bool"
+        ]
+      },
+      "set_paused": {
+        "visibility": "Public",
+        "isEntry": false,
+        "typeParameters": [],
+        "parameters": [
+          {
+            "MutableReference": {
+              "Struct": {
+                "address": "0xb746ed996cff003909ef6145089b91116f5b77d7b35034adc2ad1b0c1822ef10",
+                "module": "config",
+                "name": "GlobalConfig",
+                "typeArguments": []
+              }
+            }
+          },
+          {
+            "Reference": {
+              "Struct": {
+                "address": "0xb746ed996cff003909ef6145089b91116f5b77d7b35034adc2ad1b0c1822ef10",
+                "module": "config",
+                "name": "AdminCap",
+                "typeArguments": []
+              }
+            }
+          },
+          "Bool"
+        ],
+        "return": []
+      },
+      "update_package_version": {
+        "visibility": "Public",
+        "isEntry": false,
+        "typeParameters": [],
+        "parameters": [
+          {
+            "MutableReference": {
+              "Struct": {
+                "address": "0xb746ed996cff003909ef6145089b91116f5b77d7b35034adc2ad1b0c1822ef10",
+                "module": "config",
+                "name": "GlobalConfig",
+                "typeArguments": []
+              }
+            }
+          },
+          {
+            "Reference": {
+              "Struct": {
+                "address": "0xb746ed996cff003909ef6145089b91116f5b77d7b35034adc2ad1b0c1822ef10",
+                "module": "config",
+                "name": "AdminCap",
+                "typeArguments": []
+              }
+            }
+          },
+          "U64"
+        ],
+        "return": []
+      }
+    }
+  },
+  "main": {
+    "fileFormatVersion": 6,
+    "address": "0xb746ed996cff003909ef6145089b91116f5b77d7b35034adc2ad1b0c1822ef10",
+    "name": "main",
+    "friends": [],
+    "structs": {
+      "CycleRefunded": {
+        "abilities": {
+          "abilities": [
+            "Copy",
+            "Drop"
+          ]
+        },
+        "typeParameters": [],
+        "fields": [
+          {
+            "name": "recipe_id",
+            "type": "Address"
+          },
+          {
+            "name": "user",
+            "type": "Address"
+          },
+          {
+            "name": "token_type",
+            "type": {
+              "Struct": {
+                "address": "0x1",
+                "module": "type_name",
+                "name": "TypeName",
+                "typeArguments": []
+              }
+            }
+          },
+          {
+            "name": "amount",
+            "type": "U64"
+          },
+          {
+            "name": "cycle_number",
+            "type": "U64"
+          },
+          {
+            "name": "refunded_at_ms",
+            "type": "U64"
+          }
+        ]
+      },
+      "Order": {
+        "abilities": {
+          "abilities": [
+            "Store",
+            "Key"
+          ]
+        },
+        "typeParameters": [],
+        "fields": [
+          {
+            "name": "id",
+            "type": {
+              "Struct": {
+                "address": "0x2",
+                "module": "object",
+                "name": "UID",
+                "typeArguments": []
+              }
+            }
+          },
+          {
+            "name": "user",
+            "type": "Address"
+          },
+          {
+            "name": "batch_id",
+            "type": {
+              "Struct": {
+                "address": "0x1",
+                "module": "option",
+                "name": "Option",
+                "typeArguments": [
+                  "U64"
+                ]
+              }
+            }
+          },
+          {
+            "name": "gap_duration_ms",
+            "type": "U64"
+          },
+          {
+            "name": "order_num",
+            "type": "U64"
+          },
+          {
+            "name": "cliff_duration_ms",
+            "type": "U64"
+          },
+          {
+            "name": "min_amount_out",
+            "type": "U64"
+          },
+          {
+            "name": "max_amount_out",
+            "type": "U64"
+          },
+          {
+            "name": "from_coin_type",
+            "type": {
+              "Struct": {
+                "address": "0x1",
+                "module": "type_name",
+                "name": "TypeName",
+                "typeArguments": []
+              }
+            }
+          },
+          {
+            "name": "to_coin_type",
+            "type": {
+              "Struct": {
+                "address": "0x1",
+                "module": "type_name",
+                "name": "TypeName",
+                "typeArguments": []
+              }
+            }
+          },
+          {
+            "name": "deposited_amount",
+            "type": "U64"
+          },
+          {
+            "name": "original_amount_per_cycle",
+            "type": "U64"
+          },
+          {
+            "name": "fulfilled_time_ms",
+            "type": {
+              "Vector": "U64"
+            }
+          },
+          {
+            "name": "next_execution_time_ms",
+            "type": "U64"
+          },
+          {
+            "name": "current_cycle",
+            "type": "U64"
+          },
+          {
+            "name": "created_at_ms",
+            "type": "U64"
+          },
+          {
+            "name": "in_balance",
+            "type": {
+              "Struct": {
+                "address": "0x2",
+                "module": "bag",
+                "name": "Bag",
+                "typeArguments": []
+              }
+            }
+          },
+          {
+            "name": "out_balance",
+            "type": {
+              "Struct": {
+                "address": "0x2",
+                "module": "bag",
+                "name": "Bag",
+                "typeArguments": []
+              }
+            }
+          },
+          {
+            "name": "out_withdrawn",
+            "type": "U64"
+          },
+          {
+            "name": "status",
+            "type": "U64"
+          },
+          {
+            "name": "executing_flag",
+            "type": "Bool"
+          }
+        ]
+      },
+      "OrderCreated": {
+        "abilities": {
+          "abilities": [
+            "Copy",
+            "Drop"
+          ]
+        },
+        "typeParameters": [],
+        "fields": [
+          {
+            "name": "recipe_id",
+            "type": "Address"
+          },
+          {
+            "name": "batch_id",
+            "type": {
+              "Struct": {
+                "address": "0x1",
+                "module": "option",
+                "name": "Option",
+                "typeArguments": [
+                  "U64"
+                ]
+              }
+            }
+          },
+          {
+            "name": "gap_duration_ms",
+            "type": "U64"
+          },
+          {
+            "name": "gap_frequency",
+            "type": "U64"
+          },
+          {
+            "name": "gap_unit",
+            "type": "U8"
+          },
+          {
+            "name": "order_num",
+            "type": "U64"
+          },
+          {
+            "name": "cliff_duration_ms",
+            "type": "U64"
+          },
+          {
+            "name": "cliff_frequency",
+            "type": "U64"
+          },
+          {
+            "name": "cliff_unit",
+            "type": "U8"
+          },
+          {
+            "name": "min_amount_out",
+            "type": "U64"
+          },
+          {
+            "name": "max_amount_out",
+            "type": "U64"
+          },
+          {
+            "name": "from_coin_type",
+            "type": {
+              "Struct": {
+                "address": "0x1",
+                "module": "type_name",
+                "name": "TypeName",
+                "typeArguments": []
+              }
+            }
+          },
+          {
+            "name": "to_coin_type",
+            "type": {
+              "Struct": {
+                "address": "0x1",
+                "module": "type_name",
+                "name": "TypeName",
+                "typeArguments": []
+              }
+            }
+          },
+          {
+            "name": "deposited_amount",
+            "type": "U64"
+          },
+          {
+            "name": "created_time_ms",
+            "type": "U64"
+          }
+        ]
+      },
+      "OrderFilled": {
+        "abilities": {
+          "abilities": [
+            "Copy",
+            "Drop"
+          ]
+        },
+        "typeParameters": [],
+        "fields": [
+          {
+            "name": "recipe_id",
+            "type": "Address"
+          },
+          {
+            "name": "cycle_number",
+            "type": "U64"
+          },
+          {
+            "name": "fulfilled_time_ms",
+            "type": "U64"
+          },
+          {
+            "name": "from_coin_type",
+            "type": {
+              "Struct": {
+                "address": "0x1",
+                "module": "type_name",
+                "name": "TypeName",
+                "typeArguments": []
+              }
+            }
+          },
+          {
+            "name": "to_coin_type",
+            "type": {
+              "Struct": {
+                "address": "0x1",
+                "module": "type_name",
+                "name": "TypeName",
+                "typeArguments": []
+              }
+            }
+          },
+          {
+            "name": "amount_in_borrowed",
+            "type": "U64"
+          },
+          {
+            "name": "amount_in_spent",
+            "type": "U64"
+          },
+          {
+            "name": "amount_out",
+            "type": "U64"
+          },
+          {
+            "name": "protocol_fee_charged",
+            "type": "U64"
+          }
+        ]
+      },
+      "OrderFinished": {
+        "abilities": {
+          "abilities": [
+            "Copy",
+            "Drop"
+          ]
+        },
+        "typeParameters": [],
+        "fields": [
+          {
+            "name": "recipe_id",
+            "type": "Address"
+          },
+          {
+            "name": "amount_in_returned",
+            "type": "U64"
+          },
+          {
+            "name": "amount_out_returned",
+            "type": "U64"
+          },
+          {
+            "name": "from_coin_type",
+            "type": {
+              "Struct": {
+                "address": "0x1",
+                "module": "type_name",
+                "name": "TypeName",
+                "typeArguments": []
+              }
+            }
+          },
+          {
+            "name": "to_coin_type",
+            "type": {
+              "Struct": {
+                "address": "0x1",
+                "module": "type_name",
+                "name": "TypeName",
+                "typeArguments": []
+              }
+            }
+          },
+          {
+            "name": "is_early_terminated",
+            "type": "Bool"
+          }
+        ]
+      },
+      "OrderRegistry": {
+        "abilities": {
+          "abilities": [
+            "Store",
+            "Key"
+          ]
+        },
+        "typeParameters": [],
+        "fields": [
+          {
+            "name": "id",
+            "type": {
+              "Struct": {
+                "address": "0x2",
+                "module": "object",
+                "name": "UID",
+                "typeArguments": []
+              }
+            }
+          },
+          {
+            "name": "user_orders",
+            "type": {
+              "Struct": {
+                "address": "0x2",
+                "module": "table",
+                "name": "Table",
+                "typeArguments": [
+                  "Address",
+                  {
+                    "Vector": "Address"
+                  }
+                ]
+              }
+            }
+          },
+          {
+            "name": "orders",
+            "type": {
+              "Struct": {
+                "address": "0x2",
+                "module": "table",
+                "name": "Table",
+                "typeArguments": [
+                  "Address",
+                  {
+                    "Struct": {
+                      "address": "0xb746ed996cff003909ef6145089b91116f5b77d7b35034adc2ad1b0c1822ef10",
+                      "module": "main",
+                      "name": "Order",
+                      "typeArguments": []
+                    }
+                  }
+                ]
+              }
+            }
+          },
+          {
+            "name": "batch_orders",
+            "type": {
+              "Struct": {
+                "address": "0x2",
+                "module": "table",
+                "name": "Table",
+                "typeArguments": [
+                  "U64",
+                  {
+                    "Vector": "Address"
+                  }
+                ]
+              }
+            }
+          },
+          {
+            "name": "next_batch_id",
+            "type": "U64"
+          }
+        ]
+      },
+      "PayoutSent": {
+        "abilities": {
+          "abilities": [
+            "Copy",
+            "Drop"
+          ]
+        },
+        "typeParameters": [],
+        "fields": [
+          {
+            "name": "recipe_id",
+            "type": "Address"
+          },
+          {
+            "name": "user",
+            "type": "Address"
+          },
+          {
+            "name": "token_type",
+            "type": {
+              "Struct": {
+                "address": "0x1",
+                "module": "type_name",
+                "name": "TypeName",
+                "typeArguments": []
+              }
+            }
+          },
+          {
+            "name": "amount",
+            "type": "U64"
+          },
+          {
+            "name": "cycle_number",
+            "type": "U64"
+          },
+          {
+            "name": "sent_at_ms",
+            "type": "U64"
+          }
+        ]
+      },
+      "Receipt": {
+        "abilities": {
+          "abilities": [
+            "Store",
+            "Key"
+          ]
+        },
+        "typeParameters": [],
+        "fields": [
+          {
+            "name": "id",
+            "type": {
+              "Struct": {
+                "address": "0x2",
+                "module": "object",
+                "name": "UID",
+                "typeArguments": []
+              }
+            }
+          },
+          {
+            "name": "order_id",
+            "type": "Address"
+          },
+          {
+            "name": "batch_id",
+            "type": {
+              "Struct": {
+                "address": "0x1",
+                "module": "option",
+                "name": "Option",
+                "typeArguments": [
+                  "U64"
+                ]
+              }
+            }
+          }
+        ]
+      },
+      "WithdrawEvent": {
+        "abilities": {
+          "abilities": [
+            "Copy",
+            "Drop"
+          ]
+        },
+        "typeParameters": [],
+        "fields": [
+          {
+            "name": "recipe_id",
+            "type": "Address"
+          },
+          {
+            "name": "user",
+            "type": "Address"
+          },
+          {
+            "name": "token_type",
+            "type": {
+              "Struct": {
+                "address": "0x1",
+                "module": "type_name",
+                "name": "TypeName",
+                "typeArguments": []
+              }
+            }
+          },
+          {
+            "name": "amount",
+            "type": "U64"
+          },
+          {
+            "name": "withdrawn_at_ms",
+            "type": "U64"
+          }
+        ]
+      }
+    },
+    "exposedFunctions": {
+      "cancel_order": {
+        "visibility": "Public",
+        "isEntry": false,
+        "typeParameters": [
+          {
+            "abilities": []
+          },
+          {
+            "abilities": []
+          }
+        ],
+        "parameters": [
+          {
+            "Reference": {
+              "Struct": {
+                "address": "0xb746ed996cff003909ef6145089b91116f5b77d7b35034adc2ad1b0c1822ef10",
+                "module": "config",
+                "name": "GlobalConfig",
+                "typeArguments": []
+              }
+            }
+          },
+          {
+            "MutableReference": {
+              "Struct": {
+                "address": "0xb746ed996cff003909ef6145089b91116f5b77d7b35034adc2ad1b0c1822ef10",
+                "module": "main",
+                "name": "OrderRegistry",
+                "typeArguments": []
+              }
+            }
+          },
+          {
+            "Struct": {
+              "address": "0xb746ed996cff003909ef6145089b91116f5b77d7b35034adc2ad1b0c1822ef10",
+              "module": "main",
+              "name": "Receipt",
+              "typeArguments": []
+            }
+          },
+          {
+            "Reference": {
+              "Struct": {
+                "address": "0x2",
+                "module": "clock",
+                "name": "Clock",
+                "typeArguments": []
+              }
+            }
+          },
+          {
+            "MutableReference": {
+              "Struct": {
+                "address": "0x2",
+                "module": "tx_context",
+                "name": "TxContext",
+                "typeArguments": []
+              }
+            }
+          }
+        ],
+        "return": [
+          {
+            "Struct": {
+              "address": "0x2",
+              "module": "balance",
+              "name": "Balance",
+              "typeArguments": [
+                {
+                  "TypeParameter": 0
+                }
+              ]
+            }
+          },
+          {
+            "Struct": {
+              "address": "0x2",
+              "module": "balance",
+              "name": "Balance",
+              "typeArguments": [
+                {
+                  "TypeParameter": 1
+                }
+              ]
+            }
+          }
+        ]
+      },
+      "claim_all_output": {
+        "visibility": "Public",
+        "isEntry": false,
+        "typeParameters": [
+          {
+            "abilities": []
+          }
+        ],
+        "parameters": [
+          {
+            "Reference": {
+              "Struct": {
+                "address": "0xb746ed996cff003909ef6145089b91116f5b77d7b35034adc2ad1b0c1822ef10",
+                "module": "config",
+                "name": "GlobalConfig",
+                "typeArguments": []
+              }
+            }
+          },
+          {
+            "MutableReference": {
+              "Struct": {
+                "address": "0xb746ed996cff003909ef6145089b91116f5b77d7b35034adc2ad1b0c1822ef10",
+                "module": "main",
+                "name": "OrderRegistry",
+                "typeArguments": []
+              }
+            }
+          },
+          {
+            "Reference": {
+              "Struct": {
+                "address": "0xb746ed996cff003909ef6145089b91116f5b77d7b35034adc2ad1b0c1822ef10",
+                "module": "main",
+                "name": "Receipt",
+                "typeArguments": []
+              }
+            }
+          },
+          {
+            "Reference": {
+              "Struct": {
+                "address": "0x2",
+                "module": "clock",
+                "name": "Clock",
+                "typeArguments": []
+              }
+            }
+          },
+          {
+            "MutableReference": {
+              "Struct": {
+                "address": "0x2",
+                "module": "tx_context",
+                "name": "TxContext",
+                "typeArguments": []
+              }
+            }
+          }
+        ],
+        "return": [
+          {
+            "Struct": {
+              "address": "0x2",
+              "module": "balance",
+              "name": "Balance",
+              "typeArguments": [
+                {
+                  "TypeParameter": 0
+                }
+              ]
+            }
+          }
+        ]
+      },
+      "claim_order": {
+        "visibility": "Public",
+        "isEntry": false,
+        "typeParameters": [
+          {
+            "abilities": []
+          },
+          {
+            "abilities": []
+          }
+        ],
+        "parameters": [
+          {
+            "Reference": {
+              "Struct": {
+                "address": "0xb746ed996cff003909ef6145089b91116f5b77d7b35034adc2ad1b0c1822ef10",
+                "module": "config",
+                "name": "GlobalConfig",
+                "typeArguments": []
+              }
+            }
+          },
+          {
+            "MutableReference": {
+              "Struct": {
+                "address": "0xb746ed996cff003909ef6145089b91116f5b77d7b35034adc2ad1b0c1822ef10",
+                "module": "main",
+                "name": "OrderRegistry",
+                "typeArguments": []
+              }
+            }
+          },
+          {
+            "Struct": {
+              "address": "0xb746ed996cff003909ef6145089b91116f5b77d7b35034adc2ad1b0c1822ef10",
+              "module": "main",
+              "name": "Receipt",
+              "typeArguments": []
+            }
+          },
+          {
+            "Reference": {
+              "Struct": {
+                "address": "0x2",
+                "module": "clock",
+                "name": "Clock",
+                "typeArguments": []
+              }
+            }
+          },
+          {
+            "MutableReference": {
+              "Struct": {
+                "address": "0x2",
+                "module": "tx_context",
+                "name": "TxContext",
+                "typeArguments": []
+              }
+            }
+          }
+        ],
+        "return": [
+          {
+            "Struct": {
+              "address": "0x2",
+              "module": "balance",
+              "name": "Balance",
+              "typeArguments": [
+                {
+                  "TypeParameter": 0
+                }
+              ]
+            }
+          },
+          {
+            "Struct": {
+              "address": "0x2",
+              "module": "balance",
+              "name": "Balance",
+              "typeArguments": [
+                {
+                  "TypeParameter": 1
+                }
+              ]
+            }
+          }
+        ]
+      },
+      "create_order": {
+        "visibility": "Public",
+        "isEntry": false,
+        "typeParameters": [
+          {
+            "abilities": []
+          },
+          {
+            "abilities": []
+          }
+        ],
+        "parameters": [
+          {
+            "Reference": {
+              "Struct": {
+                "address": "0xb746ed996cff003909ef6145089b91116f5b77d7b35034adc2ad1b0c1822ef10",
+                "module": "config",
+                "name": "GlobalConfig",
+                "typeArguments": []
+              }
+            }
+          },
+          {
+            "MutableReference": {
+              "Struct": {
+                "address": "0xb746ed996cff003909ef6145089b91116f5b77d7b35034adc2ad1b0c1822ef10",
+                "module": "main",
+                "name": "OrderRegistry",
+                "typeArguments": []
+              }
+            }
+          },
+          {
+            "Struct": {
+              "address": "0x2",
+              "module": "balance",
+              "name": "Balance",
+              "typeArguments": [
+                {
+                  "TypeParameter": 0
+                }
+              ]
+            }
+          },
+          "U64",
+          "U8",
+          "U64",
+          "U64",
+          "U8",
+          "U64",
+          "U64",
+          {
+            "Reference": {
+              "Struct": {
+                "address": "0x2",
+                "module": "clock",
+                "name": "Clock",
+                "typeArguments": []
+              }
+            }
+          },
+          {
+            "MutableReference": {
+              "Struct": {
+                "address": "0x2",
+                "module": "tx_context",
+                "name": "TxContext",
+                "typeArguments": []
+              }
+            }
+          }
+        ],
+        "return": [
+          {
+            "Struct": {
+              "address": "0xb746ed996cff003909ef6145089b91116f5b77d7b35034adc2ad1b0c1822ef10",
+              "module": "main",
+              "name": "Receipt",
+              "typeArguments": []
+            }
+          }
+        ]
+      },
+      "end_execute_order": {
+        "visibility": "Public",
+        "isEntry": false,
+        "typeParameters": [
+          {
+            "abilities": []
+          },
+          {
+            "abilities": []
+          }
+        ],
+        "parameters": [
+          {
+            "Reference": {
+              "Struct": {
+                "address": "0xb746ed996cff003909ef6145089b91116f5b77d7b35034adc2ad1b0c1822ef10",
+                "module": "config",
+                "name": "GlobalConfig",
+                "typeArguments": []
+              }
+            }
+          },
+          {
+            "MutableReference": {
+              "Struct": {
+                "address": "0xb746ed996cff003909ef6145089b91116f5b77d7b35034adc2ad1b0c1822ef10",
+                "module": "main",
+                "name": "OrderRegistry",
+                "typeArguments": []
+              }
+            }
+          },
+          {
+            "Struct": {
+              "address": "0xb746ed996cff003909ef6145089b91116f5b77d7b35034adc2ad1b0c1822ef10",
+              "module": "types",
+              "name": "ExecTicket",
+              "typeArguments": []
+            }
+          },
+          {
+            "Struct": {
+              "address": "0x2",
+              "module": "coin",
+              "name": "Coin",
+              "typeArguments": [
+                {
+                  "TypeParameter": 1
+                }
+              ]
+            }
+          },
+          {
+            "Reference": {
+              "Struct": {
+                "address": "0x2",
+                "module": "clock",
+                "name": "Clock",
+                "typeArguments": []
+              }
+            }
+          },
+          {
+            "MutableReference": {
+              "Struct": {
+                "address": "0x2",
+                "module": "tx_context",
+                "name": "TxContext",
+                "typeArguments": []
+              }
+            }
+          }
+        ],
+        "return": []
+      },
+      "get_current_cycle": {
+        "visibility": "Public",
+        "isEntry": false,
+        "typeParameters": [],
+        "parameters": [
+          {
+            "Reference": {
+              "Struct": {
+                "address": "0xb746ed996cff003909ef6145089b91116f5b77d7b35034adc2ad1b0c1822ef10",
+                "module": "main",
+                "name": "Order",
+                "typeArguments": []
+              }
+            }
+          }
+        ],
+        "return": [
+          "U64"
+        ]
+      },
+      "get_deposited_amount": {
+        "visibility": "Public",
+        "isEntry": false,
+        "typeParameters": [],
+        "parameters": [
+          {
+            "Reference": {
+              "Struct": {
+                "address": "0xb746ed996cff003909ef6145089b91116f5b77d7b35034adc2ad1b0c1822ef10",
+                "module": "main",
+                "name": "Order",
+                "typeArguments": []
+              }
+            }
+          }
+        ],
+        "return": [
+          "U64"
+        ]
+      },
+      "get_fulfilled_time_ms": {
+        "visibility": "Public",
+        "isEntry": false,
+        "typeParameters": [],
+        "parameters": [
+          {
+            "Reference": {
+              "Struct": {
+                "address": "0xb746ed996cff003909ef6145089b91116f5b77d7b35034adc2ad1b0c1822ef10",
+                "module": "main",
+                "name": "Order",
+                "typeArguments": []
+              }
+            }
+          }
+        ],
+        "return": [
+          {
+            "Reference": {
+              "Vector": "U64"
+            }
+          }
+        ]
+      },
+      "get_next_execution_time_ms": {
+        "visibility": "Public",
+        "isEntry": false,
+        "typeParameters": [],
+        "parameters": [
+          {
+            "Reference": {
+              "Struct": {
+                "address": "0xb746ed996cff003909ef6145089b91116f5b77d7b35034adc2ad1b0c1822ef10",
+                "module": "main",
+                "name": "Order",
+                "typeArguments": []
+              }
+            }
+          }
+        ],
+        "return": [
+          "U64"
+        ]
+      },
+      "get_order_details": {
+        "visibility": "Public",
+        "isEntry": false,
+        "typeParameters": [],
+        "parameters": [
+          {
+            "Reference": {
+              "Struct": {
+                "address": "0xb746ed996cff003909ef6145089b91116f5b77d7b35034adc2ad1b0c1822ef10",
+                "module": "main",
+                "name": "OrderRegistry",
+                "typeArguments": []
+              }
+            }
+          },
+          "Address"
+        ],
+        "return": [
+          {
+            "Reference": {
+              "Struct": {
+                "address": "0xb746ed996cff003909ef6145089b91116f5b77d7b35034adc2ad1b0c1822ef10",
+                "module": "main",
+                "name": "Order",
+                "typeArguments": []
+              }
+            }
+          }
+        ]
+      },
+      "get_order_num": {
+        "visibility": "Public",
+        "isEntry": false,
+        "typeParameters": [],
+        "parameters": [
+          {
+            "Reference": {
+              "Struct": {
+                "address": "0xb746ed996cff003909ef6145089b91116f5b77d7b35034adc2ad1b0c1822ef10",
+                "module": "main",
+                "name": "Order",
+                "typeArguments": []
+              }
+            }
+          }
+        ],
+        "return": [
+          "U64"
+        ]
+      },
+      "get_order_status": {
+        "visibility": "Public",
+        "isEntry": false,
+        "typeParameters": [],
+        "parameters": [
+          {
+            "Reference": {
+              "Struct": {
+                "address": "0xb746ed996cff003909ef6145089b91116f5b77d7b35034adc2ad1b0c1822ef10",
+                "module": "main",
+                "name": "Order",
+                "typeArguments": []
+              }
+            }
+          }
+        ],
+        "return": [
+          "U64"
+        ]
+      },
+      "get_order_user": {
+        "visibility": "Public",
+        "isEntry": false,
+        "typeParameters": [],
+        "parameters": [
+          {
+            "Reference": {
+              "Struct": {
+                "address": "0xb746ed996cff003909ef6145089b91116f5b77d7b35034adc2ad1b0c1822ef10",
+                "module": "main",
+                "name": "Order",
+                "typeArguments": []
+              }
+            }
+          }
+        ],
+        "return": [
+          "Address"
+        ]
+      },
+      "get_receipt_batch_id": {
+        "visibility": "Public",
+        "isEntry": false,
+        "typeParameters": [],
+        "parameters": [
+          {
+            "Reference": {
+              "Struct": {
+                "address": "0xb746ed996cff003909ef6145089b91116f5b77d7b35034adc2ad1b0c1822ef10",
+                "module": "main",
+                "name": "Receipt",
+                "typeArguments": []
+              }
+            }
+          }
+        ],
+        "return": [
+          {
+            "Struct": {
+              "address": "0x1",
+              "module": "option",
+              "name": "Option",
+              "typeArguments": [
+                "U64"
+              ]
+            }
+          }
+        ]
+      },
+      "get_receipt_order_id": {
+        "visibility": "Public",
+        "isEntry": false,
+        "typeParameters": [],
+        "parameters": [
+          {
+            "Reference": {
+              "Struct": {
+                "address": "0xb746ed996cff003909ef6145089b91116f5b77d7b35034adc2ad1b0c1822ef10",
+                "module": "main",
+                "name": "Receipt",
+                "typeArguments": []
+              }
+            }
+          }
+        ],
+        "return": [
+          "Address"
+        ]
+      },
+      "get_status_active": {
+        "visibility": "Public",
+        "isEntry": false,
+        "typeParameters": [],
+        "parameters": [],
+        "return": [
+          "U64"
+        ]
+      },
+      "get_status_cancelled": {
+        "visibility": "Public",
+        "isEntry": false,
+        "typeParameters": [],
+        "parameters": [],
+        "return": [
+          "U64"
+        ]
+      },
+      "get_status_completed": {
+        "visibility": "Public",
+        "isEntry": false,
+        "typeParameters": [],
+        "parameters": [],
+        "return": [
+          "U64"
+        ]
+      },
+      "get_user_orders": {
+        "visibility": "Public",
+        "isEntry": false,
+        "typeParameters": [],
+        "parameters": [
+          {
+            "Reference": {
+              "Struct": {
+                "address": "0xb746ed996cff003909ef6145089b91116f5b77d7b35034adc2ad1b0c1822ef10",
+                "module": "main",
+                "name": "OrderRegistry",
+                "typeArguments": []
+              }
+            }
+          },
+          "Address"
+        ],
+        "return": [
+          {
+            "Vector": "Address"
+          }
+        ]
+      },
+      "get_withdrawable_output": {
+        "visibility": "Public",
+        "isEntry": false,
+        "typeParameters": [
+          {
+            "abilities": []
+          }
+        ],
+        "parameters": [
+          {
+            "Reference": {
+              "Struct": {
+                "address": "0xb746ed996cff003909ef6145089b91116f5b77d7b35034adc2ad1b0c1822ef10",
+                "module": "main",
+                "name": "OrderRegistry",
+                "typeArguments": []
+              }
+            }
+          },
+          "Address"
+        ],
+        "return": [
+          "U64"
+        ]
+      },
+      "is_order_executable": {
+        "visibility": "Public",
+        "isEntry": false,
+        "typeParameters": [],
+        "parameters": [
+          {
+            "Reference": {
+              "Struct": {
+                "address": "0xb746ed996cff003909ef6145089b91116f5b77d7b35034adc2ad1b0c1822ef10",
+                "module": "main",
+                "name": "OrderRegistry",
+                "typeArguments": []
+              }
+            }
+          },
+          "Address",
+          {
+            "Reference": {
+              "Struct": {
+                "address": "0x2",
+                "module": "clock",
+                "name": "Clock",
+                "typeArguments": []
+              }
+            }
+          }
+        ],
+        "return": [
+          "Bool"
+        ]
+      },
+      "operator_end_execute_and_payout": {
+        "visibility": "Public",
+        "isEntry": false,
+        "typeParameters": [
+          {
+            "abilities": []
+          },
+          {
+            "abilities": []
+          }
+        ],
+        "parameters": [
+          {
+            "Reference": {
+              "Struct": {
+                "address": "0xb746ed996cff003909ef6145089b91116f5b77d7b35034adc2ad1b0c1822ef10",
+                "module": "config",
+                "name": "OperatorCap",
+                "typeArguments": []
+              }
+            }
+          },
+          {
+            "Reference": {
+              "Struct": {
+                "address": "0xb746ed996cff003909ef6145089b91116f5b77d7b35034adc2ad1b0c1822ef10",
+                "module": "config",
+                "name": "GlobalConfig",
+                "typeArguments": []
+              }
+            }
+          },
+          {
+            "MutableReference": {
+              "Struct": {
+                "address": "0xb746ed996cff003909ef6145089b91116f5b77d7b35034adc2ad1b0c1822ef10",
+                "module": "main",
+                "name": "OrderRegistry",
+                "typeArguments": []
+              }
+            }
+          },
+          {
+            "Struct": {
+              "address": "0xb746ed996cff003909ef6145089b91116f5b77d7b35034adc2ad1b0c1822ef10",
+              "module": "types",
+              "name": "ExecTicket",
+              "typeArguments": []
+            }
+          },
+          {
+            "Struct": {
+              "address": "0x2",
+              "module": "coin",
+              "name": "Coin",
+              "typeArguments": [
+                {
+                  "TypeParameter": 1
+                }
+              ]
+            }
+          },
+          {
+            "Reference": {
+              "Struct": {
+                "address": "0x2",
+                "module": "clock",
+                "name": "Clock",
+                "typeArguments": []
+              }
+            }
+          },
+          {
+            "MutableReference": {
+              "Struct": {
+                "address": "0x2",
+                "module": "tx_context",
+                "name": "TxContext",
+                "typeArguments": []
+              }
+            }
+          }
+        ],
+        "return": []
+      },
+      "operator_finalize_completed": {
+        "visibility": "Public",
+        "isEntry": false,
+        "typeParameters": [
+          {
+            "abilities": []
+          },
+          {
+            "abilities": []
+          }
+        ],
+        "parameters": [
+          {
+            "Reference": {
+              "Struct": {
+                "address": "0xb746ed996cff003909ef6145089b91116f5b77d7b35034adc2ad1b0c1822ef10",
+                "module": "config",
+                "name": "OperatorCap",
+                "typeArguments": []
+              }
+            }
+          },
+          {
+            "Reference": {
+              "Struct": {
+                "address": "0xb746ed996cff003909ef6145089b91116f5b77d7b35034adc2ad1b0c1822ef10",
+                "module": "config",
+                "name": "GlobalConfig",
+                "typeArguments": []
+              }
+            }
+          },
+          {
+            "MutableReference": {
+              "Struct": {
+                "address": "0xb746ed996cff003909ef6145089b91116f5b77d7b35034adc2ad1b0c1822ef10",
+                "module": "main",
+                "name": "OrderRegistry",
+                "typeArguments": []
+              }
+            }
+          },
+          "Address",
+          {
+            "MutableReference": {
+              "Struct": {
+                "address": "0x2",
+                "module": "tx_context",
+                "name": "TxContext",
+                "typeArguments": []
+              }
+            }
+          }
+        ],
+        "return": []
+      },
+      "operator_refund_missed_cycle_input": {
+        "visibility": "Public",
+        "isEntry": false,
+        "typeParameters": [
+          {
+            "abilities": []
+          }
+        ],
+        "parameters": [
+          {
+            "Reference": {
+              "Struct": {
+                "address": "0xb746ed996cff003909ef6145089b91116f5b77d7b35034adc2ad1b0c1822ef10",
+                "module": "config",
+                "name": "OperatorCap",
+                "typeArguments": []
+              }
+            }
+          },
+          {
+            "Reference": {
+              "Struct": {
+                "address": "0xb746ed996cff003909ef6145089b91116f5b77d7b35034adc2ad1b0c1822ef10",
+                "module": "config",
+                "name": "GlobalConfig",
+                "typeArguments": []
+              }
+            }
+          },
+          {
+            "MutableReference": {
+              "Struct": {
+                "address": "0xb746ed996cff003909ef6145089b91116f5b77d7b35034adc2ad1b0c1822ef10",
+                "module": "main",
+                "name": "OrderRegistry",
+                "typeArguments": []
+              }
+            }
+          },
+          "Address",
+          {
+            "Reference": {
+              "Struct": {
+                "address": "0x2",
+                "module": "clock",
+                "name": "Clock",
+                "typeArguments": []
+              }
+            }
+          },
+          {
+            "MutableReference": {
+              "Struct": {
+                "address": "0x2",
+                "module": "tx_context",
+                "name": "TxContext",
+                "typeArguments": []
+              }
+            }
+          }
+        ],
+        "return": []
+      },
+      "start_execute_order": {
+        "visibility": "Public",
+        "isEntry": false,
+        "typeParameters": [
+          {
+            "abilities": []
+          }
+        ],
+        "parameters": [
+          {
+            "Reference": {
+              "Struct": {
+                "address": "0xb746ed996cff003909ef6145089b91116f5b77d7b35034adc2ad1b0c1822ef10",
+                "module": "config",
+                "name": "OperatorCap",
+                "typeArguments": []
+              }
+            }
+          },
+          {
+            "Reference": {
+              "Struct": {
+                "address": "0xb746ed996cff003909ef6145089b91116f5b77d7b35034adc2ad1b0c1822ef10",
+                "module": "config",
+                "name": "GlobalConfig",
+                "typeArguments": []
+              }
+            }
+          },
+          {
+            "MutableReference": {
+              "Struct": {
+                "address": "0xb746ed996cff003909ef6145089b91116f5b77d7b35034adc2ad1b0c1822ef10",
+                "module": "main",
+                "name": "OrderRegistry",
+                "typeArguments": []
+              }
+            }
+          },
+          "Address",
+          {
+            "Reference": {
+              "Struct": {
+                "address": "0x2",
+                "module": "clock",
+                "name": "Clock",
+                "typeArguments": []
+              }
+            }
+          },
+          {
+            "MutableReference": {
+              "Struct": {
+                "address": "0x2",
+                "module": "tx_context",
+                "name": "TxContext",
+                "typeArguments": []
+              }
+            }
+          }
+        ],
+        "return": [
+          {
+            "Struct": {
+              "address": "0xb746ed996cff003909ef6145089b91116f5b77d7b35034adc2ad1b0c1822ef10",
+              "module": "types",
+              "name": "ExecTicket",
+              "typeArguments": []
+            }
+          },
+          {
+            "Struct": {
+              "address": "0x2",
+              "module": "coin",
+              "name": "Coin",
+              "typeArguments": [
+                {
+                  "TypeParameter": 0
+                }
+              ]
+            }
+          }
+        ]
+      },
+      "time_to_ms": {
+        "visibility": "Public",
+        "isEntry": false,
+        "typeParameters": [],
+        "parameters": [
+          "U64",
+          "U8"
+        ],
+        "return": [
+          "U64"
+        ]
+      },
+      "withdraw_output": {
+        "visibility": "Public",
+        "isEntry": false,
+        "typeParameters": [
+          {
+            "abilities": []
+          }
+        ],
+        "parameters": [
+          {
+            "Reference": {
+              "Struct": {
+                "address": "0xb746ed996cff003909ef6145089b91116f5b77d7b35034adc2ad1b0c1822ef10",
+                "module": "config",
+                "name": "GlobalConfig",
+                "typeArguments": []
+              }
+            }
+          },
+          {
+            "MutableReference": {
+              "Struct": {
+                "address": "0xb746ed996cff003909ef6145089b91116f5b77d7b35034adc2ad1b0c1822ef10",
+                "module": "main",
+                "name": "OrderRegistry",
+                "typeArguments": []
+              }
+            }
+          },
+          {
+            "Reference": {
+              "Struct": {
+                "address": "0xb746ed996cff003909ef6145089b91116f5b77d7b35034adc2ad1b0c1822ef10",
+                "module": "main",
+                "name": "Receipt",
+                "typeArguments": []
+              }
+            }
+          },
+          {
+            "Reference": {
+              "Struct": {
+                "address": "0x2",
+                "module": "clock",
+                "name": "Clock",
+                "typeArguments": []
+              }
+            }
+          },
+          {
+            "MutableReference": {
+              "Struct": {
+                "address": "0x2",
+                "module": "tx_context",
+                "name": "TxContext",
+                "typeArguments": []
+              }
+            }
+          }
+        ],
+        "return": [
+          {
+            "Struct": {
+              "address": "0x2",
+              "module": "balance",
+              "name": "Balance",
+              "typeArguments": [
+                {
+                  "TypeParameter": 0
+                }
+              ]
+            }
+          }
+        ]
+      },
+      "withdraw_output_amount": {
+        "visibility": "Public",
+        "isEntry": false,
+        "typeParameters": [
+          {
+            "abilities": []
+          }
+        ],
+        "parameters": [
+          {
+            "Reference": {
+              "Struct": {
+                "address": "0xb746ed996cff003909ef6145089b91116f5b77d7b35034adc2ad1b0c1822ef10",
+                "module": "config",
+                "name": "GlobalConfig",
+                "typeArguments": []
+              }
+            }
+          },
+          {
+            "MutableReference": {
+              "Struct": {
+                "address": "0xb746ed996cff003909ef6145089b91116f5b77d7b35034adc2ad1b0c1822ef10",
+                "module": "main",
+                "name": "OrderRegistry",
+                "typeArguments": []
+              }
+            }
+          },
+          {
+            "Reference": {
+              "Struct": {
+                "address": "0xb746ed996cff003909ef6145089b91116f5b77d7b35034adc2ad1b0c1822ef10",
+                "module": "main",
+                "name": "Receipt",
+                "typeArguments": []
+              }
+            }
+          },
+          "U64",
+          {
+            "Reference": {
+              "Struct": {
+                "address": "0x2",
+                "module": "clock",
+                "name": "Clock",
+                "typeArguments": []
+              }
+            }
+          },
+          {
+            "MutableReference": {
+              "Struct": {
+                "address": "0x2",
+                "module": "tx_context",
+                "name": "TxContext",
+                "typeArguments": []
+              }
+            }
+          }
+        ],
+        "return": [
+          {
+            "Struct": {
+              "address": "0x2",
+              "module": "balance",
+              "name": "Balance",
+              "typeArguments": [
+                {
+                  "TypeParameter": 0
+                }
+              ]
+            }
+          }
+        ]
+      }
+    }
+  },
+  "types": {
+    "fileFormatVersion": 6,
+    "address": "0xb746ed996cff003909ef6145089b91116f5b77d7b35034adc2ad1b0c1822ef10",
+    "name": "types",
+    "friends": [
+      {
+        "address": "0xb746ed996cff003909ef6145089b91116f5b77d7b35034adc2ad1b0c1822ef10",
+        "name": "main"
+      }
+    ],
+    "structs": {
+      "ExecTicket": {
+        "abilities": {
+          "abilities": []
+        },
+        "typeParameters": [],
+        "fields": [
+          {
+            "name": "order_id",
+            "type": "Address"
+          },
+          {
+            "name": "amount_borrowed",
+            "type": "U64"
+          },
+          {
+            "name": "amount_in_max",
+            "type": "U64"
+          },
+          {
+            "name": "execution_time",
+            "type": "U64"
+          },
+          {
+            "name": "cycle_number",
+            "type": "U64"
+          },
+          {
+            "name": "scheduled_time",
+            "type": "U64"
+          },
+          {
+            "name": "window_end",
+            "type": "U64"
+          },
+          {
+            "name": "inflight_started_at",
+            "type": "U64"
+          }
+        ]
+      }
+    },
+    "exposedFunctions": {
+      "destroy_exec_ticket": {
+        "visibility": "Public",
+        "isEntry": false,
+        "typeParameters": [],
+        "parameters": [
+          {
+            "Struct": {
+              "address": "0xb746ed996cff003909ef6145089b91116f5b77d7b35034adc2ad1b0c1822ef10",
+              "module": "types",
+              "name": "ExecTicket",
+              "typeArguments": []
+            }
+          }
+        ],
+        "return": [
+          "Address",
+          "U64",
+          "U64",
+          "U64",
+          "U64",
+          "U64",
+          "U64",
+          "U64"
+        ]
+      },
+      "get_amount_borrowed": {
+        "visibility": "Public",
+        "isEntry": false,
+        "typeParameters": [],
+        "parameters": [
+          {
+            "Reference": {
+              "Struct": {
+                "address": "0xb746ed996cff003909ef6145089b91116f5b77d7b35034adc2ad1b0c1822ef10",
+                "module": "types",
+                "name": "ExecTicket",
+                "typeArguments": []
+              }
+            }
+          }
+        ],
+        "return": [
+          "U64"
+        ]
+      },
+      "get_amount_in_max": {
+        "visibility": "Public",
+        "isEntry": false,
+        "typeParameters": [],
+        "parameters": [
+          {
+            "Reference": {
+              "Struct": {
+                "address": "0xb746ed996cff003909ef6145089b91116f5b77d7b35034adc2ad1b0c1822ef10",
+                "module": "types",
+                "name": "ExecTicket",
+                "typeArguments": []
+              }
+            }
+          }
+        ],
+        "return": [
+          "U64"
+        ]
+      },
+      "get_cycle_number": {
+        "visibility": "Public",
+        "isEntry": false,
+        "typeParameters": [],
+        "parameters": [
+          {
+            "Reference": {
+              "Struct": {
+                "address": "0xb746ed996cff003909ef6145089b91116f5b77d7b35034adc2ad1b0c1822ef10",
+                "module": "types",
+                "name": "ExecTicket",
+                "typeArguments": []
+              }
+            }
+          }
+        ],
+        "return": [
+          "U64"
+        ]
+      },
+      "get_execution_time": {
+        "visibility": "Public",
+        "isEntry": false,
+        "typeParameters": [],
+        "parameters": [
+          {
+            "Reference": {
+              "Struct": {
+                "address": "0xb746ed996cff003909ef6145089b91116f5b77d7b35034adc2ad1b0c1822ef10",
+                "module": "types",
+                "name": "ExecTicket",
+                "typeArguments": []
+              }
+            }
+          }
+        ],
+        "return": [
+          "U64"
+        ]
+      },
+      "get_inflight_started_at": {
+        "visibility": "Public",
+        "isEntry": false,
+        "typeParameters": [],
+        "parameters": [
+          {
+            "Reference": {
+              "Struct": {
+                "address": "0xb746ed996cff003909ef6145089b91116f5b77d7b35034adc2ad1b0c1822ef10",
+                "module": "types",
+                "name": "ExecTicket",
+                "typeArguments": []
+              }
+            }
+          }
+        ],
+        "return": [
+          "U64"
+        ]
+      },
+      "get_order_id": {
+        "visibility": "Public",
+        "isEntry": false,
+        "typeParameters": [],
+        "parameters": [
+          {
+            "Reference": {
+              "Struct": {
+                "address": "0xb746ed996cff003909ef6145089b91116f5b77d7b35034adc2ad1b0c1822ef10",
+                "module": "types",
+                "name": "ExecTicket",
+                "typeArguments": []
+              }
+            }
+          }
+        ],
+        "return": [
+          "Address"
+        ]
+      },
+      "get_scheduled_time": {
+        "visibility": "Public",
+        "isEntry": false,
+        "typeParameters": [],
+        "parameters": [
+          {
+            "Reference": {
+              "Struct": {
+                "address": "0xb746ed996cff003909ef6145089b91116f5b77d7b35034adc2ad1b0c1822ef10",
+                "module": "types",
+                "name": "ExecTicket",
+                "typeArguments": []
+              }
+            }
+          }
+        ],
+        "return": [
+          "U64"
+        ]
+      },
+      "get_window_end": {
+        "visibility": "Public",
+        "isEntry": false,
+        "typeParameters": [],
+        "parameters": [
+          {
+            "Reference": {
+              "Struct": {
+                "address": "0xb746ed996cff003909ef6145089b91116f5b77d7b35034adc2ad1b0c1822ef10",
+                "module": "types",
+                "name": "ExecTicket",
+                "typeArguments": []
+              }
+            }
+          }
+        ],
+        "return": [
+          "U64"
+        ]
+      },
+      "new_exec_ticket": {
+        "visibility": "Friend",
+        "isEntry": false,
+        "typeParameters": [],
+        "parameters": [
+          "Address",
+          "U64",
+          "U64",
+          "U64",
+          "U64",
+          "U64",
+          "U64",
+          "U64"
+        ],
+        "return": [
+          {
+            "Struct": {
+              "address": "0xb746ed996cff003909ef6145089b91116f5b77d7b35034adc2ad1b0c1822ef10",
+              "module": "types",
+              "name": "ExecTicket",
+              "typeArguments": []
+            }
+          }
+        ]
+      }
+    }
+  }
+}

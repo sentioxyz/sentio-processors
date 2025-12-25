@@ -2,6 +2,7 @@ import { SuiContext, SuiNetwork } from "@sentio/sdk/sui";
 import * as aggregator from "./types/sui/0x88dfe5e893bc9fa984d121e4d0d5b2e873dc70ae430cf5b3228ae6cb199cb32b.js";
 import { slippage } from "./types/sui/0x5b7d732adeb3140a2dbf2becd1e9dbe56cee0e3687379bcfe7df4357ea664313.js";
 import * as newSlippage from "./types/sui/0xdd21f177ec772046619e401c7a44eb78c233c0d53b4b2213ad83122eef4147db.js";
+import * as dca from "./types/sui/0xb746ed996cff003909ef6145089b91116f5b77d7b35034adc2ad1b0c1822ef10.js";
 import { SuiCoinList } from "@sentio/sdk/sui/ext";
 import { getPriceBySymbol, getPriceByType, token } from "@sentio/sdk/utils";
 
@@ -82,6 +83,61 @@ export const getOrCreateCoin = async function (
     console.log(msg);
   }
   return coinInfo;
+};
+
+type MoveTypeName = {
+  name?: string;
+};
+
+type CoinContext = {
+  type: string;
+  symbol: string;
+  decimals: number;
+  price: number;
+};
+
+const DEFAULT_COIN_CONTEXT: CoinContext = {
+  type: "",
+  symbol: "UNKNOWN",
+  decimals: 0,
+  price: 0,
+};
+
+const getCoinTypeFromTypeName = (typeName?: MoveTypeName): string => {
+  return typeName?.name ?? "";
+};
+
+const getCoinContext = async (
+  ctx: SuiContext,
+  typeName?: MoveTypeName
+): Promise<CoinContext> => {
+  const coinType = getCoinTypeFromTypeName(typeName);
+  if (coinType === "") {
+    return { ...DEFAULT_COIN_CONTEXT };
+  }
+
+  const [info, price] = await Promise.all([
+    getOrCreateCoin(ctx, coinType),
+    getCoinPrice(ctx, coinType),
+  ]);
+
+  return {
+    type: coinType,
+    symbol: updateSymbol(info, coinType),
+    decimals: info.decimal,
+    price,
+  };
+};
+
+const toDecimalAmount = (amount: bigint, decimals: number) => {
+  if (decimals === 0) {
+    return Number(amount);
+  }
+  return Number(amount) / Math.pow(10, decimals);
+};
+
+const toUsdValue = (amountNumber: number, price: number) => {
+  return amountNumber * price;
 };
 
 const updateSymbol = (coin: token.TokenInfo, coinAddress: string) => {
@@ -490,3 +546,222 @@ newSlippage.slippage
   .onEventPositiveSlippageEvent(positiveSlippageEventHandler, {
     resourceChanges: true,
   });
+
+async function handleDcaOrderCreated(
+  event: dca.main.OrderCreatedInstance,
+  ctx: SuiContext
+) {
+  const data = event.data_decoded;
+  const [fromCoin, toCoin] = await Promise.all([
+    getCoinContext(ctx, data.from_coin_type),
+    getCoinContext(ctx, data.to_coin_type),
+  ]);
+
+  const depositedAmountNumber = toDecimalAmount(
+    data.deposited_amount,
+    fromCoin.decimals
+  );
+  const minAmountOutNumber = toDecimalAmount(
+    data.min_amount_out,
+    toCoin.decimals
+  );
+  const maxAmountOutNumber = toDecimalAmount(
+    data.max_amount_out,
+    toCoin.decimals
+  );
+
+  const batchId = data.batch_id ?? null;
+  const batchIdNumber = batchId === null ? null : Number(batchId);
+
+  ctx.eventLogger.emit("dcaOrderCreated", {
+    txHash: ctx.transaction.digest,
+    sender: event.sender,
+    recipe_id: data.recipe_id,
+    batch_id: batchId,
+    batch_id_number: batchIdNumber,
+    gap_duration_ms: data.gap_duration_ms,
+    gap_frequency: data.gap_frequency,
+    gap_unit: data.gap_unit,
+    order_num: data.order_num,
+    cliff_duration_ms: data.cliff_duration_ms,
+    cliff_frequency: data.cliff_frequency,
+    cliff_unit: data.cliff_unit,
+    min_amount_out: data.min_amount_out,
+    min_amount_out_number: minAmountOutNumber,
+    min_amount_out_usd: toUsdValue(minAmountOutNumber, toCoin.price),
+    max_amount_out: data.max_amount_out,
+    max_amount_out_number: maxAmountOutNumber,
+    max_amount_out_usd: toUsdValue(maxAmountOutNumber, toCoin.price),
+    deposited_amount: data.deposited_amount,
+    deposited_amount_number: depositedAmountNumber,
+    deposited_amount_usd: toUsdValue(depositedAmountNumber, fromCoin.price),
+    from_coin_type: fromCoin.type,
+    from_symbol: fromCoin.symbol,
+    to_coin_type: toCoin.type,
+    to_symbol: toCoin.symbol,
+    created_time_ms: data.created_time_ms,
+  });
+}
+
+async function handleDcaOrderFilled(
+  event: dca.main.OrderFilledInstance,
+  ctx: SuiContext
+) {
+  const data = event.data_decoded;
+  const [fromCoin, toCoin] = await Promise.all([
+    getCoinContext(ctx, data.from_coin_type),
+    getCoinContext(ctx, data.to_coin_type),
+  ]);
+
+  const borrowedNumber = toDecimalAmount(
+    data.amount_in_borrowed,
+    fromCoin.decimals
+  );
+  const spentNumber = toDecimalAmount(
+    data.amount_in_spent,
+    fromCoin.decimals
+  );
+  const amountOutNumber = toDecimalAmount(data.amount_out, toCoin.decimals);
+  const protocolFeeNumber = toDecimalAmount(
+    data.protocol_fee_charged,
+    toCoin.decimals
+  );
+
+  ctx.eventLogger.emit("dcaOrderFilled", {
+    txHash: ctx.transaction.digest,
+    sender: event.sender,
+    recipe_id: data.recipe_id,
+    cycle_number: data.cycle_number,
+    fulfilled_time_ms: data.fulfilled_time_ms,
+    from_coin_type: fromCoin.type,
+    from_symbol: fromCoin.symbol,
+    to_coin_type: toCoin.type,
+    to_symbol: toCoin.symbol,
+    amount_in_borrowed: data.amount_in_borrowed,
+    amount_in_borrowed_number: borrowedNumber,
+    amount_in_borrowed_usd: toUsdValue(borrowedNumber, fromCoin.price),
+    amount_in_spent: data.amount_in_spent,
+    amount_in_spent_number: spentNumber,
+    amount_in_spent_usd: toUsdValue(spentNumber, fromCoin.price),
+    amount_out: data.amount_out,
+    amount_out_number: amountOutNumber,
+    amount_out_usd: toUsdValue(amountOutNumber, toCoin.price),
+    protocol_fee_charged: data.protocol_fee_charged,
+    protocol_fee_charged_number: protocolFeeNumber,
+    protocol_fee_charged_usd: toUsdValue(protocolFeeNumber, toCoin.price),
+  });
+}
+
+async function handleDcaOrderFinished(
+  event: dca.main.OrderFinishedInstance,
+  ctx: SuiContext
+) {
+  const data = event.data_decoded;
+  const [fromCoin, toCoin] = await Promise.all([
+    getCoinContext(ctx, data.from_coin_type),
+    getCoinContext(ctx, data.to_coin_type),
+  ]);
+
+  const amountInReturnedNumber = toDecimalAmount(
+    data.amount_in_returned,
+    fromCoin.decimals
+  );
+  const amountOutReturnedNumber = toDecimalAmount(
+    data.amount_out_returned,
+    toCoin.decimals
+  );
+
+  ctx.eventLogger.emit("dcaOrderFinished", {
+    txHash: ctx.transaction.digest,
+    sender: event.sender,
+    recipe_id: data.recipe_id,
+    amount_in_returned: data.amount_in_returned,
+    amount_in_returned_number: amountInReturnedNumber,
+    amount_in_returned_usd: toUsdValue(amountInReturnedNumber, fromCoin.price),
+    amount_out_returned: data.amount_out_returned,
+    amount_out_returned_number: amountOutReturnedNumber,
+    amount_out_returned_usd: toUsdValue(amountOutReturnedNumber, toCoin.price),
+    from_coin_type: fromCoin.type,
+    from_symbol: fromCoin.symbol,
+    to_coin_type: toCoin.type,
+    to_symbol: toCoin.symbol,
+    is_early_terminated: data.is_early_terminated,
+  });
+}
+
+async function handleDcaCycleRefunded(
+  event: dca.main.CycleRefundedInstance,
+  ctx: SuiContext
+) {
+  const data = event.data_decoded;
+  const coin = await getCoinContext(ctx, data.token_type);
+  const amountNumber = toDecimalAmount(data.amount, coin.decimals);
+
+  ctx.eventLogger.emit("dcaCycleRefunded", {
+    txHash: ctx.transaction.digest,
+    sender: event.sender,
+    recipe_id: data.recipe_id,
+    user: data.user,
+    token_type: coin.type,
+    token_symbol: coin.symbol,
+    amount: data.amount,
+    amount_number: amountNumber,
+    amount_usd: toUsdValue(amountNumber, coin.price),
+    cycle_number: data.cycle_number,
+    refunded_at_ms: data.refunded_at_ms,
+  });
+}
+
+async function handleDcaPayoutSent(
+  event: dca.main.PayoutSentInstance,
+  ctx: SuiContext
+) {
+  const data = event.data_decoded;
+  const coin = await getCoinContext(ctx, data.token_type);
+  const amountNumber = toDecimalAmount(data.amount, coin.decimals);
+
+  ctx.eventLogger.emit("dcaPayoutSent", {
+    txHash: ctx.transaction.digest,
+    sender: event.sender,
+    recipe_id: data.recipe_id,
+    user: data.user,
+    token_type: coin.type,
+    token_symbol: coin.symbol,
+    amount: data.amount,
+    amount_number: amountNumber,
+    amount_usd: toUsdValue(amountNumber, coin.price),
+    cycle_number: data.cycle_number,
+    sent_at_ms: data.sent_at_ms,
+  });
+}
+
+async function handleDcaWithdrawEvent(
+  event: dca.main.WithdrawEventInstance,
+  ctx: SuiContext
+) {
+  const data = event.data_decoded;
+  const coin = await getCoinContext(ctx, data.token_type);
+  const amountNumber = toDecimalAmount(data.amount, coin.decimals);
+
+  ctx.eventLogger.emit("dcaWithdrawEvent", {
+    txHash: ctx.transaction.digest,
+    sender: event.sender,
+    recipe_id: data.recipe_id,
+    user: data.user,
+    token_type: coin.type,
+    token_symbol: coin.symbol,
+    amount: data.amount,
+    amount_number: amountNumber,
+    amount_usd: toUsdValue(amountNumber, coin.price),
+    withdrawn_at_ms: data.withdrawn_at_ms,
+  });
+}
+
+dca.main
+  .bind({ startCheckpoint: START_CHECKPOINT })
+  .onEventOrderCreated(handleDcaOrderCreated, { resourceChanges: true })
+  .onEventOrderFilled(handleDcaOrderFilled, { resourceChanges: true })
+  .onEventOrderFinished(handleDcaOrderFinished, { resourceChanges: true })
+  .onEventCycleRefunded(handleDcaCycleRefunded, { resourceChanges: true })
+  .onEventPayoutSent(handleDcaPayoutSent, { resourceChanges: true })
+  .onEventWithdrawEvent(handleDcaWithdrawEvent, { resourceChanges: true });

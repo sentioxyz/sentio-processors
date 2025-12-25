@@ -18,7 +18,18 @@ import {
   incentive_v3,
   flash_loan as flash_loan_v3,
 } from "../types/sui/0x81c408448d0d57b3e371ea94de1d40bf852784d3e225de1e74acab3e8395c18f.js";
-import { FlashLoanCoins, getDecimalBySymbol, COIN_MAP } from "./utils.js";
+import {
+  incentive_v3 as incentive_v4,
+  pool_manager,
+} from "../types/sui/0xee0041239b89564ce870a7dec5ddc5d114367ab94a1137e90aa0633cb76518e0.js";
+import { stake_pool } from "../types/sui/0x634511c660964940915acb37dde75963e35f2d1b0a034b41e2da8f3e9d1491ae.js";
+import {
+  FlashLoanCoins,
+  COIN_MAP,
+  getCoinSymbolByType,
+  getDecimalByCoinType,
+  normalizeCoinType,
+} from "./utils.js";
 import { DECIMAL_MAP, SYMBOL_MAP } from "./utils.js";
 
 let coinInfoMap = new Map<string, Promise<token.TokenInfo>>();
@@ -47,11 +58,11 @@ const COIN_MAPPING: { [key: string]: string } = {
   "1": "0x5d4b302506645c37ff133b98c4b50a5ae14841659738d6d733d59d0d217a93bf::coin::COIN",
   "2": "0xc060006111016b8a020ad5b33834984a437aaa7d3c74c18e09a95d48aceab08c::coin::COIN",
   "3": "0xaf8cd5edc19c4512f4259f0bee101a40d41ebed738ade5874359610ef8eeced5::coin::COIN",
-  "4": "0x06864a6f921804860930db6ddbe2e16acdf8504495ea7481637a1c8b9a8fe54b::cetus::CETUS",
+  "4": "0x6864a6f921804860930db6ddbe2e16acdf8504495ea7481637a1c8b9a8fe54b::cetus::CETUS",
   "5": "0x549e8b69270defbfafd4f94e17ec44cdbdd99820b33bda2278dea3b9a32d3f55::cert::CERT",
   "6": "0xbde4ba4c2e274a60ce15c1cfff9e5c42e41654ac8b6d906a57efa4bd3c29f47d::hasui::HASUI",
   "7": "0xa99b8952d4f7d947ea77fe0ecdcc9e5fc0bcab2841d6e2a5aa00c3044e5544b5::navx::NAVX",
-  "8": "0x027792d9fed7f9844eb4839566001bb6f6cb4804f66aa2da6fe1ee242d896881::coin::COIN", // WBTC
+  "8": "0x27792d9fed7f9844eb4839566001bb6f6cb4804f66aa2da6fe1ee242d896881::coin::COIN", // WBTC
   "9": "0x2053d08c1e2bd02791056171aab0fd12bd7cd7efad2ab8f6b9c8902f14df2ff2::ausd::AUSD", // AUSD
   "10": "0xdba34672e30cb065b1f93e3ab55318768fd6fef66c15942c9f7cb846e2f900e7::usdc::USDC", // Native USDC
   "11": "0xd0e89b2af5e4910726fbcd8b8dd37bb79b29e5f83f7491bca830e94f7f226d29::eth::ETH", // Native ETH
@@ -71,7 +82,13 @@ const COIN_MAPPING: { [key: string]: string } = {
   "25": "0x3a304c7feba2d819ea57c3542d68439ca2c386ba02159c740f7b406e592c62ea::haedal::HAEDAL", // HAEDAL
   "26": "0x876a4b7bce8aeaef60464c11f4026903e9afacab79b9b142686158aa86560b50::xbtc::XBTC", // XBTC
   "27": "0x7262fb2f7a3a14c888c438a3cd9b912469a58cf60f367352c46584262e8299aa::ika::IKA", //IKA
+  "28": "0x9d297676e7a4b771ab023291377b2adfaa4938fb9080b8d12430e4b108b836a9::xaum::XAUM", // XAUM
 };
+
+const LIQUID_STAKING_PACKAGE =
+  "0x634511c660964940915acb37dde75963e35f2d1b0a034b41e2da8f3e9d1491ae";
+const LIQUID_STAKING_START_CHECKPOINT = 8000000n;
+const SUI_DECIMALS = 9;
 
 // Initialize historical cumulative withdrawal amounts
 async function initializeHistoricalWithdrawals(ctx: SuiContext): Promise<void> {
@@ -358,15 +375,15 @@ async function withdrawTreasuryHandler(
   const index = event.data_decoded.index;
 
   // Get complete coin_type through numeric index
-  let coinType = COIN_MAPPING[assetIndex.toString()];
-  if (
-    coinType ===
-    "0x0000000000000000000000000000000000000000000000000000000000000002::sui::SUI"
-  ) {
-    coinType = "0x2::sui::SUI"; // Normalize SUI address
-  }
-
-  const coinSymbol = COIN_MAP[coinType] || `UNKNOWN_${assetIndex}`;
+  const rawCoinType = COIN_MAPPING[assetIndex.toString()] || "";
+  const normalizedCoinType = normalizeCoinType(rawCoinType);
+  const coinType =
+    normalizedCoinType || (rawCoinType ? rawCoinType : "unknown");
+  const resolvedCoinSymbol = getCoinSymbolByType(rawCoinType);
+  const coinSymbol =
+    resolvedCoinSymbol === "unknown"
+      ? `UNKNOWN_${assetIndex}`
+      : resolvedCoinSymbol;
 
   // Use 9 decimal places for treasury balance consistency (all treasury operations use 9 decimals)
   const decimal = 9; // Treasury balance is always 9 decimals regardless of token's native decimals
@@ -539,13 +556,170 @@ async function onRewardsClaimedEventV3(
   });
 }
 
+// New event handlers for upgraded package (v4)
+async function onAssetBorrowFeeRateUpdated(
+  event: incentive_v4.AssetBorrowFeeRateUpdatedInstance,
+  ctx: SuiContext
+) {
+  const asset_symbol =
+    SYMBOL_MAP[event.data_decoded.asset_id] ||
+    `UNKNOWN_${event.data_decoded.asset_id}`;
+
+  ctx.eventLogger.emit("AssetBorrowFeeRateUpdated", {
+    sender: event.data_decoded.sender,
+    asset_id: event.data_decoded.asset_id,
+    asset_symbol: asset_symbol,
+    user: event.data_decoded.user,
+    rate: event.data_decoded.rate,
+    env: "mainnet",
+  });
+}
+
+async function onAssetBorrowFeeRateRemoved(
+  event: incentive_v4.AssetBorrowFeeRateRemovedInstance,
+  ctx: SuiContext
+) {
+  const asset_symbol =
+    SYMBOL_MAP[event.data_decoded.asset_id] ||
+    `UNKNOWN_${event.data_decoded.asset_id}`;
+
+  ctx.eventLogger.emit("AssetBorrowFeeRateRemoved", {
+    sender: event.data_decoded.sender,
+    asset_id: event.data_decoded.asset_id,
+    asset_symbol: asset_symbol,
+    user: event.data_decoded.user,
+    env: "mainnet",
+  });
+}
+
+async function onBorrowFeeDeposited(
+  event: incentive_v4.BorrowFeeDepositedInstance,
+  ctx: SuiContext
+) {
+  const rawCoinType = String(event.data_decoded.coin_type);
+  const coin_type = normalizeCoinType(rawCoinType);
+  const coin_symbol = getCoinSymbolByType(rawCoinType);
+  const decimal = getDecimalByCoinType(rawCoinType);
+
+  let fee_normalized;
+  if (decimal !== undefined) {
+    fee_normalized = scaleDown(event.data_decoded.fee, decimal);
+  } else {
+    fee_normalized = BigDecimal(event.data_decoded.fee.toString());
+  }
+
+  ctx.eventLogger.emit("BorrowFeeDeposited", {
+    sender: event.data_decoded.sender,
+    coin_type: coin_type,
+    coin_symbol: coin_symbol,
+    fee: event.data_decoded.fee,
+    fee_normalized: fee_normalized,
+    env: "mainnet",
+  });
+}
+
+async function onFundUpdated(
+  event: pool_manager.FundUpdatedInstance,
+  ctx: SuiContext
+) {
+  // SUI uses 9 decimals
+  const decimal = 9;
+
+  ctx.eventLogger.emit("FundUpdated", {
+    original_sui_amount: event.data_decoded.original_sui_amount,
+    original_sui_amount_normalized: scaleDown(
+      event.data_decoded.original_sui_amount,
+      decimal
+    ),
+    current_sui_amount: event.data_decoded.current_sui_amount,
+    current_sui_amount_normalized: scaleDown(
+      event.data_decoded.current_sui_amount,
+      decimal
+    ),
+    vsui_balance_amount: event.data_decoded.vsui_balance_amount,
+    vsui_balance_amount_normalized: scaleDown(
+      event.data_decoded.vsui_balance_amount,
+      decimal
+    ),
+    target_sui_amount: event.data_decoded.target_sui_amount,
+    target_sui_amount_normalized: scaleDown(
+      event.data_decoded.target_sui_amount,
+      decimal
+    ),
+    env: "mainnet",
+  });
+}
+
+async function onStakingTreasuryWithdrawn(
+  event: pool_manager.StakingTreasuryWithdrawnInstance,
+  ctx: SuiContext
+) {
+  // SUI uses 9 decimals
+  const decimal = 9;
+
+  ctx.eventLogger.emit("StakingTreasuryWithdrawn", {
+    taken_vsui_balance_amount: event.data_decoded.taken_vsui_balance_amount,
+    taken_vsui_balance_amount_normalized: scaleDown(
+      event.data_decoded.taken_vsui_balance_amount,
+      decimal
+    ),
+    equal_sui_balance_amount: event.data_decoded.equal_sui_balance_amount,
+    equal_sui_balance_amount_normalized: scaleDown(
+      event.data_decoded.equal_sui_balance_amount,
+      decimal
+    ),
+    env: "mainnet",
+  });
+}
+
+async function onLiquidStakingEpochChanged(
+  event: stake_pool.EpochChangedEventInstance,
+  ctx: SuiContext
+) {
+  const oldSupply = event.data_decoded.old_sui_supply;
+  const newSupply = event.data_decoded.new_sui_supply;
+  const rewardFee = event.data_decoded.reward_fee;
+  const boostedReward = event.data_decoded.boosted_reward_amount;
+  const lstSupply = event.data_decoded.lst_supply;
+
+  const revenue = newSupply - oldSupply - rewardFee;
+
+  const oldSupplyNormalized = scaleDown(oldSupply, SUI_DECIMALS);
+  const newSupplyNormalized = scaleDown(newSupply, SUI_DECIMALS);
+  const rewardFeeNormalized = scaleDown(rewardFee, SUI_DECIMALS);
+  const boostedRewardNormalized = scaleDown(boostedReward, SUI_DECIMALS);
+  const lstSupplyNormalized = scaleDown(lstSupply, SUI_DECIMALS);
+  const revenueNormalized = scaleDown(revenue, SUI_DECIMALS);
+
+  ctx.eventLogger.emit("LiquidStakingEpochChanged", {
+    env: "mainnet",
+    package: LIQUID_STAKING_PACKAGE,
+    old_sui_supply: oldSupply,
+    old_sui_supply_normalized: oldSupplyNormalized,
+    new_sui_supply: newSupply,
+    new_sui_supply_normalized: newSupplyNormalized,
+    reward_fee: rewardFee,
+    reward_fee_normalized: rewardFeeNormalized,
+    boosted_reward_amount: boostedReward,
+    boosted_reward_amount_normalized: boostedRewardNormalized,
+    lst_supply: lstSupply,
+    lst_supply_normalized: lstSupplyNormalized,
+    revenue,
+    revenue_normalized: revenueNormalized,
+  });
+
+  ctx.meter
+    .Gauge("liquid_staking_revenue_sui")
+    .record(revenueNormalized, { env: "mainnet" });
+}
+
 flash_loan
-  .bind({ startCheckpoint: 7800000n })
+  .bind({ startCheckpoint: 8000000n })
   .onEventFlashLoan(flashLoanHandler)
   .onEventFlashRepay(flashoanRepayHandler);
 
 lending_new_liquidation_event
-  .bind({ startCheckpoint: 7800000n })
+  .bind({ startCheckpoint: 8000000n })
   .onEventDepositOnBehalfOfEvent(depositOnBehalfOfHandler)
   .onEventRepayOnBehalfOfEvent(repayOnBehalfOfHandler)
   .onEventBorrowEvent(onEvent)
@@ -557,22 +731,41 @@ lending_new_liquidation_event
 //   .onEventSCCProcessedEvent(supraEventHandler)
 
 incentive_v2
-  .bind({ startCheckpoint: 7800000n })
+  .bind({ startCheckpoint: 8000000n })
   .onEventRewardsClaimed(onRewardsClaimedEvent);
 
 lending_new_liquidation_event_v3
-  .bind({ startCheckpoint: 7800000n })
+  .bind({ startCheckpoint: 8000000n })
   .onEventLiquidationEvent(onLiquidationNewEventV3)
   .onEventDepositOnBehalfOfEvent(depositOnBehalfOfHandlerV3)
   .onEventRepayOnBehalfOfEvent(repayOnBehalfOfHandlerV3);
 
 incentive_v3
-  .bind({ startCheckpoint: 7800000n })
+  .bind({ startCheckpoint: 8000000n })
   .onEventRewardClaimed(onRewardsClaimedEventV3);
 
 storage
-  .bind({ startCheckpoint: 7800000n })
+  .bind({ startCheckpoint: 8000000n })
   .onEventWithdrawTreasuryEvent(withdrawTreasuryHandler);
+
+// New events from upgraded package (v4)
+incentive_v4
+  .bind({ startCheckpoint: 8000000n })
+  .onEventAssetBorrowFeeRateUpdated(onAssetBorrowFeeRateUpdated)
+  .onEventAssetBorrowFeeRateRemoved(onAssetBorrowFeeRateRemoved)
+  .onEventBorrowFeeDeposited(onBorrowFeeDeposited);
+
+pool_manager
+  .bind({ startCheckpoint: 8000000n })
+  .onEventFundUpdated(onFundUpdated)
+  .onEventStakingTreasuryWithdrawn(onStakingTreasuryWithdrawn);
+
+stake_pool
+  .bind({
+    startCheckpoint: LIQUID_STAKING_START_CHECKPOINT,
+    address: LIQUID_STAKING_PACKAGE,
+  })
+  .onEventEpochChangedEvent(onLiquidStakingEpochChanged);
 
 // Update fee pool amount (called by fee.ts)
 export function updateFeePoolAmount(

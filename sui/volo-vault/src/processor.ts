@@ -16,28 +16,18 @@ import { vault_fee_record } from "./types/sui/0xcecac1d9cafdc922a8974675c32a5347
 import { incentive_v3 } from "./types/sui/0x81c408448d0d57b3e371ea94de1d40bf852784d3e225de1e74acab3e8395c18f.js";
 import {
   VAULT_ADDRESSES,
-  NAVI_ACCOUNT_CAPS,
-  EVENT_TYPES,
-  VAULT_METRICS,
   getDecimalBySymbol,
   COIN_MAP,
-  getPackageFromVaultType,
-  getCoinSymbolFromVaultType,
-  parseVaultType,
   getCurrentDateUTC,
   applyVaultPrecision,
   applyOraclePrecision,
   applyTokenDecimalPrecision,
   getVaultInfoById,
-  getVaultInfoBySender,
-  addVaultStatusSenderMapping,
-  VAULT_STATUS_SENDER_MAPPING,
-  getAllKnownVaultIds,
-  getAllPerformanceFeeRecords,
-  DECIMAL_MAP,
-  SYMBOL_MAP,
   DEFAULT_COIN_DECIMAL,
   getVaultTypeFromRewardsSender,
+  VAULT_ID_TO_TYPE,
+  getVaultInfoByType,
+  PERFORMANCE_FEE_RECORD_ADDRESS,
 } from "./utils.js";
 import { NaviRewardsProcessor } from "./navi-rewards-processor.js";
 import { OracleProcessor } from "./oracle-processor.js";
@@ -46,8 +36,8 @@ import { OracleProcessor } from "./oracle-processor.js";
 const VAULT_ADDRESS = VAULT_ADDRESSES.VAULT_PACKAGE_PROD;
 
 // Specific vault type strings for metrics and logging
-const SUIBTC_VAULT_TYPE = VAULT_ADDRESSES.SUIBTC_VAULT;
-const XBTC_VAULT_TYPE = VAULT_ADDRESSES.XBTC_VAULT;
+const wBTC_VAULT_TYPE = VAULT_ADDRESSES.wBTC_VAULT;
+const XBTC_VAULT_TYPE = VAULT_ADDRESSES.xBTC_VAULT;
 
 // Performance fee metrics from dynamic fields
 const performanceFeeMetrics = {
@@ -800,7 +790,7 @@ async function handleVaultStatusRecorded(
     event_type: "VaultStatusRecorded",
     vault_type: vaultType,
     vault_id: vaultId,
-    identification_method: "EVENT_VAULT_ID",
+    // identification_method: "EVENT_VAULT_ID",
     coin_symbol: coinSymbol,
     principal_price_raw: data.principal_price.toString(),
     share_ratio_raw: data.share_ratio.toString(),
@@ -834,42 +824,26 @@ vault_event_recorder
   })
   .onEventVaultStatusRecorded(handleVaultStatusRecorded);
 
-export function PerformanceFeeRecordProcessor() {
-  // Event-based tracking only
-}
-
-// monitorPerformanceFeeRecords function removed - using event-based tracking only
+// Initialize all processors
 VoloVaultProcessor();
-
 NaviRewardsProcessor();
 OracleProcessor();
-PerformanceFeeRecordProcessor();
 VaultStateMonitorProcessor();
 DynamicFieldPerformanceFeeRecordProcessor();
 
 // VoloApiProcessor();
 
-// Vault addresses to monitor
-const VAULT_ADDRESSES_TO_MONITOR = [
-  {
-    vault_id:
-      "0x041b49dc6625e074f452b9bc60a9a828aebfbef29bcba119ad90a4b11ba405bf",
-    vault_type: "XBTC_VAULT",
-    coin_symbol: "XBTC",
-  },
-  {
-    vault_id:
-      "0x6e53ffe5b77a85ff609b0813955866ec98a072e4aaf628108e717143ec907bd8",
-    vault_type: "SUIBTC_VAULT",
-    coin_symbol: "suiBTC",
-  },
-  {
-    vault_id:
-      "0xa97cc9a63710f905deb2da40d6548ce7a75ee3dfe4be0c1d553553d2059c31a3",
-    vault_type: "NUSDC_VAULT",
-    coin_symbol: "nUSDC",
-  },
-] as const;
+// Vault addresses to monitor - auto-generated from VAULT_ID_TO_TYPE
+const VAULT_ADDRESSES_TO_MONITOR = Object.entries(VAULT_ID_TO_TYPE).map(
+  ([vault_id, vault_type]) => {
+    const vaultInfo = getVaultInfoByType(vault_type);
+    return {
+      vault_id,
+      vault_type,
+      coin_symbol: vaultInfo?.coinSymbol || "UNKNOWN",
+    };
+  }
+);
 
 // Vault addresses validation
 
@@ -1086,96 +1060,84 @@ export function VaultFeeStateProcessor() {
 }
 
 export function DynamicFieldPerformanceFeeRecordProcessor() {
-  const knownPerformanceFeeRecords = getAllPerformanceFeeRecords();
+  // Monitor the central PerformanceFeeRecord address for all vaults
+  SuiWrappedObjectProcessor.bind({
+    objectId: PERFORMANCE_FEE_RECORD_ADDRESS,
+    network: ChainId.SUI_MAINNET,
+    startCheckpoint: 175000000n,
+  }).onTimeInterval(
+    async (dynamicFieldObjects, ctx) => {
+      const fieldType: TypeDescriptor<
+        dynamic_field.Field<string, vault_fee_record.PerformanceFeeRecord>
+      > = dynamic_field.Field.type(
+        BUILTIN_TYPES.ADDRESS_TYPE,
+        vault_fee_record.PerformanceFeeRecord.type()
+      );
 
-  knownPerformanceFeeRecords.forEach((record) => {
-    SuiWrappedObjectProcessor.bind({
-      objectId: record.parentObjectId,
-      network: ChainId.SUI_MAINNET,
-      startCheckpoint: 175000000n,
-    }).onTimeInterval(
-      async (dynamicFieldObjects, ctx) => {
-        const fieldType: TypeDescriptor<
-          dynamic_field.Field<string, vault_fee_record.PerformanceFeeRecord>
-        > = dynamic_field.Field.type(
-          BUILTIN_TYPES.ADDRESS_TYPE,
-          vault_fee_record.PerformanceFeeRecord.type()
+      const fields = await ctx.coder.filterAndDecodeObjects(
+        fieldType,
+        dynamicFieldObjects
+      );
+
+      for (const field of fields) {
+        const fieldDecoded = field.data_decoded;
+        const vaultAddress = fieldDecoded.name;
+        const performanceFeeData = fieldDecoded.value;
+        const vaultInfo = getVaultInfoById(vaultAddress);
+        const vaultType = vaultInfo?.vaultType || "UNKNOWN_VAULT";
+        const coinSymbol = vaultInfo?.coinSymbol || "UNKNOWN";
+        const coinDecimal = getDecimalBySymbol(coinSymbol) || 9;
+
+        const totalActiveCumulatedRaw = Number(
+          performanceFeeData.total_active_cumulated
         );
+        const totalClaimedRaw = Number(performanceFeeData.total_claimed);
 
-        const fields = await ctx.coder.filterAndDecodeObjects(
-          fieldType,
-          dynamicFieldObjects
+        const totalActiveCumulated = applyTokenDecimalPrecision(
+          totalActiveCumulatedRaw,
+          coinDecimal
         );
-
-        for (const field of fields) {
-          const fieldDecoded = field.data_decoded;
-          const vaultAddress = fieldDecoded.name;
-          const performanceFeeData = fieldDecoded.value;
-          const vaultInfo = getVaultInfoById(vaultAddress);
-          const vaultType = vaultInfo?.vaultType || "UNKNOWN_VAULT";
-          const coinSymbol = vaultInfo?.coinSymbol || "UNKNOWN";
-          const coinDecimal = getDecimalBySymbol(coinSymbol) || 9;
-
-          const totalActiveCumulatedRaw = Number(
-            performanceFeeData.total_active_cumulated
-          );
-          const totalClaimedRaw = Number(performanceFeeData.total_claimed);
-
-          const totalActiveCumulated = applyTokenDecimalPrecision(
-            totalActiveCumulatedRaw,
-            coinDecimal
-          );
-          const totalClaimed = applyTokenDecimalPrecision(
-            totalClaimedRaw,
-            coinDecimal
-          );
-          const unclaimed = totalActiveCumulated - totalClaimed;
-          ctx.eventLogger.emit("PerformanceFeeRecord", {
-            event_type: "DynamicFieldPerformanceFeeRecord",
-            vault_address: vaultAddress,
+        const totalClaimed = applyTokenDecimalPrecision(
+          totalClaimedRaw,
+          coinDecimal
+        );
+        const unclaimed = totalActiveCumulated - totalClaimed;
+        ctx.eventLogger.emit("PerformanceFeeRecord", {
+          vault_address: vaultAddress,
+          vault_type: vaultType,
+          coin_symbol: coinSymbol,
+          coin_decimal: coinDecimal,
+          total_active_cumulated_raw: totalActiveCumulatedRaw,
+          total_claimed_raw: totalClaimedRaw,
+          total_active_cumulated: totalActiveCumulated,
+          total_claimed: totalClaimed,
+          unclaimed: unclaimed,
+          timestamp: ctx.timestamp,
+        });
+        performanceFeeMetrics.performanceFeeActiveCumulated.record(
+          ctx,
+          totalActiveCumulated,
+          {
             vault_type: vaultType,
             coin_symbol: coinSymbol,
-            coin_decimal: coinDecimal,
-            total_active_cumulated_raw: totalActiveCumulatedRaw,
-            total_claimed_raw: totalClaimedRaw,
-            total_active_cumulated: totalActiveCumulated,
-            total_claimed: totalClaimed,
-            unclaimed: unclaimed,
-            timestamp: ctx.timestamp,
-            data_source: "dynamic_field_monitoring",
-          });
-          performanceFeeMetrics.performanceFeeActiveCumulated.record(
-            ctx,
-            totalActiveCumulated,
-            {
-              vault_type: vaultType,
-              coin_symbol: coinSymbol,
-            }
-          );
-          performanceFeeMetrics.performanceFeeClaimed.record(
-            ctx,
-            totalClaimed,
-            {
-              vault_type: vaultType,
-              coin_symbol: coinSymbol,
-            }
-          );
-          performanceFeeMetrics.performanceFeeUnclaimed.record(ctx, unclaimed, {
-            vault_type: vaultType,
-            coin_symbol: coinSymbol,
-          });
-        }
-      },
-      300,
-      300,
-      undefined,
-      { owned: true }
-    );
-  });
+          }
+        );
+        performanceFeeMetrics.performanceFeeClaimed.record(ctx, totalClaimed, {
+          vault_type: vaultType,
+          coin_symbol: coinSymbol,
+        });
+        performanceFeeMetrics.performanceFeeUnclaimed.record(ctx, unclaimed, {
+          vault_type: vaultType,
+          coin_symbol: coinSymbol,
+        });
+      }
+    },
+    300,
+    300,
+    undefined,
+    { owned: true }
+  );
 }
-
-// Legacy vault state cache functions (kept for compatibility)
-// Note: VaultStateMonitorProcessor now uses SuiWrappedObjectProcessor for real-time monitoring
 
 export function getVaultState(vaultId: string) {
   return vaultStateCache.get(vaultId);

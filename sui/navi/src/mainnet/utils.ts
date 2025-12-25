@@ -29,6 +29,7 @@ export const COIN = [
   "HAEDAL",
   "XBTC",
   "IKA",
+  "XAUM",
 ];
 
 export const DECIMAL_RAY = 27;
@@ -63,6 +64,7 @@ export const DECIMAL_MAP: Record<number, number> = {
   25: 9,
   26: 8,
   27: 9,
+  28: 9,
 };
 
 export const COIN_MAP: CoinMap = {
@@ -73,7 +75,7 @@ export const COIN_MAP: CoinMap = {
     "wUSDT",
   "0xaf8cd5edc19c4512f4259f0bee101a40d41ebed738ade5874359610ef8eeced5::coin::COIN":
     "wETH",
-  "0x06864a6f921804860930db6ddbe2e16acdf8504495ea7481637a1c8b9a8fe54b::cetus::CETUS":
+  "0x6864a6f921804860930db6ddbe2e16acdf8504495ea7481637a1c8b9a8fe54b::cetus::CETUS":
     "CETUS",
   "0x549e8b69270defbfafd4f94e17ec44cdbdd99820b33bda2278dea3b9a32d3f55::cert::CERT":
     "vSui",
@@ -81,7 +83,7 @@ export const COIN_MAP: CoinMap = {
     "haSui",
   "0xa99b8952d4f7d947ea77fe0ecdcc9e5fc0bcab2841d6e2a5aa00c3044e5544b5::navx::NAVX":
     "NAVX",
-  "0x027792d9fed7f9844eb4839566001bb6f6cb4804f66aa2da6fe1ee242d896881::coin::COIN":
+  "0x27792d9fed7f9844eb4839566001bb6f6cb4804f66aa2da6fe1ee242d896881::coin::COIN":
     "wBTC",
   "0x2053d08c1e2bd02791056171aab0fd12bd7cd7efad2ab8f6b9c8902f14df2ff2::ausd::AUSD":
     "AUSD",
@@ -121,6 +123,55 @@ export const COIN_MAP: CoinMap = {
     "XBTC",
   "0x7262fb2f7a3a14c888c438a3cd9b912469a58cf60f367352c46584262e8299aa::ika::IKA":
     "IKA",
+  "0x9d297676e7a4b771ab023291377b2adfaa4938fb9080b8d12430e4b108b836a9::xaum::XAUM":
+    "XAUM",
+};
+
+const UNKNOWN_COIN = "unknown";
+
+const normalizeAddress = (address: string): string => {
+  let addr = address.trim();
+  if (!addr.startsWith("0x")) {
+    addr = `0x${addr}`;
+  }
+  let body = addr.slice(2).replace(/^0+/, "");
+  if (body === "") {
+    body = "0";
+  }
+  return `0x${body.toLowerCase()}`;
+};
+
+export const normalizeCoinType = (coinType: string): string => {
+  if (!coinType) {
+    return "";
+  }
+
+  let type = coinType.trim();
+  if (type === "" || type === UNKNOWN_COIN) {
+    return type;
+  }
+
+  if (!type.startsWith("0x")) {
+    type = `0x${type}`;
+  }
+
+  const firstSeparator = type.indexOf("::");
+  if (firstSeparator === -1) {
+    return normalizeAddress(type);
+  }
+
+  const addressPart = type.slice(0, firstSeparator);
+  const rest = type.slice(firstSeparator + 2);
+  const normalizedAddress = normalizeAddress(addressPart);
+  return `${normalizedAddress}::${rest}`;
+};
+
+export const getCoinSymbolByType = (coinType: string): string => {
+  const normalized = normalizeCoinType(coinType);
+  if (!normalized || normalized === UNKNOWN_COIN) {
+    return UNKNOWN_COIN;
+  }
+  return COIN_MAP[normalized] || UNKNOWN_COIN;
 };
 
 export const SYMBOL_MAP: Record<number, string> = {
@@ -152,6 +203,7 @@ export const SYMBOL_MAP: Record<number, string> = {
   25: "HAEDAL",
   26: "XBTC",
   27: "IKA",
+  28: "XAUM",
 };
 
 export const FlashLoanCoins: Record<string, string> = {
@@ -185,7 +237,7 @@ export function SymbolMatcher(objectType: string) {
   const regex = /<([^>]+)>/;
   const matches = objectType.match(regex);
   if (matches && matches.length > 1) {
-    return matches[1];
+    return normalizeCoinType(matches[1]);
   } else {
     return "unknown";
   }
@@ -213,3 +265,11 @@ export function getIdBySymbol(coinSymbol: string): number | undefined {
   }
   return undefined;
 }
+
+export const getDecimalByCoinType = (coinType: string): number | undefined => {
+  const coinSymbol = getCoinSymbolByType(coinType);
+  if (coinSymbol === UNKNOWN_COIN) {
+    return undefined;
+  }
+  return getDecimalBySymbol(coinSymbol);
+};

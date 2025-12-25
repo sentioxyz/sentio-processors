@@ -1,6 +1,6 @@
 import { SuiAddressProcessor } from "@sentio/sdk/sui";
 import { ChainId } from "@sentio/chain";
-import { COIN_MAP } from "./utils.js";
+import { COIN_MAP, normalizeCoinType, getCoinSymbolByType } from "./utils.js";
 
 const addresses = [
   "0x497e20c4e0189d37aae771b9e60155941a35ec59485ce2b02e30a30a0b5e3ecb", // liquidation bot
@@ -12,16 +12,18 @@ export function AddressProcessor() {
     SuiAddressProcessor.bind({
       address: address,
       network: ChainId.SUI_MAINNET,
-      startCheckpoint: 7800000n,
-      // startCheckpoint: 24814000n
+      startCheckpoint: 8000000n,
     }).onTimeInterval(async (self, ctx) => {
       try {
         const result = await getBalance(address);
         const balances = result.result as BalanceBody[];
 
         for (let coin of Object.keys(COIN_MAP)) {
+          const normalizedCoin = normalizeCoinType(coin);
+          const coinSymbol = getCoinSymbolByType(coin);
+
           const data = balances.find((balance) => {
-            return balance.coinType == coin;
+            return normalizeCoinType(balance.coinType) === normalizedCoin;
           });
           let totalBalance = "0";
           let coinObjectCount = 0;
@@ -34,13 +36,13 @@ export function AddressProcessor() {
             env: "mainnet",
             address,
             coin,
-            coin_symbol: COIN_MAP[coin],
+            coin_symbol: coinSymbol,
           });
           ctx.meter.Gauge("coinObjectCountForAddress").record(coinObjectCount, {
             env: "mainnet",
             address,
             coin,
-            coin_symbol: COIN_MAP[coin],
+            coin_symbol: coinSymbol,
           });
         }
       } catch (e) {}

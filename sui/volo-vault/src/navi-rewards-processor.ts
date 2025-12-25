@@ -1,17 +1,14 @@
 import { SuiContext } from "@sentio/sdk/sui";
-import { ChainId } from "@sentio/chain";
 import { Counter, Gauge } from "@sentio/sdk";
 
-// Import Navi incentive_v3 types (temporarily commented out for build fix)
-// TODO: Re-enable after proper type setup
-// import { incentive_v3 } from "./types/sui/0x81c408448d0d57b3e371ea94de1d40bf852784d3e225de1e74acab3e8395c18f.js";
-
 import {
-  NAVI_ACCOUNT_CAPS,
-  VAULT_ADDRESSES,
   getDecimalBySymbol,
   COIN_MAP,
   applyTokenDecimalPrecision,
+  getVaultTypeByAccountCap,
+  getCoinSymbolByVaultType,
+  getNaviAccountCaps,
+  getCurrentDateUTC,
 } from "./utils.js";
 
 // Navi reward metrics for Volo Vault integration
@@ -38,17 +35,6 @@ const naviRewardMetrics = {
   }),
 };
 
-// Track which account cap addresses belong to which vault
-const ACCOUNT_CAP_TO_VAULT_MAP: Record<string, string> = {
-  // SUIBTC Vault account caps
-  [NAVI_ACCOUNT_CAPS.SUIBTC_VAULT.naviAccountCap0]: "SUIBTC",
-  [NAVI_ACCOUNT_CAPS.SUIBTC_VAULT.naviAccountCap1]: "SUIBTC",
-
-  // XBTC Vault account caps
-  [NAVI_ACCOUNT_CAPS.XBTC_VAULT.naviAccountCap0]: "XBTC",
-  [NAVI_ACCOUNT_CAPS.XBTC_VAULT.naviAccountCap1]: "XBTC",
-};
-
 // Daily aggregation for each vault
 const dailyNaviStats = {
   lastUpdateDate: "",
@@ -56,13 +42,21 @@ const dailyNaviStats = {
   coinTypeRewards: new Map<string, number>(), // coinType -> daily total
 };
 
-// Helper functions
-function getCurrentDateUTC(): string {
-  return new Date().toISOString().split("T")[0];
-}
+function resolveVaultForAccountCap(accountCap: string): {
+  vaultType: string;
+  vaultLabel: string;
+} | null {
+  const vaultType = getVaultTypeByAccountCap(accountCap);
+  if (!vaultType) {
+    return null;
+  }
 
-function getVaultByAccountCap(accountCap: string): string | undefined {
-  return ACCOUNT_CAP_TO_VAULT_MAP[accountCap];
+  const coinSymbol = getCoinSymbolByVaultType(vaultType);
+  const vaultLabel = coinSymbol
+    ? coinSymbol.toUpperCase()
+    : vaultType.replace(/_VAULT$/, "");
+
+  return { vaultType, vaultLabel };
 }
 
 function updateDailyNaviStats(ctx: SuiContext) {
@@ -86,8 +80,6 @@ async function handleNaviRewardClaimed(
   const user = data.user; // Account cap address
   const rawTotalClaimed = data.total_claimed;
   const coinType = data.coin_type;
-  const ruleIds = data.rule_ids;
-  const ruleIndices = data.rule_indices;
 
   const coinSymbol = COIN_MAP[coinType] || "UNKNOWN";
   const decimal = getDecimalBySymbol(coinSymbol) || 9;
@@ -101,11 +93,12 @@ async function handleNaviRewardClaimed(
   );
 
   // Check if this reward claim is from one of our monitored account caps
-  const vaultType = getVaultByAccountCap(user);
-  if (!vaultType) {
+  const vaultInfo = resolveVaultForAccountCap(user);
+  if (!vaultInfo) {
     // Not from our vaults, skip processing
     return;
   }
+  const { vaultType, vaultLabel } = vaultInfo;
 
   // Update daily statistics
   updateDailyNaviStats(ctx);
@@ -126,26 +119,30 @@ async function handleNaviRewardClaimed(
 
   // Record metrics
   naviRewardMetrics.dailyNaviRewards.add(ctx, totalClaimed, {
-    vault: vaultType,
+    vault: vaultLabel,
+    vaultType,
     accountCap: user,
     coinType: coinType,
     date: getCurrentDateUTC(),
   });
 
   naviRewardMetrics.rewardsByCoinType.add(ctx, totalClaimed, {
-    vault: vaultType,
+    vault: vaultLabel,
+    vaultType,
     coinType: coinType,
   });
 
   naviRewardMetrics.totalNaviRewards.add(ctx, totalClaimed, {
-    vault: vaultType,
+    vault: vaultLabel,
+    vaultType,
   });
 
   naviRewardMetrics.lastRewardClaim.record(
     ctx,
     ctx.timestamp.getTime() / 1000,
     {
-      vault: vaultType,
+      vault: vaultLabel,
+      vaultType,
       accountCap: user,
     }
   );
@@ -156,11 +153,8 @@ export function NaviRewardsProcessor() {
   console.log(
     "Setting up Navi rewards monitoring for Volo Vault account caps:"
   );
-  console.log(
-    "SUIBTC Vault caps:",
-    Object.values(NAVI_ACCOUNT_CAPS.SUIBTC_VAULT)
-  );
-  console.log("XBTC Vault caps:", Object.values(NAVI_ACCOUNT_CAPS.XBTC_VAULT));
+  console.log("SUIBTC Vault caps:", getNaviAccountCaps("wBTC_VAULT"));
+  console.log("XBTC Vault caps:", getNaviAccountCaps("xBTC_VAULT"));
 
   // Bind to incentive_v3 contract to monitor RewardClaimed events
   // TODO: Re-enable after type setup
@@ -176,4 +170,4 @@ export function NaviRewardsProcessor() {
   */
 }
 
-export { naviRewardMetrics, ACCOUNT_CAP_TO_VAULT_MAP, handleNaviRewardClaimed };
+export { naviRewardMetrics, handleNaviRewardClaimed };

@@ -1,7 +1,11 @@
 import { SuiObjectProcessor } from "@sentio/sdk/sui";
 import { ChainId } from "@sentio/chain";
 import { BigDecimal } from "@sentio/sdk";
-import { COIN_MAP, SymbolMatcher, getIdBySymbol } from "./utils.js";
+import {
+  getCoinSymbolByType,
+  SymbolMatcher,
+  getIdBySymbol,
+} from "./utils.js";
 import { updateTreasuryBalanceForPool } from "./main.js";
 
 const pools = [
@@ -40,11 +44,11 @@ export function PoolProcessor() {
     SuiObjectProcessor.bind({
       objectId: pool,
       network: ChainId.SUI_MAINNET,
-      startCheckpoint: 7800000n,
+      startCheckpoint: 8000000n,
     }).onTimeInterval(async (self, data, ctx) => {
       const type = String(self.type);
       const coin_type = SymbolMatcher(type);
-      const coin_symbol = COIN_MAP[coin_type];
+      const coin_symbol = getCoinSymbolByType(coin_type);
       const coin_id = getIdBySymbol(coin_symbol);
 
       //@ts-ignore
