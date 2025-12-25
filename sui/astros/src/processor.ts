@@ -200,6 +200,17 @@ async function getCoinPrice(
   return price;
 }
 
+// Safe BigInt to number conversion for decimal amounts
+function bigIntToDecimal(value: bigint, decimals: number): number {
+  const divisor = BigInt(Math.pow(10, decimals));
+  const intPart = value / divisor;
+  const fracPart = value % divisor;
+  // Convert to number safely by using string for the integer part if it's too large
+  const intPartNum = Number(intPart);
+  const fracPartNum = Number(fracPart) / Math.pow(10, decimals);
+  return intPartNum + fracPartNum;
+}
+
 async function swapEventHandler(
   event: aggregator.slippage.SwapEventInstance,
   ctx: SuiContext
@@ -213,12 +224,11 @@ async function swapEventHandler(
   const fromPrice = await getCoinPrice(ctx, event.type_arguments[0]);
   const toPrice = await getCoinPrice(ctx, event.type_arguments[1]);
 
-  let fromValue =
-    (fromPrice * Number(event.data_decoded.amount_in)) /
-    Math.pow(10, fromInfo.decimal);
-  let toValue =
-    (toPrice * Number(event.data_decoded.amount_out)) /
-    Math.pow(10, toInfo.decimal);
+  const amountInDecimal = bigIntToDecimal(event.data_decoded.amount_in, fromInfo.decimal);
+  const amountOutDecimal = bigIntToDecimal(event.data_decoded.amount_out, toInfo.decimal);
+
+  let fromValue = fromPrice * amountInDecimal;
+  let toValue = toPrice * amountOutDecimal;
 
   let usdGap = 0;
 
@@ -241,23 +251,21 @@ async function swapEventHandler(
       (event.type_arguments[0] == NAVX && event.type_arguments[1] == USDC) ||
       (event.type_arguments[0] == USDC && event.type_arguments[1] == NAVX)
     ) {
-      fromValue =
-        (toPrice * Number(event.data_decoded.amount_in)) /
-        Math.pow(10, toInfo.decimal);
+      const amountInDecimalTo = bigIntToDecimal(event.data_decoded.amount_in, toInfo.decimal);
+      fromValue = toPrice * amountInDecimalTo;
       ctx.eventLogger.emit("swapEvent", {
         user: event.sender,
         from: event.type_arguments[1],
         fromSymbol: updateSymbol(toInfo, event.type_arguments[1]),
         target: event.type_arguments[0],
         targetSymbol: updateSymbol(fromInfo, event.type_arguments[0]),
-        amount_in: event.data_decoded.amount_in,
-        amount_in_number:
-          Number(event.data_decoded.amount_in) / Math.pow(10, toInfo.decimal),
+        amount_in: event.data_decoded.amount_in.toString(),
+        amount_in_number: amountInDecimalTo,
         amount_in_usd: Number(fromValue),
-        amount_out: 0,
+        amount_out: "0",
         amount_out_number: 0,
         amount_out_usd: 0,
-        min_amount_out: 0,
+        min_amount_out: "0",
         referral_code: event.data_decoded.referral_code,
       });
     }
@@ -268,15 +276,13 @@ async function swapEventHandler(
       fromSymbol: updateSymbol(fromInfo, event.type_arguments[0]),
       target: event.type_arguments[1],
       targetSymbol: updateSymbol(toInfo, event.type_arguments[1]),
-      amount_in: event.data_decoded.amount_in,
-      amount_in_number:
-        Number(event.data_decoded.amount_in) / Math.pow(10, fromInfo.decimal),
+      amount_in: event.data_decoded.amount_in.toString(),
+      amount_in_number: amountInDecimal,
       amount_in_usd: Number(fromValue),
-      amount_out: event.data_decoded.amount_out,
-      amount_out_number:
-        Number(event.data_decoded.amount_out) / Math.pow(10, toInfo.decimal),
+      amount_out: event.data_decoded.amount_out.toString(),
+      amount_out_number: amountOutDecimal,
       amount_out_usd: Number(toValue),
-      min_amount_out: event.data_decoded.min_amount_out,
+      min_amount_out: event.data_decoded.min_amount_out.toString(),
       referral_code: event.data_decoded.referral_code,
     });
   }
