@@ -1,4 +1,5 @@
 import { SuiContext, SuiNetwork } from "@sentio/sdk/sui";
+import { scaleDown } from "@sentio/sdk";
 import * as aggregator from "./types/sui/0x88dfe5e893bc9fa984d121e4d0d5b2e873dc70ae430cf5b3228ae6cb199cb32b.js";
 import { slippage } from "./types/sui/0x5b7d732adeb3140a2dbf2becd1e9dbe56cee0e3687379bcfe7df4357ea664313.js";
 import * as newSlippage from "./types/sui/0xdd21f177ec772046619e401c7a44eb78c233c0d53b4b2213ad83122eef4147db.js";
@@ -200,17 +201,6 @@ async function getCoinPrice(
   return price;
 }
 
-// Safe BigInt to number conversion for decimal amounts
-function bigIntToDecimal(value: bigint, decimals: number): number {
-  const divisor = BigInt(Math.pow(10, decimals));
-  const intPart = value / divisor;
-  const fracPart = value % divisor;
-  // Convert to number safely by using string for the integer part if it's too large
-  const intPartNum = Number(intPart);
-  const fracPartNum = Number(fracPart) / Math.pow(10, decimals);
-  return intPartNum + fracPartNum;
-}
-
 async function swapEventHandler(
   event: aggregator.slippage.SwapEventInstance,
   ctx: SuiContext
@@ -224,17 +214,20 @@ async function swapEventHandler(
   const fromPrice = await getCoinPrice(ctx, event.type_arguments[0]);
   const toPrice = await getCoinPrice(ctx, event.type_arguments[1]);
 
-  const amountInDecimal = bigIntToDecimal(event.data_decoded.amount_in, fromInfo.decimal);
-  const amountOutDecimal = bigIntToDecimal(event.data_decoded.amount_out, toInfo.decimal);
+  const amountInNormalized = scaleDown(event.data_decoded.amount_in, fromInfo.decimal);
+  const amountOutNormalized = scaleDown(event.data_decoded.amount_out, toInfo.decimal);
 
-  let fromValue = fromPrice * amountInDecimal;
-  let toValue = toPrice * amountOutDecimal;
+  let fromValue = amountInNormalized.multipliedBy(fromPrice);
+  let toValue = amountOutNormalized.multipliedBy(toPrice);
 
-  let usdGap = 0;
-
-  usdGap = Math.abs(fromValue - toValue) / Math.min(fromValue, toValue);
+  // Check USD gap and adjust if needed
+  const fromValueNum = fromValue.toNumber();
+  const toValueNum = toValue.toNumber();
+  const minValue = Math.min(fromValueNum, toValueNum);
+  const usdGap = minValue > 0 ? Math.abs(fromValueNum - toValueNum) / minValue : 0;
+  
   if (usdGap >= 0.5) {
-    if (fromValue > toValue) {
+    if (fromValueNum > toValueNum) {
       fromValue = toValue;
     } else {
       toValue = fromValue;
@@ -251,8 +244,8 @@ async function swapEventHandler(
       (event.type_arguments[0] == NAVX && event.type_arguments[1] == USDC) ||
       (event.type_arguments[0] == USDC && event.type_arguments[1] == NAVX)
     ) {
-      const amountInDecimalTo = bigIntToDecimal(event.data_decoded.amount_in, toInfo.decimal);
-      fromValue = toPrice * amountInDecimalTo;
+      const amountInToNormalized = scaleDown(event.data_decoded.amount_in, toInfo.decimal);
+      const fromValueNormalized = amountInToNormalized.multipliedBy(toPrice);
       ctx.eventLogger.emit("swapEvent", {
         user: event.sender,
         from: event.type_arguments[1],
@@ -260,8 +253,8 @@ async function swapEventHandler(
         target: event.type_arguments[0],
         targetSymbol: updateSymbol(fromInfo, event.type_arguments[0]),
         amount_in: event.data_decoded.amount_in.toString(),
-        amount_in_number: amountInDecimalTo,
-        amount_in_usd: Number(fromValue),
+        amount_in_number: amountInToNormalized,
+        amount_in_usd: fromValueNormalized,
         amount_out: "0",
         amount_out_number: 0,
         amount_out_usd: 0,
@@ -270,6 +263,7 @@ async function swapEventHandler(
       });
     }
   } else {
+    const minAmountOutNormalized = scaleDown(event.data_decoded.min_amount_out, toInfo.decimal);
     ctx.eventLogger.emit("swapEvent", {
       user: event.sender,
       from: event.type_arguments[0],
@@ -277,12 +271,13 @@ async function swapEventHandler(
       target: event.type_arguments[1],
       targetSymbol: updateSymbol(toInfo, event.type_arguments[1]),
       amount_in: event.data_decoded.amount_in.toString(),
-      amount_in_number: amountInDecimal,
-      amount_in_usd: Number(fromValue),
+      amount_in_number: amountInNormalized,
+      amount_in_usd: fromValue,
       amount_out: event.data_decoded.amount_out.toString(),
-      amount_out_number: amountOutDecimal,
-      amount_out_usd: Number(toValue),
+      amount_out_number: amountOutNormalized,
+      amount_out_usd: toValue,
       min_amount_out: event.data_decoded.min_amount_out.toString(),
+      min_amount_out_number: minAmountOutNormalized,
       referral_code: event.data_decoded.referral_code,
     });
   }
@@ -495,25 +490,25 @@ async function positiveSlippageEventHandler(
     target: event.type_arguments[1],
     targetSymbol: updateSymbol(toInfo, event.type_arguments[1]),
 
-    // Input token information
-    amount_in: event.data_decoded.amount_in,
+    // Input token information - use toString() to match schema (string type)
+    amount_in: event.data_decoded.amount_in.toString(),
     amount_in_number:
       Number(event.data_decoded.amount_in) / Math.pow(10, fromInfo.decimal),
-    amount_in_value: event.data_decoded.amount_in_value,
+    amount_in_value: event.data_decoded.amount_in_value.toString(),
 
-    // Output token information
-    amount_out: event.data_decoded.amount_out,
+    // Output token information - use toString() to match schema (string type)
+    amount_out: event.data_decoded.amount_out.toString(),
     amount_out_number:
       Number(event.data_decoded.amount_out) / Math.pow(10, toInfo.decimal),
 
-    // Expected output information
-    expected_amount_out: event.data_decoded.expected_amount_out,
+    // Expected output information - use toString() to match schema (string type)
+    expected_amount_out: event.data_decoded.expected_amount_out.toString(),
     expected_amount_out_number:
       Number(event.data_decoded.expected_amount_out) /
       Math.pow(10, toInfo.decimal),
 
-    // Slippage fee information
-    take_amount: event.data_decoded.take_amount,
+    // Slippage fee information - use toString() to match schema (string type)
+    take_amount: event.data_decoded.take_amount.toString(),
     take_amount_number:
       Number(event.data_decoded.take_amount) / Math.pow(10, toInfo.decimal),
 
@@ -525,7 +520,7 @@ async function positiveSlippageEventHandler(
 
     // Configuration validation information with proper BigInt handling
     threshold_index: thresholdIndex,
-    threshold_value: positiveThreshold[thresholdIndex].toString(), // Use string to avoid BigInt overflow
+    threshold_value: positiveThreshold[thresholdIndex].toString(),
     max_take_amount: maxTakeAmount,
     max_take_percent: maxTakePercent,
 
