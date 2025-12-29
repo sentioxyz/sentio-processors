@@ -7,7 +7,10 @@ import * as dca from "./types/sui/0xaf08f20a6214169d5dc77c133e98b529bdb9c1db93ac
 import { SuiCoinList } from "@sentio/sdk/sui/ext";
 import { getPriceBySymbol, getPriceByType, token } from "@sentio/sdk/utils";
 
-const START_CHECKPOINT = 72000000n;
+const START_CHECKPOINT = 220000000n;
+
+// DCA Operator address for filtering DCA-specific events
+const DCA_OPERATOR_ADDRESS = "0xde61d3608383c5cdee51d2b0f913ef71b7103f161cb7d73fe4edbd87e5bd4b97";
 
 let coinInfoMap = new Map<string, Promise<token.TokenInfo>>();
 
@@ -105,7 +108,12 @@ const DEFAULT_COIN_CONTEXT: CoinContext = {
 };
 
 const getCoinTypeFromTypeName = (typeName?: MoveTypeName): string => {
-  return typeName?.name ?? "";
+  const name = typeName?.name ?? "";
+  // DCA contract returns coin type without 0x prefix, add it if missing
+  if (name && !name.startsWith("0x")) {
+    return "0x" + name;
+  }
+  return name;
 };
 
 const getCoinContext = async (
@@ -130,7 +138,14 @@ const getCoinContext = async (
   };
 };
 
+// U64_MAX represents "no limit" in DCA orders
+const U64_MAX = 18446744073709551615n;
+
 const toDecimalAmount = (amount: bigint, decimals: number) => {
+  // Only U64_MAX (no limit) returns 0, other values normalize normally
+  if (amount === U64_MAX) {
+    return 0;
+  }
   if (decimals === 0) {
     return Number(amount);
   }
@@ -530,6 +545,83 @@ async function positiveSlippageEventHandler(
   });
 }
 
+// DCA ExSwapWithReferralEvent handler - records slippage revenue from DCA operations
+async function dcaExSwapWithReferralHandler(
+  event: newSlippage.slippage.ExSwapWithReferralEventInstance,
+  ctx: SuiContext
+) {
+  const sender = event.data_decoded.swap_initializer_address;
+  
+  // Only record events from DCA Operator
+  if (sender !== DCA_OPERATOR_ADDRESS) {
+    return;
+  }
+
+  const divisor = Math.pow(10, 9);
+  const receiver = event.data_decoded.receiver_address;
+  const fromCoinPrice = event.data_decoded.from_coin_price;
+  const fromCoinPriceNumber = Number(fromCoinPrice) / divisor;
+  const fromCoinAmount = event.data_decoded.from_coin_amount;
+  const fromCoinAmountNumber = Number(fromCoinAmount) / divisor;
+  const toCoinPrice = event.data_decoded.to_coin_price;
+  const toCoinPriceNumber = Number(toCoinPrice) / divisor;
+  const toCoinAmount = event.data_decoded.to_coin_amount;
+  const toCoinAmountNumber = Number(toCoinAmount) / divisor;
+  const rewardAmount = event.data_decoded.reward_amount;
+  const rewardAmountNumber = Number(rewardAmount) / divisor;
+  const rewardsRatio = event.data_decoded.rewards_ratio;
+  const referralId = event.data_decoded.referral_id;
+
+  // Calculate USD values
+  const fromValueInUSD = fromCoinPriceNumber * fromCoinAmountNumber;
+  const toValueInUSD = toCoinPriceNumber * toCoinAmountNumber;
+  // reward_amount is in toCoin, calculate USD value
+  const rewardValueInUSD = rewardAmountNumber * toCoinPriceNumber;
+
+  // Get coin symbols from type arguments
+  const fromCoinType = event.type_arguments[0];
+  const toCoinType = event.type_arguments[1];
+  const intermediateCoinType = event.type_arguments[2];
+
+  ctx.eventLogger.emit("dcaSlippageEvent", {
+    // Transaction info
+    txHash: ctx.transaction.digest,
+    timestamp: ctx.timestamp,
+    
+    // Addresses
+    sender,
+    receiver,
+    
+    // From coin info
+    fromCoinType,
+    fromCoinPrice: fromCoinPrice.toString(),
+    fromCoinPriceNumber,
+    fromCoinAmount: fromCoinAmount.toString(),
+    fromCoinAmountNumber,
+    fromValueInUSD,
+    
+    // To coin info
+    toCoinType,
+    toCoinPrice: toCoinPrice.toString(),
+    toCoinPriceNumber,
+    toCoinAmount: toCoinAmount.toString(),
+    toCoinAmountNumber,
+    toValueInUSD,
+    
+    // Intermediate coin (for routing)
+    intermediateCoinType,
+    
+    // Reward/slippage info
+    rewardAmount: rewardAmount.toString(),
+    rewardAmountNumber,
+    rewardValueInUSD,
+    rewardsRatio: Number(rewardsRatio),
+    
+    // Referral info
+    referralId: referralId.toString(),
+  });
+}
+
 // Original event listeners
 aggregator.slippage
   .bind({ startCheckpoint: START_CHECKPOINT })
@@ -546,6 +638,9 @@ newSlippage.slippage
   .bind({ startCheckpoint: START_CHECKPOINT })
   .onEventPositiveSlippageEvent(positiveSlippageEventHandler, {
     resourceChanges: true,
+  })
+  .onEventExSwapWithReferralEvent(dcaExSwapWithReferralHandler, {
+    resourceChanges: true,
   });
 
 async function handleDcaOrderCreated(
@@ -558,15 +653,15 @@ async function handleDcaOrderCreated(
     getCoinContext(ctx, data.to_coin_type),
   ]);
 
-  const depositedAmountNumber = toDecimalAmount(
+  const depositedAmountNormalized = toDecimalAmount(
     data.deposited_amount,
     fromCoin.decimals
   );
-  const minAmountOutNumber = toDecimalAmount(
+  const minAmountOutNormalized = toDecimalAmount(
     data.min_amount_out,
     toCoin.decimals
   );
-  const maxAmountOutNumber = toDecimalAmount(
+  const maxAmountOutNormalized = toDecimalAmount(
     data.max_amount_out,
     toCoin.decimals
   );
@@ -575,27 +670,27 @@ async function handleDcaOrderCreated(
     txHash: ctx.transaction.digest,
     sender: event.sender,
     order_id: data.order_id,
-    gap_duration_ms: data.gap_duration_ms,
-    gap_frequency: data.gap_frequency,
+    gap_duration_ms: data.gap_duration_ms.toString(),
+    gap_frequency: data.gap_frequency.toString(),
     gap_unit: data.gap_unit,
-    order_num: data.order_num,
-    cliff_duration_ms: data.cliff_duration_ms,
-    cliff_frequency: data.cliff_frequency,
+    order_num: data.order_num.toString(),
+    cliff_duration_ms: data.cliff_duration_ms.toString(),
+    cliff_frequency: data.cliff_frequency.toString(),
     cliff_unit: data.cliff_unit,
-    min_amount_out: data.min_amount_out,
-    min_amount_out_number: minAmountOutNumber,
-    min_amount_out_usd: toUsdValue(minAmountOutNumber, toCoin.price),
-    max_amount_out: data.max_amount_out,
-    max_amount_out_number: maxAmountOutNumber,
-    max_amount_out_usd: toUsdValue(maxAmountOutNumber, toCoin.price),
-    deposited_amount: data.deposited_amount,
-    deposited_amount_number: depositedAmountNumber,
-    deposited_amount_usd: toUsdValue(depositedAmountNumber, fromCoin.price),
+    min_amount_out: data.min_amount_out.toString(),
+    min_amount_out_normalized: minAmountOutNormalized,
+    min_amount_out_usd: toUsdValue(minAmountOutNormalized, toCoin.price),
+    max_amount_out: data.max_amount_out.toString(),
+    max_amount_out_normalized: maxAmountOutNormalized,
+    max_amount_out_usd: toUsdValue(maxAmountOutNormalized, toCoin.price),
+    deposited_amount: data.deposited_amount.toString(),
+    deposited_amount_normalized: depositedAmountNormalized,
+    deposited_amount_usd: toUsdValue(depositedAmountNormalized, fromCoin.price),
     from_coin_type: fromCoin.type,
     from_symbol: fromCoin.symbol,
     to_coin_type: toCoin.type,
     to_symbol: toCoin.symbol,
-    created_at_ms: data.created_at_ms,
+    created_at_ms: data.created_at_ms.toString(),
   });
 }
 
@@ -609,16 +704,16 @@ async function handleDcaOrderFilled(
     getCoinContext(ctx, data.to_coin_type),
   ]);
 
-  const borrowedNumber = toDecimalAmount(
+  const borrowedNormalized = toDecimalAmount(
     data.amount_in_borrowed,
     fromCoin.decimals
   );
-  const spentNumber = toDecimalAmount(
+  const spentNormalized = toDecimalAmount(
     data.amount_in_spent,
     fromCoin.decimals
   );
-  const amountOutNumber = toDecimalAmount(data.amount_out, toCoin.decimals);
-  const protocolFeeNumber = toDecimalAmount(
+  const amountOutNormalized = toDecimalAmount(data.amount_out, toCoin.decimals);
+  const protocolFeeNormalized = toDecimalAmount(
     data.protocol_fee_charged,
     toCoin.decimals
   );
@@ -627,24 +722,24 @@ async function handleDcaOrderFilled(
     txHash: ctx.transaction.digest,
     sender: event.sender,
     order_id: data.order_id,
-    cycle_number: data.cycle_number,
-    fulfilled_time_ms: data.fulfilled_time_ms,
+    cycle_number: data.cycle_number.toString(),
+    fulfilled_time_ms: data.fulfilled_time_ms.toString(),
     from_coin_type: fromCoin.type,
     from_symbol: fromCoin.symbol,
     to_coin_type: toCoin.type,
     to_symbol: toCoin.symbol,
-    amount_in_borrowed: data.amount_in_borrowed,
-    amount_in_borrowed_number: borrowedNumber,
-    amount_in_borrowed_usd: toUsdValue(borrowedNumber, fromCoin.price),
-    amount_in_spent: data.amount_in_spent,
-    amount_in_spent_number: spentNumber,
-    amount_in_spent_usd: toUsdValue(spentNumber, fromCoin.price),
-    amount_out: data.amount_out,
-    amount_out_number: amountOutNumber,
-    amount_out_usd: toUsdValue(amountOutNumber, toCoin.price),
-    protocol_fee_charged: data.protocol_fee_charged,
-    protocol_fee_charged_number: protocolFeeNumber,
-    protocol_fee_charged_usd: toUsdValue(protocolFeeNumber, toCoin.price),
+    amount_in_borrowed: data.amount_in_borrowed.toString(),
+    amount_in_borrowed_normalized: borrowedNormalized,
+    amount_in_borrowed_usd: toUsdValue(borrowedNormalized, fromCoin.price),
+    amount_in_spent: data.amount_in_spent.toString(),
+    amount_in_spent_normalized: spentNormalized,
+    amount_in_spent_usd: toUsdValue(spentNormalized, fromCoin.price),
+    amount_out: data.amount_out.toString(),
+    amount_out_normalized: amountOutNormalized,
+    amount_out_usd: toUsdValue(amountOutNormalized, toCoin.price),
+    protocol_fee_charged: data.protocol_fee_charged.toString(),
+    protocol_fee_charged_normalized: protocolFeeNormalized,
+    protocol_fee_charged_usd: toUsdValue(protocolFeeNormalized, toCoin.price),
   });
 }
 
@@ -658,7 +753,7 @@ async function handleDcaOrderFinished(
     getCoinContext(ctx, data.to_coin_type),
   ]);
 
-  const amountInReturnedNumber = toDecimalAmount(
+  const amountInReturnedNormalized = toDecimalAmount(
     data.amount_in_returned,
     fromCoin.decimals
   );
@@ -667,9 +762,9 @@ async function handleDcaOrderFinished(
     txHash: ctx.transaction.digest,
     sender: event.sender,
     order_id: data.order_id,
-    amount_in_returned: data.amount_in_returned,
-    amount_in_returned_number: amountInReturnedNumber,
-    amount_in_returned_usd: toUsdValue(amountInReturnedNumber, fromCoin.price),
+    amount_in_returned: data.amount_in_returned.toString(),
+    amount_in_returned_normalized: amountInReturnedNormalized,
+    amount_in_returned_usd: toUsdValue(amountInReturnedNormalized, fromCoin.price),
     from_coin_type: fromCoin.type,
     from_symbol: fromCoin.symbol,
     to_coin_type: toCoin.type,
@@ -684,7 +779,7 @@ async function handleDcaCycleRefunded(
 ) {
   const data = event.data_decoded;
   const coin = await getCoinContext(ctx, data.token_type);
-  const amountNumber = toDecimalAmount(data.amount, coin.decimals);
+  const amountNormalized = toDecimalAmount(data.amount, coin.decimals);
 
   ctx.eventLogger.emit("dcaCycleRefunded", {
     txHash: ctx.transaction.digest,
@@ -693,11 +788,11 @@ async function handleDcaCycleRefunded(
     user: data.user,
     token_type: coin.type,
     token_symbol: coin.symbol,
-    amount: data.amount,
-    amount_number: amountNumber,
-    amount_usd: toUsdValue(amountNumber, coin.price),
-    cycle_number: data.cycle_number,
-    refunded_at_ms: data.refunded_at_ms,
+    amount: data.amount.toString(),
+    amount_normalized: amountNormalized,
+    amount_usd: toUsdValue(amountNormalized, coin.price),
+    cycle_number: data.cycle_number.toString(),
+    refunded_at_ms: data.refunded_at_ms.toString(),
   });
 }
 
@@ -707,7 +802,7 @@ async function handleDcaPayoutSent(
 ) {
   const data = event.data_decoded;
   const coin = await getCoinContext(ctx, data.token_type);
-  const amountNumber = toDecimalAmount(data.amount, coin.decimals);
+  const amountNormalized = toDecimalAmount(data.amount, coin.decimals);
 
   ctx.eventLogger.emit("dcaPayoutSent", {
     txHash: ctx.transaction.digest,
@@ -716,11 +811,11 @@ async function handleDcaPayoutSent(
     user: data.user,
     token_type: coin.type,
     token_symbol: coin.symbol,
-    amount: data.amount,
-    amount_number: amountNumber,
-    amount_usd: toUsdValue(amountNumber, coin.price),
-    cycle_number: data.cycle_number,
-    sent_at_ms: data.sent_at_ms,
+    amount: data.amount.toString(),
+    amount_normalized: amountNormalized,
+    amount_usd: toUsdValue(amountNormalized, coin.price),
+    cycle_number: data.cycle_number.toString(),
+    sent_at_ms: data.sent_at_ms.toString(),
   });
 }
 
