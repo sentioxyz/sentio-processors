@@ -618,7 +618,7 @@ async function dcaExSwapWithReferralHandler(
     rewardsRatio: Number(rewardsRatio),
     
     // Referral info
-    referralId: referralId.toString(),
+    referralId: Number(referralId),
   });
 }
 
