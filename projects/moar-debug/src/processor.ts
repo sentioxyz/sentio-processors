@@ -14,9 +14,7 @@
 import { pool, credit_manager } from './types/aptos/testnet/moar.js'
 import { Gauge } from "@sentio/sdk";
 
-import { AptosDex, getCoinInfo, getPairValue }
-  from "@sentio/sdk/aptos/ext"
-// from "@sentio-processor/common/aptos"
+// Removed unused deprecated imports: getCoinInfo, getPairValue, AptosDex
 
 import { AptosResourcesProcessor } from "@sentio/sdk/aptos";
 // import { pool } from "./types/aptos/testnet/moar.js";

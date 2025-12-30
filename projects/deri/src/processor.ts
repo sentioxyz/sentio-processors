@@ -43,7 +43,7 @@ const symbolState = EventLogger.register("SymbolState")
 const symbolInfo = EventLogger.register("SymbolInfo")
 
 const symbolTemplate = new SymbolProcessorTemplate()
-    .onEventNewImplementation(onSymbolImplementation)
+  .onEventNewImplementation(onSymbolImplementation)
 
 async function getMarket(underlying: string, poolContract: PoolImplementationBoundContractView) {
   if (underlying == ethers.ZeroAddress) {
@@ -92,7 +92,7 @@ async function recordMarketsIn(ctx: EthContext, marketsIn: string[], eventName: 
 
 async function recordSymbols(ctx: EthContext, symbolManagerContract: SymbolManagerImplementationBoundContractView, event: AddLiquidityEvent | RemoveLiquidityEvent) {
   try {
-  //symbols
+    //symbols
     const symbolsLength = await symbolManagerContract.getSymbolsLength()
     for (var i = 0; i < symbolsLength; i++) {
       const symbol = await symbolManagerContract.indexedSymbols(i)
@@ -148,7 +148,7 @@ async function recordSymbols(ctx: EthContext, symbolManagerContract: SymbolManag
 
 async function recordSymbolsForMargin(ctx: EthContext, symbolManagerContract: SymbolManagerImplementationBoundContractView, event: AddMarginEvent | RemoveMarginEvent) {
   try {
-  //symbols
+    //symbols
     const symbolsLength = await symbolManagerContract.getSymbolsLength()
     for (var i = 0; i < symbolsLength; i++) {
       const symbol = await symbolManagerContract.indexedSymbols(i)
@@ -173,20 +173,20 @@ async function recordSymbolsForMargin(ctx: EthContext, symbolManagerContract: Sy
           initialMarginRequired,
         })
       } else {
-          const gammaContract = getSymbolImplementationGammaContractOnContext(ctx, symbol)
-          const cumulaitveFundingPerPowerVolume = await gammaContract.cumulaitveFundingPerPowerVolume()
-          const cumulativeFundingPerRealFuturesVolume = await gammaContract.cumulativeFundingPerRealFuturesVolume()
-          symbolState.emit(ctx, {
-            pool: event.address,
-            symbol: symbolName,
-            symbolAddress: symbol,
-            indexPrice,
-            fundingTimestamp,
-            cumulaitveFundingPerPowerVolume,
-            cumulativeFundingPerRealFuturesVolume,
-            tradersPnl,
-            initialMarginRequired,
-          })
+        const gammaContract = getSymbolImplementationGammaContractOnContext(ctx, symbol)
+        const cumulaitveFundingPerPowerVolume = await gammaContract.cumulaitveFundingPerPowerVolume()
+        const cumulativeFundingPerRealFuturesVolume = await gammaContract.cumulativeFundingPerRealFuturesVolume()
+        symbolState.emit(ctx, {
+          pool: event.address,
+          symbol: symbolName,
+          symbolAddress: symbol,
+          indexPrice,
+          fundingTimestamp,
+          cumulaitveFundingPerPowerVolume,
+          cumulativeFundingPerRealFuturesVolume,
+          tradersPnl,
+          initialMarginRequired,
+        })
       }
     }
   } catch (e) {
@@ -204,13 +204,13 @@ async function recordSymbolsForTrade(
   evt: TradeEvent,
   activeSymbols: Set<string>) {
   try {
-  //symbols
-  const symbolsLength = await symbolManagerContract.getSymbolsLength()
-  const pTokenId = evt.args.pTokenId
-  for (var symbol of activeSymbols) {
-    const symbolContract = getSymbolImplementationFuturesContractOnContext(ctx, symbol)
-    const symbolId = await symbolContract.symbolId()
-    const symbolName = await symbolContract.symbol()
+    //symbols
+    const symbolsLength = await symbolManagerContract.getSymbolsLength()
+    const pTokenId = evt.args.pTokenId
+    for (var symbol of activeSymbols) {
+      const symbolContract = getSymbolImplementationFuturesContractOnContext(ctx, symbol)
+      const symbolId = await symbolContract.symbolId()
+      const symbolName = await symbolContract.symbol()
       const type = symbolType(symbolName)
       if (type == "futures" || type == "option" || type == "power") {
         const netVolume = await symbolContract.netVolume()
@@ -249,16 +249,16 @@ async function recordSymbolsForTrade(
           lastNetVolumeBlock,
           // openVolume
         })
-          positionState.emit(ctx, {
-            pool,
-            symbol: symbolName,
-            symbolAddress: symbol,
-            pTokenId: pTokenId,
-            volume: position.volume,
-            cost: position.cost,
-            cumulativeFundingPerVolume: position.cumulativeFundingPerVolume
-          })
-        } else {
+        positionState.emit(ctx, {
+          pool,
+          symbol: symbolName,
+          symbolAddress: symbol,
+          pTokenId: pTokenId,
+          volume: position.volume,
+          cost: position.cost,
+          cumulativeFundingPerVolume: position.cumulativeFundingPerVolume
+        })
+      } else {
         const symbolGammaContract = getSymbolImplementationGammaContractOnContext(ctx, symbol)
         // const indexPrice = await symbolGammaContract.indexPrice()
         // const fundingTimestamp = await symbolGammaContract.fundingTimestamp()
@@ -284,18 +284,18 @@ async function recordSymbolsForTrade(
         })
       }
     }
-} catch (e) {
-  console.log(evt)
-  console.log("symbol" + evt.name + ctx.blockNumber)
-  console.log(e)
-}
+  } catch (e) {
+    console.log(evt)
+    console.log("symbol" + evt.name + ctx.blockNumber)
+    console.log(e)
+  }
 }
 
 function isSettled(evt: TradeEvent, symbolId: string, activeSymbols: string[]) {
   if (evt.args.symbolId.toLowerCase() == symbolId.toLowerCase()) {
     return true
   }
-  for (var i = 0; i < activeSymbols.length; i ++) {
+  for (var i = 0; i < activeSymbols.length; i++) {
     if ((activeSymbols[i]).toLowerCase() == symbolId.toLowerCase()) {
       return true
     }
@@ -417,138 +417,56 @@ async function onAddMarket(evt: AddMarketEvent, ctx: PoolImplementationContext) 
 
 async function onChangeLiquidity(evt: AddLiquidityEvent | RemoveLiquidityEvent, ctx: PoolImplementationContext) {
   // try {
-    const address = evt.address
-    const underlying = evt.args.underlying
-    const lTokenId = evt.args.lTokenId
-    const poolContract = getPoolImplementationContractOnContext(ctx, evt.address)
-    const lToken = await poolContract.lToken()
-    const lTokenContract = getDTokenContractOnContext(ctx, lToken)
-    const liquidity =  await poolContract.liquidity()
-    const lpsPnl = await poolContract.lpsPnl()
-    const cumulativePnlPerLiquidity = await poolContract.cumulativePnlPerLiquidity()
-    const lpInfo = await poolContract.lpInfos(lTokenId)
-    const account = await lTokenContract.getOwnerOf(lTokenId)
-
-    poolState.emit(ctx, {
-      pool: address,
-      liquidity,
-      lpsPnl,
-      cumulativePnlPerLiquidity
-    })
-
-    //vault
-    const vault = lpInfo.vault
-
-    const vaultContract = getVaultImplementationContractOnContext(ctx, vault)
-    const vaultLiquidity = await vaultContract.getVaultLiquidity()
-    const vaultComptroller = await vaultContract.comptroller()
-    const comptrollerContract = getComptrollerContractOnContext(ctx, vaultComptroller)
-    const oracle = await comptrollerContract.oracle()
-    const oracleContract = getVenusChainlinkOracleContractOnContext(ctx, oracle)
-
-    // markets in
-    const marketsIn = await vaultContract.getMarketsIn()
-    // await recordMarketsIn(ctx, marketsIn, evt.name, vault, oracleContract)
-    lpState.emit(ctx,{
-      pool: evt.address,
-      lTokenId,
-      vault: lpInfo.vault,
-      amountB0: lpInfo.amountB0,
-      liquidity: lpInfo.liquidity,
-      cumulativePnlPerLiquidity: lpInfo.cumulativePnlPerLiquidity,
-      vaultLiquidity,
-      marketsIn: marketsIn.join("-")
-    })
-
-    const market = await getMarket(underlying, poolContract)
-    const marketContract = getVBep20DelegatorContractOnContext(ctx, market)
-    const marketBalance = await marketContract.balanceOf(vault)
-    const exchangeRateStored = await marketContract.exchangeRateStored()
-    marketState.emit(ctx, {
-      pool: evt.address,
-      lTokenId,
-      vault,
-      asset: underlying,
-      market,
-      marketBalance,
-      exchangeRateStored
-    })
-
-    //symbol manager
-    const symbolManager = await poolContract.symbolManager()
-    const symbolManagerContract = await getSymbolManagerImplementationContractOnContext(ctx, symbolManager)
-    const initialMarginRequired = await symbolManagerContract.initialMarginRequired()
-
-    symbolManagerState.emit(ctx, {
-      pool: evt.address,
-      managerAddress: symbolManager,
-      initialMarginRequired
-    })
-
-    await recordSymbols(ctx, symbolManagerContract, evt)
-    console.log(`${ctx.blockNumber} - ${ctx.timestamp.getTime()} - ${Date.now()} - ${Date.now() - ctx.timestamp.getTime()}`)
-
-    // ctx.eventLogger.emit(evt.name, {
-    //   pool_liquidity,
-    //   lpsPnl,
-    //   pool_cumulativePnlPerLiquidity,
-    //   account,
-    //   lTokenId,
-    //   vault,
-    //   amountB0: lpInfos.amountB0,
-    //   liquidity: lpInfos.liquidity,
-    //   cumulativePnlPerLiquidity: lpInfos.cumulativePnlPerLiquidity,
-    //   vaultLiquidity,
-    //   // TODO: markets in
-    //   // markets,
-    //   initialMarginRequired,
-    //   message: evt.name + ` for ${lTokenId}`
-    // })
-  // } catch (e) {
-  //   console.log(e)
-  // }
-}
-
-async function onChangeMargin(evt: AddMarginEvent | RemoveMarginEvent, ctx: PoolImplementationContext) {
-  try {
-  const poolAddress = evt.address
+  const address = evt.address
   const underlying = evt.args.underlying
-  const pTokenId = evt.args.pTokenId
+  const lTokenId = evt.args.lTokenId
   const poolContract = getPoolImplementationContractOnContext(ctx, evt.address)
   const lToken = await poolContract.lToken()
   const lTokenContract = getDTokenContractOnContext(ctx, lToken)
-  const account = await lTokenContract.getOwnerOf(pTokenId)
+  const liquidity = await poolContract.liquidity()
   const lpsPnl = await poolContract.lpsPnl()
   const cumulativePnlPerLiquidity = await poolContract.cumulativePnlPerLiquidity()
+  const lpInfo = await poolContract.lpInfos(lTokenId)
+  const account = await lTokenContract.getOwnerOf(lTokenId)
 
-  const tdInfos = await poolContract.tdInfos(pTokenId)
-  const vault = tdInfos.vault
+  poolState.emit(ctx, {
+    pool: address,
+    liquidity,
+    lpsPnl,
+    cumulativePnlPerLiquidity
+  })
+
+  //vault
+  const vault = lpInfo.vault
+
   const vaultContract = getVaultImplementationContractOnContext(ctx, vault)
   const vaultLiquidity = await vaultContract.getVaultLiquidity()
-
   const vaultComptroller = await vaultContract.comptroller()
   const comptrollerContract = getComptrollerContractOnContext(ctx, vaultComptroller)
   const oracle = await comptrollerContract.oracle()
   const oracleContract = getVenusChainlinkOracleContractOnContext(ctx, oracle)
+
+  // markets in
   const marketsIn = await vaultContract.getMarketsIn()
-  tdState.emit(ctx, {
-    pool: poolAddress,
-    pTokenId,
-    vault,
-    amountB0: tdInfos.amountB0,
+  // await recordMarketsIn(ctx, marketsIn, evt.name, vault, oracleContract)
+  lpState.emit(ctx, {
+    pool: evt.address,
+    lTokenId,
+    vault: lpInfo.vault,
+    amountB0: lpInfo.amountB0,
+    liquidity: lpInfo.liquidity,
+    cumulativePnlPerLiquidity: lpInfo.cumulativePnlPerLiquidity,
     vaultLiquidity,
     marketsIn: marketsIn.join("-")
   })
 
-  // await recordMarketsIn(ctx, marketsIn, evt.name, vault, oracleContract)
-  //symbol manager
   const market = await getMarket(underlying, poolContract)
   const marketContract = getVBep20DelegatorContractOnContext(ctx, market)
   const marketBalance = await marketContract.balanceOf(vault)
   const exchangeRateStored = await marketContract.exchangeRateStored()
   marketState.emit(ctx, {
     pool: evt.address,
-    pTokenId,
+    lTokenId,
     vault,
     asset: underlying,
     market,
@@ -556,70 +474,152 @@ async function onChangeMargin(evt: AddMarginEvent | RemoveMarginEvent, ctx: Pool
     exchangeRateStored
   })
 
-  if (evt.name == "RemoveMargin") {
-    const symbolManager = await poolContract.symbolManager()
-    const symbolManagerContract = await getSymbolManagerImplementationContractOnContext(ctx, symbolManager)
-    // const initialMarginRequired = await symbolManagerContract.initialMarginRequired()
-    const liquidity = await poolContract.liquidity()
+  //symbol manager
+  const symbolManager = await poolContract.symbolManager()
+  const symbolManagerContract = await getSymbolManagerImplementationContractOnContext(ctx, symbolManager)
+  const initialMarginRequired = await symbolManagerContract.initialMarginRequired()
 
-    poolState.emit(ctx, {
-      pool: poolAddress,
-      lpsPnl,
-      cumulativePnlPerLiquidity,
-      liquidity
-    })
-    await recordSymbolsForMargin(ctx, symbolManagerContract, evt)
+  symbolManagerState.emit(ctx, {
+    pool: evt.address,
+    managerAddress: symbolManager,
+    initialMarginRequired
+  })
 
-  }
-} catch (e) {
-  console.log(e)
-  console.log(evt)
+  await recordSymbols(ctx, symbolManagerContract, evt)
+  console.log(`${ctx.blockNumber} - ${ctx.timestamp.getTime()} - ${Date.now()} - ${Date.now() - ctx.timestamp.getTime()}`)
+
+  // ctx.eventLogger.emit(evt.name, {
+  //   pool_liquidity,
+  //   lpsPnl,
+  //   pool_cumulativePnlPerLiquidity,
+  //   account,
+  //   lTokenId,
+  //   vault,
+  //   amountB0: lpInfos.amountB0,
+  //   liquidity: lpInfos.liquidity,
+  //   cumulativePnlPerLiquidity: lpInfos.cumulativePnlPerLiquidity,
+  //   vaultLiquidity,
+  //   // TODO: markets in
+  //   // markets,
+  //   initialMarginRequired,
+  //   message: evt.name + ` for ${lTokenId}`
+  // })
+  // } catch (e) {
+  //   console.log(e)
+  // }
 }
+
+async function onChangeMargin(evt: AddMarginEvent | RemoveMarginEvent, ctx: PoolImplementationContext) {
+  try {
+    const poolAddress = evt.address
+    const underlying = evt.args.underlying
+    const pTokenId = evt.args.pTokenId
+    const poolContract = getPoolImplementationContractOnContext(ctx, evt.address)
+    const lToken = await poolContract.lToken()
+    const lTokenContract = getDTokenContractOnContext(ctx, lToken)
+    const account = await lTokenContract.getOwnerOf(pTokenId)
+    const lpsPnl = await poolContract.lpsPnl()
+    const cumulativePnlPerLiquidity = await poolContract.cumulativePnlPerLiquidity()
+
+    const tdInfos = await poolContract.tdInfos(pTokenId)
+    const vault = tdInfos.vault
+    const vaultContract = getVaultImplementationContractOnContext(ctx, vault)
+    const vaultLiquidity = await vaultContract.getVaultLiquidity()
+
+    const vaultComptroller = await vaultContract.comptroller()
+    const comptrollerContract = getComptrollerContractOnContext(ctx, vaultComptroller)
+    const oracle = await comptrollerContract.oracle()
+    const oracleContract = getVenusChainlinkOracleContractOnContext(ctx, oracle)
+    const marketsIn = await vaultContract.getMarketsIn()
+    tdState.emit(ctx, {
+      pool: poolAddress,
+      pTokenId,
+      vault,
+      amountB0: tdInfos.amountB0,
+      vaultLiquidity,
+      marketsIn: marketsIn.join("-")
+    })
+
+    // await recordMarketsIn(ctx, marketsIn, evt.name, vault, oracleContract)
+    //symbol manager
+    const market = await getMarket(underlying, poolContract)
+    const marketContract = getVBep20DelegatorContractOnContext(ctx, market)
+    const marketBalance = await marketContract.balanceOf(vault)
+    const exchangeRateStored = await marketContract.exchangeRateStored()
+    marketState.emit(ctx, {
+      pool: evt.address,
+      pTokenId,
+      vault,
+      asset: underlying,
+      market,
+      marketBalance,
+      exchangeRateStored
+    })
+
+    if (evt.name == "RemoveMargin") {
+      const symbolManager = await poolContract.symbolManager()
+      const symbolManagerContract = await getSymbolManagerImplementationContractOnContext(ctx, symbolManager)
+      // const initialMarginRequired = await symbolManagerContract.initialMarginRequired()
+      const liquidity = await poolContract.liquidity()
+
+      poolState.emit(ctx, {
+        pool: poolAddress,
+        lpsPnl,
+        cumulativePnlPerLiquidity,
+        liquidity
+      })
+      await recordSymbolsForMargin(ctx, symbolManagerContract, evt)
+
+    }
+  } catch (e) {
+    console.log(e)
+    console.log(evt)
+  }
 }
 
 async function onTrade(evt: TradeEvent, ctx: SymbolManagerImplementationContext) {
   try {
-  const pTokenId = evt.args.pTokenId
-  const symbolId = evt.args.symbolId
-  const symbolManagerContract = getSymbolManagerImplementationContractOnContext(ctx, ctx.address)
-  const pool = await symbolManagerContract.pool()
-  const poolContract = getPoolImplementationContractOnContext(ctx, pool)
-  const lpsPnl = await poolContract.lpsPnl()
-  const cumulativePnlPerLiquidity = await poolContract.cumulativePnlPerLiquidity()
-  const protocolFeeAccrued = await poolContract.protocolFeeAccrued()
-  const tdInfos = await poolContract.tdInfos(pTokenId)
-  const lToken = await poolContract.lToken()
-  const lTokenContract = getDTokenContractOnContext(ctx, lToken)
-  const account = await lTokenContract.getOwnerOf(pTokenId)
-  const vault = tdInfos.vault
-  const amountB0 = tdInfos.amountB0
-  const vaultContract = getVaultImplementationContractOnContext(ctx, vault)
-  const vaultLiquidity = await vaultContract.getVaultLiquidity()
-  const marketsIn = await vaultContract.getMarketsIn()
+    const pTokenId = evt.args.pTokenId
+    const symbolId = evt.args.symbolId
+    const symbolManagerContract = getSymbolManagerImplementationContractOnContext(ctx, ctx.address)
+    const pool = await symbolManagerContract.pool()
+    const poolContract = getPoolImplementationContractOnContext(ctx, pool)
+    const lpsPnl = await poolContract.lpsPnl()
+    const cumulativePnlPerLiquidity = await poolContract.cumulativePnlPerLiquidity()
+    const protocolFeeAccrued = await poolContract.protocolFeeAccrued()
+    const tdInfos = await poolContract.tdInfos(pTokenId)
+    const lToken = await poolContract.lToken()
+    const lTokenContract = getDTokenContractOnContext(ctx, lToken)
+    const account = await lTokenContract.getOwnerOf(pTokenId)
+    const vault = tdInfos.vault
+    const amountB0 = tdInfos.amountB0
+    const vaultContract = getVaultImplementationContractOnContext(ctx, vault)
+    const vaultLiquidity = await vaultContract.getVaultLiquidity()
+    const marketsIn = await vaultContract.getMarketsIn()
 
-  const activeSymbols = await symbolManagerContract.getActiveSymbols(pTokenId)
-  const currentSymbol = await symbolManagerContract.symbols(symbolId)
-  const newActiveSymbols = new Set(activeSymbols).add(currentSymbol)
-  const liquidity = await poolContract.liquidity()
+    const activeSymbols = await symbolManagerContract.getActiveSymbols(pTokenId)
+    const currentSymbol = await symbolManagerContract.symbols(symbolId)
+    const newActiveSymbols = new Set(activeSymbols).add(currentSymbol)
+    const liquidity = await poolContract.liquidity()
 
-  poolState.emit(ctx, {
-    pool: pool,
-    lpsPnl,
-    cumulativePnlPerLiquidity,
-    protocolFeeAccrued,
-    liquidity
-  })
+    poolState.emit(ctx, {
+      pool: pool,
+      lpsPnl,
+      cumulativePnlPerLiquidity,
+      protocolFeeAccrued,
+      liquidity
+    })
 
-  tdState.emit(ctx, {
-    pool: pool,
-    pTokenId,
-    vault,
-    amountB0,
-    vaultLiquidity,
-    marketsIn: marketsIn.join("-")
-  })
+    tdState.emit(ctx, {
+      pool: pool,
+      pTokenId,
+      vault,
+      amountB0,
+      vaultLiquidity,
+      marketsIn: marketsIn.join("-")
+    })
 
-  await recordSymbolsForTrade(ctx, symbolManagerContract, pool, evt, newActiveSymbols)
+    await recordSymbolsForTrade(ctx, symbolManagerContract, pool, evt, newActiveSymbols)
 
   } catch (e) {
     console.log(evt)
@@ -638,15 +638,15 @@ async function recordSymbolInfo(symbolAddress: string, ctx: EthContext) {
   const symbolId = await symbolContract.symbolId()
   var priceId
   try {
-   priceId = await symbolContract.priceId()
-  } catch(e) {
+    priceId = await symbolContract.priceId()
+  } catch (e) {
     console.log(e)
     console.log("error fetching priceId")
   }
   var feeRatio
   try {
     feeRatio = await symbolContract.feeRatio()
-  } catch(e) {
+  } catch (e) {
     console.log(e)
     console.log("error fetching feeRatio")
   }
@@ -672,7 +672,7 @@ async function recordSymbolInfo(symbolAddress: string, ctx: EthContext) {
       startingPriceShiftLimit = await symbolContract.startingPriceShiftLimit()
       initialOpenVolume = await symbolContract.initialOpenVolume()
 
-    } catch(e) {
+    } catch (e) {
       console.log(e)
       console.log("error fetching feeRatioNotional or feeRatioMark or startingPriceShiftLimit")
     }
@@ -715,14 +715,14 @@ async function recordSymbolInfo(symbolAddress: string, ctx: EthContext) {
     var jumpLimitRatio
     try {
       jumpLimitRatio = await symbolContract.jumpLimitRatio()
-    } catch(e) {
+    } catch (e) {
       console.log(e)
       console.log("error fetching jumpLimitRatio")
     }
     var initialOpenVolume
     try {
       initialOpenVolume = await symbolContract.initialOpenVolume()
-    } catch(e) {
+    } catch (e) {
       console.log(e)
       console.log("error fetching initialOpenVolume")
     }
@@ -759,7 +759,7 @@ async function recordSymbolInfo(symbolAddress: string, ctx: EthContext) {
     const volatilityId = await gammaContract.volatilityId()
 
     symbolInfo.emit(ctx, {
-      symbol:symbolAddress,
+      symbol: symbolAddress,
       symbolName,
       symbolManager,
       pool,
@@ -784,14 +784,14 @@ async function recordSymbolInfo(symbolAddress: string, ctx: EthContext) {
     var jumpLimitRatio
     try {
       jumpLimitRatio = await symbolContract.jumpLimitRatio()
-    } catch(e) {
+    } catch (e) {
       console.log(e)
       console.log("error fetching jumpLimitRatio")
     }
     var initialOpenVolume
     try {
       initialOpenVolume = await symbolContract.initialOpenVolume()
-    } catch(e) {
+    } catch (e) {
       console.log(e)
       console.log("error fetching initialOpenVolume")
     }
@@ -824,21 +824,21 @@ async function recordSymbolInfo(symbolAddress: string, ctx: EthContext) {
 
 async function onChangeSymbol(evt: AddSymbolEvent | RemoveSymbolEvent, ctx: SymbolManagerImplementationContext) {
   // try {
-    const symbol = evt.args.symbol
-    const symbolManagerContract = getSymbolManagerImplementationContractOnContext(ctx, ctx.address)
-    const pool = await symbolManagerContract.pool()
-    const symbolsLength = await symbolManagerContract.getSymbolsLength()
-    var symbols = ""
-    for (var i = 0; i < symbolsLength; i++) {
-      const indexedSymbols = await symbolManagerContract.indexedSymbols(i)
-      symbols = symbols + indexedSymbols + "-"
-    }
-    indexedSymbols.emit(ctx, {
-      pool,
-      indexedSymbols: symbols
-    })
-    await recordSymbolInfo(symbol, ctx)
-    symbolTemplate.bind({address: symbol}, ctx)
+  const symbol = evt.args.symbol
+  const symbolManagerContract = getSymbolManagerImplementationContractOnContext(ctx, ctx.address)
+  const pool = await symbolManagerContract.pool()
+  const symbolsLength = await symbolManagerContract.getSymbolsLength()
+  var symbols = ""
+  for (var i = 0; i < symbolsLength; i++) {
+    const indexedSymbols = await symbolManagerContract.indexedSymbols(i)
+    symbols = symbols + indexedSymbols + "-"
+  }
+  indexedSymbols.emit(ctx, {
+    pool,
+    indexedSymbols: symbols
+  })
+  await recordSymbolInfo(symbol, ctx)
+  symbolTemplate.bind({ address: symbol }, ctx)
   // } catch (e) {
   //   console.log(e)
   //   console.log(evt)
@@ -854,27 +854,29 @@ async function onSymbolImplementation(evt: NewImplementationEvent, ctx: SymbolCo
     console.log(e)
   }
 }
-DTokenProcessor.bind({address: "0xc5b1dE3769921E8b43222e3C221ab495193440C0", network: EthChainId.BINANCE})
-.onEventTransfer(onTransfer)
+DTokenProcessor.bind({ address: "0xc5b1dE3769921E8b43222e3C221ab495193440C0", network: EthChainId.BSC })
+  .onEventTransfer(onTransfer)
 
-DTokenProcessor.bind({address: "0x25d5aD687068799739FF7B0e18C7cbff403AcB64", network: EthChainId.BINANCE})
-.onEventTransfer(onTransfer)
+DTokenProcessor.bind({ address: "0x25d5aD687068799739FF7B0e18C7cbff403AcB64", network: EthChainId.BSC })
+  .onEventTransfer(onTransfer)
 
-PoolProcessor.bind({address: "0x243681B8Cd79E3823fF574e07B2378B8Ab292c1E", network: EthChainId.BINANCE})
-.onEventNewImplementation(onImplementation)
+PoolProcessor.bind({ address: "0x243681B8Cd79E3823fF574e07B2378B8Ab292c1E", network: EthChainId.BSC })
+  .onEventNewImplementation(onImplementation)
 
-PoolImplementationProcessor.bind({address: "0x243681B8Cd79E3823fF574e07B2378B8Ab292c1E", network: EthChainId.BINANCE
-// , startBlock: 28007586
+PoolImplementationProcessor.bind({
+  address: "0x243681B8Cd79E3823fF574e07B2378B8Ab292c1E", network: EthChainId.BSC
+  // , startBlock: 28007586
 })
-.onEventAddMarket(onAddMarket)
-.onEventAddLiquidity(onChangeLiquidity)
-.onEventRemoveLiquidity(onChangeLiquidity)
-.onEventAddMargin(onChangeMargin)
-.onEventRemoveMargin(onChangeMargin)
+  .onEventAddMarket(onAddMarket)
+  .onEventAddLiquidity(onChangeLiquidity)
+  .onEventRemoveLiquidity(onChangeLiquidity)
+  .onEventAddMargin(onChangeMargin)
+  .onEventRemoveMargin(onChangeMargin)
 
-SymbolManagerImplementationProcessor.bind({address: "0x543A9FA25ba9a16612274DD707Ac4462eD6988FA", network: EthChainId.BINANCE
-// , startBlock: 28007586
+SymbolManagerImplementationProcessor.bind({
+  address: "0x543A9FA25ba9a16612274DD707Ac4462eD6988FA", network: EthChainId.BSC
+  // , startBlock: 28007586
 })
-.onEventTrade(onTrade)
-.onEventAddSymbol(onChangeSymbol)
+  .onEventTrade(onTrade)
+  .onEventAddSymbol(onChangeSymbol)
 // .onEventNewImplementation(onSymbolImplementation)

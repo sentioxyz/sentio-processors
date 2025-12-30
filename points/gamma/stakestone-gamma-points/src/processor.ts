@@ -136,8 +136,8 @@ async function getAccountSnapshot(
       ctx.contract.balanceOf(account),
       lynexGauge && ctx.blockNumber >= lynexGauge.startBlock
         ? getGaugeV2CLContractOnContext(ctx, lynexGauge.address).balanceOf(
-            account
-          )
+          account
+        )
         : Promise.resolve(0n),
     ]);
   const balance =
@@ -148,6 +148,7 @@ async function getAccountSnapshot(
     id: vault + "." + account,
     vault,
     account,
+    network: ctx.chainId.toString(),
     timestampMilli: BigInt(timestampMilli),
     balance,
   });

@@ -1,4 +1,4 @@
-import { SuiObjectChange } from "@mysten/sui.js/client"
+import { SuiObjectChange } from "@mysten/sui/client"
 import { SuiGlobalProcessor, SuiNetwork, SuiObjectChangeContext } from "@sentio/sdk/sui"
 
 const LP_TOKEN_TYPE_PREFIX = [

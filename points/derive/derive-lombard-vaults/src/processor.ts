@@ -96,7 +96,7 @@ for (const params of [
 
 const ebtc_filter = SubaccountsProcessor.filters.BalanceAdjusted(null, null, V2_ASSETS.LBTC.assetAndSubId, null, null, null, null)
 SubaccountsProcessor.bind(
-    { address: DERIVE_V2_SUBACCOUNTS_ADDRESS, network: EthChainId.LYRA, startBlock: DERIVE_V2_DEPOSIT_START_BLOCK }
+    { address: DERIVE_V2_SUBACCOUNTS_ADDRESS, network: (957 as unknown as EthChainId), startBlock: DERIVE_V2_DEPOSIT_START_BLOCK }
 )
     .onEventBalanceAdjusted(async (event, ctx) => {
         await v2.snapshot.updateExchangeBalance(ctx, V2_ASSETS.LBTC, event.args.accountId, event.args.postBalance.scaleDown(18), excludedSubaccounts, emitUserExchangePoints)
@@ -104,7 +104,7 @@ SubaccountsProcessor.bind(
 
 
 GlobalProcessor.bind(
-    { network: EthChainId.LYRA, startBlock: DERIVE_V2_DEPOSIT_START_BLOCK }
+    { network: (957 as unknown as EthChainId), startBlock: DERIVE_V2_DEPOSIT_START_BLOCK }
 ).onTimeInterval(async (_, ctx) => {
     await v2.snapshot.updateExchangeTimestamp(ctx, V2_ASSETS, emitUserExchangePoints)
 },
