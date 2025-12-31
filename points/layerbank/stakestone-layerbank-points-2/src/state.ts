@@ -10,6 +10,7 @@ export async function getGlobalState(ctx: LTokenContext) {
     (await storeGet(ctx, GlobalState, GLOBAL_STATE_ID)) ??
     new GlobalState({
       id: GLOBAL_STATE_ID,
+      network: ctx.chainId.toString(),
       totalPositiveNetBalance: 0n,
       totalSupply: await ctx.contract.totalSupply(),
       totalBorrow: await ctx.contract.totalBorrow(),

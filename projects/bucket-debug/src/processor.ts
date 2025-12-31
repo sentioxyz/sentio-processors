@@ -8,8 +8,8 @@ import { fountain_core as old_fountain } from "./types/sui/old_fountain.js";
 import { fountain_core as sbuck_fountain } from "./types/sui/sbuck_fountain.js";
 import { fountain as strap_fountain } from "./types/sui/strap_fountain.js";
 import { getPriceBySymbol } from "@sentio/sdk/utils";
-import { normalizeSuiAddress } from "@mysten/sui.js/utils";
-import { SuiMoveObject } from "@mysten/sui.js/client";
+import { normalizeSuiAddress } from "@mysten/sui/utils";
+import { SuiMoveObject } from "@mysten/sui/client";
 import {
   bucket_events,
   bucket,

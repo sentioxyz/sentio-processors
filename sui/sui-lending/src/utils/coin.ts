@@ -1,6 +1,6 @@
 import { SuiContext, SuiNetwork } from '@sentio/sdk/sui'
-import { CoinMetadata } from '@mysten/sui.js/client'
-import { normalizeSuiAddress } from '@mysten/sui.js/utils'
+import { CoinMetadata } from '@mysten/sui/client'
+import { normalizeSuiAddress } from '@mysten/sui/utils'
 
 const coinsMetadata = new Map<string, CoinMetadata | null>()
 

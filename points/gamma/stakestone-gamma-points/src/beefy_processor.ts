@@ -103,6 +103,7 @@ async function process(
     id,
     vault: ctx.address,
     account,
+    network: ctx.chainId.toString(),
     balance: newBalance,
     timestampMilli: BigInt(ctx.timestamp.getTime()),
   });

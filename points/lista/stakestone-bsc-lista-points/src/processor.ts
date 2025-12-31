@@ -24,7 +24,7 @@ GLOBAL_CONFIG.execution = {
 let lastEigenRatioTimestamp: number | undefined = undefined;
 
 ListaInteractionProcessor.bind({
-  network: EthChainId.BINANCE,
+  network: EthChainId.BSC,
   address: LISTA_INTERACTION_CONTRACT_ADDRESS,
   startBlock: 38765592,
 })

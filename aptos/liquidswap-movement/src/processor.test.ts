@@ -28,7 +28,8 @@ describe('Test Processor', () => {
             }
           },
           handlerIds: [0],
-          handlerType: HandlerType.APT_EVENT
+          handlerType: HandlerType.APT_EVENT,
+          chainId: "1"
         }
       ]
     })

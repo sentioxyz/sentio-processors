@@ -1,6 +1,6 @@
 import { clob_v2, custodian_v2 } from "./types/sui/deepbook.js"
 import { SuiContext } from "@sentio/sdk/sui"
-import { SuiTransactionBlockResponse } from '@mysten/sui.js/client'
+import { SuiTransactionBlockResponse } from '@mysten/sui/client'
 import { getCoinAddressFromType, getOrCreateCoin } from './helper/getCoinOrPool.js'
 
 const orderFilledHandler = async (event: clob_v2.OrderFilledInstance, ctx: SuiContext) => {

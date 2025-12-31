@@ -1,24 +1,24 @@
 import assert from 'assert'
 import { TestProcessorServer, firstCounterValue } from "@sentio/sdk/testing";
-import blockJson from "./17121437.json";
-import blockJsonX from "./17126233.json";
-import blockJsonUniswapMint from "./14202253.json";
-import blockWrongRevenue from "./17128908.json";
-import block2Botsfrom from "./17134096.json";
-import blockSandwichBasic from "./17139815.json";
-import blockSandwichJared from "./17141262.json";
-import blockMissedArb from "./17153025.json";
-import blockLido from "./17148112.json";
-import blockWrongRevenue2 from "./17160609.json";
-import blockWrongSandWich from "./17148068.json";
-import blockLosingSandwich from "./17148268.json";
-import blockUniswapSandwich from "./17163020.json";
-import blockEulerHack1 from "./16818057.json";
-import blockForTubeHack from "./17143711.json";
-import blockWrongArbRevenue from "./17173197.json";
-import blockSandwichWrongRev1 from "./17100036.json";
-import blockHugeGraph from "./17124947.json";
-import zeroXBlock from "./44290568.json";
+import blockJson from "./17121437.json" with { type: "json" };
+import blockJsonX from "./17126233.json" with { type: "json" };
+import blockJsonUniswapMint from "./14202253.json" with { type: "json" };
+import blockWrongRevenue from "./17128908.json" with { type: "json" };
+import block2Botsfrom from "./17134096.json" with { type: "json" };
+import blockSandwichBasic from "./17139815.json" with { type: "json" };
+import blockSandwichJared from "./17141262.json" with { type: "json" };
+import blockMissedArb from "./17153025.json" with { type: "json" };
+import blockLido from "./17148112.json" with { type: "json" };
+import blockWrongRevenue2 from "./17160609.json" with { type: "json" };
+import blockWrongSandWich from "./17148068.json" with { type: "json" };
+import blockLosingSandwich from "./17148268.json" with { type: "json" };
+import blockUniswapSandwich from "./17163020.json" with { type: "json" };
+import blockEulerHack1 from "./16818057.json" with { type: "json" };
+import blockForTubeHack from "./17143711.json" with { type: "json" };
+import blockWrongArbRevenue from "./17173197.json" with { type: "json" };
+import blockSandwichWrongRev1 from "./17100036.json" with { type: "json" };
+import blockHugeGraph from "./17124947.json" with { type: "json" };
+import zeroXBlock from "./44290568.json" with { type: "json" };
 import { RichBlock, formatRichBlock } from "@sentio/sdk/eth";
 import { txnProfitAndCost, isArbitrage, handleBlock } from "./eth_processor.js";
 import { dataByTxn, getDataByTxn } from "./eth_util.js";
@@ -233,7 +233,7 @@ describe("Test MEV", () => {
       mevResults.sandwichTxns[0].revenue.get(
         "0xc02aaa39b223fe8d0a0e5c4f27ead9083c756cc2"
       )
-    , 22971036132798645n);
+      , 22971036132798645n);
   });
 
   test("huge graph", async () => {

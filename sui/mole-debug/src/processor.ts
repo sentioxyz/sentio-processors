@@ -6,7 +6,7 @@ import { pool } from './types/sui/0x1eabed72c53feb3805120a081dc15963c204dc8d0915
 import { getPriceByType, token } from "@sentio/sdk/utils"
 import { buildCoinInfo } from './utils/mole_utils.js'
 import { ANY_TYPE, BUILTIN_TYPES, TypeDescriptor, parseMoveType } from '@sentio/sdk/move'
-import { string_ } from "@sentio/sdk/sui/builtin/0x1";
+import { string$ } from "@sentio/sdk/sui/builtin/0x1";
 import { dynamic_field } from "@sentio/sdk/sui/builtin/0x2";
 
 
@@ -301,8 +301,8 @@ SuiWrappedObjectProcessor.bind({
       console.log("hellp, onTimeInterval")
       // console.log("object 0", dynamicFieldObjects[0])
 
-      const fieldType: TypeDescriptor<dynamic_field.Field<string_.String, vault.VaultInfo<any>>>
-          = dynamic_field.Field.type(string_.String.type(), vault.VaultInfo.type(ANY_TYPE))
+      const fieldType: TypeDescriptor<dynamic_field.Field<string$.String, vault.VaultInfo<any>>>
+        = dynamic_field.Field.type(string$.String.type(), vault.VaultInfo.type(ANY_TYPE))
 
       const fields = await ctx.coder.filterAndDecodeObjects(fieldType, dynamicFieldObjects)
 

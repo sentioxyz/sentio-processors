@@ -1,5 +1,5 @@
 
-import {defaultMoveCoder, AptosResourcesProcessor, TypedMoveResource, AptosResourcesContext} from "@sentio/sdk/aptos";
+import { defaultMoveCoder, AptosResourcesProcessor, TypedMoveResource, AptosResourcesContext } from "@sentio/sdk/aptos";
 import { MoveResource } from "@aptos-labs/ts-sdk"
 
 
@@ -17,7 +17,7 @@ import {
 } from "@sentio/sdk/aptos/ext"
 // } from "@sentio-processor/common/aptos"
 
-import { AccountEventTracker, BigDecimal, scaleDown } from "@sentio/sdk"
+import { BigDecimal, scaleDown } from "@sentio/sdk"
 
 import {
     inputUsd,
@@ -33,8 +33,8 @@ import {
 // import { SimpleCoinInfo } from "@sentio/sdk/move/ext";
 
 // TODO to remove
-export const accountTracker = AccountEventTracker.register("users")
-export const lps = AccountEventTracker.register("lps")
+// export const accountTracker = AccountEventTracker.register("users")
+// export const lps = AccountEventTracker.register("lps")
 
 type PoolType<T0, T1, T2> = v0.liquidity_pool.LiquidityPool<T0, T1, T2> | v05.liquidity_pool.LiquidityPool<T0, T1, T2>
 
@@ -46,45 +46,45 @@ for (const env of [v0, v05]) {
 
     const liquidSwap = new AptosDex<PoolType<any, any, any>>(volume, volumeByCoin,
         tvlAll, tvl, tvlByPool, {
-            getXReserve: pool => pool.coin_x_reserve.value,
-            getYReserve: pool => pool.coin_y_reserve.value,
-            getExtraPoolTags: pool => {
-                return {curve: pool.type_arguments[2], ver}
-            },
-            poolType: liquidity_pool.LiquidityPool.type()
-        })
+        getXReserve: pool => pool.coin_x_reserve.value,
+        getYReserve: pool => pool.coin_y_reserve.value,
+        getExtraPoolTags: pool => {
+            return { curve: pool.type_arguments[2], ver }
+        },
+        poolType: liquidity_pool.LiquidityPool.type()
+    })
 
     liquidity_pool.bind({ baseLabels: { ver } })
         .onEventPoolCreatedEvent(async (evt, ctx) => {
-            ctx.meter.Counter("num_pools").add(1, {ver})
-            ctx.eventLogger.emit("lp", {distinctId: ctx.transaction.sender, ver})
+            ctx.meter.Counter("num_pools").add(1, { ver })
+            ctx.eventLogger.emit("lp", { distinctId: ctx.transaction.sender, ver })
             // ctx.logger.info("", {user: "-", value: 0.0001})
         })
         .onEventLiquidityAddedEvent(async (evt, ctx) => {
-            ctx.meter.Counter("event_liquidity_add").add(1, {ver})
-            ctx.eventLogger.emit("lp", {distinctId: ctx.transaction.sender, ver})
+            ctx.meter.Counter("event_liquidity_add").add(1, { ver })
+            ctx.eventLogger.emit("lp", { distinctId: ctx.transaction.sender, ver })
 
             if (recordAccount) {
                 const value = await getPairValue(ctx, evt.type_arguments[0], evt.type_arguments[1], evt.data_decoded.added_x_val, evt.data_decoded.added_y_val)
-                    ctx.eventLogger.emit("liquidity", {
-                        distinctId: ctx.transaction.sender,
-                        "account": ctx.transaction.sender,
-                        "value": value.toNumber(),
-                        "formula_value": value.toNumber() * 2,
-                        ver
-                    })
-                    ctx.eventLogger.emit("net_liquidity", {
-                        distinctId: ctx.transaction.sender,
-                        "account": ctx.transaction.sender,
-                        "value": value.toNumber(),
-                        "formula_value": value.toNumber() * 2,
-                        ver
-                    })
+                ctx.eventLogger.emit("liquidity", {
+                    distinctId: ctx.transaction.sender,
+                    "account": ctx.transaction.sender,
+                    "value": value.toNumber(),
+                    "formula_value": value.toNumber() * 2,
+                    ver
+                })
+                ctx.eventLogger.emit("net_liquidity", {
+                    distinctId: ctx.transaction.sender,
+                    "account": ctx.transaction.sender,
+                    "value": value.toNumber(),
+                    "formula_value": value.toNumber() * 2,
+                    ver
+                })
             }
         })
         .onEventLiquidityRemovedEvent(async (evt, ctx) => {
-            ctx.meter.Counter("event_liquidity_removed").add(1, {ver})
-            ctx.eventLogger.emit("lp", {distinctId: ctx.transaction.sender, ver})
+            ctx.meter.Counter("event_liquidity_removed").add(1, { ver })
+            ctx.eventLogger.emit("lp", { distinctId: ctx.transaction.sender, ver })
             if (recordAccount) {
                 const value = await getPairValue(ctx, evt.type_arguments[0], evt.type_arguments[1], evt.data_decoded.returned_x_val, evt.data_decoded.returned_y_val)
                 if (value.isGreaterThan(10)) {
@@ -107,13 +107,13 @@ for (const env of [v0, v05]) {
             }
         })
         .onEventSwapEvent(async (evt, ctx) => {
-            accountTracker.trackEvent(ctx, {distinctId: ctx.transaction.sender})
+            // accountTracker.trackEvent(ctx, {distinctId: ctx.transaction.sender})
 
             const value = await liquidSwap.recordTradingVolume(ctx,
                 evt.type_arguments[0], evt.type_arguments[1],
                 evt.data_decoded.x_in + evt.data_decoded.x_out,
                 evt.data_decoded.y_in + evt.data_decoded.y_out,
-                {curve: getCurve(evt.type_arguments[2]), ver})
+                { curve: getCurve(evt.type_arguments[2]), ver })
             if (recordAccount) {
                 ctx.eventLogger.emit("vol", {
                     distinctId: ctx.transaction.sender,
@@ -138,8 +138,8 @@ for (const env of [v0, v05]) {
             const coinYInfo = await getTokenInfoWithFallback(evt.type_arguments[1])
             // ctx.logger.info(`${ctx.transaction.sender} Swap ${coinXInfo.symbol} for ${coinYInfo.symbol}`, {user: ctx.transaction.sender, value: value.toNumber()})
 
-            ctx.meter.Counter("event_swap_by_bridge").add(1, {bridge: coinXInfo.bridge, ver})
-            ctx.meter.Counter("event_swap_by_bridge").add(1, {bridge: coinYInfo.bridge, ver})
+            ctx.meter.Counter("event_swap_by_bridge").add(1, { bridge: coinXInfo.bridge, ver })
+            ctx.meter.Counter("event_swap_by_bridge").add(1, { bridge: coinYInfo.bridge, ver })
 
             // ctx.eventLogger.emit("account", {
             //     distinctId: ctx.transaction.sender,
@@ -147,12 +147,12 @@ for (const env of [v0, v05]) {
             // })
         })
         .onEventFlashloanEvent(async (evt, ctx) => {
-            accountTracker.trackEvent(ctx, {distinctId: ctx.transaction.sender})
+            // accountTracker.trackEvent(ctx, {distinctId: ctx.transaction.sender})
 
             const coinXInfo = await getTokenInfoWithFallback(evt.type_arguments[0])
             const coinYInfo = await getTokenInfoWithFallback(evt.type_arguments[1])
-            ctx.meter.Counter("event_flashloan_by_bridge").add(1, {bridge: coinXInfo.bridge, ver})
-            ctx.meter.Counter("event_flashloan_by_bridge").add(1, {bridge: coinYInfo.bridge, ver})
+            ctx.meter.Counter("event_flashloan_by_bridge").add(1, { bridge: coinXInfo.bridge, ver })
+            ctx.meter.Counter("event_flashloan_by_bridge").add(1, { bridge: coinYInfo.bridge, ver })
 
             ctx.eventLogger.emit("account", {
                 distinctId: ctx.transaction.sender,
@@ -161,7 +161,7 @@ for (const env of [v0, v05]) {
             })
         })
 
-// TODO pool name should consider not just use symbol name
+    // TODO pool name should consider not just use symbol name
     async function getPair(coinx: string, coiny: string) {
         const coinXInfo = await getTokenInfoWithFallback(coinx)
         const coinYInfo = await getTokenInfoWithFallback(coiny)
@@ -179,7 +179,7 @@ for (const env of [v0, v05]) {
         }
     }
 
-// TODO refactor this
+    // TODO refactor this
     async function syncLiquidSwapPools(resources: MoveResource[], ctx: AptosResourcesContext) {
         let pools = await defaultMoveCoder().filterAndDecodeResources<PoolType<any, any, any>>(liquidity_pool.LiquidityPool.type(), resources)
 
@@ -218,35 +218,35 @@ for (const env of [v0, v05]) {
             const coinYInfo = await getTokenInfoWithFallback(coiny)
             let priceX = BigDecimal(0)
             let priceY = BigDecimal(0)
-//             if (whitelistx) {
-//                 if (!updated.has(coinx)) {
-//                     updated.add(coinx)
-//                     priceX = calcPrice(coinx, pools) ?? BigDecimal(0)
-//                     if (priceX.eq(BigDecimal(0))) {
-// //                    debugCoin(coinx)
-//                         priceX = priceInUsd.get(coinx) ?? BigDecimal(0)
-//                     } else {
-//                         priceInUsd.set(coinx, priceX)
-//                     }
-//                 } else {
-//                     priceX = priceInUsd.get(coinx) ?? BigDecimal(0)
-//                 }
-//                 priceGaugeNew.record(ctx, priceX, {coin: coinXInfo.symbol, ver})
-//             }
-//             if (whitelisty) {
-//                 if (!updated.has(coiny)) {
-//                     updated.add(coiny)
-//                     priceY = calcPrice(coiny, pools) ?? BigDecimal(0)
-//                     if (priceY.eq(BigDecimal(0))) {
-//                         priceY = priceInUsd.get(coiny) ?? BigDecimal(0)
-//                     } else {
-//                         priceInUsd.set(coiny, priceY)
-//                     }
-//                 } else {
-//                     priceY = priceInUsd.get(coiny) ?? BigDecimal(0)
-//                 }
-//                 priceGaugeNew.record(ctx, priceY, {coin: coinYInfo.symbol, ver})
-//             }
+            //             if (whitelistx) {
+            //                 if (!updated.has(coinx)) {
+            //                     updated.add(coinx)
+            //                     priceX = calcPrice(coinx, pools) ?? BigDecimal(0)
+            //                     if (priceX.eq(BigDecimal(0))) {
+            // //                    debugCoin(coinx)
+            //                         priceX = priceInUsd.get(coinx) ?? BigDecimal(0)
+            //                     } else {
+            //                         priceInUsd.set(coinx, priceX)
+            //                     }
+            //                 } else {
+            //                     priceX = priceInUsd.get(coinx) ?? BigDecimal(0)
+            //                 }
+            //                 priceGaugeNew.record(ctx, priceX, {coin: coinXInfo.symbol, ver})
+            //             }
+            //             if (whitelisty) {
+            //                 if (!updated.has(coiny)) {
+            //                     updated.add(coiny)
+            //                     priceY = calcPrice(coiny, pools) ?? BigDecimal(0)
+            //                     if (priceY.eq(BigDecimal(0))) {
+            //                         priceY = priceInUsd.get(coiny) ?? BigDecimal(0)
+            //                     } else {
+            //                         priceInUsd.set(coiny, priceY)
+            //                     }
+            //                 } else {
+            //                     priceY = priceInUsd.get(coiny) ?? BigDecimal(0)
+            //                 }
+            //                 priceGaugeNew.record(ctx, priceY, {coin: coinYInfo.symbol, ver})
+            //             }
 
             if (!whitelistx && !whitelisty) {
                 continue
@@ -302,8 +302,8 @@ for (const env of [v0, v05]) {
                 }
             }
             if (poolValue.isGreaterThan(1000)) {
-                tvlByPool.record(ctx, poolValue, {pair, curve, ver})
-                tvlByPoolNew.record(ctx, poolValueNew, {pair, curve, ver})
+                tvlByPool.record(ctx, poolValue, { pair, curve, ver })
+                tvlByPoolNew.record(ctx, poolValueNew, { pair, curve, ver })
 
                 if (curve == "Uncorrelated") {
                     const priceX = await getPriceForToken(coinXInfo.type, timestamp)
@@ -342,7 +342,7 @@ for (const env of [v0, v05]) {
             tvlAllValue = tvlAllValue.plus(poolValue)
         }
 
-        tvlAll.record(ctx, tvlAllValue, {ver})
+        tvlAll.record(ctx, tvlAllValue, { ver })
 
         for (const [k, v] of volumeByCoin) {
             const coinInfo = liquidSwap.coinList.whitelistCoins().get(k)
@@ -350,9 +350,9 @@ for (const env of [v0, v05]) {
                 throw Error("unexpected coin " + k)
             }
             const price = await getPriceForToken(coinInfo.type, timestamp)
-            priceGauge.record(ctx, price, {coin: coinInfo.symbol, ver})
+            priceGauge.record(ctx, price, { coin: coinInfo.symbol, ver })
             if (v.isGreaterThan(0)) {
-                tvl.record(ctx, v, {coin: coinInfo.symbol, bridge: coinInfo.bridge, type: coinInfo.type, ver})
+                tvl.record(ctx, v, { coin: coinInfo.symbol, bridge: coinInfo.bridge, type: coinInfo.type, ver })
             }
         }
     }
@@ -418,7 +418,7 @@ for (const env of [v0, v05]) {
     }
 
     // loadAllTypes(defaultMoveCoder())
-    AptosResourcesProcessor.bind({address: resourceAddress, baseLabels: { ver }})
+    AptosResourcesProcessor.bind({ address: resourceAddress, baseLabels: { ver } })
         .onTimeInterval(async (resources, ctx) =>
             syncLiquidSwapPools(resources, ctx), 60, 12 * 60)
 

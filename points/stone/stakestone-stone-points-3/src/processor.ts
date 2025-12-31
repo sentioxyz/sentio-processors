@@ -102,6 +102,12 @@ async function updateAccounts(ctx: ERC20Context, events: TempEvent[]) {
   const eventsWithSentry = [
     ...events,
     new TempEvent({
+      id: "end",
+      network: ctx.chainId.toString(),
+      args: "",
+      blockNumber: 0,
+      txIdx: 0,
+      eventIdx: 0,
       eventName: "end",
       timestampMilli: BigInt(ctx.timestamp.getTime()),
     }),
@@ -150,6 +156,7 @@ async function updateAccounts(ctx: ERC20Context, events: TempEvent[]) {
     for (const account of eventAccounts) {
       snapshots[account] = new AccountSnapshot({
         id: account,
+        network: ctx.chainId.toString(),
         timestampMilli: BigInt(nowMilli),
         stoneBalance: callResults[`balanceOf_${account}_${bn}`],
       });
@@ -210,6 +217,7 @@ function calcPoints(
 function baseEvent(ctx: EthContext, event: TypedEvent) {
   return {
     id: event.blockNumber + "," + event.transactionIndex + "," + event.index,
+    network: ctx.chainId.toString(),
     blockNumber: ctx.blockNumber,
     txIdx: event.transactionIndex,
     eventIdx: event.index,

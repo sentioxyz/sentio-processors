@@ -87,6 +87,7 @@ async function process(
   const newStoneBalance = await ctx.contract.balanceOf(account);
   const newSnapshot = new AccountSnapshot({
     id: account,
+    network: ctx.chainId.toString(),
     timestampMilli: newTimestampMilli,
     stoneBalance: newStoneBalance,
   });

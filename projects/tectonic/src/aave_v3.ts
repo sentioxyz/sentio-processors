@@ -11,7 +11,6 @@ const CHAIN_ADDRESS_MAP = new Map<EthChainId, string>([
     [EthChainId.OPTIMISM, "0x794a61358d6845594f94dc1db02a252b5b4814ad"],
     [EthChainId.ARBITRUM, "0x794a61358d6845594f94dc1db02a252b5b4814ad"],
     [EthChainId.POLYGON, "0x794a61358d6845594f94dc1db02a252b5b4814ad"],
-    [EthChainId.FANTOM, "0x794a61358d6845594f94dc1db02a252b5b4814ad"],
     [EthChainId.AVALANCHE, "0x794a61358d6845594f94dc1db02a252b5b4814ad"],
 ])
 

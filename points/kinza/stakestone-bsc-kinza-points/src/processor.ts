@@ -17,7 +17,7 @@ let lastEigenRatioTimestamp: number | undefined = undefined;
 
 ATokenProcessor.bind({
   address: ATOKEN_ADDRESS,
-  network: EthChainId.BINANCE,
+  network: EthChainId.BSC,
 })
   .onEventMint(async (event, ctx) => {
     const { onBehalfOf, value } = event.args;

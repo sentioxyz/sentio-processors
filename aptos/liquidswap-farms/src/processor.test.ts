@@ -1,7 +1,7 @@
 import assert from 'assert'
 import { before, describe, test } from 'node:test'
-import {TestProcessorServer} from '@sentio/sdk/testing'
-import {HandlerType} from "@sentio/sdk";
+import { TestProcessorServer } from '@sentio/sdk/testing'
+import { HandlerType } from "@sentio/sdk";
 
 describe('Test Processor', () => {
     const service = new TestProcessorServer(() => import('./processor.js'))
@@ -21,14 +21,17 @@ describe('Test Processor', () => {
                 {
                     data: {
                         aptEvent: {
-                            transaction: {
+                            rawTransaction: JSON.stringify({
                                 ...testData3,
                                 events: [testData3.events[0]]
-                            }
+                            }),
+                            rawEvent: JSON.stringify(testData3.events[0]),
+                            eventIndex: 0
                         },
                     },
                     handlerIds: [0],
-                    handlerType: HandlerType.APT_EVENT
+                    handlerType: HandlerType.APT_EVENT,
+                    chainId: "1"
                 }
             ]
         })
@@ -48,7 +51,7 @@ const testData = {
         "type": "entry_function_payload",
         "type_arguments": ["0x5e156f1207d0ebfa19a9eeff00d62a282278fb8719f4fab3a586a0a2c0fffbea::coin::T", "0x1::aptos_coin::AptosCoin", "0x190d44266241744264b964a37b8f09863167a12d3e70cda39376cfb4e3561e12::curves::Uncorrelated"],
         "arguments": ["68504157", "68161636", "980000000", "975100000"],
-        "code": {"bytecode": ""},
+        "code": { "bytecode": "" },
         "function": "0x190d44266241744264b964a37b8f09863167a12d3e70cda39376cfb4e3561e12::scripts::add_liquidity"
     },
     "max_gas_amount": "6234",
@@ -63,7 +66,7 @@ const testData = {
         "signatures": null,
         "threshold": 0,
         "bitmap": "",
-        "sender": {"type": "", "public_key": "", "signature": "", "public_keys": null, "signatures": null, "threshold": 0, "bitmap": ""},
+        "sender": { "type": "", "public_key": "", "signature": "", "public_keys": null, "signatures": null, "threshold": 0, "bitmap": "" },
         "secondary_signer_addresses": null,
         "secondary_signers": null
     },
@@ -71,10 +74,10 @@ const testData = {
     "timestamp": "1666153966972483",
     "events": [{
         "version": "2573574",
-        "guid": {"creation_number": "17", "account_address": "0x5a97986a9d031c4567e15b797be516910cfcb4156312482efc6a19c0a30c948"},
+        "guid": { "creation_number": "17", "account_address": "0x5a97986a9d031c4567e15b797be516910cfcb4156312482efc6a19c0a30c948" },
         "sequence_number": "1",
         "type": "0x190d44266241744264b964a37b8f09863167a12d3e70cda39376cfb4e3561e12::liquidity_pool::LiquidityAddedEvent\u003c0x5e156f1207d0ebfa19a9eeff00d62a282278fb8719f4fab3a586a0a2c0fffbea::coin::T, 0x1::aptos_coin::AptosCoin, 0x190d44266241744264b964a37b8f09863167a12d3e70cda39376cfb4e3561e12::curves::Uncorrelated\u003e",
-        "data": {"added_x_val": "68504157", "added_y_val": "979804281", "lp_tokens_received": "259076356"}
+        "data": { "added_x_val": "68504157", "added_y_val": "979804281", "lp_tokens_received": "259076356" }
     }],
     "version": "2573574",
     "hash": "0x6913fca129f7bcfb7fa52e86ff101854a987f9cd1a3b75f07c15722be4d91669",
@@ -98,7 +101,7 @@ const testData3 = {
         "type": "entry_function_payload",
         "type_arguments": ["0xdad81b9d47bd5f2f9b024a2d852198295d4c8e550b4a949061d0e387fbc6fa84::swan::Swan", "0x1::aptos_coin::AptosCoin", "0x190d44266241744264b964a37b8f09863167a12d3e70cda39376cfb4e3561e12::curves::Uncorrelated"],
         "arguments": ["900000000000", "891000000000", "21856081091", "21637520280"],
-        "code": {"bytecode": ""},
+        "code": { "bytecode": "" },
         "function": "0x190d44266241744264b964a37b8f09863167a12d3e70cda39376cfb4e3561e12::scripts_v2::register_pool_and_add_liquidity"
     },
     "max_gas_amount": "10000",
@@ -113,7 +116,7 @@ const testData3 = {
         "signatures": null,
         "threshold": 0,
         "bitmap": "",
-        "sender": {"type": "", "public_key": "", "signature": "", "public_keys": null, "signatures": null, "threshold": 0, "bitmap": ""},
+        "sender": { "type": "", "public_key": "", "signature": "", "public_keys": null, "signatures": null, "threshold": 0, "bitmap": "" },
         "secondary_signer_addresses": null,
         "secondary_signers": null
     },
@@ -121,10 +124,10 @@ const testData3 = {
     "timestamp": "1666710252100813",
     "events": [{
         "version": "12407243",
-        "guid": {"creation_number": "15108", "account_address": "0x5a97986a9d031c4567e15b797be516910cfcb4156312482efc6a19c0a30c948"},
+        "guid": { "creation_number": "15108", "account_address": "0x5a97986a9d031c4567e15b797be516910cfcb4156312482efc6a19c0a30c948" },
         "sequence_number": "0",
         "type": "0x190d44266241744264b964a37b8f09863167a12d3e70cda39376cfb4e3561e12::liquidity_pool::PoolCreatedEvent\u003c0xdad81b9d47bd5f2f9b024a2d852198295d4c8e550b4a949061d0e387fbc6fa84::swan::Swan, 0x1::aptos_coin::AptosCoin, 0x190d44266241744264b964a37b8f09863167a12d3e70cda39376cfb4e3561e12::curves::Uncorrelated\u003e",
-        "data": {"creator": "0xdad81b9d47bd5f2f9b024a2d852198295d4c8e550b4a949061d0e387fbc6fa84"}
+        "data": { "creator": "0xdad81b9d47bd5f2f9b024a2d852198295d4c8e550b4a949061d0e387fbc6fa84" }
     }],
     "version": "12407243",
     "hash": "0x91a6f0b7021490108bbfb6530640628dd210b94af4baadbbae4c0d3fdc9360f9",
@@ -148,7 +151,7 @@ const testData2 = {
         "type": "entry_function_payload",
         "type_arguments": ["0x1::aptos_coin::AptosCoin", "0x96aed04e1c823431a1f68ff910c4ca8ed395bd7d9e03b9fab7461a7793f4a3c9::xfc::XENFuckCoin", "0x190d44266241744264b964a37b8f09863167a12d3e70cda39376cfb4e3561e12::curves::Uncorrelated"],
         "arguments": ["190000000000", "189050000000", "9000000000", "8955000000"],
-        "code": {"bytecode": ""},
+        "code": { "bytecode": "" },
         "function": "0x190d44266241744264b964a37b8f09863167a12d3e70cda39376cfb4e3561e12::scripts::register_pool_and_add_liquidity"
     },
     "max_gas_amount": "9500",
@@ -163,7 +166,7 @@ const testData2 = {
         "signatures": null,
         "threshold": 0,
         "bitmap": "",
-        "sender": {"type": "", "public_key": "", "signature": "", "public_keys": null, "signatures": null, "threshold": 0, "bitmap": ""},
+        "sender": { "type": "", "public_key": "", "signature": "", "public_keys": null, "signatures": null, "threshold": 0, "bitmap": "" },
         "secondary_signer_addresses": null,
         "secondary_signers": null
     },
@@ -171,10 +174,10 @@ const testData2 = {
     "timestamp": "1666204448770854",
     "events": [{
         "version": "4163732",
-        "guid": {"creation_number": "688", "account_address": "0x5a97986a9d031c4567e15b797be516910cfcb4156312482efc6a19c0a30c948"},
+        "guid": { "creation_number": "688", "account_address": "0x5a97986a9d031c4567e15b797be516910cfcb4156312482efc6a19c0a30c948" },
         "sequence_number": "0",
         "type": "0x190d44266241744264b964a37b8f09863167a12d3e70cda39376cfb4e3561e12::liquidity_pool::LiquidityAddedEvent\u003c0x1::aptos_coin::AptosCoin, 0x96aed04e1c823431a1f68ff910c4ca8ed395bd7d9e03b9fab7461a7793f4a3c9::xfc::XENFuckCoin, 0x190d44266241744264b964a37b8f09863167a12d3e70cda39376cfb4e3561e12::curves::Uncorrelated\u003e",
-        "data": {"added_x_val": "190000000000", "added_y_val": "9000000000", "lp_tokens_received": "41352145256"}
+        "data": { "added_x_val": "190000000000", "added_y_val": "9000000000", "lp_tokens_received": "41352145256" }
     }],
     "version": "4163732",
     "hash": "0x4de35197f721e9be9a295daaa67a5d1b4d7336b0a0d6defb0bc4a87a308a7835",

@@ -65,6 +65,7 @@ async function getAccountSnapshot(
   const overrides = blockNumber ? { blockTag: blockNumber } : undefined;
   return new AccountSnapshot({
     id: account,
+    network: ctx.chainId.toString(),
     timestampMilli: BigInt(timestampMilli),
     balance: await ctx.contract.balanceOf(account, overrides),
   });

@@ -138,6 +138,11 @@ async function updateAccounts(ctx: EthContext, events: TempEvent[]) {
   const eventsWithSentry = [
     ...events,
     new TempEvent({
+      id: "end",
+      args: "",
+      blockNumber: 0,
+      txIdx: 0,
+      eventIdx: 0,
       eventName: "end",
       timestampMilli: BigInt(ctx.timestamp.getTime()),
     }),

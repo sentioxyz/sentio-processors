@@ -1,6 +1,6 @@
 import { typus_dov_single } from "./types/sui/typus.js";
 import { SuiContext } from "@sentio/sdk/sui";
-import { normalizeSuiAddress } from "@mysten/sui.js/utils";
+import { normalizeSuiAddress } from "@mysten/sui/utils";
 
 function getCoinSymbol(name: string): string {
     let typeArgs = name.split("::");

@@ -3,7 +3,7 @@
 /* tslint:disable */
 /* eslint-disable */
 import type { String, Int, BigInt, Float, ID, Bytes, Timestamp, Boolean, Int8 } from '@sentio/sdk/store'
-import { Entity, Required, One, Many, Column, ListColumn, AbstractEntity } from '@sentio/sdk/store'
+import { Entity, Required, One, Many, Column, ListColumn, AbstractEntity, getStore, UpdateValues } from '@sentio/sdk/store'
 import { BigDecimal } from '@sentio/bigdecimal'
 import { DatabaseSchema } from '@sentio/sdk'
 
@@ -39,6 +39,10 @@ export class UserBalance extends AbstractEntity  {
 	balance: BigInt
   constructor(data: UserBalanceConstructorInput) {super()}
   
+  
+  static update(values: UpdateValues<UserBalanceConstructorInput>): Promise<void> {
+    return getStore().update(UserBalance, values)
+  }
 }
 
 

@@ -35,9 +35,9 @@ export async function getEigenRatioByTime(timestampMilli: number) {
   return eigenRatios[l].timestampMilli <= timestampMilli
     ? eigenRatios[l]
     : {
-        ratio: new BigDecimal(0),
-        timestampMilli: 0,
-      };
+      ratio: new BigDecimal(0),
+      timestampMilli: 0,
+    };
 }
 
 export async function fetchEigenRatios() {

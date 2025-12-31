@@ -3,7 +3,7 @@
 /* tslint:disable */
 /* eslint-disable */
 import type { String, Int, BigInt, Float, ID, Bytes, Timestamp, Boolean, Int8 } from '@sentio/sdk/store'
-import { Entity, Required, One, Many, Column, ListColumn, AbstractEntity } from '@sentio/sdk/store'
+import { Entity, Required, One, Many, Column, ListColumn, AbstractEntity, getStore, UpdateValues } from '@sentio/sdk/store'
 import { BigDecimal } from '@sentio/bigdecimal'
 import { DatabaseSchema } from '@sentio/sdk'
 
@@ -59,6 +59,10 @@ export class PositionSnapshot extends AbstractEntity  {
 	poolAddress: String
   constructor(data: PositionSnapshotConstructorInput) {super()}
   
+  
+  static update(values: UpdateValues<PositionSnapshotConstructorInput>): Promise<void> {
+    return getStore().update(PositionSnapshot, values)
+  }
 }
 
 

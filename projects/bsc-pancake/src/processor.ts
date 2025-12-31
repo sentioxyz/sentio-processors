@@ -15,7 +15,7 @@ const V2_ADDRESSES = [
 for (const address of V2_ADDRESSES) {
   PancakePairProcessor.bind({
     address: address,
-    network: EthChainId.BINANCE,
+    network: EthChainId.BSC,
     startBlock: START_BLOCK,
   }).onEventSwap(async (evt, ctx) => {
     ctx.eventLogger.emit("V2SwapEvent", {
@@ -30,7 +30,7 @@ const V3_ADDRESSES = ["0x77d5b2560e4B84b3fC58875Cb0133F39560e8AE3"];
 for (const address of V3_ADDRESSES) {
   PancakeV3PoolProcessor.bind({
     address: address,
-    network: EthChainId.BINANCE,
+    network: EthChainId.BSC,
     startBlock: START_BLOCK,
   }).onEventSwap(async (evt, ctx) => {
     ctx.eventLogger.emit("V3SwapEvent", {
@@ -48,7 +48,7 @@ const ALGEBRA_ADDRESSES = [
 for (const address of ALGEBRA_ADDRESSES) {
   AlgebraPoolProcessor.bind({
     address: address,
-    network: EthChainId.BINANCE,
+    network: EthChainId.BSC,
     startBlock: START_BLOCK,
   }).onEventSwap(async (evt, ctx) => {
     ctx.eventLogger.emit("AlgebraSwapEvent", {

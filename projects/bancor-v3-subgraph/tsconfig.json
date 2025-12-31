@@ -1,4 +1,37 @@
 {
-  "extends": "@graphprotocol/graph-ts/types/tsconfig.base.json",
-  "include": ["src"]
+  "compilerOptions": {
+    "importHelpers": true,
+    "alwaysStrict": true,
+    "sourceMap": true,
+    "target": "es2020",
+    "lib": [
+      "es2020",
+      "esnext",
+      "dom"
+    ],
+    "esModuleInterop": true,
+    "noImplicitReturns": true,
+    "noImplicitAny": true,
+    "module": "nodenext",
+    "moduleResolution": "nodenext",
+    "strictNullChecks": true,
+    "stripInternal": true,
+    "noFallthroughCasesInSwitch": true,
+    "noEmitOnError": true,
+    "rootDir": "./src",
+    "outDir": "./dist",
+    "skipLibCheck": true,
+    "experimentalDecorators": true,
+    "emitDecoratorMetadata": true
+  },
+  "include": [
+    "src/schema/*.ts"
+  ],
+  "exclude": [
+    "dist",
+    "jest.config.ts",
+    "src/mapping.ts",
+    "src/constants.ts",
+    "src/versions.ts"
+  ]
 }

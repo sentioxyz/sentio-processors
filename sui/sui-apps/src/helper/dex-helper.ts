@@ -494,7 +494,7 @@ export async function recordClmmV3SwapEvent(event: SuiEvent, ctx: SuiContext) {
 
     const usd_volume = await calculateSwapVol_USD(ctx, poolInfo, amount_in, amount_out, atob)
 
-    ctx.eventLogger.emit("dex.swapEvents", {
+    ctx.eventLogger.emit("dex_swapEvents", {
         //@ts-ignore
         distinctId: ctx.transaction.transaction.data.sender,
         pool,
@@ -556,7 +556,7 @@ export async function recordAmmV2SwapEvent(event: SuiEvent, ctx: SuiContext) {
     //@ts-ignore
     const usd_volume = await calculateSwapVol_USD(ctx, poolInfo, amount_in, amount_out, atob)
 
-    ctx.eventLogger.emit("dex.swapEvents", {
+    ctx.eventLogger.emit("dex_swapEvents", {
         //@ts-ignore
         distinctId: ctx.transaction.transaction.data.sender,
         pool,
@@ -598,7 +598,7 @@ export async function recordClobSwapEvent(event: SuiEvent, ctx: SuiContext) {
     //@ts-ignore
     const usd_volume = await calculateSwapVol_USD(ctx, poolInfo, amount_in, amount_out, atob)
 
-    ctx.eventLogger.emit("dex.swapEvents", {
+    ctx.eventLogger.emit("dex_swapEvents", {
         //@ts-ignore
         distinctId: ctx.transaction.transaction.data.sender,
         pool,
@@ -664,7 +664,7 @@ export async function recordMultiAssetSwapEvent(event: SuiEvent, ctx: SuiContext
 
     try {
         if (amounts_in.length == 1 && amounts_out.length == 1) {
-            ctx.eventLogger.emit("dex.swapEvents", {
+            ctx.eventLogger.emit("dex_swapEvents", {
                 //@ts-ignore
                 distinctId: ctx.transaction.transaction.data.sender,
                 pool,
@@ -679,7 +679,7 @@ export async function recordMultiAssetSwapEvent(event: SuiEvent, ctx: SuiContext
             })
         }
         else
-            ctx.eventLogger.emit("dex.swapMultiTokenEvents", {
+            ctx.eventLogger.emit("dex_swapMultiTokenEvents", {
                 //@ts-ignore
                 distinctId: ctx.transaction.transaction.data.sender,
                 pool,
@@ -696,7 +696,7 @@ export async function recordMultiAssetSwapEvent(event: SuiEvent, ctx: SuiContext
 
 export async function logLiquidityEvents(ctx: SuiContext, isDeposit: boolean, pool: string, amounts: number[], types: string[], symbols: string[], usd_volumes: number[], total_usd_volume: number, pairName: string, project: string) {
 
-    ctx.eventLogger.emit(`dex.${isDeposit ? "Add" : "Remove"}LiquidityEvents`, {
+    ctx.eventLogger.emit(`dex_${isDeposit ? "Add" : "Remove"}LiquidityEvents`, {
         //@ts-ignore
         distinctId: ctx.transaction.transaction.data.sender,
         pool,
@@ -707,7 +707,7 @@ export async function logLiquidityEvents(ctx: SuiContext, isDeposit: boolean, po
     })
 
     for (let i = 0; i < amounts.length; i++) {
-        ctx.eventLogger.emit(`dex.${isDeposit ? "Add" : "Remove"}LiquiditySingleAssetEvents`, {
+        ctx.eventLogger.emit(`dex_${isDeposit ? "Add" : "Remove"}LiquiditySingleAssetEvents`, {
             //@ts-ignore
             distinctId: ctx.transaction.transaction.data.sender,
             pool,

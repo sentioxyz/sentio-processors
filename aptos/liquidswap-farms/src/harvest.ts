@@ -86,6 +86,6 @@ scripts
         function: functionName,
       })
     },
-    false,
+    {},
     { allEvents: true },
   )
