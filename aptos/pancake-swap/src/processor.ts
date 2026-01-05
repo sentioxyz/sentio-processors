@@ -4,12 +4,12 @@ import { GLOBAL_CONFIG } from "@sentio/runtime";
 
 import { AptosDex, getTokenInfoWithFallback, getPairValue, TokenInfo }
   from "@sentio/sdk/aptos/ext"
-  // from "@sentio-processor/common/aptos"
+// from "@sentio-processor/common/aptos"
 
-import {  AptosResourcesProcessor } from "@sentio/sdk/aptos";
+import { AptosResourcesProcessor, AptosNetwork } from "@sentio/sdk/aptos";
 import { IFO } from "./types/aptos/movecoin.js";
 
-const commonOptions = { sparse:  true }
+const commonOptions = { sparse: true }
 export const volOptions = {
   sparse: true,
   aggregationConfig: {
@@ -26,28 +26,28 @@ const volumeByCoin = Gauge.register("vol_by_coin", volOptions)
 // const accountTracker = AccountEventTracker.register("users")
 
 IFO.bind()
-    .onEventDepositEvent(async (evt, ctx)=>{
-      // console.log(JSON.stringify(evt))
-      ctx.eventLogger.emit("Deposit", {
-        distinctId: evt.data_decoded.user,
-        amount: evt.data_decoded.amount,
-        pid: evt.data_decoded.pid,
-      })
+  .onEventDepositEvent(async (evt, ctx) => {
+    // console.log(JSON.stringify(evt))
+    ctx.eventLogger.emit("Deposit", {
+      distinctId: evt.data_decoded.user,
+      amount: evt.data_decoded.amount,
+      pid: evt.data_decoded.pid,
     })
-    .onEventHarvestEvent(async (evt, ctx) => {
-      ctx.eventLogger.emit("Harvest", {
-        distinctId: evt.data_decoded.user,
-        amount: evt.data_decoded.offering_amount,
-        pid: evt.data_decoded.pid
-      })
+  })
+  .onEventHarvestEvent(async (evt, ctx) => {
+    ctx.eventLogger.emit("Harvest", {
+      distinctId: evt.data_decoded.user,
+      amount: evt.data_decoded.offering_amount,
+      pid: evt.data_decoded.pid
     })
+  })
 
-swap.bind({startVersion: 10463608})
+swap.bind({ startVersion: 10463608 })
   .onEventPairCreatedEvent(async (evt, ctx) => {
     ctx.meter.Counter("num_pools").add(1)
     const coinx = evt.data_decoded.token_x
     const coiny = evt.data_decoded.token_y
-    const pair = await PANCAKE_SWAP_APTOS.getPair(coinx, coiny)
+    const pair = await PANCAKE_SWAP_APTOS.getPair(coinx, coiny, AptosNetwork.MAIN_NET)
     ctx.eventLogger.emit("Create Pair", {
       distinctId: ctx.transaction.sender,
       pair,
@@ -61,7 +61,7 @@ swap.bind({startVersion: 10463608})
     const value = await getPairValue(ctx, coinx, coiny, evt.data_decoded.amount_x, evt.data_decoded.amount_y)
     ctx.eventLogger.emit("Add Liquidity", {
       distinctId: ctx.transaction.sender,
-      pair: await PANCAKE_SWAP_APTOS.getPair(coinx, coiny),
+      pair: await PANCAKE_SWAP_APTOS.getPair(coinx, coiny, AptosNetwork.MAIN_NET),
       value,
     })
   })
@@ -72,7 +72,7 @@ swap.bind({startVersion: 10463608})
     const value = await getPairValue(ctx, coinx, coiny, evt.data_decoded.amount_x, evt.data_decoded.amount_y)
     ctx.eventLogger.emit("Remove Liquidity", {
       distinctId: ctx.transaction.sender,
-      pair: await PANCAKE_SWAP_APTOS.getPair(coinx, coiny),
+      pair: await PANCAKE_SWAP_APTOS.getPair(coinx, coiny, AptosNetwork.MAIN_NET),
       value
     })
   })
@@ -102,20 +102,20 @@ swap.bind({startVersion: 10463608})
 
     ctx.eventLogger.emit("Swap", {
       distinctId: ctx.transaction.sender,
-      pair: await PANCAKE_SWAP_APTOS.getPair(coinx, coiny),
+      pair: await PANCAKE_SWAP_APTOS.getPair(coinx, coiny, AptosNetwork.MAIN_NET),
       value: value,
       message
     })
   })
 
 const PANCAKE_SWAP_APTOS = new AptosDex<swap.TokenPairReserve<any, any>>(
-    volume, volumeByCoin,tvlAll, tvl, tvlByPool,{
+  volume, volumeByCoin, tvlAll, tvl, tvlByPool, {
   getXReserve: pool => pool.reserve_x,
   getYReserve: pool => pool.reserve_y,
-  getExtraPoolTags: _ => {},
+  getExtraPoolTags: _ => { },
   poolType: swap.TokenPairReserve.type()
-  },
+},
 )
 
-AptosResourcesProcessor.bind({address: swap.DEFAULT_OPTIONS.address, startVersion: 10463608})
-    .onVersionInterval((rs, ctx) => PANCAKE_SWAP_APTOS.syncPools(rs, ctx))
+AptosResourcesProcessor.bind({ address: swap.DEFAULT_OPTIONS.address, startVersion: 10463608 })
+  .onVersionInterval((rs, ctx) => PANCAKE_SWAP_APTOS.syncPools(rs, ctx))

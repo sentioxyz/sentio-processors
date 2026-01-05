@@ -55,7 +55,7 @@ export const configs = [
     address: "0xD2012fc1B913cE50732ebcaa7E601fe37Ac728C6",
   },
   {
-    network: EthChainId.ASTAR_ZKEVM,
+    network: 3776 as unknown as EthChainId,
     address: "0x80137510979822322193FC997d400D5A6C747bf7",
   },
   {

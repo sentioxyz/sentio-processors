@@ -130,8 +130,8 @@ async function updateAccounts(
           conf.rnpTokenStartBlock &&
           bn >= conf.rnpTokenStartBlock
           ? rnpStoneContract
-              .balanceOf(account, overrides)
-              .then((v) => [`rnpStone_balanceOf_${account}_${bn}`, v])
+            .balanceOf(account, overrides)
+            .then((v) => [`rnpStone_balanceOf_${account}_${bn}`, v])
           : Promise.resolve([`rnpStone_balanceOf_${account}_${bn}`, 0n])
       );
     }
@@ -154,6 +154,12 @@ async function updateAccounts(
   const eventsWithSentry = [
     ...events,
     new TempEvent({
+      id: "end",
+      network: ctx.chainId.toString(),
+      args: "",
+      blockNumber: 0,
+      txIdx: 0,
+      eventIdx: 0,
       eventName: "end",
       timestampMilli: BigInt(ctx.timestamp.getTime()),
     }),
@@ -215,7 +221,7 @@ async function updateAccounts(
       }
       const snapshot =
         snapshots[account] ??
-        new AccountSnapshot({ id: account, netBalance: 0n });
+        new AccountSnapshot({ id: account, network: ctx.chainId.toString(), netBalance: 0n, balance: 0n, borrowBalance: 0n, timestampMilli: 0n });
       if (snapshot.netBalance > 0n) {
         state.totalPositiveNetBalance -= snapshot.netBalance;
       }
@@ -233,6 +239,7 @@ async function updateAccounts(
       }
       snapshots[account] = new AccountSnapshot({
         id: account,
+        network: ctx.chainId.toString(),
         timestampMilli: BigInt(nowMilli),
         balance: stoneBalance,
         borrowBalance: borrowBalance,
@@ -312,6 +319,7 @@ function calcPoints(
 function baseEvent(ctx: EthContext, event: TypedEvent) {
   return {
     id: event.blockNumber + "," + event.transactionIndex + "," + event.index,
+    network: ctx.chainId.toString(),
     blockNumber: ctx.blockNumber,
     txIdx: event.transactionIndex,
     eventIdx: event.index,

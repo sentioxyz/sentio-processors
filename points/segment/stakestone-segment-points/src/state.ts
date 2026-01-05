@@ -11,6 +11,7 @@ async function getGlobalState(ctx: SeBep20DelegatorContext) {
     (await storeGet(ctx, GlobalState, GLOBAL_STATE_ID)) ??
     new GlobalState({
       id: GLOBAL_STATE_ID,
+      network: ctx.chainId.toString(),
       totalPositiveNetBalance: 0n,
       totalSupply: await ctx.contract.totalSupply(),
       totalBorrow: await ctx.contract.totalBorrows(),
@@ -34,7 +35,15 @@ export async function updateGlobalState(
     accounts.map(
       async (account) =>
         (await storeGet(ctx, AccountSnapshot, account)) ??
-        new AccountSnapshot({ id: account, netBalance: 0n })
+        new AccountSnapshot({
+          id: account,
+          network: ctx.chainId.toString(),
+          netBalance: 0n,
+          balance: 0n,
+          borrowBalance: 0n,
+          exchangeRateRaw: 0n,
+          timestampMilli: 0n
+        })
     )
   );
 

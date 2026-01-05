@@ -18,7 +18,7 @@ GLOBAL_CONFIG.execution = {
 let lastEigenRatioTimestamp: number | undefined = undefined;
 
 AstherusVaultProcessor.bind({
-  network: EthChainId.BINANCE,
+  network: EthChainId.BSC,
   address: VAULT,
   startBlock: 38765592,
 })

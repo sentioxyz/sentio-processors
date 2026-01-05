@@ -14,7 +14,7 @@ import { scaleDown } from '@sentio/sdk'
 import { JsonRpcProvider } from 'ethers'
 import { getERC20ContractOnContext } from '@sentio/sdk/eth/builtin/erc20'
 
-GlobalProcessor.bind({ network: EthChainId.ASTAR_ZKEVM })
+GlobalProcessor.bind({ network: (3776 as unknown as EthChainId) })
   .onTransaction(
     async (tx, ctx) => {
       // const hexBlockNumber = tx.blockNumber?.toString(16)
@@ -56,7 +56,7 @@ GlobalProcessor.bind({ network: EthChainId.ASTAR_ZKEVM })
   )
 
 PolygonZkEVMBridgeV2Processor.bind({
-  network: EthChainId.ASTAR_ZKEVM,
+  network: (3776 as unknown as EthChainId),
   address: PolygonZkEVMBridgeV2.proxy,
 }).onEventBridgeEvent(
   async (event, ctx) => {
@@ -91,7 +91,7 @@ PolygonZkEVMBridgeV2Processor.bind({
 )
 
 PolygonZkEVMBridgeV2Processor.bind({
-  network: EthChainId.ASTAR_ZKEVM,
+  network: (3776 as unknown as EthChainId),
   address: PolygonZkEVMBridgeV2.proxy,
 }).onEventClaimEvent(
   async (event, ctx) => {

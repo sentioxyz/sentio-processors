@@ -13,6 +13,7 @@ export async function getGlobalState(ctx: EthContext) {
     (await storeGet(ctx, GlobalState, GLOBAL_STATE_ID)) ??
     new GlobalState({
       id: GLOBAL_STATE_ID,
+      network: ctx.chainId.toString(),
       totalPositiveNetBalance: 0n,
       totalSupply: await getATokenContractOnContext(
         ctx,
@@ -20,9 +21,9 @@ export async function getGlobalState(ctx: EthContext) {
       ).totalSupply(),
       totalBorrow: conf.debtTokenAddress
         ? await getVariableDebtTokenContractOnContext(
-            ctx,
-            conf.debtTokenAddress
-          ).totalSupply()
+          ctx,
+          conf.debtTokenAddress
+        ).totalSupply()
         : 0n,
     })
   );

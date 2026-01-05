@@ -173,6 +173,7 @@ async function getAccountSnapshot(
     await getAccountBalance(ctx, account);
   return new AccountSnapshot({
     id: account,
+    network: ctx.chainId.toString(),
     timestampMilli: BigInt(timestampMilli),
     balance,
     borrowBalance,
