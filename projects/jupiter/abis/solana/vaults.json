@@ -1,0 +1,3563 @@
+{
+  "address": "jupr81YtYssSyPt8jbnGuiWon5f6x9TcDEFxYe3Bdzi",
+  "metadata": {
+    "name": "vaults",
+    "version": "0.1.0",
+    "spec": "0.1.0",
+    "description": "Created with Anchor"
+  },
+  "instructions": [
+    {
+      "name": "get_exchange_prices",
+      "discriminator": [237, 128, 83, 152, 52, 21, 231, 86],
+      "accounts": [
+        {
+          "name": "vault_state"
+        },
+        {
+          "name": "vault_config"
+        },
+        {
+          "name": "supply_token_reserves"
+        },
+        {
+          "name": "borrow_token_reserves"
+        }
+      ],
+      "args": []
+    },
+    {
+      "name": "init_branch",
+      "discriminator": [162, 91, 57, 23, 228, 93, 111, 21],
+      "accounts": [
+        {
+          "name": "signer",
+          "writable": true,
+          "signer": true
+        },
+        {
+          "name": "vault_config",
+          "docs": ["@dev Verification inside instruction logic"]
+        },
+        {
+          "name": "branch",
+          "writable": true,
+          "pda": {
+            "seeds": [
+              {
+                "kind": "const",
+                "value": [98, 114, 97, 110, 99, 104]
+              },
+              {
+                "kind": "arg",
+                "path": "vault_id"
+              },
+              {
+                "kind": "arg",
+                "path": "branch_id"
+              }
+            ]
+          }
+        },
+        {
+          "name": "system_program",
+          "address": "11111111111111111111111111111111"
+        }
+      ],
+      "args": [
+        {
+          "name": "vault_id",
+          "type": "u16"
+        },
+        {
+          "name": "branch_id",
+          "type": "u32"
+        }
+      ]
+    },
+    {
+      "name": "init_position",
+      "discriminator": [197, 20, 10, 1, 97, 160, 177, 91],
+      "accounts": [
+        {
+          "name": "signer",
+          "writable": true,
+          "signer": true
+        },
+        {
+          "name": "vault_admin"
+        },
+        {
+          "name": "vault_state",
+          "docs": ["@dev Verification inside instruction logic"],
+          "writable": true
+        },
+        {
+          "name": "position",
+          "writable": true,
+          "pda": {
+            "seeds": [
+              {
+                "kind": "const",
+                "value": [112, 111, 115, 105, 116, 105, 111, 110]
+              },
+              {
+                "kind": "arg",
+                "path": "vault_id"
+              },
+              {
+                "kind": "arg",
+                "path": "next_position_id"
+              }
+            ]
+          }
+        },
+        {
+          "name": "position_mint",
+          "writable": true,
+          "pda": {
+            "seeds": [
+              {
+                "kind": "const",
+                "value": [
+                  112, 111, 115, 105, 116, 105, 111, 110, 95, 109, 105, 110, 116
+                ]
+              },
+              {
+                "kind": "arg",
+                "path": "vault_id"
+              },
+              {
+                "kind": "arg",
+                "path": "next_position_id"
+              }
+            ]
+          }
+        },
+        {
+          "name": "position_token_account",
+          "writable": true,
+          "pda": {
+            "seeds": [
+              {
+                "kind": "account",
+                "path": "signer"
+              },
+              {
+                "kind": "const",
+                "value": [
+                  6, 221, 246, 225, 215, 101, 161, 147, 217, 203, 225, 70, 206,
+                  235, 121, 172, 28, 180, 133, 237, 95, 91, 55, 145, 58, 140,
+                  245, 133, 126, 255, 0, 169
+                ]
+              },
+              {
+                "kind": "account",
+                "path": "position_mint"
+              }
+            ],
+            "program": {
+              "kind": "const",
+              "value": [
+                140, 151, 37, 143, 78, 36, 137, 241, 187, 61, 16, 41, 20, 142,
+                13, 131, 11, 90, 19, 153, 218, 255, 16, 132, 4, 142, 123, 216,
+                219, 233, 248, 89
+              ]
+            }
+          }
+        },
+        {
+          "name": "metadata_account",
+          "writable": true,
+          "pda": {
+            "seeds": [
+              {
+                "kind": "const",
+                "value": [109, 101, 116, 97, 100, 97, 116, 97]
+              },
+              {
+                "kind": "const",
+                "value": [
+                  11, 112, 101, 177, 227, 209, 124, 69, 56, 157, 82, 127, 107,
+                  4, 195, 205, 88, 184, 108, 115, 26, 160, 253, 181, 73, 182,
+                  209, 188, 3, 248, 41, 70
+                ]
+              },
+              {
+                "kind": "account",
+                "path": "position_mint"
+              }
+            ],
+            "program": {
+              "kind": "const",
+              "value": [
+                11, 112, 101, 177, 227, 209, 124, 69, 56, 157, 82, 127, 107, 4,
+                195, 205, 88, 184, 108, 115, 26, 160, 253, 181, 73, 182, 209,
+                188, 3, 248, 41, 70
+              ]
+            }
+          }
+        },
+        {
+          "name": "token_program"
+        },
+        {
+          "name": "associated_token_program",
+          "address": "ATokenGPvbdGVxr1b2hvZbsiqW5xWH25efTNsLJA8knL"
+        },
+        {
+          "name": "system_program",
+          "address": "11111111111111111111111111111111"
+        },
+        {
+          "name": "sysvar_instruction",
+          "address": "Sysvar1nstructions1111111111111111111111111"
+        },
+        {
+          "name": "metadata_program",
+          "address": "metaqbxxUerdq28cj1RbAWkYQm3ybzjb6a8bt518x1s"
+        },
+        {
+          "name": "rent",
+          "address": "SysvarRent111111111111111111111111111111111"
+        }
+      ],
+      "args": [
+        {
+          "name": "vault_id",
+          "type": "u16"
+        },
+        {
+          "name": "next_position_id",
+          "type": "u32"
+        }
+      ]
+    },
+    {
+      "name": "init_tick",
+      "discriminator": [22, 13, 62, 141, 73, 89, 178, 29],
+      "accounts": [
+        {
+          "name": "signer",
+          "writable": true,
+          "signer": true
+        },
+        {
+          "name": "vault_config",
+          "docs": ["@dev Verification inside instruction logic"]
+        },
+        {
+          "name": "tick_data",
+          "writable": true
+        },
+        {
+          "name": "system_program",
+          "address": "11111111111111111111111111111111"
+        }
+      ],
+      "args": [
+        {
+          "name": "vault_id",
+          "type": "u16"
+        },
+        {
+          "name": "tick",
+          "type": "i32"
+        }
+      ]
+    },
+    {
+      "name": "init_tick_has_debt_array",
+      "discriminator": [206, 108, 146, 245, 20, 0, 141, 208],
+      "accounts": [
+        {
+          "name": "signer",
+          "writable": true,
+          "signer": true
+        },
+        {
+          "name": "vault_config",
+          "docs": ["@dev Verification inside instruction logic"]
+        },
+        {
+          "name": "tick_has_debt_array",
+          "writable": true,
+          "pda": {
+            "seeds": [
+              {
+                "kind": "const",
+                "value": [
+                  116, 105, 99, 107, 95, 104, 97, 115, 95, 100, 101, 98, 116
+                ]
+              },
+              {
+                "kind": "arg",
+                "path": "vault_id"
+              },
+              {
+                "kind": "arg",
+                "path": "index"
+              }
+            ]
+          }
+        },
+        {
+          "name": "system_program",
+          "address": "11111111111111111111111111111111"
+        }
+      ],
+      "args": [
+        {
+          "name": "vault_id",
+          "type": "u16"
+        },
+        {
+          "name": "index",
+          "type": "u8"
+        }
+      ]
+    },
+    {
+      "name": "init_tick_id_liquidation",
+      "discriminator": [56, 110, 121, 169, 152, 241, 86, 183],
+      "accounts": [
+        {
+          "name": "signer",
+          "writable": true,
+          "signer": true
+        },
+        {
+          "name": "tick_data",
+          "docs": ["@dev Verification inside instruction logic"]
+        },
+        {
+          "name": "tick_id_liquidation",
+          "writable": true
+        },
+        {
+          "name": "system_program",
+          "address": "11111111111111111111111111111111"
+        }
+      ],
+      "args": [
+        {
+          "name": "vault_id",
+          "type": "u16"
+        },
+        {
+          "name": "tick",
+          "type": "i32"
+        },
+        {
+          "name": "total_ids",
+          "type": "u32"
+        }
+      ]
+    },
+    {
+      "name": "init_vault_admin",
+      "discriminator": [22, 133, 2, 244, 123, 100, 249, 230],
+      "accounts": [
+        {
+          "name": "signer",
+          "writable": true,
+          "signer": true
+        },
+        {
+          "name": "vault_admin",
+          "writable": true,
+          "pda": {
+            "seeds": [
+              {
+                "kind": "const",
+                "value": [118, 97, 117, 108, 116, 95, 97, 100, 109, 105, 110]
+              }
+            ]
+          }
+        },
+        {
+          "name": "system_program",
+          "address": "11111111111111111111111111111111"
+        }
+      ],
+      "args": [
+        {
+          "name": "liquidity",
+          "type": "pubkey"
+        },
+        {
+          "name": "authority",
+          "type": "pubkey"
+        }
+      ]
+    },
+    {
+      "name": "init_vault_config",
+      "discriminator": [41, 194, 69, 254, 196, 246, 226, 195],
+      "accounts": [
+        {
+          "name": "authority",
+          "writable": true,
+          "signer": true
+        },
+        {
+          "name": "vault_admin",
+          "writable": true
+        },
+        {
+          "name": "vault_config",
+          "writable": true,
+          "pda": {
+            "seeds": [
+              {
+                "kind": "const",
+                "value": [
+                  118, 97, 117, 108, 116, 95, 99, 111, 110, 102, 105, 103
+                ]
+              },
+              {
+                "kind": "arg",
+                "path": "vault_id"
+              }
+            ]
+          }
+        },
+        {
+          "name": "vault_metadata",
+          "writable": true,
+          "pda": {
+            "seeds": [
+              {
+                "kind": "const",
+                "value": [
+                  118, 97, 117, 108, 116, 95, 109, 101, 116, 97, 100, 97, 116,
+                  97
+                ]
+              },
+              {
+                "kind": "arg",
+                "path": "vault_id"
+              }
+            ]
+          }
+        },
+        {
+          "name": "oracle"
+        },
+        {
+          "name": "supply_token"
+        },
+        {
+          "name": "borrow_token"
+        },
+        {
+          "name": "system_program",
+          "address": "11111111111111111111111111111111"
+        }
+      ],
+      "args": [
+        {
+          "name": "vault_id",
+          "type": "u16"
+        },
+        {
+          "name": "params",
+          "type": {
+            "defined": {
+              "name": "InitVaultConfigParams"
+            }
+          }
+        }
+      ]
+    },
+    {
+      "name": "init_vault_state",
+      "discriminator": [96, 120, 23, 100, 153, 11, 13, 165],
+      "accounts": [
+        {
+          "name": "authority",
+          "writable": true,
+          "signer": true
+        },
+        {
+          "name": "vault_admin",
+          "writable": true
+        },
+        {
+          "name": "vault_config",
+          "docs": ["@dev Verification inside instruction logic"]
+        },
+        {
+          "name": "vault_state",
+          "writable": true,
+          "pda": {
+            "seeds": [
+              {
+                "kind": "const",
+                "value": [118, 97, 117, 108, 116, 95, 115, 116, 97, 116, 101]
+              },
+              {
+                "kind": "arg",
+                "path": "vault_id"
+              }
+            ]
+          }
+        },
+        {
+          "name": "supply_token_reserves_liquidity",
+          "docs": ["@dev Verification inside instruction logic"]
+        },
+        {
+          "name": "borrow_token_reserves_liquidity",
+          "docs": ["@dev Verification inside instruction logic"]
+        },
+        {
+          "name": "system_program",
+          "address": "11111111111111111111111111111111"
+        }
+      ],
+      "args": [
+        {
+          "name": "vault_id",
+          "type": "u16"
+        }
+      ]
+    },
+    {
+      "name": "liquidate",
+      "discriminator": [223, 179, 226, 125, 48, 46, 39, 74],
+      "accounts": [
+        {
+          "name": "signer",
+          "writable": true,
+          "signer": true
+        },
+        {
+          "name": "signer_token_account",
+          "writable": true,
+          "pda": {
+            "seeds": [
+              {
+                "kind": "account",
+                "path": "signer"
+              },
+              {
+                "kind": "account",
+                "path": "borrow_token_program"
+              },
+              {
+                "kind": "account",
+                "path": "borrow_token"
+              }
+            ],
+            "program": {
+              "kind": "const",
+              "value": [
+                140, 151, 37, 143, 78, 36, 137, 241, 187, 61, 16, 41, 20, 142,
+                13, 131, 11, 90, 19, 153, 218, 255, 16, 132, 4, 142, 123, 216,
+                219, 233, 248, 89
+              ]
+            }
+          }
+        },
+        {
+          "name": "to"
+        },
+        {
+          "name": "to_token_account",
+          "writable": true,
+          "pda": {
+            "seeds": [
+              {
+                "kind": "account",
+                "path": "to"
+              },
+              {
+                "kind": "account",
+                "path": "supply_token_program"
+              },
+              {
+                "kind": "account",
+                "path": "supply_token"
+              }
+            ],
+            "program": {
+              "kind": "const",
+              "value": [
+                140, 151, 37, 143, 78, 36, 137, 241, 187, 61, 16, 41, 20, 142,
+                13, 131, 11, 90, 19, 153, 218, 255, 16, 132, 4, 142, 123, 216,
+                219, 233, 248, 89
+              ]
+            }
+          }
+        },
+        {
+          "name": "vault_config",
+          "docs": [
+            "@dev mut because this PDA signs the CPI to liquidity program",
+            "@dev verification inside instruction logic"
+          ]
+        },
+        {
+          "name": "vault_state",
+          "writable": true
+        },
+        {
+          "name": "supply_token"
+        },
+        {
+          "name": "borrow_token"
+        },
+        {
+          "name": "oracle"
+        },
+        {
+          "name": "new_branch",
+          "writable": true
+        },
+        {
+          "name": "supply_token_reserves_liquidity",
+          "writable": true
+        },
+        {
+          "name": "borrow_token_reserves_liquidity",
+          "writable": true
+        },
+        {
+          "name": "vault_supply_position_on_liquidity",
+          "writable": true
+        },
+        {
+          "name": "vault_borrow_position_on_liquidity",
+          "writable": true
+        },
+        {
+          "name": "supply_rate_model"
+        },
+        {
+          "name": "borrow_rate_model"
+        },
+        {
+          "name": "supply_token_claim_account",
+          "writable": true,
+          "optional": true
+        },
+        {
+          "name": "liquidity"
+        },
+        {
+          "name": "liquidity_program"
+        },
+        {
+          "name": "vault_supply_token_account",
+          "writable": true
+        },
+        {
+          "name": "vault_borrow_token_account",
+          "writable": true
+        },
+        {
+          "name": "supply_token_program"
+        },
+        {
+          "name": "borrow_token_program"
+        },
+        {
+          "name": "system_program",
+          "address": "11111111111111111111111111111111"
+        },
+        {
+          "name": "associated_token_program",
+          "address": "ATokenGPvbdGVxr1b2hvZbsiqW5xWH25efTNsLJA8knL"
+        },
+        {
+          "name": "oracle_program"
+        }
+      ],
+      "args": [
+        {
+          "name": "debt_amt",
+          "type": "u64"
+        },
+        {
+          "name": "col_per_unit_debt",
+          "type": "u128"
+        },
+        {
+          "name": "absorb",
+          "type": "bool"
+        },
+        {
+          "name": "transfer_type",
+          "type": {
+            "option": {
+              "defined": {
+                "name": "TransferType"
+              }
+            }
+          }
+        },
+        {
+          "name": "remaining_accounts_indices",
+          "type": "bytes"
+        }
+      ]
+    },
+    {
+      "name": "operate",
+      "discriminator": [217, 106, 208, 99, 116, 151, 42, 135],
+      "accounts": [
+        {
+          "name": "signer",
+          "writable": true,
+          "signer": true
+        },
+        {
+          "name": "signer_supply_token_account",
+          "writable": true,
+          "pda": {
+            "seeds": [
+              {
+                "kind": "account",
+                "path": "signer"
+              },
+              {
+                "kind": "account",
+                "path": "supply_token_program"
+              },
+              {
+                "kind": "account",
+                "path": "supply_token"
+              }
+            ],
+            "program": {
+              "kind": "const",
+              "value": [
+                140, 151, 37, 143, 78, 36, 137, 241, 187, 61, 16, 41, 20, 142,
+                13, 131, 11, 90, 19, 153, 218, 255, 16, 132, 4, 142, 123, 216,
+                219, 233, 248, 89
+              ]
+            }
+          }
+        },
+        {
+          "name": "signer_borrow_token_account",
+          "writable": true,
+          "pda": {
+            "seeds": [
+              {
+                "kind": "account",
+                "path": "signer"
+              },
+              {
+                "kind": "account",
+                "path": "borrow_token_program"
+              },
+              {
+                "kind": "account",
+                "path": "borrow_token"
+              }
+            ],
+            "program": {
+              "kind": "const",
+              "value": [
+                140, 151, 37, 143, 78, 36, 137, 241, 187, 61, 16, 41, 20, 142,
+                13, 131, 11, 90, 19, 153, 218, 255, 16, 132, 4, 142, 123, 216,
+                219, 233, 248, 89
+              ]
+            }
+          }
+        },
+        {
+          "name": "recipient",
+          "optional": true
+        },
+        {
+          "name": "recipient_borrow_token_account",
+          "writable": true,
+          "optional": true,
+          "pda": {
+            "seeds": [
+              {
+                "kind": "account",
+                "path": "recipient"
+              },
+              {
+                "kind": "account",
+                "path": "borrow_token_program"
+              },
+              {
+                "kind": "account",
+                "path": "borrow_token"
+              }
+            ],
+            "program": {
+              "kind": "const",
+              "value": [
+                140, 151, 37, 143, 78, 36, 137, 241, 187, 61, 16, 41, 20, 142,
+                13, 131, 11, 90, 19, 153, 218, 255, 16, 132, 4, 142, 123, 216,
+                219, 233, 248, 89
+              ]
+            }
+          }
+        },
+        {
+          "name": "recipient_supply_token_account",
+          "writable": true,
+          "optional": true,
+          "pda": {
+            "seeds": [
+              {
+                "kind": "account",
+                "path": "recipient"
+              },
+              {
+                "kind": "account",
+                "path": "supply_token_program"
+              },
+              {
+                "kind": "account",
+                "path": "supply_token"
+              }
+            ],
+            "program": {
+              "kind": "const",
+              "value": [
+                140, 151, 37, 143, 78, 36, 137, 241, 187, 61, 16, 41, 20, 142,
+                13, 131, 11, 90, 19, 153, 218, 255, 16, 132, 4, 142, 123, 216,
+                219, 233, 248, 89
+              ]
+            }
+          }
+        },
+        {
+          "name": "vault_config",
+          "docs": [
+            "@dev mut because this PDA signs the CPI to liquidity program",
+            "@dev verification inside instruction logic"
+          ]
+        },
+        {
+          "name": "vault_state",
+          "docs": ["@dev verification inside instruction logic"],
+          "writable": true
+        },
+        {
+          "name": "supply_token"
+        },
+        {
+          "name": "borrow_token"
+        },
+        {
+          "name": "oracle"
+        },
+        {
+          "name": "position",
+          "writable": true
+        },
+        {
+          "name": "position_token_account",
+          "docs": ["@dev verification inside instruction logic"]
+        },
+        {
+          "name": "current_position_tick",
+          "writable": true
+        },
+        {
+          "name": "final_position_tick",
+          "writable": true
+        },
+        {
+          "name": "current_position_tick_id"
+        },
+        {
+          "name": "final_position_tick_id",
+          "writable": true
+        },
+        {
+          "name": "new_branch",
+          "writable": true
+        },
+        {
+          "name": "supply_token_reserves_liquidity",
+          "writable": true
+        },
+        {
+          "name": "borrow_token_reserves_liquidity",
+          "writable": true
+        },
+        {
+          "name": "vault_supply_position_on_liquidity",
+          "writable": true
+        },
+        {
+          "name": "vault_borrow_position_on_liquidity",
+          "writable": true
+        },
+        {
+          "name": "supply_rate_model"
+        },
+        {
+          "name": "borrow_rate_model"
+        },
+        {
+          "name": "vault_supply_token_account",
+          "writable": true
+        },
+        {
+          "name": "vault_borrow_token_account",
+          "writable": true
+        },
+        {
+          "name": "supply_token_claim_account",
+          "writable": true,
+          "optional": true
+        },
+        {
+          "name": "borrow_token_claim_account",
+          "writable": true,
+          "optional": true
+        },
+        {
+          "name": "liquidity"
+        },
+        {
+          "name": "liquidity_program"
+        },
+        {
+          "name": "oracle_program"
+        },
+        {
+          "name": "supply_token_program"
+        },
+        {
+          "name": "borrow_token_program"
+        },
+        {
+          "name": "associated_token_program",
+          "address": "ATokenGPvbdGVxr1b2hvZbsiqW5xWH25efTNsLJA8knL"
+        },
+        {
+          "name": "system_program",
+          "address": "11111111111111111111111111111111"
+        }
+      ],
+      "args": [
+        {
+          "name": "new_col",
+          "type": "i128"
+        },
+        {
+          "name": "new_debt",
+          "type": "i128"
+        },
+        {
+          "name": "transfer_type",
+          "type": {
+            "option": {
+              "defined": {
+                "name": "TransferType"
+              }
+            }
+          }
+        },
+        {
+          "name": "remaining_accounts_indices",
+          "type": "bytes"
+        }
+      ]
+    },
+    {
+      "name": "rebalance",
+      "discriminator": [108, 158, 77, 9, 210, 52, 88, 62],
+      "accounts": [
+        {
+          "name": "rebalancer",
+          "writable": true,
+          "signer": true,
+          "relations": ["vault_config"]
+        },
+        {
+          "name": "rebalancer_supply_token_account",
+          "writable": true,
+          "pda": {
+            "seeds": [
+              {
+                "kind": "account",
+                "path": "rebalancer"
+              },
+              {
+                "kind": "account",
+                "path": "supply_token_program"
+              },
+              {
+                "kind": "account",
+                "path": "supply_token"
+              }
+            ],
+            "program": {
+              "kind": "const",
+              "value": [
+                140, 151, 37, 143, 78, 36, 137, 241, 187, 61, 16, 41, 20, 142,
+                13, 131, 11, 90, 19, 153, 218, 255, 16, 132, 4, 142, 123, 216,
+                219, 233, 248, 89
+              ]
+            }
+          }
+        },
+        {
+          "name": "rebalancer_borrow_token_account",
+          "writable": true,
+          "pda": {
+            "seeds": [
+              {
+                "kind": "account",
+                "path": "rebalancer"
+              },
+              {
+                "kind": "account",
+                "path": "borrow_token_program"
+              },
+              {
+                "kind": "account",
+                "path": "borrow_token"
+              }
+            ],
+            "program": {
+              "kind": "const",
+              "value": [
+                140, 151, 37, 143, 78, 36, 137, 241, 187, 61, 16, 41, 20, 142,
+                13, 131, 11, 90, 19, 153, 218, 255, 16, 132, 4, 142, 123, 216,
+                219, 233, 248, 89
+              ]
+            }
+          }
+        },
+        {
+          "name": "vault_config",
+          "docs": [
+            "@dev mut because this PDA signs the CPI to liquidity program",
+            "@dev verification inside instruction logic"
+          ],
+          "writable": true
+        },
+        {
+          "name": "vault_state",
+          "docs": ["@dev verification inside instruction logic"],
+          "writable": true
+        },
+        {
+          "name": "supply_token",
+          "relations": ["vault_config"]
+        },
+        {
+          "name": "borrow_token",
+          "relations": ["vault_config"]
+        },
+        {
+          "name": "supply_token_reserves_liquidity",
+          "writable": true
+        },
+        {
+          "name": "borrow_token_reserves_liquidity",
+          "writable": true
+        },
+        {
+          "name": "vault_supply_position_on_liquidity",
+          "writable": true
+        },
+        {
+          "name": "vault_borrow_position_on_liquidity",
+          "writable": true
+        },
+        {
+          "name": "supply_rate_model"
+        },
+        {
+          "name": "borrow_rate_model"
+        },
+        {
+          "name": "liquidity"
+        },
+        {
+          "name": "liquidity_program"
+        },
+        {
+          "name": "vault_supply_token_account",
+          "writable": true
+        },
+        {
+          "name": "vault_borrow_token_account",
+          "writable": true
+        },
+        {
+          "name": "system_program",
+          "address": "11111111111111111111111111111111"
+        },
+        {
+          "name": "supply_token_program"
+        },
+        {
+          "name": "borrow_token_program"
+        },
+        {
+          "name": "associated_token_program",
+          "address": "ATokenGPvbdGVxr1b2hvZbsiqW5xWH25efTNsLJA8knL"
+        }
+      ],
+      "args": []
+    },
+    {
+      "name": "update_authority",
+      "discriminator": [32, 46, 64, 28, 149, 75, 243, 88],
+      "accounts": [
+        {
+          "name": "signer",
+          "signer": true
+        },
+        {
+          "name": "vault_admin",
+          "writable": true
+        }
+      ],
+      "args": [
+        {
+          "name": "new_authority",
+          "type": "pubkey"
+        }
+      ]
+    },
+    {
+      "name": "update_auths",
+      "discriminator": [93, 96, 178, 156, 57, 117, 253, 209],
+      "accounts": [
+        {
+          "name": "signer",
+          "signer": true
+        },
+        {
+          "name": "vault_admin",
+          "writable": true
+        }
+      ],
+      "args": [
+        {
+          "name": "auth_status",
+          "type": {
+            "vec": {
+              "defined": {
+                "name": "AddressBool"
+              }
+            }
+          }
+        }
+      ]
+    },
+    {
+      "name": "update_borrow_fee",
+      "discriminator": [251, 124, 35, 148, 202, 167, 157, 65],
+      "accounts": [
+        {
+          "name": "authority",
+          "signer": true
+        },
+        {
+          "name": "vault_admin"
+        },
+        {
+          "name": "vault_state",
+          "docs": ["@dev Verification inside instruction logic"],
+          "writable": true
+        },
+        {
+          "name": "vault_config",
+          "docs": ["@dev Verification inside instruction logic"],
+          "writable": true
+        },
+        {
+          "name": "supply_token_reserves_liquidity",
+          "docs": ["@dev Verification inside instruction logic"]
+        },
+        {
+          "name": "borrow_token_reserves_liquidity",
+          "docs": ["@dev Verification inside instruction logic"]
+        }
+      ],
+      "args": [
+        {
+          "name": "vault_id",
+          "type": "u16"
+        },
+        {
+          "name": "borrow_fee",
+          "type": "u16"
+        }
+      ]
+    },
+    {
+      "name": "update_borrow_rate_magnifier",
+      "discriminator": [75, 250, 27, 176, 156, 53, 26, 112],
+      "accounts": [
+        {
+          "name": "authority",
+          "signer": true
+        },
+        {
+          "name": "vault_admin"
+        },
+        {
+          "name": "vault_state",
+          "docs": ["@dev Verification inside instruction logic"],
+          "writable": true
+        },
+        {
+          "name": "vault_config",
+          "docs": ["@dev Verification inside instruction logic"],
+          "writable": true
+        },
+        {
+          "name": "supply_token_reserves_liquidity",
+          "docs": ["@dev Verification inside instruction logic"]
+        },
+        {
+          "name": "borrow_token_reserves_liquidity",
+          "docs": ["@dev Verification inside instruction logic"]
+        }
+      ],
+      "args": [
+        {
+          "name": "vault_id",
+          "type": "u16"
+        },
+        {
+          "name": "borrow_rate_magnifier",
+          "type": "i16"
+        }
+      ]
+    },
+    {
+      "name": "update_collateral_factor",
+      "discriminator": [244, 83, 227, 215, 220, 82, 201, 221],
+      "accounts": [
+        {
+          "name": "authority",
+          "signer": true
+        },
+        {
+          "name": "vault_admin"
+        },
+        {
+          "name": "vault_state",
+          "docs": ["@dev Verification inside instruction logic"],
+          "writable": true
+        },
+        {
+          "name": "vault_config",
+          "docs": ["@dev Verification inside instruction logic"],
+          "writable": true
+        },
+        {
+          "name": "supply_token_reserves_liquidity",
+          "docs": ["@dev Verification inside instruction logic"]
+        },
+        {
+          "name": "borrow_token_reserves_liquidity",
+          "docs": ["@dev Verification inside instruction logic"]
+        }
+      ],
+      "args": [
+        {
+          "name": "vault_id",
+          "type": "u16"
+        },
+        {
+          "name": "collateral_factor",
+          "type": "u16"
+        }
+      ]
+    },
+    {
+      "name": "update_core_settings",
+      "discriminator": [101, 84, 9, 11, 60, 104, 149, 234],
+      "accounts": [
+        {
+          "name": "authority",
+          "signer": true
+        },
+        {
+          "name": "vault_admin"
+        },
+        {
+          "name": "vault_state",
+          "docs": ["@dev Verification inside instruction logic"],
+          "writable": true
+        },
+        {
+          "name": "vault_config",
+          "docs": ["@dev Verification inside instruction logic"],
+          "writable": true
+        },
+        {
+          "name": "supply_token_reserves_liquidity",
+          "docs": ["@dev Verification inside instruction logic"]
+        },
+        {
+          "name": "borrow_token_reserves_liquidity",
+          "docs": ["@dev Verification inside instruction logic"]
+        }
+      ],
+      "args": [
+        {
+          "name": "vault_id",
+          "type": "u16"
+        },
+        {
+          "name": "params",
+          "type": {
+            "defined": {
+              "name": "UpdateCoreSettingsParams"
+            }
+          }
+        }
+      ]
+    },
+    {
+      "name": "update_exchange_prices",
+      "discriminator": [209, 14, 188, 95, 242, 20, 119, 196],
+      "accounts": [
+        {
+          "name": "vault_state",
+          "docs": ["@dev Verification inside instruction logic"],
+          "writable": true
+        },
+        {
+          "name": "vault_config",
+          "docs": ["@dev Verification inside instruction logic"]
+        },
+        {
+          "name": "supply_token_reserves_liquidity",
+          "docs": ["@dev Verification inside instruction logic"]
+        },
+        {
+          "name": "borrow_token_reserves_liquidity",
+          "docs": ["@dev Verification inside instruction logic"]
+        }
+      ],
+      "args": [
+        {
+          "name": "vault_id",
+          "type": "u16"
+        }
+      ]
+    },
+    {
+      "name": "update_liquidation_max_limit",
+      "discriminator": [183, 242, 152, 150, 176, 40, 65, 161],
+      "accounts": [
+        {
+          "name": "authority",
+          "signer": true
+        },
+        {
+          "name": "vault_admin"
+        },
+        {
+          "name": "vault_state",
+          "docs": ["@dev Verification inside instruction logic"],
+          "writable": true
+        },
+        {
+          "name": "vault_config",
+          "docs": ["@dev Verification inside instruction logic"],
+          "writable": true
+        },
+        {
+          "name": "supply_token_reserves_liquidity",
+          "docs": ["@dev Verification inside instruction logic"]
+        },
+        {
+          "name": "borrow_token_reserves_liquidity",
+          "docs": ["@dev Verification inside instruction logic"]
+        }
+      ],
+      "args": [
+        {
+          "name": "vault_id",
+          "type": "u16"
+        },
+        {
+          "name": "liquidation_max_limit",
+          "type": "u16"
+        }
+      ]
+    },
+    {
+      "name": "update_liquidation_penalty",
+      "discriminator": [21, 168, 167, 206, 98, 206, 69, 32],
+      "accounts": [
+        {
+          "name": "authority",
+          "signer": true
+        },
+        {
+          "name": "vault_admin"
+        },
+        {
+          "name": "vault_state",
+          "docs": ["@dev Verification inside instruction logic"],
+          "writable": true
+        },
+        {
+          "name": "vault_config",
+          "docs": ["@dev Verification inside instruction logic"],
+          "writable": true
+        },
+        {
+          "name": "supply_token_reserves_liquidity",
+          "docs": ["@dev Verification inside instruction logic"]
+        },
+        {
+          "name": "borrow_token_reserves_liquidity",
+          "docs": ["@dev Verification inside instruction logic"]
+        }
+      ],
+      "args": [
+        {
+          "name": "vault_id",
+          "type": "u16"
+        },
+        {
+          "name": "liquidation_penalty",
+          "type": "u16"
+        }
+      ]
+    },
+    {
+      "name": "update_liquidation_threshold",
+      "discriminator": [53, 185, 87, 243, 138, 11, 79, 28],
+      "accounts": [
+        {
+          "name": "authority",
+          "signer": true
+        },
+        {
+          "name": "vault_admin"
+        },
+        {
+          "name": "vault_state",
+          "docs": ["@dev Verification inside instruction logic"],
+          "writable": true
+        },
+        {
+          "name": "vault_config",
+          "docs": ["@dev Verification inside instruction logic"],
+          "writable": true
+        },
+        {
+          "name": "supply_token_reserves_liquidity",
+          "docs": ["@dev Verification inside instruction logic"]
+        },
+        {
+          "name": "borrow_token_reserves_liquidity",
+          "docs": ["@dev Verification inside instruction logic"]
+        }
+      ],
+      "args": [
+        {
+          "name": "vault_id",
+          "type": "u16"
+        },
+        {
+          "name": "liquidation_threshold",
+          "type": "u16"
+        }
+      ]
+    },
+    {
+      "name": "update_lookup_table",
+      "discriminator": [221, 59, 30, 246, 106, 223, 137, 55],
+      "accounts": [
+        {
+          "name": "authority",
+          "signer": true
+        },
+        {
+          "name": "vault_admin"
+        },
+        {
+          "name": "vault_metadata",
+          "docs": ["@dev Verification inside instruction logic"],
+          "writable": true
+        }
+      ],
+      "args": [
+        {
+          "name": "vault_id",
+          "type": "u16"
+        },
+        {
+          "name": "lookup_table",
+          "type": "pubkey"
+        }
+      ]
+    },
+    {
+      "name": "update_oracle",
+      "discriminator": [112, 41, 209, 18, 248, 226, 252, 188],
+      "accounts": [
+        {
+          "name": "authority",
+          "signer": true
+        },
+        {
+          "name": "vault_admin"
+        },
+        {
+          "name": "vault_state",
+          "docs": ["@dev Verification inside instruction logic"],
+          "writable": true
+        },
+        {
+          "name": "vault_config",
+          "docs": ["@dev Verification inside instruction logic"],
+          "writable": true
+        },
+        {
+          "name": "new_oracle",
+          "writable": true
+        },
+        {
+          "name": "supply_token_reserves_liquidity",
+          "docs": ["@dev Verification inside instruction logic"]
+        },
+        {
+          "name": "borrow_token_reserves_liquidity",
+          "docs": ["@dev Verification inside instruction logic"]
+        }
+      ],
+      "args": [
+        {
+          "name": "vault_id",
+          "type": "u16"
+        }
+      ]
+    },
+    {
+      "name": "update_rebalancer",
+      "discriminator": [206, 187, 54, 228, 145, 8, 203, 111],
+      "accounts": [
+        {
+          "name": "authority",
+          "signer": true
+        },
+        {
+          "name": "vault_admin"
+        },
+        {
+          "name": "vault_state",
+          "docs": ["@dev Verification inside instruction logic"],
+          "writable": true
+        },
+        {
+          "name": "vault_config",
+          "docs": ["@dev Verification inside instruction logic"],
+          "writable": true
+        },
+        {
+          "name": "supply_token_reserves_liquidity",
+          "docs": ["@dev Verification inside instruction logic"]
+        },
+        {
+          "name": "borrow_token_reserves_liquidity",
+          "docs": ["@dev Verification inside instruction logic"]
+        }
+      ],
+      "args": [
+        {
+          "name": "vault_id",
+          "type": "u16"
+        },
+        {
+          "name": "new_rebalancer",
+          "type": "pubkey"
+        }
+      ]
+    },
+    {
+      "name": "update_supply_rate_magnifier",
+      "discriminator": [175, 59, 117, 196, 211, 170, 22, 12],
+      "accounts": [
+        {
+          "name": "authority",
+          "signer": true
+        },
+        {
+          "name": "vault_admin"
+        },
+        {
+          "name": "vault_state",
+          "docs": ["@dev Verification inside instruction logic"],
+          "writable": true
+        },
+        {
+          "name": "vault_config",
+          "docs": ["@dev Verification inside instruction logic"],
+          "writable": true
+        },
+        {
+          "name": "supply_token_reserves_liquidity",
+          "docs": ["@dev Verification inside instruction logic"]
+        },
+        {
+          "name": "borrow_token_reserves_liquidity",
+          "docs": ["@dev Verification inside instruction logic"]
+        }
+      ],
+      "args": [
+        {
+          "name": "vault_id",
+          "type": "u16"
+        },
+        {
+          "name": "supply_rate_magnifier",
+          "type": "i16"
+        }
+      ]
+    },
+    {
+      "name": "update_withdraw_gap",
+      "discriminator": [229, 163, 76, 21, 82, 215, 25, 233],
+      "accounts": [
+        {
+          "name": "authority",
+          "signer": true
+        },
+        {
+          "name": "vault_admin"
+        },
+        {
+          "name": "vault_state",
+          "docs": ["@dev Verification inside instruction logic"],
+          "writable": true
+        },
+        {
+          "name": "vault_config",
+          "docs": ["@dev Verification inside instruction logic"],
+          "writable": true
+        },
+        {
+          "name": "supply_token_reserves_liquidity",
+          "docs": ["@dev Verification inside instruction logic"]
+        },
+        {
+          "name": "borrow_token_reserves_liquidity",
+          "docs": ["@dev Verification inside instruction logic"]
+        }
+      ],
+      "args": [
+        {
+          "name": "vault_id",
+          "type": "u16"
+        },
+        {
+          "name": "withdraw_gap",
+          "type": "u16"
+        }
+      ]
+    }
+  ],
+  "accounts": [
+    {
+      "name": "Branch",
+      "discriminator": [14, 63, 100, 50, 25, 8, 29, 5]
+    },
+    {
+      "name": "Oracle",
+      "discriminator": [139, 194, 131, 179, 140, 179, 229, 244]
+    },
+    {
+      "name": "Position",
+      "discriminator": [170, 188, 143, 228, 122, 64, 247, 208]
+    },
+    {
+      "name": "Tick",
+      "discriminator": [176, 94, 67, 247, 133, 173, 7, 115]
+    },
+    {
+      "name": "TickHasDebtArray",
+      "discriminator": [91, 232, 60, 29, 124, 103, 49, 252]
+    },
+    {
+      "name": "TickIdLiquidation",
+      "discriminator": [41, 28, 190, 197, 68, 213, 31, 181]
+    },
+    {
+      "name": "TokenReserve",
+      "discriminator": [21, 18, 59, 135, 120, 20, 31, 12]
+    },
+    {
+      "name": "UserBorrowPosition",
+      "discriminator": [73, 126, 65, 123, 220, 126, 197, 24]
+    },
+    {
+      "name": "UserSupplyPosition",
+      "discriminator": [202, 219, 136, 118, 61, 177, 21, 146]
+    },
+    {
+      "name": "VaultAdmin",
+      "discriminator": [88, 97, 160, 117, 102, 39, 103, 44]
+    },
+    {
+      "name": "VaultConfig",
+      "discriminator": [99, 86, 43, 216, 184, 102, 119, 77]
+    },
+    {
+      "name": "VaultMetadata",
+      "discriminator": [248, 177, 244, 93, 67, 19, 117, 57]
+    },
+    {
+      "name": "VaultState",
+      "discriminator": [228, 196, 82, 165, 98, 210, 235, 152]
+    }
+  ],
+  "events": [
+    {
+      "name": "LogAbsorb",
+      "discriminator": [177, 119, 143, 137, 184, 63, 197, 215]
+    },
+    {
+      "name": "LogClosePosition",
+      "discriminator": [225, 156, 13, 36, 189, 95, 170, 92]
+    },
+    {
+      "name": "LogInitBranch",
+      "discriminator": [127, 182, 211, 219, 140, 189, 193, 101]
+    },
+    {
+      "name": "LogInitTick",
+      "discriminator": [56, 182, 35, 79, 249, 114, 9, 175]
+    },
+    {
+      "name": "LogInitTickHasDebtArray",
+      "discriminator": [15, 134, 113, 2, 251, 206, 30, 129]
+    },
+    {
+      "name": "LogInitTickIdLiquidation",
+      "discriminator": [172, 64, 170, 238, 39, 153, 185, 225]
+    },
+    {
+      "name": "LogInitVaultConfig",
+      "discriminator": [194, 158, 35, 55, 179, 48, 174, 46]
+    },
+    {
+      "name": "LogInitVaultState",
+      "discriminator": [140, 108, 65, 38, 128, 26, 194, 28]
+    },
+    {
+      "name": "LogLiquidate",
+      "discriminator": [154, 128, 202, 147, 65, 233, 195, 73]
+    },
+    {
+      "name": "LogLiquidateInfo",
+      "discriminator": [169, 150, 46, 42, 178, 89, 98, 83]
+    },
+    {
+      "name": "LogOperate",
+      "discriminator": [180, 8, 81, 71, 19, 132, 173, 8]
+    },
+    {
+      "name": "LogRebalance",
+      "discriminator": [90, 67, 219, 41, 181, 118, 132, 9]
+    },
+    {
+      "name": "LogUpdateAuthority",
+      "discriminator": [150, 152, 157, 143, 6, 135, 193, 101]
+    },
+    {
+      "name": "LogUpdateAuths",
+      "discriminator": [88, 80, 109, 48, 111, 203, 76, 251]
+    },
+    {
+      "name": "LogUpdateBorrowFee",
+      "discriminator": [33, 134, 42, 66, 16, 167, 119, 196]
+    },
+    {
+      "name": "LogUpdateBorrowRateMagnifier",
+      "discriminator": [186, 23, 46, 117, 57, 111, 107, 51]
+    },
+    {
+      "name": "LogUpdateCollateralFactor",
+      "discriminator": [142, 89, 0, 231, 164, 164, 230, 82]
+    },
+    {
+      "name": "LogUpdateCoreSettings",
+      "discriminator": [233, 65, 32, 7, 230, 115, 122, 197]
+    },
+    {
+      "name": "LogUpdateExchangePrices",
+      "discriminator": [190, 194, 69, 204, 30, 86, 181, 163]
+    },
+    {
+      "name": "LogUpdateLiquidationMaxLimit",
+      "discriminator": [73, 32, 49, 0, 234, 86, 150, 94]
+    },
+    {
+      "name": "LogUpdateLiquidationPenalty",
+      "discriminator": [42, 132, 67, 48, 209, 133, 77, 83]
+    },
+    {
+      "name": "LogUpdateLiquidationThreshold",
+      "discriminator": [211, 71, 215, 239, 159, 238, 71, 219]
+    },
+    {
+      "name": "LogUpdateLookupTable",
+      "discriminator": [45, 248, 126, 111, 185, 41, 103, 5]
+    },
+    {
+      "name": "LogUpdateOracle",
+      "discriminator": [251, 163, 219, 57, 30, 152, 177, 10]
+    },
+    {
+      "name": "LogUpdateRebalancer",
+      "discriminator": [66, 79, 144, 204, 26, 217, 153, 225]
+    },
+    {
+      "name": "LogUpdateSupplyRateMagnifier",
+      "discriminator": [198, 113, 184, 213, 239, 18, 253, 56]
+    },
+    {
+      "name": "LogUpdateWithdrawGap",
+      "discriminator": [182, 248, 48, 47, 8, 159, 21, 35]
+    },
+    {
+      "name": "LogUserPosition",
+      "discriminator": [46, 44, 213, 42, 55, 59, 190, 133]
+    }
+  ],
+  "errors": [
+    {
+      "code": 6000,
+      "name": "VaultNextTickNotFound",
+      "msg": "VAULT_NEXT_TICK_NOT_FOUND"
+    },
+    {
+      "code": 6001,
+      "name": "VaultInvalidPositionMint",
+      "msg": "VAULT_INVALID_POSITION_MINT"
+    },
+    {
+      "code": 6002,
+      "name": "VaultTickIdLiquidationMismatch",
+      "msg": "VAULT_TICK_ID_LIQUIDATION_MISMATCH"
+    },
+    {
+      "code": 6003,
+      "name": "VaultInvalidPositionTokenAmount",
+      "msg": "VAULT_INVALID_POSITION_TOKEN_AMOUNT"
+    },
+    {
+      "code": 6004,
+      "name": "VaultInvalidRemainingAccountsIndices",
+      "msg": "VAULT_INVALID_REMAINING_ACCOUNTS_INDICES"
+    },
+    {
+      "code": 6005,
+      "name": "VaultTickHasDebtVaultIdMismatch",
+      "msg": "VAULT_TICK_HAS_DEBT_VAULT_ID_MISMATCH"
+    },
+    {
+      "code": 6006,
+      "name": "VaultBranchVaultIdMismatch",
+      "msg": "VAULT_BRANCH_VAULT_ID_MISMATCH"
+    },
+    {
+      "code": 6007,
+      "name": "VaultTickVaultIdMismatch",
+      "msg": "VAULT_TICK_VAULT_ID_MISMATCH"
+    },
+    {
+      "code": 6008,
+      "name": "VaultInvalidDecimals",
+      "msg": "VAULT_INVALID_DECIMALS"
+    },
+    {
+      "code": 6009,
+      "name": "VaultInvalidOperateAmount",
+      "msg": "VAULT_INVALID_OPERATE_AMOUNT"
+    },
+    {
+      "code": 6010,
+      "name": "VaultTickIsEmpty",
+      "msg": "VAULT_TICK_IS_EMPTY"
+    },
+    {
+      "code": 6011,
+      "name": "VaultPositionAboveCF",
+      "msg": "VAULT_POSITION_ABOVE_CF"
+    },
+    {
+      "code": 6012,
+      "name": "VaultTopTickDoesNotExist",
+      "msg": "VAULT_TOP_TICK_DOES_NOT_EXIST"
+    },
+    {
+      "code": 6013,
+      "name": "VaultExcessSlippageLiquidation",
+      "msg": "VAULT_EXCESS_SLIPPAGE_LIQUIDATION"
+    },
+    {
+      "code": 6014,
+      "name": "VaultNotRebalancer",
+      "msg": "VAULT_NOT_REBALANCER"
+    },
+    {
+      "code": 6015,
+      "name": "VaultTokenNotInitialized",
+      "msg": "VAULT_TOKEN_NOT_INITIALIZED"
+    },
+    {
+      "code": 6016,
+      "name": "VaultUserCollateralDebtExceed",
+      "msg": "VAULT_USER_COLLATERAL_DEBT_EXCEED"
+    },
+    {
+      "code": 6017,
+      "name": "VaultExcessCollateralWithdrawal",
+      "msg": "VAULT_EXCESS_COLLATERAL_WITHDRAWAL"
+    },
+    {
+      "code": 6018,
+      "name": "VaultExcessDebtPayback",
+      "msg": "VAULT_EXCESS_DEBT_PAYBACK"
+    },
+    {
+      "code": 6019,
+      "name": "VaultWithdrawMoreThanOperateLimit",
+      "msg": "VAULT_WITHDRAW_MORE_THAN_OPERATE_LIMIT"
+    },
+    {
+      "code": 6020,
+      "name": "VaultInvalidLiquidationAmt",
+      "msg": "VAULT_INVALID_LIQUIDATION_AMT"
+    },
+    {
+      "code": 6021,
+      "name": "VaultLiquidationResult",
+      "msg": "VAULT_LIQUIDATION_RESULT"
+    },
+    {
+      "code": 6022,
+      "name": "VaultBranchDebtTooLow",
+      "msg": "VAULT_BRANCH_DEBT_TOO_LOW"
+    },
+    {
+      "code": 6023,
+      "name": "VaultTickDebtTooLow",
+      "msg": "VAULT_TICK_DEBT_TOO_LOW"
+    },
+    {
+      "code": 6024,
+      "name": "VaultLiquidityExchangePriceUnexpected",
+      "msg": "VAULT_LIQUIDITY_EXCHANGE_PRICE_UNEXPECTED"
+    },
+    {
+      "code": 6025,
+      "name": "VaultUserDebtTooLow",
+      "msg": "VAULT_USER_DEBT_TOO_LOW"
+    },
+    {
+      "code": 6026,
+      "name": "VaultInvalidPaybackOrDeposit",
+      "msg": "VAULT_INVALID_PAYBACK_OR_DEPOSIT"
+    },
+    {
+      "code": 6027,
+      "name": "VaultInvalidLiquidation",
+      "msg": "VAULT_INVALID_LIQUIDATION"
+    },
+    {
+      "code": 6028,
+      "name": "VaultNothingToRebalance",
+      "msg": "VAULT_NOTHING_TO_REBALANCE"
+    },
+    {
+      "code": 6029,
+      "name": "VaultLiquidationReverts",
+      "msg": "VAULT_LIQUIDATION_REVERTS"
+    },
+    {
+      "code": 6030,
+      "name": "VaultInvalidOraclePrice",
+      "msg": "VAULT_INVALID_ORACLE_PRICE"
+    },
+    {
+      "code": 6031,
+      "name": "VaultBranchNotFound",
+      "msg": "VAULT_BRANCH_NOT_FOUND"
+    },
+    {
+      "code": 6032,
+      "name": "VaultTickNotFound",
+      "msg": "VAULT_TICK_NOT_FOUND"
+    },
+    {
+      "code": 6033,
+      "name": "VaultTickHasDebtNotFound",
+      "msg": "VAULT_TICK_HAS_DEBT_NOT_FOUND"
+    },
+    {
+      "code": 6034,
+      "name": "VaultTickMismatch",
+      "msg": "VAULT_TICK_MISMATCH"
+    },
+    {
+      "code": 6035,
+      "name": "VaultInvalidVaultId",
+      "msg": "VAULT_INVALID_VAULT_ID"
+    },
+    {
+      "code": 6036,
+      "name": "VaultInvalidNextPositionId",
+      "msg": "VAULT_INVALID_NEXT_POSITION_ID"
+    },
+    {
+      "code": 6037,
+      "name": "VaultInvalidPositionId",
+      "msg": "VAULT_INVALID_POSITION_ID"
+    },
+    {
+      "code": 6038,
+      "name": "VaultPositionNotEmpty",
+      "msg": "VAULT_POSITION_NOT_EMPTY"
+    },
+    {
+      "code": 6039,
+      "name": "VaultInvalidSupplyMint",
+      "msg": "VAULT_INVALID_SUPPLY_MINT"
+    },
+    {
+      "code": 6040,
+      "name": "VaultInvalidBorrowMint",
+      "msg": "VAULT_INVALID_BORROW_MINT"
+    },
+    {
+      "code": 6041,
+      "name": "VaultInvalidOracle",
+      "msg": "VAULT_INVALID_ORACLE"
+    },
+    {
+      "code": 6042,
+      "name": "VaultInvalidTick",
+      "msg": "VAULT_INVALID_TICK"
+    },
+    {
+      "code": 6043,
+      "name": "VaultInvalidLiquidityProgram",
+      "msg": "VAULT_INVALID_LIQUIDITY_PROGRAM"
+    },
+    {
+      "code": 6044,
+      "name": "VaultInvalidPositionAuthority",
+      "msg": "VAULT_INVALID_POSITION_AUTHORITY"
+    },
+    {
+      "code": 6045,
+      "name": "VaultOracleNotValid",
+      "msg": "VAULT_ORACLE_NOT_VALID"
+    },
+    {
+      "code": 6046,
+      "name": "VaultBranchOwnerNotValid",
+      "msg": "VAULT_BRANCH_OWNER_NOT_VALID"
+    },
+    {
+      "code": 6047,
+      "name": "VaultTickHasDebtOwnerNotValid",
+      "msg": "VAULT_TICK_HAS_DEBT_OWNER_NOT_VALID"
+    },
+    {
+      "code": 6048,
+      "name": "VaultTickOwnerNotValid",
+      "msg": "VAULT_TICK_DATA_OWNER_NOT_VALID"
+    },
+    {
+      "code": 6049,
+      "name": "VaultLiquidateRemainingAccountsTooShort",
+      "msg": "VAULT_LIQUIDATE_REMAINING_ACCOUNTS_TOO_SHORT"
+    },
+    {
+      "code": 6050,
+      "name": "VaultOperateRemainingAccountsTooShort",
+      "msg": "VAULT_OPERATE_REMAINING_ACCOUNTS_TOO_SHORT"
+    },
+    {
+      "code": 6051,
+      "name": "VaultInvalidZerothBranch",
+      "msg": "VAULT_INVALID_ZEROTH_BRANCH"
+    },
+    {
+      "code": 6052,
+      "name": "VaultCpiToLiquidityFailed",
+      "msg": "VAULT_CPI_TO_LIQUIDITY_FAILED"
+    },
+    {
+      "code": 6053,
+      "name": "VaultCpiToOracleFailed",
+      "msg": "VAULT_CPI_TO_ORACLE_FAILED"
+    },
+    {
+      "code": 6054,
+      "name": "VaultOnlyAuthority",
+      "msg": "VAULT_ONLY_AUTHORITY"
+    },
+    {
+      "code": 6055,
+      "name": "VaultNewBranchInvalid",
+      "msg": "VAULT_NEW_BRANCH_INVALID"
+    },
+    {
+      "code": 6056,
+      "name": "VaultTickHasDebtIndexMismatch",
+      "msg": "VAULT_TICK_HAS_DEBT_INDEX_MISMATCH"
+    },
+    {
+      "code": 6057,
+      "name": "VaultTickHasDebtOutOfRange",
+      "msg": "VAULT_TICK_HAS_DEBT_OUT_OF_RANGE"
+    },
+    {
+      "code": 6058,
+      "name": "VaultUserSupplyPositionRequired",
+      "msg": "VAULT_USER_SUPPLY_POSITION_REQUIRED"
+    },
+    {
+      "code": 6059,
+      "name": "VaultClaimAccountRequired",
+      "msg": "VAULT_CLAIM_ACCOUNT_REQUIRED"
+    },
+    {
+      "code": 6060,
+      "name": "VaultRecipientWithdrawAccountRequired",
+      "msg": "VAULT_RECIPIENT_WITHDRAW_ACCOUNT_REQUIRED"
+    },
+    {
+      "code": 6061,
+      "name": "VaultRecipientBorrowAccountRequired",
+      "msg": "VAULT_RECIPIENT_BORROW_ACCOUNT_REQUIRED"
+    },
+    {
+      "code": 6062,
+      "name": "VaultPositionAboveLiquidationThreshold",
+      "msg": "VAULT_POSITION_ABOVE_LIQUIDATION_THRESHOLD"
+    },
+    {
+      "code": 6063,
+      "name": "VaultAdminValueAboveLimit",
+      "msg": "VAULT_ADMIN_VALUE_ABOVE_LIMIT"
+    },
+    {
+      "code": 6064,
+      "name": "VaultAdminOnlyAuths",
+      "msg": "VAULT_ADMIN_ONLY_AUTH_ACCOUNTS"
+    },
+    {
+      "code": 6065,
+      "name": "VaultAdminAddressZeroNotAllowed",
+      "msg": "VAULT_ADMIN_ADDRESS_ZERO_NOT_ALLOWED"
+    },
+    {
+      "code": 6066,
+      "name": "VaultAdminVaultIdMismatch",
+      "msg": "VAULT_ADMIN_VAULT_ID_MISMATCH"
+    },
+    {
+      "code": 6067,
+      "name": "VaultAdminTotalIdsMismatch",
+      "msg": "VAULT_ADMIN_TOTAL_IDS_MISMATCH"
+    },
+    {
+      "code": 6068,
+      "name": "VaultAdminTickMismatch",
+      "msg": "VAULT_ADMIN_TICK_MISMATCH"
+    },
+    {
+      "code": 6069,
+      "name": "VaultAdminLiquidityProgramMismatch",
+      "msg": "VAULT_ADMIN_LIQUIDITY_PROGRAM_MISMATCH"
+    },
+    {
+      "code": 6070,
+      "name": "VaultAdminMaxAuthCountReached",
+      "msg": "VAULT_ADMIN_MAX_AUTH_COUNT_REACHED"
+    },
+    {
+      "code": 6071,
+      "name": "VaultAdminInvalidParams",
+      "msg": "VAULT_ADMIN_INVALID_PARAMS"
+    },
+    {
+      "code": 6072,
+      "name": "VaultAdminOnlyAuthority",
+      "msg": "VAULT_ADMIN_ONLY_AUTHORITY"
+    },
+    {
+      "code": 6073,
+      "name": "VaultAdminOracleProgramMismatch",
+      "msg": "VAULT_ADMIN_ORACLE_PROGRAM_MISMATCH"
+    }
+  ],
+  "types": [
+    {
+      "name": "AddressBool",
+      "type": {
+        "kind": "struct",
+        "fields": [
+          {
+            "name": "addr",
+            "type": "pubkey"
+          },
+          {
+            "name": "value",
+            "type": "bool"
+          }
+        ]
+      }
+    },
+    {
+      "name": "Branch",
+      "docs": ["Branch data structure"],
+      "serialization": "bytemuck",
+      "repr": {
+        "kind": "c",
+        "packed": true
+      },
+      "type": {
+        "kind": "struct",
+        "fields": [
+          {
+            "name": "vault_id",
+            "type": "u16"
+          },
+          {
+            "name": "branch_id",
+            "type": "u32"
+          },
+          {
+            "name": "status",
+            "type": "u8"
+          },
+          {
+            "name": "minima_tick",
+            "type": "i32"
+          },
+          {
+            "name": "minima_tick_partials",
+            "type": "u32"
+          },
+          {
+            "name": "debt_liquidity",
+            "type": "u64"
+          },
+          {
+            "name": "debt_factor",
+            "type": "u64"
+          },
+          {
+            "name": "connected_branch_id",
+            "type": "u32"
+          },
+          {
+            "name": "connected_minima_tick",
+            "type": "i32"
+          }
+        ]
+      }
+    },
+    {
+      "name": "InitVaultConfigParams",
+      "type": {
+        "kind": "struct",
+        "fields": [
+          {
+            "name": "supply_rate_magnifier",
+            "type": "i16"
+          },
+          {
+            "name": "borrow_rate_magnifier",
+            "type": "i16"
+          },
+          {
+            "name": "collateral_factor",
+            "type": "u16"
+          },
+          {
+            "name": "liquidation_threshold",
+            "type": "u16"
+          },
+          {
+            "name": "liquidation_max_limit",
+            "type": "u16"
+          },
+          {
+            "name": "withdraw_gap",
+            "type": "u16"
+          },
+          {
+            "name": "liquidation_penalty",
+            "type": "u16"
+          },
+          {
+            "name": "borrow_fee",
+            "type": "u16"
+          },
+          {
+            "name": "rebalancer",
+            "type": "pubkey"
+          },
+          {
+            "name": "liquidity_program",
+            "type": "pubkey"
+          },
+          {
+            "name": "oracle_program",
+            "type": "pubkey"
+          }
+        ]
+      }
+    },
+    {
+      "name": "LogAbsorb",
+      "type": {
+        "kind": "struct",
+        "fields": [
+          {
+            "name": "col_amount",
+            "type": "u64"
+          },
+          {
+            "name": "debt_amount",
+            "type": "u64"
+          }
+        ]
+      }
+    },
+    {
+      "name": "LogClosePosition",
+      "type": {
+        "kind": "struct",
+        "fields": [
+          {
+            "name": "signer",
+            "type": "pubkey"
+          },
+          {
+            "name": "position_id",
+            "type": "u32"
+          },
+          {
+            "name": "vault_id",
+            "type": "u16"
+          },
+          {
+            "name": "position_mint",
+            "type": "pubkey"
+          }
+        ]
+      }
+    },
+    {
+      "name": "LogInitBranch",
+      "type": {
+        "kind": "struct",
+        "fields": [
+          {
+            "name": "branch",
+            "type": "pubkey"
+          },
+          {
+            "name": "branch_id",
+            "type": "u32"
+          }
+        ]
+      }
+    },
+    {
+      "name": "LogInitTick",
+      "type": {
+        "kind": "struct",
+        "fields": [
+          {
+            "name": "tick",
+            "type": "pubkey"
+          }
+        ]
+      }
+    },
+    {
+      "name": "LogInitTickHasDebtArray",
+      "type": {
+        "kind": "struct",
+        "fields": [
+          {
+            "name": "tick_has_debt_array",
+            "type": "pubkey"
+          }
+        ]
+      }
+    },
+    {
+      "name": "LogInitTickIdLiquidation",
+      "type": {
+        "kind": "struct",
+        "fields": [
+          {
+            "name": "tick_id_liquidation",
+            "type": "pubkey"
+          },
+          {
+            "name": "tick",
+            "type": "i32"
+          }
+        ]
+      }
+    },
+    {
+      "name": "LogInitVaultConfig",
+      "type": {
+        "kind": "struct",
+        "fields": [
+          {
+            "name": "vault_config",
+            "type": "pubkey"
+          }
+        ]
+      }
+    },
+    {
+      "name": "LogInitVaultState",
+      "type": {
+        "kind": "struct",
+        "fields": [
+          {
+            "name": "vault_state",
+            "type": "pubkey"
+          }
+        ]
+      }
+    },
+    {
+      "name": "LogLiquidate",
+      "type": {
+        "kind": "struct",
+        "fields": [
+          {
+            "name": "signer",
+            "type": "pubkey"
+          },
+          {
+            "name": "col_amount",
+            "type": "u64"
+          },
+          {
+            "name": "debt_amount",
+            "type": "u64"
+          },
+          {
+            "name": "to",
+            "type": "pubkey"
+          }
+        ]
+      }
+    },
+    {
+      "name": "LogLiquidateInfo",
+      "type": {
+        "kind": "struct",
+        "fields": [
+          {
+            "name": "vault_id",
+            "type": "u16"
+          },
+          {
+            "name": "start_tick",
+            "type": "i32"
+          },
+          {
+            "name": "end_tick",
+            "type": "i32"
+          }
+        ]
+      }
+    },
+    {
+      "name": "LogOperate",
+      "type": {
+        "kind": "struct",
+        "fields": [
+          {
+            "name": "signer",
+            "type": "pubkey"
+          },
+          {
+            "name": "nft_id",
+            "type": "u32"
+          },
+          {
+            "name": "new_col",
+            "type": "i128"
+          },
+          {
+            "name": "new_debt",
+            "type": "i128"
+          },
+          {
+            "name": "to",
+            "type": "pubkey"
+          }
+        ]
+      }
+    },
+    {
+      "name": "LogRebalance",
+      "type": {
+        "kind": "struct",
+        "fields": [
+          {
+            "name": "supply_amt",
+            "type": "i128"
+          },
+          {
+            "name": "borrow_amt",
+            "type": "i128"
+          }
+        ]
+      }
+    },
+    {
+      "name": "LogUpdateAuthority",
+      "type": {
+        "kind": "struct",
+        "fields": [
+          {
+            "name": "new_authority",
+            "type": "pubkey"
+          }
+        ]
+      }
+    },
+    {
+      "name": "LogUpdateAuths",
+      "type": {
+        "kind": "struct",
+        "fields": [
+          {
+            "name": "auth_status",
+            "type": {
+              "vec": {
+                "defined": {
+                  "name": "AddressBool"
+                }
+              }
+            }
+          }
+        ]
+      }
+    },
+    {
+      "name": "LogUpdateBorrowFee",
+      "type": {
+        "kind": "struct",
+        "fields": [
+          {
+            "name": "borrow_fee",
+            "type": "u16"
+          }
+        ]
+      }
+    },
+    {
+      "name": "LogUpdateBorrowRateMagnifier",
+      "type": {
+        "kind": "struct",
+        "fields": [
+          {
+            "name": "borrow_rate_magnifier",
+            "type": "i16"
+          }
+        ]
+      }
+    },
+    {
+      "name": "LogUpdateCollateralFactor",
+      "type": {
+        "kind": "struct",
+        "fields": [
+          {
+            "name": "collateral_factor",
+            "type": "u16"
+          }
+        ]
+      }
+    },
+    {
+      "name": "LogUpdateCoreSettings",
+      "type": {
+        "kind": "struct",
+        "fields": [
+          {
+            "name": "supply_rate_magnifier",
+            "type": "i16"
+          },
+          {
+            "name": "borrow_rate_magnifier",
+            "type": "i16"
+          },
+          {
+            "name": "collateral_factor",
+            "type": "u16"
+          },
+          {
+            "name": "liquidation_threshold",
+            "type": "u16"
+          },
+          {
+            "name": "liquidation_max_limit",
+            "type": "u16"
+          },
+          {
+            "name": "withdraw_gap",
+            "type": "u16"
+          },
+          {
+            "name": "liquidation_penalty",
+            "type": "u16"
+          },
+          {
+            "name": "borrow_fee",
+            "type": "u16"
+          }
+        ]
+      }
+    },
+    {
+      "name": "LogUpdateExchangePrices",
+      "type": {
+        "kind": "struct",
+        "fields": [
+          {
+            "name": "vault_supply_exchange_price",
+            "type": "u64"
+          },
+          {
+            "name": "vault_borrow_exchange_price",
+            "type": "u64"
+          },
+          {
+            "name": "liquidity_supply_exchange_price",
+            "type": "u64"
+          },
+          {
+            "name": "liquidity_borrow_exchange_price",
+            "type": "u64"
+          }
+        ]
+      }
+    },
+    {
+      "name": "LogUpdateLiquidationMaxLimit",
+      "type": {
+        "kind": "struct",
+        "fields": [
+          {
+            "name": "liquidation_max_limit",
+            "type": "u16"
+          }
+        ]
+      }
+    },
+    {
+      "name": "LogUpdateLiquidationPenalty",
+      "type": {
+        "kind": "struct",
+        "fields": [
+          {
+            "name": "liquidation_penalty",
+            "type": "u16"
+          }
+        ]
+      }
+    },
+    {
+      "name": "LogUpdateLiquidationThreshold",
+      "type": {
+        "kind": "struct",
+        "fields": [
+          {
+            "name": "liquidation_threshold",
+            "type": "u16"
+          }
+        ]
+      }
+    },
+    {
+      "name": "LogUpdateLookupTable",
+      "type": {
+        "kind": "struct",
+        "fields": [
+          {
+            "name": "lookup_table",
+            "type": "pubkey"
+          }
+        ]
+      }
+    },
+    {
+      "name": "LogUpdateOracle",
+      "type": {
+        "kind": "struct",
+        "fields": [
+          {
+            "name": "new_oracle",
+            "type": "pubkey"
+          }
+        ]
+      }
+    },
+    {
+      "name": "LogUpdateRebalancer",
+      "type": {
+        "kind": "struct",
+        "fields": [
+          {
+            "name": "new_rebalancer",
+            "type": "pubkey"
+          }
+        ]
+      }
+    },
+    {
+      "name": "LogUpdateSupplyRateMagnifier",
+      "type": {
+        "kind": "struct",
+        "fields": [
+          {
+            "name": "supply_rate_magnifier",
+            "type": "i16"
+          }
+        ]
+      }
+    },
+    {
+      "name": "LogUpdateWithdrawGap",
+      "type": {
+        "kind": "struct",
+        "fields": [
+          {
+            "name": "withdraw_gap",
+            "type": "u16"
+          }
+        ]
+      }
+    },
+    {
+      "name": "LogUserPosition",
+      "type": {
+        "kind": "struct",
+        "fields": [
+          {
+            "name": "user",
+            "type": "pubkey"
+          },
+          {
+            "name": "nft_id",
+            "type": "u32"
+          },
+          {
+            "name": "vault_id",
+            "type": "u16"
+          },
+          {
+            "name": "position_mint",
+            "type": "pubkey"
+          },
+          {
+            "name": "tick",
+            "type": "i32"
+          },
+          {
+            "name": "col",
+            "type": "u64"
+          },
+          {
+            "name": "borrow",
+            "type": "u64"
+          }
+        ]
+      }
+    },
+    {
+      "name": "Oracle",
+      "type": {
+        "kind": "struct",
+        "fields": [
+          {
+            "name": "nonce",
+            "type": "u16"
+          },
+          {
+            "name": "sources",
+            "type": {
+              "vec": {
+                "defined": {
+                  "name": "Sources"
+                }
+              }
+            }
+          },
+          {
+            "name": "bump",
+            "type": "u8"
+          }
+        ]
+      }
+    },
+    {
+      "name": "Position",
+      "docs": ["Position data structure"],
+      "serialization": "bytemuck",
+      "repr": {
+        "kind": "c",
+        "packed": true
+      },
+      "type": {
+        "kind": "struct",
+        "fields": [
+          {
+            "name": "vault_id",
+            "type": "u16"
+          },
+          {
+            "name": "nft_id",
+            "type": "u32"
+          },
+          {
+            "name": "position_mint",
+            "type": "pubkey"
+          },
+          {
+            "name": "is_supply_only_position",
+            "type": "u8"
+          },
+          {
+            "name": "tick",
+            "type": "i32"
+          },
+          {
+            "name": "tick_id",
+            "type": "u32"
+          },
+          {
+            "name": "supply_amount",
+            "type": "u64"
+          },
+          {
+            "name": "dust_debt_amount",
+            "type": "u64"
+          }
+        ]
+      }
+    },
+    {
+      "name": "SourceType",
+      "type": {
+        "kind": "enum",
+        "variants": [
+          {
+            "name": "Pyth"
+          },
+          {
+            "name": "StakePool"
+          },
+          {
+            "name": "MsolPool"
+          },
+          {
+            "name": "Redstone"
+          },
+          {
+            "name": "Chainlink"
+          },
+          {
+            "name": "SinglePool"
+          }
+        ]
+      }
+    },
+    {
+      "name": "Sources",
+      "type": {
+        "kind": "struct",
+        "fields": [
+          {
+            "name": "source",
+            "type": "pubkey"
+          },
+          {
+            "name": "invert",
+            "type": "bool"
+          },
+          {
+            "name": "multiplier",
+            "type": "u128"
+          },
+          {
+            "name": "divisor",
+            "type": "u128"
+          },
+          {
+            "name": "source_type",
+            "type": {
+              "defined": {
+                "name": "SourceType"
+              }
+            }
+          }
+        ]
+      }
+    },
+    {
+      "name": "Tick",
+      "docs": ["Tick data structure"],
+      "serialization": "bytemuck",
+      "repr": {
+        "kind": "c",
+        "packed": true
+      },
+      "type": {
+        "kind": "struct",
+        "fields": [
+          {
+            "name": "vault_id",
+            "type": "u16"
+          },
+          {
+            "name": "tick",
+            "type": "i32"
+          },
+          {
+            "name": "is_liquidated",
+            "type": "u8"
+          },
+          {
+            "name": "total_ids",
+            "type": "u32"
+          },
+          {
+            "name": "raw_debt",
+            "type": "u64"
+          },
+          {
+            "name": "is_fully_liquidated",
+            "type": "u8"
+          },
+          {
+            "name": "liquidation_branch_id",
+            "type": "u32"
+          },
+          {
+            "name": "debt_factor",
+            "type": "u64"
+          }
+        ]
+      }
+    },
+    {
+      "name": "TickHasDebt",
+      "docs": [
+        "Tick has debt structure",
+        "Each TickHasDebt can track 8 * 256 = 2048 ticks",
+        "children_bits has 32 bytes = 256 bits total",
+        "Each map within the array covers 256 ticks"
+      ],
+      "repr": {
+        "kind": "c",
+        "packed": true
+      },
+      "type": {
+        "kind": "struct",
+        "fields": [
+          {
+            "name": "children_bits",
+            "type": {
+              "array": ["u8", 32]
+            }
+          }
+        ]
+      }
+    },
+    {
+      "name": "TickHasDebtArray",
+      "serialization": "bytemuck",
+      "repr": {
+        "kind": "c",
+        "packed": true
+      },
+      "type": {
+        "kind": "struct",
+        "fields": [
+          {
+            "name": "vault_id",
+            "type": "u16"
+          },
+          {
+            "name": "index",
+            "type": "u8"
+          },
+          {
+            "name": "tick_has_debt",
+            "docs": [
+              "Each array contains 8 TickHasDebt structs",
+              "Each TickHasDebt covers 256 ticks",
+              "Total: 8 * 256 = 2048 ticks per TickHasDebtArray"
+            ],
+            "type": {
+              "array": [
+                {
+                  "defined": {
+                    "name": "TickHasDebt"
+                  }
+                },
+                8
+              ]
+            }
+          }
+        ]
+      }
+    },
+    {
+      "name": "TickIdLiquidation",
+      "docs": ["Tick ID liquidation data"],
+      "serialization": "bytemuck",
+      "repr": {
+        "kind": "c",
+        "packed": true
+      },
+      "type": {
+        "kind": "struct",
+        "fields": [
+          {
+            "name": "vault_id",
+            "type": "u16"
+          },
+          {
+            "name": "tick",
+            "type": "i32"
+          },
+          {
+            "name": "tick_map",
+            "type": "u32"
+          },
+          {
+            "name": "is_fully_liquidated_1",
+            "type": "u8"
+          },
+          {
+            "name": "liquidation_branch_id_1",
+            "type": "u32"
+          },
+          {
+            "name": "debt_factor_1",
+            "type": "u64"
+          },
+          {
+            "name": "is_fully_liquidated_2",
+            "type": "u8"
+          },
+          {
+            "name": "liquidation_branch_id_2",
+            "type": "u32"
+          },
+          {
+            "name": "debt_factor_2",
+            "type": "u64"
+          },
+          {
+            "name": "is_fully_liquidated_3",
+            "type": "u8"
+          },
+          {
+            "name": "liquidation_branch_id_3",
+            "type": "u32"
+          },
+          {
+            "name": "debt_factor_3",
+            "type": "u64"
+          }
+        ]
+      }
+    },
+    {
+      "name": "TokenReserve",
+      "docs": ["Token configuration and exchange prices"],
+      "serialization": "bytemuck",
+      "repr": {
+        "kind": "c",
+        "packed": true
+      },
+      "type": {
+        "kind": "struct",
+        "fields": [
+          {
+            "name": "mint",
+            "type": "pubkey"
+          },
+          {
+            "name": "vault",
+            "type": "pubkey"
+          },
+          {
+            "name": "borrow_rate",
+            "type": "u16"
+          },
+          {
+            "name": "fee_on_interest",
+            "type": "u16"
+          },
+          {
+            "name": "last_utilization",
+            "type": "u16"
+          },
+          {
+            "name": "last_update_timestamp",
+            "type": "u64"
+          },
+          {
+            "name": "supply_exchange_price",
+            "type": "u64"
+          },
+          {
+            "name": "borrow_exchange_price",
+            "type": "u64"
+          },
+          {
+            "name": "max_utilization",
+            "type": "u16"
+          },
+          {
+            "name": "total_supply_with_interest",
+            "type": "u64"
+          },
+          {
+            "name": "total_supply_interest_free",
+            "type": "u64"
+          },
+          {
+            "name": "total_borrow_with_interest",
+            "type": "u64"
+          },
+          {
+            "name": "total_borrow_interest_free",
+            "type": "u64"
+          },
+          {
+            "name": "total_claim_amount",
+            "type": "u64"
+          },
+          {
+            "name": "interacting_protocol",
+            "type": "pubkey"
+          },
+          {
+            "name": "interacting_timestamp",
+            "type": "u64"
+          },
+          {
+            "name": "interacting_balance",
+            "type": "u64"
+          }
+        ]
+      }
+    },
+    {
+      "name": "TransferType",
+      "type": {
+        "kind": "enum",
+        "variants": [
+          {
+            "name": "SKIP"
+          },
+          {
+            "name": "DIRECT"
+          },
+          {
+            "name": "CLAIM"
+          }
+        ]
+      }
+    },
+    {
+      "name": "UpdateCoreSettingsParams",
+      "type": {
+        "kind": "struct",
+        "fields": [
+          {
+            "name": "supply_rate_magnifier",
+            "type": "i16"
+          },
+          {
+            "name": "borrow_rate_magnifier",
+            "type": "i16"
+          },
+          {
+            "name": "collateral_factor",
+            "type": "u16"
+          },
+          {
+            "name": "liquidation_threshold",
+            "type": "u16"
+          },
+          {
+            "name": "liquidation_max_limit",
+            "type": "u16"
+          },
+          {
+            "name": "withdraw_gap",
+            "type": "u16"
+          },
+          {
+            "name": "liquidation_penalty",
+            "type": "u16"
+          },
+          {
+            "name": "borrow_fee",
+            "type": "u16"
+          }
+        ]
+      }
+    },
+    {
+      "name": "UserBorrowPosition",
+      "docs": ["User borrow position"],
+      "serialization": "bytemuck",
+      "repr": {
+        "kind": "c",
+        "packed": true
+      },
+      "type": {
+        "kind": "struct",
+        "fields": [
+          {
+            "name": "protocol",
+            "type": "pubkey"
+          },
+          {
+            "name": "mint",
+            "type": "pubkey"
+          },
+          {
+            "name": "with_interest",
+            "type": "u8"
+          },
+          {
+            "name": "amount",
+            "type": "u64"
+          },
+          {
+            "name": "debt_ceiling",
+            "type": "u64"
+          },
+          {
+            "name": "last_update",
+            "type": "u64"
+          },
+          {
+            "name": "expand_pct",
+            "type": "u16"
+          },
+          {
+            "name": "expand_duration",
+            "type": "u32"
+          },
+          {
+            "name": "base_debt_ceiling",
+            "type": "u64"
+          },
+          {
+            "name": "max_debt_ceiling",
+            "type": "u64"
+          },
+          {
+            "name": "status",
+            "type": "u8"
+          }
+        ]
+      }
+    },
+    {
+      "name": "UserSupplyPosition",
+      "docs": ["User supply position"],
+      "serialization": "bytemuck",
+      "repr": {
+        "kind": "c",
+        "packed": true
+      },
+      "type": {
+        "kind": "struct",
+        "fields": [
+          {
+            "name": "protocol",
+            "type": "pubkey"
+          },
+          {
+            "name": "mint",
+            "type": "pubkey"
+          },
+          {
+            "name": "with_interest",
+            "type": "u8"
+          },
+          {
+            "name": "amount",
+            "type": "u64"
+          },
+          {
+            "name": "withdrawal_limit",
+            "type": "u128"
+          },
+          {
+            "name": "last_update",
+            "type": "u64"
+          },
+          {
+            "name": "expand_pct",
+            "type": "u16"
+          },
+          {
+            "name": "expand_duration",
+            "type": "u64"
+          },
+          {
+            "name": "base_withdrawal_limit",
+            "type": "u64"
+          },
+          {
+            "name": "status",
+            "type": "u8"
+          }
+        ]
+      }
+    },
+    {
+      "name": "VaultAdmin",
+      "type": {
+        "kind": "struct",
+        "fields": [
+          {
+            "name": "authority",
+            "type": "pubkey"
+          },
+          {
+            "name": "liquidity_program",
+            "type": "pubkey"
+          },
+          {
+            "name": "next_vault_id",
+            "type": "u16"
+          },
+          {
+            "name": "auths",
+            "type": {
+              "vec": "pubkey"
+            }
+          },
+          {
+            "name": "bump",
+            "type": "u8"
+          }
+        ]
+      }
+    },
+    {
+      "name": "VaultConfig",
+      "serialization": "bytemuck",
+      "repr": {
+        "kind": "c",
+        "packed": true
+      },
+      "type": {
+        "kind": "struct",
+        "fields": [
+          {
+            "name": "vault_id",
+            "type": "u16"
+          },
+          {
+            "name": "supply_rate_magnifier",
+            "type": "i16"
+          },
+          {
+            "name": "borrow_rate_magnifier",
+            "type": "i16"
+          },
+          {
+            "name": "collateral_factor",
+            "type": "u16"
+          },
+          {
+            "name": "liquidation_threshold",
+            "type": "u16"
+          },
+          {
+            "name": "liquidation_max_limit",
+            "type": "u16"
+          },
+          {
+            "name": "withdraw_gap",
+            "type": "u16"
+          },
+          {
+            "name": "liquidation_penalty",
+            "type": "u16"
+          },
+          {
+            "name": "borrow_fee",
+            "type": "u16"
+          },
+          {
+            "name": "oracle",
+            "type": "pubkey"
+          },
+          {
+            "name": "rebalancer",
+            "type": "pubkey"
+          },
+          {
+            "name": "liquidity_program",
+            "type": "pubkey"
+          },
+          {
+            "name": "oracle_program",
+            "type": "pubkey"
+          },
+          {
+            "name": "supply_token",
+            "type": "pubkey"
+          },
+          {
+            "name": "borrow_token",
+            "type": "pubkey"
+          },
+          {
+            "name": "bump",
+            "type": "u8"
+          }
+        ]
+      }
+    },
+    {
+      "name": "VaultMetadata",
+      "type": {
+        "kind": "struct",
+        "fields": [
+          {
+            "name": "vault_id",
+            "type": "u16"
+          },
+          {
+            "name": "lookup_table",
+            "type": "pubkey"
+          },
+          {
+            "name": "supply_mint_decimals",
+            "type": "u8"
+          },
+          {
+            "name": "borrow_mint_decimals",
+            "type": "u8"
+          }
+        ]
+      }
+    },
+    {
+      "name": "VaultState",
+      "serialization": "bytemuck",
+      "repr": {
+        "kind": "c",
+        "packed": true
+      },
+      "type": {
+        "kind": "struct",
+        "fields": [
+          {
+            "name": "vault_id",
+            "type": "u16"
+          },
+          {
+            "name": "branch_liquidated",
+            "type": "u8"
+          },
+          {
+            "name": "topmost_tick",
+            "type": "i32"
+          },
+          {
+            "name": "current_branch_id",
+            "type": "u32"
+          },
+          {
+            "name": "total_branch_id",
+            "type": "u32"
+          },
+          {
+            "name": "total_supply",
+            "type": "u64"
+          },
+          {
+            "name": "total_borrow",
+            "type": "u64"
+          },
+          {
+            "name": "total_positions",
+            "type": "u32"
+          },
+          {
+            "name": "absorbed_debt_amount",
+            "type": "u128"
+          },
+          {
+            "name": "absorbed_col_amount",
+            "type": "u128"
+          },
+          {
+            "name": "absorbed_dust_debt",
+            "type": "u64"
+          },
+          {
+            "name": "liquidity_supply_exchange_price",
+            "type": "u64"
+          },
+          {
+            "name": "liquidity_borrow_exchange_price",
+            "type": "u64"
+          },
+          {
+            "name": "vault_supply_exchange_price",
+            "type": "u64"
+          },
+          {
+            "name": "vault_borrow_exchange_price",
+            "type": "u64"
+          },
+          {
+            "name": "next_position_id",
+            "type": "u32"
+          },
+          {
+            "name": "last_update_timestamp",
+            "type": "u64"
+          }
+        ]
+      }
+    }
+  ]
+}
