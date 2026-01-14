@@ -7,10 +7,11 @@ import * as dca from "./types/sui/0xaf08f20a6214169d5dc77c133e98b529bdb9c1db93ac
 import { SuiCoinList } from "@sentio/sdk/sui/ext";
 import { getPriceBySymbol, getPriceByType, token } from "@sentio/sdk/utils";
 
-const START_CHECKPOINT = 220000000n;
+const START_CHECKPOINT = 78000000n;
 
 // DCA Operator address for filtering DCA-specific events
-const DCA_OPERATOR_ADDRESS = "0xde61d3608383c5cdee51d2b0f913ef71b7103f161cb7d73fe4edbd87e5bd4b97";
+const DCA_OPERATOR_ADDRESS =
+  "0xde61d3608383c5cdee51d2b0f913ef71b7103f161cb7d73fe4edbd87e5bd4b97";
 
 let coinInfoMap = new Map<string, Promise<token.TokenInfo>>();
 
@@ -25,6 +26,7 @@ const referralIdToUsernameMap: Record<string, string> = {
   "4697169920": "Mayan",
   "6541220672": "Wave",
   "8868297728": "SuiWallet",
+  "5059366912": "DCA",
 };
 
 export function delay(ms: number) {
@@ -229,8 +231,14 @@ async function swapEventHandler(
   const fromPrice = await getCoinPrice(ctx, event.type_arguments[0]);
   const toPrice = await getCoinPrice(ctx, event.type_arguments[1]);
 
-  const amountInNormalized = scaleDown(event.data_decoded.amount_in, fromInfo.decimal);
-  const amountOutNormalized = scaleDown(event.data_decoded.amount_out, toInfo.decimal);
+  const amountInNormalized = scaleDown(
+    event.data_decoded.amount_in,
+    fromInfo.decimal
+  );
+  const amountOutNormalized = scaleDown(
+    event.data_decoded.amount_out,
+    toInfo.decimal
+  );
 
   let fromValue = amountInNormalized.multipliedBy(fromPrice);
   let toValue = amountOutNormalized.multipliedBy(toPrice);
@@ -239,8 +247,9 @@ async function swapEventHandler(
   const fromValueNum = fromValue.toNumber();
   const toValueNum = toValue.toNumber();
   const minValue = Math.min(fromValueNum, toValueNum);
-  const usdGap = minValue > 0 ? Math.abs(fromValueNum - toValueNum) / minValue : 0;
-  
+  const usdGap =
+    minValue > 0 ? Math.abs(fromValueNum - toValueNum) / minValue : 0;
+
   if (usdGap >= 0.5) {
     if (fromValueNum > toValueNum) {
       fromValue = toValue;
@@ -259,7 +268,10 @@ async function swapEventHandler(
       (event.type_arguments[0] == NAVX && event.type_arguments[1] == USDC) ||
       (event.type_arguments[0] == USDC && event.type_arguments[1] == NAVX)
     ) {
-      const amountInToNormalized = scaleDown(event.data_decoded.amount_in, toInfo.decimal);
+      const amountInToNormalized = scaleDown(
+        event.data_decoded.amount_in,
+        toInfo.decimal
+      );
       const fromValueNormalized = amountInToNormalized.multipliedBy(toPrice);
       ctx.eventLogger.emit("swapEvent", {
         user: event.sender,
@@ -278,7 +290,10 @@ async function swapEventHandler(
       });
     }
   } else {
-    const minAmountOutNormalized = scaleDown(event.data_decoded.min_amount_out, toInfo.decimal);
+    const minAmountOutNormalized = scaleDown(
+      event.data_decoded.min_amount_out,
+      toInfo.decimal
+    );
     ctx.eventLogger.emit("swapEvent", {
       user: event.sender,
       from: event.type_arguments[0],
@@ -551,7 +566,7 @@ async function dcaExSwapWithReferralHandler(
   ctx: SuiContext
 ) {
   const sender = event.data_decoded.swap_initializer_address;
-  
+
   // Only record events from DCA Operator
   if (sender !== DCA_OPERATOR_ADDRESS) {
     return;
@@ -587,36 +602,31 @@ async function dcaExSwapWithReferralHandler(
     // Transaction info
     txHash: ctx.transaction.digest,
     timestamp: ctx.timestamp,
-    
+
     // Addresses
     sender,
     receiver,
-    
+
     // From coin info
     fromCoinType,
-    fromCoinPrice: fromCoinPrice.toString(),
-    fromCoinPriceNumber,
-    fromCoinAmount: fromCoinAmount.toString(),
-    fromCoinAmountNumber,
+    fromCoinPrice: fromCoinPriceNumber,
+    fromCoinAmount: fromCoinAmountNumber,
     fromValueInUSD,
-    
+
     // To coin info
     toCoinType,
-    toCoinPrice: toCoinPrice.toString(),
-    toCoinPriceNumber,
-    toCoinAmount: toCoinAmount.toString(),
-    toCoinAmountNumber,
+    toCoinPrice: toCoinPriceNumber,
+    toCoinAmount: toCoinAmountNumber,
     toValueInUSD,
-    
+
     // Intermediate coin (for routing)
     intermediateCoinType,
-    
-    // Reward/slippage info
-    rewardAmount: rewardAmount.toString(),
-    rewardAmountNumber,
+
+    // Reward/slippage info (key metrics)
+    rewardAmount: rewardAmountNumber,
     rewardValueInUSD,
     rewardsRatio: Number(rewardsRatio),
-    
+
     // Referral info
     referralId: Number(referralId),
   });
@@ -764,7 +774,10 @@ async function handleDcaOrderFinished(
     order_id: data.order_id,
     amount_in_returned: data.amount_in_returned.toString(),
     amount_in_returned_normalized: amountInReturnedNormalized,
-    amount_in_returned_usd: toUsdValue(amountInReturnedNormalized, fromCoin.price),
+    amount_in_returned_usd: toUsdValue(
+      amountInReturnedNormalized,
+      fromCoin.price
+    ),
     from_coin_type: fromCoin.type,
     from_symbol: fromCoin.symbol,
     to_coin_type: toCoin.type,
