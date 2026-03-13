@@ -358,23 +358,36 @@ async function OnBehalfOfExSwapWithReferral(
   event: slippage.ExSwapWithReferralEventInstance,
   ctx: SuiContext
 ) {
-  const divisor = Math.pow(10, 9);
+  const priceDivisor = Math.pow(10, 9); // USD price precision is always 1e9
   const sender = event.data_decoded.swap_initializer_address;
   const receiver = event.data_decoded.receiver_address;
+
+  // Get coin types from type arguments
+  const fromCoinType = event.type_arguments[0];
+  const toCoinType = event.type_arguments[1];
+
+  // Get coin info for decimals and symbols
+  const [fromInfo, toInfo] = await Promise.all([
+    getOrCreateCoin(ctx, fromCoinType),
+    getOrCreateCoin(ctx, toCoinType),
+  ]);
+
+  // Price fields use 1e9 precision
   const fromCoinPrice = event.data_decoded.from_coin_price;
-  const fromCoinPriceNumber =
-    Number(event.data_decoded.from_coin_price) / divisor;
+  const fromCoinPriceNumber = Number(fromCoinPrice) / priceDivisor;
+  const toCoinPrice = event.data_decoded.to_coin_price;
+  const toCoinPriceNumber = Number(toCoinPrice) / priceDivisor;
+
+  // Amount fields use actual token decimals
   const fromCoinAmount = event.data_decoded.from_coin_amount;
   const fromCoinAmountNumber =
-    Number(event.data_decoded.from_coin_amount) / divisor;
-  const toCoinPrice = event.data_decoded.to_coin_price;
-  const toCoinPriceNumber = Number(event.data_decoded.to_coin_price) / divisor;
+    Number(fromCoinAmount) / Math.pow(10, fromInfo.decimal);
   const toCoinAmount = event.data_decoded.to_coin_amount;
   const toCoinAmountNumber =
-    Number(event.data_decoded.to_coin_amount) / divisor;
+    Number(toCoinAmount) / Math.pow(10, toInfo.decimal);
   const rewardsAmount = event.data_decoded.reward_amount;
   const rewardsAmountNumber =
-    Number(event.data_decoded.reward_amount) / divisor;
+    Number(rewardsAmount) / Math.pow(10, toInfo.decimal); // reward is in toCoin
   const rewardsRatio = event.data_decoded.rewards_ratio;
   const referralId = event.data_decoded.referral_id;
 
@@ -400,17 +413,21 @@ async function OnBehalfOfExSwapWithReferral(
   ctx.eventLogger.emit("swapReferralEvent", {
     sender,
     receiver,
+    fromCoinType,
+    fromSymbol: updateSymbol(fromInfo, fromCoinType),
     fromCoinPrice,
     fromCoinAmount,
-    toCoinPrice,
-    toCoinAmount,
-    rewardsAmount,
     fromCoinPriceNumber,
     fromCoinAmountNumber,
     fromValueInUSD,
+    toCoinType,
+    toSymbol: updateSymbol(toInfo, toCoinType),
+    toCoinPrice,
+    toCoinAmount,
     toCoinPriceNumber,
     toCoinAmountNumber,
     toValueInUSD,
+    rewardsAmount,
     rewardsAmountNumber,
     rewardsRatio,
     referralId,
@@ -572,31 +589,54 @@ async function dcaExSwapWithReferralHandler(
     return;
   }
 
-  const divisor = Math.pow(10, 9);
+  const priceDivisor = Math.pow(10, 9); // USD price precision is always 1e9
   const receiver = event.data_decoded.receiver_address;
+
+  // Get coin types from type arguments
+  const fromCoinType = event.type_arguments[0];
+  const toCoinType = event.type_arguments[1];
+  // reward coin is the 3rd type argument in ExSwapWithReferralEvent
+  const rewardCoinType = event.type_arguments[2];
+  // keep legacy field name for backward compatibility with existing tables/queries
+  const intermediateCoinType = rewardCoinType;
+
+  // Get coin info for decimals
+  const [fromInfo, toInfo, rewardInfo, rewardCoinPriceNumber] = await Promise.all([
+    getOrCreateCoin(ctx, fromCoinType),
+    getOrCreateCoin(ctx, toCoinType),
+    getOrCreateCoin(ctx, rewardCoinType),
+    getCoinPrice(ctx, rewardCoinType),
+  ]);
+
+  // Price fields use 1e9 precision
   const fromCoinPrice = event.data_decoded.from_coin_price;
-  const fromCoinPriceNumber = Number(fromCoinPrice) / divisor;
-  const fromCoinAmount = event.data_decoded.from_coin_amount;
-  const fromCoinAmountNumber = Number(fromCoinAmount) / divisor;
+  const fromCoinPriceNumber = Number(fromCoinPrice) / priceDivisor;
   const toCoinPrice = event.data_decoded.to_coin_price;
-  const toCoinPriceNumber = Number(toCoinPrice) / divisor;
+  const toCoinPriceNumber = Number(toCoinPrice) / priceDivisor;
+
+  // Amount fields use actual token decimals
+  const fromCoinAmount = event.data_decoded.from_coin_amount;
+  const fromCoinAmountNumber =
+    Number(fromCoinAmount) / Math.pow(10, fromInfo.decimal);
   const toCoinAmount = event.data_decoded.to_coin_amount;
-  const toCoinAmountNumber = Number(toCoinAmount) / divisor;
+  const toCoinAmountNumber =
+    Number(toCoinAmount) / Math.pow(10, toInfo.decimal);
   const rewardAmount = event.data_decoded.reward_amount;
-  const rewardAmountNumber = Number(rewardAmount) / divisor;
+  const rewardAmountNumber =
+    Number(rewardAmount) / Math.pow(10, rewardInfo.decimal);
   const rewardsRatio = event.data_decoded.rewards_ratio;
   const referralId = event.data_decoded.referral_id;
 
   // Calculate USD values
   const fromValueInUSD = fromCoinPriceNumber * fromCoinAmountNumber;
   const toValueInUSD = toCoinPriceNumber * toCoinAmountNumber;
-  // reward_amount is in toCoin, calculate USD value
-  const rewardValueInUSD = rewardAmountNumber * toCoinPriceNumber;
-
-  // Get coin symbols from type arguments
-  const fromCoinType = event.type_arguments[0];
-  const toCoinType = event.type_arguments[1];
-  const intermediateCoinType = event.type_arguments[2];
+  // reward_amount is in reward coin (type arg #3), not toCoin.
+  let rewardValueInUSD = rewardAmountNumber * rewardCoinPriceNumber;
+  // Fallback when reward coin price is temporarily unavailable.
+  if (rewardCoinPriceNumber === 0) {
+    rewardValueInUSD =
+      (fromValueInUSD * Number(rewardsRatio)) / Math.pow(10, 4);
+  }
 
   ctx.eventLogger.emit("dcaSlippageEvent", {
     // Transaction info
@@ -621,6 +661,8 @@ async function dcaExSwapWithReferralHandler(
 
     // Intermediate coin (for routing)
     intermediateCoinType,
+    rewardCoinType,
+    rewardCoinPrice: rewardCoinPriceNumber,
 
     // Reward/slippage info (key metrics)
     rewardAmount: rewardAmountNumber,
