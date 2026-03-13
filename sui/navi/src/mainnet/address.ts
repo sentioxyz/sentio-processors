@@ -12,7 +12,7 @@ export function AddressProcessor() {
     SuiAddressProcessor.bind({
       address: address,
       network: ChainId.SUI_MAINNET,
-      startCheckpoint: 8000000n,
+      startCheckpoint: 78000000n,
     }).onTimeInterval(async (self, ctx) => {
       try {
         const result = await getBalance(address);

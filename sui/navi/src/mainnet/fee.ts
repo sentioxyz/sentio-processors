@@ -49,7 +49,7 @@ export function FeeProcessor() {
     SuiObjectProcessor.bind({
       objectId: feeObject,
       network: ChainId.SUI_MAINNET,
-      startCheckpoint: 8000000n,
+      startCheckpoint: 78000000n,
     }).onTimeInterval(
       async (self, data, ctx) => {
         let coin_type = "0x" + (self.fields as any).name.fields.name;

@@ -1,0 +1,4038 @@
+[
+	{
+		"fileFormatVersion": 6,
+		"address": "0x634511c660964940915acb37dde75963e35f2d1b0a034b41e2da8f3e9d1491ae",
+		"name": "cert",
+		"friends": [
+			{
+				"address": "0x634511c660964940915acb37dde75963e35f2d1b0a034b41e2da8f3e9d1491ae",
+				"name": "stake_pool"
+			}
+		],
+		"structs": {
+			"CERT": {
+				"abilities": {
+					"abilities": [
+						"Drop"
+					]
+				},
+				"typeParameters": [],
+				"fields": [
+					{
+						"name": "dummy_field",
+						"type": "Bool"
+					}
+				]
+			},
+			"Metadata": {
+				"abilities": {
+					"abilities": [
+						"Store",
+						"Key"
+					]
+				},
+				"typeParameters": [
+					{
+						"constraints": {
+							"abilities": []
+						},
+						"isPhantom": true
+					}
+				],
+				"fields": [
+					{
+						"name": "id",
+						"type": {
+							"Struct": {
+								"address": "0x2",
+								"module": "object",
+								"name": "UID",
+								"typeArguments": []
+							}
+						}
+					},
+					{
+						"name": "version",
+						"type": "U64"
+					},
+					{
+						"name": "total_supply",
+						"type": {
+							"Struct": {
+								"address": "0x2",
+								"module": "balance",
+								"name": "Supply",
+								"typeArguments": [
+									{
+										"TypeParameter": 0
+									}
+								]
+							}
+						}
+					}
+				]
+			},
+			"MigratedEvent": {
+				"abilities": {
+					"abilities": [
+						"Copy",
+						"Drop"
+					]
+				},
+				"typeParameters": [],
+				"fields": [
+					{
+						"name": "prev_version",
+						"type": "U64"
+					},
+					{
+						"name": "new_version",
+						"type": "U64"
+					}
+				]
+			}
+		},
+		"exposedFunctions": {
+			"burn_balance": {
+				"visibility": "Friend",
+				"isEntry": false,
+				"typeParameters": [],
+				"parameters": [
+					{
+						"MutableReference": {
+							"Struct": {
+								"address": "0x634511c660964940915acb37dde75963e35f2d1b0a034b41e2da8f3e9d1491ae",
+								"module": "cert",
+								"name": "Metadata",
+								"typeArguments": [
+									{
+										"Struct": {
+											"address": "0x634511c660964940915acb37dde75963e35f2d1b0a034b41e2da8f3e9d1491ae",
+											"module": "cert",
+											"name": "CERT",
+											"typeArguments": []
+										}
+									}
+								]
+							}
+						}
+					},
+					{
+						"Struct": {
+							"address": "0x2",
+							"module": "balance",
+							"name": "Balance",
+							"typeArguments": [
+								{
+									"Struct": {
+										"address": "0x634511c660964940915acb37dde75963e35f2d1b0a034b41e2da8f3e9d1491ae",
+										"module": "cert",
+										"name": "CERT",
+										"typeArguments": []
+									}
+								}
+							]
+						}
+					}
+				],
+				"return": [
+					"U64"
+				]
+			},
+			"burn_coin": {
+				"visibility": "Friend",
+				"isEntry": false,
+				"typeParameters": [],
+				"parameters": [
+					{
+						"MutableReference": {
+							"Struct": {
+								"address": "0x634511c660964940915acb37dde75963e35f2d1b0a034b41e2da8f3e9d1491ae",
+								"module": "cert",
+								"name": "Metadata",
+								"typeArguments": [
+									{
+										"Struct": {
+											"address": "0x634511c660964940915acb37dde75963e35f2d1b0a034b41e2da8f3e9d1491ae",
+											"module": "cert",
+											"name": "CERT",
+											"typeArguments": []
+										}
+									}
+								]
+							}
+						}
+					},
+					{
+						"Struct": {
+							"address": "0x2",
+							"module": "coin",
+							"name": "Coin",
+							"typeArguments": [
+								{
+									"Struct": {
+										"address": "0x634511c660964940915acb37dde75963e35f2d1b0a034b41e2da8f3e9d1491ae",
+										"module": "cert",
+										"name": "CERT",
+										"typeArguments": []
+									}
+								}
+							]
+						}
+					}
+				],
+				"return": [
+					"U64"
+				]
+			},
+			"get_total_supply": {
+				"visibility": "Public",
+				"isEntry": false,
+				"typeParameters": [],
+				"parameters": [
+					{
+						"Reference": {
+							"Struct": {
+								"address": "0x634511c660964940915acb37dde75963e35f2d1b0a034b41e2da8f3e9d1491ae",
+								"module": "cert",
+								"name": "Metadata",
+								"typeArguments": [
+									{
+										"Struct": {
+											"address": "0x634511c660964940915acb37dde75963e35f2d1b0a034b41e2da8f3e9d1491ae",
+											"module": "cert",
+											"name": "CERT",
+											"typeArguments": []
+										}
+									}
+								]
+							}
+						}
+					}
+				],
+				"return": [
+					{
+						"Reference": {
+							"Struct": {
+								"address": "0x2",
+								"module": "balance",
+								"name": "Supply",
+								"typeArguments": [
+									{
+										"Struct": {
+											"address": "0x634511c660964940915acb37dde75963e35f2d1b0a034b41e2da8f3e9d1491ae",
+											"module": "cert",
+											"name": "CERT",
+											"typeArguments": []
+										}
+									}
+								]
+							}
+						}
+					}
+				]
+			},
+			"get_total_supply_value": {
+				"visibility": "Public",
+				"isEntry": false,
+				"typeParameters": [],
+				"parameters": [
+					{
+						"Reference": {
+							"Struct": {
+								"address": "0x634511c660964940915acb37dde75963e35f2d1b0a034b41e2da8f3e9d1491ae",
+								"module": "cert",
+								"name": "Metadata",
+								"typeArguments": [
+									{
+										"Struct": {
+											"address": "0x634511c660964940915acb37dde75963e35f2d1b0a034b41e2da8f3e9d1491ae",
+											"module": "cert",
+											"name": "CERT",
+											"typeArguments": []
+										}
+									}
+								]
+							}
+						}
+					}
+				],
+				"return": [
+					"U64"
+				]
+			},
+			"migrate": {
+				"visibility": "Friend",
+				"isEntry": false,
+				"typeParameters": [],
+				"parameters": [
+					{
+						"MutableReference": {
+							"Struct": {
+								"address": "0x634511c660964940915acb37dde75963e35f2d1b0a034b41e2da8f3e9d1491ae",
+								"module": "cert",
+								"name": "Metadata",
+								"typeArguments": [
+									{
+										"Struct": {
+											"address": "0x634511c660964940915acb37dde75963e35f2d1b0a034b41e2da8f3e9d1491ae",
+											"module": "cert",
+											"name": "CERT",
+											"typeArguments": []
+										}
+									}
+								]
+							}
+						}
+					}
+				],
+				"return": []
+			},
+			"mint": {
+				"visibility": "Friend",
+				"isEntry": false,
+				"typeParameters": [],
+				"parameters": [
+					{
+						"MutableReference": {
+							"Struct": {
+								"address": "0x634511c660964940915acb37dde75963e35f2d1b0a034b41e2da8f3e9d1491ae",
+								"module": "cert",
+								"name": "Metadata",
+								"typeArguments": [
+									{
+										"Struct": {
+											"address": "0x634511c660964940915acb37dde75963e35f2d1b0a034b41e2da8f3e9d1491ae",
+											"module": "cert",
+											"name": "CERT",
+											"typeArguments": []
+										}
+									}
+								]
+							}
+						}
+					},
+					"U64",
+					{
+						"MutableReference": {
+							"Struct": {
+								"address": "0x2",
+								"module": "tx_context",
+								"name": "TxContext",
+								"typeArguments": []
+							}
+						}
+					}
+				],
+				"return": [
+					{
+						"Struct": {
+							"address": "0x2",
+							"module": "coin",
+							"name": "Coin",
+							"typeArguments": [
+								{
+									"Struct": {
+										"address": "0x634511c660964940915acb37dde75963e35f2d1b0a034b41e2da8f3e9d1491ae",
+										"module": "cert",
+										"name": "CERT",
+										"typeArguments": []
+									}
+								}
+							]
+						}
+					}
+				]
+			}
+		}
+	},
+	{
+		"fileFormatVersion": 6,
+		"address": "0x634511c660964940915acb37dde75963e35f2d1b0a034b41e2da8f3e9d1491ae",
+		"name": "fee_config",
+		"friends": [
+			{
+				"address": "0x634511c660964940915acb37dde75963e35f2d1b0a034b41e2da8f3e9d1491ae",
+				"name": "stake_pool"
+			}
+		],
+		"structs": {
+			"FeeConfig": {
+				"abilities": {
+					"abilities": [
+						"Store"
+					]
+				},
+				"typeParameters": [],
+				"fields": [
+					{
+						"name": "stake_fee_bps",
+						"type": "U64"
+					},
+					{
+						"name": "unstake_fee_bps",
+						"type": "U64"
+					},
+					{
+						"name": "reward_fee_bps",
+						"type": "U64"
+					},
+					{
+						"name": "unstake_fee_redistribution_bps",
+						"type": "U64"
+					},
+					{
+						"name": "extra_fields",
+						"type": {
+							"Struct": {
+								"address": "0x2",
+								"module": "bag",
+								"name": "Bag",
+								"typeArguments": []
+							}
+						}
+					}
+				]
+			}
+		},
+		"exposedFunctions": {
+			"calculate_reward_fee": {
+				"visibility": "Friend",
+				"isEntry": false,
+				"typeParameters": [],
+				"parameters": [
+					{
+						"Reference": {
+							"Struct": {
+								"address": "0x634511c660964940915acb37dde75963e35f2d1b0a034b41e2da8f3e9d1491ae",
+								"module": "fee_config",
+								"name": "FeeConfig",
+								"typeArguments": []
+							}
+						}
+					},
+					"U64",
+					"U64"
+				],
+				"return": [
+					"U64"
+				]
+			},
+			"calculate_stake_fee": {
+				"visibility": "Friend",
+				"isEntry": false,
+				"typeParameters": [],
+				"parameters": [
+					{
+						"Reference": {
+							"Struct": {
+								"address": "0x634511c660964940915acb37dde75963e35f2d1b0a034b41e2da8f3e9d1491ae",
+								"module": "fee_config",
+								"name": "FeeConfig",
+								"typeArguments": []
+							}
+						}
+					},
+					"U64"
+				],
+				"return": [
+					"U64"
+				]
+			},
+			"calculate_unstake_fee": {
+				"visibility": "Friend",
+				"isEntry": false,
+				"typeParameters": [],
+				"parameters": [
+					{
+						"Reference": {
+							"Struct": {
+								"address": "0x634511c660964940915acb37dde75963e35f2d1b0a034b41e2da8f3e9d1491ae",
+								"module": "fee_config",
+								"name": "FeeConfig",
+								"typeArguments": []
+							}
+						}
+					},
+					"U64"
+				],
+				"return": [
+					"U64"
+				]
+			},
+			"calculate_unstake_fee_redistribution": {
+				"visibility": "Friend",
+				"isEntry": false,
+				"typeParameters": [],
+				"parameters": [
+					{
+						"Reference": {
+							"Struct": {
+								"address": "0x634511c660964940915acb37dde75963e35f2d1b0a034b41e2da8f3e9d1491ae",
+								"module": "fee_config",
+								"name": "FeeConfig",
+								"typeArguments": []
+							}
+						}
+					},
+					"U64"
+				],
+				"return": [
+					"U64"
+				]
+			},
+			"new": {
+				"visibility": "Public",
+				"isEntry": false,
+				"typeParameters": [],
+				"parameters": [
+					{
+						"MutableReference": {
+							"Struct": {
+								"address": "0x2",
+								"module": "tx_context",
+								"name": "TxContext",
+								"typeArguments": []
+							}
+						}
+					}
+				],
+				"return": [
+					{
+						"Struct": {
+							"address": "0x634511c660964940915acb37dde75963e35f2d1b0a034b41e2da8f3e9d1491ae",
+							"module": "fee_config",
+							"name": "FeeConfig",
+							"typeArguments": []
+						}
+					}
+				]
+			},
+			"reward_fee_bps": {
+				"visibility": "Public",
+				"isEntry": false,
+				"typeParameters": [],
+				"parameters": [
+					{
+						"Reference": {
+							"Struct": {
+								"address": "0x634511c660964940915acb37dde75963e35f2d1b0a034b41e2da8f3e9d1491ae",
+								"module": "fee_config",
+								"name": "FeeConfig",
+								"typeArguments": []
+							}
+						}
+					}
+				],
+				"return": [
+					"U64"
+				]
+			},
+			"set_reward_fee_bps": {
+				"visibility": "Friend",
+				"isEntry": false,
+				"typeParameters": [],
+				"parameters": [
+					{
+						"MutableReference": {
+							"Struct": {
+								"address": "0x634511c660964940915acb37dde75963e35f2d1b0a034b41e2da8f3e9d1491ae",
+								"module": "fee_config",
+								"name": "FeeConfig",
+								"typeArguments": []
+							}
+						}
+					},
+					"U64"
+				],
+				"return": []
+			},
+			"set_stake_fee_bps": {
+				"visibility": "Friend",
+				"isEntry": false,
+				"typeParameters": [],
+				"parameters": [
+					{
+						"MutableReference": {
+							"Struct": {
+								"address": "0x634511c660964940915acb37dde75963e35f2d1b0a034b41e2da8f3e9d1491ae",
+								"module": "fee_config",
+								"name": "FeeConfig",
+								"typeArguments": []
+							}
+						}
+					},
+					"U64"
+				],
+				"return": []
+			},
+			"set_unstake_fee_bps": {
+				"visibility": "Friend",
+				"isEntry": false,
+				"typeParameters": [],
+				"parameters": [
+					{
+						"MutableReference": {
+							"Struct": {
+								"address": "0x634511c660964940915acb37dde75963e35f2d1b0a034b41e2da8f3e9d1491ae",
+								"module": "fee_config",
+								"name": "FeeConfig",
+								"typeArguments": []
+							}
+						}
+					},
+					"U64"
+				],
+				"return": []
+			},
+			"set_unstake_fee_redistribution_bps": {
+				"visibility": "Friend",
+				"isEntry": false,
+				"typeParameters": [],
+				"parameters": [
+					{
+						"MutableReference": {
+							"Struct": {
+								"address": "0x634511c660964940915acb37dde75963e35f2d1b0a034b41e2da8f3e9d1491ae",
+								"module": "fee_config",
+								"name": "FeeConfig",
+								"typeArguments": []
+							}
+						}
+					},
+					"U64"
+				],
+				"return": []
+			},
+			"stake_fee_bps": {
+				"visibility": "Public",
+				"isEntry": false,
+				"typeParameters": [],
+				"parameters": [
+					{
+						"Reference": {
+							"Struct": {
+								"address": "0x634511c660964940915acb37dde75963e35f2d1b0a034b41e2da8f3e9d1491ae",
+								"module": "fee_config",
+								"name": "FeeConfig",
+								"typeArguments": []
+							}
+						}
+					}
+				],
+				"return": [
+					"U64"
+				]
+			},
+			"unstake_fee_bps": {
+				"visibility": "Public",
+				"isEntry": false,
+				"typeParameters": [],
+				"parameters": [
+					{
+						"Reference": {
+							"Struct": {
+								"address": "0x634511c660964940915acb37dde75963e35f2d1b0a034b41e2da8f3e9d1491ae",
+								"module": "fee_config",
+								"name": "FeeConfig",
+								"typeArguments": []
+							}
+						}
+					}
+				],
+				"return": [
+					"U64"
+				]
+			},
+			"unstake_fee_redistribution_bps": {
+				"visibility": "Public",
+				"isEntry": false,
+				"typeParameters": [],
+				"parameters": [
+					{
+						"Reference": {
+							"Struct": {
+								"address": "0x634511c660964940915acb37dde75963e35f2d1b0a034b41e2da8f3e9d1491ae",
+								"module": "fee_config",
+								"name": "FeeConfig",
+								"typeArguments": []
+							}
+						}
+					}
+				],
+				"return": [
+					"U64"
+				]
+			},
+			"validate_fees": {
+				"visibility": "Public",
+				"isEntry": false,
+				"typeParameters": [],
+				"parameters": [
+					{
+						"Reference": {
+							"Struct": {
+								"address": "0x634511c660964940915acb37dde75963e35f2d1b0a034b41e2da8f3e9d1491ae",
+								"module": "fee_config",
+								"name": "FeeConfig",
+								"typeArguments": []
+							}
+						}
+					}
+				],
+				"return": []
+			}
+		}
+	},
+	{
+		"fileFormatVersion": 6,
+		"address": "0x634511c660964940915acb37dde75963e35f2d1b0a034b41e2da8f3e9d1491ae",
+		"name": "manage",
+		"friends": [
+			{
+				"address": "0x634511c660964940915acb37dde75963e35f2d1b0a034b41e2da8f3e9d1491ae",
+				"name": "stake_pool"
+			},
+			{
+				"address": "0x634511c660964940915acb37dde75963e35f2d1b0a034b41e2da8f3e9d1491ae",
+				"name": "validator_pool"
+			}
+		],
+		"structs": {
+			"Manage": {
+				"abilities": {
+					"abilities": [
+						"Store"
+					]
+				},
+				"typeParameters": [],
+				"fields": [
+					{
+						"name": "version",
+						"type": "U64"
+					},
+					{
+						"name": "paused",
+						"type": "Bool"
+					}
+				]
+			}
+		},
+		"exposedFunctions": {
+			"check_not_paused": {
+				"visibility": "Public",
+				"isEntry": false,
+				"typeParameters": [],
+				"parameters": [
+					{
+						"Reference": {
+							"Struct": {
+								"address": "0x634511c660964940915acb37dde75963e35f2d1b0a034b41e2da8f3e9d1491ae",
+								"module": "manage",
+								"name": "Manage",
+								"typeArguments": []
+							}
+						}
+					}
+				],
+				"return": []
+			},
+			"check_version": {
+				"visibility": "Public",
+				"isEntry": false,
+				"typeParameters": [],
+				"parameters": [
+					{
+						"Reference": {
+							"Struct": {
+								"address": "0x634511c660964940915acb37dde75963e35f2d1b0a034b41e2da8f3e9d1491ae",
+								"module": "manage",
+								"name": "Manage",
+								"typeArguments": []
+							}
+						}
+					}
+				],
+				"return": []
+			},
+			"current_version": {
+				"visibility": "Public",
+				"isEntry": false,
+				"typeParameters": [],
+				"parameters": [],
+				"return": [
+					"U64"
+				]
+			},
+			"migrate_version": {
+				"visibility": "Friend",
+				"isEntry": false,
+				"typeParameters": [],
+				"parameters": [
+					{
+						"MutableReference": {
+							"Struct": {
+								"address": "0x634511c660964940915acb37dde75963e35f2d1b0a034b41e2da8f3e9d1491ae",
+								"module": "manage",
+								"name": "Manage",
+								"typeArguments": []
+							}
+						}
+					}
+				],
+				"return": []
+			},
+			"new": {
+				"visibility": "Friend",
+				"isEntry": false,
+				"typeParameters": [],
+				"parameters": [],
+				"return": [
+					{
+						"Struct": {
+							"address": "0x634511c660964940915acb37dde75963e35f2d1b0a034b41e2da8f3e9d1491ae",
+							"module": "manage",
+							"name": "Manage",
+							"typeArguments": []
+						}
+					}
+				]
+			},
+			"set_paused": {
+				"visibility": "Friend",
+				"isEntry": false,
+				"typeParameters": [],
+				"parameters": [
+					{
+						"MutableReference": {
+							"Struct": {
+								"address": "0x634511c660964940915acb37dde75963e35f2d1b0a034b41e2da8f3e9d1491ae",
+								"module": "manage",
+								"name": "Manage",
+								"typeArguments": []
+							}
+						}
+					},
+					"Bool"
+				],
+				"return": []
+			}
+		}
+	},
+	{
+		"fileFormatVersion": 6,
+		"address": "0x634511c660964940915acb37dde75963e35f2d1b0a034b41e2da8f3e9d1491ae",
+		"name": "stake_pool",
+		"friends": [],
+		"structs": {
+			"AdminCap": {
+				"abilities": {
+					"abilities": [
+						"Store",
+						"Key"
+					]
+				},
+				"typeParameters": [],
+				"fields": [
+					{
+						"name": "id",
+						"type": {
+							"Struct": {
+								"address": "0x2",
+								"module": "object",
+								"name": "UID",
+								"typeArguments": []
+							}
+						}
+					}
+				]
+			},
+			"BoostedRewardAmountUpdateEvent": {
+				"abilities": {
+					"abilities": [
+						"Copy",
+						"Drop"
+					]
+				},
+				"typeParameters": [],
+				"fields": [
+					{
+						"name": "old_value",
+						"type": "U64"
+					},
+					{
+						"name": "new_value",
+						"type": "U64"
+					}
+				]
+			},
+			"CollectFeesEvent": {
+				"abilities": {
+					"abilities": [
+						"Copy",
+						"Drop"
+					]
+				},
+				"typeParameters": [],
+				"fields": [
+					{
+						"name": "amount",
+						"type": "U64"
+					}
+				]
+			},
+			"DelegateStakeEvent": {
+				"abilities": {
+					"abilities": [
+						"Copy",
+						"Drop"
+					]
+				},
+				"typeParameters": [],
+				"fields": [
+					{
+						"name": "v_address",
+						"type": "Address"
+					},
+					{
+						"name": "sui_amount_in",
+						"type": "U64"
+					},
+					{
+						"name": "lst_amount_out",
+						"type": "U64"
+					}
+				]
+			},
+			"DepositBoostedBalanceEvent": {
+				"abilities": {
+					"abilities": [
+						"Copy",
+						"Drop"
+					]
+				},
+				"typeParameters": [],
+				"fields": [
+					{
+						"name": "before_balance",
+						"type": "U64"
+					},
+					{
+						"name": "after_balance",
+						"type": "U64"
+					}
+				]
+			},
+			"EpochChangedEvent": {
+				"abilities": {
+					"abilities": [
+						"Copy",
+						"Drop"
+					]
+				},
+				"typeParameters": [],
+				"fields": [
+					{
+						"name": "old_sui_supply",
+						"type": "U64"
+					},
+					{
+						"name": "new_sui_supply",
+						"type": "U64"
+					},
+					{
+						"name": "boosted_reward_amount",
+						"type": "U64"
+					},
+					{
+						"name": "lst_supply",
+						"type": "U64"
+					},
+					{
+						"name": "reward_fee",
+						"type": "U64"
+					}
+				]
+			},
+			"FeeUpdateEvent": {
+				"abilities": {
+					"abilities": [
+						"Copy",
+						"Drop"
+					]
+				},
+				"typeParameters": [],
+				"fields": [
+					{
+						"name": "field",
+						"type": {
+							"Struct": {
+								"address": "0x1",
+								"module": "ascii",
+								"name": "String",
+								"typeArguments": []
+							}
+						}
+					},
+					{
+						"name": "old_value",
+						"type": "U64"
+					},
+					{
+						"name": "new_value",
+						"type": "U64"
+					}
+				]
+			},
+			"MintOperatorCapEvent": {
+				"abilities": {
+					"abilities": [
+						"Copy",
+						"Drop"
+					]
+				},
+				"typeParameters": [],
+				"fields": [
+					{
+						"name": "recipient",
+						"type": "Address"
+					}
+				]
+			},
+			"OperatorCap": {
+				"abilities": {
+					"abilities": [
+						"Store",
+						"Key"
+					]
+				},
+				"typeParameters": [],
+				"fields": [
+					{
+						"name": "id",
+						"type": {
+							"Struct": {
+								"address": "0x2",
+								"module": "object",
+								"name": "UID",
+								"typeArguments": []
+							}
+						}
+					}
+				]
+			},
+			"RebalanceEvent": {
+				"abilities": {
+					"abilities": [
+						"Copy",
+						"Drop"
+					]
+				},
+				"typeParameters": [],
+				"fields": [
+					{
+						"name": "is_epoch_rolled_over",
+						"type": "Bool"
+					},
+					{
+						"name": "sender",
+						"type": "Address"
+					}
+				]
+			},
+			"STAKE_POOL": {
+				"abilities": {
+					"abilities": [
+						"Drop"
+					]
+				},
+				"typeParameters": [],
+				"fields": [
+					{
+						"name": "dummy_field",
+						"type": "Bool"
+					}
+				]
+			},
+			"SetPausedEvent": {
+				"abilities": {
+					"abilities": [
+						"Copy",
+						"Drop"
+					]
+				},
+				"typeParameters": [],
+				"fields": [
+					{
+						"name": "paused",
+						"type": "Bool"
+					}
+				]
+			},
+			"StakeEventExt": {
+				"abilities": {
+					"abilities": [
+						"Copy",
+						"Drop"
+					]
+				},
+				"typeParameters": [],
+				"fields": [
+					{
+						"name": "sui_amount_in",
+						"type": "U64"
+					},
+					{
+						"name": "lst_amount_out",
+						"type": "U64"
+					},
+					{
+						"name": "fee_amount",
+						"type": "U64"
+					}
+				]
+			},
+			"StakePool": {
+				"abilities": {
+					"abilities": [
+						"Store",
+						"Key"
+					]
+				},
+				"typeParameters": [],
+				"fields": [
+					{
+						"name": "id",
+						"type": {
+							"Struct": {
+								"address": "0x2",
+								"module": "object",
+								"name": "UID",
+								"typeArguments": []
+							}
+						}
+					},
+					{
+						"name": "fee_config",
+						"type": {
+							"Struct": {
+								"address": "0x634511c660964940915acb37dde75963e35f2d1b0a034b41e2da8f3e9d1491ae",
+								"module": "fee_config",
+								"name": "FeeConfig",
+								"typeArguments": []
+							}
+						}
+					},
+					{
+						"name": "fees",
+						"type": {
+							"Struct": {
+								"address": "0x2",
+								"module": "balance",
+								"name": "Balance",
+								"typeArguments": [
+									{
+										"Struct": {
+											"address": "0x2",
+											"module": "sui",
+											"name": "SUI",
+											"typeArguments": []
+										}
+									}
+								]
+							}
+						}
+					},
+					{
+						"name": "boosted_balance",
+						"type": {
+							"Struct": {
+								"address": "0x2",
+								"module": "balance",
+								"name": "Balance",
+								"typeArguments": [
+									{
+										"Struct": {
+											"address": "0x2",
+											"module": "sui",
+											"name": "SUI",
+											"typeArguments": []
+										}
+									}
+								]
+							}
+						}
+					},
+					{
+						"name": "boosted_reward_amount",
+						"type": "U64"
+					},
+					{
+						"name": "accrued_reward_fees",
+						"type": "U64"
+					},
+					{
+						"name": "validator_pool",
+						"type": {
+							"Struct": {
+								"address": "0x634511c660964940915acb37dde75963e35f2d1b0a034b41e2da8f3e9d1491ae",
+								"module": "validator_pool",
+								"name": "ValidatorPool",
+								"typeArguments": []
+							}
+						}
+					},
+					{
+						"name": "manage",
+						"type": {
+							"Struct": {
+								"address": "0x634511c660964940915acb37dde75963e35f2d1b0a034b41e2da8f3e9d1491ae",
+								"module": "manage",
+								"name": "Manage",
+								"typeArguments": []
+							}
+						}
+					},
+					{
+						"name": "extra_fields",
+						"type": {
+							"Struct": {
+								"address": "0x2",
+								"module": "bag",
+								"name": "Bag",
+								"typeArguments": []
+							}
+						}
+					}
+				]
+			},
+			"UnstakeEventExt": {
+				"abilities": {
+					"abilities": [
+						"Copy",
+						"Drop"
+					]
+				},
+				"typeParameters": [],
+				"fields": [
+					{
+						"name": "lst_amount_in",
+						"type": "U64"
+					},
+					{
+						"name": "sui_amount_out",
+						"type": "U64"
+					},
+					{
+						"name": "fee_amount",
+						"type": "U64"
+					},
+					{
+						"name": "redistribution_amount",
+						"type": "U64"
+					}
+				]
+			},
+			"ValidatorWeightsUpdateEvent": {
+				"abilities": {
+					"abilities": [
+						"Copy",
+						"Drop"
+					]
+				},
+				"typeParameters": [],
+				"fields": [
+					{
+						"name": "validator_weights",
+						"type": {
+							"Struct": {
+								"address": "0x2",
+								"module": "vec_map",
+								"name": "VecMap",
+								"typeArguments": [
+									"Address",
+									"U64"
+								]
+							}
+						}
+					}
+				]
+			}
+		},
+		"exposedFunctions": {
+			"accrued_reward_fees": {
+				"visibility": "Public",
+				"isEntry": false,
+				"typeParameters": [],
+				"parameters": [
+					{
+						"Reference": {
+							"Struct": {
+								"address": "0x634511c660964940915acb37dde75963e35f2d1b0a034b41e2da8f3e9d1491ae",
+								"module": "stake_pool",
+								"name": "StakePool",
+								"typeArguments": []
+							}
+						}
+					}
+				],
+				"return": [
+					"U64"
+				]
+			},
+			"boosted_balance": {
+				"visibility": "Public",
+				"isEntry": false,
+				"typeParameters": [],
+				"parameters": [
+					{
+						"Reference": {
+							"Struct": {
+								"address": "0x634511c660964940915acb37dde75963e35f2d1b0a034b41e2da8f3e9d1491ae",
+								"module": "stake_pool",
+								"name": "StakePool",
+								"typeArguments": []
+							}
+						}
+					}
+				],
+				"return": [
+					"U64"
+				]
+			},
+			"collect_fees": {
+				"visibility": "Public",
+				"isEntry": false,
+				"typeParameters": [],
+				"parameters": [
+					{
+						"MutableReference": {
+							"Struct": {
+								"address": "0x634511c660964940915acb37dde75963e35f2d1b0a034b41e2da8f3e9d1491ae",
+								"module": "stake_pool",
+								"name": "StakePool",
+								"typeArguments": []
+							}
+						}
+					},
+					{
+						"MutableReference": {
+							"Struct": {
+								"address": "0x634511c660964940915acb37dde75963e35f2d1b0a034b41e2da8f3e9d1491ae",
+								"module": "cert",
+								"name": "Metadata",
+								"typeArguments": [
+									{
+										"Struct": {
+											"address": "0x634511c660964940915acb37dde75963e35f2d1b0a034b41e2da8f3e9d1491ae",
+											"module": "cert",
+											"name": "CERT",
+											"typeArguments": []
+										}
+									}
+								]
+							}
+						}
+					},
+					{
+						"MutableReference": {
+							"Struct": {
+								"address": "0x3",
+								"module": "sui_system",
+								"name": "SuiSystemState",
+								"typeArguments": []
+							}
+						}
+					},
+					{
+						"Reference": {
+							"Struct": {
+								"address": "0x634511c660964940915acb37dde75963e35f2d1b0a034b41e2da8f3e9d1491ae",
+								"module": "stake_pool",
+								"name": "AdminCap",
+								"typeArguments": []
+							}
+						}
+					},
+					{
+						"MutableReference": {
+							"Struct": {
+								"address": "0x2",
+								"module": "tx_context",
+								"name": "TxContext",
+								"typeArguments": []
+							}
+						}
+					}
+				],
+				"return": [
+					{
+						"Struct": {
+							"address": "0x2",
+							"module": "coin",
+							"name": "Coin",
+							"typeArguments": [
+								{
+									"Struct": {
+										"address": "0x2",
+										"module": "sui",
+										"name": "SUI",
+										"typeArguments": []
+									}
+								}
+							]
+						}
+					}
+				]
+			},
+			"create_stake_pool": {
+				"visibility": "Friend",
+				"isEntry": false,
+				"typeParameters": [],
+				"parameters": [
+					{
+						"MutableReference": {
+							"Struct": {
+								"address": "0x2",
+								"module": "tx_context",
+								"name": "TxContext",
+								"typeArguments": []
+							}
+						}
+					}
+				],
+				"return": []
+			},
+			"delegate_stake": {
+				"visibility": "Public",
+				"isEntry": false,
+				"typeParameters": [],
+				"parameters": [
+					{
+						"MutableReference": {
+							"Struct": {
+								"address": "0x634511c660964940915acb37dde75963e35f2d1b0a034b41e2da8f3e9d1491ae",
+								"module": "stake_pool",
+								"name": "StakePool",
+								"typeArguments": []
+							}
+						}
+					},
+					{
+						"MutableReference": {
+							"Struct": {
+								"address": "0x634511c660964940915acb37dde75963e35f2d1b0a034b41e2da8f3e9d1491ae",
+								"module": "cert",
+								"name": "Metadata",
+								"typeArguments": [
+									{
+										"Struct": {
+											"address": "0x634511c660964940915acb37dde75963e35f2d1b0a034b41e2da8f3e9d1491ae",
+											"module": "cert",
+											"name": "CERT",
+											"typeArguments": []
+										}
+									}
+								]
+							}
+						}
+					},
+					{
+						"MutableReference": {
+							"Struct": {
+								"address": "0x3",
+								"module": "sui_system",
+								"name": "SuiSystemState",
+								"typeArguments": []
+							}
+						}
+					},
+					{
+						"Struct": {
+							"address": "0x2",
+							"module": "coin",
+							"name": "Coin",
+							"typeArguments": [
+								{
+									"Struct": {
+										"address": "0x2",
+										"module": "sui",
+										"name": "SUI",
+										"typeArguments": []
+									}
+								}
+							]
+						}
+					},
+					"Address",
+					{
+						"MutableReference": {
+							"Struct": {
+								"address": "0x2",
+								"module": "tx_context",
+								"name": "TxContext",
+								"typeArguments": []
+							}
+						}
+					}
+				],
+				"return": [
+					{
+						"Struct": {
+							"address": "0x2",
+							"module": "coin",
+							"name": "Coin",
+							"typeArguments": [
+								{
+									"Struct": {
+										"address": "0x634511c660964940915acb37dde75963e35f2d1b0a034b41e2da8f3e9d1491ae",
+										"module": "cert",
+										"name": "CERT",
+										"typeArguments": []
+									}
+								}
+							]
+						}
+					}
+				]
+			},
+			"delegate_stake_entry": {
+				"visibility": "Public",
+				"isEntry": true,
+				"typeParameters": [],
+				"parameters": [
+					{
+						"MutableReference": {
+							"Struct": {
+								"address": "0x634511c660964940915acb37dde75963e35f2d1b0a034b41e2da8f3e9d1491ae",
+								"module": "stake_pool",
+								"name": "StakePool",
+								"typeArguments": []
+							}
+						}
+					},
+					{
+						"MutableReference": {
+							"Struct": {
+								"address": "0x634511c660964940915acb37dde75963e35f2d1b0a034b41e2da8f3e9d1491ae",
+								"module": "cert",
+								"name": "Metadata",
+								"typeArguments": [
+									{
+										"Struct": {
+											"address": "0x634511c660964940915acb37dde75963e35f2d1b0a034b41e2da8f3e9d1491ae",
+											"module": "cert",
+											"name": "CERT",
+											"typeArguments": []
+										}
+									}
+								]
+							}
+						}
+					},
+					{
+						"MutableReference": {
+							"Struct": {
+								"address": "0x3",
+								"module": "sui_system",
+								"name": "SuiSystemState",
+								"typeArguments": []
+							}
+						}
+					},
+					{
+						"Struct": {
+							"address": "0x2",
+							"module": "coin",
+							"name": "Coin",
+							"typeArguments": [
+								{
+									"Struct": {
+										"address": "0x2",
+										"module": "sui",
+										"name": "SUI",
+										"typeArguments": []
+									}
+								}
+							]
+						}
+					},
+					"Address",
+					{
+						"MutableReference": {
+							"Struct": {
+								"address": "0x2",
+								"module": "tx_context",
+								"name": "TxContext",
+								"typeArguments": []
+							}
+						}
+					}
+				],
+				"return": []
+			},
+			"deposit_boosted_balance": {
+				"visibility": "Public",
+				"isEntry": false,
+				"typeParameters": [],
+				"parameters": [
+					{
+						"MutableReference": {
+							"Struct": {
+								"address": "0x634511c660964940915acb37dde75963e35f2d1b0a034b41e2da8f3e9d1491ae",
+								"module": "stake_pool",
+								"name": "StakePool",
+								"typeArguments": []
+							}
+						}
+					},
+					{
+						"Reference": {
+							"Struct": {
+								"address": "0x634511c660964940915acb37dde75963e35f2d1b0a034b41e2da8f3e9d1491ae",
+								"module": "stake_pool",
+								"name": "OperatorCap",
+								"typeArguments": []
+							}
+						}
+					},
+					{
+						"MutableReference": {
+							"Struct": {
+								"address": "0x2",
+								"module": "coin",
+								"name": "Coin",
+								"typeArguments": [
+									{
+										"Struct": {
+											"address": "0x2",
+											"module": "sui",
+											"name": "SUI",
+											"typeArguments": []
+										}
+									}
+								]
+							}
+						}
+					},
+					"U64",
+					{
+						"MutableReference": {
+							"Struct": {
+								"address": "0x2",
+								"module": "tx_context",
+								"name": "TxContext",
+								"typeArguments": []
+							}
+						}
+					}
+				],
+				"return": []
+			},
+			"fee_config": {
+				"visibility": "Public",
+				"isEntry": false,
+				"typeParameters": [],
+				"parameters": [
+					{
+						"Reference": {
+							"Struct": {
+								"address": "0x634511c660964940915acb37dde75963e35f2d1b0a034b41e2da8f3e9d1491ae",
+								"module": "stake_pool",
+								"name": "StakePool",
+								"typeArguments": []
+							}
+						}
+					}
+				],
+				"return": [
+					{
+						"Reference": {
+							"Struct": {
+								"address": "0x634511c660964940915acb37dde75963e35f2d1b0a034b41e2da8f3e9d1491ae",
+								"module": "fee_config",
+								"name": "FeeConfig",
+								"typeArguments": []
+							}
+						}
+					}
+				]
+			},
+			"get_amount_out": {
+				"visibility": "Public",
+				"isEntry": false,
+				"typeParameters": [],
+				"parameters": [
+					{
+						"Reference": {
+							"Struct": {
+								"address": "0x634511c660964940915acb37dde75963e35f2d1b0a034b41e2da8f3e9d1491ae",
+								"module": "stake_pool",
+								"name": "StakePool",
+								"typeArguments": []
+							}
+						}
+					},
+					{
+						"Reference": {
+							"Struct": {
+								"address": "0x634511c660964940915acb37dde75963e35f2d1b0a034b41e2da8f3e9d1491ae",
+								"module": "cert",
+								"name": "Metadata",
+								"typeArguments": [
+									{
+										"Struct": {
+											"address": "0x634511c660964940915acb37dde75963e35f2d1b0a034b41e2da8f3e9d1491ae",
+											"module": "cert",
+											"name": "CERT",
+											"typeArguments": []
+										}
+									}
+								]
+							}
+						}
+					},
+					"U64",
+					"Bool"
+				],
+				"return": [
+					"U64"
+				]
+			},
+			"get_ratio": {
+				"visibility": "Public",
+				"isEntry": false,
+				"typeParameters": [],
+				"parameters": [
+					{
+						"Reference": {
+							"Struct": {
+								"address": "0x634511c660964940915acb37dde75963e35f2d1b0a034b41e2da8f3e9d1491ae",
+								"module": "stake_pool",
+								"name": "StakePool",
+								"typeArguments": []
+							}
+						}
+					},
+					{
+						"Reference": {
+							"Struct": {
+								"address": "0x634511c660964940915acb37dde75963e35f2d1b0a034b41e2da8f3e9d1491ae",
+								"module": "cert",
+								"name": "Metadata",
+								"typeArguments": [
+									{
+										"Struct": {
+											"address": "0x634511c660964940915acb37dde75963e35f2d1b0a034b41e2da8f3e9d1491ae",
+											"module": "cert",
+											"name": "CERT",
+											"typeArguments": []
+										}
+									}
+								]
+							}
+						}
+					}
+				],
+				"return": [
+					"U64"
+				]
+			},
+			"get_ratio_reverse": {
+				"visibility": "Public",
+				"isEntry": false,
+				"typeParameters": [],
+				"parameters": [
+					{
+						"Reference": {
+							"Struct": {
+								"address": "0x634511c660964940915acb37dde75963e35f2d1b0a034b41e2da8f3e9d1491ae",
+								"module": "stake_pool",
+								"name": "StakePool",
+								"typeArguments": []
+							}
+						}
+					},
+					{
+						"Reference": {
+							"Struct": {
+								"address": "0x634511c660964940915acb37dde75963e35f2d1b0a034b41e2da8f3e9d1491ae",
+								"module": "cert",
+								"name": "Metadata",
+								"typeArguments": [
+									{
+										"Struct": {
+											"address": "0x634511c660964940915acb37dde75963e35f2d1b0a034b41e2da8f3e9d1491ae",
+											"module": "cert",
+											"name": "CERT",
+											"typeArguments": []
+										}
+									}
+								]
+							}
+						}
+					}
+				],
+				"return": [
+					"U64"
+				]
+			},
+			"join_to_sui_pool": {
+				"visibility": "Friend",
+				"isEntry": false,
+				"typeParameters": [],
+				"parameters": [
+					{
+						"MutableReference": {
+							"Struct": {
+								"address": "0x634511c660964940915acb37dde75963e35f2d1b0a034b41e2da8f3e9d1491ae",
+								"module": "stake_pool",
+								"name": "StakePool",
+								"typeArguments": []
+							}
+						}
+					},
+					{
+						"Struct": {
+							"address": "0x2",
+							"module": "balance",
+							"name": "Balance",
+							"typeArguments": [
+								{
+									"Struct": {
+										"address": "0x2",
+										"module": "sui",
+										"name": "SUI",
+										"typeArguments": []
+									}
+								}
+							]
+						}
+					}
+				],
+				"return": []
+			},
+			"lst_amount_to_sui_amount": {
+				"visibility": "Public",
+				"isEntry": false,
+				"typeParameters": [],
+				"parameters": [
+					{
+						"Reference": {
+							"Struct": {
+								"address": "0x634511c660964940915acb37dde75963e35f2d1b0a034b41e2da8f3e9d1491ae",
+								"module": "stake_pool",
+								"name": "StakePool",
+								"typeArguments": []
+							}
+						}
+					},
+					{
+						"Reference": {
+							"Struct": {
+								"address": "0x634511c660964940915acb37dde75963e35f2d1b0a034b41e2da8f3e9d1491ae",
+								"module": "cert",
+								"name": "Metadata",
+								"typeArguments": [
+									{
+										"Struct": {
+											"address": "0x634511c660964940915acb37dde75963e35f2d1b0a034b41e2da8f3e9d1491ae",
+											"module": "cert",
+											"name": "CERT",
+											"typeArguments": []
+										}
+									}
+								]
+							}
+						}
+					},
+					"U64"
+				],
+				"return": [
+					"U64"
+				]
+			},
+			"migrate_cert": {
+				"visibility": "Public",
+				"isEntry": false,
+				"typeParameters": [],
+				"parameters": [
+					{
+						"MutableReference": {
+							"Struct": {
+								"address": "0x634511c660964940915acb37dde75963e35f2d1b0a034b41e2da8f3e9d1491ae",
+								"module": "stake_pool",
+								"name": "StakePool",
+								"typeArguments": []
+							}
+						}
+					},
+					{
+						"Reference": {
+							"Struct": {
+								"address": "0x634511c660964940915acb37dde75963e35f2d1b0a034b41e2da8f3e9d1491ae",
+								"module": "stake_pool",
+								"name": "AdminCap",
+								"typeArguments": []
+							}
+						}
+					},
+					{
+						"MutableReference": {
+							"Struct": {
+								"address": "0x634511c660964940915acb37dde75963e35f2d1b0a034b41e2da8f3e9d1491ae",
+								"module": "cert",
+								"name": "Metadata",
+								"typeArguments": [
+									{
+										"Struct": {
+											"address": "0x634511c660964940915acb37dde75963e35f2d1b0a034b41e2da8f3e9d1491ae",
+											"module": "cert",
+											"name": "CERT",
+											"typeArguments": []
+										}
+									}
+								]
+							}
+						}
+					}
+				],
+				"return": []
+			},
+			"migrate_version": {
+				"visibility": "Public",
+				"isEntry": false,
+				"typeParameters": [],
+				"parameters": [
+					{
+						"MutableReference": {
+							"Struct": {
+								"address": "0x634511c660964940915acb37dde75963e35f2d1b0a034b41e2da8f3e9d1491ae",
+								"module": "stake_pool",
+								"name": "StakePool",
+								"typeArguments": []
+							}
+						}
+					},
+					{
+						"Reference": {
+							"Struct": {
+								"address": "0x634511c660964940915acb37dde75963e35f2d1b0a034b41e2da8f3e9d1491ae",
+								"module": "stake_pool",
+								"name": "AdminCap",
+								"typeArguments": []
+							}
+						}
+					}
+				],
+				"return": []
+			},
+			"mint_operator_cap": {
+				"visibility": "Public",
+				"isEntry": false,
+				"typeParameters": [],
+				"parameters": [
+					{
+						"MutableReference": {
+							"Struct": {
+								"address": "0x634511c660964940915acb37dde75963e35f2d1b0a034b41e2da8f3e9d1491ae",
+								"module": "stake_pool",
+								"name": "StakePool",
+								"typeArguments": []
+							}
+						}
+					},
+					{
+						"Reference": {
+							"Struct": {
+								"address": "0x634511c660964940915acb37dde75963e35f2d1b0a034b41e2da8f3e9d1491ae",
+								"module": "stake_pool",
+								"name": "AdminCap",
+								"typeArguments": []
+							}
+						}
+					},
+					"Address",
+					{
+						"MutableReference": {
+							"Struct": {
+								"address": "0x2",
+								"module": "tx_context",
+								"name": "TxContext",
+								"typeArguments": []
+							}
+						}
+					}
+				],
+				"return": []
+			},
+			"publish_ratio": {
+				"visibility": "Public",
+				"isEntry": false,
+				"typeParameters": [],
+				"parameters": [
+					{
+						"Reference": {
+							"Struct": {
+								"address": "0x634511c660964940915acb37dde75963e35f2d1b0a034b41e2da8f3e9d1491ae",
+								"module": "stake_pool",
+								"name": "StakePool",
+								"typeArguments": []
+							}
+						}
+					},
+					{
+						"Reference": {
+							"Struct": {
+								"address": "0x634511c660964940915acb37dde75963e35f2d1b0a034b41e2da8f3e9d1491ae",
+								"module": "cert",
+								"name": "Metadata",
+								"typeArguments": [
+									{
+										"Struct": {
+											"address": "0x634511c660964940915acb37dde75963e35f2d1b0a034b41e2da8f3e9d1491ae",
+											"module": "cert",
+											"name": "CERT",
+											"typeArguments": []
+										}
+									}
+								]
+							}
+						}
+					}
+				],
+				"return": []
+			},
+			"rebalance": {
+				"visibility": "Public",
+				"isEntry": false,
+				"typeParameters": [],
+				"parameters": [
+					{
+						"MutableReference": {
+							"Struct": {
+								"address": "0x634511c660964940915acb37dde75963e35f2d1b0a034b41e2da8f3e9d1491ae",
+								"module": "stake_pool",
+								"name": "StakePool",
+								"typeArguments": []
+							}
+						}
+					},
+					{
+						"MutableReference": {
+							"Struct": {
+								"address": "0x634511c660964940915acb37dde75963e35f2d1b0a034b41e2da8f3e9d1491ae",
+								"module": "cert",
+								"name": "Metadata",
+								"typeArguments": [
+									{
+										"Struct": {
+											"address": "0x634511c660964940915acb37dde75963e35f2d1b0a034b41e2da8f3e9d1491ae",
+											"module": "cert",
+											"name": "CERT",
+											"typeArguments": []
+										}
+									}
+								]
+							}
+						}
+					},
+					{
+						"MutableReference": {
+							"Struct": {
+								"address": "0x3",
+								"module": "sui_system",
+								"name": "SuiSystemState",
+								"typeArguments": []
+							}
+						}
+					},
+					{
+						"MutableReference": {
+							"Struct": {
+								"address": "0x2",
+								"module": "tx_context",
+								"name": "TxContext",
+								"typeArguments": []
+							}
+						}
+					}
+				],
+				"return": []
+			},
+			"refresh": {
+				"visibility": "Public",
+				"isEntry": false,
+				"typeParameters": [],
+				"parameters": [
+					{
+						"MutableReference": {
+							"Struct": {
+								"address": "0x634511c660964940915acb37dde75963e35f2d1b0a034b41e2da8f3e9d1491ae",
+								"module": "stake_pool",
+								"name": "StakePool",
+								"typeArguments": []
+							}
+						}
+					},
+					{
+						"Reference": {
+							"Struct": {
+								"address": "0x634511c660964940915acb37dde75963e35f2d1b0a034b41e2da8f3e9d1491ae",
+								"module": "cert",
+								"name": "Metadata",
+								"typeArguments": [
+									{
+										"Struct": {
+											"address": "0x634511c660964940915acb37dde75963e35f2d1b0a034b41e2da8f3e9d1491ae",
+											"module": "cert",
+											"name": "CERT",
+											"typeArguments": []
+										}
+									}
+								]
+							}
+						}
+					},
+					{
+						"MutableReference": {
+							"Struct": {
+								"address": "0x3",
+								"module": "sui_system",
+								"name": "SuiSystemState",
+								"typeArguments": []
+							}
+						}
+					},
+					{
+						"MutableReference": {
+							"Struct": {
+								"address": "0x2",
+								"module": "tx_context",
+								"name": "TxContext",
+								"typeArguments": []
+							}
+						}
+					}
+				],
+				"return": [
+					"Bool"
+				]
+			},
+			"set_paused": {
+				"visibility": "Public",
+				"isEntry": false,
+				"typeParameters": [],
+				"parameters": [
+					{
+						"MutableReference": {
+							"Struct": {
+								"address": "0x634511c660964940915acb37dde75963e35f2d1b0a034b41e2da8f3e9d1491ae",
+								"module": "stake_pool",
+								"name": "StakePool",
+								"typeArguments": []
+							}
+						}
+					},
+					{
+						"Reference": {
+							"Struct": {
+								"address": "0x634511c660964940915acb37dde75963e35f2d1b0a034b41e2da8f3e9d1491ae",
+								"module": "stake_pool",
+								"name": "AdminCap",
+								"typeArguments": []
+							}
+						}
+					},
+					"Bool"
+				],
+				"return": []
+			},
+			"set_validator_weights": {
+				"visibility": "Public",
+				"isEntry": false,
+				"typeParameters": [],
+				"parameters": [
+					{
+						"MutableReference": {
+							"Struct": {
+								"address": "0x634511c660964940915acb37dde75963e35f2d1b0a034b41e2da8f3e9d1491ae",
+								"module": "stake_pool",
+								"name": "StakePool",
+								"typeArguments": []
+							}
+						}
+					},
+					{
+						"MutableReference": {
+							"Struct": {
+								"address": "0x634511c660964940915acb37dde75963e35f2d1b0a034b41e2da8f3e9d1491ae",
+								"module": "cert",
+								"name": "Metadata",
+								"typeArguments": [
+									{
+										"Struct": {
+											"address": "0x634511c660964940915acb37dde75963e35f2d1b0a034b41e2da8f3e9d1491ae",
+											"module": "cert",
+											"name": "CERT",
+											"typeArguments": []
+										}
+									}
+								]
+							}
+						}
+					},
+					{
+						"MutableReference": {
+							"Struct": {
+								"address": "0x3",
+								"module": "sui_system",
+								"name": "SuiSystemState",
+								"typeArguments": []
+							}
+						}
+					},
+					{
+						"Reference": {
+							"Struct": {
+								"address": "0x634511c660964940915acb37dde75963e35f2d1b0a034b41e2da8f3e9d1491ae",
+								"module": "stake_pool",
+								"name": "OperatorCap",
+								"typeArguments": []
+							}
+						}
+					},
+					{
+						"Struct": {
+							"address": "0x2",
+							"module": "vec_map",
+							"name": "VecMap",
+							"typeArguments": [
+								"Address",
+								"U64"
+							]
+						}
+					},
+					{
+						"MutableReference": {
+							"Struct": {
+								"address": "0x2",
+								"module": "tx_context",
+								"name": "TxContext",
+								"typeArguments": []
+							}
+						}
+					}
+				],
+				"return": []
+			},
+			"stake": {
+				"visibility": "Public",
+				"isEntry": false,
+				"typeParameters": [],
+				"parameters": [
+					{
+						"MutableReference": {
+							"Struct": {
+								"address": "0x634511c660964940915acb37dde75963e35f2d1b0a034b41e2da8f3e9d1491ae",
+								"module": "stake_pool",
+								"name": "StakePool",
+								"typeArguments": []
+							}
+						}
+					},
+					{
+						"MutableReference": {
+							"Struct": {
+								"address": "0x634511c660964940915acb37dde75963e35f2d1b0a034b41e2da8f3e9d1491ae",
+								"module": "cert",
+								"name": "Metadata",
+								"typeArguments": [
+									{
+										"Struct": {
+											"address": "0x634511c660964940915acb37dde75963e35f2d1b0a034b41e2da8f3e9d1491ae",
+											"module": "cert",
+											"name": "CERT",
+											"typeArguments": []
+										}
+									}
+								]
+							}
+						}
+					},
+					{
+						"MutableReference": {
+							"Struct": {
+								"address": "0x3",
+								"module": "sui_system",
+								"name": "SuiSystemState",
+								"typeArguments": []
+							}
+						}
+					},
+					{
+						"Struct": {
+							"address": "0x2",
+							"module": "coin",
+							"name": "Coin",
+							"typeArguments": [
+								{
+									"Struct": {
+										"address": "0x2",
+										"module": "sui",
+										"name": "SUI",
+										"typeArguments": []
+									}
+								}
+							]
+						}
+					},
+					{
+						"MutableReference": {
+							"Struct": {
+								"address": "0x2",
+								"module": "tx_context",
+								"name": "TxContext",
+								"typeArguments": []
+							}
+						}
+					}
+				],
+				"return": [
+					{
+						"Struct": {
+							"address": "0x2",
+							"module": "coin",
+							"name": "Coin",
+							"typeArguments": [
+								{
+									"Struct": {
+										"address": "0x634511c660964940915acb37dde75963e35f2d1b0a034b41e2da8f3e9d1491ae",
+										"module": "cert",
+										"name": "CERT",
+										"typeArguments": []
+									}
+								}
+							]
+						}
+					}
+				]
+			},
+			"stake_entry": {
+				"visibility": "Public",
+				"isEntry": true,
+				"typeParameters": [],
+				"parameters": [
+					{
+						"MutableReference": {
+							"Struct": {
+								"address": "0x634511c660964940915acb37dde75963e35f2d1b0a034b41e2da8f3e9d1491ae",
+								"module": "stake_pool",
+								"name": "StakePool",
+								"typeArguments": []
+							}
+						}
+					},
+					{
+						"MutableReference": {
+							"Struct": {
+								"address": "0x634511c660964940915acb37dde75963e35f2d1b0a034b41e2da8f3e9d1491ae",
+								"module": "cert",
+								"name": "Metadata",
+								"typeArguments": [
+									{
+										"Struct": {
+											"address": "0x634511c660964940915acb37dde75963e35f2d1b0a034b41e2da8f3e9d1491ae",
+											"module": "cert",
+											"name": "CERT",
+											"typeArguments": []
+										}
+									}
+								]
+							}
+						}
+					},
+					{
+						"MutableReference": {
+							"Struct": {
+								"address": "0x3",
+								"module": "sui_system",
+								"name": "SuiSystemState",
+								"typeArguments": []
+							}
+						}
+					},
+					{
+						"Struct": {
+							"address": "0x2",
+							"module": "coin",
+							"name": "Coin",
+							"typeArguments": [
+								{
+									"Struct": {
+										"address": "0x2",
+										"module": "sui",
+										"name": "SUI",
+										"typeArguments": []
+									}
+								}
+							]
+						}
+					},
+					{
+						"MutableReference": {
+							"Struct": {
+								"address": "0x2",
+								"module": "tx_context",
+								"name": "TxContext",
+								"typeArguments": []
+							}
+						}
+					}
+				],
+				"return": []
+			},
+			"sui_amount_to_lst_amount": {
+				"visibility": "Public",
+				"isEntry": false,
+				"typeParameters": [],
+				"parameters": [
+					{
+						"Reference": {
+							"Struct": {
+								"address": "0x634511c660964940915acb37dde75963e35f2d1b0a034b41e2da8f3e9d1491ae",
+								"module": "stake_pool",
+								"name": "StakePool",
+								"typeArguments": []
+							}
+						}
+					},
+					{
+						"Reference": {
+							"Struct": {
+								"address": "0x634511c660964940915acb37dde75963e35f2d1b0a034b41e2da8f3e9d1491ae",
+								"module": "cert",
+								"name": "Metadata",
+								"typeArguments": [
+									{
+										"Struct": {
+											"address": "0x634511c660964940915acb37dde75963e35f2d1b0a034b41e2da8f3e9d1491ae",
+											"module": "cert",
+											"name": "CERT",
+											"typeArguments": []
+										}
+									}
+								]
+							}
+						}
+					},
+					"U64"
+				],
+				"return": [
+					"U64"
+				]
+			},
+			"total_fees": {
+				"visibility": "Public",
+				"isEntry": false,
+				"typeParameters": [],
+				"parameters": [
+					{
+						"Reference": {
+							"Struct": {
+								"address": "0x634511c660964940915acb37dde75963e35f2d1b0a034b41e2da8f3e9d1491ae",
+								"module": "stake_pool",
+								"name": "StakePool",
+								"typeArguments": []
+							}
+						}
+					}
+				],
+				"return": [
+					"U64"
+				]
+			},
+			"total_lst_supply": {
+				"visibility": "Public",
+				"isEntry": false,
+				"typeParameters": [],
+				"parameters": [
+					{
+						"Reference": {
+							"Struct": {
+								"address": "0x634511c660964940915acb37dde75963e35f2d1b0a034b41e2da8f3e9d1491ae",
+								"module": "cert",
+								"name": "Metadata",
+								"typeArguments": [
+									{
+										"Struct": {
+											"address": "0x634511c660964940915acb37dde75963e35f2d1b0a034b41e2da8f3e9d1491ae",
+											"module": "cert",
+											"name": "CERT",
+											"typeArguments": []
+										}
+									}
+								]
+							}
+						}
+					}
+				],
+				"return": [
+					"U64"
+				]
+			},
+			"total_sui_supply": {
+				"visibility": "Public",
+				"isEntry": false,
+				"typeParameters": [],
+				"parameters": [
+					{
+						"Reference": {
+							"Struct": {
+								"address": "0x634511c660964940915acb37dde75963e35f2d1b0a034b41e2da8f3e9d1491ae",
+								"module": "stake_pool",
+								"name": "StakePool",
+								"typeArguments": []
+							}
+						}
+					}
+				],
+				"return": [
+					"U64"
+				]
+			},
+			"unstake": {
+				"visibility": "Public",
+				"isEntry": false,
+				"typeParameters": [],
+				"parameters": [
+					{
+						"MutableReference": {
+							"Struct": {
+								"address": "0x634511c660964940915acb37dde75963e35f2d1b0a034b41e2da8f3e9d1491ae",
+								"module": "stake_pool",
+								"name": "StakePool",
+								"typeArguments": []
+							}
+						}
+					},
+					{
+						"MutableReference": {
+							"Struct": {
+								"address": "0x634511c660964940915acb37dde75963e35f2d1b0a034b41e2da8f3e9d1491ae",
+								"module": "cert",
+								"name": "Metadata",
+								"typeArguments": [
+									{
+										"Struct": {
+											"address": "0x634511c660964940915acb37dde75963e35f2d1b0a034b41e2da8f3e9d1491ae",
+											"module": "cert",
+											"name": "CERT",
+											"typeArguments": []
+										}
+									}
+								]
+							}
+						}
+					},
+					{
+						"MutableReference": {
+							"Struct": {
+								"address": "0x3",
+								"module": "sui_system",
+								"name": "SuiSystemState",
+								"typeArguments": []
+							}
+						}
+					},
+					{
+						"Struct": {
+							"address": "0x2",
+							"module": "coin",
+							"name": "Coin",
+							"typeArguments": [
+								{
+									"Struct": {
+										"address": "0x634511c660964940915acb37dde75963e35f2d1b0a034b41e2da8f3e9d1491ae",
+										"module": "cert",
+										"name": "CERT",
+										"typeArguments": []
+									}
+								}
+							]
+						}
+					},
+					{
+						"MutableReference": {
+							"Struct": {
+								"address": "0x2",
+								"module": "tx_context",
+								"name": "TxContext",
+								"typeArguments": []
+							}
+						}
+					}
+				],
+				"return": [
+					{
+						"Struct": {
+							"address": "0x2",
+							"module": "coin",
+							"name": "Coin",
+							"typeArguments": [
+								{
+									"Struct": {
+										"address": "0x2",
+										"module": "sui",
+										"name": "SUI",
+										"typeArguments": []
+									}
+								}
+							]
+						}
+					}
+				]
+			},
+			"unstake_entry": {
+				"visibility": "Public",
+				"isEntry": true,
+				"typeParameters": [],
+				"parameters": [
+					{
+						"MutableReference": {
+							"Struct": {
+								"address": "0x634511c660964940915acb37dde75963e35f2d1b0a034b41e2da8f3e9d1491ae",
+								"module": "stake_pool",
+								"name": "StakePool",
+								"typeArguments": []
+							}
+						}
+					},
+					{
+						"MutableReference": {
+							"Struct": {
+								"address": "0x634511c660964940915acb37dde75963e35f2d1b0a034b41e2da8f3e9d1491ae",
+								"module": "cert",
+								"name": "Metadata",
+								"typeArguments": [
+									{
+										"Struct": {
+											"address": "0x634511c660964940915acb37dde75963e35f2d1b0a034b41e2da8f3e9d1491ae",
+											"module": "cert",
+											"name": "CERT",
+											"typeArguments": []
+										}
+									}
+								]
+							}
+						}
+					},
+					{
+						"MutableReference": {
+							"Struct": {
+								"address": "0x3",
+								"module": "sui_system",
+								"name": "SuiSystemState",
+								"typeArguments": []
+							}
+						}
+					},
+					{
+						"Struct": {
+							"address": "0x2",
+							"module": "coin",
+							"name": "Coin",
+							"typeArguments": [
+								{
+									"Struct": {
+										"address": "0x634511c660964940915acb37dde75963e35f2d1b0a034b41e2da8f3e9d1491ae",
+										"module": "cert",
+										"name": "CERT",
+										"typeArguments": []
+									}
+								}
+							]
+						}
+					},
+					{
+						"MutableReference": {
+							"Struct": {
+								"address": "0x2",
+								"module": "tx_context",
+								"name": "TxContext",
+								"typeArguments": []
+							}
+						}
+					}
+				],
+				"return": []
+			},
+			"update_boosted_reward_amount": {
+				"visibility": "Public",
+				"isEntry": false,
+				"typeParameters": [],
+				"parameters": [
+					{
+						"MutableReference": {
+							"Struct": {
+								"address": "0x634511c660964940915acb37dde75963e35f2d1b0a034b41e2da8f3e9d1491ae",
+								"module": "stake_pool",
+								"name": "StakePool",
+								"typeArguments": []
+							}
+						}
+					},
+					{
+						"Reference": {
+							"Struct": {
+								"address": "0x634511c660964940915acb37dde75963e35f2d1b0a034b41e2da8f3e9d1491ae",
+								"module": "stake_pool",
+								"name": "AdminCap",
+								"typeArguments": []
+							}
+						}
+					},
+					"U64"
+				],
+				"return": []
+			},
+			"update_reward_fee": {
+				"visibility": "Public",
+				"isEntry": false,
+				"typeParameters": [],
+				"parameters": [
+					{
+						"MutableReference": {
+							"Struct": {
+								"address": "0x634511c660964940915acb37dde75963e35f2d1b0a034b41e2da8f3e9d1491ae",
+								"module": "stake_pool",
+								"name": "StakePool",
+								"typeArguments": []
+							}
+						}
+					},
+					{
+						"Reference": {
+							"Struct": {
+								"address": "0x634511c660964940915acb37dde75963e35f2d1b0a034b41e2da8f3e9d1491ae",
+								"module": "stake_pool",
+								"name": "AdminCap",
+								"typeArguments": []
+							}
+						}
+					},
+					"U64"
+				],
+				"return": []
+			},
+			"update_stake_fee": {
+				"visibility": "Public",
+				"isEntry": false,
+				"typeParameters": [],
+				"parameters": [
+					{
+						"MutableReference": {
+							"Struct": {
+								"address": "0x634511c660964940915acb37dde75963e35f2d1b0a034b41e2da8f3e9d1491ae",
+								"module": "stake_pool",
+								"name": "StakePool",
+								"typeArguments": []
+							}
+						}
+					},
+					{
+						"Reference": {
+							"Struct": {
+								"address": "0x634511c660964940915acb37dde75963e35f2d1b0a034b41e2da8f3e9d1491ae",
+								"module": "stake_pool",
+								"name": "AdminCap",
+								"typeArguments": []
+							}
+						}
+					},
+					"U64"
+				],
+				"return": []
+			},
+			"update_unstake_fee": {
+				"visibility": "Public",
+				"isEntry": false,
+				"typeParameters": [],
+				"parameters": [
+					{
+						"MutableReference": {
+							"Struct": {
+								"address": "0x634511c660964940915acb37dde75963e35f2d1b0a034b41e2da8f3e9d1491ae",
+								"module": "stake_pool",
+								"name": "StakePool",
+								"typeArguments": []
+							}
+						}
+					},
+					{
+						"Reference": {
+							"Struct": {
+								"address": "0x634511c660964940915acb37dde75963e35f2d1b0a034b41e2da8f3e9d1491ae",
+								"module": "stake_pool",
+								"name": "AdminCap",
+								"typeArguments": []
+							}
+						}
+					},
+					"U64"
+				],
+				"return": []
+			},
+			"update_unstake_fee_redistribution": {
+				"visibility": "Public",
+				"isEntry": false,
+				"typeParameters": [],
+				"parameters": [
+					{
+						"MutableReference": {
+							"Struct": {
+								"address": "0x634511c660964940915acb37dde75963e35f2d1b0a034b41e2da8f3e9d1491ae",
+								"module": "stake_pool",
+								"name": "StakePool",
+								"typeArguments": []
+							}
+						}
+					},
+					{
+						"Reference": {
+							"Struct": {
+								"address": "0x634511c660964940915acb37dde75963e35f2d1b0a034b41e2da8f3e9d1491ae",
+								"module": "stake_pool",
+								"name": "AdminCap",
+								"typeArguments": []
+							}
+						}
+					},
+					"U64"
+				],
+				"return": []
+			},
+			"validator_pool": {
+				"visibility": "Public",
+				"isEntry": false,
+				"typeParameters": [],
+				"parameters": [
+					{
+						"Reference": {
+							"Struct": {
+								"address": "0x634511c660964940915acb37dde75963e35f2d1b0a034b41e2da8f3e9d1491ae",
+								"module": "stake_pool",
+								"name": "StakePool",
+								"typeArguments": []
+							}
+						}
+					}
+				],
+				"return": [
+					{
+						"Reference": {
+							"Struct": {
+								"address": "0x634511c660964940915acb37dde75963e35f2d1b0a034b41e2da8f3e9d1491ae",
+								"module": "validator_pool",
+								"name": "ValidatorPool",
+								"typeArguments": []
+							}
+						}
+					}
+				]
+			}
+		}
+	},
+	{
+		"fileFormatVersion": 6,
+		"address": "0x634511c660964940915acb37dde75963e35f2d1b0a034b41e2da8f3e9d1491ae",
+		"name": "validator_pool",
+		"friends": [
+			{
+				"address": "0x634511c660964940915acb37dde75963e35f2d1b0a034b41e2da8f3e9d1491ae",
+				"name": "stake_pool"
+			}
+		],
+		"structs": {
+			"ValidatorInfo": {
+				"abilities": {
+					"abilities": [
+						"Store"
+					]
+				},
+				"typeParameters": [],
+				"fields": [
+					{
+						"name": "staking_pool_id",
+						"type": {
+							"Struct": {
+								"address": "0x2",
+								"module": "object",
+								"name": "ID",
+								"typeArguments": []
+							}
+						}
+					},
+					{
+						"name": "validator_address",
+						"type": "Address"
+					},
+					{
+						"name": "active_stake",
+						"type": {
+							"Struct": {
+								"address": "0x1",
+								"module": "option",
+								"name": "Option",
+								"typeArguments": [
+									{
+										"Struct": {
+											"address": "0x3",
+											"module": "staking_pool",
+											"name": "FungibleStakedSui",
+											"typeArguments": []
+										}
+									}
+								]
+							}
+						}
+					},
+					{
+						"name": "inactive_stake",
+						"type": {
+							"Struct": {
+								"address": "0x1",
+								"module": "option",
+								"name": "Option",
+								"typeArguments": [
+									{
+										"Struct": {
+											"address": "0x3",
+											"module": "staking_pool",
+											"name": "StakedSui",
+											"typeArguments": []
+										}
+									}
+								]
+							}
+						}
+					},
+					{
+						"name": "exchange_rate",
+						"type": {
+							"Struct": {
+								"address": "0x3",
+								"module": "staking_pool",
+								"name": "PoolTokenExchangeRate",
+								"typeArguments": []
+							}
+						}
+					},
+					{
+						"name": "total_sui_amount",
+						"type": "U64"
+					},
+					{
+						"name": "assigned_weight",
+						"type": "U64"
+					},
+					{
+						"name": "last_refresh_epoch",
+						"type": "U64"
+					},
+					{
+						"name": "extra_fields",
+						"type": {
+							"Struct": {
+								"address": "0x2",
+								"module": "bag",
+								"name": "Bag",
+								"typeArguments": []
+							}
+						}
+					}
+				]
+			},
+			"ValidatorPool": {
+				"abilities": {
+					"abilities": [
+						"Store"
+					]
+				},
+				"typeParameters": [],
+				"fields": [
+					{
+						"name": "sui_pool",
+						"type": {
+							"Struct": {
+								"address": "0x2",
+								"module": "balance",
+								"name": "Balance",
+								"typeArguments": [
+									{
+										"Struct": {
+											"address": "0x2",
+											"module": "sui",
+											"name": "SUI",
+											"typeArguments": []
+										}
+									}
+								]
+							}
+						}
+					},
+					{
+						"name": "validator_infos",
+						"type": {
+							"Vector": {
+								"Struct": {
+									"address": "0x634511c660964940915acb37dde75963e35f2d1b0a034b41e2da8f3e9d1491ae",
+									"module": "validator_pool",
+									"name": "ValidatorInfo",
+									"typeArguments": []
+								}
+							}
+						}
+					},
+					{
+						"name": "total_sui_supply",
+						"type": "U64"
+					},
+					{
+						"name": "last_refresh_epoch",
+						"type": "U64"
+					},
+					{
+						"name": "total_weight",
+						"type": "U64"
+					},
+					{
+						"name": "manage",
+						"type": {
+							"Struct": {
+								"address": "0x634511c660964940915acb37dde75963e35f2d1b0a034b41e2da8f3e9d1491ae",
+								"module": "manage",
+								"name": "Manage",
+								"typeArguments": []
+							}
+						}
+					},
+					{
+						"name": "extra_fields",
+						"type": {
+							"Struct": {
+								"address": "0x2",
+								"module": "bag",
+								"name": "Bag",
+								"typeArguments": []
+							}
+						}
+					}
+				]
+			}
+		},
+		"exposedFunctions": {
+			"active_stake": {
+				"visibility": "Public",
+				"isEntry": false,
+				"typeParameters": [],
+				"parameters": [
+					{
+						"Reference": {
+							"Struct": {
+								"address": "0x634511c660964940915acb37dde75963e35f2d1b0a034b41e2da8f3e9d1491ae",
+								"module": "validator_pool",
+								"name": "ValidatorInfo",
+								"typeArguments": []
+							}
+						}
+					}
+				],
+				"return": [
+					{
+						"Reference": {
+							"Struct": {
+								"address": "0x1",
+								"module": "option",
+								"name": "Option",
+								"typeArguments": [
+									{
+										"Struct": {
+											"address": "0x3",
+											"module": "staking_pool",
+											"name": "FungibleStakedSui",
+											"typeArguments": []
+										}
+									}
+								]
+							}
+						}
+					}
+				]
+			},
+			"decrease_validator_stake": {
+				"visibility": "Friend",
+				"isEntry": false,
+				"typeParameters": [],
+				"parameters": [
+					{
+						"MutableReference": {
+							"Struct": {
+								"address": "0x634511c660964940915acb37dde75963e35f2d1b0a034b41e2da8f3e9d1491ae",
+								"module": "validator_pool",
+								"name": "ValidatorPool",
+								"typeArguments": []
+							}
+						}
+					},
+					{
+						"MutableReference": {
+							"Struct": {
+								"address": "0x3",
+								"module": "sui_system",
+								"name": "SuiSystemState",
+								"typeArguments": []
+							}
+						}
+					},
+					"Address",
+					"U64",
+					{
+						"MutableReference": {
+							"Struct": {
+								"address": "0x2",
+								"module": "tx_context",
+								"name": "TxContext",
+								"typeArguments": []
+							}
+						}
+					}
+				],
+				"return": [
+					"U64"
+				]
+			},
+			"exchange_rate": {
+				"visibility": "Public",
+				"isEntry": false,
+				"typeParameters": [],
+				"parameters": [
+					{
+						"Reference": {
+							"Struct": {
+								"address": "0x634511c660964940915acb37dde75963e35f2d1b0a034b41e2da8f3e9d1491ae",
+								"module": "validator_pool",
+								"name": "ValidatorInfo",
+								"typeArguments": []
+							}
+						}
+					}
+				],
+				"return": [
+					{
+						"Reference": {
+							"Struct": {
+								"address": "0x3",
+								"module": "staking_pool",
+								"name": "PoolTokenExchangeRate",
+								"typeArguments": []
+							}
+						}
+					}
+				]
+			},
+			"find_validator_index_by_address": {
+				"visibility": "Public",
+				"isEntry": false,
+				"typeParameters": [],
+				"parameters": [
+					{
+						"Reference": {
+							"Struct": {
+								"address": "0x634511c660964940915acb37dde75963e35f2d1b0a034b41e2da8f3e9d1491ae",
+								"module": "validator_pool",
+								"name": "ValidatorPool",
+								"typeArguments": []
+							}
+						}
+					},
+					"Address"
+				],
+				"return": [
+					{
+						"Struct": {
+							"address": "0x1",
+							"module": "option",
+							"name": "Option",
+							"typeArguments": [
+								"U64"
+							]
+						}
+					}
+				]
+			},
+			"inactive_stake": {
+				"visibility": "Public",
+				"isEntry": false,
+				"typeParameters": [],
+				"parameters": [
+					{
+						"Reference": {
+							"Struct": {
+								"address": "0x634511c660964940915acb37dde75963e35f2d1b0a034b41e2da8f3e9d1491ae",
+								"module": "validator_pool",
+								"name": "ValidatorInfo",
+								"typeArguments": []
+							}
+						}
+					}
+				],
+				"return": [
+					{
+						"Reference": {
+							"Struct": {
+								"address": "0x1",
+								"module": "option",
+								"name": "Option",
+								"typeArguments": [
+									{
+										"Struct": {
+											"address": "0x3",
+											"module": "staking_pool",
+											"name": "StakedSui",
+											"typeArguments": []
+										}
+									}
+								]
+							}
+						}
+					}
+				]
+			},
+			"increase_validator_stake": {
+				"visibility": "Friend",
+				"isEntry": false,
+				"typeParameters": [],
+				"parameters": [
+					{
+						"MutableReference": {
+							"Struct": {
+								"address": "0x634511c660964940915acb37dde75963e35f2d1b0a034b41e2da8f3e9d1491ae",
+								"module": "validator_pool",
+								"name": "ValidatorPool",
+								"typeArguments": []
+							}
+						}
+					},
+					{
+						"MutableReference": {
+							"Struct": {
+								"address": "0x3",
+								"module": "sui_system",
+								"name": "SuiSystemState",
+								"typeArguments": []
+							}
+						}
+					},
+					"Address",
+					"U64",
+					{
+						"MutableReference": {
+							"Struct": {
+								"address": "0x2",
+								"module": "tx_context",
+								"name": "TxContext",
+								"typeArguments": []
+							}
+						}
+					}
+				],
+				"return": [
+					"U64"
+				]
+			},
+			"join_stake": {
+				"visibility": "Friend",
+				"isEntry": false,
+				"typeParameters": [],
+				"parameters": [
+					{
+						"MutableReference": {
+							"Struct": {
+								"address": "0x634511c660964940915acb37dde75963e35f2d1b0a034b41e2da8f3e9d1491ae",
+								"module": "validator_pool",
+								"name": "ValidatorPool",
+								"typeArguments": []
+							}
+						}
+					},
+					{
+						"MutableReference": {
+							"Struct": {
+								"address": "0x3",
+								"module": "sui_system",
+								"name": "SuiSystemState",
+								"typeArguments": []
+							}
+						}
+					},
+					{
+						"Struct": {
+							"address": "0x3",
+							"module": "staking_pool",
+							"name": "StakedSui",
+							"typeArguments": []
+						}
+					},
+					{
+						"MutableReference": {
+							"Struct": {
+								"address": "0x2",
+								"module": "tx_context",
+								"name": "TxContext",
+								"typeArguments": []
+							}
+						}
+					}
+				],
+				"return": []
+			},
+			"join_to_sui_pool": {
+				"visibility": "Friend",
+				"isEntry": false,
+				"typeParameters": [],
+				"parameters": [
+					{
+						"MutableReference": {
+							"Struct": {
+								"address": "0x634511c660964940915acb37dde75963e35f2d1b0a034b41e2da8f3e9d1491ae",
+								"module": "validator_pool",
+								"name": "ValidatorPool",
+								"typeArguments": []
+							}
+						}
+					},
+					{
+						"Struct": {
+							"address": "0x2",
+							"module": "balance",
+							"name": "Balance",
+							"typeArguments": [
+								{
+									"Struct": {
+										"address": "0x2",
+										"module": "sui",
+										"name": "SUI",
+										"typeArguments": []
+									}
+								}
+							]
+						}
+					}
+				],
+				"return": []
+			},
+			"last_refresh_epoch": {
+				"visibility": "Public",
+				"isEntry": false,
+				"typeParameters": [],
+				"parameters": [
+					{
+						"Reference": {
+							"Struct": {
+								"address": "0x634511c660964940915acb37dde75963e35f2d1b0a034b41e2da8f3e9d1491ae",
+								"module": "validator_pool",
+								"name": "ValidatorPool",
+								"typeArguments": []
+							}
+						}
+					}
+				],
+				"return": [
+					"U64"
+				]
+			},
+			"new": {
+				"visibility": "Friend",
+				"isEntry": false,
+				"typeParameters": [],
+				"parameters": [
+					{
+						"MutableReference": {
+							"Struct": {
+								"address": "0x2",
+								"module": "tx_context",
+								"name": "TxContext",
+								"typeArguments": []
+							}
+						}
+					}
+				],
+				"return": [
+					{
+						"Struct": {
+							"address": "0x634511c660964940915acb37dde75963e35f2d1b0a034b41e2da8f3e9d1491ae",
+							"module": "validator_pool",
+							"name": "ValidatorPool",
+							"typeArguments": []
+						}
+					}
+				]
+			},
+			"rebalance": {
+				"visibility": "Friend",
+				"isEntry": false,
+				"typeParameters": [],
+				"parameters": [
+					{
+						"MutableReference": {
+							"Struct": {
+								"address": "0x634511c660964940915acb37dde75963e35f2d1b0a034b41e2da8f3e9d1491ae",
+								"module": "validator_pool",
+								"name": "ValidatorPool",
+								"typeArguments": []
+							}
+						}
+					},
+					{
+						"Struct": {
+							"address": "0x1",
+							"module": "option",
+							"name": "Option",
+							"typeArguments": [
+								{
+									"Struct": {
+										"address": "0x2",
+										"module": "vec_map",
+										"name": "VecMap",
+										"typeArguments": [
+											"Address",
+											"U64"
+										]
+									}
+								}
+							]
+						}
+					},
+					{
+						"MutableReference": {
+							"Struct": {
+								"address": "0x3",
+								"module": "sui_system",
+								"name": "SuiSystemState",
+								"typeArguments": []
+							}
+						}
+					},
+					{
+						"MutableReference": {
+							"Struct": {
+								"address": "0x2",
+								"module": "tx_context",
+								"name": "TxContext",
+								"typeArguments": []
+							}
+						}
+					}
+				],
+				"return": []
+			},
+			"refresh": {
+				"visibility": "Friend",
+				"isEntry": false,
+				"typeParameters": [],
+				"parameters": [
+					{
+						"MutableReference": {
+							"Struct": {
+								"address": "0x634511c660964940915acb37dde75963e35f2d1b0a034b41e2da8f3e9d1491ae",
+								"module": "validator_pool",
+								"name": "ValidatorPool",
+								"typeArguments": []
+							}
+						}
+					},
+					{
+						"MutableReference": {
+							"Struct": {
+								"address": "0x3",
+								"module": "sui_system",
+								"name": "SuiSystemState",
+								"typeArguments": []
+							}
+						}
+					},
+					{
+						"MutableReference": {
+							"Struct": {
+								"address": "0x2",
+								"module": "tx_context",
+								"name": "TxContext",
+								"typeArguments": []
+							}
+						}
+					}
+				],
+				"return": [
+					"Bool"
+				]
+			},
+			"set_validator_weights": {
+				"visibility": "Friend",
+				"isEntry": false,
+				"typeParameters": [],
+				"parameters": [
+					{
+						"MutableReference": {
+							"Struct": {
+								"address": "0x634511c660964940915acb37dde75963e35f2d1b0a034b41e2da8f3e9d1491ae",
+								"module": "validator_pool",
+								"name": "ValidatorPool",
+								"typeArguments": []
+							}
+						}
+					},
+					{
+						"Struct": {
+							"address": "0x2",
+							"module": "vec_map",
+							"name": "VecMap",
+							"typeArguments": [
+								"Address",
+								"U64"
+							]
+						}
+					},
+					{
+						"MutableReference": {
+							"Struct": {
+								"address": "0x3",
+								"module": "sui_system",
+								"name": "SuiSystemState",
+								"typeArguments": []
+							}
+						}
+					},
+					{
+						"MutableReference": {
+							"Struct": {
+								"address": "0x2",
+								"module": "tx_context",
+								"name": "TxContext",
+								"typeArguments": []
+							}
+						}
+					}
+				],
+				"return": []
+			},
+			"split_n_sui": {
+				"visibility": "Friend",
+				"isEntry": false,
+				"typeParameters": [],
+				"parameters": [
+					{
+						"MutableReference": {
+							"Struct": {
+								"address": "0x634511c660964940915acb37dde75963e35f2d1b0a034b41e2da8f3e9d1491ae",
+								"module": "validator_pool",
+								"name": "ValidatorPool",
+								"typeArguments": []
+							}
+						}
+					},
+					{
+						"MutableReference": {
+							"Struct": {
+								"address": "0x3",
+								"module": "sui_system",
+								"name": "SuiSystemState",
+								"typeArguments": []
+							}
+						}
+					},
+					"U64",
+					{
+						"MutableReference": {
+							"Struct": {
+								"address": "0x2",
+								"module": "tx_context",
+								"name": "TxContext",
+								"typeArguments": []
+							}
+						}
+					}
+				],
+				"return": [
+					{
+						"Struct": {
+							"address": "0x2",
+							"module": "balance",
+							"name": "Balance",
+							"typeArguments": [
+								{
+									"Struct": {
+										"address": "0x2",
+										"module": "sui",
+										"name": "SUI",
+										"typeArguments": []
+									}
+								}
+							]
+						}
+					}
+				]
+			},
+			"split_up_to_n_sui_from_sui_pool": {
+				"visibility": "Friend",
+				"isEntry": false,
+				"typeParameters": [],
+				"parameters": [
+					{
+						"MutableReference": {
+							"Struct": {
+								"address": "0x634511c660964940915acb37dde75963e35f2d1b0a034b41e2da8f3e9d1491ae",
+								"module": "validator_pool",
+								"name": "ValidatorPool",
+								"typeArguments": []
+							}
+						}
+					},
+					"U64"
+				],
+				"return": [
+					{
+						"Struct": {
+							"address": "0x2",
+							"module": "balance",
+							"name": "Balance",
+							"typeArguments": [
+								{
+									"Struct": {
+										"address": "0x2",
+										"module": "sui",
+										"name": "SUI",
+										"typeArguments": []
+									}
+								}
+							]
+						}
+					}
+				]
+			},
+			"stake_pending_sui": {
+				"visibility": "Friend",
+				"isEntry": false,
+				"typeParameters": [],
+				"parameters": [
+					{
+						"MutableReference": {
+							"Struct": {
+								"address": "0x634511c660964940915acb37dde75963e35f2d1b0a034b41e2da8f3e9d1491ae",
+								"module": "validator_pool",
+								"name": "ValidatorPool",
+								"typeArguments": []
+							}
+						}
+					},
+					{
+						"MutableReference": {
+							"Struct": {
+								"address": "0x3",
+								"module": "sui_system",
+								"name": "SuiSystemState",
+								"typeArguments": []
+							}
+						}
+					},
+					{
+						"MutableReference": {
+							"Struct": {
+								"address": "0x2",
+								"module": "tx_context",
+								"name": "TxContext",
+								"typeArguments": []
+							}
+						}
+					}
+				],
+				"return": [
+					"Bool"
+				]
+			},
+			"staking_pool_id": {
+				"visibility": "Public",
+				"isEntry": false,
+				"typeParameters": [],
+				"parameters": [
+					{
+						"Reference": {
+							"Struct": {
+								"address": "0x634511c660964940915acb37dde75963e35f2d1b0a034b41e2da8f3e9d1491ae",
+								"module": "validator_pool",
+								"name": "ValidatorInfo",
+								"typeArguments": []
+							}
+						}
+					}
+				],
+				"return": [
+					{
+						"Struct": {
+							"address": "0x2",
+							"module": "object",
+							"name": "ID",
+							"typeArguments": []
+						}
+					}
+				]
+			},
+			"sui_pool": {
+				"visibility": "Public",
+				"isEntry": false,
+				"typeParameters": [],
+				"parameters": [
+					{
+						"Reference": {
+							"Struct": {
+								"address": "0x634511c660964940915acb37dde75963e35f2d1b0a034b41e2da8f3e9d1491ae",
+								"module": "validator_pool",
+								"name": "ValidatorPool",
+								"typeArguments": []
+							}
+						}
+					}
+				],
+				"return": [
+					{
+						"Reference": {
+							"Struct": {
+								"address": "0x2",
+								"module": "balance",
+								"name": "Balance",
+								"typeArguments": [
+									{
+										"Struct": {
+											"address": "0x2",
+											"module": "sui",
+											"name": "SUI",
+											"typeArguments": []
+										}
+									}
+								]
+							}
+						}
+					}
+				]
+			},
+			"total_sui_amount": {
+				"visibility": "Public",
+				"isEntry": false,
+				"typeParameters": [],
+				"parameters": [
+					{
+						"Reference": {
+							"Struct": {
+								"address": "0x634511c660964940915acb37dde75963e35f2d1b0a034b41e2da8f3e9d1491ae",
+								"module": "validator_pool",
+								"name": "ValidatorInfo",
+								"typeArguments": []
+							}
+						}
+					}
+				],
+				"return": [
+					"U64"
+				]
+			},
+			"total_sui_supply": {
+				"visibility": "Public",
+				"isEntry": false,
+				"typeParameters": [],
+				"parameters": [
+					{
+						"Reference": {
+							"Struct": {
+								"address": "0x634511c660964940915acb37dde75963e35f2d1b0a034b41e2da8f3e9d1491ae",
+								"module": "validator_pool",
+								"name": "ValidatorPool",
+								"typeArguments": []
+							}
+						}
+					}
+				],
+				"return": [
+					"U64"
+				]
+			},
+			"total_weight": {
+				"visibility": "Public",
+				"isEntry": false,
+				"typeParameters": [],
+				"parameters": [
+					{
+						"Reference": {
+							"Struct": {
+								"address": "0x634511c660964940915acb37dde75963e35f2d1b0a034b41e2da8f3e9d1491ae",
+								"module": "validator_pool",
+								"name": "ValidatorPool",
+								"typeArguments": []
+							}
+						}
+					}
+				],
+				"return": [
+					"U64"
+				]
+			},
+			"unstake_approx_n_sui_from_active_stake": {
+				"visibility": "Friend",
+				"isEntry": false,
+				"typeParameters": [],
+				"parameters": [
+					{
+						"MutableReference": {
+							"Struct": {
+								"address": "0x634511c660964940915acb37dde75963e35f2d1b0a034b41e2da8f3e9d1491ae",
+								"module": "validator_pool",
+								"name": "ValidatorPool",
+								"typeArguments": []
+							}
+						}
+					},
+					{
+						"MutableReference": {
+							"Struct": {
+								"address": "0x3",
+								"module": "sui_system",
+								"name": "SuiSystemState",
+								"typeArguments": []
+							}
+						}
+					},
+					"U64",
+					"U64",
+					{
+						"MutableReference": {
+							"Struct": {
+								"address": "0x2",
+								"module": "tx_context",
+								"name": "TxContext",
+								"typeArguments": []
+							}
+						}
+					}
+				],
+				"return": [
+					"U64"
+				]
+			},
+			"unstake_approx_n_sui_from_inactive_stake": {
+				"visibility": "Friend",
+				"isEntry": false,
+				"typeParameters": [],
+				"parameters": [
+					{
+						"MutableReference": {
+							"Struct": {
+								"address": "0x634511c660964940915acb37dde75963e35f2d1b0a034b41e2da8f3e9d1491ae",
+								"module": "validator_pool",
+								"name": "ValidatorPool",
+								"typeArguments": []
+							}
+						}
+					},
+					{
+						"MutableReference": {
+							"Struct": {
+								"address": "0x3",
+								"module": "sui_system",
+								"name": "SuiSystemState",
+								"typeArguments": []
+							}
+						}
+					},
+					"U64",
+					"U64",
+					{
+						"MutableReference": {
+							"Struct": {
+								"address": "0x2",
+								"module": "tx_context",
+								"name": "TxContext",
+								"typeArguments": []
+							}
+						}
+					}
+				],
+				"return": [
+					"U64"
+				]
+			},
+			"unstake_approx_n_sui_from_validator": {
+				"visibility": "Friend",
+				"isEntry": false,
+				"typeParameters": [],
+				"parameters": [
+					{
+						"MutableReference": {
+							"Struct": {
+								"address": "0x634511c660964940915acb37dde75963e35f2d1b0a034b41e2da8f3e9d1491ae",
+								"module": "validator_pool",
+								"name": "ValidatorPool",
+								"typeArguments": []
+							}
+						}
+					},
+					{
+						"MutableReference": {
+							"Struct": {
+								"address": "0x3",
+								"module": "sui_system",
+								"name": "SuiSystemState",
+								"typeArguments": []
+							}
+						}
+					},
+					"U64",
+					"U64",
+					{
+						"MutableReference": {
+							"Struct": {
+								"address": "0x2",
+								"module": "tx_context",
+								"name": "TxContext",
+								"typeArguments": []
+							}
+						}
+					}
+				],
+				"return": [
+					"U64"
+				]
+			},
+			"validator_address": {
+				"visibility": "Public",
+				"isEntry": false,
+				"typeParameters": [],
+				"parameters": [
+					{
+						"Reference": {
+							"Struct": {
+								"address": "0x634511c660964940915acb37dde75963e35f2d1b0a034b41e2da8f3e9d1491ae",
+								"module": "validator_pool",
+								"name": "ValidatorInfo",
+								"typeArguments": []
+							}
+						}
+					}
+				],
+				"return": [
+					"Address"
+				]
+			},
+			"validator_stake_amounts": {
+				"visibility": "Public",
+				"isEntry": false,
+				"typeParameters": [],
+				"parameters": [
+					{
+						"Reference": {
+							"Struct": {
+								"address": "0x634511c660964940915acb37dde75963e35f2d1b0a034b41e2da8f3e9d1491ae",
+								"module": "validator_pool",
+								"name": "ValidatorPool",
+								"typeArguments": []
+							}
+						}
+					}
+				],
+				"return": [
+					{
+						"Struct": {
+							"address": "0x2",
+							"module": "vec_map",
+							"name": "VecMap",
+							"typeArguments": [
+								"Address",
+								"U64"
+							]
+						}
+					},
+					{
+						"Struct": {
+							"address": "0x2",
+							"module": "vec_map",
+							"name": "VecMap",
+							"typeArguments": [
+								"Address",
+								"U64"
+							]
+						}
+					}
+				]
+			},
+			"validator_weights": {
+				"visibility": "Public",
+				"isEntry": false,
+				"typeParameters": [],
+				"parameters": [
+					{
+						"Reference": {
+							"Struct": {
+								"address": "0x634511c660964940915acb37dde75963e35f2d1b0a034b41e2da8f3e9d1491ae",
+								"module": "validator_pool",
+								"name": "ValidatorPool",
+								"typeArguments": []
+							}
+						}
+					}
+				],
+				"return": [
+					{
+						"Struct": {
+							"address": "0x2",
+							"module": "vec_map",
+							"name": "VecMap",
+							"typeArguments": [
+								"Address",
+								"U64"
+							]
+						}
+					}
+				]
+			},
+			"validators": {
+				"visibility": "Public",
+				"isEntry": false,
+				"typeParameters": [],
+				"parameters": [
+					{
+						"Reference": {
+							"Struct": {
+								"address": "0x634511c660964940915acb37dde75963e35f2d1b0a034b41e2da8f3e9d1491ae",
+								"module": "validator_pool",
+								"name": "ValidatorPool",
+								"typeArguments": []
+							}
+						}
+					}
+				],
+				"return": [
+					{
+						"Reference": {
+							"Vector": {
+								"Struct": {
+									"address": "0x634511c660964940915acb37dde75963e35f2d1b0a034b41e2da8f3e9d1491ae",
+									"module": "validator_pool",
+									"name": "ValidatorInfo",
+									"typeArguments": []
+								}
+							}
+						}
+					}
+				]
+			}
+		}
+	}
+]

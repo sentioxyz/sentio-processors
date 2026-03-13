@@ -23,6 +23,7 @@ import {
   pool_manager,
 } from "../types/sui/0xee0041239b89564ce870a7dec5ddc5d114367ab94a1137e90aa0633cb76518e0.js";
 import { stake_pool } from "../types/sui/0x634511c660964940915acb37dde75963e35f2d1b0a034b41e2da8f3e9d1491ae.js";
+import { event as multi_market_event } from "../types/sui/navi_multi_market.js";
 import {
   FlashLoanCoins,
   COIN_MAP,
@@ -46,7 +47,7 @@ let previousFeePoolAmounts = new Map<string, BigDecimal>();
 // Track cumulative net growth of fee pools (only positive changes)
 let feePoolNetGrowth = new Map<string, BigDecimal>();
 
-// Treasury balance for pool cache - 用于存储池子的treasury balance数据
+// Cache the latest treasury balance reported for each pool.
 let treasuryBalanceForPoolCache = new Map<string, BigDecimal>();
 
 // Historical data initialization flag
@@ -87,15 +88,14 @@ const COIN_MAPPING: { [key: string]: string } = {
 
 const LIQUID_STAKING_PACKAGE =
   "0x634511c660964940915acb37dde75963e35f2d1b0a034b41e2da8f3e9d1491ae";
-const LIQUID_STAKING_START_CHECKPOINT = 8000000n;
+const LIQUID_STAKING_START_CHECKPOINT = 78000000n;
 const SUI_DECIMALS = 9;
 
 // Initialize historical cumulative withdrawal amounts
 async function initializeHistoricalWithdrawals(ctx: SuiContext): Promise<void> {
   if (isHistoricalDataInitialized) return;
 
-  // Initialize all tokens with zero cumulative withdrawals
-  // Historical data can be set here if available
+  // Initialize all tracked tokens with zero cumulative withdrawals.
   for (const coinSymbol of Object.values(COIN_MAP)) {
     if (coinSymbol) {
       cumulativeWithdrawnAmounts.set(coinSymbol, BigDecimal(0));
@@ -290,7 +290,7 @@ async function flashLoanHandler(
   const amount = event.data_decoded.amount;
   const asset: string = event.data_decoded.asset as string;
   const coinAddress = event.type_arguments[0] as string;
-  const coinSymbol = FlashLoanCoins[asset] || "unknown";
+  const coinSymbol = getCoinSymbolByType(coinAddress) || FlashLoanCoins[asset] || "unknown";
 
   ctx.eventLogger.emit("flashloan", {
     sender: sender,
@@ -310,7 +310,7 @@ async function flashoanRepayHandler(
   const amount = event.data_decoded.amount;
   const asset = String(event.data_decoded.asset);
   const coinAddress = event.type_arguments[0] as string;
-  const coinType = FlashLoanCoins[asset] || "unknown";
+  const coinType = getCoinSymbolByType(coinAddress) || FlashLoanCoins[asset] || "unknown";
 
   ctx.eventLogger.emit("flashloanRepay", {
     sender: sender,
@@ -713,13 +713,411 @@ async function onLiquidStakingEpochChanged(
     .record(revenueNormalized, { env: "mainnet" });
 }
 
+// ============================================================
+// Multi-market event handlers (event module from multi_market package)
+// ============================================================
+
+const MULTI_MARKET_START_CHECKPOINT = 78_000_000n;
+
+type MultiMarketLendingEvent =
+  | multi_market_event.DepositEventInstance
+  | multi_market_event.WithdrawEventInstance
+  | multi_market_event.BorrowEventInstance
+  | multi_market_event.RepayEventInstance;
+
+async function onMultiMarketEvent(evt: MultiMarketLendingEvent, ctx: SuiContext) {
+  const { sender, reserve, amount, market_id } = evt.data_decoded;
+
+  if (reserve === null || reserve === undefined) return;
+  if (reserve.toString() === "null") return;
+
+  const coinAddress = COIN_MAPPING[reserve.toString()];
+  if (!coinAddress) {
+    console.warn(`[multi_market] Coin address not found for reserve: ${reserve}`);
+    return;
+  }
+
+  const typeArray = evt.type.split("::");
+  const type = typeArray[typeArray.length - 1];
+  const coinDecimal = await getOrCreateCoin(ctx, coinAddress);
+  const scaledAmount = scaleDown(amount, coinDecimal.decimal);
+
+  ctx.eventLogger.emit("UserInteraction", {
+    distinctId: sender,
+    sender,
+    amount: scaledAmount,
+    reserve,
+    type,
+    market_id: market_id.toString(),
+    env: "mainnet",
+  });
+}
+
+async function onMultiMarketDepositOnBehalf(
+  evt: multi_market_event.DepositOnBehalfOfEventInstance,
+  ctx: SuiContext,
+) {
+  const { sender, user, amount, reserve, market_id } = evt.data_decoded;
+  ctx.eventLogger.emit("OnBehalfOfInteraction", {
+    sender,
+    user,
+    reserve,
+    amount,
+    market_id: market_id.toString(),
+    env: "mainnet",
+    type: "deposit",
+  });
+}
+
+async function onMultiMarketRepayOnBehalf(
+  evt: multi_market_event.RepayOnBehalfOfEventInstance,
+  ctx: SuiContext,
+) {
+  const { sender, user, amount, reserve, market_id } = evt.data_decoded;
+  ctx.eventLogger.emit("OnBehalfOfInteraction", {
+    sender,
+    user,
+    reserve,
+    amount,
+    market_id: market_id.toString(),
+    env: "mainnet",
+    type: "repay",
+  });
+}
+
+async function onMultiMarketLiquidation(
+  evt: multi_market_event.LiquidationEventInstance,
+  ctx: SuiContext,
+) {
+  const d = evt.data_decoded;
+  const collateral_decimal = DECIMAL_MAP[d.collateral_asset];
+  const collateral_symbol = SYMBOL_MAP[d.collateral_asset];
+  const debt_decimal = DECIMAL_MAP[d.debt_asset];
+  const debt_symbol = SYMBOL_MAP[d.debt_asset];
+
+  if (collateral_decimal === undefined || debt_decimal === undefined) return;
+  if (!collateral_symbol || !debt_symbol) return;
+
+  const typeArray = evt.type.split("::");
+  const type = typeArray[typeArray.length - 1];
+
+  ctx.eventLogger.emit("Liquidation", {
+    liquidation_sender: d.sender,
+    user: d.user,
+    collateral_asset: d.collateral_asset,
+    collateral_decimal,
+    collateral_decimal_ray: Math.pow(10, collateral_decimal),
+    collateral_symbol,
+    collateral_price: d.collateral_price,
+    collateral_price_normalized: scaleDown(d.collateral_price, collateral_decimal),
+    collateral_amount: d.collateral_amount,
+    collateral_amount_normalized: scaleDown(d.collateral_amount, collateral_decimal),
+    treasury: d.treasury,
+    debt_asset: d.debt_asset,
+    debt_decimal,
+    debt_decimal_ray: Math.pow(10, debt_decimal),
+    debt_symbol,
+    debt_price: d.debt_price,
+    debt_price_normalized: scaleDown(d.debt_price, debt_decimal),
+    debt_amount: d.debt_amount,
+    debt_amount_normalized: scaleDown(d.debt_amount, debt_decimal),
+    type,
+    market_id: d.market_id.toString(),
+    env: "mainnet",
+  });
+}
+
+async function onMultiMarketLiquidationCall(
+  evt: multi_market_event.LiquidationCallEventInstance,
+  ctx: SuiContext,
+) {
+  const d = evt.data_decoded;
+  ctx.eventLogger.emit("LiquidationCall", {
+    reserve: d.reserve,
+    sender: d.sender,
+    liquidate_user: d.liquidate_user,
+    liquidate_amount: d.liquidate_amount,
+    market_id: d.market_id.toString(),
+    env: "mainnet",
+  });
+}
+
+async function onMultiMarketFlashLoan(
+  evt: multi_market_event.FlashLoanInstance,
+  ctx: SuiContext,
+) {
+  const { sender, asset, amount, market_id } = evt.data_decoded;
+  const assetStr = String(asset);
+  const coinSymbol = FlashLoanCoins[assetStr] || "unknown";
+
+  ctx.eventLogger.emit("flashloan", {
+    sender,
+    amount,
+    asset: assetStr,
+    coinType: coinSymbol,
+    market_id: market_id.toString(),
+    env: "mainnet",
+  });
+}
+
+async function onMultiMarketFlashRepay(
+  evt: multi_market_event.FlashRepayInstance,
+  ctx: SuiContext,
+) {
+  const { sender, asset, amount, fee_to_supplier, fee_to_treasury, market_id } = evt.data_decoded;
+  const assetStr = String(asset);
+  const coinSymbol = FlashLoanCoins[assetStr] || "unknown";
+
+  ctx.eventLogger.emit("flashloanRepay", {
+    sender,
+    coinType: coinSymbol,
+    amount,
+    fee_to_supplier,
+    fee_to_treasury,
+    market_id: market_id.toString(),
+    env: "mainnet",
+  });
+}
+
+async function onMultiMarketRewardClaimed(
+  evt: multi_market_event.RewardClaimedInstance,
+  ctx: SuiContext,
+) {
+  const d = evt.data_decoded;
+  ctx.eventLogger.emit("RewardsClaimed", {
+    sender: d.user,
+    amount: d.total_claimed,
+    pool: null,
+    coin_type: d.coin_type,
+    rule_ids: d.rule_ids,
+    rule_indices: d.rule_indices.map((i) => i.toString()),
+    market_id: d.market_id.toString(),
+    env: "mainnet",
+  });
+}
+
+async function onMultiMarketWithdrawTreasury(
+  evt: multi_market_event.WithdrawTreasuryEventInstance,
+  ctx: SuiContext,
+) {
+  const d = evt.data_decoded;
+  const assetIndex = Number(d.asset);
+  const rawCoinType = COIN_MAPPING[assetIndex.toString()] || "";
+  const normalizedCoinType = normalizeCoinType(rawCoinType);
+  const coinType = normalizedCoinType || (rawCoinType ? rawCoinType : "unknown");
+  const resolvedCoinSymbol = getCoinSymbolByType(rawCoinType);
+  const coinSymbol = resolvedCoinSymbol === "unknown" ? `UNKNOWN_${assetIndex}` : resolvedCoinSymbol;
+
+  const decimal = 9;
+  const withdrawAmount = scaleDown(d.amount, decimal);
+
+  const currentCumulative = await getCumulativeWithdrawnAmount(ctx, coinSymbol);
+  const newCumulative = currentCumulative.plus(withdrawAmount);
+  await saveCumulativeWithdrawn(ctx, coinSymbol, newCumulative);
+
+  ctx.eventLogger.emit("WithdrawTreasury", {
+    sender: d.sender,
+    recipient: d.recipient,
+    id: assetIndex.toString(),
+    amount: d.amount,
+    amount_normalized: withdrawAmount,
+    poolId: d.poolId,
+    before: d.before,
+    after: d.after,
+    index: d.index,
+    market_id: d.market_id.toString(),
+    env: "mainnet",
+  });
+
+  ctx.eventLogger.emit("WithdrawTreasuryV2", {
+    sender: d.sender,
+    recipient: d.recipient,
+    id: assetIndex.toString(),
+    amount: d.amount,
+    amount_normalized: withdrawAmount,
+    poolId: d.poolId,
+    before: d.before,
+    after: d.after,
+    index: d.index,
+    env: "mainnet",
+    coin_symbol: coinSymbol,
+    coin_type: coinType,
+    cumulative_withdrawn: newCumulative,
+    withdraw_amount_decimal: withdrawAmount,
+    market_id: d.market_id.toString(),
+  });
+}
+
+async function onMultiMarketBorrowFeeDeposited(
+  evt: multi_market_event.BorrowFeeDepositedInstance,
+  ctx: SuiContext,
+) {
+  const d = evt.data_decoded;
+  const rawCoinType = String(d.coin_type);
+  const coin_type = normalizeCoinType(rawCoinType);
+  const coin_symbol = getCoinSymbolByType(rawCoinType);
+  const decimal = getDecimalByCoinType(rawCoinType);
+
+  const fee_normalized = decimal !== undefined
+    ? scaleDown(d.fee, decimal)
+    : BigDecimal(d.fee.toString());
+
+  ctx.eventLogger.emit("BorrowFeeDeposited", {
+    sender: d.sender,
+    coin_type,
+    coin_symbol,
+    fee: d.fee,
+    fee_normalized,
+    market_id: d.market_id.toString(),
+    env: "mainnet",
+  });
+}
+
+async function onMultiMarketFundUpdated(
+  evt: multi_market_event.FundUpdatedInstance,
+  ctx: SuiContext,
+) {
+  const d = evt.data_decoded;
+  const decimal = 9;
+
+  ctx.eventLogger.emit("FundUpdated", {
+    original_sui_amount: d.original_sui_amount,
+    original_sui_amount_normalized: scaleDown(d.original_sui_amount, decimal),
+    current_sui_amount: d.current_sui_amount,
+    current_sui_amount_normalized: scaleDown(d.current_sui_amount, decimal),
+    vsui_balance_amount: d.vsui_balance_amount,
+    vsui_balance_amount_normalized: scaleDown(d.vsui_balance_amount, decimal),
+    target_sui_amount: d.target_sui_amount,
+    target_sui_amount_normalized: scaleDown(d.target_sui_amount, decimal),
+    manager_id: d.manager_id,
+    env: "mainnet",
+  });
+}
+
+async function onMultiMarketStakingTreasuryWithdrawn(
+  evt: multi_market_event.StakingTreasuryWithdrawnInstance,
+  ctx: SuiContext,
+) {
+  const d = evt.data_decoded;
+  const decimal = 9;
+
+  ctx.eventLogger.emit("StakingTreasuryWithdrawn", {
+    taken_vsui_balance_amount: d.taken_vsui_balance_amount,
+    taken_vsui_balance_amount_normalized: scaleDown(d.taken_vsui_balance_amount, decimal),
+    equal_sui_balance_amount: d.equal_sui_balance_amount,
+    equal_sui_balance_amount_normalized: scaleDown(d.equal_sui_balance_amount, decimal),
+    manager_id: d.manager_id,
+    env: "mainnet",
+  });
+}
+
+async function onMultiMarketStateUpdated(
+  evt: multi_market_event.StateUpdatedInstance,
+  ctx: SuiContext,
+) {
+  const d = evt.data_decoded;
+  const asset_symbol = SYMBOL_MAP[d.asset] ?? "unknown";
+
+  ctx.eventLogger.emit("StateUpdated", {
+    user: d.user,
+    asset: d.asset.toString(),
+    asset_symbol,
+    user_supply_balance: d.user_supply_balance.toString(),
+    user_borrow_balance: d.user_borrow_balance.toString(),
+    new_supply_index: d.new_supply_index.toString(),
+    new_borrow_index: d.new_borrow_index.toString(),
+    market_id: d.market_id.toString(),
+    env: "mainnet",
+  });
+}
+
+async function onMultiMarketPoolCreate(
+  evt: multi_market_event.PoolCreateInstance,
+  ctx: SuiContext,
+) {
+  const { creator, coin_type, pool_id, market_id } = evt.data_decoded;
+  ctx.eventLogger.emit("PoolCreate", {
+    creator,
+    coin_type: String(coin_type),
+    pool_id,
+    market_id: market_id.toString(),
+    env: "mainnet",
+  });
+}
+
+async function onMultiMarketPoolDeposit(
+  evt: multi_market_event.PoolDepositInstance,
+  ctx: SuiContext,
+) {
+  const { sender, amount, pool, market_id } = evt.data_decoded;
+  ctx.eventLogger.emit("PoolDeposit", {
+    sender,
+    amount: BigDecimal(amount.toString()),
+    pool: String(pool),
+    market_id: market_id.toString(),
+    env: "mainnet",
+  });
+}
+
+async function onMultiMarketPoolWithdraw(
+  evt: multi_market_event.PoolWithdrawInstance,
+  ctx: SuiContext,
+) {
+  const { sender, recipient, amount, pool, market_id } = evt.data_decoded;
+  ctx.eventLogger.emit("PoolWithdraw", {
+    sender,
+    recipient,
+    amount: BigDecimal(amount.toString()),
+    pool: String(pool),
+    market_id: market_id.toString(),
+    env: "mainnet",
+  });
+}
+
+async function onMultiMarketPoolWithdrawReserve(
+  evt: multi_market_event.PoolWithdrawReserveInstance,
+  ctx: SuiContext,
+) {
+  const d = evt.data_decoded;
+  ctx.eventLogger.emit("PoolWithdrawReserve", {
+    sender: d.sender,
+    recipient: d.recipient,
+    amount: BigDecimal(d.amount.toString()),
+    before: BigDecimal(d.before.toString()),
+    after: BigDecimal(d.after.toString()),
+    pool: String(d.pool),
+    poolId: d.poolId,
+    market_id: d.market_id.toString(),
+    env: "mainnet",
+  });
+}
+
+async function onMultiMarketPoolBalanceRegister(
+  evt: multi_market_event.PoolBalanceRegisterInstance,
+  ctx: SuiContext,
+) {
+  const { sender, amount, new_amount, pool, market_id } = evt.data_decoded;
+  ctx.eventLogger.emit("PoolBalanceRegister", {
+    sender,
+    amount: BigDecimal(amount.toString()),
+    new_amount: BigDecimal(new_amount.toString()),
+    pool: String(pool),
+    market_id: market_id.toString(),
+    env: "mainnet",
+  });
+}
+
+// ============================================================
+// Binding chains for existing processors
+// ============================================================
+
 flash_loan
-  .bind({ startCheckpoint: 8000000n })
+  .bind({ startCheckpoint: 78000000n })
   .onEventFlashLoan(flashLoanHandler)
   .onEventFlashRepay(flashoanRepayHandler);
 
 lending_new_liquidation_event
-  .bind({ startCheckpoint: 8000000n })
+  .bind({ startCheckpoint: 78000000n })
   .onEventDepositOnBehalfOfEvent(depositOnBehalfOfHandler)
   .onEventRepayOnBehalfOfEvent(repayOnBehalfOfHandler)
   .onEventBorrowEvent(onEvent)
@@ -731,32 +1129,32 @@ lending_new_liquidation_event
 //   .onEventSCCProcessedEvent(supraEventHandler)
 
 incentive_v2
-  .bind({ startCheckpoint: 8000000n })
+  .bind({ startCheckpoint: 78000000n })
   .onEventRewardsClaimed(onRewardsClaimedEvent);
 
 lending_new_liquidation_event_v3
-  .bind({ startCheckpoint: 8000000n })
+  .bind({ startCheckpoint: 78000000n })
   .onEventLiquidationEvent(onLiquidationNewEventV3)
   .onEventDepositOnBehalfOfEvent(depositOnBehalfOfHandlerV3)
   .onEventRepayOnBehalfOfEvent(repayOnBehalfOfHandlerV3);
 
 incentive_v3
-  .bind({ startCheckpoint: 8000000n })
+  .bind({ startCheckpoint: 78000000n })
   .onEventRewardClaimed(onRewardsClaimedEventV3);
 
 storage
-  .bind({ startCheckpoint: 8000000n })
+  .bind({ startCheckpoint: 78000000n })
   .onEventWithdrawTreasuryEvent(withdrawTreasuryHandler);
 
 // New events from upgraded package (v4)
 incentive_v4
-  .bind({ startCheckpoint: 8000000n })
+  .bind({ startCheckpoint: 78000000n })
   .onEventAssetBorrowFeeRateUpdated(onAssetBorrowFeeRateUpdated)
   .onEventAssetBorrowFeeRateRemoved(onAssetBorrowFeeRateRemoved)
   .onEventBorrowFeeDeposited(onBorrowFeeDeposited);
 
 pool_manager
-  .bind({ startCheckpoint: 8000000n })
+  .bind({ startCheckpoint: 78000000n })
   .onEventFundUpdated(onFundUpdated)
   .onEventStakingTreasuryWithdrawn(onStakingTreasuryWithdrawn);
 
@@ -766,6 +1164,39 @@ stake_pool
     address: LIQUID_STAKING_PACKAGE,
   })
   .onEventEpochChangedEvent(onLiquidStakingEpochChanged);
+
+// Multi-market event module (all core events consolidated)
+multi_market_event
+  .bind({ startCheckpoint: MULTI_MARKET_START_CHECKPOINT })
+  // Core lending events
+  .onEventDepositEvent(onMultiMarketEvent)
+  .onEventWithdrawEvent(onMultiMarketEvent)
+  .onEventBorrowEvent(onMultiMarketEvent)
+  .onEventRepayEvent(onMultiMarketEvent)
+  .onEventDepositOnBehalfOfEvent(onMultiMarketDepositOnBehalf)
+  .onEventRepayOnBehalfOfEvent(onMultiMarketRepayOnBehalf)
+  // Liquidation
+  .onEventLiquidationEvent(onMultiMarketLiquidation)
+  .onEventLiquidationCallEvent(onMultiMarketLiquidationCall)
+  // Flash loan
+  .onEventFlashLoan(onMultiMarketFlashLoan)
+  .onEventFlashRepay(onMultiMarketFlashRepay)
+  // Rewards
+  .onEventRewardClaimed(onMultiMarketRewardClaimed)
+  // Treasury
+  .onEventWithdrawTreasuryEvent(onMultiMarketWithdrawTreasury)
+  .onEventBorrowFeeDeposited(onMultiMarketBorrowFeeDeposited)
+  // Pool manager
+  .onEventFundUpdated(onMultiMarketFundUpdated)
+  .onEventStakingTreasuryWithdrawn(onMultiMarketStakingTreasuryWithdrawn)
+  // State
+  .onEventStateUpdated(onMultiMarketStateUpdated)
+  // Pool operations
+  .onEventPoolCreate(onMultiMarketPoolCreate)
+  .onEventPoolDeposit(onMultiMarketPoolDeposit)
+  .onEventPoolWithdraw(onMultiMarketPoolWithdraw)
+  .onEventPoolWithdrawReserve(onMultiMarketPoolWithdrawReserve)
+  .onEventPoolBalanceRegister(onMultiMarketPoolBalanceRegister);
 
 // Update fee pool amount (called by fee.ts)
 export function updateFeePoolAmount(

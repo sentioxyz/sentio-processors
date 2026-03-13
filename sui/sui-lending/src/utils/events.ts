@@ -45,3 +45,46 @@ export async function emitBorrowEvent(ctx: SuiContext, event: LendingEvent) {
 export async function emitRepayEvent(ctx: SuiContext, event: LendingEvent) {
   return emitLendingEvent(ctx, event, 'repay')
 }
+
+// --- Multi-market event helpers ---
+
+interface MarketLendingEvent {
+  project: string
+  coinType: string | undefined
+  amount: bigint
+  sender: string
+  market_id: bigint
+  user?: string
+  to?: string
+}
+
+export async function emitMarketLendingEvent(ctx: SuiContext, data: MarketLendingEvent, eventType: string) {
+  if (!data.coinType) {
+    console.warn(`[${eventType}] Coin type not found, market_id=${data.market_id}`)
+    return
+  }
+  const metadata = await getCoinMetadata(ctx, data.coinType)
+  if (!metadata) {
+    console.warn(`[${eventType}] No metadata for ${data.coinType}`)
+    return
+  }
+
+  ctx.eventLogger.emit(eventType, {
+    distinctId: data.sender,
+    project: data.project,
+    coin_symbol: metadata.symbol,
+    amount: scaleDown(data.amount, metadata.decimals),
+    usd_amount: await getUSD(ctx, data.coinType, data.amount, metadata.decimals),
+    market_id: data.market_id.toString(),
+    ...(data.user && { user: data.user }),
+    ...(data.to && { to: data.to }),
+  })
+}
+
+export function emitRawEvent(ctx: SuiContext, eventName: string, fields: Record<string, unknown>) {
+  ctx.eventLogger.emit(eventName, {
+    distinctId: ctx.transaction.transaction?.data.sender,
+    project: 'navi',
+    ...fields,
+  })
+}

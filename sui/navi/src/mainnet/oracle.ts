@@ -11,7 +11,7 @@ export function OracleProcessor() {
   SuiWrappedObjectProcessor.bind({
     network: ChainId.SUI_MAINNET,
     objectId: priceOracle,
-    startCheckpoint: 8000000n,
+    startCheckpoint: 78000000n,
   }).onTimeInterval(
     async (objects, ctx) => {
       const decodedObjects = await ctx.coder.getDynamicFields(

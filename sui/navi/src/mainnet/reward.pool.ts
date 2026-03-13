@@ -44,7 +44,7 @@ export function PoolProcessor() {
     SuiObjectProcessor.bind({
       objectId: pool,
       network: ChainId.SUI_MAINNET,
-      startCheckpoint: 8000000n,
+      startCheckpoint: 78000000n,
     }).onTimeInterval(async (self, data, ctx) => {
       const type = String(self.type);
       const coin_type = SymbolMatcher(type);
@@ -78,7 +78,7 @@ export function PoolProcessor() {
           coin_id: coin_id.toString(),
         });
 
-        // 更新treasury balance for pool缓存
+        // Keep the latest treasury balance in the shared cache.
         if (coin_symbol) {
           updateTreasuryBalanceForPool(coin_symbol, treasuryBalance);
         }
