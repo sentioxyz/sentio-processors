@@ -5,7 +5,6 @@ import {
   fungible_asset,
   object$,
 } from "@sentio/sdk/aptos/builtin/0x1";
-import { ANY_TYPE } from "@typemove/move";
 import { Balance } from "./schema/schema.js";
 import {
   AccountAddress,
@@ -81,7 +80,7 @@ AptosResourcesProcessor.bind({
       }),
     );
   }
-}, ANY_TYPE)
+}, [fungible_asset.FungibleStore.type(), object$.ObjectCore.type()])
 
 function isWriteSetChangeWriteResource(
   change: WriteSetChange,
