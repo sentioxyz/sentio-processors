@@ -1,10 +1,11 @@
 import {
-  AptosGlobalProcessor,
+  AptosResourcesProcessor,
 } from "@sentio/sdk/aptos";
 import {
   fungible_asset,
   object$,
 } from "@sentio/sdk/aptos/builtin/0x1";
+import { ANY_TYPE } from "@typemove/move";
 import { Balance } from "./schema/schema.js";
 import {
   AccountAddress,
@@ -20,11 +21,10 @@ const OBJECT_CORE_TYPE = object$.ObjectCore.TYPE_QNAME;
 const normalizeAddress = (address: string) =>
   AccountAddress.from(address, { maxMissingChars: 63 }).toString();
 
-AptosGlobalProcessor.bind({
+AptosResourcesProcessor.bind({
   address: "*",
   startVersion: START_VERSION,
-}).onTransaction(async (transaction, ctx) => {
-  const changes = transaction.changes ?? [];
+}).onResourceChange(async (changes, ctx) => {
   const stores = new Map<
     string,
     {
@@ -81,11 +81,7 @@ AptosGlobalProcessor.bind({
       }),
     );
   }
-}, undefined, {
-  allEvents: false,
-  inputs: false,
-  resourceChanges: true,
-})
+}, ANY_TYPE)
 
 function isWriteSetChangeWriteResource(
   change: WriteSetChange,
