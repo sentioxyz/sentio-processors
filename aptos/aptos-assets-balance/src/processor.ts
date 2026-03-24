@@ -1,5 +1,5 @@
 import {
-  AptosGlobalProcessor,
+  AptosResourcesProcessor,
 } from "@sentio/sdk/aptos";
 import {
   fungible_asset,
@@ -20,11 +20,10 @@ const OBJECT_CORE_TYPE = object$.ObjectCore.TYPE_QNAME;
 const normalizeAddress = (address: string) =>
   AccountAddress.from(address, { maxMissingChars: 63 }).toString();
 
-AptosGlobalProcessor.bind({
+AptosResourcesProcessor.bind({
   address: "*",
   startVersion: START_VERSION,
-}).onTransaction(async (transaction, ctx) => {
-  const changes = transaction.changes ?? [];
+}).onResourceChange(async (changes, ctx) => {
   const stores = new Map<
     string,
     {
@@ -81,11 +80,7 @@ AptosGlobalProcessor.bind({
       }),
     );
   }
-}, undefined, {
-  allEvents: false,
-  inputs: false,
-  resourceChanges: true,
-})
+}, [fungible_asset.FungibleStore.type(), object$.ObjectCore.type()])
 
 function isWriteSetChangeWriteResource(
   change: WriteSetChange,
