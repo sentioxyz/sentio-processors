@@ -45,6 +45,13 @@ const reserves = [
   "0x09c7b740981a2aa81b407e83d052a46cf1830c7470f80d053e6a49715eb29876", // 25 - Reserve For HAEDAL
   "0x9a1a0533b157361a5cc42ed64fdee6970ab66eb4731afa6dde8e7fe27a36d24d", // 26 - Reserve For XBTC
   "0x96e0827599a28f7eadeaa5165a67c4a5414d21f55070c61b5b66583b2a845d6d", // 27 - Reserve For IKA
+  "0xe10cb3da49d69a525d1dc5e6c203f09050cbecf2e36af6d7da10f954fc8cf0d5", // 28 - Reserve For enzoBTC
+  "0x17665e447178ba70dd291a6b24812c0c718dc008d4bc135b1f745c6b19197156", // 29 - Reserve For MBTC
+  "0x052727f47790aff100bdd3e53aa5dbfd1c55ab632713021e7ad4722dc91d8474", // 30 - Reserve For YBTC
+  "0x520aaee2b1b1172ef23e66cdca01dc35acd44a2e2ee293843ea4a4511f3f7110", // 31 - Reserve For XAUM
+  "0x06f162a30cdb712d7a68889792a0281eb67ac3d046233e42411b0a334523d178", // 32 - Reserve For LZWBTC
+  "0x75a99a1fb2f7ca1af1126b0915dec1741e5b037cc18244ed1941984e1781fe61", // 33 - Reserve For suiUSDe
+  "0x2f28299408b14c50ad70304fbd86ba15d7b3947377cc9ad1521e37d4d51fa4a6", // 34 - Reserve For USDSUI
 ];
 
 export function ProtocolProcessor() {

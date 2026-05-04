@@ -29,7 +29,13 @@ export const COIN = [
   "HAEDAL",
   "XBTC",
   "IKA",
+  "enzoBTC",
+  "MBTC",
+  "YBTC",
   "XAUM",
+  "LZWBTC",
+  "suiUSDe",
+  "USDSUI",
 ];
 
 export const DECIMAL_RAY = 27;
@@ -64,7 +70,13 @@ export const DECIMAL_MAP: Record<number, number> = {
   25: 9,
   26: 8,
   27: 9,
-  28: 9,
+  28: 8,
+  29: 8,
+  30: 8,
+  31: 9,
+  32: 8,
+  33: 6,
+  34: 6,
 };
 
 export const COIN_MAP: CoinMap = {
@@ -123,8 +135,20 @@ export const COIN_MAP: CoinMap = {
     "XBTC",
   "0x7262fb2f7a3a14c888c438a3cd9b912469a58cf60f367352c46584262e8299aa::ika::IKA":
     "IKA",
+  "0x8f2b5eb696ed88b71fea398d330bccfa52f6e2a5a8e1ac6180fcb25c6de42ebc::coin::COIN":
+    "enzoBTC",
+  "0xd1a91b46bd6d966b62686263609074ad16cfdffc63c31a4775870a2d54d20c6b::mbtc::MBTC":
+    "MBTC",
+  "0xa03ab7eee2c8e97111977b77374eaf6324ba617e7027382228350db08469189e::ybtc::YBTC":
+    "YBTC",
   "0x9d297676e7a4b771ab023291377b2adfaa4938fb9080b8d12430e4b108b836a9::xaum::XAUM":
     "XAUM",
+  "0x0041f9f9344cac094454cd574e333c4fdb132d7bcc9379bcd4aab485b2a63942::wbtc::WBTC":
+    "LZWBTC",
+  "0x41d587e5336f1c86cad50d38a7136db99333bb9bda91cea4ba69115defeb1402::sui_usde::SUI_USDE":
+    "suiUSDe",
+  "0x44f838219cf67b058f3b37907b655f226153c18e33dfcd0da559a844fea9b1c1::usdsui::USDSUI":
+    "USDSUI",
 };
 
 const UNKNOWN_COIN = "unknown";
@@ -203,7 +227,13 @@ export const SYMBOL_MAP: Record<number, string> = {
   25: "HAEDAL",
   26: "XBTC",
   27: "IKA",
-  28: "XAUM",
+  28: "enzoBTC",
+  29: "MBTC",
+  30: "YBTC",
+  31: "XAUM",
+  32: "LZWBTC",
+  33: "suiUSDe",
+  34: "USDSUI",
 };
 
 export const FlashLoanCoins: Record<string, string> = {

@@ -42,6 +42,10 @@ const feeObjects = [
   "0x06328cc3f67182233ac1707f9e42674440a8216a6aee09c6c49ce427963e1f65", // Fee Pool For HAEDAL
   "0x5f8e20a081373e84a51fea6cb5eba4a761a016de8d8ac6170479a1da3459bb0a", // Fee Pool For XBTC
   "0xb2fb106788d43b16fedbbb2f61cd66cb54d3503ab1eb0799eaffc1bd91e67f23", // Fee Pool For IKA
+  "0xe431cb133763847a1f06c1cda9f250eb9f589d854b0194f5c7c2277b36241202", // Fee Pool For XAUM
+  "0x81255c51f5ab11a6608131bed8ed7325e3c482a4ade1bc79ea2f35506046395a", // Fee Pool For LZWBTC
+  "0x2d4d508738a9655214940cd0e17c05c2aff76d10da2a9d439f9c902898d65aca", // Fee Pool For suiUSDe
+  "0xe5f1e38db23ba8d4303a2134d53623754e9a1d54dc56773cb69f2774eb1a97a7", // Fee Pool For USDSUI
 ];
 
 export function FeeProcessor() {

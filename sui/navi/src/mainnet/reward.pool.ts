@@ -37,6 +37,13 @@ const pools = [
   "0x930f5cf61dcb66d699ba57b2eb72da6fd04c64a53073cc40f751ef12c77aaa6a", // Treasury Pool For HAEDAL
   "0xd9c9a1d8a2f82d752d4f2504c1097636bbe7f0f335a89be85f65fb32dc6b1866", // Treasury Pool For XBTC
   "0x3566577feaba2f24b9e0b315a10f1afe04e7d275c2da6f28caeba095d00dee8d", // Treasury Pool For IKA
+  "0x35017707dfbacfc79e9cbd9d36bd7df02be9fc7fe8ad5765b20517a6971616d2", // Treasury Pool For enzoBTC
+  "0x1cea8c1275b3ec9d61faaf2d5bde53c0a5c8a7f939a68f7cf5ad4b9ed38b8e78", // Treasury Pool For MBTC
+  "0xadc7f434a042018d41d08c9e9efc851a6fcaeb779273755d47a5029f056206ef", // Treasury Pool For YBTC
+  "0x33b2924f2b7e12112a134ad69d9f2b3565c316b0a756e328abe9914c8deca034", // Treasury Pool For XAUM
+  "0x88fb36f9ab1ac2a47a974c53daf5ef37862e063f4875bf54e5853e2ca1e9ddad", // Treasury Pool For LZWBTC
+  "0x86d663fdba9690cb4edf0b29140c31bad8c98d43b3eac70050c237c0d1434334", // Treasury Pool For suiUSDe
+  "0xb0da1bf1702e919a3d5182939944435ccfd1b1facd92acb273007c3f09f42201", // Treasury Pool For USDSUI
 ];
 
 export function PoolProcessor() {
