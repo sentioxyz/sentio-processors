@@ -57,7 +57,7 @@ export class PositionSnapshot extends AbstractEntity  {
 	@Required
 	@Column("BigDecimal")
 	amountBase: BigDecimal
-  constructor(data: PositionSnapshotConstructorInput) {super()}
+  constructor(data: Partial<PositionSnapshotConstructorInput>) {super()}
   
   
   static update(values: UpdateValues<PositionSnapshotConstructorInput>): Promise<void> {
@@ -90,7 +90,7 @@ export class PoolArgs extends AbstractEntity  {
 	@Required
 	@Column("BigInt")
 	tick: BigInt
-  constructor(data: PoolArgsConstructorInput) {super()}
+  constructor(data: Partial<PoolArgsConstructorInput>) {super()}
   
   
   static update(values: UpdateValues<PoolArgsConstructorInput>): Promise<void> {

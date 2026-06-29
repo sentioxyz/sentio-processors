@@ -52,12 +52,14 @@ export async function buildCoinInfo(
 ): Promise<token.TokenInfo> {
   let [symbol, name, decimal] = ["unk", "unk", 0];
   try {
-    const metadata = await ctx.client.getCoinMetadata({
+    const metadata = (await ctx.client.getCoinMetadata({
       coinType: coinAddress,
-    });
-    symbol = metadata.symbol;
-    decimal = metadata.decimals;
-    name = metadata.name;
+    })).coinMetadata;
+    if (metadata) {
+      symbol = metadata.symbol;
+      decimal = metadata.decimals;
+      name = metadata.name;
+    }
     console.log(`build coin metadata ${symbol} ${decimal} ${name}`);
   } catch (e) {
     console.log(`${e.message} get coin metadata error ${coinAddress}`);
@@ -107,13 +109,13 @@ export async function buildPoolInfo(
   ];
   try {
     const obj = await ctx.client.getObject({
-      id: pool,
-      options: { showType: true, showContent: true },
+      objectId: pool,
+      include: { json: true },
     });
-    type = obj.data.type;
-    if (obj.data.content.fields.fee_rate) {
+    type = obj.object.type;
+    if (obj.object.json.fee_rate) {
       fee_label =
-        (Number(obj.data.content.fields.fee_rate) / 10000).toFixed(2) + "%";
+        (Number(obj.object.json.fee_rate) / 10000).toFixed(2) + "%";
     } else {
       console.log(`no fee label ${pool}`);
     }
@@ -178,10 +180,10 @@ export async function buildIDOPoolInfo(
   ];
   try {
     const obj = await ctx.client.getObject({
-      id: pool,
-      options: { showType: true, showContent: true },
+      objectId: pool,
+      include: { json: true },
     });
-    type = obj.data.type;
+    type = obj.object.type;
 
     let [coin_a_full_address, coin_b_full_address] = ["", ""];
     if (type) {
@@ -233,10 +235,10 @@ export async function getPoolPrice(
   pool: string
 ) {
   const obj = await ctx.client.getObject({
-    id: pool,
-    options: { showType: true, showContent: true },
+    objectId: pool,
+    include: { json: true },
   });
-  const current_sqrt_price = Number(obj.data.content.fields.current_sqrt_price);
+  const current_sqrt_price = Number(obj.object.json.current_sqrt_price);
   if (!current_sqrt_price) {
     console.log(`get pool price error at ${ctx}`);
   }

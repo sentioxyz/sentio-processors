@@ -62,7 +62,7 @@ export class UserBalance extends AbstractEntity  {
 	@Required
 	@Column("String")
 	trigger: String
-  constructor(data: UserBalanceConstructorInput) {super()}
+  constructor(data: Partial<UserBalanceConstructorInput>) {super()}
   
   
   static update(values: UpdateValues<UserBalanceConstructorInput>): Promise<void> {

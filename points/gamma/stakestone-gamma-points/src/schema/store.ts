@@ -47,7 +47,7 @@ export class AccountSnapshot extends AbstractEntity  {
 	@Required
 	@Column("BigInt")
 	balance: BigInt
-  constructor(data: AccountSnapshotConstructorInput) {super()}
+  constructor(data: Partial<AccountSnapshotConstructorInput>) {super()}
   
   
   static update(values: UpdateValues<AccountSnapshotConstructorInput>): Promise<void> {
@@ -90,7 +90,7 @@ export class BeefyAccountSnapshot extends AbstractEntity  {
 	@Required
 	@Column("BigInt")
 	balance: BigInt
-  constructor(data: BeefyAccountSnapshotConstructorInput) {super()}
+  constructor(data: Partial<BeefyAccountSnapshotConstructorInput>) {super()}
   
   
   static update(values: UpdateValues<BeefyAccountSnapshotConstructorInput>): Promise<void> {

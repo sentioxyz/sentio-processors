@@ -71,7 +71,7 @@ SuiObjectProcessor.bind({
 })
   .onTimeInterval(async (self, _, ctx) => {
     try {
-      const res = await ctx.coder.decodeType(self, staking.Staking.type())
+      const res = await ctx.coder.decodeType<staking.Staking, typeof self>(self, staking.Staking.type())
       ctx.meter.Gauge('haSUI_supply').record(formatSUI(Number(res!.stsui_supply)), { project: "haedal" })
       ctx.meter.Gauge('live_validators').record(res!.validators.length, { project: "haedal" })
 

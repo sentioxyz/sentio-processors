@@ -3,7 +3,14 @@ import { events, pool } from './types/sui/bluefin.js'
 import { START_CHECKPOINT, getPoolInfo, recordTx, recordSwap } from './utils.js'
 import { usdPools } from './pools.js'
 
-async function handleEvent(evt: events.LiquidityProvidedInstance | events.PositionOpenedInstance, ctx: SuiContext) {
+async function handleEvent(
+  evt:
+    | events.LiquidityProvidedInstance
+    | events.LiquidityRemovedInstance
+    | events.PositionOpenedInstance
+    | events.PositionClosedInstance,
+  ctx: SuiContext
+) {
   const { pool_id } = evt.data_decoded
   const { symbol_a, symbol_b } = await getPoolInfo(ctx, pool_id)
   if (symbol_a.includes('USD') || symbol_b.includes('USD')) {
@@ -12,7 +19,7 @@ async function handleEvent(evt: events.LiquidityProvidedInstance | events.Positi
   }
 }
 
-async function handleSwapEvent(evt: events.AssetSwapInstance, ctx: SuiContext) {
+async function handleSwapEvent(evt: events.AssetSwapInstance | events.FlashSwapInstance, ctx: SuiContext) {
   const { pool_id, amount_in, amount_out, a2b } = evt.data_decoded
   const { symbol_a, symbol_b, decimal_a, decimal_b } = await getPoolInfo(ctx, pool_id)
   if (symbol_a.includes('USD') || symbol_b.includes('USD')) {
@@ -45,7 +52,7 @@ events
 
 const poolTemplate = new SuiObjectProcessorTemplate().onTimeInterval(
   async (self, objects, ctx) => {
-    const { coin_a, coin_b } = self.fields as unknown as pool.Pool<any, any>
+    const { coin_a, coin_b } = self.json as unknown as pool.Pool<any, any>
     const { symbol_a, symbol_b, decimal_a, decimal_b } = await getPoolInfo(ctx, ctx.address)
     if (symbol_a.includes('USD')) {
       ctx.eventLogger.emit('defi', {
@@ -69,7 +76,7 @@ const poolTemplate = new SuiObjectProcessorTemplate().onTimeInterval(
 usdPools.bluefin.forEach((poolId) =>
   SuiObjectProcessor.bind({ objectId: poolId, startCheckpoint: START_CHECKPOINT }).onTimeInterval(
     async (self, objects, ctx) => {
-      const { coin_a, coin_b } = self.fields as unknown as pool.Pool<any, any>
+      const { coin_a, coin_b } = self.json as unknown as pool.Pool<any, any>
       const { symbol_a, symbol_b, decimal_a, decimal_b } = await getPoolInfo(ctx, ctx.address)
       if (symbol_a.includes('USD')) {
         ctx.eventLogger.emit('defi', {

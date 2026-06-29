@@ -1,4 +1,4 @@
-import { SuiClient, getFullnodeUrl } from "@mysten/sui/client";
+import { getClient, SuiNetwork } from "@sentio/sdk/sui";
 import { _0x834a86970ae93a73faf4fff16ae40bdb72b91c47be585fff19a2af60a19ddca3, _0xc2d49bf5e75d2258ee5563efa527feb6155de7ac6f6bf025a23ee88cd12d5a83 } from './types/sui/index.js'
 import { getOrCreateCoin } from './util.js';
 
@@ -8,7 +8,7 @@ import { getOrCreateCoin } from './util.js';
 // Oracle package: use latest by check what tx touchs price oracle obj
 // const oracleAddress = "0xc2d49bf5e75d2258ee5563efa527feb6155de7ac6f6bf025a23ee88cd12d5a83"
 
-const client = new SuiClient({ url: getFullnodeUrl('mainnet') })
+const client = getClient(SuiNetwork.MAIN_NET)
 
 
 

@@ -1,105 +1,148 @@
-{
-  "deepbook": {
-    "fileFormatVersion": 6,
+[
+  {
     "address": "0x88dfe5e893bc9fa984d121e4d0d5b2e873dc70ae430cf5b3228ae6cb199cb32b",
-    "name": "deepbook",
-    "friends": [],
-    "structs": {},
-    "exposedFunctions": {
-      "adjust_input_amount": {
-        "visibility": "Public",
-        "isEntry": false,
-        "typeParameters": [],
-        "parameters": [
-          "U64",
-          "U64"
-        ],
-        "return": [
-          "U64"
-        ]
-      }
+    "module": {
+      "name": "deepbook",
+      "datatypes": [],
+      "functions": [
+        {
+          "name": "adjust_input_amount",
+          "visibility": 2,
+          "isEntry": false,
+          "typeParameters": [],
+          "parameters": [
+            {
+              "body": {
+                "type": 6,
+                "typeParameterInstantiation": []
+              }
+            },
+            {
+              "body": {
+                "type": 6,
+                "typeParameterInstantiation": []
+              }
+            }
+          ],
+          "returns": [
+            {
+              "body": {
+                "type": 6,
+                "typeParameterInstantiation": []
+              }
+            }
+          ]
+        }
+      ]
     }
   },
-  "slippage": {
-    "fileFormatVersion": 6,
+  {
     "address": "0x88dfe5e893bc9fa984d121e4d0d5b2e873dc70ae430cf5b3228ae6cb199cb32b",
-    "name": "slippage",
-    "friends": [],
-    "structs": {
-      "SwapEvent": {
-        "abilities": {
+    "module": {
+      "name": "slippage",
+      "datatypes": [
+        {
+          "name": "SwapEvent",
+          "kind": 1,
           "abilities": [
-            "Copy",
-            "Drop"
-          ]
-        },
-        "typeParameters": [
-          {
-            "constraints": {
-              "abilities": []
+            1,
+            2
+          ],
+          "typeParameters": [
+            {
+              "constraints": []
             },
-            "isPhantom": true
-          },
-          {
-            "constraints": {
-              "abilities": []
+            {
+              "constraints": []
+            }
+          ],
+          "fields": [
+            {
+              "name": "amount_in",
+              "position": 0,
+              "type": {
+                "type": 6,
+                "typeParameterInstantiation": []
+              }
             },
-            "isPhantom": true
-          }
-        ],
-        "fields": [
-          {
-            "name": "amount_in",
-            "type": "U64"
-          },
-          {
-            "name": "amount_out",
-            "type": "U64"
-          },
-          {
-            "name": "min_amount_out",
-            "type": "U64"
-          },
-          {
-            "name": "referral_code",
-            "type": "U64"
-          }
-        ]
-      }
-    },
-    "exposedFunctions": {
-      "check_slippage_v2": {
-        "visibility": "Public",
-        "isEntry": false,
-        "typeParameters": [
-          {
-            "abilities": []
-          },
-          {
-            "abilities": []
-          }
-        ],
-        "parameters": [
-          {
-            "Reference": {
-              "Struct": {
-                "address": "0x2",
-                "module": "coin",
-                "name": "Coin",
-                "typeArguments": [
+            {
+              "name": "amount_out",
+              "position": 1,
+              "type": {
+                "type": 6,
+                "typeParameterInstantiation": []
+              }
+            },
+            {
+              "name": "min_amount_out",
+              "position": 2,
+              "type": {
+                "type": 6,
+                "typeParameterInstantiation": []
+              }
+            },
+            {
+              "name": "referral_code",
+              "position": 3,
+              "type": {
+                "type": 6,
+                "typeParameterInstantiation": []
+              }
+            }
+          ],
+          "variants": []
+        }
+      ],
+      "functions": [
+        {
+          "name": "check_slippage_v2",
+          "visibility": 2,
+          "isEntry": false,
+          "typeParameters": [
+            {
+              "constraints": []
+            },
+            {
+              "constraints": []
+            }
+          ],
+          "parameters": [
+            {
+              "reference": 1,
+              "body": {
+                "type": 10,
+                "typeName": "0x2::coin::Coin",
+                "typeParameterInstantiation": [
                   {
-                    "TypeParameter": 1
+                    "type": 11,
+                    "typeParameter": 1,
+                    "typeParameterInstantiation": []
                   }
                 ]
               }
+            },
+            {
+              "body": {
+                "type": 6,
+                "typeParameterInstantiation": []
+              }
+            },
+            {
+              "body": {
+                "type": 6,
+                "typeParameterInstantiation": []
+              }
+            },
+            {
+              "body": {
+                "type": 6,
+                "typeParameterInstantiation": []
+              }
             }
-          },
-          "U64",
-          "U64",
-          "U64"
-        ],
-        "return": []
-      }
+          ],
+          "returns": []
+        }
+      ]
     }
   }
-}
+]

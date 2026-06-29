@@ -65,7 +65,7 @@ GlobalProcessor.bind({ network, startBlock }).onTransaction(
       value: scaleDown(tx.value, 18),
       gasUsed,
       gasCost,
-      l1Fee: ctx.transactionReceipt?.l1Fee ? scaleDown(ctx.transactionReceipt.l1Fee, 18) : undefined,
+      l1Fee: (ctx.transactionReceipt as any)?.l1Fee ? scaleDown((ctx.transactionReceipt as any).l1Fee, 18) : undefined,
       ...getDAppProject(tx)
     })
 

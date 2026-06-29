@@ -25,13 +25,14 @@ SuiObjectTypeProcessor.bind({
       native = true
     }
 
-    if (change.type !== 'created') {
+    if (change.idOperation !== 'Created') {
       continue
     }
-    const t = parseMoveType(change.objectType)
+    const obj = await ctx.client.getObject({ objectId: change.objectId, include: { json: true } })
+    const t = parseMoveType(obj.object.type)
     const coinType = t.typeArgs[0].getSignature()
 
-    const metadata = await ctx.client.getCoinMetadata({ coinType })
+    const metadata = (await ctx.client.getCoinMetadata({ coinType })).coinMetadata
     if (metadata) {
       if (metadata.id) {
         await ctx.store.upsert(new Metadata({

@@ -32,7 +32,7 @@ export class AccountSnapshot extends AbstractEntity  {
 	@Required
 	@Column("String")
 	stETHBalance: String
-  constructor(data: AccountSnapshotConstructorInput) {super()}
+  constructor(data: Partial<AccountSnapshotConstructorInput>) {super()}
   
   
   static update(values: UpdateValues<AccountSnapshotConstructorInput>): Promise<void> {

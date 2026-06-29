@@ -32,7 +32,7 @@ export class AccountSnapshot extends AbstractEntity  {
 	@Required
 	@Column("BigInt")
 	timestampMilli: BigInt
-  constructor(data: AccountSnapshotConstructorInput) {super()}
+  constructor(data: Partial<AccountSnapshotConstructorInput>) {super()}
   
   
   static update(values: UpdateValues<AccountSnapshotConstructorInput>): Promise<void> {

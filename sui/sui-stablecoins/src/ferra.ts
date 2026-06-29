@@ -54,7 +54,7 @@ lb_pair
 
 const poolTemplate = new SuiObjectProcessorTemplate().onTimeInterval(
   async (self, objects, ctx) => {
-    const { balance_x, balance_y } = self.fields as unknown as lb_pair.LBPair<any, any>
+    const { balance_x, balance_y } = self.json as unknown as lb_pair.LBPair<any, any>
     const { symbol_a, symbol_b, decimal_a, decimal_b } = await getPoolInfo(ctx, ctx.address)
     if (symbol_a.includes('USD')) {
       ctx.eventLogger.emit('defi', {
@@ -88,7 +88,7 @@ const poolTemplate = new SuiObjectProcessorTemplate().onTimeInterval(
 usdPools.ferra.forEach((poolId) =>
   SuiObjectProcessor.bind({ objectId: poolId, startCheckpoint: START_CHECKPOINT }).onTimeInterval(
     async (self, objects, ctx) => {
-      const { balance_x, balance_y } = self.fields as unknown as lb_pair.LBPair<any, any>
+      const { balance_x, balance_y } = self.json as unknown as lb_pair.LBPair<any, any>
       const { symbol_a, symbol_b, decimal_a, decimal_b } = await getPoolInfo(ctx, ctx.address)
       if (symbol_a.includes('USD')) {
         ctx.eventLogger.emit('defi', {

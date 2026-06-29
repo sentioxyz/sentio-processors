@@ -62,11 +62,12 @@ const liquidSwapCl = new AptosDex(volume, volumeByCoin,
 
 const POOL_PREFIX = pool.Pool.TYPE_QNAME
 
-const fetchConfig: MoveFetchConfig = {
+const fetchConfig = {
   resourceChanges: true,
   allEvents: false,
   inputs: true,
   resourceConfig: {
+    $typeName: "processor.ResourceConfig" as const,
     moveTypePrefix: POOL_PREFIX,
   }
 }

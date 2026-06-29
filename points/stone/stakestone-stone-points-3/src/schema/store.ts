@@ -37,7 +37,7 @@ export class AccountSnapshot extends AbstractEntity  {
 	@Required
 	@Column("BigInt")
 	stoneBalance: BigInt
-  constructor(data: AccountSnapshotConstructorInput) {super()}
+  constructor(data: Partial<AccountSnapshotConstructorInput>) {super()}
   
   
   static update(values: UpdateValues<AccountSnapshotConstructorInput>): Promise<void> {
@@ -90,7 +90,7 @@ export class TempEvent extends AbstractEntity  {
 	@Required
 	@Column("BigInt")
 	timestampMilli: BigInt
-  constructor(data: TempEventConstructorInput) {super()}
+  constructor(data: Partial<TempEventConstructorInput>) {super()}
   
   
   static update(values: UpdateValues<TempEventConstructorInput>): Promise<void> {

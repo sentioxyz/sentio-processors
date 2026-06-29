@@ -22,7 +22,7 @@ async function emitLendingEvent(ctx: SuiContext, { project, coinType, amount }: 
   }
 
   ctx.eventLogger.emit(eventName, {
-    distinctId: ctx.transaction.transaction?.data.sender,
+    distinctId: ctx.transaction.transaction?.sender,
     project,
     coin_symbol: metadata.symbol,
     amount: scaleDown(amount, metadata.decimals),

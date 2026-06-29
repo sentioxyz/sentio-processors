@@ -1,9 +1,12 @@
 import { SuiContext, SuiObjectContext, SuiNetwork } from "@sentio/sdk/sui"
 import { getPriceBySymbol, getPriceByType, token } from "@sentio/sdk/utils"
 import * as constant from "./constant.js"
-import { SuiEvent } from '@mysten/sui/client'
+import { GrpcTypes } from '@mysten/sui/grpc'
+import { bcs } from "@mysten/sui/bcs"
 import { WHITELISTED_TYPE_MAP } from "./constant.js";
 import { MoveFetchConfig, EventFilter } from "@sentio/sdk/move";
+
+type SuiEvent = GrpcTypes.Event
 
 
 //get full coin address with suffix
@@ -90,7 +93,7 @@ export async function buildCoinInfo(ctx: SuiContext | SuiObjectContext, coinAddr
     let retryCounter = 0;
     while (retryCounter++ <= 5) {
         try {
-            const metadata = await ctx.client.getCoinMetadata({ coinType: coinAddress })
+            const metadata = (await ctx.client.getCoinMetadata({ coinType: coinAddress })).coinMetadata
             if (metadata == null)
                 break
 
@@ -141,9 +144,9 @@ export async function buildPoolInfo(ctx: SuiContext | SuiObjectContext, pool: st
     let [symbol_a, symbol_b, decimal_a, decimal_b, pairName, fee, type, type_a, type_b] = ["", "", 0, 0, "", 0, "", "", ""]
 
     try {
-        const obj = await ctx.client.getObject({ id: pool, options: { showType: true, showContent: true } })
+        const obj = await ctx.client.getObject({ objectId: pool, include: { json: true } })
         //@ts-ignore
-        type = obj.data.type
+        type = obj.object.type
 
         if (type) {
             [type_a, type_b] = getCoinFullAddress(type)
@@ -158,19 +161,19 @@ export async function buildPoolInfo(ctx: SuiContext | SuiObjectContext, pool: st
         //handle fee
         if (type.includes(constant.CETUS_POOL_TYPE)) {
             //@ts-ignore
-            fee = Number(obj.data?.content.fields.fee_rate) / 10 ** 6
+            fee = Number(obj.object.json?.fee_rate) / 10 ** 6
         }
         if (type.includes(constant.KRIYA_POOL_TYPE)) {
             //@ts-ignore
-            fee = obj.data?.content.fields.is_stable ? 0.0001 : 0.002
+            fee = obj.object.json?.is_stable ? 0.0001 : 0.002
         }
         if (type.includes(constant.TURBOS_POOL_TYPE)) {
             //@ts-ignore
-            fee = Number(obj.data?.content.fields.fee) / 10 ** 6
+            fee = Number(obj.object.json?.fee) / 10 ** 6
         }
         if (type.includes(constant.IPX_POOL_TYPE)) {
             //@ts-ignore
-            fee = obj.data?.content.fields.is_stable ? 0.00025 : 0.003
+            fee = obj.object.json?.is_stable ? 0.00025 : 0.003
         }
         if (type.includes(constant.FLOWX_POOL_TYPE)) {
             const stableCoins = ["0x5d4b302506645c37ff133b98c4b50a5ae14841659738d6d733d59d0d217a93bf::coin::COIN", "0xc060006111016b8a020ad5b33834984a437aaa7d3c74c18e09a95d48aceab08c::coin::COIN"]
@@ -178,14 +181,14 @@ export async function buildPoolInfo(ctx: SuiContext | SuiObjectContext, pool: st
         }
         if (type.includes(constant.FLOWX_LP_OBJECT_TYPE)) {
             //@ts-ignore
-            fee = Number(obj.data?.content.fields.value.fields.fee_rate) / 10 ** 4
+            fee = Number(obj.object.json?.value.fields.fee_rate) / 10 ** 4
         }
         if (type.includes(constant.DEEPBOOK_POOL_TYPE)) {
             fee = 0.0025
         }
         if (type.includes(constant.AFTERMATH_POOL_TYPE)) {
             //@ts-ignore
-            fee = Number(obj.data?.content.fields.fees_swap_in[0]) / 10 ** (decimal_a + 6)
+            fee = Number(obj.object.json?.fees_swap_in[0]) / 10 ** (decimal_a + 6)
         }
 
 
@@ -236,11 +239,11 @@ export async function buildMultiAssetPoolInfo(ctx: SuiContext, pool: string): Pr
 
     try {
         console.log("get pool", pool)
-        const obj = await ctx.client.getObject({ id: pool, options: { showType: true, showContent: true } })
-        console.log("obj data ", JSON.stringify(obj.data))
+        const obj = await ctx.client.getObject({ objectId: pool, include: { json: true } })
+        console.log("obj data ", JSON.stringify(obj.object))
 
         //@ts-ignore
-        for (const type of obj.data?.content.fields.type_names) {
+        for (const type of obj.object.json?.type_names) {
             const coinType = "0x" + type
             console.log("coinType 1 ", coinType)
             const coinInfo = await getOrCreateCoin(ctx, coinType)
@@ -251,9 +254,9 @@ export async function buildMultiAssetPoolInfo(ctx: SuiContext, pool: string): Pr
         }
 
         //@ts-ignore
-        if (obj.data.type.includes(constant.AFTERMATH_POOL_TYPE)) {
+        if (obj.object.type.includes(constant.AFTERMATH_POOL_TYPE)) {
             //@ts-ignore
-            fee = Number(obj.data?.content.fields.fees_swap_in[0]) / 10 ** 17
+            fee = Number(obj.object.json?.fees_swap_in[0]) / 10 ** 17
         }
 
         pairName += `${fee * 100}%`
@@ -295,9 +298,9 @@ export const getOrCreateMultiAssetPool = async function (ctx: SuiContext, pool: 
 
 
 export async function getPoolPrice(ctx: SuiContext, pool: string) {
-    const obj = await ctx.client.getObject({ id: pool, options: { showType: true, showContent: true } })
+    const obj = await ctx.client.getObject({ objectId: pool, include: { json: true } })
     //@ts-ignore
-    const current_sqrt_price = Number(obj.data.content.fields.current_sqrt_price)
+    const current_sqrt_price = Number(obj.object.json?.current_sqrt_price)
     if (!current_sqrt_price) { console.log(`get pool price error at ${ctx}`) }
     const poolInfo = await getOrCreatePool(ctx, pool)
     const pairName = poolInfo.pairName
@@ -413,23 +416,35 @@ export async function calculateSingleTypeValueUSD(ctx: SuiContext | SuiObjectCon
 }
 
 export async function getFlowXPoolId(ctx: SuiContext, coin_a: string, coin_b: string) {
-    const getDynamicFieldObjectXY = await ctx.client.getDynamicFieldObject({
-        parentId: "0xd15e209f5a250d6055c264975fee57ec09bf9d6acdda3b5f866f76023d1563e6",
-        name: {
-            type: '0x1::string::String',
-            value: `LP-${coin_a}-${coin_b}`,
-        }
-    })
-    console.log("getDynamicFieldObjectXY", JSON.stringify(getDynamicFieldObjectXY))
-    const getDynamicFieldObjectYX = await ctx.client.getDynamicFieldObject({
-        parentId: "0xd15e209f5a250d6055c264975fee57ec09bf9d6acdda3b5f866f76023d1563e6",
-        name: {
-            type: '0x1::string::String',
-            value: `LP-${coin_b}-${coin_a}`,
-        }
-    })
+    let objectIdXY: string | undefined
+    let objectIdYX: string | undefined
+    try {
+        const getDynamicFieldObjectXY = await ctx.client.getDynamicField({
+            parentId: "0xd15e209f5a250d6055c264975fee57ec09bf9d6acdda3b5f866f76023d1563e6",
+            name: {
+                type: '0x1::string::String',
+                bcs: bcs.string().serialize(`LP-${coin_a}-${coin_b}`).toBytes(),
+            }
+        })
+        console.log("getDynamicFieldObjectXY", JSON.stringify(getDynamicFieldObjectXY))
+        objectIdXY = getDynamicFieldObjectXY.dynamicField?.fieldId
+    } catch (e) {
+        console.log(`${e.message} getDynamicField XY error`)
+    }
+    try {
+        const getDynamicFieldObjectYX = await ctx.client.getDynamicField({
+            parentId: "0xd15e209f5a250d6055c264975fee57ec09bf9d6acdda3b5f866f76023d1563e6",
+            name: {
+                type: '0x1::string::String',
+                bcs: bcs.string().serialize(`LP-${coin_b}-${coin_a}`).toBytes(),
+            }
+        })
+        objectIdYX = getDynamicFieldObjectYX.dynamicField?.fieldId
+    } catch (e) {
+        console.log(`${e.message} getDynamicField YX error`)
+    }
 
-    const pool_id = getDynamicFieldObjectXY.data?.objectId || getDynamicFieldObjectYX.data?.objectId || '0x';
+    const pool_id = objectIdXY || objectIdYX || '0x';
     return pool_id
 }
 
@@ -465,28 +480,29 @@ export async function calculateFee_USD(ctx: SuiContext, pool: string, amount: nu
 
 
 export async function recordClmmV3SwapEvent(event: SuiEvent, ctx: SuiContext) {
+    if (!event.eventType) { return }
     let [project, amount_in, amount_out, atob] = ["", 0, 0, false]
     //@ts-ignore
-    const pool = event.parsedJson.pool
+    const pool = event.json.pool
 
     const poolInfo: poolInfo = await getOrCreatePool(ctx, pool)
 
-    if (event.type.includes(constant.CETUS_SWAP_TYPE)) {
+    if (event.eventType.includes(constant.CETUS_SWAP_TYPE)) {
         //@ts-ignore
-        atob = event.parsedJson.atob
+        atob = event.json.atob
         //@ts-ignore
-        amount_in = Number(event.parsedJson.amount_in) / Math.pow(10, atob ? poolInfo.decimal_a : poolInfo.decimal_b)
+        amount_in = Number(event.json.amount_in) / Math.pow(10, atob ? poolInfo.decimal_a : poolInfo.decimal_b)
         //@ts-ignore
-        amount_out = Number(event.parsedJson.amount_out) / Math.pow(10, atob ? poolInfo.decimal_b : poolInfo.decimal_a)
+        amount_out = Number(event.json.amount_out) / Math.pow(10, atob ? poolInfo.decimal_b : poolInfo.decimal_a)
         project = "cetus"
     }
-    if (event.type.includes(constant.TURBOS_SWAP_TYPE)) {
+    if (event.eventType.includes(constant.TURBOS_SWAP_TYPE)) {
         //@ts-ignore
-        atob = event.parsedJson.a_to_b
+        atob = event.json.a_to_b
         //@ts-ignore
-        const amount_a = Number(event.parsedJson.amount_a) / Math.pow(10, poolInfo.decimal_a)
+        const amount_a = Number(event.json.amount_a) / Math.pow(10, poolInfo.decimal_a)
         //@ts-ignore
-        const amount_b = Number(event.parsedJson.amount_b) / Math.pow(10, poolInfo.decimal_b)
+        const amount_b = Number(event.json.amount_b) / Math.pow(10, poolInfo.decimal_b)
         amount_in = atob ? amount_a : amount_b
         amount_out = atob ? amount_b : amount_a
         project = "turbos"
@@ -496,7 +512,7 @@ export async function recordClmmV3SwapEvent(event: SuiEvent, ctx: SuiContext) {
 
     ctx.eventLogger.emit("dex_swapEvents", {
         //@ts-ignore
-        distinctId: ctx.transaction.transaction.data.sender,
+        distinctId: ctx.transaction.transaction?.sender,
         pool,
         amount_in,
         type_in: atob ? poolInfo.symbol_a : poolInfo.symbol_b,
@@ -512,42 +528,43 @@ export async function recordClmmV3SwapEvent(event: SuiEvent, ctx: SuiContext) {
 }
 
 export async function recordAmmV2SwapEvent(event: SuiEvent, ctx: SuiContext) {
+    if (!event.eventType) { return }
     //@ts-ignore
-    const pool = (event.type.includes(constant.KRIYA_SWAP_TYPE) || event.type.includes(constant.FLOWX_SWAP_TYPE)) ? event.parsedJson.pool_id : event.parsedJson.id
+    const pool = (event.eventType.includes(constant.KRIYA_SWAP_TYPE) || event.eventType.includes(constant.FLOWX_SWAP_TYPE)) ? event.json.pool_id : event.json.id
     const poolInfo: poolInfo = await getOrCreatePool(ctx, pool)
 
     //atob
     let atob = false
     let [amount_in, amount_out, project] = [0, 0, "unk"]
     //for kriya
-    if (event.type.includes(constant.KRIYA_SWAP_TYPE)) {
-        const swapCoin = event.type.substring(event.type.indexOf('<') + 1, event.type.indexOf('>'));
+    if (event.eventType.includes(constant.KRIYA_SWAP_TYPE)) {
+        const swapCoin = event.eventType.substring(event.eventType.indexOf('<') + 1, event.eventType.indexOf('>'));
         atob = (poolInfo.type_a == swapCoin)
-        console.log("atob", swapCoin, poolInfo.type_a, pool, event.type)
+        console.log("atob", swapCoin, poolInfo.type_a, pool, event.eventType)
         //@ts-ignore
-        amount_in = Number(event.parsedJson.amount_in) / Math.pow(10, atob ? poolInfo.decimal_a : poolInfo.decimal_b)
+        amount_in = Number(event.json.amount_in) / Math.pow(10, atob ? poolInfo.decimal_a : poolInfo.decimal_b)
         //@ts-ignore
-        amount_out = Number(event.parsedJson.amount_out) / Math.pow(10, atob ? poolInfo.decimal_b : poolInfo.decimal_a)
+        amount_out = Number(event.json.amount_out) / Math.pow(10, atob ? poolInfo.decimal_b : poolInfo.decimal_a)
         project = "kriya"
     }
-    if (event.type.includes(constant.FLOWX_SWAP_TYPE)) {
+    if (event.eventType.includes(constant.FLOWX_SWAP_TYPE)) {
         //@ts-ignore
-        atob = (event.parsedJson.amount_x_in > event.parsedJson.amount_x_out)
+        atob = (event.json.amount_x_in > event.json.amount_x_out)
         //@ts-ignore
-        const amount_x = Number(event.parsedJson.amount_x_in) - Number(event.parsedJson.amount_x_out)
+        const amount_x = Number(event.json.amount_x_in) - Number(event.json.amount_x_out)
         //@ts-ignore
-        const amount_y = Number(event.parsedJson.amount_y_in) - Number(event.parsedJson.amount_y_out)
+        const amount_y = Number(event.json.amount_y_in) - Number(event.json.amount_y_out)
         amount_in = Math.abs(atob ? amount_x : amount_y) / Math.pow(10, atob ? poolInfo.decimal_a : poolInfo.decimal_b)
         amount_out = Math.abs(atob ? amount_y : amount_x) / Math.pow(10, atob ? poolInfo.decimal_b : poolInfo.decimal_a)
         project = "flowx"
     }
-    if (event.type.includes(constant.IPX_SWAP_TYPE)) {
+    if (event.eventType.includes(constant.IPX_SWAP_TYPE)) {
         //@ts-ignore
-        atob = event.type.includes("SwapTokenX")
+        atob = event.eventType.includes("SwapTokenX")
         //@ts-ignore
-        const amount_x = atob ? Number(event.parsedJson.coin_x_in) : Number(event.parsedJson.coin_x_out)
+        const amount_x = atob ? Number(event.json.coin_x_in) : Number(event.json.coin_x_out)
         //@ts-ignore
-        const amount_y = atob ? Number(event.parsedJson.coin_y_out) : Number(event.parsedJson.coin_y_in)
+        const amount_y = atob ? Number(event.json.coin_y_out) : Number(event.json.coin_y_in)
         amount_in = (atob ? amount_x : amount_y) / Math.pow(10, atob ? poolInfo.decimal_a : poolInfo.decimal_b)
         amount_out = (atob ? amount_y : amount_x) / Math.pow(10, atob ? poolInfo.decimal_b : poolInfo.decimal_a)
         project = "ipx"
@@ -558,7 +575,7 @@ export async function recordAmmV2SwapEvent(event: SuiEvent, ctx: SuiContext) {
 
     ctx.eventLogger.emit("dex_swapEvents", {
         //@ts-ignore
-        distinctId: ctx.transaction.transaction.data.sender,
+        distinctId: ctx.transaction.transaction?.sender,
         pool,
         amount_in,
         type_in: atob ? poolInfo.symbol_a : poolInfo.symbol_b,
@@ -574,21 +591,22 @@ export async function recordAmmV2SwapEvent(event: SuiEvent, ctx: SuiContext) {
 }
 
 export async function recordClobSwapEvent(event: SuiEvent, ctx: SuiContext) {
+    if (!event.eventType) { return }
     //@ts-ignore
-    const pool = event.parsedJson.pool_id
+    const pool = event.json.pool_id
     const poolInfo: poolInfo = await getOrCreatePool(ctx, pool)
 
     let atob = false
     let [amount_in, amount_out, project] = [0, 0, "unk"]
 
-    if (event.type.includes(constant.DEEPBOOK_TYPE)) {
+    if (event.eventType.includes(constant.DEEPBOOK_TYPE)) {
         //is_bid true: quote b ->base a, false: base a -> quote b, doc issue?
         //@ts-ignore
-        atob = event.parsedJson.is_bid
+        atob = event.json.is_bid
         //@ts-ignore
-        const p_r = Math.pow(10, poolInfo.decimal_a - poolInfo.decimal_b - 9) * Number(event.parsedJson.price) //calculate priceInRealWorld
+        const p_r = Math.pow(10, poolInfo.decimal_a - poolInfo.decimal_b - 9) * Number(event.json.price) //calculate priceInRealWorld
         //@ts-ignore
-        const amount_a = Number(event.parsedJson.base_asset_quantity_filled) / Math.pow(10, poolInfo.decimal_a)
+        const amount_a = Number(event.json.base_asset_quantity_filled) / Math.pow(10, poolInfo.decimal_a)
         const amount_b = amount_a * p_r
         amount_in = atob ? amount_a : amount_b
         amount_out = atob ? amount_b : amount_a
@@ -600,7 +618,7 @@ export async function recordClobSwapEvent(event: SuiEvent, ctx: SuiContext) {
 
     ctx.eventLogger.emit("dex_swapEvents", {
         //@ts-ignore
-        distinctId: ctx.transaction.transaction.data.sender,
+        distinctId: ctx.transaction.transaction?.sender,
         pool,
         amount_in,
         type_in: atob ? poolInfo.symbol_a : poolInfo.symbol_b,
@@ -616,8 +634,9 @@ export async function recordClobSwapEvent(event: SuiEvent, ctx: SuiContext) {
 }
 
 export async function recordMultiAssetSwapEvent(event: SuiEvent, ctx: SuiContext) {
+    if (!event.eventType) { return }
     //@ts-ignore
-    const pool = event.parsedJson.pool_id
+    const pool = event.json.pool_id
 
     const multiAssetPoolInfo: multiAssetPoolInfo = await getOrCreateMultiAssetPool(ctx, pool)
 
@@ -629,30 +648,30 @@ export async function recordMultiAssetSwapEvent(event: SuiEvent, ctx: SuiContext
     let symbols_in: string[] = []
     let symbols_out: string[] = []
 
-    if (event.type.includes(constant.AFTERMATH_SWAP_TYPE)) {
+    if (event.eventType.includes(constant.AFTERMATH_SWAP_TYPE)) {
         //@ts-ignore
-        for (let i = 0; i < event.parsedJson.amounts_in.length; i++) {
+        for (let i = 0; i < event.json.amounts_in.length; i++) {
             //@ts-ignore
-            const coinType = "0x" + event.parsedJson.types_in[i]
+            const coinType = "0x" + event.json.types_in[i]
             types_in.push(coinType)
             //@ts-ignore
             const coinInfo = await getOrCreateCoin(ctx, coinType)
             //@ts-ignore
-            const amount = Number(event.parsedJson.amounts_in[i]) / Math.pow(10, coinInfo.decimal)
+            const amount = Number(event.json.amounts_in[i]) / Math.pow(10, coinInfo.decimal)
             amounts_in.push(amount)
             symbols_in.push(coinInfo.symbol)
         }
 
         //@ts-ignore
-        for (let i = 0; i < event.parsedJson.amounts_out.length; i++) {
+        for (let i = 0; i < event.json.amounts_out.length; i++) {
             //@ts-ignore
-            const coinType = "0x" + event.parsedJson.types_out[i]
+            const coinType = "0x" + event.json.types_out[i]
             types_out.push(coinType)
             //@ts-ignore
             const coinInfo = await getOrCreateCoin(ctx, coinType)
 
             //@ts-ignore
-            const amount = Number(event.parsedJson.amounts_out[i]) / Math.pow(10, coinInfo.decimal)
+            const amount = Number(event.json.amounts_out[i]) / Math.pow(10, coinInfo.decimal)
             amounts_out.push(amount)
             symbols_out.push(coinInfo.symbol)
         }
@@ -666,7 +685,7 @@ export async function recordMultiAssetSwapEvent(event: SuiEvent, ctx: SuiContext
         if (amounts_in.length == 1 && amounts_out.length == 1) {
             ctx.eventLogger.emit("dex_swapEvents", {
                 //@ts-ignore
-                distinctId: ctx.transaction.transaction.data.sender,
+                distinctId: ctx.transaction.transaction?.sender,
                 pool,
                 amount_in: amounts_in[0],
                 type_in: types_in[0],
@@ -681,7 +700,7 @@ export async function recordMultiAssetSwapEvent(event: SuiEvent, ctx: SuiContext
         else
             ctx.eventLogger.emit("dex_swapMultiTokenEvents", {
                 //@ts-ignore
-                distinctId: ctx.transaction.transaction.data.sender,
+                distinctId: ctx.transaction.transaction?.sender,
                 pool,
                 usd_volume,
                 pairName: multiAssetPoolInfo.pairName,
@@ -698,7 +717,7 @@ export async function logLiquidityEvents(ctx: SuiContext, isDeposit: boolean, po
 
     ctx.eventLogger.emit(`dex_${isDeposit ? "Add" : "Remove"}LiquidityEvents`, {
         //@ts-ignore
-        distinctId: ctx.transaction.transaction.data.sender,
+        distinctId: ctx.transaction.transaction?.sender,
         pool,
         total_usd_volume,
         pairName,
@@ -709,7 +728,7 @@ export async function logLiquidityEvents(ctx: SuiContext, isDeposit: boolean, po
     for (let i = 0; i < amounts.length; i++) {
         ctx.eventLogger.emit(`dex_${isDeposit ? "Add" : "Remove"}LiquiditySingleAssetEvents`, {
             //@ts-ignore
-            distinctId: ctx.transaction.transaction.data.sender,
+            distinctId: ctx.transaction.transaction?.sender,
             pool,
             amount: amounts[i],
             usd_volume: usd_volumes[i],
@@ -724,26 +743,27 @@ export async function logLiquidityEvents(ctx: SuiContext, isDeposit: boolean, po
 }
 
 export async function recordClmmV3LiquidityEvent(event: SuiEvent, ctx: SuiContext) {
+    if (!event.eventType) { return }
     let [project, amount_a, amount_b, isDeposit] = ["", 0, 0, false]
     //@ts-ignore
-    const pool = event.parsedJson.pool
+    const pool = event.json.pool
     const poolInfo: poolInfo = await getOrCreatePool(ctx, pool)
 
-    if (event.type.includes(constant.CETUS_ADD_LIQUIDITY_TYPE) || event.type.includes(constant.CETUS_REMOVE_LIQUIDITY_TYPE)) {
-        isDeposit = event.type.includes(constant.CETUS_ADD_LIQUIDITY_TYPE)
+    if (event.eventType.includes(constant.CETUS_ADD_LIQUIDITY_TYPE) || event.eventType.includes(constant.CETUS_REMOVE_LIQUIDITY_TYPE)) {
+        isDeposit = event.eventType.includes(constant.CETUS_ADD_LIQUIDITY_TYPE)
         //@ts-ignore
-        amount_a = Number(event.parsedJson.amount_a) / Math.pow(10, poolInfo.decimal_a)
+        amount_a = Number(event.json.amount_a) / Math.pow(10, poolInfo.decimal_a)
         //@ts-ignore
-        amount_b = Number(event.parsedJson.amount_b) / Math.pow(10, poolInfo.decimal_b)
+        amount_b = Number(event.json.amount_b) / Math.pow(10, poolInfo.decimal_b)
         project = "cetus"
     }
 
-    if (event.type.includes(constant.TURBOS_ADD_LIQUIDITY_TYPE) || event.type.includes(constant.TURBOS_REMOVE_LIQUIDITY_TYPE)) {
-        isDeposit = event.type.includes(constant.TURBOS_ADD_LIQUIDITY_TYPE)
+    if (event.eventType.includes(constant.TURBOS_ADD_LIQUIDITY_TYPE) || event.eventType.includes(constant.TURBOS_REMOVE_LIQUIDITY_TYPE)) {
+        isDeposit = event.eventType.includes(constant.TURBOS_ADD_LIQUIDITY_TYPE)
         //@ts-ignore
-        amount_a = Number(event.parsedJson.amount_a) / Math.pow(10, poolInfo.decimal_a)
+        amount_a = Number(event.json.amount_a) / Math.pow(10, poolInfo.decimal_a)
         //@ts-ignore
-        amount_b = Number(event.parsedJson.amount_b) / Math.pow(10, poolInfo.decimal_b)
+        amount_b = Number(event.json.amount_b) / Math.pow(10, poolInfo.decimal_b)
         project = "turbos"
     }
 
@@ -756,48 +776,49 @@ export async function recordClmmV3LiquidityEvent(event: SuiEvent, ctx: SuiContex
 }
 
 export async function recordAmmV2LiquidityEvent(event: SuiEvent, ctx: SuiContext) {
+    if (!event.eventType) { return }
     let [amount_a, amount_b, project, isDeposit] = [0, 0, "unk", false]
     let pool
     let poolInfo: poolInfo
 
-    if (event.type.includes(constant.KRIYA_PACKAGE_ID)) {
+    if (event.eventType.includes(constant.KRIYA_PACKAGE_ID)) {
         //@ts-ignore
-        pool = event.parsedJson.pool_id
+        pool = event.json.pool_id
         poolInfo = await getOrCreatePool(ctx, pool)
-        isDeposit = event.type.includes(constant.KRIYA_ADD_LIQUIDITY_TYPE)
+        isDeposit = event.eventType.includes(constant.KRIYA_ADD_LIQUIDITY_TYPE)
         //@ts-ignore
-        amount_a = Number(event.parsedJson.amount_x) / Math.pow(10, poolInfo.decimal_a)
+        amount_a = Number(event.json.amount_x) / Math.pow(10, poolInfo.decimal_a)
         //@ts-ignore
-        amount_b = Number(event.parsedJson.amount_y) / Math.pow(10, poolInfo.decimal_b)
+        amount_b = Number(event.json.amount_y) / Math.pow(10, poolInfo.decimal_b)
         project = "kriya"
     }
 
-    if (event.type.includes(constant.FLOWX_PACKAGE_ID)) {
+    if (event.eventType.includes(constant.FLOWX_PACKAGE_ID)) {
         //@ts-ignore
-        // console.log("entering flowx liquidity", event.parsedJson.coin_x, event.parsedJson.coin_y)
+        // console.log("entering flowx liquidity", event.json.coin_x, event.json.coin_y)
         //@ts-ignore
-        pool = await getFlowXPoolId(ctx, event.parsedJson.coin_x, event.parsedJson.coin_y)
+        pool = await getFlowXPoolId(ctx, event.json.coin_x, event.json.coin_y)
         poolInfo = await getOrCreatePool(ctx, pool)
 
-        isDeposit = event.type.includes(constant.FLOWX_ADD_LIQUIDITY_TYPE)
+        isDeposit = event.eventType.includes(constant.FLOWX_ADD_LIQUIDITY_TYPE)
         //@ts-ignore
-        amount_a = Number(event.parsedJson.amount_x) / Math.pow(10, poolInfo.decimal_a)
+        amount_a = Number(event.json.amount_x) / Math.pow(10, poolInfo.decimal_a)
         //@ts-ignore
-        amount_b = Number(event.parsedJson.amount_y) / Math.pow(10, poolInfo.decimal_b)
+        amount_b = Number(event.json.amount_y) / Math.pow(10, poolInfo.decimal_b)
         project = "flowx"
     }
 
-    if (event.type.includes(constant.IPX_ADD_LIQUIDITY_TYPE) || event.type.includes(constant.IPX_REMOVE_LIQUIDITY_TYPE)) {
-        console.log("entering ipx liquidity", event.type)
+    if (event.eventType.includes(constant.IPX_ADD_LIQUIDITY_TYPE) || event.eventType.includes(constant.IPX_REMOVE_LIQUIDITY_TYPE)) {
+        console.log("entering ipx liquidity", event.eventType)
         //@ts-ignore
-        pool = event.parsedJson.id
+        pool = event.json.id
         poolInfo = await getOrCreatePool(ctx, pool)
 
-        isDeposit = event.type.includes(constant.IPX_ADD_LIQUIDITY_TYPE)
+        isDeposit = event.eventType.includes(constant.IPX_ADD_LIQUIDITY_TYPE)
         //@ts-ignore
-        amount_a = Number(isDeposit ? event.parsedJson.coin_x_amount : event.parsedJson.coin_x_out) / Math.pow(10, poolInfo.decimal_a)
+        amount_a = Number(isDeposit ? event.json.coin_x_amount : event.json.coin_x_out) / Math.pow(10, poolInfo.decimal_a)
         //@ts-ignore
-        amount_b = Number(isDeposit ? event.parsedJson.coin_y_amount : event.parsedJson.coin_x_out) / Math.pow(10, poolInfo.decimal_b)
+        amount_b = Number(isDeposit ? event.json.coin_y_amount : event.json.coin_x_out) / Math.pow(10, poolInfo.decimal_b)
         project = "ipx"
     }
 
@@ -817,29 +838,30 @@ export async function recordClobLiquidityEvent(event: SuiEvent, ctx: SuiContext)
 }
 
 export async function recordMultiAssetLiquidityEvent(event: SuiEvent, ctx: SuiContext) {
+    if (!event.eventType) { return }
     //@ts-ignore
-    const pool = event.parsedJson.pool_id
+    const pool = event.json.pool_id
     const multiAssetPoolInfo: multiAssetPoolInfo = await getOrCreateMultiAssetPool(ctx, pool)
     let usd_volume = 0
     const amounts: number[] = []
     const symbols: string[] = []
     const types: string[] = []
     const usd_volumes: number[] = []
-    const isDeposit = event.type.includes(constant.AFTERMATH_ADD_LIQUIDITY_TYPE)
+    const isDeposit = event.eventType.includes(constant.AFTERMATH_ADD_LIQUIDITY_TYPE)
     //@ts-ignore
-    for (let i = 0; i < event.parsedJson.types.length; i++) {
+    for (let i = 0; i < event.json.types.length; i++) {
         //@ts-ignore
-        const coinType = `0x${event.parsedJson.types[i]}`
+        const coinType = `0x${event.json.types[i]}`
         //@ts-ignore
         const coinInfo = await getOrCreateCoin(ctx, coinType)
         let amount = 0
         if (isDeposit) {
             //@ts-ignore
-            amount = Number(event.parsedJson.deposits[i]) / Math.pow(10, coinInfo.decimal)
+            amount = Number(event.json.deposits[i]) / Math.pow(10, coinInfo.decimal)
         }
         else {
             //@ts-ignore
-            amount = Number(event.parsedJson.withdrawn[i]) / Math.pow(10, coinInfo.decimal)
+            amount = Number(event.json.withdrawn[i]) / Math.pow(10, coinInfo.decimal)
         }
         amounts.push(amount)
         symbols.push(coinInfo.symbol)

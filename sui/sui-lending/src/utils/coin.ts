@@ -1,8 +1,8 @@
 import { SuiContext, SuiNetwork } from '@sentio/sdk/sui'
-import { CoinMetadata } from '@mysten/sui/client'
+import { SuiClientTypes } from '@mysten/sui/client'
 import { normalizeSuiAddress } from '@mysten/sui/utils'
 
-const coinsMetadata = new Map<string, CoinMetadata | null>()
+const coinsMetadata = new Map<string, SuiClientTypes.CoinMetadata | null>()
 
 export async function getCoinMetadata(ctx: SuiContext, coinType: string) {
   if (!coinType.startsWith('0x')) {
@@ -13,8 +13,8 @@ export async function getCoinMetadata(ctx: SuiContext, coinType: string) {
   if (metadata === undefined) {
     try {
       const data = await ctx.client.getCoinMetadata({ coinType })
-      if (data) {
-        metadata = data
+      if (data?.coinMetadata) {
+        metadata = data.coinMetadata
         coinsMetadata.set(coinType, metadata)
       }
     } catch (e) {

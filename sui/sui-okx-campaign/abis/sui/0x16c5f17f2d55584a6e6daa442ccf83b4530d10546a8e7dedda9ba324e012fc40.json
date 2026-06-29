@@ -1,2242 +1,2752 @@
 [
 	{
-		"fileFormatVersion": 6,
 		"address": "0x16c5f17f2d55584a6e6daa442ccf83b4530d10546a8e7dedda9ba324e012fc40",
-		"name": "frozen_pub",
-		"friends": [],
-		"structs": {
-			"FROZEN_PUB": {
-				"abilities": {
+		"module": {
+			"datatypes": [
+				{
 					"abilities": [
-						"Drop"
-					]
-				},
-				"typeParameters": [],
-				"fields": [
-					{
-						"name": "dummy_field",
-						"type": "Bool"
-					}
-				]
-			}
-		},
-		"exposedFunctions": {}
-	},
-	{
-		"fileFormatVersion": 6,
-		"address": "0x16c5f17f2d55584a6e6daa442ccf83b4530d10546a8e7dedda9ba324e012fc40",
-		"name": "frozen_publisher",
-		"friends": [],
-		"structs": {
-			"FROZEN_PUBLISHER": {
-				"abilities": {
-					"abilities": [
-						"Drop"
-					]
-				},
-				"typeParameters": [],
-				"fields": [
-					{
-						"name": "dummy_field",
-						"type": "Bool"
-					}
-				]
-			},
-			"FrozenPublisher": {
-				"abilities": {
-					"abilities": [
-						"Key"
-					]
-				},
-				"typeParameters": [],
-				"fields": [
-					{
-						"name": "id",
-						"type": {
-							"Struct": {
-								"address": "0x2",
-								"module": "object",
-								"name": "UID",
-								"typeArguments": []
+						2
+					],
+					"typeParameters": [],
+					"fields": [
+						{
+							"name": "dummy_field",
+							"position": 0,
+							"type": {
+								"typeParameterInstantiation": [],
+								"type": 2
 							}
 						}
-					},
-					{
-						"name": "inner",
-						"type": {
-							"Struct": {
-								"address": "0x2",
-								"module": "package",
-								"name": "Publisher",
-								"typeArguments": []
+					],
+					"variants": [],
+					"typeName": "0x16c5f17f2d55584a6e6daa442ccf83b4530d10546a8e7dedda9ba324e012fc40::frozen_pub::FROZEN_PUB",
+					"definingId": "0x16c5f17f2d55584a6e6daa442ccf83b4530d10546a8e7dedda9ba324e012fc40",
+					"module": "frozen_pub",
+					"name": "FROZEN_PUB",
+					"kind": 1
+				}
+			],
+			"functions": [
+				{
+					"typeParameters": [],
+					"parameters": [
+						{
+							"body": {
+								"typeParameterInstantiation": [],
+								"type": 10,
+								"typeName": "0x16c5f17f2d55584a6e6daa442ccf83b4530d10546a8e7dedda9ba324e012fc40::frozen_pub::FROZEN_PUB"
+							}
+						},
+						{
+							"reference": 2,
+							"body": {
+								"typeParameterInstantiation": [],
+								"type": 10,
+								"typeName": "0x0000000000000000000000000000000000000000000000000000000000000002::tx_context::TxContext"
 							}
 						}
-					}
-				]
-			}
-		},
-		"exposedFunctions": {
-			"borrow_publisher": {
-				"visibility": "Public",
-				"isEntry": false,
-				"typeParameters": [
-					{
-						"abilities": []
-					}
-				],
-				"parameters": [
-					{
-						"Struct": {
-							"address": "0x16c5f17f2d55584a6e6daa442ccf83b4530d10546a8e7dedda9ba324e012fc40",
-							"module": "witness",
-							"name": "Witness",
-							"typeArguments": [
-								{
-									"TypeParameter": 0
-								}
-							]
-						}
-					},
-					{
-						"Reference": {
-							"Struct": {
-								"address": "0x16c5f17f2d55584a6e6daa442ccf83b4530d10546a8e7dedda9ba324e012fc40",
-								"module": "frozen_publisher",
-								"name": "FrozenPublisher",
-								"typeArguments": []
-							}
-						}
-					}
-				],
-				"return": [
-					{
-						"Reference": {
-							"Struct": {
-								"address": "0x2",
-								"module": "package",
-								"name": "Publisher",
-								"typeArguments": []
-							}
-						}
-					}
-				]
-			},
-			"freeze_from_otw": {
-				"visibility": "Public",
-				"isEntry": false,
-				"typeParameters": [
-					{
-						"abilities": [
-							"Drop"
-						]
-					}
-				],
-				"parameters": [
-					{
-						"TypeParameter": 0
-					},
-					{
-						"MutableReference": {
-							"Struct": {
-								"address": "0x2",
-								"module": "tx_context",
-								"name": "TxContext",
-								"typeArguments": []
-							}
-						}
-					}
-				],
-				"return": []
-			},
-			"mod": {
-				"visibility": "Public",
-				"isEntry": false,
-				"typeParameters": [],
-				"parameters": [
-					{
-						"Reference": {
-							"Struct": {
-								"address": "0x16c5f17f2d55584a6e6daa442ccf83b4530d10546a8e7dedda9ba324e012fc40",
-								"module": "frozen_publisher",
-								"name": "FrozenPublisher",
-								"typeArguments": []
-							}
-						}
-					}
-				],
-				"return": [
-					{
-						"Reference": {
-							"Struct": {
-								"address": "0x1",
-								"module": "ascii",
-								"name": "String",
-								"typeArguments": []
-							}
-						}
-					}
-				]
-			},
-			"new": {
-				"visibility": "Public",
-				"isEntry": false,
-				"typeParameters": [],
-				"parameters": [
-					{
-						"Struct": {
-							"address": "0x2",
-							"module": "package",
-							"name": "Publisher",
-							"typeArguments": []
-						}
-					},
-					{
-						"MutableReference": {
-							"Struct": {
-								"address": "0x2",
-								"module": "tx_context",
-								"name": "TxContext",
-								"typeArguments": []
-							}
-						}
-					}
-				],
-				"return": [
-					{
-						"Struct": {
-							"address": "0x16c5f17f2d55584a6e6daa442ccf83b4530d10546a8e7dedda9ba324e012fc40",
-							"module": "frozen_publisher",
-							"name": "FrozenPublisher",
-							"typeArguments": []
-						}
-					}
-				]
-			},
-			"new_display": {
-				"visibility": "Public",
-				"isEntry": false,
-				"typeParameters": [
-					{
-						"abilities": [
-							"Drop"
-						]
-					},
-					{
-						"abilities": [
-							"Key"
-						]
-					}
-				],
-				"parameters": [
-					{
-						"TypeParameter": 0
-					},
-					{
-						"Reference": {
-							"Struct": {
-								"address": "0x16c5f17f2d55584a6e6daa442ccf83b4530d10546a8e7dedda9ba324e012fc40",
-								"module": "frozen_publisher",
-								"name": "FrozenPublisher",
-								"typeArguments": []
-							}
-						}
-					},
-					{
-						"MutableReference": {
-							"Struct": {
-								"address": "0x2",
-								"module": "tx_context",
-								"name": "TxContext",
-								"typeArguments": []
-							}
-						}
-					}
-				],
-				"return": [
-					{
-						"Struct": {
-							"address": "0x2",
-							"module": "display",
-							"name": "Display",
-							"typeArguments": [
-								{
-									"TypeParameter": 1
-								}
-							]
-						}
-					}
-				]
-			},
-			"pkg": {
-				"visibility": "Public",
-				"isEntry": false,
-				"typeParameters": [],
-				"parameters": [
-					{
-						"Reference": {
-							"Struct": {
-								"address": "0x16c5f17f2d55584a6e6daa442ccf83b4530d10546a8e7dedda9ba324e012fc40",
-								"module": "frozen_publisher",
-								"name": "FrozenPublisher",
-								"typeArguments": []
-							}
-						}
-					}
-				],
-				"return": [
-					{
-						"Reference": {
-							"Struct": {
-								"address": "0x1",
-								"module": "ascii",
-								"name": "String",
-								"typeArguments": []
-							}
-						}
-					}
-				]
-			},
-			"public_freeze_object": {
-				"visibility": "Public",
-				"isEntry": false,
-				"typeParameters": [],
-				"parameters": [
-					{
-						"Struct": {
-							"address": "0x16c5f17f2d55584a6e6daa442ccf83b4530d10546a8e7dedda9ba324e012fc40",
-							"module": "frozen_publisher",
-							"name": "FrozenPublisher",
-							"typeArguments": []
-						}
-					}
-				],
-				"return": []
-			}
+					],
+					"returns": [],
+					"name": "init",
+					"visibility": 1,
+					"isEntry": false
+				}
+			],
+			"name": "frozen_pub"
 		}
 	},
 	{
-		"fileFormatVersion": 6,
 		"address": "0x16c5f17f2d55584a6e6daa442ccf83b4530d10546a8e7dedda9ba324e012fc40",
-		"name": "permissions",
-		"friends": [],
-		"structs": {
-			"PERMISSIONS": {
-				"abilities": {
+		"module": {
+			"datatypes": [
+				{
 					"abilities": [
-						"Drop"
-					]
-				},
-				"typeParameters": [],
-				"fields": [
-					{
-						"name": "dummy_field",
-						"type": "Bool"
-					}
-				]
-			}
-		},
-		"exposedFunctions": {}
-	},
-	{
-		"fileFormatVersion": 6,
-		"address": "0x16c5f17f2d55584a6e6daa442ccf83b4530d10546a8e7dedda9ba324e012fc40",
-		"name": "quorum",
-		"friends": [],
-		"structs": {
-			"AddAdmin": {
-				"abilities": {
-					"abilities": [
-						"Copy",
-						"Drop",
-						"Store"
-					]
-				},
-				"typeParameters": [],
-				"fields": [
-					{
-						"name": "admin",
-						"type": "Address"
-					}
-				]
-			},
-			"AddDelegate": {
-				"abilities": {
-					"abilities": [
-						"Copy",
-						"Drop",
-						"Store"
-					]
-				},
-				"typeParameters": [],
-				"fields": [
-					{
-						"name": "entity",
-						"type": {
-							"Struct": {
-								"address": "0x2",
-								"module": "object",
-								"name": "ID",
-								"typeArguments": []
+						2
+					],
+					"typeParameters": [],
+					"fields": [
+						{
+							"name": "dummy_field",
+							"position": 0,
+							"type": {
+								"typeParameterInstantiation": [],
+								"type": 2
 							}
 						}
-					}
-				]
-			},
-			"AdminField": {
-				"abilities": {
-					"abilities": [
-						"Copy",
-						"Drop",
-						"Store"
-					]
+					],
+					"variants": [],
+					"typeName": "0x16c5f17f2d55584a6e6daa442ccf83b4530d10546a8e7dedda9ba324e012fc40::frozen_publisher::FROZEN_PUBLISHER",
+					"definingId": "0x16c5f17f2d55584a6e6daa442ccf83b4530d10546a8e7dedda9ba324e012fc40",
+					"module": "frozen_publisher",
+					"name": "FROZEN_PUBLISHER",
+					"kind": 1
 				},
-				"typeParameters": [],
-				"fields": [
-					{
-						"name": "type_name",
-						"type": {
-							"Struct": {
-								"address": "0x1",
-								"module": "type_name",
-								"name": "TypeName",
-								"typeArguments": []
-							}
-						}
-					}
-				]
-			},
-			"CreateQuorumEvent": {
-				"abilities": {
+				{
 					"abilities": [
-						"Copy",
-						"Drop"
-					]
-				},
-				"typeParameters": [],
-				"fields": [
-					{
-						"name": "quorum_id",
-						"type": {
-							"Struct": {
-								"address": "0x2",
-								"module": "object",
-								"name": "ID",
-								"typeArguments": []
+						4
+					],
+					"typeParameters": [],
+					"fields": [
+						{
+							"name": "id",
+							"position": 0,
+							"type": {
+								"typeParameterInstantiation": [],
+								"type": 10,
+								"typeName": "0x0000000000000000000000000000000000000000000000000000000000000002::object::UID"
 							}
-						}
-					},
-					{
-						"name": "type_name",
-						"type": {
-							"Struct": {
-								"address": "0x1",
-								"module": "type_name",
-								"name": "TypeName",
-								"typeArguments": []
-							}
-						}
-					}
-				]
-			},
-			"ExtensionToken": {
-				"abilities": {
-					"abilities": [
-						"Store"
-					]
-				},
-				"typeParameters": [
-					{
-						"constraints": {
-							"abilities": []
 						},
-						"isPhantom": true
-					}
-				],
-				"fields": [
-					{
-						"name": "quorum_id",
-						"type": {
-							"Struct": {
-								"address": "0x2",
-								"module": "object",
-								"name": "ID",
-								"typeArguments": []
+						{
+							"name": "inner",
+							"position": 1,
+							"type": {
+								"typeParameterInstantiation": [],
+								"type": 10,
+								"typeName": "0x0000000000000000000000000000000000000000000000000000000000000002::package::Publisher"
 							}
 						}
-					}
-				]
-			},
-			"Foo": {
-				"abilities": {
-					"abilities": [
-						"Drop"
-					]
-				},
-				"typeParameters": [],
-				"fields": [
-					{
-						"name": "dummy_field",
-						"type": "Bool"
-					}
-				]
-			},
-			"MemberField": {
-				"abilities": {
-					"abilities": [
-						"Copy",
-						"Drop",
-						"Store"
-					]
-				},
-				"typeParameters": [],
-				"fields": [
-					{
-						"name": "type_name",
-						"type": {
-							"Struct": {
-								"address": "0x1",
-								"module": "type_name",
-								"name": "TypeName",
-								"typeArguments": []
-							}
+					],
+					"variants": [],
+					"typeName": "0x16c5f17f2d55584a6e6daa442ccf83b4530d10546a8e7dedda9ba324e012fc40::frozen_publisher::FrozenPublisher",
+					"definingId": "0x16c5f17f2d55584a6e6daa442ccf83b4530d10546a8e7dedda9ba324e012fc40",
+					"module": "frozen_publisher",
+					"name": "FrozenPublisher",
+					"kind": 1
+				}
+			],
+			"functions": [
+				{
+					"typeParameters": [
+						{
+							"constraints": []
 						}
-					}
-				]
-			},
-			"Quorum": {
-				"abilities": {
-					"abilities": [
-						"Store",
-						"Key"
-					]
-				},
-				"typeParameters": [
-					{
-						"constraints": {
-							"abilities": []
-						},
-						"isPhantom": true
-					}
-				],
-				"fields": [
-					{
-						"name": "id",
-						"type": {
-							"Struct": {
-								"address": "0x2",
-								"module": "object",
-								"name": "UID",
-								"typeArguments": []
-							}
-						}
-					},
-					{
-						"name": "version",
-						"type": "U64"
-					},
-					{
-						"name": "admins",
-						"type": {
-							"Struct": {
-								"address": "0x2",
-								"module": "vec_set",
-								"name": "VecSet",
-								"typeArguments": [
-									"Address"
-								]
-							}
-						}
-					},
-					{
-						"name": "members",
-						"type": {
-							"Struct": {
-								"address": "0x2",
-								"module": "vec_set",
-								"name": "VecSet",
-								"typeArguments": [
-									"Address"
-								]
-							}
-						}
-					},
-					{
-						"name": "delegates",
-						"type": {
-							"Struct": {
-								"address": "0x2",
-								"module": "vec_set",
-								"name": "VecSet",
-								"typeArguments": [
+					],
+					"parameters": [
+						{
+							"body": {
+								"typeParameterInstantiation": [
 									{
-										"Struct": {
-											"address": "0x2",
-											"module": "object",
-											"name": "ID",
-											"typeArguments": []
-										}
+										"typeParameterInstantiation": [],
+										"type": 11,
+										"typeParameter": 0
 									}
-								]
+								],
+								"type": 10,
+								"typeName": "0x16c5f17f2d55584a6e6daa442ccf83b4530d10546a8e7dedda9ba324e012fc40::witness::Witness"
 							}
-						}
-					},
-					{
-						"name": "admin_count",
-						"type": "U64"
-					}
-				]
-			},
-			"RemoveAdmin": {
-				"abilities": {
-					"abilities": [
-						"Copy",
-						"Drop",
-						"Store"
-					]
-				},
-				"typeParameters": [],
-				"fields": [
-					{
-						"name": "admin",
-						"type": "Address"
-					}
-				]
-			},
-			"RemoveDelegate": {
-				"abilities": {
-					"abilities": [
-						"Copy",
-						"Drop",
-						"Store"
-					]
-				},
-				"typeParameters": [],
-				"fields": [
-					{
-						"name": "entity",
-						"type": {
-							"Struct": {
-								"address": "0x2",
-								"module": "object",
-								"name": "ID",
-								"typeArguments": []
-							}
-						}
-					}
-				]
-			},
-			"ReturnReceipt": {
-				"abilities": {
-					"abilities": []
-				},
-				"typeParameters": [
-					{
-						"constraints": {
-							"abilities": []
 						},
-						"isPhantom": true
-					},
-					{
-						"constraints": {
-							"abilities": [
-								"Key"
+						{
+							"reference": 1,
+							"body": {
+								"typeParameterInstantiation": [],
+								"type": 10,
+								"typeName": "0x16c5f17f2d55584a6e6daa442ccf83b4530d10546a8e7dedda9ba324e012fc40::frozen_publisher::FrozenPublisher"
+							}
+						}
+					],
+					"returns": [
+						{
+							"reference": 1,
+							"body": {
+								"typeParameterInstantiation": [],
+								"type": 10,
+								"typeName": "0x0000000000000000000000000000000000000000000000000000000000000002::package::Publisher"
+							}
+						}
+					],
+					"name": "borrow_publisher",
+					"visibility": 2,
+					"isEntry": false
+				},
+				{
+					"typeParameters": [
+						{
+							"constraints": [
+								2
+							]
+						}
+					],
+					"parameters": [
+						{
+							"body": {
+								"typeParameterInstantiation": [],
+								"type": 11,
+								"typeParameter": 0
+							}
+						},
+						{
+							"reference": 2,
+							"body": {
+								"typeParameterInstantiation": [],
+								"type": 10,
+								"typeName": "0x0000000000000000000000000000000000000000000000000000000000000002::tx_context::TxContext"
+							}
+						}
+					],
+					"returns": [],
+					"name": "freeze_from_otw",
+					"visibility": 2,
+					"isEntry": false
+				},
+				{
+					"typeParameters": [],
+					"parameters": [
+						{
+							"body": {
+								"typeParameterInstantiation": [],
+								"type": 10,
+								"typeName": "0x16c5f17f2d55584a6e6daa442ccf83b4530d10546a8e7dedda9ba324e012fc40::frozen_publisher::FROZEN_PUBLISHER"
+							}
+						},
+						{
+							"reference": 2,
+							"body": {
+								"typeParameterInstantiation": [],
+								"type": 10,
+								"typeName": "0x0000000000000000000000000000000000000000000000000000000000000002::tx_context::TxContext"
+							}
+						}
+					],
+					"returns": [],
+					"name": "init",
+					"visibility": 1,
+					"isEntry": false
+				},
+				{
+					"typeParameters": [],
+					"parameters": [
+						{
+							"reference": 1,
+							"body": {
+								"typeParameterInstantiation": [],
+								"type": 10,
+								"typeName": "0x16c5f17f2d55584a6e6daa442ccf83b4530d10546a8e7dedda9ba324e012fc40::frozen_publisher::FrozenPublisher"
+							}
+						}
+					],
+					"returns": [
+						{
+							"reference": 1,
+							"body": {
+								"typeParameterInstantiation": [],
+								"type": 10,
+								"typeName": "0x0000000000000000000000000000000000000000000000000000000000000001::ascii::String"
+							}
+						}
+					],
+					"name": "mod",
+					"visibility": 2,
+					"isEntry": false
+				},
+				{
+					"typeParameters": [],
+					"parameters": [
+						{
+							"body": {
+								"typeParameterInstantiation": [],
+								"type": 10,
+								"typeName": "0x0000000000000000000000000000000000000000000000000000000000000002::package::Publisher"
+							}
+						},
+						{
+							"reference": 2,
+							"body": {
+								"typeParameterInstantiation": [],
+								"type": 10,
+								"typeName": "0x0000000000000000000000000000000000000000000000000000000000000002::tx_context::TxContext"
+							}
+						}
+					],
+					"returns": [
+						{
+							"body": {
+								"typeParameterInstantiation": [],
+								"type": 10,
+								"typeName": "0x16c5f17f2d55584a6e6daa442ccf83b4530d10546a8e7dedda9ba324e012fc40::frozen_publisher::FrozenPublisher"
+							}
+						}
+					],
+					"name": "new",
+					"visibility": 2,
+					"isEntry": false
+				},
+				{
+					"typeParameters": [
+						{
+							"constraints": [
+								2
 							]
 						},
-						"isPhantom": true
-					}
-				],
-				"fields": [
-					{
-						"name": "dummy_field",
-						"type": "Bool"
-					}
-				]
-			},
-			"Signatures": {
-				"abilities": {
-					"abilities": [
-						"Copy",
-						"Drop",
-						"Store"
-					]
-				},
-				"typeParameters": [
-					{
-						"constraints": {
-							"abilities": []
+						{
+							"constraints": [
+								4
+							]
+						}
+					],
+					"parameters": [
+						{
+							"body": {
+								"typeParameterInstantiation": [],
+								"type": 11,
+								"typeParameter": 0
+							}
 						},
-						"isPhantom": true
-					}
-				],
-				"fields": [
-					{
-						"name": "list",
-						"type": {
-							"Struct": {
-								"address": "0x2",
-								"module": "vec_set",
-								"name": "VecSet",
-								"typeArguments": [
-									"Address"
-								]
+						{
+							"reference": 1,
+							"body": {
+								"typeParameterInstantiation": [],
+								"type": 10,
+								"typeName": "0x16c5f17f2d55584a6e6daa442ccf83b4530d10546a8e7dedda9ba324e012fc40::frozen_publisher::FrozenPublisher"
+							}
+						},
+						{
+							"reference": 2,
+							"body": {
+								"typeParameterInstantiation": [],
+								"type": 10,
+								"typeName": "0x0000000000000000000000000000000000000000000000000000000000000002::tx_context::TxContext"
 							}
 						}
-					}
-				]
-			}
-		},
-		"exposedFunctions": {
-			"add_admin_with_extension": {
-				"visibility": "Public",
-				"isEntry": false,
-				"typeParameters": [
-					{
-						"abilities": []
-					}
-				],
-				"parameters": [
-					{
-						"MutableReference": {
-							"Struct": {
-								"address": "0x16c5f17f2d55584a6e6daa442ccf83b4530d10546a8e7dedda9ba324e012fc40",
-								"module": "quorum",
-								"name": "Quorum",
-								"typeArguments": [
+					],
+					"returns": [
+						{
+							"body": {
+								"typeParameterInstantiation": [
 									{
-										"TypeParameter": 0
+										"typeParameterInstantiation": [],
+										"type": 11,
+										"typeParameter": 1
 									}
-								]
+								],
+								"type": 10,
+								"typeName": "0x0000000000000000000000000000000000000000000000000000000000000002::display::Display"
 							}
 						}
-					},
-					{
-						"Reference": {
-							"Struct": {
-								"address": "0x16c5f17f2d55584a6e6daa442ccf83b4530d10546a8e7dedda9ba324e012fc40",
-								"module": "quorum",
-								"name": "ExtensionToken",
-								"typeArguments": [
-									{
-										"TypeParameter": 0
-									}
-								]
+					],
+					"name": "new_display",
+					"visibility": 2,
+					"isEntry": false
+				},
+				{
+					"typeParameters": [],
+					"parameters": [
+						{
+							"reference": 1,
+							"body": {
+								"typeParameterInstantiation": [],
+								"type": 10,
+								"typeName": "0x16c5f17f2d55584a6e6daa442ccf83b4530d10546a8e7dedda9ba324e012fc40::frozen_publisher::FrozenPublisher"
 							}
 						}
-					},
-					"Address"
-				],
-				"return": []
-			},
-			"add_delegate_with_extension": {
-				"visibility": "Public",
-				"isEntry": false,
-				"typeParameters": [
-					{
-						"abilities": []
-					}
-				],
-				"parameters": [
-					{
-						"MutableReference": {
-							"Struct": {
-								"address": "0x16c5f17f2d55584a6e6daa442ccf83b4530d10546a8e7dedda9ba324e012fc40",
-								"module": "quorum",
-								"name": "Quorum",
-								"typeArguments": [
-									{
-										"TypeParameter": 0
-									}
-								]
+					],
+					"returns": [
+						{
+							"reference": 1,
+							"body": {
+								"typeParameterInstantiation": [],
+								"type": 10,
+								"typeName": "0x0000000000000000000000000000000000000000000000000000000000000001::ascii::String"
 							}
 						}
-					},
-					{
-						"Reference": {
-							"Struct": {
-								"address": "0x16c5f17f2d55584a6e6daa442ccf83b4530d10546a8e7dedda9ba324e012fc40",
-								"module": "quorum",
-								"name": "ExtensionToken",
-								"typeArguments": [
-									{
-										"TypeParameter": 0
-									}
-								]
+					],
+					"name": "pkg",
+					"visibility": 2,
+					"isEntry": false
+				},
+				{
+					"typeParameters": [],
+					"parameters": [
+						{
+							"body": {
+								"typeParameterInstantiation": [],
+								"type": 10,
+								"typeName": "0x16c5f17f2d55584a6e6daa442ccf83b4530d10546a8e7dedda9ba324e012fc40::frozen_publisher::FrozenPublisher"
 							}
 						}
-					},
-					{
-						"Struct": {
-							"address": "0x2",
-							"module": "object",
-							"name": "ID",
-							"typeArguments": []
-						}
-					}
-				],
-				"return": []
-			},
-			"add_member": {
-				"visibility": "Public",
-				"isEntry": false,
-				"typeParameters": [
-					{
-						"abilities": []
-					}
-				],
-				"parameters": [
-					{
-						"MutableReference": {
-							"Struct": {
-								"address": "0x16c5f17f2d55584a6e6daa442ccf83b4530d10546a8e7dedda9ba324e012fc40",
-								"module": "quorum",
-								"name": "Quorum",
-								"typeArguments": [
-									{
-										"TypeParameter": 0
-									}
-								]
-							}
-						}
-					},
-					"Address",
-					{
-						"MutableReference": {
-							"Struct": {
-								"address": "0x2",
-								"module": "tx_context",
-								"name": "TxContext",
-								"typeArguments": []
-							}
-						}
-					}
-				],
-				"return": []
-			},
-			"assert_admin": {
-				"visibility": "Public",
-				"isEntry": false,
-				"typeParameters": [
-					{
-						"abilities": []
-					}
-				],
-				"parameters": [
-					{
-						"Reference": {
-							"Struct": {
-								"address": "0x16c5f17f2d55584a6e6daa442ccf83b4530d10546a8e7dedda9ba324e012fc40",
-								"module": "quorum",
-								"name": "Quorum",
-								"typeArguments": [
-									{
-										"TypeParameter": 0
-									}
-								]
-							}
-						}
-					},
-					{
-						"Reference": {
-							"Struct": {
-								"address": "0x2",
-								"module": "tx_context",
-								"name": "TxContext",
-								"typeArguments": []
-							}
-						}
-					}
-				],
-				"return": []
-			},
-			"assert_delegate": {
-				"visibility": "Public",
-				"isEntry": false,
-				"typeParameters": [
-					{
-						"abilities": []
-					}
-				],
-				"parameters": [
-					{
-						"Reference": {
-							"Struct": {
-								"address": "0x16c5f17f2d55584a6e6daa442ccf83b4530d10546a8e7dedda9ba324e012fc40",
-								"module": "quorum",
-								"name": "Quorum",
-								"typeArguments": [
-									{
-										"TypeParameter": 0
-									}
-								]
-							}
-						}
-					},
-					{
-						"Reference": {
-							"Struct": {
-								"address": "0x2",
-								"module": "object",
-								"name": "UID",
-								"typeArguments": []
-							}
-						}
-					}
-				],
-				"return": []
-			},
-			"assert_extension_token": {
-				"visibility": "Public",
-				"isEntry": false,
-				"typeParameters": [
-					{
-						"abilities": []
-					}
-				],
-				"parameters": [
-					{
-						"Reference": {
-							"Struct": {
-								"address": "0x16c5f17f2d55584a6e6daa442ccf83b4530d10546a8e7dedda9ba324e012fc40",
-								"module": "quorum",
-								"name": "Quorum",
-								"typeArguments": [
-									{
-										"TypeParameter": 0
-									}
-								]
-							}
-						}
-					},
-					{
-						"Reference": {
-							"Struct": {
-								"address": "0x16c5f17f2d55584a6e6daa442ccf83b4530d10546a8e7dedda9ba324e012fc40",
-								"module": "quorum",
-								"name": "ExtensionToken",
-								"typeArguments": [
-									{
-										"TypeParameter": 0
-									}
-								]
-							}
-						}
-					}
-				],
-				"return": []
-			},
-			"assert_member": {
-				"visibility": "Public",
-				"isEntry": false,
-				"typeParameters": [
-					{
-						"abilities": []
-					}
-				],
-				"parameters": [
-					{
-						"Reference": {
-							"Struct": {
-								"address": "0x16c5f17f2d55584a6e6daa442ccf83b4530d10546a8e7dedda9ba324e012fc40",
-								"module": "quorum",
-								"name": "Quorum",
-								"typeArguments": [
-									{
-										"TypeParameter": 0
-									}
-								]
-							}
-						}
-					},
-					{
-						"Reference": {
-							"Struct": {
-								"address": "0x2",
-								"module": "tx_context",
-								"name": "TxContext",
-								"typeArguments": []
-							}
-						}
-					}
-				],
-				"return": []
-			},
-			"assert_member_or_admin": {
-				"visibility": "Public",
-				"isEntry": false,
-				"typeParameters": [
-					{
-						"abilities": []
-					}
-				],
-				"parameters": [
-					{
-						"Reference": {
-							"Struct": {
-								"address": "0x16c5f17f2d55584a6e6daa442ccf83b4530d10546a8e7dedda9ba324e012fc40",
-								"module": "quorum",
-								"name": "Quorum",
-								"typeArguments": [
-									{
-										"TypeParameter": 0
-									}
-								]
-							}
-						}
-					},
-					{
-						"Reference": {
-							"Struct": {
-								"address": "0x2",
-								"module": "tx_context",
-								"name": "TxContext",
-								"typeArguments": []
-							}
-						}
-					}
-				],
-				"return": []
-			},
-			"borrow_cap": {
-				"visibility": "Public",
-				"isEntry": false,
-				"typeParameters": [
-					{
-						"abilities": []
-					},
-					{
-						"abilities": [
-							"Store",
-							"Key"
-						]
-					}
-				],
-				"parameters": [
-					{
-						"MutableReference": {
-							"Struct": {
-								"address": "0x16c5f17f2d55584a6e6daa442ccf83b4530d10546a8e7dedda9ba324e012fc40",
-								"module": "quorum",
-								"name": "Quorum",
-								"typeArguments": [
-									{
-										"TypeParameter": 0
-									}
-								]
-							}
-						}
-					},
-					{
-						"MutableReference": {
-							"Struct": {
-								"address": "0x2",
-								"module": "tx_context",
-								"name": "TxContext",
-								"typeArguments": []
-							}
-						}
-					}
-				],
-				"return": [
-					{
-						"TypeParameter": 1
-					},
-					{
-						"Struct": {
-							"address": "0x16c5f17f2d55584a6e6daa442ccf83b4530d10546a8e7dedda9ba324e012fc40",
-							"module": "quorum",
-							"name": "ReturnReceipt",
-							"typeArguments": [
-								{
-									"TypeParameter": 0
-								},
-								{
-									"TypeParameter": 1
-								}
-							]
-						}
-					}
-				]
-			},
-			"borrow_cap_as_delegate": {
-				"visibility": "Public",
-				"isEntry": false,
-				"typeParameters": [
-					{
-						"abilities": []
-					},
-					{
-						"abilities": []
-					},
-					{
-						"abilities": [
-							"Store",
-							"Key"
-						]
-					}
-				],
-				"parameters": [
-					{
-						"MutableReference": {
-							"Struct": {
-								"address": "0x16c5f17f2d55584a6e6daa442ccf83b4530d10546a8e7dedda9ba324e012fc40",
-								"module": "quorum",
-								"name": "Quorum",
-								"typeArguments": [
-									{
-										"TypeParameter": 0
-									}
-								]
-							}
-						}
-					},
-					{
-						"Reference": {
-							"Struct": {
-								"address": "0x16c5f17f2d55584a6e6daa442ccf83b4530d10546a8e7dedda9ba324e012fc40",
-								"module": "quorum",
-								"name": "Quorum",
-								"typeArguments": [
-									{
-										"TypeParameter": 1
-									}
-								]
-							}
-						}
-					},
-					{
-						"MutableReference": {
-							"Struct": {
-								"address": "0x2",
-								"module": "tx_context",
-								"name": "TxContext",
-								"typeArguments": []
-							}
-						}
-					}
-				],
-				"return": [
-					{
-						"TypeParameter": 2
-					},
-					{
-						"Struct": {
-							"address": "0x16c5f17f2d55584a6e6daa442ccf83b4530d10546a8e7dedda9ba324e012fc40",
-							"module": "quorum",
-							"name": "ReturnReceipt",
-							"typeArguments": [
-								{
-									"TypeParameter": 0
-								},
-								{
-									"TypeParameter": 2
-								}
-							]
-						}
-					}
-				]
-			},
-			"create": {
-				"visibility": "Public",
-				"isEntry": false,
-				"typeParameters": [
-					{
-						"abilities": []
-					}
-				],
-				"parameters": [
-					{
-						"Reference": {
-							"TypeParameter": 0
-						}
-					},
-					{
-						"Struct": {
-							"address": "0x2",
-							"module": "vec_set",
-							"name": "VecSet",
-							"typeArguments": [
-								"Address"
-							]
-						}
-					},
-					{
-						"Struct": {
-							"address": "0x2",
-							"module": "vec_set",
-							"name": "VecSet",
-							"typeArguments": [
-								"Address"
-							]
-						}
-					},
-					{
-						"Struct": {
-							"address": "0x2",
-							"module": "vec_set",
-							"name": "VecSet",
-							"typeArguments": [
-								{
-									"Struct": {
-										"address": "0x2",
-										"module": "object",
-										"name": "ID",
-										"typeArguments": []
-									}
-								}
-							]
-						}
-					},
-					{
-						"MutableReference": {
-							"Struct": {
-								"address": "0x2",
-								"module": "tx_context",
-								"name": "TxContext",
-								"typeArguments": []
-							}
-						}
-					}
-				],
-				"return": [
-					{
-						"Struct": {
-							"address": "0x16c5f17f2d55584a6e6daa442ccf83b4530d10546a8e7dedda9ba324e012fc40",
-							"module": "quorum",
-							"name": "Quorum",
-							"typeArguments": [
-								{
-									"TypeParameter": 0
-								}
-							]
-						}
-					}
-				]
-			},
-			"create_for_extension": {
-				"visibility": "Public",
-				"isEntry": false,
-				"typeParameters": [
-					{
-						"abilities": []
-					}
-				],
-				"parameters": [
-					{
-						"Reference": {
-							"TypeParameter": 0
-						}
-					},
-					{
-						"Struct": {
-							"address": "0x2",
-							"module": "vec_set",
-							"name": "VecSet",
-							"typeArguments": [
-								"Address"
-							]
-						}
-					},
-					{
-						"Struct": {
-							"address": "0x2",
-							"module": "vec_set",
-							"name": "VecSet",
-							"typeArguments": [
-								"Address"
-							]
-						}
-					},
-					{
-						"Struct": {
-							"address": "0x2",
-							"module": "vec_set",
-							"name": "VecSet",
-							"typeArguments": [
-								{
-									"Struct": {
-										"address": "0x2",
-										"module": "object",
-										"name": "ID",
-										"typeArguments": []
-									}
-								}
-							]
-						}
-					},
-					{
-						"MutableReference": {
-							"Struct": {
-								"address": "0x2",
-								"module": "tx_context",
-								"name": "TxContext",
-								"typeArguments": []
-							}
-						}
-					}
-				],
-				"return": [
-					{
-						"Struct": {
-							"address": "0x16c5f17f2d55584a6e6daa442ccf83b4530d10546a8e7dedda9ba324e012fc40",
-							"module": "quorum",
-							"name": "Quorum",
-							"typeArguments": [
-								{
-									"TypeParameter": 0
-								}
-							]
-						}
-					},
-					{
-						"Struct": {
-							"address": "0x16c5f17f2d55584a6e6daa442ccf83b4530d10546a8e7dedda9ba324e012fc40",
-							"module": "quorum",
-							"name": "ExtensionToken",
-							"typeArguments": [
-								{
-									"TypeParameter": 0
-								}
-							]
-						}
-					}
-				]
-			},
-			"init_quorum": {
-				"visibility": "Public",
-				"isEntry": false,
-				"typeParameters": [
-					{
-						"abilities": []
-					}
-				],
-				"parameters": [
-					{
-						"Reference": {
-							"TypeParameter": 0
-						}
-					},
-					{
-						"Struct": {
-							"address": "0x2",
-							"module": "vec_set",
-							"name": "VecSet",
-							"typeArguments": [
-								"Address"
-							]
-						}
-					},
-					{
-						"Struct": {
-							"address": "0x2",
-							"module": "vec_set",
-							"name": "VecSet",
-							"typeArguments": [
-								"Address"
-							]
-						}
-					},
-					{
-						"Struct": {
-							"address": "0x2",
-							"module": "vec_set",
-							"name": "VecSet",
-							"typeArguments": [
-								{
-									"Struct": {
-										"address": "0x2",
-										"module": "object",
-										"name": "ID",
-										"typeArguments": []
-									}
-								}
-							]
-						}
-					},
-					{
-						"MutableReference": {
-							"Struct": {
-								"address": "0x2",
-								"module": "tx_context",
-								"name": "TxContext",
-								"typeArguments": []
-							}
-						}
-					}
-				],
-				"return": [
-					{
-						"Struct": {
-							"address": "0x2",
-							"module": "object",
-							"name": "ID",
-							"typeArguments": []
-						}
-					}
-				]
-			},
-			"insert_cap": {
-				"visibility": "Public",
-				"isEntry": false,
-				"typeParameters": [
-					{
-						"abilities": []
-					},
-					{
-						"abilities": [
-							"Store",
-							"Key"
-						]
-					}
-				],
-				"parameters": [
-					{
-						"MutableReference": {
-							"Struct": {
-								"address": "0x16c5f17f2d55584a6e6daa442ccf83b4530d10546a8e7dedda9ba324e012fc40",
-								"module": "quorum",
-								"name": "Quorum",
-								"typeArguments": [
-									{
-										"TypeParameter": 0
-									}
-								]
-							}
-						}
-					},
-					{
-						"TypeParameter": 1
-					},
-					"Bool",
-					{
-						"MutableReference": {
-							"Struct": {
-								"address": "0x2",
-								"module": "tx_context",
-								"name": "TxContext",
-								"typeArguments": []
-							}
-						}
-					}
-				],
-				"return": []
-			},
-			"migrate_as_creator": {
-				"visibility": "Private",
-				"isEntry": true,
-				"typeParameters": [
-					{
-						"abilities": []
-					}
-				],
-				"parameters": [
-					{
-						"MutableReference": {
-							"Struct": {
-								"address": "0x16c5f17f2d55584a6e6daa442ccf83b4530d10546a8e7dedda9ba324e012fc40",
-								"module": "quorum",
-								"name": "Quorum",
-								"typeArguments": [
-									{
-										"TypeParameter": 0
-									}
-								]
-							}
-						}
-					},
-					{
-						"Reference": {
-							"Struct": {
-								"address": "0x2",
-								"module": "package",
-								"name": "Publisher",
-								"typeArguments": []
-							}
-						}
-					}
-				],
-				"return": []
-			},
-			"migrate_as_pub": {
-				"visibility": "Private",
-				"isEntry": true,
-				"typeParameters": [
-					{
-						"abilities": []
-					}
-				],
-				"parameters": [
-					{
-						"MutableReference": {
-							"Struct": {
-								"address": "0x16c5f17f2d55584a6e6daa442ccf83b4530d10546a8e7dedda9ba324e012fc40",
-								"module": "quorum",
-								"name": "Quorum",
-								"typeArguments": [
-									{
-										"TypeParameter": 0
-									}
-								]
-							}
-						}
-					},
-					{
-						"Reference": {
-							"Struct": {
-								"address": "0x2",
-								"module": "package",
-								"name": "Publisher",
-								"typeArguments": []
-							}
-						}
-					}
-				],
-				"return": []
-			},
-			"remove_admin_with_extension": {
-				"visibility": "Public",
-				"isEntry": false,
-				"typeParameters": [
-					{
-						"abilities": []
-					}
-				],
-				"parameters": [
-					{
-						"MutableReference": {
-							"Struct": {
-								"address": "0x16c5f17f2d55584a6e6daa442ccf83b4530d10546a8e7dedda9ba324e012fc40",
-								"module": "quorum",
-								"name": "Quorum",
-								"typeArguments": [
-									{
-										"TypeParameter": 0
-									}
-								]
-							}
-						}
-					},
-					{
-						"Reference": {
-							"Struct": {
-								"address": "0x16c5f17f2d55584a6e6daa442ccf83b4530d10546a8e7dedda9ba324e012fc40",
-								"module": "quorum",
-								"name": "ExtensionToken",
-								"typeArguments": [
-									{
-										"TypeParameter": 0
-									}
-								]
-							}
-						}
-					},
-					"Address"
-				],
-				"return": []
-			},
-			"remove_delegate_with_extension": {
-				"visibility": "Public",
-				"isEntry": false,
-				"typeParameters": [
-					{
-						"abilities": []
-					}
-				],
-				"parameters": [
-					{
-						"MutableReference": {
-							"Struct": {
-								"address": "0x16c5f17f2d55584a6e6daa442ccf83b4530d10546a8e7dedda9ba324e012fc40",
-								"module": "quorum",
-								"name": "Quorum",
-								"typeArguments": [
-									{
-										"TypeParameter": 0
-									}
-								]
-							}
-						}
-					},
-					{
-						"Reference": {
-							"Struct": {
-								"address": "0x16c5f17f2d55584a6e6daa442ccf83b4530d10546a8e7dedda9ba324e012fc40",
-								"module": "quorum",
-								"name": "ExtensionToken",
-								"typeArguments": [
-									{
-										"TypeParameter": 0
-									}
-								]
-							}
-						}
-					},
-					{
-						"Struct": {
-							"address": "0x2",
-							"module": "object",
-							"name": "ID",
-							"typeArguments": []
-						}
-					}
-				],
-				"return": []
-			},
-			"remove_member": {
-				"visibility": "Public",
-				"isEntry": false,
-				"typeParameters": [
-					{
-						"abilities": []
-					}
-				],
-				"parameters": [
-					{
-						"MutableReference": {
-							"Struct": {
-								"address": "0x16c5f17f2d55584a6e6daa442ccf83b4530d10546a8e7dedda9ba324e012fc40",
-								"module": "quorum",
-								"name": "Quorum",
-								"typeArguments": [
-									{
-										"TypeParameter": 0
-									}
-								]
-							}
-						}
-					},
-					"Address",
-					{
-						"MutableReference": {
-							"Struct": {
-								"address": "0x2",
-								"module": "tx_context",
-								"name": "TxContext",
-								"typeArguments": []
-							}
-						}
-					}
-				],
-				"return": []
-			},
-			"return_cap": {
-				"visibility": "Public",
-				"isEntry": false,
-				"typeParameters": [
-					{
-						"abilities": []
-					},
-					{
-						"abilities": [
-							"Store",
-							"Key"
-						]
-					}
-				],
-				"parameters": [
-					{
-						"MutableReference": {
-							"Struct": {
-								"address": "0x16c5f17f2d55584a6e6daa442ccf83b4530d10546a8e7dedda9ba324e012fc40",
-								"module": "quorum",
-								"name": "Quorum",
-								"typeArguments": [
-									{
-										"TypeParameter": 0
-									}
-								]
-							}
-						}
-					},
-					{
-						"TypeParameter": 1
-					},
-					{
-						"Struct": {
-							"address": "0x16c5f17f2d55584a6e6daa442ccf83b4530d10546a8e7dedda9ba324e012fc40",
-							"module": "quorum",
-							"name": "ReturnReceipt",
-							"typeArguments": [
-								{
-									"TypeParameter": 0
-								},
-								{
-									"TypeParameter": 1
-								}
-							]
-						}
-					},
-					{
-						"MutableReference": {
-							"Struct": {
-								"address": "0x2",
-								"module": "tx_context",
-								"name": "TxContext",
-								"typeArguments": []
-							}
-						}
-					}
-				],
-				"return": []
-			},
-			"return_cap_as_delegate": {
-				"visibility": "Public",
-				"isEntry": false,
-				"typeParameters": [
-					{
-						"abilities": []
-					},
-					{
-						"abilities": []
-					},
-					{
-						"abilities": [
-							"Store",
-							"Key"
-						]
-					}
-				],
-				"parameters": [
-					{
-						"MutableReference": {
-							"Struct": {
-								"address": "0x16c5f17f2d55584a6e6daa442ccf83b4530d10546a8e7dedda9ba324e012fc40",
-								"module": "quorum",
-								"name": "Quorum",
-								"typeArguments": [
-									{
-										"TypeParameter": 0
-									}
-								]
-							}
-						}
-					},
-					{
-						"Reference": {
-							"Struct": {
-								"address": "0x16c5f17f2d55584a6e6daa442ccf83b4530d10546a8e7dedda9ba324e012fc40",
-								"module": "quorum",
-								"name": "Quorum",
-								"typeArguments": [
-									{
-										"TypeParameter": 1
-									}
-								]
-							}
-						}
-					},
-					{
-						"TypeParameter": 2
-					},
-					{
-						"Struct": {
-							"address": "0x16c5f17f2d55584a6e6daa442ccf83b4530d10546a8e7dedda9ba324e012fc40",
-							"module": "quorum",
-							"name": "ReturnReceipt",
-							"typeArguments": [
-								{
-									"TypeParameter": 0
-								},
-								{
-									"TypeParameter": 2
-								}
-							]
-						}
-					},
-					{
-						"MutableReference": {
-							"Struct": {
-								"address": "0x2",
-								"module": "tx_context",
-								"name": "TxContext",
-								"typeArguments": []
-							}
-						}
-					}
-				],
-				"return": []
-			},
-			"singleton": {
-				"visibility": "Public",
-				"isEntry": false,
-				"typeParameters": [
-					{
-						"abilities": []
-					}
-				],
-				"parameters": [
-					{
-						"Reference": {
-							"TypeParameter": 0
-						}
-					},
-					"Address",
-					{
-						"MutableReference": {
-							"Struct": {
-								"address": "0x2",
-								"module": "tx_context",
-								"name": "TxContext",
-								"typeArguments": []
-							}
-						}
-					}
-				],
-				"return": [
-					{
-						"Struct": {
-							"address": "0x16c5f17f2d55584a6e6daa442ccf83b4530d10546a8e7dedda9ba324e012fc40",
-							"module": "quorum",
-							"name": "Quorum",
-							"typeArguments": [
-								{
-									"TypeParameter": 0
-								}
-							]
-						}
-					}
-				]
-			},
-			"vote": {
-				"visibility": "Public",
-				"isEntry": false,
-				"typeParameters": [
-					{
-						"abilities": []
-					},
-					{
-						"abilities": [
-							"Copy",
-							"Drop",
-							"Store"
-						]
-					}
-				],
-				"parameters": [
-					{
-						"MutableReference": {
-							"Struct": {
-								"address": "0x16c5f17f2d55584a6e6daa442ccf83b4530d10546a8e7dedda9ba324e012fc40",
-								"module": "quorum",
-								"name": "Quorum",
-								"typeArguments": [
-									{
-										"TypeParameter": 0
-									}
-								]
-							}
-						}
-					},
-					{
-						"TypeParameter": 1
-					},
-					{
-						"MutableReference": {
-							"Struct": {
-								"address": "0x2",
-								"module": "tx_context",
-								"name": "TxContext",
-								"typeArguments": []
-							}
-						}
-					}
-				],
-				"return": [
-					"U64",
-					"U64"
-				]
-			},
-			"vote_add_admin": {
-				"visibility": "Public",
-				"isEntry": true,
-				"typeParameters": [
-					{
-						"abilities": []
-					}
-				],
-				"parameters": [
-					{
-						"MutableReference": {
-							"Struct": {
-								"address": "0x16c5f17f2d55584a6e6daa442ccf83b4530d10546a8e7dedda9ba324e012fc40",
-								"module": "quorum",
-								"name": "Quorum",
-								"typeArguments": [
-									{
-										"TypeParameter": 0
-									}
-								]
-							}
-						}
-					},
-					"Address",
-					{
-						"MutableReference": {
-							"Struct": {
-								"address": "0x2",
-								"module": "tx_context",
-								"name": "TxContext",
-								"typeArguments": []
-							}
-						}
-					}
-				],
-				"return": []
-			},
-			"vote_add_delegate": {
-				"visibility": "Public",
-				"isEntry": true,
-				"typeParameters": [
-					{
-						"abilities": []
-					}
-				],
-				"parameters": [
-					{
-						"MutableReference": {
-							"Struct": {
-								"address": "0x16c5f17f2d55584a6e6daa442ccf83b4530d10546a8e7dedda9ba324e012fc40",
-								"module": "quorum",
-								"name": "Quorum",
-								"typeArguments": [
-									{
-										"TypeParameter": 0
-									}
-								]
-							}
-						}
-					},
-					{
-						"Struct": {
-							"address": "0x2",
-							"module": "object",
-							"name": "ID",
-							"typeArguments": []
-						}
-					},
-					{
-						"MutableReference": {
-							"Struct": {
-								"address": "0x2",
-								"module": "tx_context",
-								"name": "TxContext",
-								"typeArguments": []
-							}
-						}
-					}
-				],
-				"return": []
-			},
-			"vote_remove_admin": {
-				"visibility": "Public",
-				"isEntry": true,
-				"typeParameters": [
-					{
-						"abilities": []
-					}
-				],
-				"parameters": [
-					{
-						"MutableReference": {
-							"Struct": {
-								"address": "0x16c5f17f2d55584a6e6daa442ccf83b4530d10546a8e7dedda9ba324e012fc40",
-								"module": "quorum",
-								"name": "Quorum",
-								"typeArguments": [
-									{
-										"TypeParameter": 0
-									}
-								]
-							}
-						}
-					},
-					"Address",
-					{
-						"MutableReference": {
-							"Struct": {
-								"address": "0x2",
-								"module": "tx_context",
-								"name": "TxContext",
-								"typeArguments": []
-							}
-						}
-					}
-				],
-				"return": []
-			},
-			"vote_remove_delegate": {
-				"visibility": "Public",
-				"isEntry": true,
-				"typeParameters": [
-					{
-						"abilities": []
-					}
-				],
-				"parameters": [
-					{
-						"MutableReference": {
-							"Struct": {
-								"address": "0x16c5f17f2d55584a6e6daa442ccf83b4530d10546a8e7dedda9ba324e012fc40",
-								"module": "quorum",
-								"name": "Quorum",
-								"typeArguments": [
-									{
-										"TypeParameter": 0
-									}
-								]
-							}
-						}
-					},
-					{
-						"Struct": {
-							"address": "0x2",
-							"module": "object",
-							"name": "ID",
-							"typeArguments": []
-						}
-					},
-					{
-						"MutableReference": {
-							"Struct": {
-								"address": "0x2",
-								"module": "tx_context",
-								"name": "TxContext",
-								"typeArguments": []
-							}
-						}
-					}
-				],
-				"return": []
-			}
+					],
+					"returns": [],
+					"name": "public_freeze_object",
+					"visibility": 2,
+					"isEntry": false
+				}
+			],
+			"name": "frozen_publisher"
 		}
 	},
 	{
-		"fileFormatVersion": 6,
 		"address": "0x16c5f17f2d55584a6e6daa442ccf83b4530d10546a8e7dedda9ba324e012fc40",
-		"name": "witness",
-		"friends": [],
-		"structs": {
-			"Witness": {
-				"abilities": {
+		"module": {
+			"datatypes": [
+				{
 					"abilities": [
-						"Copy",
-						"Drop"
-					]
-				},
-				"typeParameters": [
-					{
-						"constraints": {
-							"abilities": []
+						2
+					],
+					"typeParameters": [],
+					"fields": [
+						{
+							"name": "dummy_field",
+							"position": 0,
+							"type": {
+								"typeParameterInstantiation": [],
+								"type": 2
+							}
+						}
+					],
+					"variants": [],
+					"typeName": "0x16c5f17f2d55584a6e6daa442ccf83b4530d10546a8e7dedda9ba324e012fc40::permissions::PERMISSIONS",
+					"definingId": "0x16c5f17f2d55584a6e6daa442ccf83b4530d10546a8e7dedda9ba324e012fc40",
+					"module": "permissions",
+					"name": "PERMISSIONS",
+					"kind": 1
+				}
+			],
+			"functions": [
+				{
+					"typeParameters": [],
+					"parameters": [
+						{
+							"body": {
+								"typeParameterInstantiation": [],
+								"type": 10,
+								"typeName": "0x16c5f17f2d55584a6e6daa442ccf83b4530d10546a8e7dedda9ba324e012fc40::permissions::PERMISSIONS"
+							}
 						},
-						"isPhantom": true
-					}
-				],
-				"fields": [
-					{
-						"name": "dummy_field",
-						"type": "Bool"
-					}
-				]
-			},
-			"WitnessGenerator": {
-				"abilities": {
+						{
+							"reference": 2,
+							"body": {
+								"typeParameterInstantiation": [],
+								"type": 10,
+								"typeName": "0x0000000000000000000000000000000000000000000000000000000000000002::tx_context::TxContext"
+							}
+						}
+					],
+					"returns": [],
+					"name": "init",
+					"visibility": 1,
+					"isEntry": false
+				}
+			],
+			"name": "permissions"
+		}
+	},
+	{
+		"address": "0x16c5f17f2d55584a6e6daa442ccf83b4530d10546a8e7dedda9ba324e012fc40",
+		"module": {
+			"datatypes": [
+				{
 					"abilities": [
-						"Store"
-					]
+						1,
+						2,
+						3
+					],
+					"typeParameters": [],
+					"fields": [
+						{
+							"name": "admin",
+							"position": 0,
+							"type": {
+								"typeParameterInstantiation": [],
+								"type": 1
+							}
+						}
+					],
+					"variants": [],
+					"typeName": "0x16c5f17f2d55584a6e6daa442ccf83b4530d10546a8e7dedda9ba324e012fc40::quorum::AddAdmin",
+					"definingId": "0x16c5f17f2d55584a6e6daa442ccf83b4530d10546a8e7dedda9ba324e012fc40",
+					"module": "quorum",
+					"name": "AddAdmin",
+					"kind": 1
 				},
-				"typeParameters": [
-					{
-						"constraints": {
-							"abilities": []
+				{
+					"abilities": [
+						1,
+						2,
+						3
+					],
+					"typeParameters": [],
+					"fields": [
+						{
+							"name": "entity",
+							"position": 0,
+							"type": {
+								"typeParameterInstantiation": [],
+								"type": 10,
+								"typeName": "0x0000000000000000000000000000000000000000000000000000000000000002::object::ID"
+							}
+						}
+					],
+					"variants": [],
+					"typeName": "0x16c5f17f2d55584a6e6daa442ccf83b4530d10546a8e7dedda9ba324e012fc40::quorum::AddDelegate",
+					"definingId": "0x16c5f17f2d55584a6e6daa442ccf83b4530d10546a8e7dedda9ba324e012fc40",
+					"module": "quorum",
+					"name": "AddDelegate",
+					"kind": 1
+				},
+				{
+					"abilities": [
+						1,
+						2,
+						3
+					],
+					"typeParameters": [],
+					"fields": [
+						{
+							"name": "type_name",
+							"position": 0,
+							"type": {
+								"typeParameterInstantiation": [],
+								"type": 10,
+								"typeName": "0x0000000000000000000000000000000000000000000000000000000000000001::type_name::TypeName"
+							}
+						}
+					],
+					"variants": [],
+					"typeName": "0x16c5f17f2d55584a6e6daa442ccf83b4530d10546a8e7dedda9ba324e012fc40::quorum::AdminField",
+					"definingId": "0x16c5f17f2d55584a6e6daa442ccf83b4530d10546a8e7dedda9ba324e012fc40",
+					"module": "quorum",
+					"name": "AdminField",
+					"kind": 1
+				},
+				{
+					"abilities": [
+						1,
+						2
+					],
+					"typeParameters": [],
+					"fields": [
+						{
+							"name": "quorum_id",
+							"position": 0,
+							"type": {
+								"typeParameterInstantiation": [],
+								"type": 10,
+								"typeName": "0x0000000000000000000000000000000000000000000000000000000000000002::object::ID"
+							}
 						},
-						"isPhantom": true
-					}
-				],
-				"fields": [
-					{
-						"name": "dummy_field",
-						"type": "Bool"
-					}
-				]
-			}
-		},
-		"exposedFunctions": {
-			"delegate": {
-				"visibility": "Public",
-				"isEntry": false,
-				"typeParameters": [
-					{
-						"abilities": []
-					}
-				],
-				"parameters": [
-					{
-						"Reference": {
-							"Struct": {
-								"address": "0x16c5f17f2d55584a6e6daa442ccf83b4530d10546a8e7dedda9ba324e012fc40",
-								"module": "witness",
-								"name": "WitnessGenerator",
-								"typeArguments": [
+						{
+							"name": "type_name",
+							"position": 1,
+							"type": {
+								"typeParameterInstantiation": [],
+								"type": 10,
+								"typeName": "0x0000000000000000000000000000000000000000000000000000000000000001::type_name::TypeName"
+							}
+						}
+					],
+					"variants": [],
+					"typeName": "0x16c5f17f2d55584a6e6daa442ccf83b4530d10546a8e7dedda9ba324e012fc40::quorum::CreateQuorumEvent",
+					"definingId": "0x16c5f17f2d55584a6e6daa442ccf83b4530d10546a8e7dedda9ba324e012fc40",
+					"module": "quorum",
+					"name": "CreateQuorumEvent",
+					"kind": 1
+				},
+				{
+					"abilities": [
+						3
+					],
+					"typeParameters": [
+						{
+							"constraints": [],
+							"isPhantom": true
+						}
+					],
+					"fields": [
+						{
+							"name": "quorum_id",
+							"position": 0,
+							"type": {
+								"typeParameterInstantiation": [],
+								"type": 10,
+								"typeName": "0x0000000000000000000000000000000000000000000000000000000000000002::object::ID"
+							}
+						}
+					],
+					"variants": [],
+					"typeName": "0x16c5f17f2d55584a6e6daa442ccf83b4530d10546a8e7dedda9ba324e012fc40::quorum::ExtensionToken",
+					"definingId": "0x16c5f17f2d55584a6e6daa442ccf83b4530d10546a8e7dedda9ba324e012fc40",
+					"module": "quorum",
+					"name": "ExtensionToken",
+					"kind": 1
+				},
+				{
+					"abilities": [
+						2
+					],
+					"typeParameters": [],
+					"fields": [
+						{
+							"name": "dummy_field",
+							"position": 0,
+							"type": {
+								"typeParameterInstantiation": [],
+								"type": 2
+							}
+						}
+					],
+					"variants": [],
+					"typeName": "0x16c5f17f2d55584a6e6daa442ccf83b4530d10546a8e7dedda9ba324e012fc40::quorum::Foo",
+					"definingId": "0x16c5f17f2d55584a6e6daa442ccf83b4530d10546a8e7dedda9ba324e012fc40",
+					"module": "quorum",
+					"name": "Foo",
+					"kind": 1
+				},
+				{
+					"abilities": [
+						1,
+						2,
+						3
+					],
+					"typeParameters": [],
+					"fields": [
+						{
+							"name": "type_name",
+							"position": 0,
+							"type": {
+								"typeParameterInstantiation": [],
+								"type": 10,
+								"typeName": "0x0000000000000000000000000000000000000000000000000000000000000001::type_name::TypeName"
+							}
+						}
+					],
+					"variants": [],
+					"typeName": "0x16c5f17f2d55584a6e6daa442ccf83b4530d10546a8e7dedda9ba324e012fc40::quorum::MemberField",
+					"definingId": "0x16c5f17f2d55584a6e6daa442ccf83b4530d10546a8e7dedda9ba324e012fc40",
+					"module": "quorum",
+					"name": "MemberField",
+					"kind": 1
+				},
+				{
+					"abilities": [
+						3,
+						4
+					],
+					"typeParameters": [
+						{
+							"constraints": [],
+							"isPhantom": true
+						}
+					],
+					"fields": [
+						{
+							"name": "id",
+							"position": 0,
+							"type": {
+								"typeParameterInstantiation": [],
+								"type": 10,
+								"typeName": "0x0000000000000000000000000000000000000000000000000000000000000002::object::UID"
+							}
+						},
+						{
+							"name": "version",
+							"position": 1,
+							"type": {
+								"typeParameterInstantiation": [],
+								"type": 6
+							}
+						},
+						{
+							"name": "admins",
+							"position": 2,
+							"type": {
+								"typeParameterInstantiation": [
 									{
-										"TypeParameter": 0
+										"typeParameterInstantiation": [],
+										"type": 1
 									}
-								]
+								],
+								"type": 10,
+								"typeName": "0x0000000000000000000000000000000000000000000000000000000000000002::vec_set::VecSet"
+							}
+						},
+						{
+							"name": "members",
+							"position": 3,
+							"type": {
+								"typeParameterInstantiation": [
+									{
+										"typeParameterInstantiation": [],
+										"type": 1
+									}
+								],
+								"type": 10,
+								"typeName": "0x0000000000000000000000000000000000000000000000000000000000000002::vec_set::VecSet"
+							}
+						},
+						{
+							"name": "delegates",
+							"position": 4,
+							"type": {
+								"typeParameterInstantiation": [
+									{
+										"typeParameterInstantiation": [],
+										"type": 10,
+										"typeName": "0x0000000000000000000000000000000000000000000000000000000000000002::object::ID"
+									}
+								],
+								"type": 10,
+								"typeName": "0x0000000000000000000000000000000000000000000000000000000000000002::vec_set::VecSet"
+							}
+						},
+						{
+							"name": "admin_count",
+							"position": 5,
+							"type": {
+								"typeParameterInstantiation": [],
+								"type": 6
 							}
 						}
-					}
-				],
-				"return": [
-					{
-						"Struct": {
-							"address": "0x16c5f17f2d55584a6e6daa442ccf83b4530d10546a8e7dedda9ba324e012fc40",
-							"module": "witness",
-							"name": "Witness",
-							"typeArguments": [
-								{
-									"TypeParameter": 0
-								}
-							]
-						}
-					}
-				]
-			},
-			"from_publisher": {
-				"visibility": "Public",
-				"isEntry": false,
-				"typeParameters": [
-					{
-						"abilities": []
-					}
-				],
-				"parameters": [
-					{
-						"Reference": {
-							"Struct": {
-								"address": "0x2",
-								"module": "package",
-								"name": "Publisher",
-								"typeArguments": []
+					],
+					"variants": [],
+					"typeName": "0x16c5f17f2d55584a6e6daa442ccf83b4530d10546a8e7dedda9ba324e012fc40::quorum::Quorum",
+					"definingId": "0x16c5f17f2d55584a6e6daa442ccf83b4530d10546a8e7dedda9ba324e012fc40",
+					"module": "quorum",
+					"name": "Quorum",
+					"kind": 1
+				},
+				{
+					"abilities": [
+						1,
+						2,
+						3
+					],
+					"typeParameters": [],
+					"fields": [
+						{
+							"name": "admin",
+							"position": 0,
+							"type": {
+								"typeParameterInstantiation": [],
+								"type": 1
 							}
 						}
-					}
-				],
-				"return": [
-					{
-						"Struct": {
-							"address": "0x16c5f17f2d55584a6e6daa442ccf83b4530d10546a8e7dedda9ba324e012fc40",
-							"module": "witness",
-							"name": "Witness",
-							"typeArguments": [
-								{
-									"TypeParameter": 0
-								}
+					],
+					"variants": [],
+					"typeName": "0x16c5f17f2d55584a6e6daa442ccf83b4530d10546a8e7dedda9ba324e012fc40::quorum::RemoveAdmin",
+					"definingId": "0x16c5f17f2d55584a6e6daa442ccf83b4530d10546a8e7dedda9ba324e012fc40",
+					"module": "quorum",
+					"name": "RemoveAdmin",
+					"kind": 1
+				},
+				{
+					"abilities": [
+						1,
+						2,
+						3
+					],
+					"typeParameters": [],
+					"fields": [
+						{
+							"name": "entity",
+							"position": 0,
+							"type": {
+								"typeParameterInstantiation": [],
+								"type": 10,
+								"typeName": "0x0000000000000000000000000000000000000000000000000000000000000002::object::ID"
+							}
+						}
+					],
+					"variants": [],
+					"typeName": "0x16c5f17f2d55584a6e6daa442ccf83b4530d10546a8e7dedda9ba324e012fc40::quorum::RemoveDelegate",
+					"definingId": "0x16c5f17f2d55584a6e6daa442ccf83b4530d10546a8e7dedda9ba324e012fc40",
+					"module": "quorum",
+					"name": "RemoveDelegate",
+					"kind": 1
+				},
+				{
+					"abilities": [],
+					"typeParameters": [
+						{
+							"constraints": [],
+							"isPhantom": true
+						},
+						{
+							"constraints": [
+								4
+							],
+							"isPhantom": true
+						}
+					],
+					"fields": [
+						{
+							"name": "dummy_field",
+							"position": 0,
+							"type": {
+								"typeParameterInstantiation": [],
+								"type": 2
+							}
+						}
+					],
+					"variants": [],
+					"typeName": "0x16c5f17f2d55584a6e6daa442ccf83b4530d10546a8e7dedda9ba324e012fc40::quorum::ReturnReceipt",
+					"definingId": "0x16c5f17f2d55584a6e6daa442ccf83b4530d10546a8e7dedda9ba324e012fc40",
+					"module": "quorum",
+					"name": "ReturnReceipt",
+					"kind": 1
+				},
+				{
+					"abilities": [
+						1,
+						2,
+						3
+					],
+					"typeParameters": [
+						{
+							"constraints": [],
+							"isPhantom": true
+						}
+					],
+					"fields": [
+						{
+							"name": "list",
+							"position": 0,
+							"type": {
+								"typeParameterInstantiation": [
+									{
+										"typeParameterInstantiation": [],
+										"type": 1
+									}
+								],
+								"type": 10,
+								"typeName": "0x0000000000000000000000000000000000000000000000000000000000000002::vec_set::VecSet"
+							}
+						}
+					],
+					"variants": [],
+					"typeName": "0x16c5f17f2d55584a6e6daa442ccf83b4530d10546a8e7dedda9ba324e012fc40::quorum::Signatures",
+					"definingId": "0x16c5f17f2d55584a6e6daa442ccf83b4530d10546a8e7dedda9ba324e012fc40",
+					"module": "quorum",
+					"name": "Signatures",
+					"kind": 1
+				}
+			],
+			"functions": [
+				{
+					"typeParameters": [
+						{
+							"constraints": []
+						}
+					],
+					"parameters": [
+						{
+							"reference": 2,
+							"body": {
+								"typeParameterInstantiation": [
+									{
+										"typeParameterInstantiation": [],
+										"type": 11,
+										"typeParameter": 0
+									}
+								],
+								"type": 10,
+								"typeName": "0x16c5f17f2d55584a6e6daa442ccf83b4530d10546a8e7dedda9ba324e012fc40::quorum::Quorum"
+							}
+						},
+						{
+							"reference": 1,
+							"body": {
+								"typeParameterInstantiation": [
+									{
+										"typeParameterInstantiation": [],
+										"type": 11,
+										"typeParameter": 0
+									}
+								],
+								"type": 10,
+								"typeName": "0x16c5f17f2d55584a6e6daa442ccf83b4530d10546a8e7dedda9ba324e012fc40::quorum::ExtensionToken"
+							}
+						},
+						{
+							"body": {
+								"typeParameterInstantiation": [],
+								"type": 1
+							}
+						}
+					],
+					"returns": [],
+					"name": "add_admin_with_extension",
+					"visibility": 2,
+					"isEntry": false
+				},
+				{
+					"typeParameters": [
+						{
+							"constraints": []
+						}
+					],
+					"parameters": [
+						{
+							"reference": 2,
+							"body": {
+								"typeParameterInstantiation": [
+									{
+										"typeParameterInstantiation": [],
+										"type": 11,
+										"typeParameter": 0
+									}
+								],
+								"type": 10,
+								"typeName": "0x16c5f17f2d55584a6e6daa442ccf83b4530d10546a8e7dedda9ba324e012fc40::quorum::Quorum"
+							}
+						},
+						{
+							"reference": 1,
+							"body": {
+								"typeParameterInstantiation": [
+									{
+										"typeParameterInstantiation": [],
+										"type": 11,
+										"typeParameter": 0
+									}
+								],
+								"type": 10,
+								"typeName": "0x16c5f17f2d55584a6e6daa442ccf83b4530d10546a8e7dedda9ba324e012fc40::quorum::ExtensionToken"
+							}
+						},
+						{
+							"body": {
+								"typeParameterInstantiation": [],
+								"type": 10,
+								"typeName": "0x0000000000000000000000000000000000000000000000000000000000000002::object::ID"
+							}
+						}
+					],
+					"returns": [],
+					"name": "add_delegate_with_extension",
+					"visibility": 2,
+					"isEntry": false
+				},
+				{
+					"typeParameters": [
+						{
+							"constraints": []
+						}
+					],
+					"parameters": [
+						{
+							"reference": 2,
+							"body": {
+								"typeParameterInstantiation": [
+									{
+										"typeParameterInstantiation": [],
+										"type": 11,
+										"typeParameter": 0
+									}
+								],
+								"type": 10,
+								"typeName": "0x16c5f17f2d55584a6e6daa442ccf83b4530d10546a8e7dedda9ba324e012fc40::quorum::Quorum"
+							}
+						},
+						{
+							"body": {
+								"typeParameterInstantiation": [],
+								"type": 1
+							}
+						},
+						{
+							"reference": 2,
+							"body": {
+								"typeParameterInstantiation": [],
+								"type": 10,
+								"typeName": "0x0000000000000000000000000000000000000000000000000000000000000002::tx_context::TxContext"
+							}
+						}
+					],
+					"returns": [],
+					"name": "add_member",
+					"visibility": 2,
+					"isEntry": false
+				},
+				{
+					"typeParameters": [
+						{
+							"constraints": []
+						}
+					],
+					"parameters": [
+						{
+							"reference": 1,
+							"body": {
+								"typeParameterInstantiation": [
+									{
+										"typeParameterInstantiation": [],
+										"type": 11,
+										"typeParameter": 0
+									}
+								],
+								"type": 10,
+								"typeName": "0x16c5f17f2d55584a6e6daa442ccf83b4530d10546a8e7dedda9ba324e012fc40::quorum::Quorum"
+							}
+						},
+						{
+							"reference": 1,
+							"body": {
+								"typeParameterInstantiation": [],
+								"type": 10,
+								"typeName": "0x0000000000000000000000000000000000000000000000000000000000000002::tx_context::TxContext"
+							}
+						}
+					],
+					"returns": [],
+					"name": "assert_admin",
+					"visibility": 2,
+					"isEntry": false
+				},
+				{
+					"typeParameters": [
+						{
+							"constraints": []
+						}
+					],
+					"parameters": [
+						{
+							"reference": 1,
+							"body": {
+								"typeParameterInstantiation": [
+									{
+										"typeParameterInstantiation": [],
+										"type": 11,
+										"typeParameter": 0
+									}
+								],
+								"type": 10,
+								"typeName": "0x16c5f17f2d55584a6e6daa442ccf83b4530d10546a8e7dedda9ba324e012fc40::quorum::Quorum"
+							}
+						},
+						{
+							"reference": 1,
+							"body": {
+								"typeParameterInstantiation": [],
+								"type": 10,
+								"typeName": "0x0000000000000000000000000000000000000000000000000000000000000002::object::UID"
+							}
+						}
+					],
+					"returns": [],
+					"name": "assert_delegate",
+					"visibility": 2,
+					"isEntry": false
+				},
+				{
+					"typeParameters": [
+						{
+							"constraints": []
+						}
+					],
+					"parameters": [
+						{
+							"reference": 1,
+							"body": {
+								"typeParameterInstantiation": [
+									{
+										"typeParameterInstantiation": [],
+										"type": 11,
+										"typeParameter": 0
+									}
+								],
+								"type": 10,
+								"typeName": "0x16c5f17f2d55584a6e6daa442ccf83b4530d10546a8e7dedda9ba324e012fc40::quorum::Quorum"
+							}
+						},
+						{
+							"reference": 1,
+							"body": {
+								"typeParameterInstantiation": [
+									{
+										"typeParameterInstantiation": [],
+										"type": 11,
+										"typeParameter": 0
+									}
+								],
+								"type": 10,
+								"typeName": "0x16c5f17f2d55584a6e6daa442ccf83b4530d10546a8e7dedda9ba324e012fc40::quorum::ExtensionToken"
+							}
+						}
+					],
+					"returns": [],
+					"name": "assert_extension_token",
+					"visibility": 2,
+					"isEntry": false
+				},
+				{
+					"typeParameters": [
+						{
+							"constraints": []
+						}
+					],
+					"parameters": [
+						{
+							"reference": 1,
+							"body": {
+								"typeParameterInstantiation": [
+									{
+										"typeParameterInstantiation": [],
+										"type": 11,
+										"typeParameter": 0
+									}
+								],
+								"type": 10,
+								"typeName": "0x16c5f17f2d55584a6e6daa442ccf83b4530d10546a8e7dedda9ba324e012fc40::quorum::Quorum"
+							}
+						},
+						{
+							"reference": 1,
+							"body": {
+								"typeParameterInstantiation": [],
+								"type": 10,
+								"typeName": "0x0000000000000000000000000000000000000000000000000000000000000002::tx_context::TxContext"
+							}
+						}
+					],
+					"returns": [],
+					"name": "assert_member",
+					"visibility": 2,
+					"isEntry": false
+				},
+				{
+					"typeParameters": [
+						{
+							"constraints": []
+						}
+					],
+					"parameters": [
+						{
+							"reference": 1,
+							"body": {
+								"typeParameterInstantiation": [
+									{
+										"typeParameterInstantiation": [],
+										"type": 11,
+										"typeParameter": 0
+									}
+								],
+								"type": 10,
+								"typeName": "0x16c5f17f2d55584a6e6daa442ccf83b4530d10546a8e7dedda9ba324e012fc40::quorum::Quorum"
+							}
+						},
+						{
+							"reference": 1,
+							"body": {
+								"typeParameterInstantiation": [],
+								"type": 10,
+								"typeName": "0x0000000000000000000000000000000000000000000000000000000000000002::tx_context::TxContext"
+							}
+						}
+					],
+					"returns": [],
+					"name": "assert_member_or_admin",
+					"visibility": 2,
+					"isEntry": false
+				},
+				{
+					"typeParameters": [
+						{
+							"constraints": []
+						}
+					],
+					"parameters": [
+						{
+							"reference": 1,
+							"body": {
+								"typeParameterInstantiation": [
+									{
+										"typeParameterInstantiation": [],
+										"type": 11,
+										"typeParameter": 0
+									}
+								],
+								"type": 10,
+								"typeName": "0x16c5f17f2d55584a6e6daa442ccf83b4530d10546a8e7dedda9ba324e012fc40::quorum::Quorum"
+							}
+						}
+					],
+					"returns": [],
+					"name": "assert_version",
+					"visibility": 1,
+					"isEntry": false
+				},
+				{
+					"typeParameters": [
+						{
+							"constraints": []
+						},
+						{
+							"constraints": [
+								3,
+								4
 							]
 						}
-					}
-				]
-			},
-			"from_witness": {
-				"visibility": "Public",
-				"isEntry": false,
-				"typeParameters": [
-					{
-						"abilities": []
-					},
-					{
-						"abilities": [
-							"Drop"
-						]
-					}
-				],
-				"parameters": [
-					{
-						"TypeParameter": 1
-					}
-				],
-				"return": [
-					{
-						"Struct": {
-							"address": "0x16c5f17f2d55584a6e6daa442ccf83b4530d10546a8e7dedda9ba324e012fc40",
-							"module": "witness",
-							"name": "Witness",
-							"typeArguments": [
-								{
-									"TypeParameter": 0
-								}
+					],
+					"parameters": [
+						{
+							"reference": 2,
+							"body": {
+								"typeParameterInstantiation": [
+									{
+										"typeParameterInstantiation": [],
+										"type": 11,
+										"typeParameter": 0
+									}
+								],
+								"type": 10,
+								"typeName": "0x16c5f17f2d55584a6e6daa442ccf83b4530d10546a8e7dedda9ba324e012fc40::quorum::Quorum"
+							}
+						},
+						{
+							"reference": 2,
+							"body": {
+								"typeParameterInstantiation": [],
+								"type": 10,
+								"typeName": "0x0000000000000000000000000000000000000000000000000000000000000002::tx_context::TxContext"
+							}
+						}
+					],
+					"returns": [
+						{
+							"body": {
+								"typeParameterInstantiation": [],
+								"type": 11,
+								"typeParameter": 1
+							}
+						},
+						{
+							"body": {
+								"typeParameterInstantiation": [
+									{
+										"typeParameterInstantiation": [],
+										"type": 11,
+										"typeParameter": 0
+									},
+									{
+										"typeParameterInstantiation": [],
+										"type": 11,
+										"typeParameter": 1
+									}
+								],
+								"type": 10,
+								"typeName": "0x16c5f17f2d55584a6e6daa442ccf83b4530d10546a8e7dedda9ba324e012fc40::quorum::ReturnReceipt"
+							}
+						}
+					],
+					"name": "borrow_cap",
+					"visibility": 2,
+					"isEntry": false
+				},
+				{
+					"typeParameters": [
+						{
+							"constraints": []
+						},
+						{
+							"constraints": []
+						},
+						{
+							"constraints": [
+								3,
+								4
 							]
 						}
-					}
-				]
-			},
-			"generator": {
-				"visibility": "Public",
-				"isEntry": false,
-				"typeParameters": [
-					{
-						"abilities": []
-					},
-					{
-						"abilities": [
-							"Drop"
-						]
-					}
-				],
-				"parameters": [
-					{
-						"TypeParameter": 1
-					}
-				],
-				"return": [
-					{
-						"Struct": {
-							"address": "0x16c5f17f2d55584a6e6daa442ccf83b4530d10546a8e7dedda9ba324e012fc40",
-							"module": "witness",
-							"name": "WitnessGenerator",
-							"typeArguments": [
-								{
-									"TypeParameter": 0
-								}
+					],
+					"parameters": [
+						{
+							"reference": 2,
+							"body": {
+								"typeParameterInstantiation": [
+									{
+										"typeParameterInstantiation": [],
+										"type": 11,
+										"typeParameter": 0
+									}
+								],
+								"type": 10,
+								"typeName": "0x16c5f17f2d55584a6e6daa442ccf83b4530d10546a8e7dedda9ba324e012fc40::quorum::Quorum"
+							}
+						},
+						{
+							"reference": 1,
+							"body": {
+								"typeParameterInstantiation": [
+									{
+										"typeParameterInstantiation": [],
+										"type": 11,
+										"typeParameter": 1
+									}
+								],
+								"type": 10,
+								"typeName": "0x16c5f17f2d55584a6e6daa442ccf83b4530d10546a8e7dedda9ba324e012fc40::quorum::Quorum"
+							}
+						},
+						{
+							"reference": 2,
+							"body": {
+								"typeParameterInstantiation": [],
+								"type": 10,
+								"typeName": "0x0000000000000000000000000000000000000000000000000000000000000002::tx_context::TxContext"
+							}
+						}
+					],
+					"returns": [
+						{
+							"body": {
+								"typeParameterInstantiation": [],
+								"type": 11,
+								"typeParameter": 2
+							}
+						},
+						{
+							"body": {
+								"typeParameterInstantiation": [
+									{
+										"typeParameterInstantiation": [],
+										"type": 11,
+										"typeParameter": 0
+									},
+									{
+										"typeParameterInstantiation": [],
+										"type": 11,
+										"typeParameter": 2
+									}
+								],
+								"type": 10,
+								"typeName": "0x16c5f17f2d55584a6e6daa442ccf83b4530d10546a8e7dedda9ba324e012fc40::quorum::ReturnReceipt"
+							}
+						}
+					],
+					"name": "borrow_cap_as_delegate",
+					"visibility": 2,
+					"isEntry": false
+				},
+				{
+					"typeParameters": [
+						{
+							"constraints": []
+						},
+						{
+							"constraints": [
+								3,
+								4
 							]
 						}
-					}
-				]
-			},
-			"generator_delegated": {
-				"visibility": "Public",
-				"isEntry": false,
-				"typeParameters": [
-					{
-						"abilities": []
-					}
-				],
-				"parameters": [
-					{
-						"Struct": {
-							"address": "0x16c5f17f2d55584a6e6daa442ccf83b4530d10546a8e7dedda9ba324e012fc40",
-							"module": "witness",
-							"name": "Witness",
-							"typeArguments": [
-								{
-									"TypeParameter": 0
-								}
+					],
+					"parameters": [
+						{
+							"body": {
+								"typeParameterInstantiation": [
+									{
+										"typeParameterInstantiation": [],
+										"type": 11,
+										"typeParameter": 0
+									},
+									{
+										"typeParameterInstantiation": [],
+										"type": 11,
+										"typeParameter": 1
+									}
+								],
+								"type": 10,
+								"typeName": "0x16c5f17f2d55584a6e6daa442ccf83b4530d10546a8e7dedda9ba324e012fc40::quorum::ReturnReceipt"
+							}
+						}
+					],
+					"returns": [],
+					"name": "burn_receipt",
+					"visibility": 1,
+					"isEntry": false
+				},
+				{
+					"typeParameters": [],
+					"parameters": [
+						{
+							"body": {
+								"typeParameterInstantiation": [],
+								"type": 6
+							}
+						}
+					],
+					"returns": [
+						{
+							"body": {
+								"typeParameterInstantiation": [],
+								"type": 6
+							}
+						}
+					],
+					"name": "calc_voting_threshold",
+					"visibility": 1,
+					"isEntry": false
+				},
+				{
+					"typeParameters": [
+						{
+							"constraints": []
+						}
+					],
+					"parameters": [
+						{
+							"reference": 1,
+							"body": {
+								"typeParameterInstantiation": [],
+								"type": 11,
+								"typeParameter": 0
+							}
+						},
+						{
+							"body": {
+								"typeParameterInstantiation": [
+									{
+										"typeParameterInstantiation": [],
+										"type": 1
+									}
+								],
+								"type": 10,
+								"typeName": "0x0000000000000000000000000000000000000000000000000000000000000002::vec_set::VecSet"
+							}
+						},
+						{
+							"body": {
+								"typeParameterInstantiation": [
+									{
+										"typeParameterInstantiation": [],
+										"type": 1
+									}
+								],
+								"type": 10,
+								"typeName": "0x0000000000000000000000000000000000000000000000000000000000000002::vec_set::VecSet"
+							}
+						},
+						{
+							"body": {
+								"typeParameterInstantiation": [
+									{
+										"typeParameterInstantiation": [],
+										"type": 10,
+										"typeName": "0x0000000000000000000000000000000000000000000000000000000000000002::object::ID"
+									}
+								],
+								"type": 10,
+								"typeName": "0x0000000000000000000000000000000000000000000000000000000000000002::vec_set::VecSet"
+							}
+						},
+						{
+							"reference": 2,
+							"body": {
+								"typeParameterInstantiation": [],
+								"type": 10,
+								"typeName": "0x0000000000000000000000000000000000000000000000000000000000000002::tx_context::TxContext"
+							}
+						}
+					],
+					"returns": [
+						{
+							"body": {
+								"typeParameterInstantiation": [
+									{
+										"typeParameterInstantiation": [],
+										"type": 11,
+										"typeParameter": 0
+									}
+								],
+								"type": 10,
+								"typeName": "0x16c5f17f2d55584a6e6daa442ccf83b4530d10546a8e7dedda9ba324e012fc40::quorum::Quorum"
+							}
+						}
+					],
+					"name": "create",
+					"visibility": 2,
+					"isEntry": false
+				},
+				{
+					"typeParameters": [
+						{
+							"constraints": []
+						}
+					],
+					"parameters": [
+						{
+							"reference": 1,
+							"body": {
+								"typeParameterInstantiation": [],
+								"type": 11,
+								"typeParameter": 0
+							}
+						},
+						{
+							"body": {
+								"typeParameterInstantiation": [
+									{
+										"typeParameterInstantiation": [],
+										"type": 1
+									}
+								],
+								"type": 10,
+								"typeName": "0x0000000000000000000000000000000000000000000000000000000000000002::vec_set::VecSet"
+							}
+						},
+						{
+							"body": {
+								"typeParameterInstantiation": [
+									{
+										"typeParameterInstantiation": [],
+										"type": 1
+									}
+								],
+								"type": 10,
+								"typeName": "0x0000000000000000000000000000000000000000000000000000000000000002::vec_set::VecSet"
+							}
+						},
+						{
+							"body": {
+								"typeParameterInstantiation": [
+									{
+										"typeParameterInstantiation": [],
+										"type": 10,
+										"typeName": "0x0000000000000000000000000000000000000000000000000000000000000002::object::ID"
+									}
+								],
+								"type": 10,
+								"typeName": "0x0000000000000000000000000000000000000000000000000000000000000002::vec_set::VecSet"
+							}
+						},
+						{
+							"reference": 2,
+							"body": {
+								"typeParameterInstantiation": [],
+								"type": 10,
+								"typeName": "0x0000000000000000000000000000000000000000000000000000000000000002::tx_context::TxContext"
+							}
+						}
+					],
+					"returns": [
+						{
+							"body": {
+								"typeParameterInstantiation": [
+									{
+										"typeParameterInstantiation": [],
+										"type": 11,
+										"typeParameter": 0
+									}
+								],
+								"type": 10,
+								"typeName": "0x16c5f17f2d55584a6e6daa442ccf83b4530d10546a8e7dedda9ba324e012fc40::quorum::Quorum"
+							}
+						},
+						{
+							"body": {
+								"typeParameterInstantiation": [
+									{
+										"typeParameterInstantiation": [],
+										"type": 11,
+										"typeParameter": 0
+									}
+								],
+								"type": 10,
+								"typeName": "0x16c5f17f2d55584a6e6daa442ccf83b4530d10546a8e7dedda9ba324e012fc40::quorum::ExtensionToken"
+							}
+						}
+					],
+					"name": "create_for_extension",
+					"visibility": 2,
+					"isEntry": false
+				},
+				{
+					"typeParameters": [
+						{
+							"constraints": []
+						}
+					],
+					"parameters": [
+						{
+							"reference": 1,
+							"body": {
+								"typeParameterInstantiation": [],
+								"type": 11,
+								"typeParameter": 0
+							}
+						},
+						{
+							"body": {
+								"typeParameterInstantiation": [
+									{
+										"typeParameterInstantiation": [],
+										"type": 1
+									}
+								],
+								"type": 10,
+								"typeName": "0x0000000000000000000000000000000000000000000000000000000000000002::vec_set::VecSet"
+							}
+						},
+						{
+							"body": {
+								"typeParameterInstantiation": [
+									{
+										"typeParameterInstantiation": [],
+										"type": 1
+									}
+								],
+								"type": 10,
+								"typeName": "0x0000000000000000000000000000000000000000000000000000000000000002::vec_set::VecSet"
+							}
+						},
+						{
+							"body": {
+								"typeParameterInstantiation": [
+									{
+										"typeParameterInstantiation": [],
+										"type": 10,
+										"typeName": "0x0000000000000000000000000000000000000000000000000000000000000002::object::ID"
+									}
+								],
+								"type": 10,
+								"typeName": "0x0000000000000000000000000000000000000000000000000000000000000002::vec_set::VecSet"
+							}
+						},
+						{
+							"reference": 2,
+							"body": {
+								"typeParameterInstantiation": [],
+								"type": 10,
+								"typeName": "0x0000000000000000000000000000000000000000000000000000000000000002::tx_context::TxContext"
+							}
+						}
+					],
+					"returns": [
+						{
+							"body": {
+								"typeParameterInstantiation": [],
+								"type": 10,
+								"typeName": "0x0000000000000000000000000000000000000000000000000000000000000002::object::ID"
+							}
+						}
+					],
+					"name": "init_quorum",
+					"visibility": 2,
+					"isEntry": false
+				},
+				{
+					"typeParameters": [
+						{
+							"constraints": []
+						},
+						{
+							"constraints": [
+								3,
+								4
 							]
 						}
-					}
-				],
-				"return": [
-					{
-						"Struct": {
-							"address": "0x16c5f17f2d55584a6e6daa442ccf83b4530d10546a8e7dedda9ba324e012fc40",
-							"module": "witness",
-							"name": "WitnessGenerator",
-							"typeArguments": [
-								{
-									"TypeParameter": 0
-								}
+					],
+					"parameters": [
+						{
+							"reference": 2,
+							"body": {
+								"typeParameterInstantiation": [
+									{
+										"typeParameterInstantiation": [],
+										"type": 11,
+										"typeParameter": 0
+									}
+								],
+								"type": 10,
+								"typeName": "0x16c5f17f2d55584a6e6daa442ccf83b4530d10546a8e7dedda9ba324e012fc40::quorum::Quorum"
+							}
+						},
+						{
+							"body": {
+								"typeParameterInstantiation": [],
+								"type": 11,
+								"typeParameter": 1
+							}
+						},
+						{
+							"body": {
+								"typeParameterInstantiation": [],
+								"type": 2
+							}
+						},
+						{
+							"reference": 2,
+							"body": {
+								"typeParameterInstantiation": [],
+								"type": 10,
+								"typeName": "0x0000000000000000000000000000000000000000000000000000000000000002::tx_context::TxContext"
+							}
+						}
+					],
+					"returns": [],
+					"name": "insert_cap",
+					"visibility": 2,
+					"isEntry": false
+				},
+				{
+					"typeParameters": [
+						{
+							"constraints": []
+						},
+						{
+							"constraints": [
+								3,
+								4
 							]
 						}
-					}
-				]
-			}
+					],
+					"parameters": [
+						{
+							"reference": 2,
+							"body": {
+								"typeParameterInstantiation": [
+									{
+										"typeParameterInstantiation": [],
+										"type": 11,
+										"typeParameter": 0
+									}
+								],
+								"type": 10,
+								"typeName": "0x16c5f17f2d55584a6e6daa442ccf83b4530d10546a8e7dedda9ba324e012fc40::quorum::Quorum"
+							}
+						},
+						{
+							"body": {
+								"typeParameterInstantiation": [],
+								"type": 11,
+								"typeParameter": 1
+							}
+						},
+						{
+							"body": {
+								"typeParameterInstantiation": [],
+								"type": 2
+							}
+						}
+					],
+					"returns": [],
+					"name": "insert_cap_",
+					"visibility": 1,
+					"isEntry": false
+				},
+				{
+					"typeParameters": [
+						{
+							"constraints": []
+						}
+					],
+					"parameters": [
+						{
+							"reference": 2,
+							"body": {
+								"typeParameterInstantiation": [
+									{
+										"typeParameterInstantiation": [],
+										"type": 11,
+										"typeParameter": 0
+									}
+								],
+								"type": 10,
+								"typeName": "0x16c5f17f2d55584a6e6daa442ccf83b4530d10546a8e7dedda9ba324e012fc40::quorum::Quorum"
+							}
+						},
+						{
+							"reference": 1,
+							"body": {
+								"typeParameterInstantiation": [],
+								"type": 10,
+								"typeName": "0x0000000000000000000000000000000000000000000000000000000000000002::package::Publisher"
+							}
+						}
+					],
+					"returns": [],
+					"name": "migrate_as_creator",
+					"visibility": 1,
+					"isEntry": true
+				},
+				{
+					"typeParameters": [
+						{
+							"constraints": []
+						}
+					],
+					"parameters": [
+						{
+							"reference": 2,
+							"body": {
+								"typeParameterInstantiation": [
+									{
+										"typeParameterInstantiation": [],
+										"type": 11,
+										"typeParameter": 0
+									}
+								],
+								"type": 10,
+								"typeName": "0x16c5f17f2d55584a6e6daa442ccf83b4530d10546a8e7dedda9ba324e012fc40::quorum::Quorum"
+							}
+						},
+						{
+							"reference": 1,
+							"body": {
+								"typeParameterInstantiation": [],
+								"type": 10,
+								"typeName": "0x0000000000000000000000000000000000000000000000000000000000000002::package::Publisher"
+							}
+						}
+					],
+					"returns": [],
+					"name": "migrate_as_pub",
+					"visibility": 1,
+					"isEntry": true
+				},
+				{
+					"typeParameters": [
+						{
+							"constraints": []
+						}
+					],
+					"parameters": [
+						{
+							"reference": 2,
+							"body": {
+								"typeParameterInstantiation": [
+									{
+										"typeParameterInstantiation": [],
+										"type": 11,
+										"typeParameter": 0
+									}
+								],
+								"type": 10,
+								"typeName": "0x16c5f17f2d55584a6e6daa442ccf83b4530d10546a8e7dedda9ba324e012fc40::quorum::Quorum"
+							}
+						},
+						{
+							"reference": 1,
+							"body": {
+								"typeParameterInstantiation": [
+									{
+										"typeParameterInstantiation": [],
+										"type": 11,
+										"typeParameter": 0
+									}
+								],
+								"type": 10,
+								"typeName": "0x16c5f17f2d55584a6e6daa442ccf83b4530d10546a8e7dedda9ba324e012fc40::quorum::ExtensionToken"
+							}
+						},
+						{
+							"body": {
+								"typeParameterInstantiation": [],
+								"type": 1
+							}
+						}
+					],
+					"returns": [],
+					"name": "remove_admin_with_extension",
+					"visibility": 2,
+					"isEntry": false
+				},
+				{
+					"typeParameters": [
+						{
+							"constraints": []
+						}
+					],
+					"parameters": [
+						{
+							"reference": 2,
+							"body": {
+								"typeParameterInstantiation": [
+									{
+										"typeParameterInstantiation": [],
+										"type": 11,
+										"typeParameter": 0
+									}
+								],
+								"type": 10,
+								"typeName": "0x16c5f17f2d55584a6e6daa442ccf83b4530d10546a8e7dedda9ba324e012fc40::quorum::Quorum"
+							}
+						},
+						{
+							"reference": 1,
+							"body": {
+								"typeParameterInstantiation": [
+									{
+										"typeParameterInstantiation": [],
+										"type": 11,
+										"typeParameter": 0
+									}
+								],
+								"type": 10,
+								"typeName": "0x16c5f17f2d55584a6e6daa442ccf83b4530d10546a8e7dedda9ba324e012fc40::quorum::ExtensionToken"
+							}
+						},
+						{
+							"body": {
+								"typeParameterInstantiation": [],
+								"type": 10,
+								"typeName": "0x0000000000000000000000000000000000000000000000000000000000000002::object::ID"
+							}
+						}
+					],
+					"returns": [],
+					"name": "remove_delegate_with_extension",
+					"visibility": 2,
+					"isEntry": false
+				},
+				{
+					"typeParameters": [
+						{
+							"constraints": []
+						}
+					],
+					"parameters": [
+						{
+							"reference": 2,
+							"body": {
+								"typeParameterInstantiation": [
+									{
+										"typeParameterInstantiation": [],
+										"type": 11,
+										"typeParameter": 0
+									}
+								],
+								"type": 10,
+								"typeName": "0x16c5f17f2d55584a6e6daa442ccf83b4530d10546a8e7dedda9ba324e012fc40::quorum::Quorum"
+							}
+						},
+						{
+							"body": {
+								"typeParameterInstantiation": [],
+								"type": 1
+							}
+						},
+						{
+							"reference": 2,
+							"body": {
+								"typeParameterInstantiation": [],
+								"type": 10,
+								"typeName": "0x0000000000000000000000000000000000000000000000000000000000000002::tx_context::TxContext"
+							}
+						}
+					],
+					"returns": [],
+					"name": "remove_member",
+					"visibility": 2,
+					"isEntry": false
+				},
+				{
+					"typeParameters": [
+						{
+							"constraints": []
+						},
+						{
+							"constraints": [
+								3,
+								4
+							]
+						}
+					],
+					"parameters": [
+						{
+							"reference": 2,
+							"body": {
+								"typeParameterInstantiation": [
+									{
+										"typeParameterInstantiation": [],
+										"type": 11,
+										"typeParameter": 0
+									}
+								],
+								"type": 10,
+								"typeName": "0x16c5f17f2d55584a6e6daa442ccf83b4530d10546a8e7dedda9ba324e012fc40::quorum::Quorum"
+							}
+						},
+						{
+							"body": {
+								"typeParameterInstantiation": [],
+								"type": 11,
+								"typeParameter": 1
+							}
+						},
+						{
+							"body": {
+								"typeParameterInstantiation": [
+									{
+										"typeParameterInstantiation": [],
+										"type": 11,
+										"typeParameter": 0
+									},
+									{
+										"typeParameterInstantiation": [],
+										"type": 11,
+										"typeParameter": 1
+									}
+								],
+								"type": 10,
+								"typeName": "0x16c5f17f2d55584a6e6daa442ccf83b4530d10546a8e7dedda9ba324e012fc40::quorum::ReturnReceipt"
+							}
+						},
+						{
+							"reference": 2,
+							"body": {
+								"typeParameterInstantiation": [],
+								"type": 10,
+								"typeName": "0x0000000000000000000000000000000000000000000000000000000000000002::tx_context::TxContext"
+							}
+						}
+					],
+					"returns": [],
+					"name": "return_cap",
+					"visibility": 2,
+					"isEntry": false
+				},
+				{
+					"typeParameters": [
+						{
+							"constraints": []
+						},
+						{
+							"constraints": [
+								3,
+								4
+							]
+						}
+					],
+					"parameters": [
+						{
+							"reference": 2,
+							"body": {
+								"typeParameterInstantiation": [
+									{
+										"typeParameterInstantiation": [],
+										"type": 11,
+										"typeParameter": 0
+									}
+								],
+								"type": 10,
+								"typeName": "0x16c5f17f2d55584a6e6daa442ccf83b4530d10546a8e7dedda9ba324e012fc40::quorum::Quorum"
+							}
+						},
+						{
+							"body": {
+								"typeParameterInstantiation": [],
+								"type": 11,
+								"typeParameter": 1
+							}
+						},
+						{
+							"reference": 2,
+							"body": {
+								"typeParameterInstantiation": [],
+								"type": 10,
+								"typeName": "0x0000000000000000000000000000000000000000000000000000000000000002::tx_context::TxContext"
+							}
+						}
+					],
+					"returns": [],
+					"name": "return_cap_",
+					"visibility": 1,
+					"isEntry": false
+				},
+				{
+					"typeParameters": [
+						{
+							"constraints": []
+						},
+						{
+							"constraints": []
+						},
+						{
+							"constraints": [
+								3,
+								4
+							]
+						}
+					],
+					"parameters": [
+						{
+							"reference": 2,
+							"body": {
+								"typeParameterInstantiation": [
+									{
+										"typeParameterInstantiation": [],
+										"type": 11,
+										"typeParameter": 0
+									}
+								],
+								"type": 10,
+								"typeName": "0x16c5f17f2d55584a6e6daa442ccf83b4530d10546a8e7dedda9ba324e012fc40::quorum::Quorum"
+							}
+						},
+						{
+							"reference": 1,
+							"body": {
+								"typeParameterInstantiation": [
+									{
+										"typeParameterInstantiation": [],
+										"type": 11,
+										"typeParameter": 1
+									}
+								],
+								"type": 10,
+								"typeName": "0x16c5f17f2d55584a6e6daa442ccf83b4530d10546a8e7dedda9ba324e012fc40::quorum::Quorum"
+							}
+						},
+						{
+							"body": {
+								"typeParameterInstantiation": [],
+								"type": 11,
+								"typeParameter": 2
+							}
+						},
+						{
+							"body": {
+								"typeParameterInstantiation": [
+									{
+										"typeParameterInstantiation": [],
+										"type": 11,
+										"typeParameter": 0
+									},
+									{
+										"typeParameterInstantiation": [],
+										"type": 11,
+										"typeParameter": 2
+									}
+								],
+								"type": 10,
+								"typeName": "0x16c5f17f2d55584a6e6daa442ccf83b4530d10546a8e7dedda9ba324e012fc40::quorum::ReturnReceipt"
+							}
+						},
+						{
+							"reference": 2,
+							"body": {
+								"typeParameterInstantiation": [],
+								"type": 10,
+								"typeName": "0x0000000000000000000000000000000000000000000000000000000000000002::tx_context::TxContext"
+							}
+						}
+					],
+					"returns": [],
+					"name": "return_cap_as_delegate",
+					"visibility": 2,
+					"isEntry": false
+				},
+				{
+					"typeParameters": [
+						{
+							"constraints": []
+						}
+					],
+					"parameters": [
+						{
+							"reference": 2,
+							"body": {
+								"typeParameterInstantiation": [
+									{
+										"typeParameterInstantiation": [],
+										"type": 11,
+										"typeParameter": 0
+									}
+								],
+								"type": 10,
+								"typeName": "0x16c5f17f2d55584a6e6daa442ccf83b4530d10546a8e7dedda9ba324e012fc40::quorum::Signatures"
+							}
+						},
+						{
+							"reference": 2,
+							"body": {
+								"typeParameterInstantiation": [],
+								"type": 10,
+								"typeName": "0x0000000000000000000000000000000000000000000000000000000000000002::tx_context::TxContext"
+							}
+						}
+					],
+					"returns": [],
+					"name": "sign",
+					"visibility": 1,
+					"isEntry": false
+				},
+				{
+					"typeParameters": [
+						{
+							"constraints": []
+						}
+					],
+					"parameters": [
+						{
+							"reference": 1,
+							"body": {
+								"typeParameterInstantiation": [],
+								"type": 11,
+								"typeParameter": 0
+							}
+						},
+						{
+							"body": {
+								"typeParameterInstantiation": [],
+								"type": 1
+							}
+						},
+						{
+							"reference": 2,
+							"body": {
+								"typeParameterInstantiation": [],
+								"type": 10,
+								"typeName": "0x0000000000000000000000000000000000000000000000000000000000000002::tx_context::TxContext"
+							}
+						}
+					],
+					"returns": [
+						{
+							"body": {
+								"typeParameterInstantiation": [
+									{
+										"typeParameterInstantiation": [],
+										"type": 11,
+										"typeParameter": 0
+									}
+								],
+								"type": 10,
+								"typeName": "0x16c5f17f2d55584a6e6daa442ccf83b4530d10546a8e7dedda9ba324e012fc40::quorum::Quorum"
+							}
+						}
+					],
+					"name": "singleton",
+					"visibility": 2,
+					"isEntry": false
+				},
+				{
+					"typeParameters": [
+						{
+							"constraints": []
+						}
+					],
+					"parameters": [
+						{
+							"reference": 2,
+							"body": {
+								"typeParameterInstantiation": [
+									{
+										"typeParameterInstantiation": [],
+										"type": 11,
+										"typeParameter": 0
+									}
+								],
+								"type": 10,
+								"typeName": "0x16c5f17f2d55584a6e6daa442ccf83b4530d10546a8e7dedda9ba324e012fc40::quorum::Quorum"
+							}
+						},
+						{
+							"reference": 1,
+							"body": {
+								"typeParameterInstantiation": [
+									{
+										"typeParameterInstantiation": [],
+										"type": 11,
+										"typeParameter": 0
+									}
+								],
+								"type": 10,
+								"typeName": "0x16c5f17f2d55584a6e6daa442ccf83b4530d10546a8e7dedda9ba324e012fc40::quorum::ExtensionToken"
+							}
+						}
+					],
+					"returns": [
+						{
+							"reference": 2,
+							"body": {
+								"typeParameterInstantiation": [],
+								"type": 10,
+								"typeName": "0x0000000000000000000000000000000000000000000000000000000000000002::object::UID"
+							}
+						}
+					],
+					"name": "uid_mut",
+					"visibility": 1,
+					"isEntry": false
+				},
+				{
+					"typeParameters": [
+						{
+							"constraints": []
+						},
+						{
+							"constraints": [
+								1,
+								2,
+								3
+							]
+						}
+					],
+					"parameters": [
+						{
+							"reference": 2,
+							"body": {
+								"typeParameterInstantiation": [
+									{
+										"typeParameterInstantiation": [],
+										"type": 11,
+										"typeParameter": 0
+									}
+								],
+								"type": 10,
+								"typeName": "0x16c5f17f2d55584a6e6daa442ccf83b4530d10546a8e7dedda9ba324e012fc40::quorum::Quorum"
+							}
+						},
+						{
+							"body": {
+								"typeParameterInstantiation": [],
+								"type": 11,
+								"typeParameter": 1
+							}
+						},
+						{
+							"reference": 2,
+							"body": {
+								"typeParameterInstantiation": [],
+								"type": 10,
+								"typeName": "0x0000000000000000000000000000000000000000000000000000000000000002::tx_context::TxContext"
+							}
+						}
+					],
+					"returns": [
+						{
+							"body": {
+								"typeParameterInstantiation": [],
+								"type": 6
+							}
+						},
+						{
+							"body": {
+								"typeParameterInstantiation": [],
+								"type": 6
+							}
+						}
+					],
+					"name": "vote",
+					"visibility": 2,
+					"isEntry": false
+				},
+				{
+					"typeParameters": [
+						{
+							"constraints": []
+						}
+					],
+					"parameters": [
+						{
+							"reference": 2,
+							"body": {
+								"typeParameterInstantiation": [
+									{
+										"typeParameterInstantiation": [],
+										"type": 11,
+										"typeParameter": 0
+									}
+								],
+								"type": 10,
+								"typeName": "0x16c5f17f2d55584a6e6daa442ccf83b4530d10546a8e7dedda9ba324e012fc40::quorum::Quorum"
+							}
+						},
+						{
+							"body": {
+								"typeParameterInstantiation": [],
+								"type": 1
+							}
+						},
+						{
+							"reference": 2,
+							"body": {
+								"typeParameterInstantiation": [],
+								"type": 10,
+								"typeName": "0x0000000000000000000000000000000000000000000000000000000000000002::tx_context::TxContext"
+							}
+						}
+					],
+					"returns": [],
+					"name": "vote_add_admin",
+					"visibility": 2,
+					"isEntry": true
+				},
+				{
+					"typeParameters": [
+						{
+							"constraints": []
+						}
+					],
+					"parameters": [
+						{
+							"reference": 2,
+							"body": {
+								"typeParameterInstantiation": [
+									{
+										"typeParameterInstantiation": [],
+										"type": 11,
+										"typeParameter": 0
+									}
+								],
+								"type": 10,
+								"typeName": "0x16c5f17f2d55584a6e6daa442ccf83b4530d10546a8e7dedda9ba324e012fc40::quorum::Quorum"
+							}
+						},
+						{
+							"body": {
+								"typeParameterInstantiation": [],
+								"type": 10,
+								"typeName": "0x0000000000000000000000000000000000000000000000000000000000000002::object::ID"
+							}
+						},
+						{
+							"reference": 2,
+							"body": {
+								"typeParameterInstantiation": [],
+								"type": 10,
+								"typeName": "0x0000000000000000000000000000000000000000000000000000000000000002::tx_context::TxContext"
+							}
+						}
+					],
+					"returns": [],
+					"name": "vote_add_delegate",
+					"visibility": 2,
+					"isEntry": true
+				},
+				{
+					"typeParameters": [
+						{
+							"constraints": []
+						}
+					],
+					"parameters": [
+						{
+							"reference": 2,
+							"body": {
+								"typeParameterInstantiation": [
+									{
+										"typeParameterInstantiation": [],
+										"type": 11,
+										"typeParameter": 0
+									}
+								],
+								"type": 10,
+								"typeName": "0x16c5f17f2d55584a6e6daa442ccf83b4530d10546a8e7dedda9ba324e012fc40::quorum::Quorum"
+							}
+						},
+						{
+							"body": {
+								"typeParameterInstantiation": [],
+								"type": 1
+							}
+						},
+						{
+							"reference": 2,
+							"body": {
+								"typeParameterInstantiation": [],
+								"type": 10,
+								"typeName": "0x0000000000000000000000000000000000000000000000000000000000000002::tx_context::TxContext"
+							}
+						}
+					],
+					"returns": [],
+					"name": "vote_remove_admin",
+					"visibility": 2,
+					"isEntry": true
+				},
+				{
+					"typeParameters": [
+						{
+							"constraints": []
+						}
+					],
+					"parameters": [
+						{
+							"reference": 2,
+							"body": {
+								"typeParameterInstantiation": [
+									{
+										"typeParameterInstantiation": [],
+										"type": 11,
+										"typeParameter": 0
+									}
+								],
+								"type": 10,
+								"typeName": "0x16c5f17f2d55584a6e6daa442ccf83b4530d10546a8e7dedda9ba324e012fc40::quorum::Quorum"
+							}
+						},
+						{
+							"body": {
+								"typeParameterInstantiation": [],
+								"type": 10,
+								"typeName": "0x0000000000000000000000000000000000000000000000000000000000000002::object::ID"
+							}
+						},
+						{
+							"reference": 2,
+							"body": {
+								"typeParameterInstantiation": [],
+								"type": 10,
+								"typeName": "0x0000000000000000000000000000000000000000000000000000000000000002::tx_context::TxContext"
+							}
+						}
+					],
+					"returns": [],
+					"name": "vote_remove_delegate",
+					"visibility": 2,
+					"isEntry": true
+				}
+			],
+			"name": "quorum"
+		}
+	},
+	{
+		"address": "0x16c5f17f2d55584a6e6daa442ccf83b4530d10546a8e7dedda9ba324e012fc40",
+		"module": {
+			"datatypes": [
+				{
+					"abilities": [
+						1,
+						2
+					],
+					"typeParameters": [
+						{
+							"constraints": [],
+							"isPhantom": true
+						}
+					],
+					"fields": [
+						{
+							"name": "dummy_field",
+							"position": 0,
+							"type": {
+								"typeParameterInstantiation": [],
+								"type": 2
+							}
+						}
+					],
+					"variants": [],
+					"typeName": "0x16c5f17f2d55584a6e6daa442ccf83b4530d10546a8e7dedda9ba324e012fc40::witness::Witness",
+					"definingId": "0x16c5f17f2d55584a6e6daa442ccf83b4530d10546a8e7dedda9ba324e012fc40",
+					"module": "witness",
+					"name": "Witness",
+					"kind": 1
+				},
+				{
+					"abilities": [
+						3
+					],
+					"typeParameters": [
+						{
+							"constraints": [],
+							"isPhantom": true
+						}
+					],
+					"fields": [
+						{
+							"name": "dummy_field",
+							"position": 0,
+							"type": {
+								"typeParameterInstantiation": [],
+								"type": 2
+							}
+						}
+					],
+					"variants": [],
+					"typeName": "0x16c5f17f2d55584a6e6daa442ccf83b4530d10546a8e7dedda9ba324e012fc40::witness::WitnessGenerator",
+					"definingId": "0x16c5f17f2d55584a6e6daa442ccf83b4530d10546a8e7dedda9ba324e012fc40",
+					"module": "witness",
+					"name": "WitnessGenerator",
+					"kind": 1
+				}
+			],
+			"functions": [
+				{
+					"typeParameters": [
+						{
+							"constraints": []
+						}
+					],
+					"parameters": [
+						{
+							"reference": 1,
+							"body": {
+								"typeParameterInstantiation": [
+									{
+										"typeParameterInstantiation": [],
+										"type": 11,
+										"typeParameter": 0
+									}
+								],
+								"type": 10,
+								"typeName": "0x16c5f17f2d55584a6e6daa442ccf83b4530d10546a8e7dedda9ba324e012fc40::witness::WitnessGenerator"
+							}
+						}
+					],
+					"returns": [
+						{
+							"body": {
+								"typeParameterInstantiation": [
+									{
+										"typeParameterInstantiation": [],
+										"type": 11,
+										"typeParameter": 0
+									}
+								],
+								"type": 10,
+								"typeName": "0x16c5f17f2d55584a6e6daa442ccf83b4530d10546a8e7dedda9ba324e012fc40::witness::Witness"
+							}
+						}
+					],
+					"name": "delegate",
+					"visibility": 2,
+					"isEntry": false
+				},
+				{
+					"typeParameters": [
+						{
+							"constraints": []
+						}
+					],
+					"parameters": [
+						{
+							"reference": 1,
+							"body": {
+								"typeParameterInstantiation": [],
+								"type": 10,
+								"typeName": "0x0000000000000000000000000000000000000000000000000000000000000002::package::Publisher"
+							}
+						}
+					],
+					"returns": [
+						{
+							"body": {
+								"typeParameterInstantiation": [
+									{
+										"typeParameterInstantiation": [],
+										"type": 11,
+										"typeParameter": 0
+									}
+								],
+								"type": 10,
+								"typeName": "0x16c5f17f2d55584a6e6daa442ccf83b4530d10546a8e7dedda9ba324e012fc40::witness::Witness"
+							}
+						}
+					],
+					"name": "from_publisher",
+					"visibility": 2,
+					"isEntry": false
+				},
+				{
+					"typeParameters": [
+						{
+							"constraints": []
+						},
+						{
+							"constraints": [
+								2
+							]
+						}
+					],
+					"parameters": [
+						{
+							"body": {
+								"typeParameterInstantiation": [],
+								"type": 11,
+								"typeParameter": 1
+							}
+						}
+					],
+					"returns": [
+						{
+							"body": {
+								"typeParameterInstantiation": [
+									{
+										"typeParameterInstantiation": [],
+										"type": 11,
+										"typeParameter": 0
+									}
+								],
+								"type": 10,
+								"typeName": "0x16c5f17f2d55584a6e6daa442ccf83b4530d10546a8e7dedda9ba324e012fc40::witness::Witness"
+							}
+						}
+					],
+					"name": "from_witness",
+					"visibility": 2,
+					"isEntry": false
+				},
+				{
+					"typeParameters": [
+						{
+							"constraints": []
+						},
+						{
+							"constraints": [
+								2
+							]
+						}
+					],
+					"parameters": [
+						{
+							"body": {
+								"typeParameterInstantiation": [],
+								"type": 11,
+								"typeParameter": 1
+							}
+						}
+					],
+					"returns": [
+						{
+							"body": {
+								"typeParameterInstantiation": [
+									{
+										"typeParameterInstantiation": [],
+										"type": 11,
+										"typeParameter": 0
+									}
+								],
+								"type": 10,
+								"typeName": "0x16c5f17f2d55584a6e6daa442ccf83b4530d10546a8e7dedda9ba324e012fc40::witness::WitnessGenerator"
+							}
+						}
+					],
+					"name": "generator",
+					"visibility": 2,
+					"isEntry": false
+				},
+				{
+					"typeParameters": [
+						{
+							"constraints": []
+						}
+					],
+					"parameters": [
+						{
+							"body": {
+								"typeParameterInstantiation": [
+									{
+										"typeParameterInstantiation": [],
+										"type": 11,
+										"typeParameter": 0
+									}
+								],
+								"type": 10,
+								"typeName": "0x16c5f17f2d55584a6e6daa442ccf83b4530d10546a8e7dedda9ba324e012fc40::witness::Witness"
+							}
+						}
+					],
+					"returns": [
+						{
+							"body": {
+								"typeParameterInstantiation": [
+									{
+										"typeParameterInstantiation": [],
+										"type": 11,
+										"typeParameter": 0
+									}
+								],
+								"type": 10,
+								"typeName": "0x16c5f17f2d55584a6e6daa442ccf83b4530d10546a8e7dedda9ba324e012fc40::witness::WitnessGenerator"
+							}
+						}
+					],
+					"name": "generator_delegated",
+					"visibility": 2,
+					"isEntry": false
+				}
+			],
+			"name": "witness"
 		}
 	}
 ]

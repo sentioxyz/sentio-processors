@@ -62,7 +62,7 @@ validator.bind({
     })
 
     //add genesis events for 1 time
-    if (event.id.txDigest == "C1FDTh7cJDe3JsHS4VxzntcQEyAJHWnaxgMqHehB79kU") {
+    if (ctx.transaction.digest == "C1FDTh7cJDe3JsHS4VxzntcQEyAJHWnaxgMqHehB79kU") {
       GENESIS_STAKING.forEach(row => {
         ctx.eventLogger.emit("StakingAtGenesis", {
           distinctId: row[0].toString(),

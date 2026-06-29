@@ -1,1530 +1,2342 @@
-{
-    "jsonrpc": "2.0",
-    "result": {
-        "tails_exp": {
-            "fileFormatVersion": 6,
-            "address": "0x37816d28c34cc0df82655ca97b3f066112a5f3c202cbb4aaa76c8af54e779750",
-            "name": "tails_exp",
-            "friends": [],
-            "structs": {
-                "AddPlaygroundWhitelist": {
-                    "abilities": {
-                        "abilities": ["Copy", "Drop"]
-                    },
-                    "typeParameters": [],
-                    "fields": [
-                        {
-                            "name": "signer",
-                            "type": "Address"
-                        },
-                        {
-                            "name": "new_whitelist_users",
-                            "type": {
-                                "Vector": "Address"
-                            }
-                        }
-                    ]
-                },
-                "AddRegistryWhitelist": {
-                    "abilities": {
-                        "abilities": ["Copy", "Drop"]
-                    },
-                    "typeParameters": [],
-                    "fields": [
-                        {
-                            "name": "signer",
-                            "type": "Address"
-                        },
-                        {
-                            "name": "new_whitelist_users",
-                            "type": {
-                                "Vector": "Address"
-                            }
-                        }
-                    ]
-                },
-                "CloseGame": {
-                    "abilities": {
-                        "abilities": ["Copy", "Drop"]
-                    },
-                    "typeParameters": [],
-                    "fields": [
-                        {
-                            "name": "signer",
-                            "type": "Address"
-                        },
-                        {
-                            "name": "index",
-                            "type": "U64"
-                        },
-                        {
-                            "name": "game_id",
-                            "type": "U64"
-                        },
-                        {
-                            "name": "player",
-                            "type": "Address"
-                        },
-                        {
-                            "name": "refund_amount",
-                            "type": "U64"
-                        }
-                    ]
-                },
-                "ClosePlayground": {
-                    "abilities": {
-                        "abilities": ["Copy", "Drop"]
-                    },
-                    "typeParameters": [],
-                    "fields": [
-                        {
-                            "name": "signer",
-                            "type": "Address"
-                        },
-                        {
-                            "name": "index",
-                            "type": "U64"
-                        },
-                        {
-                            "name": "num_of_existing_games",
-                            "type": "U64"
-                        },
-                        {
-                            "name": "done",
-                            "type": "Bool"
-                        }
-                    ]
-                },
-                "Counter": {
-                    "abilities": {
-                        "abilities": ["Store", "Key"]
-                    },
-                    "typeParameters": [],
-                    "fields": [
-                        {
-                            "name": "id",
-                            "type": {
-                                "Struct": {
-                                    "address": "0x2",
-                                    "module": "object",
-                                    "name": "UID",
-                                    "typeArguments": []
-                                }
-                            }
-                        },
-                        {
-                            "name": "count",
-                            "type": "U64"
-                        }
-                    ]
-                },
-                "DepositStakesEmergency": {
-                    "abilities": {
-                        "abilities": ["Copy", "Drop"]
-                    },
-                    "typeParameters": [],
-                    "fields": [
-                        {
-                            "name": "signer",
-                            "type": "Address"
-                        },
-                        {
-                            "name": "index",
-                            "type": "U64"
-                        },
-                        {
-                            "name": "token_type",
-                            "type": {
-                                "Struct": {
-                                    "address": "0x1",
-                                    "module": "type_name",
-                                    "name": "TypeName",
-                                    "typeArguments": []
-                                }
-                            }
-                        },
-                        {
-                            "name": "amount",
-                            "type": "U64"
-                        },
-                        {
-                            "name": "stakes_before",
-                            "type": "U64"
-                        },
-                        {
-                            "name": "stakes_after",
-                            "type": "U64"
-                        }
-                    ]
-                },
-                "Draw": {
-                    "abilities": {
-                        "abilities": ["Copy", "Drop"]
-                    },
-                    "typeParameters": [],
-                    "fields": [
-                        {
-                            "name": "signer",
-                            "type": "Address"
-                        },
-                        {
-                            "name": "index",
-                            "type": "U64"
-                        },
-                        {
-                            "name": "game_id",
-                            "type": "U64"
-                        },
-                        {
-                            "name": "public_key",
-                            "type": {
-                                "Vector": "U8"
-                            }
-                        },
-                        {
-                            "name": "signature_1",
-                            "type": {
-                                "Vector": "U8"
-                            }
-                        },
-                        {
-                            "name": "signature_2",
-                            "type": {
-                                "Vector": "U8"
-                            }
-                        },
-                        {
-                            "name": "player",
-                            "type": "Address"
-                        },
-                        {
-                            "name": "guess_1",
-                            "type": "U64"
-                        },
-                        {
-                            "name": "larger_than_1",
-                            "type": "Bool"
-                        },
-                        {
-                            "name": "answer_1",
-                            "type": "U64"
-                        },
-                        {
-                            "name": "result_1",
-                            "type": "U64"
-                        },
-                        {
-                            "name": "guess_2",
-                            "type": "U64"
-                        },
-                        {
-                            "name": "larger_than_2",
-                            "type": "Bool"
-                        },
-                        {
-                            "name": "answer_2",
-                            "type": "U64"
-                        },
-                        {
-                            "name": "result_2",
-                            "type": "U64"
-                        },
-                        {
-                            "name": "stake_amount",
-                            "type": "U64"
-                        },
-                        {
-                            "name": "exp",
-                            "type": "U64"
-                        }
-                    ]
-                },
-                "Game": {
-                    "abilities": {
-                        "abilities": ["Store"]
-                    },
-                    "typeParameters": [],
-                    "fields": [
-                        {
-                            "name": "game_id",
-                            "type": "U64"
-                        },
-                        {
-                            "name": "player",
-                            "type": "Address"
-                        },
-                        {
-                            "name": "stake_amount",
-                            "type": "U64"
-                        },
-                        {
-                            "name": "guess_1",
-                            "type": {
-                                "Struct": {
-                                    "address": "0x1",
-                                    "module": "option",
-                                    "name": "Option",
-                                    "typeArguments": ["U64"]
-                                }
-                            }
-                        },
-                        {
-                            "name": "larger_than_1",
-                            "type": {
-                                "Struct": {
-                                    "address": "0x1",
-                                    "module": "option",
-                                    "name": "Option",
-                                    "typeArguments": ["Bool"]
-                                }
-                            }
-                        },
-                        {
-                            "name": "vrf_input_1",
-                            "type": {
-                                "Struct": {
-                                    "address": "0x1",
-                                    "module": "option",
-                                    "name": "Option",
-                                    "typeArguments": [
-                                        {
-                                            "Vector": "U8"
-                                        }
-                                    ]
-                                }
-                            }
-                        },
-                        {
-                            "name": "guess_2",
-                            "type": {
-                                "Struct": {
-                                    "address": "0x1",
-                                    "module": "option",
-                                    "name": "Option",
-                                    "typeArguments": ["U64"]
-                                }
-                            }
-                        },
-                        {
-                            "name": "larger_than_2",
-                            "type": {
-                                "Struct": {
-                                    "address": "0x1",
-                                    "module": "option",
-                                    "name": "Option",
-                                    "typeArguments": ["Bool"]
-                                }
-                            }
-                        },
-                        {
-                            "name": "vrf_input_2",
-                            "type": {
-                                "Struct": {
-                                    "address": "0x1",
-                                    "module": "option",
-                                    "name": "Option",
-                                    "typeArguments": [
-                                        {
-                                            "Vector": "U8"
-                                        }
-                                    ]
-                                }
-                            }
-                        }
-                    ]
-                },
-                "GameConfig": {
-                    "abilities": {
-                        "abilities": ["Copy", "Drop", "Store"]
-                    },
-                    "typeParameters": [],
-                    "fields": [
-                        {
-                            "name": "max_stake",
-                            "type": "U64"
-                        },
-                        {
-                            "name": "min_stake",
-                            "type": "U64"
-                        },
-                        {
-                            "name": "stake_lot_size",
-                            "type": "U64"
-                        },
-                        {
-                            "name": "base_exp_divisor",
-                            "type": "U64"
-                        },
-                        {
-                            "name": "losses_multiplier_bp",
-                            "type": "U64"
-                        },
-                        {
-                            "name": "critical_hits_multiplier_bp",
-                            "type": "U64"
-                        }
-                    ]
-                },
-                "NewGame": {
-                    "abilities": {
-                        "abilities": ["Copy", "Drop"]
-                    },
-                    "typeParameters": [
-                        {
-                            "constraints": {
-                                "abilities": []
-                            },
-                            "isPhantom": true
-                        }
-                    ],
-                    "fields": [
-                        {
-                            "name": "signer",
-                            "type": "Address"
-                        },
-                        {
-                            "name": "index",
-                            "type": "U64"
-                        },
-                        {
-                            "name": "game_id",
-                            "type": "U64"
-                        },
-                        {
-                            "name": "stake_amount",
-                            "type": "U64"
-                        }
-                    ]
-                },
-                "NewPlayground": {
-                    "abilities": {
-                        "abilities": ["Copy", "Drop"]
-                    },
-                    "typeParameters": [
-                        {
-                            "constraints": {
-                                "abilities": []
-                            },
-                            "isPhantom": true
-                        }
-                    ],
-                    "fields": [
-                        {
-                            "name": "signer",
-                            "type": "Address"
-                        },
-                        {
-                            "name": "playground_object_id",
-                            "type": "Address"
-                        },
-                        {
-                            "name": "index",
-                            "type": "U64"
-                        },
-                        {
-                            "name": "game_config",
-                            "type": {
-                                "Struct": {
-                                    "address": "0x37816d28c34cc0df82655ca97b3f066112a5f3c202cbb4aaa76c8af54e779750",
-                                    "module": "tails_exp",
-                                    "name": "GameConfig",
-                                    "typeArguments": []
-                                }
-                            }
-                        }
-                    ]
-                },
-                "PlayGuess": {
-                    "abilities": {
-                        "abilities": ["Copy", "Drop"]
-                    },
-                    "typeParameters": [],
-                    "fields": [
-                        {
-                            "name": "signer",
-                            "type": "Address"
-                        },
-                        {
-                            "name": "index",
-                            "type": "U64"
-                        },
-                        {
-                            "name": "game_id",
-                            "type": "U64"
-                        },
-                        {
-                            "name": "guess_1",
-                            "type": "U64"
-                        },
-                        {
-                            "name": "larger_than_1",
-                            "type": "Bool"
-                        },
-                        {
-                            "name": "guess_2",
-                            "type": "U64"
-                        },
-                        {
-                            "name": "larger_than_2",
-                            "type": "Bool"
-                        },
-                        {
-                            "name": "vrf_input_1",
-                            "type": {
-                                "Vector": "U8"
-                            }
-                        },
-                        {
-                            "name": "vrf_input_2",
-                            "type": {
-                                "Vector": "U8"
-                            }
-                        }
-                    ]
-                },
-                "Playground": {
-                    "abilities": {
-                        "abilities": ["Store", "Key"]
-                    },
-                    "typeParameters": [],
-                    "fields": [
-                        {
-                            "name": "id",
-                            "type": {
-                                "Struct": {
-                                    "address": "0x2",
-                                    "module": "object",
-                                    "name": "UID",
-                                    "typeArguments": []
-                                }
-                            }
-                        },
-                        {
-                            "name": "house_whitelist",
-                            "type": {
-                                "Vector": "Address"
-                            }
-                        },
-                        {
-                            "name": "public_key",
-                            "type": {
-                                "Vector": "U8"
-                            }
-                        },
-                        {
-                            "name": "num_of_games",
-                            "type": "U64"
-                        },
-                        {
-                            "name": "stake_token",
-                            "type": {
-                                "Struct": {
-                                    "address": "0x1",
-                                    "module": "type_name",
-                                    "name": "TypeName",
-                                    "typeArguments": []
-                                }
-                            }
-                        },
-                        {
-                            "name": "opened_games",
-                            "type": {
-                                "Struct": {
-                                    "address": "0x2",
-                                    "module": "vec_map",
-                                    "name": "VecMap",
-                                    "typeArguments": [
-                                        "Address",
-                                        {
-                                            "Struct": {
-                                                "address": "0x37816d28c34cc0df82655ca97b3f066112a5f3c202cbb4aaa76c8af54e779750",
-                                                "module": "tails_exp",
-                                                "name": "Game",
-                                                "typeArguments": []
-                                            }
-                                        }
-                                    ]
-                                }
-                            }
-                        },
-                        {
-                            "name": "game_config",
-                            "type": {
-                                "Struct": {
-                                    "address": "0x37816d28c34cc0df82655ca97b3f066112a5f3c202cbb4aaa76c8af54e779750",
-                                    "module": "tails_exp",
-                                    "name": "GameConfig",
-                                    "typeArguments": []
-                                }
-                            }
-                        },
-                        {
-                            "name": "is_active",
-                            "type": "Bool"
-                        }
-                    ]
-                },
-                "Registry": {
-                    "abilities": {
-                        "abilities": ["Key"]
-                    },
-                    "typeParameters": [],
-                    "fields": [
-                        {
-                            "name": "id",
-                            "type": {
-                                "Struct": {
-                                    "address": "0x2",
-                                    "module": "object",
-                                    "name": "UID",
-                                    "typeArguments": []
-                                }
-                            }
-                        },
-                        {
-                            "name": "whitelist",
-                            "type": {
-                                "Vector": "Address"
-                            }
-                        },
-                        {
-                            "name": "num_of_playgrounds",
-                            "type": "U64"
-                        },
-                        {
-                            "name": "version",
-                            "type": "U64"
-                        }
-                    ]
-                },
-                "RemovePlaygroundWhitelist": {
-                    "abilities": {
-                        "abilities": ["Copy", "Drop"]
-                    },
-                    "typeParameters": [],
-                    "fields": [
-                        {
-                            "name": "signer",
-                            "type": "Address"
-                        },
-                        {
-                            "name": "removed_whitelist_users",
-                            "type": {
-                                "Vector": "Address"
-                            }
-                        }
-                    ]
-                },
-                "RemoveRegistryWhitelist": {
-                    "abilities": {
-                        "abilities": ["Copy", "Drop"]
-                    },
-                    "typeParameters": [],
-                    "fields": [
-                        {
-                            "name": "signer",
-                            "type": "Address"
-                        },
-                        {
-                            "name": "removed_whitelist_users",
-                            "type": {
-                                "Vector": "Address"
-                            }
-                        }
-                    ]
-                },
-                "ResumePlayground": {
-                    "abilities": {
-                        "abilities": ["Copy", "Drop"]
-                    },
-                    "typeParameters": [],
-                    "fields": [
-                        {
-                            "name": "signer",
-                            "type": "Address"
-                        },
-                        {
-                            "name": "index",
-                            "type": "U64"
-                        }
-                    ]
-                },
-                "SuspendPlayground": {
-                    "abilities": {
-                        "abilities": ["Copy", "Drop"]
-                    },
-                    "typeParameters": [],
-                    "fields": [
-                        {
-                            "name": "signer",
-                            "type": "Address"
-                        },
-                        {
-                            "name": "index",
-                            "type": "U64"
-                        }
-                    ]
-                },
-                "TAILS_EXP": {
-                    "abilities": {
-                        "abilities": ["Drop"]
-                    },
-                    "typeParameters": [],
-                    "fields": [
-                        {
-                            "name": "dummy_field",
-                            "type": "Bool"
-                        }
-                    ]
-                },
-                "UpdateGameConfig": {
-                    "abilities": {
-                        "abilities": ["Copy", "Drop"]
-                    },
-                    "typeParameters": [],
-                    "fields": [
-                        {
-                            "name": "signer",
-                            "type": "Address"
-                        },
-                        {
-                            "name": "index",
-                            "type": "U64"
-                        },
-                        {
-                            "name": "original_max_stake",
-                            "type": "U64"
-                        },
-                        {
-                            "name": "original_min_stake",
-                            "type": "U64"
-                        },
-                        {
-                            "name": "original_stake_lot_size",
-                            "type": "U64"
-                        },
-                        {
-                            "name": "original_base_exp_divisor",
-                            "type": "U64"
-                        },
-                        {
-                            "name": "original_losses_multiplier_bp",
-                            "type": "U64"
-                        },
-                        {
-                            "name": "original_critical_hits_multiplier_bp",
-                            "type": "U64"
-                        },
-                        {
-                            "name": "max_stake",
-                            "type": "U64"
-                        },
-                        {
-                            "name": "min_stake",
-                            "type": "U64"
-                        },
-                        {
-                            "name": "stake_lot_size",
-                            "type": "U64"
-                        },
-                        {
-                            "name": "base_exp_divisor",
-                            "type": "U64"
-                        },
-                        {
-                            "name": "losses_multiplier_bp",
-                            "type": "U64"
-                        },
-                        {
-                            "name": "critical_hits_multiplier_bp",
-                            "type": "U64"
-                        }
-                    ]
-                },
-                "UpdatePublicKey": {
-                    "abilities": {
-                        "abilities": ["Copy", "Drop"]
-                    },
-                    "typeParameters": [],
-                    "fields": [
-                        {
-                            "name": "signer",
-                            "type": "Address"
-                        },
-                        {
-                            "name": "index",
-                            "type": "U64"
-                        },
-                        {
-                            "name": "previous_public_key",
-                            "type": {
-                                "Vector": "U8"
-                            }
-                        },
-                        {
-                            "name": "new_public_key",
-                            "type": {
-                                "Vector": "U8"
-                            }
-                        }
-                    ]
-                },
-                "WithdrawStakes": {
-                    "abilities": {
-                        "abilities": ["Copy", "Drop"]
-                    },
-                    "typeParameters": [],
-                    "fields": [
-                        {
-                            "name": "signer",
-                            "type": "Address"
-                        },
-                        {
-                            "name": "index",
-                            "type": "U64"
-                        },
-                        {
-                            "name": "token_type",
-                            "type": {
-                                "Struct": {
-                                    "address": "0x1",
-                                    "module": "type_name",
-                                    "name": "TypeName",
-                                    "typeArguments": []
-                                }
-                            }
-                        },
-                        {
-                            "name": "amount",
-                            "type": "U64"
-                        }
-                    ]
-                }
+[
+  {
+    "address": "0x37816d28c34cc0df82655ca97b3f066112a5f3c202cbb4aaa76c8af54e779750",
+    "module": {
+      "name": "tails_exp",
+      "datatypes": [
+        {
+          "name": "AddPlaygroundWhitelist",
+          "kind": 1,
+          "abilities": [
+            1,
+            2
+          ],
+          "typeParameters": [],
+          "fields": [
+            {
+              "name": "signer",
+              "position": 0,
+              "type": {
+                "type": 1,
+                "typeParameterInstantiation": []
+              }
             },
-            "exposedFunctions": {
-                "add_playground_whitelist": {
-                    "visibility": "Friend",
-                    "isEntry": true,
-                    "typeParameters": [],
-                    "parameters": [
-                        {
-                            "MutableReference": {
-                                "Struct": {
-                                    "address": "0x37816d28c34cc0df82655ca97b3f066112a5f3c202cbb4aaa76c8af54e779750",
-                                    "module": "tails_exp",
-                                    "name": "Registry",
-                                    "typeArguments": []
-                                }
-                            }
-                        },
-                        "U64",
-                        {
-                            "Vector": "Address"
-                        },
-                        {
-                            "MutableReference": {
-                                "Struct": {
-                                    "address": "0x2",
-                                    "module": "tx_context",
-                                    "name": "TxContext",
-                                    "typeArguments": []
-                                }
-                            }
-                        }
-                    ],
-                    "return": []
-                },
-                "add_registry_whitelist": {
-                    "visibility": "Friend",
-                    "isEntry": true,
-                    "typeParameters": [],
-                    "parameters": [
-                        {
-                            "MutableReference": {
-                                "Struct": {
-                                    "address": "0x37816d28c34cc0df82655ca97b3f066112a5f3c202cbb4aaa76c8af54e779750",
-                                    "module": "tails_exp",
-                                    "name": "Registry",
-                                    "typeArguments": []
-                                }
-                            }
-                        },
-                        {
-                            "Vector": "Address"
-                        },
-                        {
-                            "MutableReference": {
-                                "Struct": {
-                                    "address": "0x2",
-                                    "module": "tx_context",
-                                    "name": "TxContext",
-                                    "typeArguments": []
-                                }
-                            }
-                        }
-                    ],
-                    "return": []
-                },
-                "close_game": {
-                    "visibility": "Friend",
-                    "isEntry": true,
-                    "typeParameters": [
-                        {
-                            "abilities": []
-                        }
-                    ],
-                    "parameters": [
-                        {
-                            "MutableReference": {
-                                "Struct": {
-                                    "address": "0x37816d28c34cc0df82655ca97b3f066112a5f3c202cbb4aaa76c8af54e779750",
-                                    "module": "tails_exp",
-                                    "name": "Registry",
-                                    "typeArguments": []
-                                }
-                            }
-                        },
-                        "U64",
-                        "Address",
-                        {
-                            "MutableReference": {
-                                "Struct": {
-                                    "address": "0x2",
-                                    "module": "tx_context",
-                                    "name": "TxContext",
-                                    "typeArguments": []
-                                }
-                            }
-                        }
-                    ],
-                    "return": []
-                },
-                "close_playground": {
-                    "visibility": "Friend",
-                    "isEntry": true,
-                    "typeParameters": [
-                        {
-                            "abilities": []
-                        }
-                    ],
-                    "parameters": [
-                        {
-                            "MutableReference": {
-                                "Struct": {
-                                    "address": "0x37816d28c34cc0df82655ca97b3f066112a5f3c202cbb4aaa76c8af54e779750",
-                                    "module": "tails_exp",
-                                    "name": "Registry",
-                                    "typeArguments": []
-                                }
-                            }
-                        },
-                        "U64",
-                        "U64",
-                        {
-                            "MutableReference": {
-                                "Struct": {
-                                    "address": "0x2",
-                                    "module": "tx_context",
-                                    "name": "TxContext",
-                                    "typeArguments": []
-                                }
-                            }
-                        }
-                    ],
-                    "return": []
-                },
-                "deposit_stakes_emergency": {
-                    "visibility": "Friend",
-                    "isEntry": true,
-                    "typeParameters": [
-                        {
-                            "abilities": []
-                        }
-                    ],
-                    "parameters": [
-                        {
-                            "MutableReference": {
-                                "Struct": {
-                                    "address": "0x37816d28c34cc0df82655ca97b3f066112a5f3c202cbb4aaa76c8af54e779750",
-                                    "module": "tails_exp",
-                                    "name": "Registry",
-                                    "typeArguments": []
-                                }
-                            }
-                        },
-                        {
-                            "Vector": {
-                                "Struct": {
-                                    "address": "0x2",
-                                    "module": "coin",
-                                    "name": "Coin",
-                                    "typeArguments": [
-                                        {
-                                            "TypeParameter": 0
-                                        }
-                                    ]
-                                }
-                            }
-                        },
-                        "U64",
-                        "U64",
-                        {
-                            "MutableReference": {
-                                "Struct": {
-                                    "address": "0x2",
-                                    "module": "tx_context",
-                                    "name": "TxContext",
-                                    "typeArguments": []
-                                }
-                            }
-                        }
-                    ],
-                    "return": []
-                },
-                "draw": {
-                    "visibility": "Friend",
-                    "isEntry": true,
-                    "typeParameters": [],
-                    "parameters": [
-                        {
-                            "MutableReference": {
-                                "Struct": {
-                                    "address": "0x37816d28c34cc0df82655ca97b3f066112a5f3c202cbb4aaa76c8af54e779750",
-                                    "module": "tails_exp",
-                                    "name": "Registry",
-                                    "typeArguments": []
-                                }
-                            }
-                        },
-                        "U64",
-                        "Address",
-                        {
-                            "Vector": "U8"
-                        },
-                        {
-                            "Vector": "U8"
-                        },
-                        {
-                            "MutableReference": {
-                                "Struct": {
-                                    "address": "0x2",
-                                    "module": "tx_context",
-                                    "name": "TxContext",
-                                    "typeArguments": []
-                                }
-                            }
-                        }
-                    ],
-                    "return": []
-                },
-                "merge_exp_tokens": {
-                    "visibility": "Friend",
-                    "isEntry": true,
-                    "typeParameters": [],
-                    "parameters": [
-                        {
-                            "Vector": {
-                                "Struct": {
-                                    "address": "0x2",
-                                    "module": "coin",
-                                    "name": "Coin",
-                                    "typeArguments": [
-                                        {
-                                            "Struct": {
-                                                "address": "0x37816d28c34cc0df82655ca97b3f066112a5f3c202cbb4aaa76c8af54e779750",
-                                                "module": "tails_exp",
-                                                "name": "TAILS_EXP",
-                                                "typeArguments": []
-                                            }
-                                        }
-                                    ]
-                                }
-                            }
-                        },
-                        {
-                            "MutableReference": {
-                                "Struct": {
-                                    "address": "0x2",
-                                    "module": "tx_context",
-                                    "name": "TxContext",
-                                    "typeArguments": []
-                                }
-                            }
-                        }
-                    ],
-                    "return": []
-                },
-                "new_game": {
-                    "visibility": "Friend",
-                    "isEntry": true,
-                    "typeParameters": [
-                        {
-                            "abilities": []
-                        }
-                    ],
-                    "parameters": [
-                        {
-                            "MutableReference": {
-                                "Struct": {
-                                    "address": "0x37816d28c34cc0df82655ca97b3f066112a5f3c202cbb4aaa76c8af54e779750",
-                                    "module": "tails_exp",
-                                    "name": "Registry",
-                                    "typeArguments": []
-                                }
-                            }
-                        },
-                        "U64",
-                        {
-                            "Vector": {
-                                "Struct": {
-                                    "address": "0x2",
-                                    "module": "coin",
-                                    "name": "Coin",
-                                    "typeArguments": [
-                                        {
-                                            "TypeParameter": 0
-                                        }
-                                    ]
-                                }
-                            }
-                        },
-                        "U64",
-                        {
-                            "MutableReference": {
-                                "Struct": {
-                                    "address": "0x2",
-                                    "module": "tx_context",
-                                    "name": "TxContext",
-                                    "typeArguments": []
-                                }
-                            }
-                        }
-                    ],
-                    "return": []
-                },
-                "new_playground": {
-                    "visibility": "Friend",
-                    "isEntry": true,
-                    "typeParameters": [
-                        {
-                            "abilities": []
-                        }
-                    ],
-                    "parameters": [
-                        {
-                            "MutableReference": {
-                                "Struct": {
-                                    "address": "0x37816d28c34cc0df82655ca97b3f066112a5f3c202cbb4aaa76c8af54e779750",
-                                    "module": "tails_exp",
-                                    "name": "Registry",
-                                    "typeArguments": []
-                                }
-                            }
-                        },
-                        {
-                            "Vector": "U8"
-                        },
-                        "U64",
-                        "U64",
-                        "U64",
-                        "U64",
-                        "U64",
-                        "U64",
-                        {
-                            "MutableReference": {
-                                "Struct": {
-                                    "address": "0x2",
-                                    "module": "tx_context",
-                                    "name": "TxContext",
-                                    "typeArguments": []
-                                }
-                            }
-                        }
-                    ],
-                    "return": []
-                },
-                "odds": {
-                    "visibility": "Friend",
-                    "isEntry": false,
-                    "typeParameters": [],
-                    "parameters": ["U64", "Bool", "U64", "U64", "U64"],
-                    "return": ["U64"]
-                },
-                "play_guess": {
-                    "visibility": "Friend",
-                    "isEntry": true,
-                    "typeParameters": [],
-                    "parameters": [
-                        {
-                            "MutableReference": {
-                                "Struct": {
-                                    "address": "0x37816d28c34cc0df82655ca97b3f066112a5f3c202cbb4aaa76c8af54e779750",
-                                    "module": "tails_exp",
-                                    "name": "Registry",
-                                    "typeArguments": []
-                                }
-                            }
-                        },
-                        "U64",
-                        "U64",
-                        "Bool",
-                        "U64",
-                        "Bool",
-                        {
-                            "MutableReference": {
-                                "Struct": {
-                                    "address": "0x2",
-                                    "module": "tx_context",
-                                    "name": "TxContext",
-                                    "typeArguments": []
-                                }
-                            }
-                        }
-                    ],
-                    "return": []
-                },
-                "remove_playground_whitelist": {
-                    "visibility": "Friend",
-                    "isEntry": true,
-                    "typeParameters": [],
-                    "parameters": [
-                        {
-                            "MutableReference": {
-                                "Struct": {
-                                    "address": "0x37816d28c34cc0df82655ca97b3f066112a5f3c202cbb4aaa76c8af54e779750",
-                                    "module": "tails_exp",
-                                    "name": "Registry",
-                                    "typeArguments": []
-                                }
-                            }
-                        },
-                        "U64",
-                        {
-                            "Vector": "Address"
-                        },
-                        {
-                            "MutableReference": {
-                                "Struct": {
-                                    "address": "0x2",
-                                    "module": "tx_context",
-                                    "name": "TxContext",
-                                    "typeArguments": []
-                                }
-                            }
-                        }
-                    ],
-                    "return": []
-                },
-                "remove_registry_whitelist": {
-                    "visibility": "Friend",
-                    "isEntry": true,
-                    "typeParameters": [],
-                    "parameters": [
-                        {
-                            "MutableReference": {
-                                "Struct": {
-                                    "address": "0x37816d28c34cc0df82655ca97b3f066112a5f3c202cbb4aaa76c8af54e779750",
-                                    "module": "tails_exp",
-                                    "name": "Registry",
-                                    "typeArguments": []
-                                }
-                            }
-                        },
-                        {
-                            "Vector": "Address"
-                        },
-                        {
-                            "MutableReference": {
-                                "Struct": {
-                                    "address": "0x2",
-                                    "module": "tx_context",
-                                    "name": "TxContext",
-                                    "typeArguments": []
-                                }
-                            }
-                        }
-                    ],
-                    "return": []
-                },
-                "resume_playground": {
-                    "visibility": "Friend",
-                    "isEntry": true,
-                    "typeParameters": [],
-                    "parameters": [
-                        {
-                            "MutableReference": {
-                                "Struct": {
-                                    "address": "0x37816d28c34cc0df82655ca97b3f066112a5f3c202cbb4aaa76c8af54e779750",
-                                    "module": "tails_exp",
-                                    "name": "Registry",
-                                    "typeArguments": []
-                                }
-                            }
-                        },
-                        "U64",
-                        {
-                            "MutableReference": {
-                                "Struct": {
-                                    "address": "0x2",
-                                    "module": "tx_context",
-                                    "name": "TxContext",
-                                    "typeArguments": []
-                                }
-                            }
-                        }
-                    ],
-                    "return": []
-                },
-                "suspend_playground": {
-                    "visibility": "Friend",
-                    "isEntry": true,
-                    "typeParameters": [],
-                    "parameters": [
-                        {
-                            "MutableReference": {
-                                "Struct": {
-                                    "address": "0x37816d28c34cc0df82655ca97b3f066112a5f3c202cbb4aaa76c8af54e779750",
-                                    "module": "tails_exp",
-                                    "name": "Registry",
-                                    "typeArguments": []
-                                }
-                            }
-                        },
-                        "U64",
-                        {
-                            "MutableReference": {
-                                "Struct": {
-                                    "address": "0x2",
-                                    "module": "tx_context",
-                                    "name": "TxContext",
-                                    "typeArguments": []
-                                }
-                            }
-                        }
-                    ],
-                    "return": []
-                },
-                "update_game_config": {
-                    "visibility": "Friend",
-                    "isEntry": true,
-                    "typeParameters": [],
-                    "parameters": [
-                        {
-                            "MutableReference": {
-                                "Struct": {
-                                    "address": "0x37816d28c34cc0df82655ca97b3f066112a5f3c202cbb4aaa76c8af54e779750",
-                                    "module": "tails_exp",
-                                    "name": "Registry",
-                                    "typeArguments": []
-                                }
-                            }
-                        },
-                        "U64",
-                        "U64",
-                        "U64",
-                        "U64",
-                        "U64",
-                        "U64",
-                        "U64",
-                        {
-                            "MutableReference": {
-                                "Struct": {
-                                    "address": "0x2",
-                                    "module": "tx_context",
-                                    "name": "TxContext",
-                                    "typeArguments": []
-                                }
-                            }
-                        }
-                    ],
-                    "return": []
-                },
-                "update_public_key": {
-                    "visibility": "Friend",
-                    "isEntry": true,
-                    "typeParameters": [],
-                    "parameters": [
-                        {
-                            "MutableReference": {
-                                "Struct": {
-                                    "address": "0x37816d28c34cc0df82655ca97b3f066112a5f3c202cbb4aaa76c8af54e779750",
-                                    "module": "tails_exp",
-                                    "name": "Registry",
-                                    "typeArguments": []
-                                }
-                            }
-                        },
-                        "U64",
-                        {
-                            "Vector": "U8"
-                        },
-                        {
-                            "MutableReference": {
-                                "Struct": {
-                                    "address": "0x2",
-                                    "module": "tx_context",
-                                    "name": "TxContext",
-                                    "typeArguments": []
-                                }
-                            }
-                        }
-                    ],
-                    "return": []
-                },
-                "vrf_input": {
-                    "visibility": "Friend",
-                    "isEntry": false,
-                    "typeParameters": [],
-                    "parameters": [
-                        {
-                            "Reference": {
-                                "Struct": {
-                                    "address": "0x37816d28c34cc0df82655ca97b3f066112a5f3c202cbb4aaa76c8af54e779750",
-                                    "module": "tails_exp",
-                                    "name": "Registry",
-                                    "typeArguments": []
-                                }
-                            }
-                        },
-                        "U64"
-                    ],
-                    "return": [
-                        {
-                            "Vector": "U8"
-                        },
-                        {
-                            "Vector": "U8"
-                        }
-                    ]
-                },
-                "vrf_input_from_player": {
-                    "visibility": "Friend",
-                    "isEntry": false,
-                    "typeParameters": [],
-                    "parameters": [
-                        {
-                            "Reference": {
-                                "Struct": {
-                                    "address": "0x37816d28c34cc0df82655ca97b3f066112a5f3c202cbb4aaa76c8af54e779750",
-                                    "module": "tails_exp",
-                                    "name": "Registry",
-                                    "typeArguments": []
-                                }
-                            }
-                        },
-                        "U64",
-                        "Address"
-                    ],
-                    "return": [
-                        {
-                            "Vector": "U8"
-                        },
-                        {
-                            "Vector": "U8"
-                        }
-                    ]
-                },
-                "withdraw_stakes": {
-                    "visibility": "Friend",
-                    "isEntry": true,
-                    "typeParameters": [
-                        {
-                            "abilities": []
-                        }
-                    ],
-                    "parameters": [
-                        {
-                            "MutableReference": {
-                                "Struct": {
-                                    "address": "0x37816d28c34cc0df82655ca97b3f066112a5f3c202cbb4aaa76c8af54e779750",
-                                    "module": "tails_exp",
-                                    "name": "Registry",
-                                    "typeArguments": []
-                                }
-                            }
-                        },
-                        "U64",
-                        {
-                            "MutableReference": {
-                                "Struct": {
-                                    "address": "0x2",
-                                    "module": "tx_context",
-                                    "name": "TxContext",
-                                    "typeArguments": []
-                                }
-                            }
-                        }
-                    ],
-                    "return": []
-                }
+            {
+              "name": "new_whitelist_users",
+              "position": 1,
+              "type": {
+                "type": 9,
+                "typeParameterInstantiation": [
+                  {
+                    "type": 1,
+                    "typeParameterInstantiation": []
+                  }
+                ]
+              }
             }
+          ],
+          "variants": []
         },
-        "utils": {
-            "fileFormatVersion": 6,
-            "address": "0x37816d28c34cc0df82655ca97b3f066112a5f3c202cbb4aaa76c8af54e779750",
-            "name": "utils",
-            "friends": [],
-            "structs": {},
-            "exposedFunctions": {
-                "extract_balance": {
-                    "visibility": "Public",
-                    "isEntry": false,
-                    "typeParameters": [
-                        {
-                            "abilities": []
-                        }
-                    ],
-                    "parameters": [
-                        {
-                            "Vector": {
-                                "Struct": {
-                                    "address": "0x2",
-                                    "module": "coin",
-                                    "name": "Coin",
-                                    "typeArguments": [
-                                        {
-                                            "TypeParameter": 0
-                                        }
-                                    ]
-                                }
-                            }
-                        },
-                        "U64",
-                        {
-                            "Reference": {
-                                "Struct": {
-                                    "address": "0x2",
-                                    "module": "tx_context",
-                                    "name": "TxContext",
-                                    "typeArguments": []
-                                }
-                            }
-                        }
-                    ],
-                    "return": [
-                        {
-                            "Struct": {
-                                "address": "0x2",
-                                "module": "balance",
-                                "name": "Balance",
-                                "typeArguments": [
-                                    {
-                                        "TypeParameter": 0
-                                    }
-                                ]
-                            }
-                        }
-                    ]
-                },
-                "multiplier": {
-                    "visibility": "Public",
-                    "isEntry": false,
-                    "typeParameters": [],
-                    "parameters": ["U64"],
-                    "return": ["U64"]
-                }
+        {
+          "name": "AddRegistryWhitelist",
+          "kind": 1,
+          "abilities": [
+            1,
+            2
+          ],
+          "typeParameters": [],
+          "fields": [
+            {
+              "name": "signer",
+              "position": 0,
+              "type": {
+                "type": 1,
+                "typeParameterInstantiation": []
+              }
+            },
+            {
+              "name": "new_whitelist_users",
+              "position": 1,
+              "type": {
+                "type": 9,
+                "typeParameterInstantiation": [
+                  {
+                    "type": 1,
+                    "typeParameterInstantiation": []
+                  }
+                ]
+              }
             }
+          ],
+          "variants": []
+        },
+        {
+          "name": "CloseGame",
+          "kind": 1,
+          "abilities": [
+            1,
+            2
+          ],
+          "typeParameters": [],
+          "fields": [
+            {
+              "name": "signer",
+              "position": 0,
+              "type": {
+                "type": 1,
+                "typeParameterInstantiation": []
+              }
+            },
+            {
+              "name": "index",
+              "position": 1,
+              "type": {
+                "type": 6,
+                "typeParameterInstantiation": []
+              }
+            },
+            {
+              "name": "game_id",
+              "position": 2,
+              "type": {
+                "type": 6,
+                "typeParameterInstantiation": []
+              }
+            },
+            {
+              "name": "player",
+              "position": 3,
+              "type": {
+                "type": 1,
+                "typeParameterInstantiation": []
+              }
+            },
+            {
+              "name": "refund_amount",
+              "position": 4,
+              "type": {
+                "type": 6,
+                "typeParameterInstantiation": []
+              }
+            }
+          ],
+          "variants": []
+        },
+        {
+          "name": "ClosePlayground",
+          "kind": 1,
+          "abilities": [
+            1,
+            2
+          ],
+          "typeParameters": [],
+          "fields": [
+            {
+              "name": "signer",
+              "position": 0,
+              "type": {
+                "type": 1,
+                "typeParameterInstantiation": []
+              }
+            },
+            {
+              "name": "index",
+              "position": 1,
+              "type": {
+                "type": 6,
+                "typeParameterInstantiation": []
+              }
+            },
+            {
+              "name": "num_of_existing_games",
+              "position": 2,
+              "type": {
+                "type": 6,
+                "typeParameterInstantiation": []
+              }
+            },
+            {
+              "name": "done",
+              "position": 3,
+              "type": {
+                "type": 2,
+                "typeParameterInstantiation": []
+              }
+            }
+          ],
+          "variants": []
+        },
+        {
+          "name": "Counter",
+          "kind": 1,
+          "abilities": [
+            3,
+            4
+          ],
+          "typeParameters": [],
+          "fields": [
+            {
+              "name": "id",
+              "position": 0,
+              "type": {
+                "type": 10,
+                "typeName": "0x2::object::UID",
+                "typeParameterInstantiation": []
+              }
+            },
+            {
+              "name": "count",
+              "position": 1,
+              "type": {
+                "type": 6,
+                "typeParameterInstantiation": []
+              }
+            }
+          ],
+          "variants": []
+        },
+        {
+          "name": "DepositStakesEmergency",
+          "kind": 1,
+          "abilities": [
+            1,
+            2
+          ],
+          "typeParameters": [],
+          "fields": [
+            {
+              "name": "signer",
+              "position": 0,
+              "type": {
+                "type": 1,
+                "typeParameterInstantiation": []
+              }
+            },
+            {
+              "name": "index",
+              "position": 1,
+              "type": {
+                "type": 6,
+                "typeParameterInstantiation": []
+              }
+            },
+            {
+              "name": "token_type",
+              "position": 2,
+              "type": {
+                "type": 10,
+                "typeName": "0x1::type_name::TypeName",
+                "typeParameterInstantiation": []
+              }
+            },
+            {
+              "name": "amount",
+              "position": 3,
+              "type": {
+                "type": 6,
+                "typeParameterInstantiation": []
+              }
+            },
+            {
+              "name": "stakes_before",
+              "position": 4,
+              "type": {
+                "type": 6,
+                "typeParameterInstantiation": []
+              }
+            },
+            {
+              "name": "stakes_after",
+              "position": 5,
+              "type": {
+                "type": 6,
+                "typeParameterInstantiation": []
+              }
+            }
+          ],
+          "variants": []
+        },
+        {
+          "name": "Draw",
+          "kind": 1,
+          "abilities": [
+            1,
+            2
+          ],
+          "typeParameters": [],
+          "fields": [
+            {
+              "name": "signer",
+              "position": 0,
+              "type": {
+                "type": 1,
+                "typeParameterInstantiation": []
+              }
+            },
+            {
+              "name": "index",
+              "position": 1,
+              "type": {
+                "type": 6,
+                "typeParameterInstantiation": []
+              }
+            },
+            {
+              "name": "game_id",
+              "position": 2,
+              "type": {
+                "type": 6,
+                "typeParameterInstantiation": []
+              }
+            },
+            {
+              "name": "public_key",
+              "position": 3,
+              "type": {
+                "type": 9,
+                "typeParameterInstantiation": [
+                  {
+                    "type": 3,
+                    "typeParameterInstantiation": []
+                  }
+                ]
+              }
+            },
+            {
+              "name": "signature_1",
+              "position": 4,
+              "type": {
+                "type": 9,
+                "typeParameterInstantiation": [
+                  {
+                    "type": 3,
+                    "typeParameterInstantiation": []
+                  }
+                ]
+              }
+            },
+            {
+              "name": "signature_2",
+              "position": 5,
+              "type": {
+                "type": 9,
+                "typeParameterInstantiation": [
+                  {
+                    "type": 3,
+                    "typeParameterInstantiation": []
+                  }
+                ]
+              }
+            },
+            {
+              "name": "player",
+              "position": 6,
+              "type": {
+                "type": 1,
+                "typeParameterInstantiation": []
+              }
+            },
+            {
+              "name": "guess_1",
+              "position": 7,
+              "type": {
+                "type": 6,
+                "typeParameterInstantiation": []
+              }
+            },
+            {
+              "name": "larger_than_1",
+              "position": 8,
+              "type": {
+                "type": 2,
+                "typeParameterInstantiation": []
+              }
+            },
+            {
+              "name": "answer_1",
+              "position": 9,
+              "type": {
+                "type": 6,
+                "typeParameterInstantiation": []
+              }
+            },
+            {
+              "name": "result_1",
+              "position": 10,
+              "type": {
+                "type": 6,
+                "typeParameterInstantiation": []
+              }
+            },
+            {
+              "name": "guess_2",
+              "position": 11,
+              "type": {
+                "type": 6,
+                "typeParameterInstantiation": []
+              }
+            },
+            {
+              "name": "larger_than_2",
+              "position": 12,
+              "type": {
+                "type": 2,
+                "typeParameterInstantiation": []
+              }
+            },
+            {
+              "name": "answer_2",
+              "position": 13,
+              "type": {
+                "type": 6,
+                "typeParameterInstantiation": []
+              }
+            },
+            {
+              "name": "result_2",
+              "position": 14,
+              "type": {
+                "type": 6,
+                "typeParameterInstantiation": []
+              }
+            },
+            {
+              "name": "stake_amount",
+              "position": 15,
+              "type": {
+                "type": 6,
+                "typeParameterInstantiation": []
+              }
+            },
+            {
+              "name": "exp",
+              "position": 16,
+              "type": {
+                "type": 6,
+                "typeParameterInstantiation": []
+              }
+            }
+          ],
+          "variants": []
+        },
+        {
+          "name": "Game",
+          "kind": 1,
+          "abilities": [
+            3
+          ],
+          "typeParameters": [],
+          "fields": [
+            {
+              "name": "game_id",
+              "position": 0,
+              "type": {
+                "type": 6,
+                "typeParameterInstantiation": []
+              }
+            },
+            {
+              "name": "player",
+              "position": 1,
+              "type": {
+                "type": 1,
+                "typeParameterInstantiation": []
+              }
+            },
+            {
+              "name": "stake_amount",
+              "position": 2,
+              "type": {
+                "type": 6,
+                "typeParameterInstantiation": []
+              }
+            },
+            {
+              "name": "guess_1",
+              "position": 3,
+              "type": {
+                "type": 10,
+                "typeName": "0x1::option::Option",
+                "typeParameterInstantiation": [
+                  {
+                    "type": 6,
+                    "typeParameterInstantiation": []
+                  }
+                ]
+              }
+            },
+            {
+              "name": "larger_than_1",
+              "position": 4,
+              "type": {
+                "type": 10,
+                "typeName": "0x1::option::Option",
+                "typeParameterInstantiation": [
+                  {
+                    "type": 2,
+                    "typeParameterInstantiation": []
+                  }
+                ]
+              }
+            },
+            {
+              "name": "vrf_input_1",
+              "position": 5,
+              "type": {
+                "type": 10,
+                "typeName": "0x1::option::Option",
+                "typeParameterInstantiation": [
+                  {
+                    "type": 9,
+                    "typeParameterInstantiation": [
+                      {
+                        "type": 3,
+                        "typeParameterInstantiation": []
+                      }
+                    ]
+                  }
+                ]
+              }
+            },
+            {
+              "name": "guess_2",
+              "position": 6,
+              "type": {
+                "type": 10,
+                "typeName": "0x1::option::Option",
+                "typeParameterInstantiation": [
+                  {
+                    "type": 6,
+                    "typeParameterInstantiation": []
+                  }
+                ]
+              }
+            },
+            {
+              "name": "larger_than_2",
+              "position": 7,
+              "type": {
+                "type": 10,
+                "typeName": "0x1::option::Option",
+                "typeParameterInstantiation": [
+                  {
+                    "type": 2,
+                    "typeParameterInstantiation": []
+                  }
+                ]
+              }
+            },
+            {
+              "name": "vrf_input_2",
+              "position": 8,
+              "type": {
+                "type": 10,
+                "typeName": "0x1::option::Option",
+                "typeParameterInstantiation": [
+                  {
+                    "type": 9,
+                    "typeParameterInstantiation": [
+                      {
+                        "type": 3,
+                        "typeParameterInstantiation": []
+                      }
+                    ]
+                  }
+                ]
+              }
+            }
+          ],
+          "variants": []
+        },
+        {
+          "name": "GameConfig",
+          "kind": 1,
+          "abilities": [
+            1,
+            2,
+            3
+          ],
+          "typeParameters": [],
+          "fields": [
+            {
+              "name": "max_stake",
+              "position": 0,
+              "type": {
+                "type": 6,
+                "typeParameterInstantiation": []
+              }
+            },
+            {
+              "name": "min_stake",
+              "position": 1,
+              "type": {
+                "type": 6,
+                "typeParameterInstantiation": []
+              }
+            },
+            {
+              "name": "stake_lot_size",
+              "position": 2,
+              "type": {
+                "type": 6,
+                "typeParameterInstantiation": []
+              }
+            },
+            {
+              "name": "base_exp_divisor",
+              "position": 3,
+              "type": {
+                "type": 6,
+                "typeParameterInstantiation": []
+              }
+            },
+            {
+              "name": "losses_multiplier_bp",
+              "position": 4,
+              "type": {
+                "type": 6,
+                "typeParameterInstantiation": []
+              }
+            },
+            {
+              "name": "critical_hits_multiplier_bp",
+              "position": 5,
+              "type": {
+                "type": 6,
+                "typeParameterInstantiation": []
+              }
+            }
+          ],
+          "variants": []
+        },
+        {
+          "name": "NewGame",
+          "kind": 1,
+          "abilities": [
+            1,
+            2
+          ],
+          "typeParameters": [
+            {
+              "constraints": []
+            }
+          ],
+          "fields": [
+            {
+              "name": "signer",
+              "position": 0,
+              "type": {
+                "type": 1,
+                "typeParameterInstantiation": []
+              }
+            },
+            {
+              "name": "index",
+              "position": 1,
+              "type": {
+                "type": 6,
+                "typeParameterInstantiation": []
+              }
+            },
+            {
+              "name": "game_id",
+              "position": 2,
+              "type": {
+                "type": 6,
+                "typeParameterInstantiation": []
+              }
+            },
+            {
+              "name": "stake_amount",
+              "position": 3,
+              "type": {
+                "type": 6,
+                "typeParameterInstantiation": []
+              }
+            }
+          ],
+          "variants": []
+        },
+        {
+          "name": "NewPlayground",
+          "kind": 1,
+          "abilities": [
+            1,
+            2
+          ],
+          "typeParameters": [
+            {
+              "constraints": []
+            }
+          ],
+          "fields": [
+            {
+              "name": "signer",
+              "position": 0,
+              "type": {
+                "type": 1,
+                "typeParameterInstantiation": []
+              }
+            },
+            {
+              "name": "playground_object_id",
+              "position": 1,
+              "type": {
+                "type": 1,
+                "typeParameterInstantiation": []
+              }
+            },
+            {
+              "name": "index",
+              "position": 2,
+              "type": {
+                "type": 6,
+                "typeParameterInstantiation": []
+              }
+            },
+            {
+              "name": "game_config",
+              "position": 3,
+              "type": {
+                "type": 10,
+                "typeName": "0x37816d28c34cc0df82655ca97b3f066112a5f3c202cbb4aaa76c8af54e779750::tails_exp::GameConfig",
+                "typeParameterInstantiation": []
+              }
+            }
+          ],
+          "variants": []
+        },
+        {
+          "name": "PlayGuess",
+          "kind": 1,
+          "abilities": [
+            1,
+            2
+          ],
+          "typeParameters": [],
+          "fields": [
+            {
+              "name": "signer",
+              "position": 0,
+              "type": {
+                "type": 1,
+                "typeParameterInstantiation": []
+              }
+            },
+            {
+              "name": "index",
+              "position": 1,
+              "type": {
+                "type": 6,
+                "typeParameterInstantiation": []
+              }
+            },
+            {
+              "name": "game_id",
+              "position": 2,
+              "type": {
+                "type": 6,
+                "typeParameterInstantiation": []
+              }
+            },
+            {
+              "name": "guess_1",
+              "position": 3,
+              "type": {
+                "type": 6,
+                "typeParameterInstantiation": []
+              }
+            },
+            {
+              "name": "larger_than_1",
+              "position": 4,
+              "type": {
+                "type": 2,
+                "typeParameterInstantiation": []
+              }
+            },
+            {
+              "name": "guess_2",
+              "position": 5,
+              "type": {
+                "type": 6,
+                "typeParameterInstantiation": []
+              }
+            },
+            {
+              "name": "larger_than_2",
+              "position": 6,
+              "type": {
+                "type": 2,
+                "typeParameterInstantiation": []
+              }
+            },
+            {
+              "name": "vrf_input_1",
+              "position": 7,
+              "type": {
+                "type": 9,
+                "typeParameterInstantiation": [
+                  {
+                    "type": 3,
+                    "typeParameterInstantiation": []
+                  }
+                ]
+              }
+            },
+            {
+              "name": "vrf_input_2",
+              "position": 8,
+              "type": {
+                "type": 9,
+                "typeParameterInstantiation": [
+                  {
+                    "type": 3,
+                    "typeParameterInstantiation": []
+                  }
+                ]
+              }
+            }
+          ],
+          "variants": []
+        },
+        {
+          "name": "Playground",
+          "kind": 1,
+          "abilities": [
+            3,
+            4
+          ],
+          "typeParameters": [],
+          "fields": [
+            {
+              "name": "id",
+              "position": 0,
+              "type": {
+                "type": 10,
+                "typeName": "0x2::object::UID",
+                "typeParameterInstantiation": []
+              }
+            },
+            {
+              "name": "house_whitelist",
+              "position": 1,
+              "type": {
+                "type": 9,
+                "typeParameterInstantiation": [
+                  {
+                    "type": 1,
+                    "typeParameterInstantiation": []
+                  }
+                ]
+              }
+            },
+            {
+              "name": "public_key",
+              "position": 2,
+              "type": {
+                "type": 9,
+                "typeParameterInstantiation": [
+                  {
+                    "type": 3,
+                    "typeParameterInstantiation": []
+                  }
+                ]
+              }
+            },
+            {
+              "name": "num_of_games",
+              "position": 3,
+              "type": {
+                "type": 6,
+                "typeParameterInstantiation": []
+              }
+            },
+            {
+              "name": "stake_token",
+              "position": 4,
+              "type": {
+                "type": 10,
+                "typeName": "0x1::type_name::TypeName",
+                "typeParameterInstantiation": []
+              }
+            },
+            {
+              "name": "opened_games",
+              "position": 5,
+              "type": {
+                "type": 10,
+                "typeName": "0x2::vec_map::VecMap",
+                "typeParameterInstantiation": [
+                  {
+                    "type": 1,
+                    "typeParameterInstantiation": []
+                  },
+                  {
+                    "type": 10,
+                    "typeName": "0x37816d28c34cc0df82655ca97b3f066112a5f3c202cbb4aaa76c8af54e779750::tails_exp::Game",
+                    "typeParameterInstantiation": []
+                  }
+                ]
+              }
+            },
+            {
+              "name": "game_config",
+              "position": 6,
+              "type": {
+                "type": 10,
+                "typeName": "0x37816d28c34cc0df82655ca97b3f066112a5f3c202cbb4aaa76c8af54e779750::tails_exp::GameConfig",
+                "typeParameterInstantiation": []
+              }
+            },
+            {
+              "name": "is_active",
+              "position": 7,
+              "type": {
+                "type": 2,
+                "typeParameterInstantiation": []
+              }
+            }
+          ],
+          "variants": []
+        },
+        {
+          "name": "Registry",
+          "kind": 1,
+          "abilities": [
+            4
+          ],
+          "typeParameters": [],
+          "fields": [
+            {
+              "name": "id",
+              "position": 0,
+              "type": {
+                "type": 10,
+                "typeName": "0x2::object::UID",
+                "typeParameterInstantiation": []
+              }
+            },
+            {
+              "name": "whitelist",
+              "position": 1,
+              "type": {
+                "type": 9,
+                "typeParameterInstantiation": [
+                  {
+                    "type": 1,
+                    "typeParameterInstantiation": []
+                  }
+                ]
+              }
+            },
+            {
+              "name": "num_of_playgrounds",
+              "position": 2,
+              "type": {
+                "type": 6,
+                "typeParameterInstantiation": []
+              }
+            },
+            {
+              "name": "version",
+              "position": 3,
+              "type": {
+                "type": 6,
+                "typeParameterInstantiation": []
+              }
+            }
+          ],
+          "variants": []
+        },
+        {
+          "name": "RemovePlaygroundWhitelist",
+          "kind": 1,
+          "abilities": [
+            1,
+            2
+          ],
+          "typeParameters": [],
+          "fields": [
+            {
+              "name": "signer",
+              "position": 0,
+              "type": {
+                "type": 1,
+                "typeParameterInstantiation": []
+              }
+            },
+            {
+              "name": "removed_whitelist_users",
+              "position": 1,
+              "type": {
+                "type": 9,
+                "typeParameterInstantiation": [
+                  {
+                    "type": 1,
+                    "typeParameterInstantiation": []
+                  }
+                ]
+              }
+            }
+          ],
+          "variants": []
+        },
+        {
+          "name": "RemoveRegistryWhitelist",
+          "kind": 1,
+          "abilities": [
+            1,
+            2
+          ],
+          "typeParameters": [],
+          "fields": [
+            {
+              "name": "signer",
+              "position": 0,
+              "type": {
+                "type": 1,
+                "typeParameterInstantiation": []
+              }
+            },
+            {
+              "name": "removed_whitelist_users",
+              "position": 1,
+              "type": {
+                "type": 9,
+                "typeParameterInstantiation": [
+                  {
+                    "type": 1,
+                    "typeParameterInstantiation": []
+                  }
+                ]
+              }
+            }
+          ],
+          "variants": []
+        },
+        {
+          "name": "ResumePlayground",
+          "kind": 1,
+          "abilities": [
+            1,
+            2
+          ],
+          "typeParameters": [],
+          "fields": [
+            {
+              "name": "signer",
+              "position": 0,
+              "type": {
+                "type": 1,
+                "typeParameterInstantiation": []
+              }
+            },
+            {
+              "name": "index",
+              "position": 1,
+              "type": {
+                "type": 6,
+                "typeParameterInstantiation": []
+              }
+            }
+          ],
+          "variants": []
+        },
+        {
+          "name": "SuspendPlayground",
+          "kind": 1,
+          "abilities": [
+            1,
+            2
+          ],
+          "typeParameters": [],
+          "fields": [
+            {
+              "name": "signer",
+              "position": 0,
+              "type": {
+                "type": 1,
+                "typeParameterInstantiation": []
+              }
+            },
+            {
+              "name": "index",
+              "position": 1,
+              "type": {
+                "type": 6,
+                "typeParameterInstantiation": []
+              }
+            }
+          ],
+          "variants": []
+        },
+        {
+          "name": "TAILS_EXP",
+          "kind": 1,
+          "abilities": [
+            2
+          ],
+          "typeParameters": [],
+          "fields": [
+            {
+              "name": "dummy_field",
+              "position": 0,
+              "type": {
+                "type": 2,
+                "typeParameterInstantiation": []
+              }
+            }
+          ],
+          "variants": []
+        },
+        {
+          "name": "UpdateGameConfig",
+          "kind": 1,
+          "abilities": [
+            1,
+            2
+          ],
+          "typeParameters": [],
+          "fields": [
+            {
+              "name": "signer",
+              "position": 0,
+              "type": {
+                "type": 1,
+                "typeParameterInstantiation": []
+              }
+            },
+            {
+              "name": "index",
+              "position": 1,
+              "type": {
+                "type": 6,
+                "typeParameterInstantiation": []
+              }
+            },
+            {
+              "name": "original_max_stake",
+              "position": 2,
+              "type": {
+                "type": 6,
+                "typeParameterInstantiation": []
+              }
+            },
+            {
+              "name": "original_min_stake",
+              "position": 3,
+              "type": {
+                "type": 6,
+                "typeParameterInstantiation": []
+              }
+            },
+            {
+              "name": "original_stake_lot_size",
+              "position": 4,
+              "type": {
+                "type": 6,
+                "typeParameterInstantiation": []
+              }
+            },
+            {
+              "name": "original_base_exp_divisor",
+              "position": 5,
+              "type": {
+                "type": 6,
+                "typeParameterInstantiation": []
+              }
+            },
+            {
+              "name": "original_losses_multiplier_bp",
+              "position": 6,
+              "type": {
+                "type": 6,
+                "typeParameterInstantiation": []
+              }
+            },
+            {
+              "name": "original_critical_hits_multiplier_bp",
+              "position": 7,
+              "type": {
+                "type": 6,
+                "typeParameterInstantiation": []
+              }
+            },
+            {
+              "name": "max_stake",
+              "position": 8,
+              "type": {
+                "type": 6,
+                "typeParameterInstantiation": []
+              }
+            },
+            {
+              "name": "min_stake",
+              "position": 9,
+              "type": {
+                "type": 6,
+                "typeParameterInstantiation": []
+              }
+            },
+            {
+              "name": "stake_lot_size",
+              "position": 10,
+              "type": {
+                "type": 6,
+                "typeParameterInstantiation": []
+              }
+            },
+            {
+              "name": "base_exp_divisor",
+              "position": 11,
+              "type": {
+                "type": 6,
+                "typeParameterInstantiation": []
+              }
+            },
+            {
+              "name": "losses_multiplier_bp",
+              "position": 12,
+              "type": {
+                "type": 6,
+                "typeParameterInstantiation": []
+              }
+            },
+            {
+              "name": "critical_hits_multiplier_bp",
+              "position": 13,
+              "type": {
+                "type": 6,
+                "typeParameterInstantiation": []
+              }
+            }
+          ],
+          "variants": []
+        },
+        {
+          "name": "UpdatePublicKey",
+          "kind": 1,
+          "abilities": [
+            1,
+            2
+          ],
+          "typeParameters": [],
+          "fields": [
+            {
+              "name": "signer",
+              "position": 0,
+              "type": {
+                "type": 1,
+                "typeParameterInstantiation": []
+              }
+            },
+            {
+              "name": "index",
+              "position": 1,
+              "type": {
+                "type": 6,
+                "typeParameterInstantiation": []
+              }
+            },
+            {
+              "name": "previous_public_key",
+              "position": 2,
+              "type": {
+                "type": 9,
+                "typeParameterInstantiation": [
+                  {
+                    "type": 3,
+                    "typeParameterInstantiation": []
+                  }
+                ]
+              }
+            },
+            {
+              "name": "new_public_key",
+              "position": 3,
+              "type": {
+                "type": 9,
+                "typeParameterInstantiation": [
+                  {
+                    "type": 3,
+                    "typeParameterInstantiation": []
+                  }
+                ]
+              }
+            }
+          ],
+          "variants": []
+        },
+        {
+          "name": "WithdrawStakes",
+          "kind": 1,
+          "abilities": [
+            1,
+            2
+          ],
+          "typeParameters": [],
+          "fields": [
+            {
+              "name": "signer",
+              "position": 0,
+              "type": {
+                "type": 1,
+                "typeParameterInstantiation": []
+              }
+            },
+            {
+              "name": "index",
+              "position": 1,
+              "type": {
+                "type": 6,
+                "typeParameterInstantiation": []
+              }
+            },
+            {
+              "name": "token_type",
+              "position": 2,
+              "type": {
+                "type": 10,
+                "typeName": "0x1::type_name::TypeName",
+                "typeParameterInstantiation": []
+              }
+            },
+            {
+              "name": "amount",
+              "position": 3,
+              "type": {
+                "type": 6,
+                "typeParameterInstantiation": []
+              }
+            }
+          ],
+          "variants": []
         }
-    },
-    "id": 1
-}
+      ],
+      "functions": [
+        {
+          "name": "add_playground_whitelist",
+          "visibility": 3,
+          "isEntry": true,
+          "typeParameters": [],
+          "parameters": [
+            {
+              "reference": 2,
+              "body": {
+                "type": 10,
+                "typeName": "0x37816d28c34cc0df82655ca97b3f066112a5f3c202cbb4aaa76c8af54e779750::tails_exp::Registry",
+                "typeParameterInstantiation": []
+              }
+            },
+            {
+              "body": {
+                "type": 6,
+                "typeParameterInstantiation": []
+              }
+            },
+            {
+              "body": {
+                "type": 9,
+                "typeParameterInstantiation": [
+                  {
+                    "type": 1,
+                    "typeParameterInstantiation": []
+                  }
+                ]
+              }
+            },
+            {
+              "reference": 2,
+              "body": {
+                "type": 10,
+                "typeName": "0x2::tx_context::TxContext",
+                "typeParameterInstantiation": []
+              }
+            }
+          ],
+          "returns": []
+        },
+        {
+          "name": "add_registry_whitelist",
+          "visibility": 3,
+          "isEntry": true,
+          "typeParameters": [],
+          "parameters": [
+            {
+              "reference": 2,
+              "body": {
+                "type": 10,
+                "typeName": "0x37816d28c34cc0df82655ca97b3f066112a5f3c202cbb4aaa76c8af54e779750::tails_exp::Registry",
+                "typeParameterInstantiation": []
+              }
+            },
+            {
+              "body": {
+                "type": 9,
+                "typeParameterInstantiation": [
+                  {
+                    "type": 1,
+                    "typeParameterInstantiation": []
+                  }
+                ]
+              }
+            },
+            {
+              "reference": 2,
+              "body": {
+                "type": 10,
+                "typeName": "0x2::tx_context::TxContext",
+                "typeParameterInstantiation": []
+              }
+            }
+          ],
+          "returns": []
+        },
+        {
+          "name": "close_game",
+          "visibility": 3,
+          "isEntry": true,
+          "typeParameters": [
+            {
+              "constraints": []
+            }
+          ],
+          "parameters": [
+            {
+              "reference": 2,
+              "body": {
+                "type": 10,
+                "typeName": "0x37816d28c34cc0df82655ca97b3f066112a5f3c202cbb4aaa76c8af54e779750::tails_exp::Registry",
+                "typeParameterInstantiation": []
+              }
+            },
+            {
+              "body": {
+                "type": 6,
+                "typeParameterInstantiation": []
+              }
+            },
+            {
+              "body": {
+                "type": 1,
+                "typeParameterInstantiation": []
+              }
+            },
+            {
+              "reference": 2,
+              "body": {
+                "type": 10,
+                "typeName": "0x2::tx_context::TxContext",
+                "typeParameterInstantiation": []
+              }
+            }
+          ],
+          "returns": []
+        },
+        {
+          "name": "close_playground",
+          "visibility": 3,
+          "isEntry": true,
+          "typeParameters": [
+            {
+              "constraints": []
+            }
+          ],
+          "parameters": [
+            {
+              "reference": 2,
+              "body": {
+                "type": 10,
+                "typeName": "0x37816d28c34cc0df82655ca97b3f066112a5f3c202cbb4aaa76c8af54e779750::tails_exp::Registry",
+                "typeParameterInstantiation": []
+              }
+            },
+            {
+              "body": {
+                "type": 6,
+                "typeParameterInstantiation": []
+              }
+            },
+            {
+              "body": {
+                "type": 6,
+                "typeParameterInstantiation": []
+              }
+            },
+            {
+              "reference": 2,
+              "body": {
+                "type": 10,
+                "typeName": "0x2::tx_context::TxContext",
+                "typeParameterInstantiation": []
+              }
+            }
+          ],
+          "returns": []
+        },
+        {
+          "name": "deposit_stakes_emergency",
+          "visibility": 3,
+          "isEntry": true,
+          "typeParameters": [
+            {
+              "constraints": []
+            }
+          ],
+          "parameters": [
+            {
+              "reference": 2,
+              "body": {
+                "type": 10,
+                "typeName": "0x37816d28c34cc0df82655ca97b3f066112a5f3c202cbb4aaa76c8af54e779750::tails_exp::Registry",
+                "typeParameterInstantiation": []
+              }
+            },
+            {
+              "body": {
+                "type": 9,
+                "typeParameterInstantiation": [
+                  {
+                    "type": 10,
+                    "typeName": "0x2::coin::Coin",
+                    "typeParameterInstantiation": [
+                      {
+                        "type": 11,
+                        "typeParameter": 0,
+                        "typeParameterInstantiation": []
+                      }
+                    ]
+                  }
+                ]
+              }
+            },
+            {
+              "body": {
+                "type": 6,
+                "typeParameterInstantiation": []
+              }
+            },
+            {
+              "body": {
+                "type": 6,
+                "typeParameterInstantiation": []
+              }
+            },
+            {
+              "reference": 2,
+              "body": {
+                "type": 10,
+                "typeName": "0x2::tx_context::TxContext",
+                "typeParameterInstantiation": []
+              }
+            }
+          ],
+          "returns": []
+        },
+        {
+          "name": "draw",
+          "visibility": 3,
+          "isEntry": true,
+          "typeParameters": [],
+          "parameters": [
+            {
+              "reference": 2,
+              "body": {
+                "type": 10,
+                "typeName": "0x37816d28c34cc0df82655ca97b3f066112a5f3c202cbb4aaa76c8af54e779750::tails_exp::Registry",
+                "typeParameterInstantiation": []
+              }
+            },
+            {
+              "body": {
+                "type": 6,
+                "typeParameterInstantiation": []
+              }
+            },
+            {
+              "body": {
+                "type": 1,
+                "typeParameterInstantiation": []
+              }
+            },
+            {
+              "body": {
+                "type": 9,
+                "typeParameterInstantiation": [
+                  {
+                    "type": 3,
+                    "typeParameterInstantiation": []
+                  }
+                ]
+              }
+            },
+            {
+              "body": {
+                "type": 9,
+                "typeParameterInstantiation": [
+                  {
+                    "type": 3,
+                    "typeParameterInstantiation": []
+                  }
+                ]
+              }
+            },
+            {
+              "reference": 2,
+              "body": {
+                "type": 10,
+                "typeName": "0x2::tx_context::TxContext",
+                "typeParameterInstantiation": []
+              }
+            }
+          ],
+          "returns": []
+        },
+        {
+          "name": "merge_exp_tokens",
+          "visibility": 3,
+          "isEntry": true,
+          "typeParameters": [],
+          "parameters": [
+            {
+              "body": {
+                "type": 9,
+                "typeParameterInstantiation": [
+                  {
+                    "type": 10,
+                    "typeName": "0x2::coin::Coin",
+                    "typeParameterInstantiation": [
+                      {
+                        "type": 10,
+                        "typeName": "0x37816d28c34cc0df82655ca97b3f066112a5f3c202cbb4aaa76c8af54e779750::tails_exp::TAILS_EXP",
+                        "typeParameterInstantiation": []
+                      }
+                    ]
+                  }
+                ]
+              }
+            },
+            {
+              "reference": 2,
+              "body": {
+                "type": 10,
+                "typeName": "0x2::tx_context::TxContext",
+                "typeParameterInstantiation": []
+              }
+            }
+          ],
+          "returns": []
+        },
+        {
+          "name": "new_game",
+          "visibility": 3,
+          "isEntry": true,
+          "typeParameters": [
+            {
+              "constraints": []
+            }
+          ],
+          "parameters": [
+            {
+              "reference": 2,
+              "body": {
+                "type": 10,
+                "typeName": "0x37816d28c34cc0df82655ca97b3f066112a5f3c202cbb4aaa76c8af54e779750::tails_exp::Registry",
+                "typeParameterInstantiation": []
+              }
+            },
+            {
+              "body": {
+                "type": 6,
+                "typeParameterInstantiation": []
+              }
+            },
+            {
+              "body": {
+                "type": 9,
+                "typeParameterInstantiation": [
+                  {
+                    "type": 10,
+                    "typeName": "0x2::coin::Coin",
+                    "typeParameterInstantiation": [
+                      {
+                        "type": 11,
+                        "typeParameter": 0,
+                        "typeParameterInstantiation": []
+                      }
+                    ]
+                  }
+                ]
+              }
+            },
+            {
+              "body": {
+                "type": 6,
+                "typeParameterInstantiation": []
+              }
+            },
+            {
+              "reference": 2,
+              "body": {
+                "type": 10,
+                "typeName": "0x2::tx_context::TxContext",
+                "typeParameterInstantiation": []
+              }
+            }
+          ],
+          "returns": []
+        },
+        {
+          "name": "new_playground",
+          "visibility": 3,
+          "isEntry": true,
+          "typeParameters": [
+            {
+              "constraints": []
+            }
+          ],
+          "parameters": [
+            {
+              "reference": 2,
+              "body": {
+                "type": 10,
+                "typeName": "0x37816d28c34cc0df82655ca97b3f066112a5f3c202cbb4aaa76c8af54e779750::tails_exp::Registry",
+                "typeParameterInstantiation": []
+              }
+            },
+            {
+              "body": {
+                "type": 9,
+                "typeParameterInstantiation": [
+                  {
+                    "type": 3,
+                    "typeParameterInstantiation": []
+                  }
+                ]
+              }
+            },
+            {
+              "body": {
+                "type": 6,
+                "typeParameterInstantiation": []
+              }
+            },
+            {
+              "body": {
+                "type": 6,
+                "typeParameterInstantiation": []
+              }
+            },
+            {
+              "body": {
+                "type": 6,
+                "typeParameterInstantiation": []
+              }
+            },
+            {
+              "body": {
+                "type": 6,
+                "typeParameterInstantiation": []
+              }
+            },
+            {
+              "body": {
+                "type": 6,
+                "typeParameterInstantiation": []
+              }
+            },
+            {
+              "body": {
+                "type": 6,
+                "typeParameterInstantiation": []
+              }
+            },
+            {
+              "reference": 2,
+              "body": {
+                "type": 10,
+                "typeName": "0x2::tx_context::TxContext",
+                "typeParameterInstantiation": []
+              }
+            }
+          ],
+          "returns": []
+        },
+        {
+          "name": "odds",
+          "visibility": 3,
+          "isEntry": false,
+          "typeParameters": [],
+          "parameters": [
+            {
+              "body": {
+                "type": 6,
+                "typeParameterInstantiation": []
+              }
+            },
+            {
+              "body": {
+                "type": 2,
+                "typeParameterInstantiation": []
+              }
+            },
+            {
+              "body": {
+                "type": 6,
+                "typeParameterInstantiation": []
+              }
+            },
+            {
+              "body": {
+                "type": 6,
+                "typeParameterInstantiation": []
+              }
+            },
+            {
+              "body": {
+                "type": 6,
+                "typeParameterInstantiation": []
+              }
+            }
+          ],
+          "returns": [
+            {
+              "body": {
+                "type": 6,
+                "typeParameterInstantiation": []
+              }
+            }
+          ]
+        },
+        {
+          "name": "play_guess",
+          "visibility": 3,
+          "isEntry": true,
+          "typeParameters": [],
+          "parameters": [
+            {
+              "reference": 2,
+              "body": {
+                "type": 10,
+                "typeName": "0x37816d28c34cc0df82655ca97b3f066112a5f3c202cbb4aaa76c8af54e779750::tails_exp::Registry",
+                "typeParameterInstantiation": []
+              }
+            },
+            {
+              "body": {
+                "type": 6,
+                "typeParameterInstantiation": []
+              }
+            },
+            {
+              "body": {
+                "type": 6,
+                "typeParameterInstantiation": []
+              }
+            },
+            {
+              "body": {
+                "type": 2,
+                "typeParameterInstantiation": []
+              }
+            },
+            {
+              "body": {
+                "type": 6,
+                "typeParameterInstantiation": []
+              }
+            },
+            {
+              "body": {
+                "type": 2,
+                "typeParameterInstantiation": []
+              }
+            },
+            {
+              "reference": 2,
+              "body": {
+                "type": 10,
+                "typeName": "0x2::tx_context::TxContext",
+                "typeParameterInstantiation": []
+              }
+            }
+          ],
+          "returns": []
+        },
+        {
+          "name": "remove_playground_whitelist",
+          "visibility": 3,
+          "isEntry": true,
+          "typeParameters": [],
+          "parameters": [
+            {
+              "reference": 2,
+              "body": {
+                "type": 10,
+                "typeName": "0x37816d28c34cc0df82655ca97b3f066112a5f3c202cbb4aaa76c8af54e779750::tails_exp::Registry",
+                "typeParameterInstantiation": []
+              }
+            },
+            {
+              "body": {
+                "type": 6,
+                "typeParameterInstantiation": []
+              }
+            },
+            {
+              "body": {
+                "type": 9,
+                "typeParameterInstantiation": [
+                  {
+                    "type": 1,
+                    "typeParameterInstantiation": []
+                  }
+                ]
+              }
+            },
+            {
+              "reference": 2,
+              "body": {
+                "type": 10,
+                "typeName": "0x2::tx_context::TxContext",
+                "typeParameterInstantiation": []
+              }
+            }
+          ],
+          "returns": []
+        },
+        {
+          "name": "remove_registry_whitelist",
+          "visibility": 3,
+          "isEntry": true,
+          "typeParameters": [],
+          "parameters": [
+            {
+              "reference": 2,
+              "body": {
+                "type": 10,
+                "typeName": "0x37816d28c34cc0df82655ca97b3f066112a5f3c202cbb4aaa76c8af54e779750::tails_exp::Registry",
+                "typeParameterInstantiation": []
+              }
+            },
+            {
+              "body": {
+                "type": 9,
+                "typeParameterInstantiation": [
+                  {
+                    "type": 1,
+                    "typeParameterInstantiation": []
+                  }
+                ]
+              }
+            },
+            {
+              "reference": 2,
+              "body": {
+                "type": 10,
+                "typeName": "0x2::tx_context::TxContext",
+                "typeParameterInstantiation": []
+              }
+            }
+          ],
+          "returns": []
+        },
+        {
+          "name": "resume_playground",
+          "visibility": 3,
+          "isEntry": true,
+          "typeParameters": [],
+          "parameters": [
+            {
+              "reference": 2,
+              "body": {
+                "type": 10,
+                "typeName": "0x37816d28c34cc0df82655ca97b3f066112a5f3c202cbb4aaa76c8af54e779750::tails_exp::Registry",
+                "typeParameterInstantiation": []
+              }
+            },
+            {
+              "body": {
+                "type": 6,
+                "typeParameterInstantiation": []
+              }
+            },
+            {
+              "reference": 2,
+              "body": {
+                "type": 10,
+                "typeName": "0x2::tx_context::TxContext",
+                "typeParameterInstantiation": []
+              }
+            }
+          ],
+          "returns": []
+        },
+        {
+          "name": "suspend_playground",
+          "visibility": 3,
+          "isEntry": true,
+          "typeParameters": [],
+          "parameters": [
+            {
+              "reference": 2,
+              "body": {
+                "type": 10,
+                "typeName": "0x37816d28c34cc0df82655ca97b3f066112a5f3c202cbb4aaa76c8af54e779750::tails_exp::Registry",
+                "typeParameterInstantiation": []
+              }
+            },
+            {
+              "body": {
+                "type": 6,
+                "typeParameterInstantiation": []
+              }
+            },
+            {
+              "reference": 2,
+              "body": {
+                "type": 10,
+                "typeName": "0x2::tx_context::TxContext",
+                "typeParameterInstantiation": []
+              }
+            }
+          ],
+          "returns": []
+        },
+        {
+          "name": "update_game_config",
+          "visibility": 3,
+          "isEntry": true,
+          "typeParameters": [],
+          "parameters": [
+            {
+              "reference": 2,
+              "body": {
+                "type": 10,
+                "typeName": "0x37816d28c34cc0df82655ca97b3f066112a5f3c202cbb4aaa76c8af54e779750::tails_exp::Registry",
+                "typeParameterInstantiation": []
+              }
+            },
+            {
+              "body": {
+                "type": 6,
+                "typeParameterInstantiation": []
+              }
+            },
+            {
+              "body": {
+                "type": 6,
+                "typeParameterInstantiation": []
+              }
+            },
+            {
+              "body": {
+                "type": 6,
+                "typeParameterInstantiation": []
+              }
+            },
+            {
+              "body": {
+                "type": 6,
+                "typeParameterInstantiation": []
+              }
+            },
+            {
+              "body": {
+                "type": 6,
+                "typeParameterInstantiation": []
+              }
+            },
+            {
+              "body": {
+                "type": 6,
+                "typeParameterInstantiation": []
+              }
+            },
+            {
+              "body": {
+                "type": 6,
+                "typeParameterInstantiation": []
+              }
+            },
+            {
+              "reference": 2,
+              "body": {
+                "type": 10,
+                "typeName": "0x2::tx_context::TxContext",
+                "typeParameterInstantiation": []
+              }
+            }
+          ],
+          "returns": []
+        },
+        {
+          "name": "update_public_key",
+          "visibility": 3,
+          "isEntry": true,
+          "typeParameters": [],
+          "parameters": [
+            {
+              "reference": 2,
+              "body": {
+                "type": 10,
+                "typeName": "0x37816d28c34cc0df82655ca97b3f066112a5f3c202cbb4aaa76c8af54e779750::tails_exp::Registry",
+                "typeParameterInstantiation": []
+              }
+            },
+            {
+              "body": {
+                "type": 6,
+                "typeParameterInstantiation": []
+              }
+            },
+            {
+              "body": {
+                "type": 9,
+                "typeParameterInstantiation": [
+                  {
+                    "type": 3,
+                    "typeParameterInstantiation": []
+                  }
+                ]
+              }
+            },
+            {
+              "reference": 2,
+              "body": {
+                "type": 10,
+                "typeName": "0x2::tx_context::TxContext",
+                "typeParameterInstantiation": []
+              }
+            }
+          ],
+          "returns": []
+        },
+        {
+          "name": "vrf_input",
+          "visibility": 3,
+          "isEntry": false,
+          "typeParameters": [],
+          "parameters": [
+            {
+              "reference": 1,
+              "body": {
+                "type": 10,
+                "typeName": "0x37816d28c34cc0df82655ca97b3f066112a5f3c202cbb4aaa76c8af54e779750::tails_exp::Registry",
+                "typeParameterInstantiation": []
+              }
+            },
+            {
+              "body": {
+                "type": 6,
+                "typeParameterInstantiation": []
+              }
+            }
+          ],
+          "returns": [
+            {
+              "body": {
+                "type": 9,
+                "typeParameterInstantiation": [
+                  {
+                    "type": 3,
+                    "typeParameterInstantiation": []
+                  }
+                ]
+              }
+            },
+            {
+              "body": {
+                "type": 9,
+                "typeParameterInstantiation": [
+                  {
+                    "type": 3,
+                    "typeParameterInstantiation": []
+                  }
+                ]
+              }
+            }
+          ]
+        },
+        {
+          "name": "vrf_input_from_player",
+          "visibility": 3,
+          "isEntry": false,
+          "typeParameters": [],
+          "parameters": [
+            {
+              "reference": 1,
+              "body": {
+                "type": 10,
+                "typeName": "0x37816d28c34cc0df82655ca97b3f066112a5f3c202cbb4aaa76c8af54e779750::tails_exp::Registry",
+                "typeParameterInstantiation": []
+              }
+            },
+            {
+              "body": {
+                "type": 6,
+                "typeParameterInstantiation": []
+              }
+            },
+            {
+              "body": {
+                "type": 1,
+                "typeParameterInstantiation": []
+              }
+            }
+          ],
+          "returns": [
+            {
+              "body": {
+                "type": 9,
+                "typeParameterInstantiation": [
+                  {
+                    "type": 3,
+                    "typeParameterInstantiation": []
+                  }
+                ]
+              }
+            },
+            {
+              "body": {
+                "type": 9,
+                "typeParameterInstantiation": [
+                  {
+                    "type": 3,
+                    "typeParameterInstantiation": []
+                  }
+                ]
+              }
+            }
+          ]
+        },
+        {
+          "name": "withdraw_stakes",
+          "visibility": 3,
+          "isEntry": true,
+          "typeParameters": [
+            {
+              "constraints": []
+            }
+          ],
+          "parameters": [
+            {
+              "reference": 2,
+              "body": {
+                "type": 10,
+                "typeName": "0x37816d28c34cc0df82655ca97b3f066112a5f3c202cbb4aaa76c8af54e779750::tails_exp::Registry",
+                "typeParameterInstantiation": []
+              }
+            },
+            {
+              "body": {
+                "type": 6,
+                "typeParameterInstantiation": []
+              }
+            },
+            {
+              "reference": 2,
+              "body": {
+                "type": 10,
+                "typeName": "0x2::tx_context::TxContext",
+                "typeParameterInstantiation": []
+              }
+            }
+          ],
+          "returns": []
+        }
+      ]
+    }
+  },
+  {
+    "address": "0x37816d28c34cc0df82655ca97b3f066112a5f3c202cbb4aaa76c8af54e779750",
+    "module": {
+      "name": "utils",
+      "datatypes": [],
+      "functions": [
+        {
+          "name": "extract_balance",
+          "visibility": 2,
+          "isEntry": false,
+          "typeParameters": [
+            {
+              "constraints": []
+            }
+          ],
+          "parameters": [
+            {
+              "body": {
+                "type": 9,
+                "typeParameterInstantiation": [
+                  {
+                    "type": 10,
+                    "typeName": "0x2::coin::Coin",
+                    "typeParameterInstantiation": [
+                      {
+                        "type": 11,
+                        "typeParameter": 0,
+                        "typeParameterInstantiation": []
+                      }
+                    ]
+                  }
+                ]
+              }
+            },
+            {
+              "body": {
+                "type": 6,
+                "typeParameterInstantiation": []
+              }
+            },
+            {
+              "reference": 1,
+              "body": {
+                "type": 10,
+                "typeName": "0x2::tx_context::TxContext",
+                "typeParameterInstantiation": []
+              }
+            }
+          ],
+          "returns": [
+            {
+              "body": {
+                "type": 10,
+                "typeName": "0x2::balance::Balance",
+                "typeParameterInstantiation": [
+                  {
+                    "type": 11,
+                    "typeParameter": 0,
+                    "typeParameterInstantiation": []
+                  }
+                ]
+              }
+            }
+          ]
+        },
+        {
+          "name": "multiplier",
+          "visibility": 2,
+          "isEntry": false,
+          "typeParameters": [],
+          "parameters": [
+            {
+              "body": {
+                "type": 6,
+                "typeParameterInstantiation": []
+              }
+            }
+          ],
+          "returns": [
+            {
+              "body": {
+                "type": 6,
+                "typeParameterInstantiation": []
+              }
+            }
+          ]
+        }
+      ]
+    }
+  }
+]

@@ -37,7 +37,7 @@ export class Pool extends AbstractEntity  {
 	@Required
 	@Column("BigInt")
 	poolIdx: BigInt
-  constructor(data: PoolConstructorInput) {super()}
+  constructor(data: Partial<PoolConstructorInput>) {super()}
   
   
   static update(values: UpdateValues<PoolConstructorInput>): Promise<void> {
@@ -85,7 +85,7 @@ export class RangePositionSnapshot extends AbstractEntity  {
 	@Required
 	@Column("BigInt")
 	timestampMilli: BigInt
-  constructor(data: RangePositionSnapshotConstructorInput) {super()}
+  constructor(data: Partial<RangePositionSnapshotConstructorInput>) {super()}
   
   
   static update(values: UpdateValues<RangePositionSnapshotConstructorInput>): Promise<void> {
@@ -123,7 +123,7 @@ export class AmbientPositionSnapshot extends AbstractEntity  {
 	@Required
 	@Column("BigInt")
 	timestampMilli: BigInt
-  constructor(data: AmbientPositionSnapshotConstructorInput) {super()}
+  constructor(data: Partial<AmbientPositionSnapshotConstructorInput>) {super()}
   
   
   static update(values: UpdateValues<AmbientPositionSnapshotConstructorInput>): Promise<void> {

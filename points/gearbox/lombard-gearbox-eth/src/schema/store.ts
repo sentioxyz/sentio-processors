@@ -37,7 +37,7 @@ export class CreditAccountSnapshot extends AbstractEntity  {
 	@Required
 	@Column("BigInt")
 	timestampMilli: BigInt
-  constructor(data: CreditAccountSnapshotConstructorInput) {super()}
+  constructor(data: Partial<CreditAccountSnapshotConstructorInput>) {super()}
   
   
   static update(values: UpdateValues<CreditAccountSnapshotConstructorInput>): Promise<void> {

@@ -1,12 +1,11 @@
 import { clob_v2, custodian_v2 } from "./types/sui/deepbook.js"
 import { SuiContext } from "@sentio/sdk/sui"
-import { SuiTransactionBlockResponse } from '@mysten/sui/client'
 import { getCoinAddressFromType, getOrCreateCoin } from './helper/getCoinOrPool.js'
 
 const orderFilledHandler = async (event: clob_v2.OrderFilledInstance, ctx: SuiContext) => {
 
   const sender = event.sender
-  const type = event.type
+  const type = event.eventType
 
   const pool_id = event.data_decoded.pool_id
   const order_id = event.data_decoded.order_id
@@ -44,9 +43,9 @@ const orderFilledHandler = async (event: clob_v2.OrderFilledInstance, ctx: SuiCo
 
 
 const DepositAssetHandler = async (event: clob_v2.DepositAssetInstance, ctx: SuiContext) => {
-  const time = event.timestampMs
+  const time = ctx.timestamp.getTime()
   const sender = event.sender
-  const type = event.type
+  const type = event.eventType
 
   const pool_id = event.data_decoded.pool_id
 
@@ -66,9 +65,9 @@ const DepositAssetHandler = async (event: clob_v2.DepositAssetInstance, ctx: Sui
 }
 
 const WithdrawAssetHandler = async (event: clob_v2.WithdrawAssetInstance, ctx: SuiContext) => {
-  const time = event.timestampMs
+  const time = ctx.timestamp.getTime()
   const sender = event.sender
-  const type = event.type
+  const type = event.eventType
 
   const pool_id = event.data_decoded.pool_id
 

@@ -4,10 +4,10 @@
   "version": "1.0.0",
   "type": "module",
   "scripts": {
-    "test": "sentio test",
-    "gen": "sentio gen",
-    "build": "sentio build",
-    "upload": "sentio upload",
-    "postinstall": "sentio gen"
+    "test": "sentio gen && node scripts/patch-sui-codegen.mjs && sentio test",
+    "gen": "sentio gen && node scripts/patch-sui-codegen.mjs",
+    "build": "sentio gen && node scripts/patch-sui-codegen.mjs && sentio build --skip-gen",
+    "upload": "sentio gen && node scripts/patch-sui-codegen.mjs && sentio upload --skip-gen",
+    "postinstall": "sentio gen && node scripts/patch-sui-codegen.mjs"
   }
 }

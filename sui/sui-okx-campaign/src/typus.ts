@@ -13,7 +13,7 @@ function getCoinSymbol(name: string): string {
 const depositEventHandler = async (event: typus_dov_single.DepositInstance, ctx: SuiContext) => {
     const { amount, index, signer } = event.data_decoded
     const regex = /Deposit<([^>]+)>/
-    const type = event.type.match(regex)?.[1] as string
+    const type = event.eventType.match(regex)?.[1] as string
     const coin_symbol = getCoinSymbol(type)
     let decimal = 0
     if (coin_symbol == "usdc") decimal = 8

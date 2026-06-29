@@ -31,7 +31,7 @@ const tokens: [
     | typeof NsASTRProcessor
     | typeof YayASTRProcessor
   ),
-  (ctx: BaseContext, address: string) => any
+  (ctx: EthContext, address: string) => any
 ][] = [
   ['ASTR', '0x2CAE934a1e84F693fbb78CA5ED3B0A6893259441', ASTRProcessor, getASTRContractOnContext],
   ['vASTR', '0x60336f9296C79dA4294A19153eC87F8E52158e5F', VASTRProcessor, getVASTRContractOnContext],

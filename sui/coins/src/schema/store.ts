@@ -61,7 +61,7 @@ export class Metadata extends AbstractEntity  {
 	@Required
 	@Column("Int")
 	timestamp: Int
-  constructor(data: MetadataConstructorInput) {super()}
+  constructor(data: Partial<MetadataConstructorInput>) {super()}
   
   
   static update(values: UpdateValues<MetadataConstructorInput>): Promise<void> {

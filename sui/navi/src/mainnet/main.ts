@@ -77,7 +77,7 @@ async function onEvent(event: LendingEvent, ctx: SuiContext) {
   const coinAddress = Coins[reserve]
   // const coinAddress = event.data_decoded.pool;
 
-  const typeArray = event.type.split("::")
+  const typeArray = event.eventType.split("::")
   const type = typeArray[typeArray.length - 1]
   const coinDecimal = getOrCreateCoin(ctx, coinAddress)
   const amount = scaleDown(event.data_decoded.amount, (await coinDecimal).decimal)
@@ -97,7 +97,7 @@ async function onLiquidationEvent(event: lending.LiquidationCallEventInstance, c
   const liquidation_amount = event.data_decoded.liquidate_amount
   const liquidate_user = event.data_decoded.liquidate_user
   const reserve = event.data_decoded.reserve
-  const typeArray = event.type.split("::")
+  const typeArray = event.eventType.split("::")
   const type = typeArray[typeArray.length - 1]
 
   ctx.eventLogger.emit("UserInteraction", {
@@ -121,7 +121,7 @@ async function onLiquidationNewEvent(event: lending_new_liquidation_event.Liquid
   const debt_asset = event.data_decoded.debt_asset
   const debt_price = event.data_decoded.debt_price
   const debt_amount = event.data_decoded.debt_amount
-  const typeArray = event.type.split("::")
+  const typeArray = event.eventType.split("::")
   const type = typeArray[typeArray.length - 1]
 
   ctx.eventLogger.emit("Liquidation", {

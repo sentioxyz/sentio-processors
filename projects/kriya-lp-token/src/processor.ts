@@ -1,4 +1,4 @@
-import { SuiObjectChange } from "@mysten/sui/client"
+import { SuiClientTypes } from "@mysten/sui/client"
 import { SuiGlobalProcessor, SuiNetwork, SuiObjectChangeContext } from "@sentio/sdk/sui"
 
 const LP_TOKEN_TYPE_PREFIX = [
@@ -51,38 +51,46 @@ function handlePrefix(lp_token_prefix: string) {
 }
 
 
-async function processObjectChanges(ctx: SuiObjectChangeContext, objectChange: SuiObjectChange, lp_token_prefix: string) {
+async function processObjectChanges(ctx: SuiObjectChangeContext, objectChange: SuiClientTypes.ChangedObject, lp_token_prefix: string) {
   // console.log(`processing entered ${objectChange} captured`)
   try {
-    //@ts-ignore
-    const obj = await ctx.client.tryGetPastObject({ id: objectChange.objectId, version: parseInt(objectChange.version), options: { showOwner: true, showContent: true } })
+    const { object: obj } = await ctx.client.getObject({ objectId: objectChange.objectId, include: { json: true } })
     let [balance, pool_id, farm_id, stake_amount, owner] = [0, "unk", "unk", 0, "unk"]
     // console.log(`processing entered try ${objectChange} captured`)
-    if (obj.status == "VersionFound") {
+    if (obj) {
 
       if (lp_token_prefix == "0xa0eba10b173538c8fecca1dff298e488402cc9ff374f8a12ca7758eebe830b66::spot_dex::KriyaLPToken<") {
         //@ts-ignore
-        balance = parseInt(obj.details.content.fields.lsp.fields.balance) || 0 //null for object deleted
+        balance = parseInt(obj.json?.lsp.fields.balance) || 0 //null for object deleted
         //@ts-ignore
-        pool_id = obj.details.content.fields.pool_id || "unk" //null for object deleted
+        pool_id = obj.json?.pool_id || "unk" //null for object deleted
       }
 
       if (lp_token_prefix == "0x88701243d0445aa38c0a13f02a9af49a58092dfadb93af9754edb41c52f40085::farm::StakedPosition<") {
         console.log(`stakedPositionLog ${JSON.stringify(obj)} at ${ctx.txDigest}`)
         //@ts-ignore
-        farm_id = obj.details.content.fields.farm_id || "unk" //null for object deleted
+        farm_id = obj.json?.farm_id || "unk" //null for object deleted
         //@ts-ignore
-        stake_amount = parseInt(obj.details.content.fields.stake_amount) || 0 //null for object deleted
+        stake_amount = parseInt(obj.json?.stake_amount) || 0 //null for object deleted
       }
 
-      if (objectChange.type != "deleted") {
-        //@ts-ignore
-        owner = obj.details.owner.AddressOwner || "unk" //null for object deleted
+      if (objectChange.idOperation != "Deleted") {
+        if (objectChange.outputOwner?.$kind === "AddressOwner") {
+          owner = objectChange.outputOwner.AddressOwner || "unk" //null for object deleted
+        }
       }
     }
 
     const newObjectChange = {
-      ...objectChange,
+      objectId: objectChange.objectId,
+      type: objectChange.idOperation,
+      idOperation: objectChange.idOperation,
+      inputState: objectChange.inputState,
+      inputVersion: objectChange.inputVersion,
+      inputDigest: objectChange.inputDigest,
+      outputState: objectChange.outputState,
+      version: objectChange.outputVersion,
+      digest: objectChange.outputDigest,
       owner,
       balance,
       farm_id,

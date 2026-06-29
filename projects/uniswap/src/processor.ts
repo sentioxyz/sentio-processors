@@ -11,7 +11,6 @@ import { PoolCreatedEvent, UniswapFactoryContext, UniswapFactoryProcessor } from
 // import type { BaseContract, BigNumber } from 'ethers'
 import { ERC20Context, ERC20Processor, getERC20Contract } from '@sentio/sdk/eth/builtin/erc20'
 import { getPriceByType,  token } from "@sentio/sdk/utils"
-import { Status, ClientError } from "nice-grpc-common";
 import { BigDecimal, Gauge, MetricOptions } from "@sentio/sdk";
 import { EthChainId } from "@sentio/sdk/eth";
 

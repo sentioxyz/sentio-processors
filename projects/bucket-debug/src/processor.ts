@@ -9,12 +9,13 @@ import { fountain_core as sbuck_fountain } from "./types/sui/sbuck_fountain.js";
 import { fountain as strap_fountain } from "./types/sui/strap_fountain.js";
 import { getPriceBySymbol } from "@sentio/sdk/utils";
 import { normalizeSuiAddress } from "@mysten/sui/utils";
-import { SuiMoveObject } from "@mysten/sui/client";
+
+type SuiMoveObject = { type: string; fields: Record<string, unknown> };
 import {
   bucket_events,
   bucket,
   interest,
-} from "./types/sui/0xce7ff77a83ea0cb6fd39bd8748e2ec89a3f41e8efdc3f4eb123e0ca37b184db2.js";
+} from "./types/sui/0xc592cdefe5ad2d062b128b6a097983e9c40a742c50abb867a5821714a628457.js";
 import { BigDecimal } from "@sentio/sdk";
 
 const START_CHECKPOINT = 76_049_261;

@@ -6,7 +6,7 @@ import { getSeller, setSeller } from "./localdb.js";
 
 hyperspace.bind()
   .onEventItemListed(async (event, ctx) => {
-    await setSeller(event.data_decoded.id, ctx.transaction.transaction?.data.sender || "")
+    await setSeller(event.data_decoded.id, ctx.transaction.transaction?.sender || "")
   })
   .onEventItemPurchased(async (event, ctx) => {
 
@@ -21,7 +21,7 @@ hyperspace.bind()
       nft_name,
       nft_type,
       nft_link,
-      buyer: ctx.transaction.transaction?.data.sender || "",
+      buyer: ctx.transaction.transaction?.sender || "",
       seller,
       price: event.data_decoded.price.scaleDown(9)
     }

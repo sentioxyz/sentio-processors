@@ -1,3145 +1,4635 @@
 [
 	{
-		"fileFormatVersion": 6,
 		"address": "0x8d79f4d920b03d88faca1e421af023a87fbb1e4a6fd200248e6e9998d09e470",
-		"name": "aggregator",
-		"friends": [],
-		"structs": {
-			"Aggregator": {
-				"abilities": {
+		"module": {
+			"datatypes": [
+				{
 					"abilities": [
-						"Key"
-					]
-				},
-				"typeParameters": [],
-				"fields": [
-					{
-						"name": "id",
-						"type": {
-							"Struct": {
-								"address": "0x2",
-								"module": "object",
-								"name": "UID",
-								"typeArguments": []
-							}
-						}
-					},
-					{
-						"name": "authority",
-						"type": "Address"
-					},
-					{
-						"name": "queue_addr",
-						"type": "Address"
-					},
-					{
-						"name": "token_addr",
-						"type": "Address"
-					},
-					{
-						"name": "batch_size",
-						"type": "U64"
-					},
-					{
-						"name": "min_oracle_results",
-						"type": "U64"
-					},
-					{
-						"name": "min_update_delay_seconds",
-						"type": "U64"
-					},
-					{
-						"name": "name",
-						"type": {
-							"Vector": "U8"
-						}
-					},
-					{
-						"name": "history_limit",
-						"type": "U64"
-					},
-					{
-						"name": "variance_threshold",
-						"type": {
-							"Struct": {
-								"address": "0x8d79f4d920b03d88faca1e421af023a87fbb1e4a6fd200248e6e9998d09e470",
-								"module": "math",
-								"name": "SwitchboardDecimal",
-								"typeArguments": []
-							}
-						}
-					},
-					{
-						"name": "force_report_period",
-						"type": "U64"
-					},
-					{
-						"name": "min_job_results",
-						"type": "U64"
-					},
-					{
-						"name": "crank_disabled",
-						"type": "Bool"
-					},
-					{
-						"name": "crank_row_count",
-						"type": "U8"
-					},
-					{
-						"name": "next_allowed_update_time",
-						"type": "U64"
-					},
-					{
-						"name": "created_at",
-						"type": "U64"
-					},
-					{
-						"name": "read_charge",
-						"type": "U64"
-					},
-					{
-						"name": "reward_escrow",
-						"type": "Address"
-					},
-					{
-						"name": "read_whitelist",
-						"type": {
-							"Struct": {
-								"address": "0x2",
-								"module": "bag",
-								"name": "Bag",
-								"typeArguments": []
-							}
-						}
-					},
-					{
-						"name": "limit_reads_to_whitelist",
-						"type": "Bool"
-					},
-					{
-						"name": "update_data",
-						"type": {
-							"Struct": {
-								"address": "0x8d79f4d920b03d88faca1e421af023a87fbb1e4a6fd200248e6e9998d09e470",
-								"module": "aggregator",
-								"name": "SlidingWindow",
-								"typeArguments": []
-							}
-						}
-					},
-					{
-						"name": "interval_id",
-						"type": "U64"
-					},
-					{
-						"name": "curr_interval_payouts",
-						"type": "U64"
-					},
-					{
-						"name": "next_interval_refresh_time",
-						"type": "U64"
-					},
-					{
-						"name": "escrows",
-						"type": {
-							"Struct": {
-								"address": "0x2",
-								"module": "bag",
-								"name": "Bag",
-								"typeArguments": []
-							}
-						}
-					},
-					{
-						"name": "friend_key",
-						"type": {
-							"Vector": "U8"
-						}
-					},
-					{
-						"name": "version",
-						"type": "U64"
-					}
-				]
-			},
-			"AggregatorHistoryData": {
-				"abilities": {
-					"abilities": [
-						"Store",
-						"Key"
-					]
-				},
-				"typeParameters": [],
-				"fields": [
-					{
-						"name": "id",
-						"type": {
-							"Struct": {
-								"address": "0x2",
-								"module": "object",
-								"name": "UID",
-								"typeArguments": []
-							}
-						}
-					},
-					{
-						"name": "data",
-						"type": {
-							"Vector": {
-								"Struct": {
-									"address": "0x8d79f4d920b03d88faca1e421af023a87fbb1e4a6fd200248e6e9998d09e470",
-									"module": "aggregator",
-									"name": "AggregatorHistoryRow",
-									"typeArguments": []
-								}
-							}
-						}
-					},
-					{
-						"name": "history_write_idx",
-						"type": "U64"
-					}
-				]
-			},
-			"AggregatorHistoryRow": {
-				"abilities": {
-					"abilities": [
-						"Copy",
-						"Drop",
-						"Store"
-					]
-				},
-				"typeParameters": [],
-				"fields": [
-					{
-						"name": "value",
-						"type": {
-							"Struct": {
-								"address": "0x8d79f4d920b03d88faca1e421af023a87fbb1e4a6fd200248e6e9998d09e470",
-								"module": "math",
-								"name": "SwitchboardDecimal",
-								"typeArguments": []
-							}
-						}
-					},
-					{
-						"name": "timestamp",
-						"type": "U64"
-					}
-				]
-			},
-			"AggregatorJobData": {
-				"abilities": {
-					"abilities": [
-						"Store",
-						"Key"
-					]
-				},
-				"typeParameters": [],
-				"fields": [
-					{
-						"name": "id",
-						"type": {
-							"Struct": {
-								"address": "0x2",
-								"module": "object",
-								"name": "UID",
-								"typeArguments": []
-							}
-						}
-					},
-					{
-						"name": "job_keys",
-						"type": {
-							"Vector": "Address"
-						}
-					},
-					{
-						"name": "job_weights",
-						"type": {
-							"Vector": "U8"
-						}
-					},
-					{
-						"name": "jobs_checksum",
-						"type": {
-							"Vector": "U8"
-						}
-					}
-				]
-			},
-			"SlidingWindow": {
-				"abilities": {
-					"abilities": [
-						"Copy",
-						"Store"
-					]
-				},
-				"typeParameters": [],
-				"fields": [
-					{
-						"name": "data",
-						"type": {
-							"Vector": {
-								"Struct": {
-									"address": "0x8d79f4d920b03d88faca1e421af023a87fbb1e4a6fd200248e6e9998d09e470",
-									"module": "aggregator",
-									"name": "SlidingWindowElement",
-									"typeArguments": []
-								}
-							}
-						}
-					},
-					{
-						"name": "latest_result",
-						"type": {
-							"Struct": {
-								"address": "0x8d79f4d920b03d88faca1e421af023a87fbb1e4a6fd200248e6e9998d09e470",
-								"module": "math",
-								"name": "SwitchboardDecimal",
-								"typeArguments": []
-							}
-						}
-					},
-					{
-						"name": "latest_timestamp",
-						"type": "U64"
-					}
-				]
-			},
-			"SlidingWindowElement": {
-				"abilities": {
-					"abilities": [
-						"Copy",
-						"Drop",
-						"Store"
-					]
-				},
-				"typeParameters": [],
-				"fields": [
-					{
-						"name": "oracle_addr",
-						"type": "Address"
-					},
-					{
-						"name": "value",
-						"type": {
-							"Struct": {
-								"address": "0x8d79f4d920b03d88faca1e421af023a87fbb1e4a6fd200248e6e9998d09e470",
-								"module": "math",
-								"name": "SwitchboardDecimal",
-								"typeArguments": []
-							}
-						}
-					},
-					{
-						"name": "timestamp",
-						"type": "U64"
-					}
-				]
-			}
-		},
-		"exposedFunctions": {
-			"add_crank_row_count": {
-				"visibility": "Public",
-				"isEntry": false,
-				"typeParameters": [
-					{
-						"abilities": []
-					}
-				],
-				"parameters": [
-					{
-						"MutableReference": {
-							"Struct": {
-								"address": "0x8d79f4d920b03d88faca1e421af023a87fbb1e4a6fd200248e6e9998d09e470",
-								"module": "aggregator",
-								"name": "Aggregator",
-								"typeArguments": []
-							}
-						}
-					},
-					{
-						"Reference": {
-							"TypeParameter": 0
-						}
-					}
-				],
-				"return": []
-			},
-			"add_job": {
-				"visibility": "Public",
-				"isEntry": false,
-				"typeParameters": [],
-				"parameters": [
-					{
-						"MutableReference": {
-							"Struct": {
-								"address": "0x8d79f4d920b03d88faca1e421af023a87fbb1e4a6fd200248e6e9998d09e470",
-								"module": "aggregator",
-								"name": "Aggregator",
-								"typeArguments": []
-							}
-						}
-					},
-					{
-						"Reference": {
-							"Struct": {
-								"address": "0x8d79f4d920b03d88faca1e421af023a87fbb1e4a6fd200248e6e9998d09e470",
-								"module": "job",
-								"name": "Job",
-								"typeArguments": []
-							}
-						}
-					},
-					"U8",
-					{
-						"MutableReference": {
-							"Struct": {
-								"address": "0x2",
-								"module": "tx_context",
-								"name": "TxContext",
-								"typeArguments": []
-							}
-						}
-					}
-				],
-				"return": []
-			},
-			"add_to_sliding_window": {
-				"visibility": "Public",
-				"isEntry": false,
-				"typeParameters": [],
-				"parameters": [
-					{
-						"MutableReference": {
-							"Struct": {
-								"address": "0x8d79f4d920b03d88faca1e421af023a87fbb1e4a6fd200248e6e9998d09e470",
-								"module": "aggregator",
-								"name": "SlidingWindow",
-								"typeArguments": []
-							}
-						}
-					},
-					"Address",
-					{
-						"Struct": {
-							"address": "0x8d79f4d920b03d88faca1e421af023a87fbb1e4a6fd200248e6e9998d09e470",
-							"module": "math",
-							"name": "SwitchboardDecimal",
-							"typeArguments": []
-						}
-					},
-					"U64",
-					"U64",
-					"U64"
-				],
-				"return": [
-					"Bool",
-					{
-						"Struct": {
-							"address": "0x8d79f4d920b03d88faca1e421af023a87fbb1e4a6fd200248e6e9998d09e470",
-							"module": "math",
-							"name": "SwitchboardDecimal",
-							"typeArguments": []
-						}
-					}
-				]
-			},
-			"aggregator_address": {
-				"visibility": "Public",
-				"isEntry": false,
-				"typeParameters": [],
-				"parameters": [
-					{
-						"Reference": {
-							"Struct": {
-								"address": "0x8d79f4d920b03d88faca1e421af023a87fbb1e4a6fd200248e6e9998d09e470",
-								"module": "aggregator",
-								"name": "Aggregator",
-								"typeArguments": []
-							}
-						}
-					}
-				],
-				"return": [
-					"Address"
-				]
-			},
-			"authority": {
-				"visibility": "Public",
-				"isEntry": false,
-				"typeParameters": [],
-				"parameters": [
-					{
-						"Reference": {
-							"Struct": {
-								"address": "0x8d79f4d920b03d88faca1e421af023a87fbb1e4a6fd200248e6e9998d09e470",
-								"module": "aggregator",
-								"name": "Aggregator",
-								"typeArguments": []
-							}
-						}
-					}
-				],
-				"return": [
-					"Address"
-				]
-			},
-			"batch_size": {
-				"visibility": "Public",
-				"isEntry": false,
-				"typeParameters": [],
-				"parameters": [
-					{
-						"Reference": {
-							"Struct": {
-								"address": "0x8d79f4d920b03d88faca1e421af023a87fbb1e4a6fd200248e6e9998d09e470",
-								"module": "aggregator",
-								"name": "Aggregator",
-								"typeArguments": []
-							}
-						}
-					}
-				],
-				"return": [
-					"U64"
-				]
-			},
-			"can_open_round": {
-				"visibility": "Public",
-				"isEntry": false,
-				"typeParameters": [],
-				"parameters": [
-					{
-						"Reference": {
-							"Struct": {
-								"address": "0x8d79f4d920b03d88faca1e421af023a87fbb1e4a6fd200248e6e9998d09e470",
-								"module": "aggregator",
-								"name": "Aggregator",
-								"typeArguments": []
-							}
-						}
-					},
-					"U64"
-				],
-				"return": [
-					"Bool"
-				]
-			},
-			"crank_disabled": {
-				"visibility": "Public",
-				"isEntry": false,
-				"typeParameters": [],
-				"parameters": [
-					{
-						"Reference": {
-							"Struct": {
-								"address": "0x8d79f4d920b03d88faca1e421af023a87fbb1e4a6fd200248e6e9998d09e470",
-								"module": "aggregator",
-								"name": "Aggregator",
-								"typeArguments": []
-							}
-						}
-					}
-				],
-				"return": [
-					"Bool"
-				]
-			},
-			"crank_row_count": {
-				"visibility": "Public",
-				"isEntry": false,
-				"typeParameters": [],
-				"parameters": [
-					{
-						"Reference": {
-							"Struct": {
-								"address": "0x8d79f4d920b03d88faca1e421af023a87fbb1e4a6fd200248e6e9998d09e470",
-								"module": "aggregator",
-								"name": "Aggregator",
-								"typeArguments": []
-							}
-						}
-					}
-				],
-				"return": [
-					"U8"
-				]
-			},
-			"created_at": {
-				"visibility": "Public",
-				"isEntry": false,
-				"typeParameters": [],
-				"parameters": [
-					{
-						"Reference": {
-							"Struct": {
-								"address": "0x8d79f4d920b03d88faca1e421af023a87fbb1e4a6fd200248e6e9998d09e470",
-								"module": "aggregator",
-								"name": "Aggregator",
-								"typeArguments": []
-							}
-						}
-					}
-				],
-				"return": [
-					"U64"
-				]
-			},
-			"curr_interval_payouts": {
-				"visibility": "Public",
-				"isEntry": false,
-				"typeParameters": [],
-				"parameters": [
-					{
-						"Reference": {
-							"Struct": {
-								"address": "0x8d79f4d920b03d88faca1e421af023a87fbb1e4a6fd200248e6e9998d09e470",
-								"module": "aggregator",
-								"name": "Aggregator",
-								"typeArguments": []
-							}
-						}
-					}
-				],
-				"return": [
-					"U64"
-				]
-			},
-			"escrow_balance": {
-				"visibility": "Public",
-				"isEntry": false,
-				"typeParameters": [
-					{
-						"abilities": []
-					}
-				],
-				"parameters": [
-					{
-						"Reference": {
-							"Struct": {
-								"address": "0x8d79f4d920b03d88faca1e421af023a87fbb1e4a6fd200248e6e9998d09e470",
-								"module": "aggregator",
-								"name": "Aggregator",
-								"typeArguments": []
-							}
-						}
-					},
-					"Address"
-				],
-				"return": [
-					"U64"
-				]
-			},
-			"escrow_deposit": {
-				"visibility": "Public",
-				"isEntry": false,
-				"typeParameters": [
-					{
-						"abilities": []
-					},
-					{
-						"abilities": []
-					}
-				],
-				"parameters": [
-					{
-						"MutableReference": {
-							"Struct": {
-								"address": "0x8d79f4d920b03d88faca1e421af023a87fbb1e4a6fd200248e6e9998d09e470",
-								"module": "aggregator",
-								"name": "Aggregator",
-								"typeArguments": []
-							}
-						}
-					},
-					"Address",
-					{
-						"Struct": {
-							"address": "0x2",
-							"module": "coin",
-							"name": "Coin",
-							"typeArguments": [
-								{
-									"TypeParameter": 0
-								}
-							]
-						}
-					},
-					{
-						"Reference": {
-							"TypeParameter": 1
-						}
-					}
-				],
-				"return": []
-			},
-			"escrow_withdraw": {
-				"visibility": "Public",
-				"isEntry": false,
-				"typeParameters": [
-					{
-						"abilities": []
-					},
-					{
-						"abilities": []
-					}
-				],
-				"parameters": [
-					{
-						"MutableReference": {
-							"Struct": {
-								"address": "0x8d79f4d920b03d88faca1e421af023a87fbb1e4a6fd200248e6e9998d09e470",
-								"module": "aggregator",
-								"name": "Aggregator",
-								"typeArguments": []
-							}
-						}
-					},
-					"Address",
-					"U64",
-					{
-						"Reference": {
-							"TypeParameter": 1
-						}
-					},
-					{
-						"MutableReference": {
-							"Struct": {
-								"address": "0x2",
-								"module": "tx_context",
-								"name": "TxContext",
-								"typeArguments": []
-							}
-						}
-					}
-				],
-				"return": [
-					{
-						"Struct": {
-							"address": "0x2",
-							"module": "coin",
-							"name": "Coin",
-							"typeArguments": [
-								{
-									"TypeParameter": 0
-								}
-							]
-						}
-					}
-				]
-			},
-			"has_authority": {
-				"visibility": "Public",
-				"isEntry": false,
-				"typeParameters": [],
-				"parameters": [
-					{
-						"Reference": {
-							"Struct": {
-								"address": "0x8d79f4d920b03d88faca1e421af023a87fbb1e4a6fd200248e6e9998d09e470",
-								"module": "aggregator",
-								"name": "Aggregator",
-								"typeArguments": []
-							}
-						}
-					},
-					{
-						"Reference": {
-							"Struct": {
-								"address": "0x2",
-								"module": "tx_context",
-								"name": "TxContext",
-								"typeArguments": []
-							}
-						}
-					}
-				],
-				"return": [
-					"Bool"
-				]
-			},
-			"increment_curr_interval_payouts": {
-				"visibility": "Public",
-				"isEntry": false,
-				"typeParameters": [
-					{
-						"abilities": []
-					}
-				],
-				"parameters": [
-					{
-						"MutableReference": {
-							"Struct": {
-								"address": "0x8d79f4d920b03d88faca1e421af023a87fbb1e4a6fd200248e6e9998d09e470",
-								"module": "aggregator",
-								"name": "Aggregator",
-								"typeArguments": []
-							}
-						}
-					},
-					{
-						"Reference": {
-							"TypeParameter": 0
-						}
-					}
-				],
-				"return": []
-			},
-			"interval_id": {
-				"visibility": "Public",
-				"isEntry": false,
-				"typeParameters": [],
-				"parameters": [
-					{
-						"Reference": {
-							"Struct": {
-								"address": "0x8d79f4d920b03d88faca1e421af023a87fbb1e4a6fd200248e6e9998d09e470",
-								"module": "aggregator",
-								"name": "Aggregator",
-								"typeArguments": []
-							}
-						}
-					}
-				],
-				"return": [
-					"U64"
-				]
-			},
-			"is_locked": {
-				"visibility": "Public",
-				"isEntry": false,
-				"typeParameters": [],
-				"parameters": [
-					{
-						"Reference": {
-							"Struct": {
-								"address": "0x8d79f4d920b03d88faca1e421af023a87fbb1e4a6fd200248e6e9998d09e470",
-								"module": "aggregator",
-								"name": "Aggregator",
-								"typeArguments": []
-							}
-						}
-					}
-				],
-				"return": [
-					"Bool"
-				]
-			},
-			"job_keys": {
-				"visibility": "Public",
-				"isEntry": false,
-				"typeParameters": [],
-				"parameters": [
-					{
-						"Reference": {
-							"Struct": {
-								"address": "0x8d79f4d920b03d88faca1e421af023a87fbb1e4a6fd200248e6e9998d09e470",
-								"module": "aggregator",
-								"name": "Aggregator",
-								"typeArguments": []
-							}
-						}
-					}
-				],
-				"return": [
-					{
-						"Vector": "Address"
-					}
-				]
-			},
-			"latest_value": {
-				"visibility": "Public",
-				"isEntry": false,
-				"typeParameters": [],
-				"parameters": [
-					{
-						"Reference": {
-							"Struct": {
-								"address": "0x8d79f4d920b03d88faca1e421af023a87fbb1e4a6fd200248e6e9998d09e470",
-								"module": "aggregator",
-								"name": "Aggregator",
-								"typeArguments": []
-							}
-						}
-					}
-				],
-				"return": [
-					{
-						"Struct": {
-							"address": "0x8d79f4d920b03d88faca1e421af023a87fbb1e4a6fd200248e6e9998d09e470",
-							"module": "math",
-							"name": "SwitchboardDecimal",
-							"typeArguments": []
-						}
-					},
-					"U64"
-				]
-			},
-			"migrate": {
-				"visibility": "Private",
-				"isEntry": true,
-				"typeParameters": [],
-				"parameters": [
-					{
-						"MutableReference": {
-							"Struct": {
-								"address": "0x8d79f4d920b03d88faca1e421af023a87fbb1e4a6fd200248e6e9998d09e470",
-								"module": "aggregator",
-								"name": "Aggregator",
-								"typeArguments": []
-							}
-						}
-					},
-					{
-						"Reference": {
-							"Struct": {
-								"address": "0x8d79f4d920b03d88faca1e421af023a87fbb1e4a6fd200248e6e9998d09e470",
-								"module": "switchboard",
-								"name": "AdminCap",
-								"typeArguments": []
-							}
-						}
-					}
-				],
-				"return": []
-			},
-			"migrate_package": {
-				"visibility": "Public",
-				"isEntry": false,
-				"typeParameters": [
-					{
-						"abilities": []
-					},
-					{
-						"abilities": []
-					}
-				],
-				"parameters": [
-					{
-						"MutableReference": {
-							"Struct": {
-								"address": "0x8d79f4d920b03d88faca1e421af023a87fbb1e4a6fd200248e6e9998d09e470",
-								"module": "aggregator",
-								"name": "Aggregator",
-								"typeArguments": []
-							}
-						}
-					},
-					{
-						"Reference": {
-							"TypeParameter": 0
-						}
-					},
-					{
-						"Reference": {
-							"TypeParameter": 1
-						}
-					}
-				],
-				"return": []
-			},
-			"min_oracle_results": {
-				"visibility": "Public",
-				"isEntry": false,
-				"typeParameters": [],
-				"parameters": [
-					{
-						"Reference": {
-							"Struct": {
-								"address": "0x8d79f4d920b03d88faca1e421af023a87fbb1e4a6fd200248e6e9998d09e470",
-								"module": "aggregator",
-								"name": "Aggregator",
-								"typeArguments": []
-							}
-						}
-					}
-				],
-				"return": [
-					"U64"
-				]
-			},
-			"new": {
-				"visibility": "Public",
-				"isEntry": false,
-				"typeParameters": [
-					{
-						"abilities": [
-							"Drop"
-						]
-					}
-				],
-				"parameters": [
-					{
-						"Vector": "U8"
-					},
-					"Address",
-					"U64",
-					"U64",
-					"U64",
-					"U64",
-					{
-						"Struct": {
-							"address": "0x8d79f4d920b03d88faca1e421af023a87fbb1e4a6fd200248e6e9998d09e470",
-							"module": "math",
-							"name": "SwitchboardDecimal",
-							"typeArguments": []
-						}
-					},
-					"U64",
-					"Bool",
-					"U64",
-					"U64",
-					"Address",
-					{
-						"Vector": "Address"
-					},
-					"Bool",
-					"U64",
-					"Address",
-					{
-						"Reference": {
-							"TypeParameter": 0
-						}
-					},
-					{
-						"MutableReference": {
-							"Struct": {
-								"address": "0x2",
-								"module": "tx_context",
-								"name": "TxContext",
-								"typeArguments": []
-							}
-						}
-					}
-				],
-				"return": [
-					{
-						"Struct": {
-							"address": "0x8d79f4d920b03d88faca1e421af023a87fbb1e4a6fd200248e6e9998d09e470",
-							"module": "aggregator",
-							"name": "Aggregator",
-							"typeArguments": []
-						}
-					}
-				]
-			},
-			"new_sliding_window": {
-				"visibility": "Public",
-				"isEntry": false,
-				"typeParameters": [],
-				"parameters": [],
-				"return": [
-					{
-						"Struct": {
-							"address": "0x8d79f4d920b03d88faca1e421af023a87fbb1e4a6fd200248e6e9998d09e470",
-							"module": "aggregator",
-							"name": "SlidingWindow",
-							"typeArguments": []
-						}
-					}
-				]
-			},
-			"next_payment_interval": {
-				"visibility": "Public",
-				"isEntry": false,
-				"typeParameters": [
-					{
-						"abilities": []
-					}
-				],
-				"parameters": [
-					{
-						"MutableReference": {
-							"Struct": {
-								"address": "0x8d79f4d920b03d88faca1e421af023a87fbb1e4a6fd200248e6e9998d09e470",
-								"module": "aggregator",
-								"name": "Aggregator",
-								"typeArguments": []
-							}
-						}
-					},
-					{
-						"Reference": {
-							"TypeParameter": 0
-						}
-					}
-				],
-				"return": []
-			},
-			"push_update": {
-				"visibility": "Public",
-				"isEntry": false,
-				"typeParameters": [
-					{
-						"abilities": []
-					}
-				],
-				"parameters": [
-					{
-						"MutableReference": {
-							"Struct": {
-								"address": "0x8d79f4d920b03d88faca1e421af023a87fbb1e4a6fd200248e6e9998d09e470",
-								"module": "aggregator",
-								"name": "Aggregator",
-								"typeArguments": []
-							}
-						}
-					},
-					"Address",
-					{
-						"Struct": {
-							"address": "0x8d79f4d920b03d88faca1e421af023a87fbb1e4a6fd200248e6e9998d09e470",
-							"module": "math",
-							"name": "SwitchboardDecimal",
-							"typeArguments": []
-						}
-					},
-					"U64",
-					{
-						"Reference": {
-							"TypeParameter": 0
-						}
-					}
-				],
-				"return": [
-					"Bool",
-					{
-						"Struct": {
-							"address": "0x8d79f4d920b03d88faca1e421af023a87fbb1e4a6fd200248e6e9998d09e470",
-							"module": "math",
-							"name": "SwitchboardDecimal",
-							"typeArguments": []
-						}
-					}
-				]
-			},
-			"queue_address": {
-				"visibility": "Public",
-				"isEntry": false,
-				"typeParameters": [],
-				"parameters": [
-					{
-						"Reference": {
-							"Struct": {
-								"address": "0x8d79f4d920b03d88faca1e421af023a87fbb1e4a6fd200248e6e9998d09e470",
-								"module": "aggregator",
-								"name": "Aggregator",
-								"typeArguments": []
-							}
-						}
-					}
-				],
-				"return": [
-					"Address"
-				]
-			},
-			"remove_job": {
-				"visibility": "Public",
-				"isEntry": false,
-				"typeParameters": [],
-				"parameters": [
-					{
-						"MutableReference": {
-							"Struct": {
-								"address": "0x8d79f4d920b03d88faca1e421af023a87fbb1e4a6fd200248e6e9998d09e470",
-								"module": "aggregator",
-								"name": "Aggregator",
-								"typeArguments": []
-							}
-						}
-					},
-					"Address",
-					{
-						"MutableReference": {
-							"Struct": {
-								"address": "0x2",
-								"module": "tx_context",
-								"name": "TxContext",
-								"typeArguments": []
-							}
-						}
-					}
-				],
-				"return": []
-			},
-			"results_older_than": {
-				"visibility": "Public",
-				"isEntry": false,
-				"typeParameters": [],
-				"parameters": [
-					{
-						"Reference": {
-							"Struct": {
-								"address": "0x8d79f4d920b03d88faca1e421af023a87fbb1e4a6fd200248e6e9998d09e470",
-								"module": "aggregator",
-								"name": "SlidingWindow",
-								"typeArguments": []
-							}
-						}
-					},
-					{
-						"Reference": {
-							"Struct": {
-								"address": "0x2",
-								"module": "clock",
-								"name": "Clock",
-								"typeArguments": []
-							}
-						}
-					},
-					"U64"
-				],
-				"return": [
-					"Bool"
-				]
-			},
-			"set_aggregator_token": {
-				"visibility": "Public",
-				"isEntry": false,
-				"typeParameters": [],
-				"parameters": [
-					{
-						"MutableReference": {
-							"Struct": {
-								"address": "0x8d79f4d920b03d88faca1e421af023a87fbb1e4a6fd200248e6e9998d09e470",
-								"module": "aggregator",
-								"name": "Aggregator",
-								"typeArguments": []
-							}
-						}
-					},
-					"Address",
-					{
-						"MutableReference": {
-							"Struct": {
-								"address": "0x2",
-								"module": "tx_context",
-								"name": "TxContext",
-								"typeArguments": []
-							}
-						}
-					}
-				],
-				"return": []
-			},
-			"set_authority": {
-				"visibility": "Public",
-				"isEntry": false,
-				"typeParameters": [],
-				"parameters": [
-					{
-						"MutableReference": {
-							"Struct": {
-								"address": "0x8d79f4d920b03d88faca1e421af023a87fbb1e4a6fd200248e6e9998d09e470",
-								"module": "aggregator",
-								"name": "Aggregator",
-								"typeArguments": []
-							}
-						}
-					},
-					"Address",
-					{
-						"MutableReference": {
-							"Struct": {
-								"address": "0x2",
-								"module": "tx_context",
-								"name": "TxContext",
-								"typeArguments": []
-							}
-						}
-					}
-				],
-				"return": []
-			},
-			"set_config": {
-				"visibility": "Public",
-				"isEntry": false,
-				"typeParameters": [],
-				"parameters": [
-					{
-						"MutableReference": {
-							"Struct": {
-								"address": "0x8d79f4d920b03d88faca1e421af023a87fbb1e4a6fd200248e6e9998d09e470",
-								"module": "aggregator",
-								"name": "Aggregator",
-								"typeArguments": []
-							}
-						}
-					},
-					{
-						"Vector": "U8"
-					},
-					"Address",
-					"U64",
-					"U64",
-					"U64",
-					"U64",
-					{
-						"Struct": {
-							"address": "0x8d79f4d920b03d88faca1e421af023a87fbb1e4a6fd200248e6e9998d09e470",
-							"module": "math",
-							"name": "SwitchboardDecimal",
-							"typeArguments": []
-						}
-					},
-					"U64",
-					"Bool",
-					"U64",
-					"U64",
-					"Address",
-					{
-						"Vector": "Address"
-					},
-					{
-						"Vector": "Address"
-					},
-					"Bool",
-					{
-						"MutableReference": {
-							"Struct": {
-								"address": "0x2",
-								"module": "tx_context",
-								"name": "TxContext",
-								"typeArguments": []
-							}
-						}
-					}
-				],
-				"return": []
-			},
-			"share_aggregator": {
-				"visibility": "Public",
-				"isEntry": false,
-				"typeParameters": [],
-				"parameters": [
-					{
-						"Struct": {
-							"address": "0x8d79f4d920b03d88faca1e421af023a87fbb1e4a6fd200248e6e9998d09e470",
-							"module": "aggregator",
-							"name": "Aggregator",
-							"typeArguments": []
-						}
-					}
-				],
-				"return": []
-			},
-			"sliding_window_latest_result": {
-				"visibility": "Public",
-				"isEntry": false,
-				"typeParameters": [],
-				"parameters": [
-					{
-						"Reference": {
-							"Struct": {
-								"address": "0x8d79f4d920b03d88faca1e421af023a87fbb1e4a6fd200248e6e9998d09e470",
-								"module": "aggregator",
-								"name": "SlidingWindow",
-								"typeArguments": []
-							}
-						}
-					}
-				],
-				"return": [
-					{
-						"Struct": {
-							"address": "0x8d79f4d920b03d88faca1e421af023a87fbb1e4a6fd200248e6e9998d09e470",
-							"module": "math",
-							"name": "SwitchboardDecimal",
-							"typeArguments": []
-						}
-					},
-					"U64"
-				]
-			},
-			"sub_crank_row_count": {
-				"visibility": "Public",
-				"isEntry": false,
-				"typeParameters": [
-					{
-						"abilities": []
-					}
-				],
-				"parameters": [
-					{
-						"MutableReference": {
-							"Struct": {
-								"address": "0x8d79f4d920b03d88faca1e421af023a87fbb1e4a6fd200248e6e9998d09e470",
-								"module": "aggregator",
-								"name": "Aggregator",
-								"typeArguments": []
-							}
-						}
-					},
-					{
-						"Reference": {
-							"TypeParameter": 0
-						}
-					}
-				],
-				"return": []
-			}
-		}
-	},
-	{
-		"fileFormatVersion": 6,
-		"address": "0x8d79f4d920b03d88faca1e421af023a87fbb1e4a6fd200248e6e9998d09e470",
-		"name": "errors",
-		"friends": [],
-		"structs": {},
-		"exposedFunctions": {
-			"AggregatorIllegalRoundOpenCall": {
-				"visibility": "Public",
-				"isEntry": false,
-				"typeParameters": [],
-				"parameters": [],
-				"return": [
-					"U64"
-				]
-			},
-			"AggregatorInvalidBatchSize": {
-				"visibility": "Public",
-				"isEntry": false,
-				"typeParameters": [],
-				"parameters": [],
-				"return": [
-					"U64"
-				]
-			},
-			"AggregatorInvalidMinJobs": {
-				"visibility": "Public",
-				"isEntry": false,
-				"typeParameters": [],
-				"parameters": [],
-				"return": [
-					"U64"
-				]
-			},
-			"AggregatorInvalidMinOracleResults": {
-				"visibility": "Public",
-				"isEntry": false,
-				"typeParameters": [],
-				"parameters": [],
-				"return": [
-					"U64"
-				]
-			},
-			"AggregatorInvalidUpdateDelay": {
-				"visibility": "Public",
-				"isEntry": false,
-				"typeParameters": [],
-				"parameters": [],
-				"return": [
-					"U64"
-				]
-			},
-			"AggregatorLocked": {
-				"visibility": "Public",
-				"isEntry": false,
-				"typeParameters": [],
-				"parameters": [],
-				"return": [
-					"U64"
-				]
-			},
-			"CrankDisabled": {
-				"visibility": "Public",
-				"isEntry": false,
-				"typeParameters": [],
-				"parameters": [],
-				"return": [
-					"U64"
-				]
-			},
-			"Generic": {
-				"visibility": "Public",
-				"isEntry": false,
-				"typeParameters": [],
-				"parameters": [],
-				"return": [
-					"U64"
-				]
-			},
-			"InsufficientCoin": {
-				"visibility": "Public",
-				"isEntry": false,
-				"typeParameters": [],
-				"parameters": [],
-				"return": [
-					"U64"
-				]
-			},
-			"InsufficientQueueError": {
-				"visibility": "Public",
-				"isEntry": false,
-				"typeParameters": [],
-				"parameters": [],
-				"return": [
-					"U64"
-				]
-			},
-			"InvalidArgument": {
-				"visibility": "Public",
-				"isEntry": false,
-				"typeParameters": [],
-				"parameters": [],
-				"return": [
-					"U64"
-				]
-			},
-			"InvalidAuthority": {
-				"visibility": "Public",
-				"isEntry": false,
-				"typeParameters": [],
-				"parameters": [],
-				"return": [
-					"U64"
-				]
-			},
-			"InvalidConstraint": {
-				"visibility": "Public",
-				"isEntry": false,
-				"typeParameters": [],
-				"parameters": [],
-				"return": [
-					"U64"
-				]
-			},
-			"InvalidNodeError": {
-				"visibility": "Public",
-				"isEntry": false,
-				"typeParameters": [],
-				"parameters": [],
-				"return": [
-					"U64"
-				]
-			},
-			"InvalidPackage": {
-				"visibility": "Public",
-				"isEntry": false,
-				"typeParameters": [],
-				"parameters": [],
-				"return": [
-					"U64"
-				]
-			},
-			"InvalidQuoteError": {
-				"visibility": "Public",
-				"isEntry": false,
-				"typeParameters": [],
-				"parameters": [],
-				"return": [
-					"U64"
-				]
-			},
-			"InvalidTimestamp": {
-				"visibility": "Public",
-				"isEntry": false,
-				"typeParameters": [],
-				"parameters": [],
-				"return": [
-					"U64"
-				]
-			},
-			"InvalidVersion": {
-				"visibility": "Public",
-				"isEntry": false,
-				"typeParameters": [],
-				"parameters": [],
-				"return": [
-					"U64"
-				]
-			},
-			"JobsChecksumMismatch": {
-				"visibility": "Public",
-				"isEntry": false,
-				"typeParameters": [],
-				"parameters": [],
-				"return": [
-					"U64"
-				]
-			},
-			"MrEnclaveAlreadyExists": {
-				"visibility": "Public",
-				"isEntry": false,
-				"typeParameters": [],
-				"parameters": [],
-				"return": [
-					"U64"
-				]
-			},
-			"MrEnclaveAtCapacity": {
-				"visibility": "Public",
-				"isEntry": false,
-				"typeParameters": [],
-				"parameters": [],
-				"return": [
-					"U64"
-				]
-			},
-			"MrEnclaveDoesNotExist": {
-				"visibility": "Public",
-				"isEntry": false,
-				"typeParameters": [],
-				"parameters": [],
-				"return": [
-					"U64"
-				]
-			},
-			"PermissionDenied": {
-				"visibility": "Public",
-				"isEntry": false,
-				"typeParameters": [],
-				"parameters": [],
-				"return": [
-					"U64"
-				]
-			},
-			"QueueFullError": {
-				"visibility": "Public",
-				"isEntry": false,
-				"typeParameters": [],
-				"parameters": [],
-				"return": [
-					"U64"
-				]
-			},
-			"QuoteExpiredError": {
-				"visibility": "Public",
-				"isEntry": false,
-				"typeParameters": [],
-				"parameters": [],
-				"return": [
-					"U64"
-				]
-			}
-		}
-	},
-	{
-		"fileFormatVersion": 6,
-		"address": "0x8d79f4d920b03d88faca1e421af023a87fbb1e4a6fd200248e6e9998d09e470",
-		"name": "job",
-		"friends": [],
-		"structs": {
-			"Job": {
-				"abilities": {
-					"abilities": [
-						"Key"
-					]
-				},
-				"typeParameters": [],
-				"fields": [
-					{
-						"name": "id",
-						"type": {
-							"Struct": {
-								"address": "0x2",
-								"module": "object",
-								"name": "UID",
-								"typeArguments": []
-							}
-						}
-					},
-					{
-						"name": "name",
-						"type": {
-							"Vector": "U8"
-						}
-					},
-					{
-						"name": "hash",
-						"type": {
-							"Vector": "U8"
-						}
-					},
-					{
-						"name": "data",
-						"type": {
-							"Vector": "U8"
-						}
-					},
-					{
-						"name": "created_at",
-						"type": "U64"
-					}
-				]
-			}
-		},
-		"exposedFunctions": {
-			"freeze_job": {
-				"visibility": "Public",
-				"isEntry": false,
-				"typeParameters": [],
-				"parameters": [
-					{
-						"Struct": {
-							"address": "0x8d79f4d920b03d88faca1e421af023a87fbb1e4a6fd200248e6e9998d09e470",
-							"module": "job",
-							"name": "Job",
-							"typeArguments": []
-						}
-					}
-				],
-				"return": []
-			},
-			"hash": {
-				"visibility": "Public",
-				"isEntry": false,
-				"typeParameters": [],
-				"parameters": [
-					{
-						"Reference": {
-							"Struct": {
-								"address": "0x8d79f4d920b03d88faca1e421af023a87fbb1e4a6fd200248e6e9998d09e470",
-								"module": "job",
-								"name": "Job",
-								"typeArguments": []
-							}
-						}
-					}
-				],
-				"return": [
-					{
-						"Vector": "U8"
-					}
-				]
-			},
-			"job_address": {
-				"visibility": "Public",
-				"isEntry": false,
-				"typeParameters": [],
-				"parameters": [
-					{
-						"Reference": {
-							"Struct": {
-								"address": "0x8d79f4d920b03d88faca1e421af023a87fbb1e4a6fd200248e6e9998d09e470",
-								"module": "job",
-								"name": "Job",
-								"typeArguments": []
-							}
-						}
-					}
-				],
-				"return": [
-					"Address"
-				]
-			},
-			"new": {
-				"visibility": "Public",
-				"isEntry": false,
-				"typeParameters": [],
-				"parameters": [
-					{
-						"Vector": "U8"
-					},
-					{
-						"Vector": "U8"
-					},
-					"U64",
-					{
-						"MutableReference": {
-							"Struct": {
-								"address": "0x2",
-								"module": "tx_context",
-								"name": "TxContext",
-								"typeArguments": []
-							}
-						}
-					}
-				],
-				"return": [
-					{
-						"Struct": {
-							"address": "0x8d79f4d920b03d88faca1e421af023a87fbb1e4a6fd200248e6e9998d09e470",
-							"module": "job",
-							"name": "Job",
-							"typeArguments": []
-						}
-					}
-				]
-			}
-		}
-	},
-	{
-		"fileFormatVersion": 6,
-		"address": "0x8d79f4d920b03d88faca1e421af023a87fbb1e4a6fd200248e6e9998d09e470",
-		"name": "math",
-		"friends": [],
-		"structs": {
-			"SwitchboardDecimal": {
-				"abilities": {
-					"abilities": [
-						"Copy",
-						"Drop",
-						"Store"
-					]
-				},
-				"typeParameters": [],
-				"fields": [
-					{
-						"name": "value",
-						"type": "U128"
-					},
-					{
-						"name": "dec",
-						"type": "U8"
-					},
-					{
-						"name": "neg",
-						"type": "Bool"
-					}
-				]
-			}
-		},
-		"exposedFunctions": {
-			"add": {
-				"visibility": "Public",
-				"isEntry": false,
-				"typeParameters": [],
-				"parameters": [
-					{
-						"Reference": {
-							"Struct": {
-								"address": "0x8d79f4d920b03d88faca1e421af023a87fbb1e4a6fd200248e6e9998d09e470",
-								"module": "math",
-								"name": "SwitchboardDecimal",
-								"typeArguments": []
-							}
-						}
-					},
-					{
-						"Reference": {
-							"Struct": {
-								"address": "0x8d79f4d920b03d88faca1e421af023a87fbb1e4a6fd200248e6e9998d09e470",
-								"module": "math",
-								"name": "SwitchboardDecimal",
-								"typeArguments": []
-							}
-						}
-					}
-				],
-				"return": [
-					{
-						"Struct": {
-							"address": "0x8d79f4d920b03d88faca1e421af023a87fbb1e4a6fd200248e6e9998d09e470",
-							"module": "math",
-							"name": "SwitchboardDecimal",
-							"typeArguments": []
-						}
-					}
-				]
-			},
-			"add_u64": {
-				"visibility": "Public",
-				"isEntry": false,
-				"typeParameters": [],
-				"parameters": [
-					"U64",
-					"Bool",
-					"U64",
-					"Bool"
-				],
-				"return": [
-					"Bool",
-					"U64"
-				]
-			},
-			"div": {
-				"visibility": "Public",
-				"isEntry": false,
-				"typeParameters": [],
-				"parameters": [
-					{
-						"Reference": {
-							"Struct": {
-								"address": "0x8d79f4d920b03d88faca1e421af023a87fbb1e4a6fd200248e6e9998d09e470",
-								"module": "math",
-								"name": "SwitchboardDecimal",
-								"typeArguments": []
-							}
-						}
-					},
-					{
-						"Reference": {
-							"Struct": {
-								"address": "0x8d79f4d920b03d88faca1e421af023a87fbb1e4a6fd200248e6e9998d09e470",
-								"module": "math",
-								"name": "SwitchboardDecimal",
-								"typeArguments": []
-							}
-						}
-					},
-					{
-						"MutableReference": {
-							"Struct": {
-								"address": "0x8d79f4d920b03d88faca1e421af023a87fbb1e4a6fd200248e6e9998d09e470",
-								"module": "math",
-								"name": "SwitchboardDecimal",
-								"typeArguments": []
-							}
-						}
-					}
-				],
-				"return": []
-			},
-			"equals": {
-				"visibility": "Public",
-				"isEntry": false,
-				"typeParameters": [],
-				"parameters": [
-					{
-						"Reference": {
-							"Struct": {
-								"address": "0x8d79f4d920b03d88faca1e421af023a87fbb1e4a6fd200248e6e9998d09e470",
-								"module": "math",
-								"name": "SwitchboardDecimal",
-								"typeArguments": []
-							}
-						}
-					},
-					{
-						"Reference": {
-							"Struct": {
-								"address": "0x8d79f4d920b03d88faca1e421af023a87fbb1e4a6fd200248e6e9998d09e470",
-								"module": "math",
-								"name": "SwitchboardDecimal",
-								"typeArguments": []
-							}
-						}
-					}
-				],
-				"return": [
-					"Bool"
-				]
-			},
-			"gt": {
-				"visibility": "Public",
-				"isEntry": false,
-				"typeParameters": [],
-				"parameters": [
-					{
-						"Reference": {
-							"Struct": {
-								"address": "0x8d79f4d920b03d88faca1e421af023a87fbb1e4a6fd200248e6e9998d09e470",
-								"module": "math",
-								"name": "SwitchboardDecimal",
-								"typeArguments": []
-							}
-						}
-					},
-					{
-						"Reference": {
-							"Struct": {
-								"address": "0x8d79f4d920b03d88faca1e421af023a87fbb1e4a6fd200248e6e9998d09e470",
-								"module": "math",
-								"name": "SwitchboardDecimal",
-								"typeArguments": []
-							}
-						}
-					}
-				],
-				"return": [
-					"Bool"
-				]
-			},
-			"gte": {
-				"visibility": "Public",
-				"isEntry": false,
-				"typeParameters": [],
-				"parameters": [
-					{
-						"Reference": {
-							"Struct": {
-								"address": "0x8d79f4d920b03d88faca1e421af023a87fbb1e4a6fd200248e6e9998d09e470",
-								"module": "math",
-								"name": "SwitchboardDecimal",
-								"typeArguments": []
-							}
-						}
-					},
-					{
-						"Reference": {
-							"Struct": {
-								"address": "0x8d79f4d920b03d88faca1e421af023a87fbb1e4a6fd200248e6e9998d09e470",
-								"module": "math",
-								"name": "SwitchboardDecimal",
-								"typeArguments": []
-							}
-						}
-					}
-				],
-				"return": [
-					"Bool"
-				]
-			},
-			"lt": {
-				"visibility": "Public",
-				"isEntry": false,
-				"typeParameters": [],
-				"parameters": [
-					{
-						"Reference": {
-							"Struct": {
-								"address": "0x8d79f4d920b03d88faca1e421af023a87fbb1e4a6fd200248e6e9998d09e470",
-								"module": "math",
-								"name": "SwitchboardDecimal",
-								"typeArguments": []
-							}
-						}
-					},
-					{
-						"Reference": {
-							"Struct": {
-								"address": "0x8d79f4d920b03d88faca1e421af023a87fbb1e4a6fd200248e6e9998d09e470",
-								"module": "math",
-								"name": "SwitchboardDecimal",
-								"typeArguments": []
-							}
-						}
-					}
-				],
-				"return": [
-					"Bool"
-				]
-			},
-			"lt_u64": {
-				"visibility": "Public",
-				"isEntry": false,
-				"typeParameters": [],
-				"parameters": [
-					"U64",
-					"Bool",
-					"U64",
-					"Bool"
-				],
-				"return": [
-					"Bool"
-				]
-			},
-			"lte": {
-				"visibility": "Public",
-				"isEntry": false,
-				"typeParameters": [],
-				"parameters": [
-					{
-						"Reference": {
-							"Struct": {
-								"address": "0x8d79f4d920b03d88faca1e421af023a87fbb1e4a6fd200248e6e9998d09e470",
-								"module": "math",
-								"name": "SwitchboardDecimal",
-								"typeArguments": []
-							}
-						}
-					},
-					{
-						"Reference": {
-							"Struct": {
-								"address": "0x8d79f4d920b03d88faca1e421af023a87fbb1e4a6fd200248e6e9998d09e470",
-								"module": "math",
-								"name": "SwitchboardDecimal",
-								"typeArguments": []
-							}
-						}
-					}
-				],
-				"return": [
-					"Bool"
-				]
-			},
-			"max_u128": {
-				"visibility": "Public",
-				"isEntry": false,
-				"typeParameters": [],
-				"parameters": [],
-				"return": [
-					"U128"
-				]
-			},
-			"median": {
-				"visibility": "Public",
-				"isEntry": false,
-				"typeParameters": [],
-				"parameters": [
-					{
-						"MutableReference": {
-							"Vector": {
-								"Struct": {
-									"address": "0x8d79f4d920b03d88faca1e421af023a87fbb1e4a6fd200248e6e9998d09e470",
-									"module": "math",
-									"name": "SwitchboardDecimal",
-									"typeArguments": []
-								}
-							}
-						}
-					}
-				],
-				"return": [
-					{
-						"Struct": {
-							"address": "0x8d79f4d920b03d88faca1e421af023a87fbb1e4a6fd200248e6e9998d09e470",
-							"module": "math",
-							"name": "SwitchboardDecimal",
-							"typeArguments": []
-						}
-					}
-				]
-			},
-			"mul": {
-				"visibility": "Public",
-				"isEntry": false,
-				"typeParameters": [],
-				"parameters": [
-					{
-						"Reference": {
-							"Struct": {
-								"address": "0x8d79f4d920b03d88faca1e421af023a87fbb1e4a6fd200248e6e9998d09e470",
-								"module": "math",
-								"name": "SwitchboardDecimal",
-								"typeArguments": []
-							}
-						}
-					},
-					{
-						"Reference": {
-							"Struct": {
-								"address": "0x8d79f4d920b03d88faca1e421af023a87fbb1e4a6fd200248e6e9998d09e470",
-								"module": "math",
-								"name": "SwitchboardDecimal",
-								"typeArguments": []
-							}
-						}
-					},
-					{
-						"MutableReference": {
-							"Struct": {
-								"address": "0x8d79f4d920b03d88faca1e421af023a87fbb1e4a6fd200248e6e9998d09e470",
-								"module": "math",
-								"name": "SwitchboardDecimal",
-								"typeArguments": []
-							}
-						}
-					}
-				],
-				"return": []
-			},
-			"new": {
-				"visibility": "Public",
-				"isEntry": false,
-				"typeParameters": [],
-				"parameters": [
-					"U128",
-					"U8",
-					"Bool"
-				],
-				"return": [
-					{
-						"Struct": {
-							"address": "0x8d79f4d920b03d88faca1e421af023a87fbb1e4a6fd200248e6e9998d09e470",
-							"module": "math",
-							"name": "SwitchboardDecimal",
-							"typeArguments": []
-						}
-					}
-				]
-			},
-			"pow": {
-				"visibility": "Public",
-				"isEntry": false,
-				"typeParameters": [],
-				"parameters": [
-					"U64",
-					"U8"
-				],
-				"return": [
-					"U128"
-				]
-			},
-			"quick_sort": {
-				"visibility": "Public",
-				"isEntry": false,
-				"typeParameters": [],
-				"parameters": [
-					{
-						"MutableReference": {
-							"Vector": {
-								"Struct": {
-									"address": "0x8d79f4d920b03d88faca1e421af023a87fbb1e4a6fd200248e6e9998d09e470",
-									"module": "math",
-									"name": "SwitchboardDecimal",
-									"typeArguments": []
-								}
-							}
-						}
-					},
-					"U64",
-					"Bool",
-					"U64",
-					"Bool"
-				],
-				"return": []
-			},
-			"scale_to_decimals": {
-				"visibility": "Public",
-				"isEntry": false,
-				"typeParameters": [],
-				"parameters": [
-					{
-						"Reference": {
-							"Struct": {
-								"address": "0x8d79f4d920b03d88faca1e421af023a87fbb1e4a6fd200248e6e9998d09e470",
-								"module": "math",
-								"name": "SwitchboardDecimal",
-								"typeArguments": []
-							}
-						}
-					},
-					"U8"
-				],
-				"return": [
-					"U128"
-				]
-			},
-			"sort_results": {
-				"visibility": "Public",
-				"isEntry": false,
-				"typeParameters": [],
-				"parameters": [
-					{
-						"MutableReference": {
-							"Vector": {
-								"Struct": {
-									"address": "0x8d79f4d920b03d88faca1e421af023a87fbb1e4a6fd200248e6e9998d09e470",
-									"module": "math",
-									"name": "SwitchboardDecimal",
-									"typeArguments": []
-								}
-							}
-						}
-					}
-				],
-				"return": []
-			},
-			"sub": {
-				"visibility": "Public",
-				"isEntry": false,
-				"typeParameters": [],
-				"parameters": [
-					{
-						"Reference": {
-							"Struct": {
-								"address": "0x8d79f4d920b03d88faca1e421af023a87fbb1e4a6fd200248e6e9998d09e470",
-								"module": "math",
-								"name": "SwitchboardDecimal",
-								"typeArguments": []
-							}
-						}
-					},
-					{
-						"Reference": {
-							"Struct": {
-								"address": "0x8d79f4d920b03d88faca1e421af023a87fbb1e4a6fd200248e6e9998d09e470",
-								"module": "math",
-								"name": "SwitchboardDecimal",
-								"typeArguments": []
-							}
-						}
-					}
-				],
-				"return": [
-					{
-						"Struct": {
-							"address": "0x8d79f4d920b03d88faca1e421af023a87fbb1e4a6fd200248e6e9998d09e470",
-							"module": "math",
-							"name": "SwitchboardDecimal",
-							"typeArguments": []
-						}
-					}
-				]
-			},
-			"sub_u64": {
-				"visibility": "Public",
-				"isEntry": false,
-				"typeParameters": [],
-				"parameters": [
-					"U64",
-					"Bool",
-					"U64",
-					"Bool"
-				],
-				"return": [
-					"Bool",
-					"U64"
-				]
-			},
-			"unpack": {
-				"visibility": "Public",
-				"isEntry": false,
-				"typeParameters": [],
-				"parameters": [
-					{
-						"Struct": {
-							"address": "0x8d79f4d920b03d88faca1e421af023a87fbb1e4a6fd200248e6e9998d09e470",
-							"module": "math",
-							"name": "SwitchboardDecimal",
-							"typeArguments": []
-						}
-					}
-				],
-				"return": [
-					"U128",
-					"U8",
-					"Bool"
-				]
-			},
-			"zero": {
-				"visibility": "Public",
-				"isEntry": false,
-				"typeParameters": [],
-				"parameters": [],
-				"return": [
-					{
-						"Struct": {
-							"address": "0x8d79f4d920b03d88faca1e421af023a87fbb1e4a6fd200248e6e9998d09e470",
-							"module": "math",
-							"name": "SwitchboardDecimal",
-							"typeArguments": []
-						}
-					}
-				]
-			}
-		}
-	},
-	{
-		"fileFormatVersion": 6,
-		"address": "0x8d79f4d920b03d88faca1e421af023a87fbb1e4a6fd200248e6e9998d09e470",
-		"name": "quote",
-		"friends": [],
-		"structs": {
-			"Quote": {
-				"abilities": {
-					"abilities": [
-						"Key"
-					]
-				},
-				"typeParameters": [],
-				"fields": [
-					{
-						"name": "id",
-						"type": {
-							"Struct": {
-								"address": "0x2",
-								"module": "object",
-								"name": "UID",
-								"typeArguments": []
-							}
-						}
-					},
-					{
-						"name": "node_addr",
-						"type": "Address"
-					},
-					{
-						"name": "node_authority",
-						"type": "Address"
-					},
-					{
-						"name": "queue_addr",
-						"type": "Address"
-					},
-					{
-						"name": "quote_buffer",
-						"type": {
-							"Vector": "U8"
-						}
-					},
-					{
-						"name": "verification_status",
-						"type": "U8"
-					},
-					{
-						"name": "verification_timestamp",
-						"type": "U64"
-					},
-					{
-						"name": "valid_until",
-						"type": "U64"
-					},
-					{
-						"name": "content_hash_enabled",
-						"type": "Bool"
-					},
-					{
-						"name": "friend_key",
-						"type": {
-							"Vector": "U8"
-						}
-					},
-					{
-						"name": "version",
-						"type": "U64"
-					}
-				]
-			}
-		},
-		"exposedFunctions": {
-			"VERIFICATION_FAILURE": {
-				"visibility": "Public",
-				"isEntry": false,
-				"typeParameters": [],
-				"parameters": [],
-				"return": [
-					"U8"
-				]
-			},
-			"VERIFICATION_OVERRIDE": {
-				"visibility": "Public",
-				"isEntry": false,
-				"typeParameters": [],
-				"parameters": [],
-				"return": [
-					"U8"
-				]
-			},
-			"VERIFICATION_PENDING": {
-				"visibility": "Public",
-				"isEntry": false,
-				"typeParameters": [],
-				"parameters": [],
-				"return": [
-					"U8"
-				]
-			},
-			"VERIFICATION_SUCCESS": {
-				"visibility": "Public",
-				"isEntry": false,
-				"typeParameters": [],
-				"parameters": [],
-				"return": [
-					"U8"
-				]
-			},
-			"fail": {
-				"visibility": "Public",
-				"isEntry": false,
-				"typeParameters": [
-					{
-						"abilities": []
-					}
-				],
-				"parameters": [
-					{
-						"MutableReference": {
-							"Struct": {
-								"address": "0x8d79f4d920b03d88faca1e421af023a87fbb1e4a6fd200248e6e9998d09e470",
-								"module": "quote",
-								"name": "Quote",
-								"typeArguments": []
-							}
-						}
-					},
-					{
-						"Reference": {
-							"TypeParameter": 0
-						}
-					}
-				],
-				"return": []
-			},
-			"force_override": {
-				"visibility": "Public",
-				"isEntry": false,
-				"typeParameters": [
-					{
-						"abilities": []
-					}
-				],
-				"parameters": [
-					{
-						"MutableReference": {
-							"Struct": {
-								"address": "0x8d79f4d920b03d88faca1e421af023a87fbb1e4a6fd200248e6e9998d09e470",
-								"module": "quote",
-								"name": "Quote",
-								"typeArguments": []
-							}
-						}
-					},
-					"U64",
-					"U64",
-					{
-						"Reference": {
-							"TypeParameter": 0
-						}
-					}
-				],
-				"return": []
-			},
-			"is_valid": {
-				"visibility": "Public",
-				"isEntry": false,
-				"typeParameters": [],
-				"parameters": [
-					{
-						"Reference": {
-							"Struct": {
-								"address": "0x8d79f4d920b03d88faca1e421af023a87fbb1e4a6fd200248e6e9998d09e470",
-								"module": "quote",
-								"name": "Quote",
-								"typeArguments": []
-							}
-						}
-					},
-					"U64"
-				],
-				"return": [
-					"Bool"
-				]
-			},
-			"migrate": {
-				"visibility": "Private",
-				"isEntry": true,
-				"typeParameters": [],
-				"parameters": [
-					{
-						"MutableReference": {
-							"Struct": {
-								"address": "0x8d79f4d920b03d88faca1e421af023a87fbb1e4a6fd200248e6e9998d09e470",
-								"module": "quote",
-								"name": "Quote",
-								"typeArguments": []
-							}
-						}
-					},
-					{
-						"Reference": {
-							"Struct": {
-								"address": "0x8d79f4d920b03d88faca1e421af023a87fbb1e4a6fd200248e6e9998d09e470",
-								"module": "switchboard",
-								"name": "AdminCap",
-								"typeArguments": []
-							}
-						}
-					}
-				],
-				"return": []
-			},
-			"migrate_package": {
-				"visibility": "Public",
-				"isEntry": false,
-				"typeParameters": [
-					{
-						"abilities": []
-					},
-					{
-						"abilities": []
-					}
-				],
-				"parameters": [
-					{
-						"MutableReference": {
-							"Struct": {
-								"address": "0x8d79f4d920b03d88faca1e421af023a87fbb1e4a6fd200248e6e9998d09e470",
-								"module": "quote",
-								"name": "Quote",
-								"typeArguments": []
-							}
-						}
-					},
-					{
-						"Reference": {
-							"TypeParameter": 0
-						}
-					},
-					{
-						"Reference": {
-							"TypeParameter": 1
-						}
-					}
-				],
-				"return": []
-			},
-			"new": {
-				"visibility": "Public",
-				"isEntry": false,
-				"typeParameters": [
-					{
-						"abilities": []
-					}
-				],
-				"parameters": [
-					"Address",
-					"Address",
-					"Address",
-					{
-						"Vector": "U8"
-					},
-					"Bool",
-					{
-						"Reference": {
-							"TypeParameter": 0
-						}
-					},
-					{
-						"MutableReference": {
-							"Struct": {
-								"address": "0x2",
-								"module": "tx_context",
-								"name": "TxContext",
-								"typeArguments": []
-							}
-						}
-					}
-				],
-				"return": [
-					{
-						"Struct": {
-							"address": "0x8d79f4d920b03d88faca1e421af023a87fbb1e4a6fd200248e6e9998d09e470",
-							"module": "quote",
-							"name": "Quote",
-							"typeArguments": []
-						}
-					}
-				]
-			},
-			"node_addr": {
-				"visibility": "Public",
-				"isEntry": false,
-				"typeParameters": [],
-				"parameters": [
-					{
-						"Reference": {
-							"Struct": {
-								"address": "0x8d79f4d920b03d88faca1e421af023a87fbb1e4a6fd200248e6e9998d09e470",
-								"module": "quote",
-								"name": "Quote",
-								"typeArguments": []
-							}
-						}
-					}
-				],
-				"return": [
-					"Address"
-				]
-			},
-			"node_authority": {
-				"visibility": "Public",
-				"isEntry": false,
-				"typeParameters": [],
-				"parameters": [
-					{
-						"Reference": {
-							"Struct": {
-								"address": "0x8d79f4d920b03d88faca1e421af023a87fbb1e4a6fd200248e6e9998d09e470",
-								"module": "quote",
-								"name": "Quote",
-								"typeArguments": []
-							}
-						}
-					}
-				],
-				"return": [
-					"Address"
-				]
-			},
-			"queue_addr": {
-				"visibility": "Public",
-				"isEntry": false,
-				"typeParameters": [],
-				"parameters": [
-					{
-						"Reference": {
-							"Struct": {
-								"address": "0x8d79f4d920b03d88faca1e421af023a87fbb1e4a6fd200248e6e9998d09e470",
-								"module": "quote",
-								"name": "Quote",
-								"typeArguments": []
-							}
-						}
-					}
-				],
-				"return": [
-					"Address"
-				]
-			},
-			"quote_address": {
-				"visibility": "Public",
-				"isEntry": false,
-				"typeParameters": [],
-				"parameters": [
-					{
-						"Reference": {
-							"Struct": {
-								"address": "0x8d79f4d920b03d88faca1e421af023a87fbb1e4a6fd200248e6e9998d09e470",
-								"module": "quote",
-								"name": "Quote",
-								"typeArguments": []
-							}
-						}
-					}
-				],
-				"return": [
-					"Address"
-				]
-			},
-			"quote_buffer": {
-				"visibility": "Public",
-				"isEntry": false,
-				"typeParameters": [],
-				"parameters": [
-					{
-						"Reference": {
-							"Struct": {
-								"address": "0x8d79f4d920b03d88faca1e421af023a87fbb1e4a6fd200248e6e9998d09e470",
-								"module": "quote",
-								"name": "Quote",
-								"typeArguments": []
-							}
-						}
-					}
-				],
-				"return": [
-					{
-						"Reference": {
-							"Vector": "U8"
-						}
-					}
-				]
-			},
-			"set_configs": {
-				"visibility": "Public",
-				"isEntry": false,
-				"typeParameters": [
-					{
-						"abilities": []
-					}
-				],
-				"parameters": [
-					{
-						"MutableReference": {
-							"Struct": {
-								"address": "0x8d79f4d920b03d88faca1e421af023a87fbb1e4a6fd200248e6e9998d09e470",
-								"module": "quote",
-								"name": "Quote",
-								"typeArguments": []
-							}
-						}
-					},
-					"Address",
-					"Address",
-					"Address",
-					{
-						"Vector": "U8"
-					},
-					"U8",
-					"U64",
-					"U64",
-					{
-						"Reference": {
-							"TypeParameter": 0
-						}
-					}
-				],
-				"return": []
-			},
-			"share_quote": {
-				"visibility": "Public",
-				"isEntry": false,
-				"typeParameters": [],
-				"parameters": [
-					{
-						"Struct": {
-							"address": "0x8d79f4d920b03d88faca1e421af023a87fbb1e4a6fd200248e6e9998d09e470",
-							"module": "quote",
-							"name": "Quote",
-							"typeArguments": []
-						}
-					}
-				],
-				"return": []
-			},
-			"valid_until": {
-				"visibility": "Public",
-				"isEntry": false,
-				"typeParameters": [],
-				"parameters": [
-					{
-						"Reference": {
-							"Struct": {
-								"address": "0x8d79f4d920b03d88faca1e421af023a87fbb1e4a6fd200248e6e9998d09e470",
-								"module": "quote",
-								"name": "Quote",
-								"typeArguments": []
-							}
-						}
-					}
-				],
-				"return": [
-					"U64"
-				]
-			},
-			"verification_status": {
-				"visibility": "Public",
-				"isEntry": false,
-				"typeParameters": [],
-				"parameters": [
-					{
-						"Reference": {
-							"Struct": {
-								"address": "0x8d79f4d920b03d88faca1e421af023a87fbb1e4a6fd200248e6e9998d09e470",
-								"module": "quote",
-								"name": "Quote",
-								"typeArguments": []
-							}
-						}
-					}
-				],
-				"return": [
-					"U8"
-				]
-			},
-			"verification_timestamp": {
-				"visibility": "Public",
-				"isEntry": false,
-				"typeParameters": [],
-				"parameters": [
-					{
-						"Reference": {
-							"Struct": {
-								"address": "0x8d79f4d920b03d88faca1e421af023a87fbb1e4a6fd200248e6e9998d09e470",
-								"module": "quote",
-								"name": "Quote",
-								"typeArguments": []
-							}
-						}
-					}
-				],
-				"return": [
-					"U64"
-				]
-			},
-			"verify": {
-				"visibility": "Public",
-				"isEntry": false,
-				"typeParameters": [
-					{
-						"abilities": []
-					}
-				],
-				"parameters": [
-					{
-						"MutableReference": {
-							"Struct": {
-								"address": "0x8d79f4d920b03d88faca1e421af023a87fbb1e4a6fd200248e6e9998d09e470",
-								"module": "quote",
-								"name": "Quote",
-								"typeArguments": []
-							}
-						}
-					},
-					"U64",
-					"U64",
-					{
-						"Reference": {
-							"TypeParameter": 0
-						}
-					}
-				],
-				"return": []
-			},
-			"verify_quote_data": {
-				"visibility": "Public",
-				"isEntry": false,
-				"typeParameters": [],
-				"parameters": [
-					{
-						"Reference": {
-							"Struct": {
-								"address": "0x8d79f4d920b03d88faca1e421af023a87fbb1e4a6fd200248e6e9998d09e470",
-								"module": "quote",
-								"name": "Quote",
-								"typeArguments": []
-							}
-						}
-					}
-				],
-				"return": [
-					"Bool",
-					{
-						"Vector": "U8"
-					}
-				]
-			}
-		}
-	},
-	{
-		"fileFormatVersion": 6,
-		"address": "0x8d79f4d920b03d88faca1e421af023a87fbb1e4a6fd200248e6e9998d09e470",
-		"name": "switchboard",
-		"friends": [],
-		"structs": {
-			"AdminCap": {
-				"abilities": {
-					"abilities": [
-						"Key"
-					]
-				},
-				"typeParameters": [],
-				"fields": [
-					{
-						"name": "id",
-						"type": {
-							"Struct": {
-								"address": "0x2",
-								"module": "object",
-								"name": "UID",
-								"typeArguments": []
-							}
-						}
-					}
-				]
-			}
-		},
-		"exposedFunctions": {
-			"version": {
-				"visibility": "Public",
-				"isEntry": false,
-				"typeParameters": [],
-				"parameters": [],
-				"return": [
-					"U64"
-				]
-			}
-		}
-	},
-	{
-		"fileFormatVersion": 6,
-		"address": "0x8d79f4d920b03d88faca1e421af023a87fbb1e4a6fd200248e6e9998d09e470",
-		"name": "utils",
-		"friends": [],
-		"structs": {},
-		"exposedFunctions": {
-			"escrow_balance": {
-				"visibility": "Public",
-				"isEntry": false,
-				"typeParameters": [
-					{
-						"abilities": []
-					}
-				],
-				"parameters": [
-					{
-						"Reference": {
-							"Struct": {
-								"address": "0x2",
-								"module": "bag",
-								"name": "Bag",
-								"typeArguments": []
-							}
-						}
-					},
-					"Address"
-				],
-				"return": [
-					"U64"
-				]
-			},
-			"escrow_deposit": {
-				"visibility": "Public",
-				"isEntry": false,
-				"typeParameters": [
-					{
-						"abilities": []
-					}
-				],
-				"parameters": [
-					{
-						"MutableReference": {
-							"Struct": {
-								"address": "0x2",
-								"module": "bag",
-								"name": "Bag",
-								"typeArguments": []
-							}
-						}
-					},
-					"Address",
-					{
-						"Struct": {
-							"address": "0x2",
-							"module": "coin",
-							"name": "Coin",
-							"typeArguments": [
-								{
-									"TypeParameter": 0
-								}
-							]
-						}
-					}
-				],
-				"return": []
-			},
-			"escrow_withdraw": {
-				"visibility": "Public",
-				"isEntry": false,
-				"typeParameters": [
-					{
-						"abilities": []
-					}
-				],
-				"parameters": [
-					{
-						"MutableReference": {
-							"Struct": {
-								"address": "0x2",
-								"module": "bag",
-								"name": "Bag",
-								"typeArguments": []
-							}
-						}
-					},
-					"Address",
-					"U64",
-					{
-						"MutableReference": {
-							"Struct": {
-								"address": "0x2",
-								"module": "tx_context",
-								"name": "TxContext",
-								"typeArguments": []
-							}
-						}
-					}
-				],
-				"return": [
-					{
-						"Struct": {
-							"address": "0x2",
-							"module": "coin",
-							"name": "Coin",
-							"typeArguments": [
-								{
-									"TypeParameter": 0
-								}
-							]
-						}
-					}
-				]
-			},
-			"parse_sgx_quote": {
-				"visibility": "Public",
-				"isEntry": false,
-				"typeParameters": [],
-				"parameters": [
-					{
-						"Reference": {
-							"Vector": "U8"
-						}
-					}
-				],
-				"return": [
-					{
-						"Vector": "U8"
-					},
-					{
-						"Vector": "U8"
-					}
-				]
-			},
-			"slice": {
-				"visibility": "Public",
-				"isEntry": false,
-				"typeParameters": [],
-				"parameters": [
-					{
-						"Reference": {
-							"Vector": "U8"
-						}
-					},
-					"U64",
-					"U64"
-				],
-				"return": [
-					{
-						"Vector": "U8"
-					}
-				]
-			},
-			"swap_remove": {
-				"visibility": "Public",
-				"isEntry": false,
-				"typeParameters": [
-					{
-						"abilities": [
-							"Drop",
-							"Store"
-						]
-					}
-				],
-				"parameters": [
-					{
-						"MutableReference": {
-							"Struct": {
-								"address": "0x2",
-								"module": "table_vec",
-								"name": "TableVec",
-								"typeArguments": [
+						4
+					],
+					"typeParameters": [],
+					"fields": [
+						{
+							"name": "id",
+							"position": 0,
+							"type": {
+								"typeParameterInstantiation": [],
+								"type": 10,
+								"typeName": "0x0000000000000000000000000000000000000000000000000000000000000002::object::UID"
+							}
+						},
+						{
+							"name": "authority",
+							"position": 1,
+							"type": {
+								"typeParameterInstantiation": [],
+								"type": 1
+							}
+						},
+						{
+							"name": "queue_addr",
+							"position": 2,
+							"type": {
+								"typeParameterInstantiation": [],
+								"type": 1
+							}
+						},
+						{
+							"name": "token_addr",
+							"position": 3,
+							"type": {
+								"typeParameterInstantiation": [],
+								"type": 1
+							}
+						},
+						{
+							"name": "batch_size",
+							"position": 4,
+							"type": {
+								"typeParameterInstantiation": [],
+								"type": 6
+							}
+						},
+						{
+							"name": "min_oracle_results",
+							"position": 5,
+							"type": {
+								"typeParameterInstantiation": [],
+								"type": 6
+							}
+						},
+						{
+							"name": "min_update_delay_seconds",
+							"position": 6,
+							"type": {
+								"typeParameterInstantiation": [],
+								"type": 6
+							}
+						},
+						{
+							"name": "name",
+							"position": 7,
+							"type": {
+								"typeParameterInstantiation": [
 									{
-										"TypeParameter": 0
+										"typeParameterInstantiation": [],
+										"type": 3
 									}
-								]
+								],
+								"type": 9
+							}
+						},
+						{
+							"name": "history_limit",
+							"position": 8,
+							"type": {
+								"typeParameterInstantiation": [],
+								"type": 6
+							}
+						},
+						{
+							"name": "variance_threshold",
+							"position": 9,
+							"type": {
+								"typeParameterInstantiation": [],
+								"type": 10,
+								"typeName": "0x08d79f4d920b03d88faca1e421af023a87fbb1e4a6fd200248e6e9998d09e470::math::SwitchboardDecimal"
+							}
+						},
+						{
+							"name": "force_report_period",
+							"position": 10,
+							"type": {
+								"typeParameterInstantiation": [],
+								"type": 6
+							}
+						},
+						{
+							"name": "min_job_results",
+							"position": 11,
+							"type": {
+								"typeParameterInstantiation": [],
+								"type": 6
+							}
+						},
+						{
+							"name": "crank_disabled",
+							"position": 12,
+							"type": {
+								"typeParameterInstantiation": [],
+								"type": 2
+							}
+						},
+						{
+							"name": "crank_row_count",
+							"position": 13,
+							"type": {
+								"typeParameterInstantiation": [],
+								"type": 3
+							}
+						},
+						{
+							"name": "next_allowed_update_time",
+							"position": 14,
+							"type": {
+								"typeParameterInstantiation": [],
+								"type": 6
+							}
+						},
+						{
+							"name": "created_at",
+							"position": 15,
+							"type": {
+								"typeParameterInstantiation": [],
+								"type": 6
+							}
+						},
+						{
+							"name": "read_charge",
+							"position": 16,
+							"type": {
+								"typeParameterInstantiation": [],
+								"type": 6
+							}
+						},
+						{
+							"name": "reward_escrow",
+							"position": 17,
+							"type": {
+								"typeParameterInstantiation": [],
+								"type": 1
+							}
+						},
+						{
+							"name": "read_whitelist",
+							"position": 18,
+							"type": {
+								"typeParameterInstantiation": [],
+								"type": 10,
+								"typeName": "0x0000000000000000000000000000000000000000000000000000000000000002::bag::Bag"
+							}
+						},
+						{
+							"name": "limit_reads_to_whitelist",
+							"position": 19,
+							"type": {
+								"typeParameterInstantiation": [],
+								"type": 2
+							}
+						},
+						{
+							"name": "update_data",
+							"position": 20,
+							"type": {
+								"typeParameterInstantiation": [],
+								"type": 10,
+								"typeName": "0x08d79f4d920b03d88faca1e421af023a87fbb1e4a6fd200248e6e9998d09e470::aggregator::SlidingWindow"
+							}
+						},
+						{
+							"name": "interval_id",
+							"position": 21,
+							"type": {
+								"typeParameterInstantiation": [],
+								"type": 6
+							}
+						},
+						{
+							"name": "curr_interval_payouts",
+							"position": 22,
+							"type": {
+								"typeParameterInstantiation": [],
+								"type": 6
+							}
+						},
+						{
+							"name": "next_interval_refresh_time",
+							"position": 23,
+							"type": {
+								"typeParameterInstantiation": [],
+								"type": 6
+							}
+						},
+						{
+							"name": "escrows",
+							"position": 24,
+							"type": {
+								"typeParameterInstantiation": [],
+								"type": 10,
+								"typeName": "0x0000000000000000000000000000000000000000000000000000000000000002::bag::Bag"
+							}
+						},
+						{
+							"name": "friend_key",
+							"position": 25,
+							"type": {
+								"typeParameterInstantiation": [
+									{
+										"typeParameterInstantiation": [],
+										"type": 3
+									}
+								],
+								"type": 9
+							}
+						},
+						{
+							"name": "version",
+							"position": 26,
+							"type": {
+								"typeParameterInstantiation": [],
+								"type": 6
 							}
 						}
-					},
-					"U64"
-				],
-				"return": []
-			},
-			"type_of": {
-				"visibility": "Public",
-				"isEntry": false,
-				"typeParameters": [
-					{
-						"abilities": []
-					}
-				],
-				"parameters": [],
-				"return": [
-					{
-						"Vector": "U8"
-					}
-				]
-			},
-			"u16_from_le_bytes": {
-				"visibility": "Public",
-				"isEntry": false,
-				"typeParameters": [],
-				"parameters": [
-					{
-						"Reference": {
-							"Vector": "U8"
+					],
+					"variants": [],
+					"typeName": "0x08d79f4d920b03d88faca1e421af023a87fbb1e4a6fd200248e6e9998d09e470::aggregator::Aggregator",
+					"definingId": "0x08d79f4d920b03d88faca1e421af023a87fbb1e4a6fd200248e6e9998d09e470",
+					"module": "aggregator",
+					"name": "Aggregator",
+					"kind": 1
+				},
+				{
+					"abilities": [
+						3,
+						4
+					],
+					"typeParameters": [],
+					"fields": [
+						{
+							"name": "id",
+							"position": 0,
+							"type": {
+								"typeParameterInstantiation": [],
+								"type": 10,
+								"typeName": "0x0000000000000000000000000000000000000000000000000000000000000002::object::UID"
+							}
+						},
+						{
+							"name": "data",
+							"position": 1,
+							"type": {
+								"typeParameterInstantiation": [
+									{
+										"typeParameterInstantiation": [],
+										"type": 10,
+										"typeName": "0x08d79f4d920b03d88faca1e421af023a87fbb1e4a6fd200248e6e9998d09e470::aggregator::AggregatorHistoryRow"
+									}
+								],
+								"type": 9
+							}
+						},
+						{
+							"name": "history_write_idx",
+							"position": 2,
+							"type": {
+								"typeParameterInstantiation": [],
+								"type": 6
+							}
 						}
-					}
-				],
-				"return": [
-					"U16"
-				]
-			},
-			"u32_from_le_bytes": {
-				"visibility": "Public",
-				"isEntry": false,
-				"typeParameters": [],
-				"parameters": [
-					{
-						"Reference": {
-							"Vector": "U8"
+					],
+					"variants": [],
+					"typeName": "0x08d79f4d920b03d88faca1e421af023a87fbb1e4a6fd200248e6e9998d09e470::aggregator::AggregatorHistoryData",
+					"definingId": "0x08d79f4d920b03d88faca1e421af023a87fbb1e4a6fd200248e6e9998d09e470",
+					"module": "aggregator",
+					"name": "AggregatorHistoryData",
+					"kind": 1
+				},
+				{
+					"abilities": [
+						1,
+						2,
+						3
+					],
+					"typeParameters": [],
+					"fields": [
+						{
+							"name": "value",
+							"position": 0,
+							"type": {
+								"typeParameterInstantiation": [],
+								"type": 10,
+								"typeName": "0x08d79f4d920b03d88faca1e421af023a87fbb1e4a6fd200248e6e9998d09e470::math::SwitchboardDecimal"
+							}
+						},
+						{
+							"name": "timestamp",
+							"position": 1,
+							"type": {
+								"typeParameterInstantiation": [],
+								"type": 6
+							}
 						}
-					}
-				],
-				"return": [
-					"U32"
-				]
-			}
+					],
+					"variants": [],
+					"typeName": "0x08d79f4d920b03d88faca1e421af023a87fbb1e4a6fd200248e6e9998d09e470::aggregator::AggregatorHistoryRow",
+					"definingId": "0x08d79f4d920b03d88faca1e421af023a87fbb1e4a6fd200248e6e9998d09e470",
+					"module": "aggregator",
+					"name": "AggregatorHistoryRow",
+					"kind": 1
+				},
+				{
+					"abilities": [
+						3,
+						4
+					],
+					"typeParameters": [],
+					"fields": [
+						{
+							"name": "id",
+							"position": 0,
+							"type": {
+								"typeParameterInstantiation": [],
+								"type": 10,
+								"typeName": "0x0000000000000000000000000000000000000000000000000000000000000002::object::UID"
+							}
+						},
+						{
+							"name": "job_keys",
+							"position": 1,
+							"type": {
+								"typeParameterInstantiation": [
+									{
+										"typeParameterInstantiation": [],
+										"type": 1
+									}
+								],
+								"type": 9
+							}
+						},
+						{
+							"name": "job_weights",
+							"position": 2,
+							"type": {
+								"typeParameterInstantiation": [
+									{
+										"typeParameterInstantiation": [],
+										"type": 3
+									}
+								],
+								"type": 9
+							}
+						},
+						{
+							"name": "jobs_checksum",
+							"position": 3,
+							"type": {
+								"typeParameterInstantiation": [
+									{
+										"typeParameterInstantiation": [],
+										"type": 3
+									}
+								],
+								"type": 9
+							}
+						}
+					],
+					"variants": [],
+					"typeName": "0x08d79f4d920b03d88faca1e421af023a87fbb1e4a6fd200248e6e9998d09e470::aggregator::AggregatorJobData",
+					"definingId": "0x08d79f4d920b03d88faca1e421af023a87fbb1e4a6fd200248e6e9998d09e470",
+					"module": "aggregator",
+					"name": "AggregatorJobData",
+					"kind": 1
+				},
+				{
+					"abilities": [
+						1,
+						3
+					],
+					"typeParameters": [],
+					"fields": [
+						{
+							"name": "data",
+							"position": 0,
+							"type": {
+								"typeParameterInstantiation": [
+									{
+										"typeParameterInstantiation": [],
+										"type": 10,
+										"typeName": "0x08d79f4d920b03d88faca1e421af023a87fbb1e4a6fd200248e6e9998d09e470::aggregator::SlidingWindowElement"
+									}
+								],
+								"type": 9
+							}
+						},
+						{
+							"name": "latest_result",
+							"position": 1,
+							"type": {
+								"typeParameterInstantiation": [],
+								"type": 10,
+								"typeName": "0x08d79f4d920b03d88faca1e421af023a87fbb1e4a6fd200248e6e9998d09e470::math::SwitchboardDecimal"
+							}
+						},
+						{
+							"name": "latest_timestamp",
+							"position": 2,
+							"type": {
+								"typeParameterInstantiation": [],
+								"type": 6
+							}
+						}
+					],
+					"variants": [],
+					"typeName": "0x08d79f4d920b03d88faca1e421af023a87fbb1e4a6fd200248e6e9998d09e470::aggregator::SlidingWindow",
+					"definingId": "0x08d79f4d920b03d88faca1e421af023a87fbb1e4a6fd200248e6e9998d09e470",
+					"module": "aggregator",
+					"name": "SlidingWindow",
+					"kind": 1
+				},
+				{
+					"abilities": [
+						1,
+						2,
+						3
+					],
+					"typeParameters": [],
+					"fields": [
+						{
+							"name": "oracle_addr",
+							"position": 0,
+							"type": {
+								"typeParameterInstantiation": [],
+								"type": 1
+							}
+						},
+						{
+							"name": "value",
+							"position": 1,
+							"type": {
+								"typeParameterInstantiation": [],
+								"type": 10,
+								"typeName": "0x08d79f4d920b03d88faca1e421af023a87fbb1e4a6fd200248e6e9998d09e470::math::SwitchboardDecimal"
+							}
+						},
+						{
+							"name": "timestamp",
+							"position": 2,
+							"type": {
+								"typeParameterInstantiation": [],
+								"type": 6
+							}
+						}
+					],
+					"variants": [],
+					"typeName": "0x08d79f4d920b03d88faca1e421af023a87fbb1e4a6fd200248e6e9998d09e470::aggregator::SlidingWindowElement",
+					"definingId": "0x08d79f4d920b03d88faca1e421af023a87fbb1e4a6fd200248e6e9998d09e470",
+					"module": "aggregator",
+					"name": "SlidingWindowElement",
+					"kind": 1
+				}
+			],
+			"functions": [
+				{
+					"typeParameters": [
+						{
+							"constraints": []
+						}
+					],
+					"parameters": [
+						{
+							"reference": 2,
+							"body": {
+								"typeParameterInstantiation": [],
+								"type": 10,
+								"typeName": "0x08d79f4d920b03d88faca1e421af023a87fbb1e4a6fd200248e6e9998d09e470::aggregator::Aggregator"
+							}
+						},
+						{
+							"reference": 1,
+							"body": {
+								"typeParameterInstantiation": [],
+								"type": 11,
+								"typeParameter": 0
+							}
+						}
+					],
+					"returns": [],
+					"name": "add_crank_row_count",
+					"visibility": 2,
+					"isEntry": false
+				},
+				{
+					"typeParameters": [],
+					"parameters": [
+						{
+							"reference": 2,
+							"body": {
+								"typeParameterInstantiation": [],
+								"type": 10,
+								"typeName": "0x08d79f4d920b03d88faca1e421af023a87fbb1e4a6fd200248e6e9998d09e470::aggregator::Aggregator"
+							}
+						},
+						{
+							"reference": 1,
+							"body": {
+								"typeParameterInstantiation": [],
+								"type": 10,
+								"typeName": "0x08d79f4d920b03d88faca1e421af023a87fbb1e4a6fd200248e6e9998d09e470::job::Job"
+							}
+						},
+						{
+							"body": {
+								"typeParameterInstantiation": [],
+								"type": 3
+							}
+						},
+						{
+							"reference": 2,
+							"body": {
+								"typeParameterInstantiation": [],
+								"type": 10,
+								"typeName": "0x0000000000000000000000000000000000000000000000000000000000000002::tx_context::TxContext"
+							}
+						}
+					],
+					"returns": [],
+					"name": "add_job",
+					"visibility": 2,
+					"isEntry": false
+				},
+				{
+					"typeParameters": [],
+					"parameters": [
+						{
+							"reference": 2,
+							"body": {
+								"typeParameterInstantiation": [],
+								"type": 10,
+								"typeName": "0x08d79f4d920b03d88faca1e421af023a87fbb1e4a6fd200248e6e9998d09e470::aggregator::SlidingWindow"
+							}
+						},
+						{
+							"body": {
+								"typeParameterInstantiation": [],
+								"type": 1
+							}
+						},
+						{
+							"body": {
+								"typeParameterInstantiation": [],
+								"type": 10,
+								"typeName": "0x08d79f4d920b03d88faca1e421af023a87fbb1e4a6fd200248e6e9998d09e470::math::SwitchboardDecimal"
+							}
+						},
+						{
+							"body": {
+								"typeParameterInstantiation": [],
+								"type": 6
+							}
+						},
+						{
+							"body": {
+								"typeParameterInstantiation": [],
+								"type": 6
+							}
+						},
+						{
+							"body": {
+								"typeParameterInstantiation": [],
+								"type": 6
+							}
+						}
+					],
+					"returns": [
+						{
+							"body": {
+								"typeParameterInstantiation": [],
+								"type": 2
+							}
+						},
+						{
+							"body": {
+								"typeParameterInstantiation": [],
+								"type": 10,
+								"typeName": "0x08d79f4d920b03d88faca1e421af023a87fbb1e4a6fd200248e6e9998d09e470::math::SwitchboardDecimal"
+							}
+						}
+					],
+					"name": "add_to_sliding_window",
+					"visibility": 2,
+					"isEntry": false
+				},
+				{
+					"typeParameters": [],
+					"parameters": [
+						{
+							"reference": 1,
+							"body": {
+								"typeParameterInstantiation": [],
+								"type": 10,
+								"typeName": "0x08d79f4d920b03d88faca1e421af023a87fbb1e4a6fd200248e6e9998d09e470::aggregator::Aggregator"
+							}
+						}
+					],
+					"returns": [
+						{
+							"body": {
+								"typeParameterInstantiation": [],
+								"type": 1
+							}
+						}
+					],
+					"name": "aggregator_address",
+					"visibility": 2,
+					"isEntry": false
+				},
+				{
+					"typeParameters": [],
+					"parameters": [
+						{
+							"reference": 1,
+							"body": {
+								"typeParameterInstantiation": [],
+								"type": 10,
+								"typeName": "0x08d79f4d920b03d88faca1e421af023a87fbb1e4a6fd200248e6e9998d09e470::aggregator::Aggregator"
+							}
+						}
+					],
+					"returns": [
+						{
+							"body": {
+								"typeParameterInstantiation": [],
+								"type": 1
+							}
+						}
+					],
+					"name": "authority",
+					"visibility": 2,
+					"isEntry": false
+				},
+				{
+					"typeParameters": [],
+					"parameters": [
+						{
+							"reference": 1,
+							"body": {
+								"typeParameterInstantiation": [],
+								"type": 10,
+								"typeName": "0x08d79f4d920b03d88faca1e421af023a87fbb1e4a6fd200248e6e9998d09e470::aggregator::Aggregator"
+							}
+						}
+					],
+					"returns": [
+						{
+							"body": {
+								"typeParameterInstantiation": [],
+								"type": 6
+							}
+						}
+					],
+					"name": "batch_size",
+					"visibility": 2,
+					"isEntry": false
+				},
+				{
+					"typeParameters": [],
+					"parameters": [
+						{
+							"reference": 1,
+							"body": {
+								"typeParameterInstantiation": [],
+								"type": 10,
+								"typeName": "0x08d79f4d920b03d88faca1e421af023a87fbb1e4a6fd200248e6e9998d09e470::aggregator::Aggregator"
+							}
+						},
+						{
+							"body": {
+								"typeParameterInstantiation": [],
+								"type": 6
+							}
+						}
+					],
+					"returns": [
+						{
+							"body": {
+								"typeParameterInstantiation": [],
+								"type": 2
+							}
+						}
+					],
+					"name": "can_open_round",
+					"visibility": 2,
+					"isEntry": false
+				},
+				{
+					"typeParameters": [],
+					"parameters": [
+						{
+							"reference": 1,
+							"body": {
+								"typeParameterInstantiation": [],
+								"type": 10,
+								"typeName": "0x08d79f4d920b03d88faca1e421af023a87fbb1e4a6fd200248e6e9998d09e470::aggregator::Aggregator"
+							}
+						}
+					],
+					"returns": [
+						{
+							"body": {
+								"typeParameterInstantiation": [],
+								"type": 2
+							}
+						}
+					],
+					"name": "crank_disabled",
+					"visibility": 2,
+					"isEntry": false
+				},
+				{
+					"typeParameters": [],
+					"parameters": [
+						{
+							"reference": 1,
+							"body": {
+								"typeParameterInstantiation": [],
+								"type": 10,
+								"typeName": "0x08d79f4d920b03d88faca1e421af023a87fbb1e4a6fd200248e6e9998d09e470::aggregator::Aggregator"
+							}
+						}
+					],
+					"returns": [
+						{
+							"body": {
+								"typeParameterInstantiation": [],
+								"type": 3
+							}
+						}
+					],
+					"name": "crank_row_count",
+					"visibility": 2,
+					"isEntry": false
+				},
+				{
+					"typeParameters": [],
+					"parameters": [
+						{
+							"reference": 1,
+							"body": {
+								"typeParameterInstantiation": [],
+								"type": 10,
+								"typeName": "0x08d79f4d920b03d88faca1e421af023a87fbb1e4a6fd200248e6e9998d09e470::aggregator::Aggregator"
+							}
+						}
+					],
+					"returns": [
+						{
+							"body": {
+								"typeParameterInstantiation": [],
+								"type": 6
+							}
+						}
+					],
+					"name": "created_at",
+					"visibility": 2,
+					"isEntry": false
+				},
+				{
+					"typeParameters": [],
+					"parameters": [
+						{
+							"reference": 1,
+							"body": {
+								"typeParameterInstantiation": [],
+								"type": 10,
+								"typeName": "0x08d79f4d920b03d88faca1e421af023a87fbb1e4a6fd200248e6e9998d09e470::aggregator::Aggregator"
+							}
+						}
+					],
+					"returns": [
+						{
+							"body": {
+								"typeParameterInstantiation": [],
+								"type": 6
+							}
+						}
+					],
+					"name": "curr_interval_payouts",
+					"visibility": 2,
+					"isEntry": false
+				},
+				{
+					"typeParameters": [
+						{
+							"constraints": []
+						}
+					],
+					"parameters": [
+						{
+							"reference": 1,
+							"body": {
+								"typeParameterInstantiation": [],
+								"type": 10,
+								"typeName": "0x08d79f4d920b03d88faca1e421af023a87fbb1e4a6fd200248e6e9998d09e470::aggregator::Aggregator"
+							}
+						},
+						{
+							"body": {
+								"typeParameterInstantiation": [],
+								"type": 1
+							}
+						}
+					],
+					"returns": [
+						{
+							"body": {
+								"typeParameterInstantiation": [],
+								"type": 6
+							}
+						}
+					],
+					"name": "escrow_balance",
+					"visibility": 2,
+					"isEntry": false
+				},
+				{
+					"typeParameters": [
+						{
+							"constraints": []
+						},
+						{
+							"constraints": []
+						}
+					],
+					"parameters": [
+						{
+							"reference": 2,
+							"body": {
+								"typeParameterInstantiation": [],
+								"type": 10,
+								"typeName": "0x08d79f4d920b03d88faca1e421af023a87fbb1e4a6fd200248e6e9998d09e470::aggregator::Aggregator"
+							}
+						},
+						{
+							"body": {
+								"typeParameterInstantiation": [],
+								"type": 1
+							}
+						},
+						{
+							"body": {
+								"typeParameterInstantiation": [
+									{
+										"typeParameterInstantiation": [],
+										"type": 11,
+										"typeParameter": 0
+									}
+								],
+								"type": 10,
+								"typeName": "0x0000000000000000000000000000000000000000000000000000000000000002::coin::Coin"
+							}
+						},
+						{
+							"reference": 1,
+							"body": {
+								"typeParameterInstantiation": [],
+								"type": 11,
+								"typeParameter": 1
+							}
+						}
+					],
+					"returns": [],
+					"name": "escrow_deposit",
+					"visibility": 2,
+					"isEntry": false
+				},
+				{
+					"typeParameters": [
+						{
+							"constraints": []
+						},
+						{
+							"constraints": []
+						}
+					],
+					"parameters": [
+						{
+							"reference": 2,
+							"body": {
+								"typeParameterInstantiation": [],
+								"type": 10,
+								"typeName": "0x08d79f4d920b03d88faca1e421af023a87fbb1e4a6fd200248e6e9998d09e470::aggregator::Aggregator"
+							}
+						},
+						{
+							"body": {
+								"typeParameterInstantiation": [],
+								"type": 1
+							}
+						},
+						{
+							"body": {
+								"typeParameterInstantiation": [],
+								"type": 6
+							}
+						},
+						{
+							"reference": 1,
+							"body": {
+								"typeParameterInstantiation": [],
+								"type": 11,
+								"typeParameter": 1
+							}
+						},
+						{
+							"reference": 2,
+							"body": {
+								"typeParameterInstantiation": [],
+								"type": 10,
+								"typeName": "0x0000000000000000000000000000000000000000000000000000000000000002::tx_context::TxContext"
+							}
+						}
+					],
+					"returns": [
+						{
+							"body": {
+								"typeParameterInstantiation": [
+									{
+										"typeParameterInstantiation": [],
+										"type": 11,
+										"typeParameter": 0
+									}
+								],
+								"type": 10,
+								"typeName": "0x0000000000000000000000000000000000000000000000000000000000000002::coin::Coin"
+							}
+						}
+					],
+					"name": "escrow_withdraw",
+					"visibility": 2,
+					"isEntry": false
+				},
+				{
+					"typeParameters": [],
+					"parameters": [
+						{
+							"reference": 1,
+							"body": {
+								"typeParameterInstantiation": [],
+								"type": 10,
+								"typeName": "0x08d79f4d920b03d88faca1e421af023a87fbb1e4a6fd200248e6e9998d09e470::aggregator::Aggregator"
+							}
+						},
+						{
+							"reference": 1,
+							"body": {
+								"typeParameterInstantiation": [],
+								"type": 10,
+								"typeName": "0x0000000000000000000000000000000000000000000000000000000000000002::tx_context::TxContext"
+							}
+						}
+					],
+					"returns": [
+						{
+							"body": {
+								"typeParameterInstantiation": [],
+								"type": 2
+							}
+						}
+					],
+					"name": "has_authority",
+					"visibility": 2,
+					"isEntry": false
+				},
+				{
+					"typeParameters": [
+						{
+							"constraints": []
+						}
+					],
+					"parameters": [
+						{
+							"reference": 2,
+							"body": {
+								"typeParameterInstantiation": [],
+								"type": 10,
+								"typeName": "0x08d79f4d920b03d88faca1e421af023a87fbb1e4a6fd200248e6e9998d09e470::aggregator::Aggregator"
+							}
+						},
+						{
+							"reference": 1,
+							"body": {
+								"typeParameterInstantiation": [],
+								"type": 11,
+								"typeParameter": 0
+							}
+						}
+					],
+					"returns": [],
+					"name": "increment_curr_interval_payouts",
+					"visibility": 2,
+					"isEntry": false
+				},
+				{
+					"typeParameters": [],
+					"parameters": [
+						{
+							"reference": 2,
+							"body": {
+								"typeParameterInstantiation": [],
+								"type": 10,
+								"typeName": "0x0000000000000000000000000000000000000000000000000000000000000002::tx_context::TxContext"
+							}
+						}
+					],
+					"returns": [],
+					"name": "init",
+					"visibility": 1,
+					"isEntry": false
+				},
+				{
+					"typeParameters": [],
+					"parameters": [
+						{
+							"reference": 1,
+							"body": {
+								"typeParameterInstantiation": [],
+								"type": 10,
+								"typeName": "0x08d79f4d920b03d88faca1e421af023a87fbb1e4a6fd200248e6e9998d09e470::aggregator::Aggregator"
+							}
+						}
+					],
+					"returns": [
+						{
+							"body": {
+								"typeParameterInstantiation": [],
+								"type": 6
+							}
+						}
+					],
+					"name": "interval_id",
+					"visibility": 2,
+					"isEntry": false
+				},
+				{
+					"typeParameters": [],
+					"parameters": [
+						{
+							"reference": 1,
+							"body": {
+								"typeParameterInstantiation": [],
+								"type": 10,
+								"typeName": "0x08d79f4d920b03d88faca1e421af023a87fbb1e4a6fd200248e6e9998d09e470::aggregator::Aggregator"
+							}
+						}
+					],
+					"returns": [
+						{
+							"body": {
+								"typeParameterInstantiation": [],
+								"type": 2
+							}
+						}
+					],
+					"name": "is_locked",
+					"visibility": 2,
+					"isEntry": false
+				},
+				{
+					"typeParameters": [],
+					"parameters": [
+						{
+							"reference": 1,
+							"body": {
+								"typeParameterInstantiation": [],
+								"type": 10,
+								"typeName": "0x08d79f4d920b03d88faca1e421af023a87fbb1e4a6fd200248e6e9998d09e470::aggregator::Aggregator"
+							}
+						}
+					],
+					"returns": [
+						{
+							"body": {
+								"typeParameterInstantiation": [
+									{
+										"typeParameterInstantiation": [],
+										"type": 1
+									}
+								],
+								"type": 9
+							}
+						}
+					],
+					"name": "job_keys",
+					"visibility": 2,
+					"isEntry": false
+				},
+				{
+					"typeParameters": [],
+					"parameters": [
+						{
+							"reference": 1,
+							"body": {
+								"typeParameterInstantiation": [],
+								"type": 10,
+								"typeName": "0x08d79f4d920b03d88faca1e421af023a87fbb1e4a6fd200248e6e9998d09e470::aggregator::Aggregator"
+							}
+						}
+					],
+					"returns": [
+						{
+							"body": {
+								"typeParameterInstantiation": [],
+								"type": 10,
+								"typeName": "0x08d79f4d920b03d88faca1e421af023a87fbb1e4a6fd200248e6e9998d09e470::math::SwitchboardDecimal"
+							}
+						},
+						{
+							"body": {
+								"typeParameterInstantiation": [],
+								"type": 6
+							}
+						}
+					],
+					"name": "latest_value",
+					"visibility": 2,
+					"isEntry": false
+				},
+				{
+					"typeParameters": [],
+					"parameters": [
+						{
+							"reference": 2,
+							"body": {
+								"typeParameterInstantiation": [],
+								"type": 10,
+								"typeName": "0x08d79f4d920b03d88faca1e421af023a87fbb1e4a6fd200248e6e9998d09e470::aggregator::Aggregator"
+							}
+						},
+						{
+							"reference": 1,
+							"body": {
+								"typeParameterInstantiation": [],
+								"type": 10,
+								"typeName": "0x08d79f4d920b03d88faca1e421af023a87fbb1e4a6fd200248e6e9998d09e470::switchboard::AdminCap"
+							}
+						}
+					],
+					"returns": [],
+					"name": "migrate",
+					"visibility": 1,
+					"isEntry": true
+				},
+				{
+					"typeParameters": [
+						{
+							"constraints": []
+						},
+						{
+							"constraints": []
+						}
+					],
+					"parameters": [
+						{
+							"reference": 2,
+							"body": {
+								"typeParameterInstantiation": [],
+								"type": 10,
+								"typeName": "0x08d79f4d920b03d88faca1e421af023a87fbb1e4a6fd200248e6e9998d09e470::aggregator::Aggregator"
+							}
+						},
+						{
+							"reference": 1,
+							"body": {
+								"typeParameterInstantiation": [],
+								"type": 11,
+								"typeParameter": 0
+							}
+						},
+						{
+							"reference": 1,
+							"body": {
+								"typeParameterInstantiation": [],
+								"type": 11,
+								"typeParameter": 1
+							}
+						}
+					],
+					"returns": [],
+					"name": "migrate_package",
+					"visibility": 2,
+					"isEntry": false
+				},
+				{
+					"typeParameters": [],
+					"parameters": [
+						{
+							"reference": 1,
+							"body": {
+								"typeParameterInstantiation": [],
+								"type": 10,
+								"typeName": "0x08d79f4d920b03d88faca1e421af023a87fbb1e4a6fd200248e6e9998d09e470::aggregator::Aggregator"
+							}
+						}
+					],
+					"returns": [
+						{
+							"body": {
+								"typeParameterInstantiation": [],
+								"type": 6
+							}
+						}
+					],
+					"name": "min_oracle_results",
+					"visibility": 2,
+					"isEntry": false
+				},
+				{
+					"typeParameters": [
+						{
+							"constraints": [
+								2
+							]
+						}
+					],
+					"parameters": [
+						{
+							"body": {
+								"typeParameterInstantiation": [
+									{
+										"typeParameterInstantiation": [],
+										"type": 3
+									}
+								],
+								"type": 9
+							}
+						},
+						{
+							"body": {
+								"typeParameterInstantiation": [],
+								"type": 1
+							}
+						},
+						{
+							"body": {
+								"typeParameterInstantiation": [],
+								"type": 6
+							}
+						},
+						{
+							"body": {
+								"typeParameterInstantiation": [],
+								"type": 6
+							}
+						},
+						{
+							"body": {
+								"typeParameterInstantiation": [],
+								"type": 6
+							}
+						},
+						{
+							"body": {
+								"typeParameterInstantiation": [],
+								"type": 6
+							}
+						},
+						{
+							"body": {
+								"typeParameterInstantiation": [],
+								"type": 10,
+								"typeName": "0x08d79f4d920b03d88faca1e421af023a87fbb1e4a6fd200248e6e9998d09e470::math::SwitchboardDecimal"
+							}
+						},
+						{
+							"body": {
+								"typeParameterInstantiation": [],
+								"type": 6
+							}
+						},
+						{
+							"body": {
+								"typeParameterInstantiation": [],
+								"type": 2
+							}
+						},
+						{
+							"body": {
+								"typeParameterInstantiation": [],
+								"type": 6
+							}
+						},
+						{
+							"body": {
+								"typeParameterInstantiation": [],
+								"type": 6
+							}
+						},
+						{
+							"body": {
+								"typeParameterInstantiation": [],
+								"type": 1
+							}
+						},
+						{
+							"body": {
+								"typeParameterInstantiation": [
+									{
+										"typeParameterInstantiation": [],
+										"type": 1
+									}
+								],
+								"type": 9
+							}
+						},
+						{
+							"body": {
+								"typeParameterInstantiation": [],
+								"type": 2
+							}
+						},
+						{
+							"body": {
+								"typeParameterInstantiation": [],
+								"type": 6
+							}
+						},
+						{
+							"body": {
+								"typeParameterInstantiation": [],
+								"type": 1
+							}
+						},
+						{
+							"reference": 1,
+							"body": {
+								"typeParameterInstantiation": [],
+								"type": 11,
+								"typeParameter": 0
+							}
+						},
+						{
+							"reference": 2,
+							"body": {
+								"typeParameterInstantiation": [],
+								"type": 10,
+								"typeName": "0x0000000000000000000000000000000000000000000000000000000000000002::tx_context::TxContext"
+							}
+						}
+					],
+					"returns": [
+						{
+							"body": {
+								"typeParameterInstantiation": [],
+								"type": 10,
+								"typeName": "0x08d79f4d920b03d88faca1e421af023a87fbb1e4a6fd200248e6e9998d09e470::aggregator::Aggregator"
+							}
+						}
+					],
+					"name": "new",
+					"visibility": 2,
+					"isEntry": false
+				},
+				{
+					"typeParameters": [],
+					"parameters": [],
+					"returns": [
+						{
+							"body": {
+								"typeParameterInstantiation": [],
+								"type": 10,
+								"typeName": "0x08d79f4d920b03d88faca1e421af023a87fbb1e4a6fd200248e6e9998d09e470::aggregator::SlidingWindow"
+							}
+						}
+					],
+					"name": "new_sliding_window",
+					"visibility": 2,
+					"isEntry": false
+				},
+				{
+					"typeParameters": [
+						{
+							"constraints": []
+						}
+					],
+					"parameters": [
+						{
+							"reference": 2,
+							"body": {
+								"typeParameterInstantiation": [],
+								"type": 10,
+								"typeName": "0x08d79f4d920b03d88faca1e421af023a87fbb1e4a6fd200248e6e9998d09e470::aggregator::Aggregator"
+							}
+						},
+						{
+							"reference": 1,
+							"body": {
+								"typeParameterInstantiation": [],
+								"type": 11,
+								"typeParameter": 0
+							}
+						}
+					],
+					"returns": [],
+					"name": "next_payment_interval",
+					"visibility": 2,
+					"isEntry": false
+				},
+				{
+					"typeParameters": [
+						{
+							"constraints": []
+						}
+					],
+					"parameters": [
+						{
+							"reference": 2,
+							"body": {
+								"typeParameterInstantiation": [],
+								"type": 10,
+								"typeName": "0x08d79f4d920b03d88faca1e421af023a87fbb1e4a6fd200248e6e9998d09e470::aggregator::Aggregator"
+							}
+						},
+						{
+							"body": {
+								"typeParameterInstantiation": [],
+								"type": 1
+							}
+						},
+						{
+							"body": {
+								"typeParameterInstantiation": [],
+								"type": 10,
+								"typeName": "0x08d79f4d920b03d88faca1e421af023a87fbb1e4a6fd200248e6e9998d09e470::math::SwitchboardDecimal"
+							}
+						},
+						{
+							"body": {
+								"typeParameterInstantiation": [],
+								"type": 6
+							}
+						},
+						{
+							"reference": 1,
+							"body": {
+								"typeParameterInstantiation": [],
+								"type": 11,
+								"typeParameter": 0
+							}
+						}
+					],
+					"returns": [
+						{
+							"body": {
+								"typeParameterInstantiation": [],
+								"type": 2
+							}
+						},
+						{
+							"body": {
+								"typeParameterInstantiation": [],
+								"type": 10,
+								"typeName": "0x08d79f4d920b03d88faca1e421af023a87fbb1e4a6fd200248e6e9998d09e470::math::SwitchboardDecimal"
+							}
+						}
+					],
+					"name": "push_update",
+					"visibility": 2,
+					"isEntry": false
+				},
+				{
+					"typeParameters": [],
+					"parameters": [
+						{
+							"reference": 1,
+							"body": {
+								"typeParameterInstantiation": [],
+								"type": 10,
+								"typeName": "0x08d79f4d920b03d88faca1e421af023a87fbb1e4a6fd200248e6e9998d09e470::aggregator::Aggregator"
+							}
+						}
+					],
+					"returns": [
+						{
+							"body": {
+								"typeParameterInstantiation": [],
+								"type": 1
+							}
+						}
+					],
+					"name": "queue_address",
+					"visibility": 2,
+					"isEntry": false
+				},
+				{
+					"typeParameters": [],
+					"parameters": [
+						{
+							"reference": 2,
+							"body": {
+								"typeParameterInstantiation": [],
+								"type": 10,
+								"typeName": "0x08d79f4d920b03d88faca1e421af023a87fbb1e4a6fd200248e6e9998d09e470::aggregator::Aggregator"
+							}
+						},
+						{
+							"body": {
+								"typeParameterInstantiation": [],
+								"type": 1
+							}
+						},
+						{
+							"reference": 2,
+							"body": {
+								"typeParameterInstantiation": [],
+								"type": 10,
+								"typeName": "0x0000000000000000000000000000000000000000000000000000000000000002::tx_context::TxContext"
+							}
+						}
+					],
+					"returns": [],
+					"name": "remove_job",
+					"visibility": 2,
+					"isEntry": false
+				},
+				{
+					"typeParameters": [],
+					"parameters": [
+						{
+							"reference": 1,
+							"body": {
+								"typeParameterInstantiation": [],
+								"type": 10,
+								"typeName": "0x08d79f4d920b03d88faca1e421af023a87fbb1e4a6fd200248e6e9998d09e470::aggregator::SlidingWindow"
+							}
+						},
+						{
+							"reference": 1,
+							"body": {
+								"typeParameterInstantiation": [],
+								"type": 10,
+								"typeName": "0x0000000000000000000000000000000000000000000000000000000000000002::clock::Clock"
+							}
+						},
+						{
+							"body": {
+								"typeParameterInstantiation": [],
+								"type": 6
+							}
+						}
+					],
+					"returns": [
+						{
+							"body": {
+								"typeParameterInstantiation": [],
+								"type": 2
+							}
+						}
+					],
+					"name": "results_older_than",
+					"visibility": 2,
+					"isEntry": false
+				},
+				{
+					"typeParameters": [],
+					"parameters": [
+						{
+							"reference": 2,
+							"body": {
+								"typeParameterInstantiation": [],
+								"type": 10,
+								"typeName": "0x08d79f4d920b03d88faca1e421af023a87fbb1e4a6fd200248e6e9998d09e470::aggregator::Aggregator"
+							}
+						},
+						{
+							"body": {
+								"typeParameterInstantiation": [],
+								"type": 1
+							}
+						},
+						{
+							"reference": 2,
+							"body": {
+								"typeParameterInstantiation": [],
+								"type": 10,
+								"typeName": "0x0000000000000000000000000000000000000000000000000000000000000002::tx_context::TxContext"
+							}
+						}
+					],
+					"returns": [],
+					"name": "set_aggregator_token",
+					"visibility": 2,
+					"isEntry": false
+				},
+				{
+					"typeParameters": [],
+					"parameters": [
+						{
+							"reference": 2,
+							"body": {
+								"typeParameterInstantiation": [],
+								"type": 10,
+								"typeName": "0x08d79f4d920b03d88faca1e421af023a87fbb1e4a6fd200248e6e9998d09e470::aggregator::Aggregator"
+							}
+						},
+						{
+							"body": {
+								"typeParameterInstantiation": [],
+								"type": 1
+							}
+						},
+						{
+							"reference": 2,
+							"body": {
+								"typeParameterInstantiation": [],
+								"type": 10,
+								"typeName": "0x0000000000000000000000000000000000000000000000000000000000000002::tx_context::TxContext"
+							}
+						}
+					],
+					"returns": [],
+					"name": "set_authority",
+					"visibility": 2,
+					"isEntry": false
+				},
+				{
+					"typeParameters": [],
+					"parameters": [
+						{
+							"reference": 2,
+							"body": {
+								"typeParameterInstantiation": [],
+								"type": 10,
+								"typeName": "0x08d79f4d920b03d88faca1e421af023a87fbb1e4a6fd200248e6e9998d09e470::aggregator::Aggregator"
+							}
+						},
+						{
+							"body": {
+								"typeParameterInstantiation": [
+									{
+										"typeParameterInstantiation": [],
+										"type": 3
+									}
+								],
+								"type": 9
+							}
+						},
+						{
+							"body": {
+								"typeParameterInstantiation": [],
+								"type": 1
+							}
+						},
+						{
+							"body": {
+								"typeParameterInstantiation": [],
+								"type": 6
+							}
+						},
+						{
+							"body": {
+								"typeParameterInstantiation": [],
+								"type": 6
+							}
+						},
+						{
+							"body": {
+								"typeParameterInstantiation": [],
+								"type": 6
+							}
+						},
+						{
+							"body": {
+								"typeParameterInstantiation": [],
+								"type": 6
+							}
+						},
+						{
+							"body": {
+								"typeParameterInstantiation": [],
+								"type": 10,
+								"typeName": "0x08d79f4d920b03d88faca1e421af023a87fbb1e4a6fd200248e6e9998d09e470::math::SwitchboardDecimal"
+							}
+						},
+						{
+							"body": {
+								"typeParameterInstantiation": [],
+								"type": 6
+							}
+						},
+						{
+							"body": {
+								"typeParameterInstantiation": [],
+								"type": 2
+							}
+						},
+						{
+							"body": {
+								"typeParameterInstantiation": [],
+								"type": 6
+							}
+						},
+						{
+							"body": {
+								"typeParameterInstantiation": [],
+								"type": 6
+							}
+						},
+						{
+							"body": {
+								"typeParameterInstantiation": [],
+								"type": 1
+							}
+						},
+						{
+							"body": {
+								"typeParameterInstantiation": [
+									{
+										"typeParameterInstantiation": [],
+										"type": 1
+									}
+								],
+								"type": 9
+							}
+						},
+						{
+							"body": {
+								"typeParameterInstantiation": [
+									{
+										"typeParameterInstantiation": [],
+										"type": 1
+									}
+								],
+								"type": 9
+							}
+						},
+						{
+							"body": {
+								"typeParameterInstantiation": [],
+								"type": 2
+							}
+						},
+						{
+							"reference": 2,
+							"body": {
+								"typeParameterInstantiation": [],
+								"type": 10,
+								"typeName": "0x0000000000000000000000000000000000000000000000000000000000000002::tx_context::TxContext"
+							}
+						}
+					],
+					"returns": [],
+					"name": "set_config",
+					"visibility": 2,
+					"isEntry": false
+				},
+				{
+					"typeParameters": [],
+					"parameters": [
+						{
+							"body": {
+								"typeParameterInstantiation": [],
+								"type": 10,
+								"typeName": "0x08d79f4d920b03d88faca1e421af023a87fbb1e4a6fd200248e6e9998d09e470::aggregator::Aggregator"
+							}
+						}
+					],
+					"returns": [],
+					"name": "share_aggregator",
+					"visibility": 2,
+					"isEntry": false
+				},
+				{
+					"typeParameters": [],
+					"parameters": [
+						{
+							"reference": 1,
+							"body": {
+								"typeParameterInstantiation": [],
+								"type": 10,
+								"typeName": "0x08d79f4d920b03d88faca1e421af023a87fbb1e4a6fd200248e6e9998d09e470::aggregator::SlidingWindow"
+							}
+						}
+					],
+					"returns": [
+						{
+							"body": {
+								"typeParameterInstantiation": [],
+								"type": 10,
+								"typeName": "0x08d79f4d920b03d88faca1e421af023a87fbb1e4a6fd200248e6e9998d09e470::math::SwitchboardDecimal"
+							}
+						},
+						{
+							"body": {
+								"typeParameterInstantiation": [],
+								"type": 6
+							}
+						}
+					],
+					"name": "sliding_window_latest_result",
+					"visibility": 2,
+					"isEntry": false
+				},
+				{
+					"typeParameters": [
+						{
+							"constraints": []
+						}
+					],
+					"parameters": [
+						{
+							"reference": 2,
+							"body": {
+								"typeParameterInstantiation": [],
+								"type": 10,
+								"typeName": "0x08d79f4d920b03d88faca1e421af023a87fbb1e4a6fd200248e6e9998d09e470::aggregator::Aggregator"
+							}
+						},
+						{
+							"reference": 1,
+							"body": {
+								"typeParameterInstantiation": [],
+								"type": 11,
+								"typeParameter": 0
+							}
+						}
+					],
+					"returns": [],
+					"name": "sub_crank_row_count",
+					"visibility": 2,
+					"isEntry": false
+				}
+			],
+			"name": "aggregator"
+		}
+	},
+	{
+		"address": "0x8d79f4d920b03d88faca1e421af023a87fbb1e4a6fd200248e6e9998d09e470",
+		"module": {
+			"datatypes": [],
+			"functions": [
+				{
+					"typeParameters": [],
+					"parameters": [],
+					"returns": [
+						{
+							"body": {
+								"typeParameterInstantiation": [],
+								"type": 6
+							}
+						}
+					],
+					"name": "AggregatorIllegalRoundOpenCall",
+					"visibility": 2,
+					"isEntry": false
+				},
+				{
+					"typeParameters": [],
+					"parameters": [],
+					"returns": [
+						{
+							"body": {
+								"typeParameterInstantiation": [],
+								"type": 6
+							}
+						}
+					],
+					"name": "AggregatorInvalidBatchSize",
+					"visibility": 2,
+					"isEntry": false
+				},
+				{
+					"typeParameters": [],
+					"parameters": [],
+					"returns": [
+						{
+							"body": {
+								"typeParameterInstantiation": [],
+								"type": 6
+							}
+						}
+					],
+					"name": "AggregatorInvalidMinJobs",
+					"visibility": 2,
+					"isEntry": false
+				},
+				{
+					"typeParameters": [],
+					"parameters": [],
+					"returns": [
+						{
+							"body": {
+								"typeParameterInstantiation": [],
+								"type": 6
+							}
+						}
+					],
+					"name": "AggregatorInvalidMinOracleResults",
+					"visibility": 2,
+					"isEntry": false
+				},
+				{
+					"typeParameters": [],
+					"parameters": [],
+					"returns": [
+						{
+							"body": {
+								"typeParameterInstantiation": [],
+								"type": 6
+							}
+						}
+					],
+					"name": "AggregatorInvalidUpdateDelay",
+					"visibility": 2,
+					"isEntry": false
+				},
+				{
+					"typeParameters": [],
+					"parameters": [],
+					"returns": [
+						{
+							"body": {
+								"typeParameterInstantiation": [],
+								"type": 6
+							}
+						}
+					],
+					"name": "AggregatorLocked",
+					"visibility": 2,
+					"isEntry": false
+				},
+				{
+					"typeParameters": [],
+					"parameters": [],
+					"returns": [
+						{
+							"body": {
+								"typeParameterInstantiation": [],
+								"type": 6
+							}
+						}
+					],
+					"name": "CrankDisabled",
+					"visibility": 2,
+					"isEntry": false
+				},
+				{
+					"typeParameters": [],
+					"parameters": [],
+					"returns": [
+						{
+							"body": {
+								"typeParameterInstantiation": [],
+								"type": 6
+							}
+						}
+					],
+					"name": "Generic",
+					"visibility": 2,
+					"isEntry": false
+				},
+				{
+					"typeParameters": [],
+					"parameters": [],
+					"returns": [
+						{
+							"body": {
+								"typeParameterInstantiation": [],
+								"type": 6
+							}
+						}
+					],
+					"name": "InsufficientCoin",
+					"visibility": 2,
+					"isEntry": false
+				},
+				{
+					"typeParameters": [],
+					"parameters": [],
+					"returns": [
+						{
+							"body": {
+								"typeParameterInstantiation": [],
+								"type": 6
+							}
+						}
+					],
+					"name": "InsufficientQueueError",
+					"visibility": 2,
+					"isEntry": false
+				},
+				{
+					"typeParameters": [],
+					"parameters": [],
+					"returns": [
+						{
+							"body": {
+								"typeParameterInstantiation": [],
+								"type": 6
+							}
+						}
+					],
+					"name": "InvalidArgument",
+					"visibility": 2,
+					"isEntry": false
+				},
+				{
+					"typeParameters": [],
+					"parameters": [],
+					"returns": [
+						{
+							"body": {
+								"typeParameterInstantiation": [],
+								"type": 6
+							}
+						}
+					],
+					"name": "InvalidAuthority",
+					"visibility": 2,
+					"isEntry": false
+				},
+				{
+					"typeParameters": [],
+					"parameters": [],
+					"returns": [
+						{
+							"body": {
+								"typeParameterInstantiation": [],
+								"type": 6
+							}
+						}
+					],
+					"name": "InvalidConstraint",
+					"visibility": 2,
+					"isEntry": false
+				},
+				{
+					"typeParameters": [],
+					"parameters": [],
+					"returns": [
+						{
+							"body": {
+								"typeParameterInstantiation": [],
+								"type": 6
+							}
+						}
+					],
+					"name": "InvalidNodeError",
+					"visibility": 2,
+					"isEntry": false
+				},
+				{
+					"typeParameters": [],
+					"parameters": [],
+					"returns": [
+						{
+							"body": {
+								"typeParameterInstantiation": [],
+								"type": 6
+							}
+						}
+					],
+					"name": "InvalidPackage",
+					"visibility": 2,
+					"isEntry": false
+				},
+				{
+					"typeParameters": [],
+					"parameters": [],
+					"returns": [
+						{
+							"body": {
+								"typeParameterInstantiation": [],
+								"type": 6
+							}
+						}
+					],
+					"name": "InvalidQuoteError",
+					"visibility": 2,
+					"isEntry": false
+				},
+				{
+					"typeParameters": [],
+					"parameters": [],
+					"returns": [
+						{
+							"body": {
+								"typeParameterInstantiation": [],
+								"type": 6
+							}
+						}
+					],
+					"name": "InvalidTimestamp",
+					"visibility": 2,
+					"isEntry": false
+				},
+				{
+					"typeParameters": [],
+					"parameters": [],
+					"returns": [
+						{
+							"body": {
+								"typeParameterInstantiation": [],
+								"type": 6
+							}
+						}
+					],
+					"name": "InvalidVersion",
+					"visibility": 2,
+					"isEntry": false
+				},
+				{
+					"typeParameters": [],
+					"parameters": [],
+					"returns": [
+						{
+							"body": {
+								"typeParameterInstantiation": [],
+								"type": 6
+							}
+						}
+					],
+					"name": "JobsChecksumMismatch",
+					"visibility": 2,
+					"isEntry": false
+				},
+				{
+					"typeParameters": [],
+					"parameters": [],
+					"returns": [
+						{
+							"body": {
+								"typeParameterInstantiation": [],
+								"type": 6
+							}
+						}
+					],
+					"name": "MrEnclaveAlreadyExists",
+					"visibility": 2,
+					"isEntry": false
+				},
+				{
+					"typeParameters": [],
+					"parameters": [],
+					"returns": [
+						{
+							"body": {
+								"typeParameterInstantiation": [],
+								"type": 6
+							}
+						}
+					],
+					"name": "MrEnclaveAtCapacity",
+					"visibility": 2,
+					"isEntry": false
+				},
+				{
+					"typeParameters": [],
+					"parameters": [],
+					"returns": [
+						{
+							"body": {
+								"typeParameterInstantiation": [],
+								"type": 6
+							}
+						}
+					],
+					"name": "MrEnclaveDoesNotExist",
+					"visibility": 2,
+					"isEntry": false
+				},
+				{
+					"typeParameters": [],
+					"parameters": [],
+					"returns": [
+						{
+							"body": {
+								"typeParameterInstantiation": [],
+								"type": 6
+							}
+						}
+					],
+					"name": "PermissionDenied",
+					"visibility": 2,
+					"isEntry": false
+				},
+				{
+					"typeParameters": [],
+					"parameters": [],
+					"returns": [
+						{
+							"body": {
+								"typeParameterInstantiation": [],
+								"type": 6
+							}
+						}
+					],
+					"name": "QueueFullError",
+					"visibility": 2,
+					"isEntry": false
+				},
+				{
+					"typeParameters": [],
+					"parameters": [],
+					"returns": [
+						{
+							"body": {
+								"typeParameterInstantiation": [],
+								"type": 6
+							}
+						}
+					],
+					"name": "QuoteExpiredError",
+					"visibility": 2,
+					"isEntry": false
+				}
+			],
+			"name": "errors"
+		}
+	},
+	{
+		"address": "0x8d79f4d920b03d88faca1e421af023a87fbb1e4a6fd200248e6e9998d09e470",
+		"module": {
+			"datatypes": [
+				{
+					"abilities": [
+						4
+					],
+					"typeParameters": [],
+					"fields": [
+						{
+							"name": "id",
+							"position": 0,
+							"type": {
+								"typeParameterInstantiation": [],
+								"type": 10,
+								"typeName": "0x0000000000000000000000000000000000000000000000000000000000000002::object::UID"
+							}
+						},
+						{
+							"name": "name",
+							"position": 1,
+							"type": {
+								"typeParameterInstantiation": [
+									{
+										"typeParameterInstantiation": [],
+										"type": 3
+									}
+								],
+								"type": 9
+							}
+						},
+						{
+							"name": "hash",
+							"position": 2,
+							"type": {
+								"typeParameterInstantiation": [
+									{
+										"typeParameterInstantiation": [],
+										"type": 3
+									}
+								],
+								"type": 9
+							}
+						},
+						{
+							"name": "data",
+							"position": 3,
+							"type": {
+								"typeParameterInstantiation": [
+									{
+										"typeParameterInstantiation": [],
+										"type": 3
+									}
+								],
+								"type": 9
+							}
+						},
+						{
+							"name": "created_at",
+							"position": 4,
+							"type": {
+								"typeParameterInstantiation": [],
+								"type": 6
+							}
+						}
+					],
+					"variants": [],
+					"typeName": "0x08d79f4d920b03d88faca1e421af023a87fbb1e4a6fd200248e6e9998d09e470::job::Job",
+					"definingId": "0x08d79f4d920b03d88faca1e421af023a87fbb1e4a6fd200248e6e9998d09e470",
+					"module": "job",
+					"name": "Job",
+					"kind": 1
+				}
+			],
+			"functions": [
+				{
+					"typeParameters": [],
+					"parameters": [
+						{
+							"body": {
+								"typeParameterInstantiation": [],
+								"type": 10,
+								"typeName": "0x08d79f4d920b03d88faca1e421af023a87fbb1e4a6fd200248e6e9998d09e470::job::Job"
+							}
+						}
+					],
+					"returns": [],
+					"name": "freeze_job",
+					"visibility": 2,
+					"isEntry": false
+				},
+				{
+					"typeParameters": [],
+					"parameters": [
+						{
+							"reference": 1,
+							"body": {
+								"typeParameterInstantiation": [],
+								"type": 10,
+								"typeName": "0x08d79f4d920b03d88faca1e421af023a87fbb1e4a6fd200248e6e9998d09e470::job::Job"
+							}
+						}
+					],
+					"returns": [
+						{
+							"body": {
+								"typeParameterInstantiation": [
+									{
+										"typeParameterInstantiation": [],
+										"type": 3
+									}
+								],
+								"type": 9
+							}
+						}
+					],
+					"name": "hash",
+					"visibility": 2,
+					"isEntry": false
+				},
+				{
+					"typeParameters": [],
+					"parameters": [
+						{
+							"reference": 1,
+							"body": {
+								"typeParameterInstantiation": [],
+								"type": 10,
+								"typeName": "0x08d79f4d920b03d88faca1e421af023a87fbb1e4a6fd200248e6e9998d09e470::job::Job"
+							}
+						}
+					],
+					"returns": [
+						{
+							"body": {
+								"typeParameterInstantiation": [],
+								"type": 1
+							}
+						}
+					],
+					"name": "job_address",
+					"visibility": 2,
+					"isEntry": false
+				},
+				{
+					"typeParameters": [],
+					"parameters": [
+						{
+							"body": {
+								"typeParameterInstantiation": [
+									{
+										"typeParameterInstantiation": [],
+										"type": 3
+									}
+								],
+								"type": 9
+							}
+						},
+						{
+							"body": {
+								"typeParameterInstantiation": [
+									{
+										"typeParameterInstantiation": [],
+										"type": 3
+									}
+								],
+								"type": 9
+							}
+						},
+						{
+							"body": {
+								"typeParameterInstantiation": [],
+								"type": 6
+							}
+						},
+						{
+							"reference": 2,
+							"body": {
+								"typeParameterInstantiation": [],
+								"type": 10,
+								"typeName": "0x0000000000000000000000000000000000000000000000000000000000000002::tx_context::TxContext"
+							}
+						}
+					],
+					"returns": [
+						{
+							"body": {
+								"typeParameterInstantiation": [],
+								"type": 10,
+								"typeName": "0x08d79f4d920b03d88faca1e421af023a87fbb1e4a6fd200248e6e9998d09e470::job::Job"
+							}
+						}
+					],
+					"name": "new",
+					"visibility": 2,
+					"isEntry": false
+				}
+			],
+			"name": "job"
+		}
+	},
+	{
+		"address": "0x8d79f4d920b03d88faca1e421af023a87fbb1e4a6fd200248e6e9998d09e470",
+		"module": {
+			"datatypes": [
+				{
+					"abilities": [
+						1,
+						2,
+						3
+					],
+					"typeParameters": [],
+					"fields": [
+						{
+							"name": "value",
+							"position": 0,
+							"type": {
+								"typeParameterInstantiation": [],
+								"type": 7
+							}
+						},
+						{
+							"name": "dec",
+							"position": 1,
+							"type": {
+								"typeParameterInstantiation": [],
+								"type": 3
+							}
+						},
+						{
+							"name": "neg",
+							"position": 2,
+							"type": {
+								"typeParameterInstantiation": [],
+								"type": 2
+							}
+						}
+					],
+					"variants": [],
+					"typeName": "0x08d79f4d920b03d88faca1e421af023a87fbb1e4a6fd200248e6e9998d09e470::math::SwitchboardDecimal",
+					"definingId": "0x08d79f4d920b03d88faca1e421af023a87fbb1e4a6fd200248e6e9998d09e470",
+					"module": "math",
+					"name": "SwitchboardDecimal",
+					"kind": 1
+				}
+			],
+			"functions": [
+				{
+					"typeParameters": [],
+					"parameters": [
+						{
+							"reference": 1,
+							"body": {
+								"typeParameterInstantiation": [],
+								"type": 10,
+								"typeName": "0x08d79f4d920b03d88faca1e421af023a87fbb1e4a6fd200248e6e9998d09e470::math::SwitchboardDecimal"
+							}
+						},
+						{
+							"reference": 1,
+							"body": {
+								"typeParameterInstantiation": [],
+								"type": 10,
+								"typeName": "0x08d79f4d920b03d88faca1e421af023a87fbb1e4a6fd200248e6e9998d09e470::math::SwitchboardDecimal"
+							}
+						}
+					],
+					"returns": [
+						{
+							"body": {
+								"typeParameterInstantiation": [],
+								"type": 2
+							}
+						}
+					],
+					"name": "abs_gt",
+					"visibility": 1,
+					"isEntry": false
+				},
+				{
+					"typeParameters": [],
+					"parameters": [
+						{
+							"reference": 1,
+							"body": {
+								"typeParameterInstantiation": [],
+								"type": 10,
+								"typeName": "0x08d79f4d920b03d88faca1e421af023a87fbb1e4a6fd200248e6e9998d09e470::math::SwitchboardDecimal"
+							}
+						},
+						{
+							"reference": 1,
+							"body": {
+								"typeParameterInstantiation": [],
+								"type": 10,
+								"typeName": "0x08d79f4d920b03d88faca1e421af023a87fbb1e4a6fd200248e6e9998d09e470::math::SwitchboardDecimal"
+							}
+						}
+					],
+					"returns": [
+						{
+							"body": {
+								"typeParameterInstantiation": [],
+								"type": 2
+							}
+						}
+					],
+					"name": "abs_lt",
+					"visibility": 1,
+					"isEntry": false
+				},
+				{
+					"typeParameters": [],
+					"parameters": [
+						{
+							"reference": 1,
+							"body": {
+								"typeParameterInstantiation": [],
+								"type": 10,
+								"typeName": "0x08d79f4d920b03d88faca1e421af023a87fbb1e4a6fd200248e6e9998d09e470::math::SwitchboardDecimal"
+							}
+						},
+						{
+							"reference": 1,
+							"body": {
+								"typeParameterInstantiation": [],
+								"type": 10,
+								"typeName": "0x08d79f4d920b03d88faca1e421af023a87fbb1e4a6fd200248e6e9998d09e470::math::SwitchboardDecimal"
+							}
+						}
+					],
+					"returns": [
+						{
+							"body": {
+								"typeParameterInstantiation": [],
+								"type": 10,
+								"typeName": "0x08d79f4d920b03d88faca1e421af023a87fbb1e4a6fd200248e6e9998d09e470::math::SwitchboardDecimal"
+							}
+						}
+					],
+					"name": "add",
+					"visibility": 2,
+					"isEntry": false
+				},
+				{
+					"typeParameters": [],
+					"parameters": [
+						{
+							"reference": 1,
+							"body": {
+								"typeParameterInstantiation": [],
+								"type": 10,
+								"typeName": "0x08d79f4d920b03d88faca1e421af023a87fbb1e4a6fd200248e6e9998d09e470::math::SwitchboardDecimal"
+							}
+						},
+						{
+							"reference": 1,
+							"body": {
+								"typeParameterInstantiation": [],
+								"type": 10,
+								"typeName": "0x08d79f4d920b03d88faca1e421af023a87fbb1e4a6fd200248e6e9998d09e470::math::SwitchboardDecimal"
+							}
+						}
+					],
+					"returns": [
+						{
+							"body": {
+								"typeParameterInstantiation": [],
+								"type": 10,
+								"typeName": "0x08d79f4d920b03d88faca1e421af023a87fbb1e4a6fd200248e6e9998d09e470::math::SwitchboardDecimal"
+							}
+						}
+					],
+					"name": "add_internal",
+					"visibility": 1,
+					"isEntry": false
+				},
+				{
+					"typeParameters": [],
+					"parameters": [
+						{
+							"body": {
+								"typeParameterInstantiation": [],
+								"type": 6
+							}
+						},
+						{
+							"body": {
+								"typeParameterInstantiation": [],
+								"type": 2
+							}
+						},
+						{
+							"body": {
+								"typeParameterInstantiation": [],
+								"type": 6
+							}
+						},
+						{
+							"body": {
+								"typeParameterInstantiation": [],
+								"type": 2
+							}
+						}
+					],
+					"returns": [
+						{
+							"body": {
+								"typeParameterInstantiation": [],
+								"type": 2
+							}
+						},
+						{
+							"body": {
+								"typeParameterInstantiation": [],
+								"type": 6
+							}
+						}
+					],
+					"name": "add_u64",
+					"visibility": 2,
+					"isEntry": false
+				},
+				{
+					"typeParameters": [],
+					"parameters": [
+						{
+							"reference": 1,
+							"body": {
+								"typeParameterInstantiation": [],
+								"type": 10,
+								"typeName": "0x08d79f4d920b03d88faca1e421af023a87fbb1e4a6fd200248e6e9998d09e470::math::SwitchboardDecimal"
+							}
+						},
+						{
+							"reference": 1,
+							"body": {
+								"typeParameterInstantiation": [],
+								"type": 10,
+								"typeName": "0x08d79f4d920b03d88faca1e421af023a87fbb1e4a6fd200248e6e9998d09e470::math::SwitchboardDecimal"
+							}
+						},
+						{
+							"reference": 2,
+							"body": {
+								"typeParameterInstantiation": [],
+								"type": 10,
+								"typeName": "0x08d79f4d920b03d88faca1e421af023a87fbb1e4a6fd200248e6e9998d09e470::math::SwitchboardDecimal"
+							}
+						}
+					],
+					"returns": [],
+					"name": "div",
+					"visibility": 2,
+					"isEntry": false
+				},
+				{
+					"typeParameters": [],
+					"parameters": [
+						{
+							"reference": 1,
+							"body": {
+								"typeParameterInstantiation": [],
+								"type": 10,
+								"typeName": "0x08d79f4d920b03d88faca1e421af023a87fbb1e4a6fd200248e6e9998d09e470::math::SwitchboardDecimal"
+							}
+						},
+						{
+							"reference": 1,
+							"body": {
+								"typeParameterInstantiation": [],
+								"type": 10,
+								"typeName": "0x08d79f4d920b03d88faca1e421af023a87fbb1e4a6fd200248e6e9998d09e470::math::SwitchboardDecimal"
+							}
+						}
+					],
+					"returns": [
+						{
+							"body": {
+								"typeParameterInstantiation": [],
+								"type": 2
+							}
+						}
+					],
+					"name": "equals",
+					"visibility": 2,
+					"isEntry": false
+				},
+				{
+					"typeParameters": [],
+					"parameters": [
+						{
+							"reference": 1,
+							"body": {
+								"typeParameterInstantiation": [],
+								"type": 10,
+								"typeName": "0x08d79f4d920b03d88faca1e421af023a87fbb1e4a6fd200248e6e9998d09e470::math::SwitchboardDecimal"
+							}
+						},
+						{
+							"reference": 1,
+							"body": {
+								"typeParameterInstantiation": [],
+								"type": 10,
+								"typeName": "0x08d79f4d920b03d88faca1e421af023a87fbb1e4a6fd200248e6e9998d09e470::math::SwitchboardDecimal"
+							}
+						}
+					],
+					"returns": [
+						{
+							"body": {
+								"typeParameterInstantiation": [],
+								"type": 2
+							}
+						}
+					],
+					"name": "gt",
+					"visibility": 2,
+					"isEntry": false
+				},
+				{
+					"typeParameters": [],
+					"parameters": [
+						{
+							"reference": 1,
+							"body": {
+								"typeParameterInstantiation": [],
+								"type": 10,
+								"typeName": "0x08d79f4d920b03d88faca1e421af023a87fbb1e4a6fd200248e6e9998d09e470::math::SwitchboardDecimal"
+							}
+						},
+						{
+							"reference": 1,
+							"body": {
+								"typeParameterInstantiation": [],
+								"type": 10,
+								"typeName": "0x08d79f4d920b03d88faca1e421af023a87fbb1e4a6fd200248e6e9998d09e470::math::SwitchboardDecimal"
+							}
+						}
+					],
+					"returns": [
+						{
+							"body": {
+								"typeParameterInstantiation": [],
+								"type": 2
+							}
+						}
+					],
+					"name": "gte",
+					"visibility": 2,
+					"isEntry": false
+				},
+				{
+					"typeParameters": [],
+					"parameters": [
+						{
+							"reference": 1,
+							"body": {
+								"typeParameterInstantiation": [],
+								"type": 10,
+								"typeName": "0x08d79f4d920b03d88faca1e421af023a87fbb1e4a6fd200248e6e9998d09e470::math::SwitchboardDecimal"
+							}
+						},
+						{
+							"reference": 1,
+							"body": {
+								"typeParameterInstantiation": [],
+								"type": 10,
+								"typeName": "0x08d79f4d920b03d88faca1e421af023a87fbb1e4a6fd200248e6e9998d09e470::math::SwitchboardDecimal"
+							}
+						}
+					],
+					"returns": [
+						{
+							"body": {
+								"typeParameterInstantiation": [],
+								"type": 2
+							}
+						}
+					],
+					"name": "lt",
+					"visibility": 2,
+					"isEntry": false
+				},
+				{
+					"typeParameters": [],
+					"parameters": [
+						{
+							"body": {
+								"typeParameterInstantiation": [],
+								"type": 6
+							}
+						},
+						{
+							"body": {
+								"typeParameterInstantiation": [],
+								"type": 2
+							}
+						},
+						{
+							"body": {
+								"typeParameterInstantiation": [],
+								"type": 6
+							}
+						},
+						{
+							"body": {
+								"typeParameterInstantiation": [],
+								"type": 2
+							}
+						}
+					],
+					"returns": [
+						{
+							"body": {
+								"typeParameterInstantiation": [],
+								"type": 2
+							}
+						}
+					],
+					"name": "lt_u64",
+					"visibility": 2,
+					"isEntry": false
+				},
+				{
+					"typeParameters": [],
+					"parameters": [
+						{
+							"reference": 1,
+							"body": {
+								"typeParameterInstantiation": [],
+								"type": 10,
+								"typeName": "0x08d79f4d920b03d88faca1e421af023a87fbb1e4a6fd200248e6e9998d09e470::math::SwitchboardDecimal"
+							}
+						},
+						{
+							"reference": 1,
+							"body": {
+								"typeParameterInstantiation": [],
+								"type": 10,
+								"typeName": "0x08d79f4d920b03d88faca1e421af023a87fbb1e4a6fd200248e6e9998d09e470::math::SwitchboardDecimal"
+							}
+						}
+					],
+					"returns": [
+						{
+							"body": {
+								"typeParameterInstantiation": [],
+								"type": 2
+							}
+						}
+					],
+					"name": "lte",
+					"visibility": 2,
+					"isEntry": false
+				},
+				{
+					"typeParameters": [],
+					"parameters": [
+						{
+							"body": {
+								"typeParameterInstantiation": [],
+								"type": 3
+							}
+						},
+						{
+							"body": {
+								"typeParameterInstantiation": [],
+								"type": 3
+							}
+						}
+					],
+					"returns": [
+						{
+							"body": {
+								"typeParameterInstantiation": [],
+								"type": 3
+							}
+						}
+					],
+					"name": "max",
+					"visibility": 1,
+					"isEntry": false
+				},
+				{
+					"typeParameters": [],
+					"parameters": [],
+					"returns": [
+						{
+							"body": {
+								"typeParameterInstantiation": [],
+								"type": 7
+							}
+						}
+					],
+					"name": "max_u128",
+					"visibility": 2,
+					"isEntry": false
+				},
+				{
+					"typeParameters": [],
+					"parameters": [
+						{
+							"reference": 2,
+							"body": {
+								"typeParameterInstantiation": [
+									{
+										"typeParameterInstantiation": [],
+										"type": 10,
+										"typeName": "0x08d79f4d920b03d88faca1e421af023a87fbb1e4a6fd200248e6e9998d09e470::math::SwitchboardDecimal"
+									}
+								],
+								"type": 9
+							}
+						}
+					],
+					"returns": [
+						{
+							"body": {
+								"typeParameterInstantiation": [],
+								"type": 10,
+								"typeName": "0x08d79f4d920b03d88faca1e421af023a87fbb1e4a6fd200248e6e9998d09e470::math::SwitchboardDecimal"
+							}
+						}
+					],
+					"name": "median",
+					"visibility": 2,
+					"isEntry": false
+				},
+				{
+					"typeParameters": [],
+					"parameters": [
+						{
+							"body": {
+								"typeParameterInstantiation": [],
+								"type": 3
+							}
+						},
+						{
+							"body": {
+								"typeParameterInstantiation": [],
+								"type": 3
+							}
+						}
+					],
+					"returns": [
+						{
+							"body": {
+								"typeParameterInstantiation": [],
+								"type": 3
+							}
+						}
+					],
+					"name": "min",
+					"visibility": 1,
+					"isEntry": false
+				},
+				{
+					"typeParameters": [],
+					"parameters": [
+						{
+							"reference": 1,
+							"body": {
+								"typeParameterInstantiation": [],
+								"type": 10,
+								"typeName": "0x08d79f4d920b03d88faca1e421af023a87fbb1e4a6fd200248e6e9998d09e470::math::SwitchboardDecimal"
+							}
+						},
+						{
+							"reference": 1,
+							"body": {
+								"typeParameterInstantiation": [],
+								"type": 10,
+								"typeName": "0x08d79f4d920b03d88faca1e421af023a87fbb1e4a6fd200248e6e9998d09e470::math::SwitchboardDecimal"
+							}
+						},
+						{
+							"reference": 2,
+							"body": {
+								"typeParameterInstantiation": [],
+								"type": 10,
+								"typeName": "0x08d79f4d920b03d88faca1e421af023a87fbb1e4a6fd200248e6e9998d09e470::math::SwitchboardDecimal"
+							}
+						}
+					],
+					"returns": [],
+					"name": "mul",
+					"visibility": 2,
+					"isEntry": false
+				},
+				{
+					"typeParameters": [],
+					"parameters": [
+						{
+							"reference": 1,
+							"body": {
+								"typeParameterInstantiation": [],
+								"type": 10,
+								"typeName": "0x08d79f4d920b03d88faca1e421af023a87fbb1e4a6fd200248e6e9998d09e470::math::SwitchboardDecimal"
+							}
+						},
+						{
+							"reference": 1,
+							"body": {
+								"typeParameterInstantiation": [],
+								"type": 10,
+								"typeName": "0x08d79f4d920b03d88faca1e421af023a87fbb1e4a6fd200248e6e9998d09e470::math::SwitchboardDecimal"
+							}
+						},
+						{
+							"reference": 2,
+							"body": {
+								"typeParameterInstantiation": [],
+								"type": 10,
+								"typeName": "0x08d79f4d920b03d88faca1e421af023a87fbb1e4a6fd200248e6e9998d09e470::math::SwitchboardDecimal"
+							}
+						}
+					],
+					"returns": [],
+					"name": "mul_internal",
+					"visibility": 1,
+					"isEntry": false
+				},
+				{
+					"typeParameters": [],
+					"parameters": [
+						{
+							"body": {
+								"typeParameterInstantiation": [],
+								"type": 7
+							}
+						},
+						{
+							"body": {
+								"typeParameterInstantiation": [],
+								"type": 3
+							}
+						},
+						{
+							"body": {
+								"typeParameterInstantiation": [],
+								"type": 2
+							}
+						}
+					],
+					"returns": [
+						{
+							"body": {
+								"typeParameterInstantiation": [],
+								"type": 10,
+								"typeName": "0x08d79f4d920b03d88faca1e421af023a87fbb1e4a6fd200248e6e9998d09e470::math::SwitchboardDecimal"
+							}
+						}
+					],
+					"name": "new",
+					"visibility": 2,
+					"isEntry": false
+				},
+				{
+					"typeParameters": [],
+					"parameters": [
+						{
+							"body": {
+								"typeParameterInstantiation": [],
+								"type": 6
+							}
+						},
+						{
+							"body": {
+								"typeParameterInstantiation": [],
+								"type": 3
+							}
+						}
+					],
+					"returns": [
+						{
+							"body": {
+								"typeParameterInstantiation": [],
+								"type": 7
+							}
+						}
+					],
+					"name": "pow",
+					"visibility": 2,
+					"isEntry": false
+				},
+				{
+					"typeParameters": [],
+					"parameters": [
+						{
+							"body": {
+								"typeParameterInstantiation": [],
+								"type": 3
+							}
+						}
+					],
+					"returns": [
+						{
+							"body": {
+								"typeParameterInstantiation": [],
+								"type": 7
+							}
+						}
+					],
+					"name": "pow_10",
+					"visibility": 1,
+					"isEntry": false
+				},
+				{
+					"typeParameters": [],
+					"parameters": [
+						{
+							"reference": 2,
+							"body": {
+								"typeParameterInstantiation": [
+									{
+										"typeParameterInstantiation": [],
+										"type": 10,
+										"typeName": "0x08d79f4d920b03d88faca1e421af023a87fbb1e4a6fd200248e6e9998d09e470::math::SwitchboardDecimal"
+									}
+								],
+								"type": 9
+							}
+						},
+						{
+							"body": {
+								"typeParameterInstantiation": [],
+								"type": 6
+							}
+						},
+						{
+							"body": {
+								"typeParameterInstantiation": [],
+								"type": 2
+							}
+						},
+						{
+							"body": {
+								"typeParameterInstantiation": [],
+								"type": 6
+							}
+						},
+						{
+							"body": {
+								"typeParameterInstantiation": [],
+								"type": 2
+							}
+						}
+					],
+					"returns": [],
+					"name": "quick_sort",
+					"visibility": 2,
+					"isEntry": false
+				},
+				{
+					"typeParameters": [],
+					"parameters": [
+						{
+							"reference": 1,
+							"body": {
+								"typeParameterInstantiation": [],
+								"type": 10,
+								"typeName": "0x08d79f4d920b03d88faca1e421af023a87fbb1e4a6fd200248e6e9998d09e470::math::SwitchboardDecimal"
+							}
+						},
+						{
+							"body": {
+								"typeParameterInstantiation": [],
+								"type": 3
+							}
+						}
+					],
+					"returns": [
+						{
+							"body": {
+								"typeParameterInstantiation": [],
+								"type": 7
+							}
+						}
+					],
+					"name": "scale_to_decimals",
+					"visibility": 2,
+					"isEntry": false
+				},
+				{
+					"typeParameters": [],
+					"parameters": [
+						{
+							"reference": 2,
+							"body": {
+								"typeParameterInstantiation": [
+									{
+										"typeParameterInstantiation": [],
+										"type": 10,
+										"typeName": "0x08d79f4d920b03d88faca1e421af023a87fbb1e4a6fd200248e6e9998d09e470::math::SwitchboardDecimal"
+									}
+								],
+								"type": 9
+							}
+						}
+					],
+					"returns": [],
+					"name": "sort_results",
+					"visibility": 2,
+					"isEntry": false
+				},
+				{
+					"typeParameters": [],
+					"parameters": [
+						{
+							"reference": 1,
+							"body": {
+								"typeParameterInstantiation": [],
+								"type": 10,
+								"typeName": "0x08d79f4d920b03d88faca1e421af023a87fbb1e4a6fd200248e6e9998d09e470::math::SwitchboardDecimal"
+							}
+						},
+						{
+							"reference": 1,
+							"body": {
+								"typeParameterInstantiation": [],
+								"type": 10,
+								"typeName": "0x08d79f4d920b03d88faca1e421af023a87fbb1e4a6fd200248e6e9998d09e470::math::SwitchboardDecimal"
+							}
+						}
+					],
+					"returns": [
+						{
+							"body": {
+								"typeParameterInstantiation": [],
+								"type": 10,
+								"typeName": "0x08d79f4d920b03d88faca1e421af023a87fbb1e4a6fd200248e6e9998d09e470::math::SwitchboardDecimal"
+							}
+						}
+					],
+					"name": "sub",
+					"visibility": 2,
+					"isEntry": false
+				},
+				{
+					"typeParameters": [],
+					"parameters": [
+						{
+							"body": {
+								"typeParameterInstantiation": [],
+								"type": 3
+							}
+						},
+						{
+							"body": {
+								"typeParameterInstantiation": [],
+								"type": 3
+							}
+						}
+					],
+					"returns": [
+						{
+							"body": {
+								"typeParameterInstantiation": [],
+								"type": 3
+							}
+						}
+					],
+					"name": "sub_abs_u8",
+					"visibility": 1,
+					"isEntry": false
+				},
+				{
+					"typeParameters": [],
+					"parameters": [
+						{
+							"reference": 1,
+							"body": {
+								"typeParameterInstantiation": [],
+								"type": 10,
+								"typeName": "0x08d79f4d920b03d88faca1e421af023a87fbb1e4a6fd200248e6e9998d09e470::math::SwitchboardDecimal"
+							}
+						},
+						{
+							"reference": 1,
+							"body": {
+								"typeParameterInstantiation": [],
+								"type": 10,
+								"typeName": "0x08d79f4d920b03d88faca1e421af023a87fbb1e4a6fd200248e6e9998d09e470::math::SwitchboardDecimal"
+							}
+						}
+					],
+					"returns": [
+						{
+							"body": {
+								"typeParameterInstantiation": [],
+								"type": 10,
+								"typeName": "0x08d79f4d920b03d88faca1e421af023a87fbb1e4a6fd200248e6e9998d09e470::math::SwitchboardDecimal"
+							}
+						}
+					],
+					"name": "sub_internal",
+					"visibility": 1,
+					"isEntry": false
+				},
+				{
+					"typeParameters": [],
+					"parameters": [
+						{
+							"body": {
+								"typeParameterInstantiation": [],
+								"type": 6
+							}
+						},
+						{
+							"body": {
+								"typeParameterInstantiation": [],
+								"type": 2
+							}
+						},
+						{
+							"body": {
+								"typeParameterInstantiation": [],
+								"type": 6
+							}
+						},
+						{
+							"body": {
+								"typeParameterInstantiation": [],
+								"type": 2
+							}
+						}
+					],
+					"returns": [
+						{
+							"body": {
+								"typeParameterInstantiation": [],
+								"type": 2
+							}
+						},
+						{
+							"body": {
+								"typeParameterInstantiation": [],
+								"type": 6
+							}
+						}
+					],
+					"name": "sub_u64",
+					"visibility": 2,
+					"isEntry": false
+				},
+				{
+					"typeParameters": [],
+					"parameters": [
+						{
+							"body": {
+								"typeParameterInstantiation": [],
+								"type": 10,
+								"typeName": "0x08d79f4d920b03d88faca1e421af023a87fbb1e4a6fd200248e6e9998d09e470::math::SwitchboardDecimal"
+							}
+						}
+					],
+					"returns": [
+						{
+							"body": {
+								"typeParameterInstantiation": [],
+								"type": 7
+							}
+						},
+						{
+							"body": {
+								"typeParameterInstantiation": [],
+								"type": 3
+							}
+						},
+						{
+							"body": {
+								"typeParameterInstantiation": [],
+								"type": 2
+							}
+						}
+					],
+					"name": "unpack",
+					"visibility": 2,
+					"isEntry": false
+				},
+				{
+					"typeParameters": [],
+					"parameters": [],
+					"returns": [
+						{
+							"body": {
+								"typeParameterInstantiation": [],
+								"type": 10,
+								"typeName": "0x08d79f4d920b03d88faca1e421af023a87fbb1e4a6fd200248e6e9998d09e470::math::SwitchboardDecimal"
+							}
+						}
+					],
+					"name": "zero",
+					"visibility": 2,
+					"isEntry": false
+				}
+			],
+			"name": "math"
+		}
+	},
+	{
+		"address": "0x8d79f4d920b03d88faca1e421af023a87fbb1e4a6fd200248e6e9998d09e470",
+		"module": {
+			"datatypes": [
+				{
+					"abilities": [
+						4
+					],
+					"typeParameters": [],
+					"fields": [
+						{
+							"name": "id",
+							"position": 0,
+							"type": {
+								"typeParameterInstantiation": [],
+								"type": 10,
+								"typeName": "0x0000000000000000000000000000000000000000000000000000000000000002::object::UID"
+							}
+						},
+						{
+							"name": "node_addr",
+							"position": 1,
+							"type": {
+								"typeParameterInstantiation": [],
+								"type": 1
+							}
+						},
+						{
+							"name": "node_authority",
+							"position": 2,
+							"type": {
+								"typeParameterInstantiation": [],
+								"type": 1
+							}
+						},
+						{
+							"name": "queue_addr",
+							"position": 3,
+							"type": {
+								"typeParameterInstantiation": [],
+								"type": 1
+							}
+						},
+						{
+							"name": "quote_buffer",
+							"position": 4,
+							"type": {
+								"typeParameterInstantiation": [
+									{
+										"typeParameterInstantiation": [],
+										"type": 3
+									}
+								],
+								"type": 9
+							}
+						},
+						{
+							"name": "verification_status",
+							"position": 5,
+							"type": {
+								"typeParameterInstantiation": [],
+								"type": 3
+							}
+						},
+						{
+							"name": "verification_timestamp",
+							"position": 6,
+							"type": {
+								"typeParameterInstantiation": [],
+								"type": 6
+							}
+						},
+						{
+							"name": "valid_until",
+							"position": 7,
+							"type": {
+								"typeParameterInstantiation": [],
+								"type": 6
+							}
+						},
+						{
+							"name": "content_hash_enabled",
+							"position": 8,
+							"type": {
+								"typeParameterInstantiation": [],
+								"type": 2
+							}
+						},
+						{
+							"name": "friend_key",
+							"position": 9,
+							"type": {
+								"typeParameterInstantiation": [
+									{
+										"typeParameterInstantiation": [],
+										"type": 3
+									}
+								],
+								"type": 9
+							}
+						},
+						{
+							"name": "version",
+							"position": 10,
+							"type": {
+								"typeParameterInstantiation": [],
+								"type": 6
+							}
+						}
+					],
+					"variants": [],
+					"typeName": "0x08d79f4d920b03d88faca1e421af023a87fbb1e4a6fd200248e6e9998d09e470::quote::Quote",
+					"definingId": "0x08d79f4d920b03d88faca1e421af023a87fbb1e4a6fd200248e6e9998d09e470",
+					"module": "quote",
+					"name": "Quote",
+					"kind": 1
+				}
+			],
+			"functions": [
+				{
+					"typeParameters": [],
+					"parameters": [],
+					"returns": [
+						{
+							"body": {
+								"typeParameterInstantiation": [],
+								"type": 3
+							}
+						}
+					],
+					"name": "VERIFICATION_FAILURE",
+					"visibility": 2,
+					"isEntry": false
+				},
+				{
+					"typeParameters": [],
+					"parameters": [],
+					"returns": [
+						{
+							"body": {
+								"typeParameterInstantiation": [],
+								"type": 3
+							}
+						}
+					],
+					"name": "VERIFICATION_OVERRIDE",
+					"visibility": 2,
+					"isEntry": false
+				},
+				{
+					"typeParameters": [],
+					"parameters": [],
+					"returns": [
+						{
+							"body": {
+								"typeParameterInstantiation": [],
+								"type": 3
+							}
+						}
+					],
+					"name": "VERIFICATION_PENDING",
+					"visibility": 2,
+					"isEntry": false
+				},
+				{
+					"typeParameters": [],
+					"parameters": [],
+					"returns": [
+						{
+							"body": {
+								"typeParameterInstantiation": [],
+								"type": 3
+							}
+						}
+					],
+					"name": "VERIFICATION_SUCCESS",
+					"visibility": 2,
+					"isEntry": false
+				},
+				{
+					"typeParameters": [
+						{
+							"constraints": []
+						}
+					],
+					"parameters": [
+						{
+							"reference": 2,
+							"body": {
+								"typeParameterInstantiation": [],
+								"type": 10,
+								"typeName": "0x08d79f4d920b03d88faca1e421af023a87fbb1e4a6fd200248e6e9998d09e470::quote::Quote"
+							}
+						},
+						{
+							"reference": 1,
+							"body": {
+								"typeParameterInstantiation": [],
+								"type": 11,
+								"typeParameter": 0
+							}
+						}
+					],
+					"returns": [],
+					"name": "fail",
+					"visibility": 2,
+					"isEntry": false
+				},
+				{
+					"typeParameters": [
+						{
+							"constraints": []
+						}
+					],
+					"parameters": [
+						{
+							"reference": 2,
+							"body": {
+								"typeParameterInstantiation": [],
+								"type": 10,
+								"typeName": "0x08d79f4d920b03d88faca1e421af023a87fbb1e4a6fd200248e6e9998d09e470::quote::Quote"
+							}
+						},
+						{
+							"body": {
+								"typeParameterInstantiation": [],
+								"type": 6
+							}
+						},
+						{
+							"body": {
+								"typeParameterInstantiation": [],
+								"type": 6
+							}
+						},
+						{
+							"reference": 1,
+							"body": {
+								"typeParameterInstantiation": [],
+								"type": 11,
+								"typeParameter": 0
+							}
+						}
+					],
+					"returns": [],
+					"name": "force_override",
+					"visibility": 2,
+					"isEntry": false
+				},
+				{
+					"typeParameters": [],
+					"parameters": [
+						{
+							"reference": 1,
+							"body": {
+								"typeParameterInstantiation": [],
+								"type": 10,
+								"typeName": "0x08d79f4d920b03d88faca1e421af023a87fbb1e4a6fd200248e6e9998d09e470::quote::Quote"
+							}
+						},
+						{
+							"body": {
+								"typeParameterInstantiation": [],
+								"type": 6
+							}
+						}
+					],
+					"returns": [
+						{
+							"body": {
+								"typeParameterInstantiation": [],
+								"type": 2
+							}
+						}
+					],
+					"name": "is_valid",
+					"visibility": 2,
+					"isEntry": false
+				},
+				{
+					"typeParameters": [],
+					"parameters": [
+						{
+							"reference": 2,
+							"body": {
+								"typeParameterInstantiation": [],
+								"type": 10,
+								"typeName": "0x08d79f4d920b03d88faca1e421af023a87fbb1e4a6fd200248e6e9998d09e470::quote::Quote"
+							}
+						},
+						{
+							"reference": 1,
+							"body": {
+								"typeParameterInstantiation": [],
+								"type": 10,
+								"typeName": "0x08d79f4d920b03d88faca1e421af023a87fbb1e4a6fd200248e6e9998d09e470::switchboard::AdminCap"
+							}
+						}
+					],
+					"returns": [],
+					"name": "migrate",
+					"visibility": 1,
+					"isEntry": true
+				},
+				{
+					"typeParameters": [
+						{
+							"constraints": []
+						},
+						{
+							"constraints": []
+						}
+					],
+					"parameters": [
+						{
+							"reference": 2,
+							"body": {
+								"typeParameterInstantiation": [],
+								"type": 10,
+								"typeName": "0x08d79f4d920b03d88faca1e421af023a87fbb1e4a6fd200248e6e9998d09e470::quote::Quote"
+							}
+						},
+						{
+							"reference": 1,
+							"body": {
+								"typeParameterInstantiation": [],
+								"type": 11,
+								"typeParameter": 0
+							}
+						},
+						{
+							"reference": 1,
+							"body": {
+								"typeParameterInstantiation": [],
+								"type": 11,
+								"typeParameter": 1
+							}
+						}
+					],
+					"returns": [],
+					"name": "migrate_package",
+					"visibility": 2,
+					"isEntry": false
+				},
+				{
+					"typeParameters": [
+						{
+							"constraints": []
+						}
+					],
+					"parameters": [
+						{
+							"body": {
+								"typeParameterInstantiation": [],
+								"type": 1
+							}
+						},
+						{
+							"body": {
+								"typeParameterInstantiation": [],
+								"type": 1
+							}
+						},
+						{
+							"body": {
+								"typeParameterInstantiation": [],
+								"type": 1
+							}
+						},
+						{
+							"body": {
+								"typeParameterInstantiation": [
+									{
+										"typeParameterInstantiation": [],
+										"type": 3
+									}
+								],
+								"type": 9
+							}
+						},
+						{
+							"body": {
+								"typeParameterInstantiation": [],
+								"type": 2
+							}
+						},
+						{
+							"reference": 1,
+							"body": {
+								"typeParameterInstantiation": [],
+								"type": 11,
+								"typeParameter": 0
+							}
+						},
+						{
+							"reference": 2,
+							"body": {
+								"typeParameterInstantiation": [],
+								"type": 10,
+								"typeName": "0x0000000000000000000000000000000000000000000000000000000000000002::tx_context::TxContext"
+							}
+						}
+					],
+					"returns": [
+						{
+							"body": {
+								"typeParameterInstantiation": [],
+								"type": 10,
+								"typeName": "0x08d79f4d920b03d88faca1e421af023a87fbb1e4a6fd200248e6e9998d09e470::quote::Quote"
+							}
+						}
+					],
+					"name": "new",
+					"visibility": 2,
+					"isEntry": false
+				},
+				{
+					"typeParameters": [],
+					"parameters": [
+						{
+							"reference": 1,
+							"body": {
+								"typeParameterInstantiation": [],
+								"type": 10,
+								"typeName": "0x08d79f4d920b03d88faca1e421af023a87fbb1e4a6fd200248e6e9998d09e470::quote::Quote"
+							}
+						}
+					],
+					"returns": [
+						{
+							"body": {
+								"typeParameterInstantiation": [],
+								"type": 1
+							}
+						}
+					],
+					"name": "node_addr",
+					"visibility": 2,
+					"isEntry": false
+				},
+				{
+					"typeParameters": [],
+					"parameters": [
+						{
+							"reference": 1,
+							"body": {
+								"typeParameterInstantiation": [],
+								"type": 10,
+								"typeName": "0x08d79f4d920b03d88faca1e421af023a87fbb1e4a6fd200248e6e9998d09e470::quote::Quote"
+							}
+						}
+					],
+					"returns": [
+						{
+							"body": {
+								"typeParameterInstantiation": [],
+								"type": 1
+							}
+						}
+					],
+					"name": "node_authority",
+					"visibility": 2,
+					"isEntry": false
+				},
+				{
+					"typeParameters": [],
+					"parameters": [
+						{
+							"reference": 1,
+							"body": {
+								"typeParameterInstantiation": [],
+								"type": 10,
+								"typeName": "0x08d79f4d920b03d88faca1e421af023a87fbb1e4a6fd200248e6e9998d09e470::quote::Quote"
+							}
+						}
+					],
+					"returns": [
+						{
+							"body": {
+								"typeParameterInstantiation": [],
+								"type": 1
+							}
+						}
+					],
+					"name": "queue_addr",
+					"visibility": 2,
+					"isEntry": false
+				},
+				{
+					"typeParameters": [],
+					"parameters": [
+						{
+							"reference": 1,
+							"body": {
+								"typeParameterInstantiation": [],
+								"type": 10,
+								"typeName": "0x08d79f4d920b03d88faca1e421af023a87fbb1e4a6fd200248e6e9998d09e470::quote::Quote"
+							}
+						}
+					],
+					"returns": [
+						{
+							"body": {
+								"typeParameterInstantiation": [],
+								"type": 1
+							}
+						}
+					],
+					"name": "quote_address",
+					"visibility": 2,
+					"isEntry": false
+				},
+				{
+					"typeParameters": [],
+					"parameters": [
+						{
+							"reference": 1,
+							"body": {
+								"typeParameterInstantiation": [],
+								"type": 10,
+								"typeName": "0x08d79f4d920b03d88faca1e421af023a87fbb1e4a6fd200248e6e9998d09e470::quote::Quote"
+							}
+						}
+					],
+					"returns": [
+						{
+							"reference": 1,
+							"body": {
+								"typeParameterInstantiation": [
+									{
+										"typeParameterInstantiation": [],
+										"type": 3
+									}
+								],
+								"type": 9
+							}
+						}
+					],
+					"name": "quote_buffer",
+					"visibility": 2,
+					"isEntry": false
+				},
+				{
+					"typeParameters": [
+						{
+							"constraints": []
+						}
+					],
+					"parameters": [
+						{
+							"reference": 2,
+							"body": {
+								"typeParameterInstantiation": [],
+								"type": 10,
+								"typeName": "0x08d79f4d920b03d88faca1e421af023a87fbb1e4a6fd200248e6e9998d09e470::quote::Quote"
+							}
+						},
+						{
+							"body": {
+								"typeParameterInstantiation": [],
+								"type": 1
+							}
+						},
+						{
+							"body": {
+								"typeParameterInstantiation": [],
+								"type": 1
+							}
+						},
+						{
+							"body": {
+								"typeParameterInstantiation": [],
+								"type": 1
+							}
+						},
+						{
+							"body": {
+								"typeParameterInstantiation": [
+									{
+										"typeParameterInstantiation": [],
+										"type": 3
+									}
+								],
+								"type": 9
+							}
+						},
+						{
+							"body": {
+								"typeParameterInstantiation": [],
+								"type": 3
+							}
+						},
+						{
+							"body": {
+								"typeParameterInstantiation": [],
+								"type": 6
+							}
+						},
+						{
+							"body": {
+								"typeParameterInstantiation": [],
+								"type": 6
+							}
+						},
+						{
+							"reference": 1,
+							"body": {
+								"typeParameterInstantiation": [],
+								"type": 11,
+								"typeParameter": 0
+							}
+						}
+					],
+					"returns": [],
+					"name": "set_configs",
+					"visibility": 2,
+					"isEntry": false
+				},
+				{
+					"typeParameters": [],
+					"parameters": [
+						{
+							"body": {
+								"typeParameterInstantiation": [],
+								"type": 10,
+								"typeName": "0x08d79f4d920b03d88faca1e421af023a87fbb1e4a6fd200248e6e9998d09e470::quote::Quote"
+							}
+						}
+					],
+					"returns": [],
+					"name": "share_quote",
+					"visibility": 2,
+					"isEntry": false
+				},
+				{
+					"typeParameters": [],
+					"parameters": [
+						{
+							"reference": 1,
+							"body": {
+								"typeParameterInstantiation": [],
+								"type": 10,
+								"typeName": "0x08d79f4d920b03d88faca1e421af023a87fbb1e4a6fd200248e6e9998d09e470::quote::Quote"
+							}
+						}
+					],
+					"returns": [
+						{
+							"body": {
+								"typeParameterInstantiation": [],
+								"type": 6
+							}
+						}
+					],
+					"name": "valid_until",
+					"visibility": 2,
+					"isEntry": false
+				},
+				{
+					"typeParameters": [],
+					"parameters": [
+						{
+							"reference": 1,
+							"body": {
+								"typeParameterInstantiation": [],
+								"type": 10,
+								"typeName": "0x08d79f4d920b03d88faca1e421af023a87fbb1e4a6fd200248e6e9998d09e470::quote::Quote"
+							}
+						}
+					],
+					"returns": [
+						{
+							"body": {
+								"typeParameterInstantiation": [],
+								"type": 3
+							}
+						}
+					],
+					"name": "verification_status",
+					"visibility": 2,
+					"isEntry": false
+				},
+				{
+					"typeParameters": [],
+					"parameters": [
+						{
+							"reference": 1,
+							"body": {
+								"typeParameterInstantiation": [],
+								"type": 10,
+								"typeName": "0x08d79f4d920b03d88faca1e421af023a87fbb1e4a6fd200248e6e9998d09e470::quote::Quote"
+							}
+						}
+					],
+					"returns": [
+						{
+							"body": {
+								"typeParameterInstantiation": [],
+								"type": 6
+							}
+						}
+					],
+					"name": "verification_timestamp",
+					"visibility": 2,
+					"isEntry": false
+				},
+				{
+					"typeParameters": [
+						{
+							"constraints": []
+						}
+					],
+					"parameters": [
+						{
+							"reference": 2,
+							"body": {
+								"typeParameterInstantiation": [],
+								"type": 10,
+								"typeName": "0x08d79f4d920b03d88faca1e421af023a87fbb1e4a6fd200248e6e9998d09e470::quote::Quote"
+							}
+						},
+						{
+							"body": {
+								"typeParameterInstantiation": [],
+								"type": 6
+							}
+						},
+						{
+							"body": {
+								"typeParameterInstantiation": [],
+								"type": 6
+							}
+						},
+						{
+							"reference": 1,
+							"body": {
+								"typeParameterInstantiation": [],
+								"type": 11,
+								"typeParameter": 0
+							}
+						}
+					],
+					"returns": [],
+					"name": "verify",
+					"visibility": 2,
+					"isEntry": false
+				},
+				{
+					"typeParameters": [],
+					"parameters": [
+						{
+							"reference": 1,
+							"body": {
+								"typeParameterInstantiation": [],
+								"type": 10,
+								"typeName": "0x08d79f4d920b03d88faca1e421af023a87fbb1e4a6fd200248e6e9998d09e470::quote::Quote"
+							}
+						}
+					],
+					"returns": [
+						{
+							"body": {
+								"typeParameterInstantiation": [],
+								"type": 2
+							}
+						},
+						{
+							"body": {
+								"typeParameterInstantiation": [
+									{
+										"typeParameterInstantiation": [],
+										"type": 3
+									}
+								],
+								"type": 9
+							}
+						}
+					],
+					"name": "verify_quote_data",
+					"visibility": 2,
+					"isEntry": false
+				}
+			],
+			"name": "quote"
+		}
+	},
+	{
+		"address": "0x8d79f4d920b03d88faca1e421af023a87fbb1e4a6fd200248e6e9998d09e470",
+		"module": {
+			"datatypes": [
+				{
+					"abilities": [
+						4
+					],
+					"typeParameters": [],
+					"fields": [
+						{
+							"name": "id",
+							"position": 0,
+							"type": {
+								"typeParameterInstantiation": [],
+								"type": 10,
+								"typeName": "0x0000000000000000000000000000000000000000000000000000000000000002::object::UID"
+							}
+						}
+					],
+					"variants": [],
+					"typeName": "0x08d79f4d920b03d88faca1e421af023a87fbb1e4a6fd200248e6e9998d09e470::switchboard::AdminCap",
+					"definingId": "0x08d79f4d920b03d88faca1e421af023a87fbb1e4a6fd200248e6e9998d09e470",
+					"module": "switchboard",
+					"name": "AdminCap",
+					"kind": 1
+				}
+			],
+			"functions": [
+				{
+					"typeParameters": [],
+					"parameters": [
+						{
+							"reference": 2,
+							"body": {
+								"typeParameterInstantiation": [],
+								"type": 10,
+								"typeName": "0x0000000000000000000000000000000000000000000000000000000000000002::tx_context::TxContext"
+							}
+						}
+					],
+					"returns": [],
+					"name": "init",
+					"visibility": 1,
+					"isEntry": false
+				},
+				{
+					"typeParameters": [],
+					"parameters": [],
+					"returns": [
+						{
+							"body": {
+								"typeParameterInstantiation": [],
+								"type": 6
+							}
+						}
+					],
+					"name": "version",
+					"visibility": 2,
+					"isEntry": false
+				}
+			],
+			"name": "switchboard"
+		}
+	},
+	{
+		"address": "0x8d79f4d920b03d88faca1e421af023a87fbb1e4a6fd200248e6e9998d09e470",
+		"module": {
+			"datatypes": [],
+			"functions": [
+				{
+					"typeParameters": [
+						{
+							"constraints": []
+						}
+					],
+					"parameters": [
+						{
+							"reference": 1,
+							"body": {
+								"typeParameterInstantiation": [],
+								"type": 10,
+								"typeName": "0x0000000000000000000000000000000000000000000000000000000000000002::bag::Bag"
+							}
+						},
+						{
+							"body": {
+								"typeParameterInstantiation": [],
+								"type": 1
+							}
+						}
+					],
+					"returns": [
+						{
+							"body": {
+								"typeParameterInstantiation": [],
+								"type": 6
+							}
+						}
+					],
+					"name": "escrow_balance",
+					"visibility": 2,
+					"isEntry": false
+				},
+				{
+					"typeParameters": [
+						{
+							"constraints": []
+						}
+					],
+					"parameters": [
+						{
+							"reference": 2,
+							"body": {
+								"typeParameterInstantiation": [],
+								"type": 10,
+								"typeName": "0x0000000000000000000000000000000000000000000000000000000000000002::bag::Bag"
+							}
+						},
+						{
+							"body": {
+								"typeParameterInstantiation": [],
+								"type": 1
+							}
+						},
+						{
+							"body": {
+								"typeParameterInstantiation": [
+									{
+										"typeParameterInstantiation": [],
+										"type": 11,
+										"typeParameter": 0
+									}
+								],
+								"type": 10,
+								"typeName": "0x0000000000000000000000000000000000000000000000000000000000000002::coin::Coin"
+							}
+						}
+					],
+					"returns": [],
+					"name": "escrow_deposit",
+					"visibility": 2,
+					"isEntry": false
+				},
+				{
+					"typeParameters": [
+						{
+							"constraints": []
+						}
+					],
+					"parameters": [
+						{
+							"reference": 2,
+							"body": {
+								"typeParameterInstantiation": [],
+								"type": 10,
+								"typeName": "0x0000000000000000000000000000000000000000000000000000000000000002::bag::Bag"
+							}
+						},
+						{
+							"body": {
+								"typeParameterInstantiation": [],
+								"type": 1
+							}
+						},
+						{
+							"body": {
+								"typeParameterInstantiation": [],
+								"type": 6
+							}
+						},
+						{
+							"reference": 2,
+							"body": {
+								"typeParameterInstantiation": [],
+								"type": 10,
+								"typeName": "0x0000000000000000000000000000000000000000000000000000000000000002::tx_context::TxContext"
+							}
+						}
+					],
+					"returns": [
+						{
+							"body": {
+								"typeParameterInstantiation": [
+									{
+										"typeParameterInstantiation": [],
+										"type": 11,
+										"typeParameter": 0
+									}
+								],
+								"type": 10,
+								"typeName": "0x0000000000000000000000000000000000000000000000000000000000000002::coin::Coin"
+							}
+						}
+					],
+					"name": "escrow_withdraw",
+					"visibility": 2,
+					"isEntry": false
+				},
+				{
+					"typeParameters": [],
+					"parameters": [
+						{
+							"reference": 1,
+							"body": {
+								"typeParameterInstantiation": [
+									{
+										"typeParameterInstantiation": [],
+										"type": 3
+									}
+								],
+								"type": 9
+							}
+						}
+					],
+					"returns": [
+						{
+							"body": {
+								"typeParameterInstantiation": [
+									{
+										"typeParameterInstantiation": [],
+										"type": 3
+									}
+								],
+								"type": 9
+							}
+						},
+						{
+							"body": {
+								"typeParameterInstantiation": [
+									{
+										"typeParameterInstantiation": [],
+										"type": 3
+									}
+								],
+								"type": 9
+							}
+						}
+					],
+					"name": "parse_sgx_quote",
+					"visibility": 2,
+					"isEntry": false
+				},
+				{
+					"typeParameters": [],
+					"parameters": [
+						{
+							"reference": 1,
+							"body": {
+								"typeParameterInstantiation": [
+									{
+										"typeParameterInstantiation": [],
+										"type": 3
+									}
+								],
+								"type": 9
+							}
+						},
+						{
+							"body": {
+								"typeParameterInstantiation": [],
+								"type": 6
+							}
+						},
+						{
+							"body": {
+								"typeParameterInstantiation": [],
+								"type": 6
+							}
+						}
+					],
+					"returns": [
+						{
+							"body": {
+								"typeParameterInstantiation": [
+									{
+										"typeParameterInstantiation": [],
+										"type": 3
+									}
+								],
+								"type": 9
+							}
+						}
+					],
+					"name": "slice",
+					"visibility": 2,
+					"isEntry": false
+				},
+				{
+					"typeParameters": [
+						{
+							"constraints": [
+								2,
+								3
+							]
+						}
+					],
+					"parameters": [
+						{
+							"reference": 2,
+							"body": {
+								"typeParameterInstantiation": [
+									{
+										"typeParameterInstantiation": [],
+										"type": 11,
+										"typeParameter": 0
+									}
+								],
+								"type": 10,
+								"typeName": "0x0000000000000000000000000000000000000000000000000000000000000002::table_vec::TableVec"
+							}
+						},
+						{
+							"body": {
+								"typeParameterInstantiation": [],
+								"type": 6
+							}
+						}
+					],
+					"returns": [],
+					"name": "swap_remove",
+					"visibility": 2,
+					"isEntry": false
+				},
+				{
+					"typeParameters": [
+						{
+							"constraints": []
+						}
+					],
+					"parameters": [],
+					"returns": [
+						{
+							"body": {
+								"typeParameterInstantiation": [
+									{
+										"typeParameterInstantiation": [],
+										"type": 3
+									}
+								],
+								"type": 9
+							}
+						}
+					],
+					"name": "type_of",
+					"visibility": 2,
+					"isEntry": false
+				},
+				{
+					"typeParameters": [],
+					"parameters": [
+						{
+							"reference": 1,
+							"body": {
+								"typeParameterInstantiation": [
+									{
+										"typeParameterInstantiation": [],
+										"type": 3
+									}
+								],
+								"type": 9
+							}
+						}
+					],
+					"returns": [
+						{
+							"body": {
+								"typeParameterInstantiation": [],
+								"type": 4
+							}
+						}
+					],
+					"name": "u16_from_le_bytes",
+					"visibility": 2,
+					"isEntry": false
+				},
+				{
+					"typeParameters": [],
+					"parameters": [
+						{
+							"reference": 1,
+							"body": {
+								"typeParameterInstantiation": [
+									{
+										"typeParameterInstantiation": [],
+										"type": 3
+									}
+								],
+								"type": 9
+							}
+						}
+					],
+					"returns": [
+						{
+							"body": {
+								"typeParameterInstantiation": [],
+								"type": 5
+							}
+						}
+					],
+					"name": "u32_from_le_bytes",
+					"visibility": 2,
+					"isEntry": false
+				}
+			],
+			"name": "utils"
 		}
 	}
 ]

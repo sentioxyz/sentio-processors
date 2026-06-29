@@ -57,7 +57,7 @@ export class PositionSnapshot extends AbstractEntity  {
 	@Required
 	@Column("String")
 	poolAddress: String
-  constructor(data: PositionSnapshotConstructorInput) {super()}
+  constructor(data: Partial<PositionSnapshotConstructorInput>) {super()}
   
   
   static update(values: UpdateValues<PositionSnapshotConstructorInput>): Promise<void> {

@@ -1,2092 +1,2763 @@
 [
 	{
-		"fileFormatVersion": 6,
 		"address": "0x1b089c63a8cfe583ba10a11258d5e83960e76a4c64adb37538cd2ac1546651af",
-		"name": "fair_launch",
-		"friends": [],
-		"structs": {
-			"AdminCap": {
-				"abilities": {
+		"module": {
+			"datatypes": [
+				{
 					"abilities": [
-						"Store",
-						"Key"
-					]
-				},
-				"typeParameters": [],
-				"fields": [
-					{
-						"name": "id",
-						"type": {
-							"Struct": {
-								"address": "0x2",
-								"module": "object",
-								"name": "UID",
-								"typeArguments": []
+						3,
+						4
+					],
+					"typeParameters": [],
+					"fields": [
+						{
+							"name": "id",
+							"position": 0,
+							"type": {
+								"typeParameterInstantiation": [],
+								"type": 10,
+								"typeName": "0x0000000000000000000000000000000000000000000000000000000000000002::object::UID"
 							}
 						}
-					}
-				]
-			},
-			"DepositEvent": {
-				"abilities": {
-					"abilities": [
-						"Copy",
-						"Drop"
-					]
+					],
+					"variants": [],
+					"typeName": "0x1b089c63a8cfe583ba10a11258d5e83960e76a4c64adb37538cd2ac1546651af::fair_launch::AdminCap",
+					"definingId": "0x1b089c63a8cfe583ba10a11258d5e83960e76a4c64adb37538cd2ac1546651af",
+					"module": "fair_launch",
+					"name": "AdminCap",
+					"kind": 1
 				},
-				"typeParameters": [
-					{
-						"constraints": {
-							"abilities": []
-						},
-						"isPhantom": true
-					}
-				],
-				"fields": [
-					{
-						"name": "user",
-						"type": "Address"
-					},
-					{
-						"name": "pid",
-						"type": "U64"
-					},
-					{
-						"name": "amount",
-						"type": "U64"
-					}
-				]
-			},
-			"EmergencyWithdrawEvent": {
-				"abilities": {
+				{
 					"abilities": [
-						"Copy",
-						"Drop"
-					]
-				},
-				"typeParameters": [
-					{
-						"constraints": {
-							"abilities": []
+						1,
+						2
+					],
+					"typeParameters": [
+						{
+							"constraints": [],
+							"isPhantom": true
+						}
+					],
+					"fields": [
+						{
+							"name": "user",
+							"position": 0,
+							"type": {
+								"typeParameterInstantiation": [],
+								"type": 1
+							}
 						},
-						"isPhantom": true
-					}
-				],
-				"fields": [
-					{
-						"name": "user",
-						"type": "Address"
-					},
-					{
-						"name": "pid",
-						"type": "U64"
-					},
-					{
-						"name": "amount",
-						"type": "U64"
-					}
-				]
-			},
-			"Pool": {
-				"abilities": {
+						{
+							"name": "pid",
+							"position": 1,
+							"type": {
+								"typeParameterInstantiation": [],
+								"type": 6
+							}
+						},
+						{
+							"name": "amount",
+							"position": 2,
+							"type": {
+								"typeParameterInstantiation": [],
+								"type": 6
+							}
+						}
+					],
+					"variants": [],
+					"typeName": "0x1b089c63a8cfe583ba10a11258d5e83960e76a4c64adb37538cd2ac1546651af::fair_launch::DepositEvent",
+					"definingId": "0x1b089c63a8cfe583ba10a11258d5e83960e76a4c64adb37538cd2ac1546651af",
+					"module": "fair_launch",
+					"name": "DepositEvent",
+					"kind": 1
+				},
+				{
 					"abilities": [
-						"Store"
-					]
-				},
-				"typeParameters": [
-					{
-						"constraints": {
-							"abilities": []
+						1,
+						2
+					],
+					"typeParameters": [
+						{
+							"constraints": [],
+							"isPhantom": true
+						}
+					],
+					"fields": [
+						{
+							"name": "user",
+							"position": 0,
+							"type": {
+								"typeParameterInstantiation": [],
+								"type": 1
+							}
 						},
-						"isPhantom": true
-					}
-				],
-				"fields": [
-					{
-						"name": "pid",
-						"type": "U64"
-					},
-					{
-						"name": "coin_staking",
-						"type": {
-							"Struct": {
-								"address": "0x2",
-								"module": "balance",
-								"name": "Balance",
-								"typeArguments": [
+						{
+							"name": "pid",
+							"position": 1,
+							"type": {
+								"typeParameterInstantiation": [],
+								"type": 6
+							}
+						},
+						{
+							"name": "amount",
+							"position": 2,
+							"type": {
+								"typeParameterInstantiation": [],
+								"type": 6
+							}
+						}
+					],
+					"variants": [],
+					"typeName": "0x1b089c63a8cfe583ba10a11258d5e83960e76a4c64adb37538cd2ac1546651af::fair_launch::EmergencyWithdrawEvent",
+					"definingId": "0x1b089c63a8cfe583ba10a11258d5e83960e76a4c64adb37538cd2ac1546651af",
+					"module": "fair_launch",
+					"name": "EmergencyWithdrawEvent",
+					"kind": 1
+				},
+				{
+					"abilities": [
+						3
+					],
+					"typeParameters": [
+						{
+							"constraints": [],
+							"isPhantom": true
+						}
+					],
+					"fields": [
+						{
+							"name": "pid",
+							"position": 0,
+							"type": {
+								"typeParameterInstantiation": [],
+								"type": 6
+							}
+						},
+						{
+							"name": "coin_staking",
+							"position": 1,
+							"type": {
+								"typeParameterInstantiation": [
 									{
-										"TypeParameter": 0
+										"typeParameterInstantiation": [],
+										"type": 11,
+										"typeParameter": 0
 									}
-								]
+								],
+								"type": 10,
+								"typeName": "0x0000000000000000000000000000000000000000000000000000000000000002::balance::Balance"
 							}
-						}
-					},
-					{
-						"name": "user_info",
-						"type": {
-							"Struct": {
-								"address": "0x2",
-								"module": "table",
-								"name": "Table",
-								"typeArguments": [
+						},
+						{
+							"name": "user_info",
+							"position": 2,
+							"type": {
+								"typeParameterInstantiation": [
 									{
-										"Struct": {
-											"address": "0x1b089c63a8cfe583ba10a11258d5e83960e76a4c64adb37538cd2ac1546651af",
-											"module": "fair_launch",
-											"name": "User",
-											"typeArguments": []
-										}
+										"typeParameterInstantiation": [],
+										"type": 10,
+										"typeName": "0x1b089c63a8cfe583ba10a11258d5e83960e76a4c64adb37538cd2ac1546651af::fair_launch::User"
 									},
 									{
-										"Struct": {
-											"address": "0x1b089c63a8cfe583ba10a11258d5e83960e76a4c64adb37538cd2ac1546651af",
-											"module": "fair_launch",
-											"name": "UserInfo",
-											"typeArguments": [
-												{
-													"TypeParameter": 0
-												}
-											]
-										}
+										"typeParameterInstantiation": [
+											{
+												"typeParameterInstantiation": [],
+												"type": 11,
+												"typeParameter": 0
+											}
+										],
+										"type": 10,
+										"typeName": "0x1b089c63a8cfe583ba10a11258d5e83960e76a4c64adb37538cd2ac1546651af::fair_launch::UserInfo"
 									}
-								]
+								],
+								"type": 10,
+								"typeName": "0x0000000000000000000000000000000000000000000000000000000000000002::table::Table"
 							}
 						}
-					}
-				]
-			},
-			"PoolInfo": {
-				"abilities": {
-					"abilities": [
-						"Store"
-					]
+					],
+					"variants": [],
+					"typeName": "0x1b089c63a8cfe583ba10a11258d5e83960e76a4c64adb37538cd2ac1546651af::fair_launch::Pool",
+					"definingId": "0x1b089c63a8cfe583ba10a11258d5e83960e76a4c64adb37538cd2ac1546651af",
+					"module": "fair_launch",
+					"name": "Pool",
+					"kind": 1
 				},
-				"typeParameters": [],
-				"fields": [
-					{
-						"name": "alloc_point",
-						"type": "U64"
-					},
-					{
-						"name": "last_reward_time",
-						"type": "U64"
-					},
-					{
-						"name": "acc_mole_per_share",
-						"type": "U128"
-					},
-					{
-						"name": "is_debt_token_pool",
-						"type": "Bool"
-					},
-					{
-						"name": "staked_balance",
-						"type": "U64"
-					}
-				]
-			},
-			"PoolInfoStore": {
-				"abilities": {
+				{
 					"abilities": [
-						"Store"
-					]
-				},
-				"typeParameters": [],
-				"fields": [
-					{
-						"name": "bonus_addr",
-						"type": "Address"
-					},
-					{
-						"name": "dev_percent",
-						"type": "U64"
-					},
-					{
-						"name": "mole_per_second",
-						"type": "U64"
-					},
-					{
-						"name": "max_mole_per_second",
-						"type": "U64"
-					},
-					{
-						"name": "pools",
-						"type": {
-							"Vector": {
-								"Struct": {
-									"address": "0x1b089c63a8cfe583ba10a11258d5e83960e76a4c64adb37538cd2ac1546651af",
-									"module": "fair_launch",
-									"name": "PoolInfo",
-									"typeArguments": []
-								}
+						3
+					],
+					"typeParameters": [],
+					"fields": [
+						{
+							"name": "alloc_point",
+							"position": 0,
+							"type": {
+								"typeParameterInstantiation": [],
+								"type": 6
 							}
-						}
-					},
-					{
-						"name": "total_alloc_point",
-						"type": "U64"
-					},
-					{
-						"name": "coin_mole",
-						"type": {
-							"Struct": {
-								"address": "0x2",
-								"module": "balance",
-								"name": "Balance",
-								"typeArguments": [
-									{
-										"Struct": {
-											"address": "0x81ab0208cd5b4edb97d655fcb8ca456a078ef05a54c18b104a10e223872cb9cc",
-											"module": "mole",
-											"name": "MOLE",
-											"typeArguments": []
-										}
-									}
-								]
-							}
-						}
-					},
-					{
-						"name": "stake_debt_token_allowance",
-						"type": {
-							"Struct": {
-								"address": "0x2",
-								"module": "table",
-								"name": "Table",
-								"typeArguments": [
-									"U64",
-									{
-										"Struct": {
-											"address": "0x2",
-											"module": "table",
-											"name": "Table",
-											"typeArguments": [
-												{
-													"Struct": {
-														"address": "0x1b089c63a8cfe583ba10a11258d5e83960e76a4c64adb37538cd2ac1546651af",
-														"module": "fair_launch",
-														"name": "User",
-														"typeArguments": []
-													}
-												},
-												"Bool"
-											]
-										}
-									}
-								]
-							}
-						}
-					}
-				]
-			},
-			"Storage": {
-				"abilities": {
-					"abilities": [
-						"Key"
-					]
-				},
-				"typeParameters": [],
-				"fields": [
-					{
-						"name": "id",
-						"type": {
-							"Struct": {
-								"address": "0x2",
-								"module": "object",
-								"name": "UID",
-								"typeArguments": []
-							}
-						}
-					},
-					{
-						"name": "pool_infos",
-						"type": {
-							"Struct": {
-								"address": "0x1b089c63a8cfe583ba10a11258d5e83960e76a4c64adb37538cd2ac1546651af",
-								"module": "fair_launch",
-								"name": "PoolInfoStore",
-								"typeArguments": []
-							}
-						}
-					},
-					{
-						"name": "emergency_status",
-						"type": {
-							"Struct": {
-								"address": "0x1b089c63a8cfe583ba10a11258d5e83960e76a4c64adb37538cd2ac1546651af",
-								"module": "fair_launch_emergency",
-								"name": "EmergencyStatus",
-								"typeArguments": []
-							}
-						}
-					},
-					{
-						"name": "pools",
-						"type": {
-							"Struct": {
-								"address": "0x2",
-								"module": "bag",
-								"name": "Bag",
-								"typeArguments": []
-							}
-						}
-					},
-					{
-						"name": "mole_admin_cap",
-						"type": {
-							"Struct": {
-								"address": "0x81ab0208cd5b4edb97d655fcb8ca456a078ef05a54c18b104a10e223872cb9cc",
-								"module": "mole",
-								"name": "AdminCap",
-								"typeArguments": []
-							}
-						}
-					},
-					{
-						"name": "package_version",
-						"type": "U64"
-					},
-					{
-						"name": "mole_reward_bounty",
-						"type": {
-							"Struct": {
-								"address": "0x2",
-								"module": "balance",
-								"name": "Balance",
-								"typeArguments": [
-									{
-										"Struct": {
-											"address": "0x81ab0208cd5b4edb97d655fcb8ca456a078ef05a54c18b104a10e223872cb9cc",
-											"module": "mole",
-											"name": "MOLE",
-											"typeArguments": []
-										}
-									}
-								]
-							}
-						}
-					}
-				]
-			},
-			"User": {
-				"abilities": {
-					"abilities": [
-						"Copy",
-						"Drop",
-						"Store"
-					]
-				},
-				"typeParameters": [],
-				"fields": [
-					{
-						"name": "address",
-						"type": "Address"
-					},
-					{
-						"name": "is_object",
-						"type": "Bool"
-					}
-				]
-			},
-			"UserCapability": {
-				"abilities": {
-					"abilities": [
-						"Store"
-					]
-				},
-				"typeParameters": [
-					{
-						"constraints": {
-							"abilities": []
 						},
-						"isPhantom": true
-					}
-				],
-				"fields": [
-					{
-						"name": "user",
-						"type": "Address"
-					},
-					{
-						"name": "is_object",
-						"type": "Bool"
-					}
-				]
-			},
-			"UserInfo": {
-				"abilities": {
-					"abilities": [
-						"Store"
-					]
-				},
-				"typeParameters": [
-					{
-						"constraints": {
-							"abilities": []
+						{
+							"name": "last_reward_time",
+							"position": 1,
+							"type": {
+								"typeParameterInstantiation": [],
+								"type": 6
+							}
 						},
-						"isPhantom": true
-					}
-				],
-				"fields": [
-					{
-						"name": "amount",
-						"type": "U64"
-					},
-					{
-						"name": "reward_debt",
-						"type": "U64"
-					}
-				]
-			},
-			"WithdrawEvent": {
-				"abilities": {
-					"abilities": [
-						"Copy",
-						"Drop"
-					]
-				},
-				"typeParameters": [
-					{
-						"constraints": {
-							"abilities": []
+						{
+							"name": "acc_mole_per_share",
+							"position": 2,
+							"type": {
+								"typeParameterInstantiation": [],
+								"type": 7
+							}
 						},
-						"isPhantom": true
-					}
-				],
-				"fields": [
-					{
-						"name": "user",
-						"type": "Address"
-					},
-					{
-						"name": "pid",
-						"type": "U64"
-					},
-					{
-						"name": "amount",
-						"type": "U64"
-					}
-				]
-			}
-		},
-		"exposedFunctions": {
-			"add_pool": {
-				"visibility": "Public",
-				"isEntry": true,
-				"typeParameters": [
-					{
-						"abilities": []
-					}
-				],
-				"parameters": [
-					{
-						"Reference": {
-							"Struct": {
-								"address": "0x1b089c63a8cfe583ba10a11258d5e83960e76a4c64adb37538cd2ac1546651af",
-								"module": "fair_launch",
-								"name": "AdminCap",
-								"typeArguments": []
+						{
+							"name": "is_debt_token_pool",
+							"position": 3,
+							"type": {
+								"typeParameterInstantiation": [],
+								"type": 2
+							}
+						},
+						{
+							"name": "staked_balance",
+							"position": 4,
+							"type": {
+								"typeParameterInstantiation": [],
+								"type": 6
 							}
 						}
-					},
-					{
-						"MutableReference": {
-							"Struct": {
-								"address": "0x1b089c63a8cfe583ba10a11258d5e83960e76a4c64adb37538cd2ac1546651af",
-								"module": "fair_launch",
-								"name": "Storage",
-								"typeArguments": []
+					],
+					"variants": [],
+					"typeName": "0x1b089c63a8cfe583ba10a11258d5e83960e76a4c64adb37538cd2ac1546651af::fair_launch::PoolInfo",
+					"definingId": "0x1b089c63a8cfe583ba10a11258d5e83960e76a4c64adb37538cd2ac1546651af",
+					"module": "fair_launch",
+					"name": "PoolInfo",
+					"kind": 1
+				},
+				{
+					"abilities": [
+						3
+					],
+					"typeParameters": [],
+					"fields": [
+						{
+							"name": "bonus_addr",
+							"position": 0,
+							"type": {
+								"typeParameterInstantiation": [],
+								"type": 1
 							}
-						}
-					},
-					"U64",
-					"Bool",
-					"Bool",
-					{
-						"Reference": {
-							"Struct": {
-								"address": "0x2",
-								"module": "clock",
-								"name": "Clock",
-								"typeArguments": []
+						},
+						{
+							"name": "dev_percent",
+							"position": 1,
+							"type": {
+								"typeParameterInstantiation": [],
+								"type": 6
 							}
-						}
-					},
-					{
-						"MutableReference": {
-							"Struct": {
-								"address": "0x2",
-								"module": "tx_context",
-								"name": "TxContext",
-								"typeArguments": []
+						},
+						{
+							"name": "mole_per_second",
+							"position": 2,
+							"type": {
+								"typeParameterInstantiation": [],
+								"type": 6
 							}
-						}
-					}
-				],
-				"return": []
-			},
-			"alloc_point": {
-				"visibility": "Public",
-				"isEntry": false,
-				"typeParameters": [
-					{
-						"abilities": []
-					}
-				],
-				"parameters": [
-					{
-						"MutableReference": {
-							"Struct": {
-								"address": "0x1b089c63a8cfe583ba10a11258d5e83960e76a4c64adb37538cd2ac1546651af",
-								"module": "fair_launch",
-								"name": "Storage",
-								"typeArguments": []
+						},
+						{
+							"name": "max_mole_per_second",
+							"position": 3,
+							"type": {
+								"typeParameterInstantiation": [],
+								"type": 6
 							}
-						}
-					}
-				],
-				"return": [
-					"U64"
-				]
-			},
-			"approve_stake_debt_token": {
-				"visibility": "Public",
-				"isEntry": true,
-				"typeParameters": [],
-				"parameters": [
-					{
-						"Reference": {
-							"Struct": {
-								"address": "0x1b089c63a8cfe583ba10a11258d5e83960e76a4c64adb37538cd2ac1546651af",
-								"module": "fair_launch",
-								"name": "AdminCap",
-								"typeArguments": []
-							}
-						}
-					},
-					{
-						"MutableReference": {
-							"Struct": {
-								"address": "0x1b089c63a8cfe583ba10a11258d5e83960e76a4c64adb37538cd2ac1546651af",
-								"module": "fair_launch",
-								"name": "Storage",
-								"typeArguments": []
-							}
-						}
-					},
-					"U64",
-					"Address",
-					"Bool",
-					"Bool",
-					{
-						"MutableReference": {
-							"Struct": {
-								"address": "0x2",
-								"module": "tx_context",
-								"name": "TxContext",
-								"typeArguments": []
-							}
-						}
-					}
-				],
-				"return": []
-			},
-			"approve_stake_debt_tokens": {
-				"visibility": "Public",
-				"isEntry": true,
-				"typeParameters": [],
-				"parameters": [
-					{
-						"Reference": {
-							"Struct": {
-								"address": "0x1b089c63a8cfe583ba10a11258d5e83960e76a4c64adb37538cd2ac1546651af",
-								"module": "fair_launch",
-								"name": "AdminCap",
-								"typeArguments": []
-							}
-						}
-					},
-					{
-						"MutableReference": {
-							"Struct": {
-								"address": "0x1b089c63a8cfe583ba10a11258d5e83960e76a4c64adb37538cd2ac1546651af",
-								"module": "fair_launch",
-								"name": "Storage",
-								"typeArguments": []
-							}
-						}
-					},
-					{
-						"Vector": "U64"
-					},
-					{
-						"Vector": "Address"
-					},
-					"Bool",
-					"Bool",
-					{
-						"MutableReference": {
-							"Struct": {
-								"address": "0x2",
-								"module": "tx_context",
-								"name": "TxContext",
-								"typeArguments": []
-							}
-						}
-					}
-				],
-				"return": []
-			},
-			"checked_package_version": {
-				"visibility": "Public",
-				"isEntry": false,
-				"typeParameters": [],
-				"parameters": [
-					{
-						"Reference": {
-							"Struct": {
-								"address": "0x1b089c63a8cfe583ba10a11258d5e83960e76a4c64adb37538cd2ac1546651af",
-								"module": "fair_launch",
-								"name": "Storage",
-								"typeArguments": []
-							}
-						}
-					}
-				],
-				"return": []
-			},
-			"deposit": {
-				"visibility": "Public",
-				"isEntry": true,
-				"typeParameters": [
-					{
-						"abilities": []
-					}
-				],
-				"parameters": [
-					{
-						"MutableReference": {
-							"Struct": {
-								"address": "0x1b089c63a8cfe583ba10a11258d5e83960e76a4c64adb37538cd2ac1546651af",
-								"module": "fair_launch",
-								"name": "Storage",
-								"typeArguments": []
-							}
-						}
-					},
-					"Address",
-					{
-						"Vector": {
-							"Struct": {
-								"address": "0x2",
-								"module": "coin",
-								"name": "Coin",
-								"typeArguments": [
+						},
+						{
+							"name": "pools",
+							"position": 4,
+							"type": {
+								"typeParameterInstantiation": [
 									{
-										"TypeParameter": 0
+										"typeParameterInstantiation": [],
+										"type": 10,
+										"typeName": "0x1b089c63a8cfe583ba10a11258d5e83960e76a4c64adb37538cd2ac1546651af::fair_launch::PoolInfo"
 									}
-								]
+								],
+								"type": 9
 							}
-						}
-					},
-					"U64",
-					{
-						"Reference": {
-							"Struct": {
-								"address": "0x2",
-								"module": "clock",
-								"name": "Clock",
-								"typeArguments": []
+						},
+						{
+							"name": "total_alloc_point",
+							"position": 5,
+							"type": {
+								"typeParameterInstantiation": [],
+								"type": 6
 							}
-						}
-					},
-					{
-						"MutableReference": {
-							"Struct": {
-								"address": "0x2",
-								"module": "tx_context",
-								"name": "TxContext",
-								"typeArguments": []
-							}
-						}
-					}
-				],
-				"return": []
-			},
-			"deposit_single": {
-				"visibility": "Public",
-				"isEntry": true,
-				"typeParameters": [
-					{
-						"abilities": []
-					}
-				],
-				"parameters": [
-					{
-						"MutableReference": {
-							"Struct": {
-								"address": "0x1b089c63a8cfe583ba10a11258d5e83960e76a4c64adb37538cd2ac1546651af",
-								"module": "fair_launch",
-								"name": "Storage",
-								"typeArguments": []
-							}
-						}
-					},
-					"Address",
-					{
-						"Struct": {
-							"address": "0x2",
-							"module": "coin",
-							"name": "Coin",
-							"typeArguments": [
-								{
-									"TypeParameter": 0
-								}
-							]
-						}
-					},
-					"U64",
-					{
-						"Reference": {
-							"Struct": {
-								"address": "0x2",
-								"module": "clock",
-								"name": "Clock",
-								"typeArguments": []
-							}
-						}
-					},
-					{
-						"MutableReference": {
-							"Struct": {
-								"address": "0x2",
-								"module": "tx_context",
-								"name": "TxContext",
-								"typeArguments": []
-							}
-						}
-					}
-				],
-				"return": []
-			},
-			"deposit_with_cap": {
-				"visibility": "Public",
-				"isEntry": false,
-				"typeParameters": [
-					{
-						"abilities": []
-					}
-				],
-				"parameters": [
-					{
-						"MutableReference": {
-							"Struct": {
-								"address": "0x1b089c63a8cfe583ba10a11258d5e83960e76a4c64adb37538cd2ac1546651af",
-								"module": "fair_launch",
-								"name": "Storage",
-								"typeArguments": []
-							}
-						}
-					},
-					{
-						"Reference": {
-							"Struct": {
-								"address": "0x1b089c63a8cfe583ba10a11258d5e83960e76a4c64adb37538cd2ac1546651af",
-								"module": "fair_launch",
-								"name": "UserCapability",
-								"typeArguments": [
+						},
+						{
+							"name": "coin_mole",
+							"position": 6,
+							"type": {
+								"typeParameterInstantiation": [
 									{
-										"TypeParameter": 0
+										"typeParameterInstantiation": [],
+										"type": 10,
+										"typeName": "0x81ab0208cd5b4edb97d655fcb8ca456a078ef05a54c18b104a10e223872cb9cc::mole::MOLE"
 									}
-								]
+								],
+								"type": 10,
+								"typeName": "0x0000000000000000000000000000000000000000000000000000000000000002::balance::Balance"
 							}
-						}
-					},
-					"Address",
-					"Bool",
-					{
-						"Struct": {
-							"address": "0x2",
-							"module": "coin",
-							"name": "Coin",
-							"typeArguments": [
-								{
-									"TypeParameter": 0
-								}
-							]
-						}
-					},
-					{
-						"Reference": {
-							"Struct": {
-								"address": "0x2",
-								"module": "clock",
-								"name": "Clock",
-								"typeArguments": []
-							}
-						}
-					},
-					{
-						"MutableReference": {
-							"Struct": {
-								"address": "0x2",
-								"module": "tx_context",
-								"name": "TxContext",
-								"typeArguments": []
-							}
-						}
-					}
-				],
-				"return": [
-					{
-						"Struct": {
-							"address": "0x2",
-							"module": "coin",
-							"name": "Coin",
-							"typeArguments": [
-								{
-									"Struct": {
-										"address": "0x81ab0208cd5b4edb97d655fcb8ca456a078ef05a54c18b104a10e223872cb9cc",
-										"module": "mole",
-										"name": "MOLE",
-										"typeArguments": []
-									}
-								}
-							]
-						}
-					}
-				]
-			},
-			"emergency_withdraw": {
-				"visibility": "Public",
-				"isEntry": true,
-				"typeParameters": [
-					{
-						"abilities": []
-					}
-				],
-				"parameters": [
-					{
-						"MutableReference": {
-							"Struct": {
-								"address": "0x1b089c63a8cfe583ba10a11258d5e83960e76a4c64adb37538cd2ac1546651af",
-								"module": "fair_launch",
-								"name": "Storage",
-								"typeArguments": []
-							}
-						}
-					},
-					{
-						"MutableReference": {
-							"Struct": {
-								"address": "0x2",
-								"module": "tx_context",
-								"name": "TxContext",
-								"typeArguments": []
-							}
-						}
-					}
-				],
-				"return": []
-			},
-			"exists_pool": {
-				"visibility": "Public",
-				"isEntry": false,
-				"typeParameters": [
-					{
-						"abilities": []
-					}
-				],
-				"parameters": [
-					{
-						"Reference": {
-							"Struct": {
-								"address": "0x1b089c63a8cfe583ba10a11258d5e83960e76a4c64adb37538cd2ac1546651af",
-								"module": "fair_launch",
-								"name": "Storage",
-								"typeArguments": []
-							}
-						}
-					}
-				],
-				"return": [
-					"Bool"
-				]
-			},
-			"extract_user_cap": {
-				"visibility": "Public",
-				"isEntry": false,
-				"typeParameters": [
-					{
-						"abilities": []
-					}
-				],
-				"parameters": [
-					{
-						"Reference": {
-							"Struct": {
-								"address": "0x1b089c63a8cfe583ba10a11258d5e83960e76a4c64adb37538cd2ac1546651af",
-								"module": "fair_launch",
-								"name": "AdminCap",
-								"typeArguments": []
-							}
-						}
-					},
-					"Address",
-					"Bool"
-				],
-				"return": [
-					{
-						"Struct": {
-							"address": "0x1b089c63a8cfe583ba10a11258d5e83960e76a4c64adb37538cd2ac1546651af",
-							"module": "fair_launch",
-							"name": "UserCapability",
-							"typeArguments": [
-								{
-									"TypeParameter": 0
-								}
-							]
-						}
-					}
-				]
-			},
-			"get_pid": {
-				"visibility": "Public",
-				"isEntry": false,
-				"typeParameters": [
-					{
-						"abilities": []
-					}
-				],
-				"parameters": [
-					{
-						"MutableReference": {
-							"Struct": {
-								"address": "0x1b089c63a8cfe583ba10a11258d5e83960e76a4c64adb37538cd2ac1546651af",
-								"module": "fair_launch",
-								"name": "Storage",
-								"typeArguments": []
-							}
-						}
-					}
-				],
-				"return": [
-					"U64"
-				]
-			},
-			"get_pool_name": {
-				"visibility": "Public",
-				"isEntry": false,
-				"typeParameters": [
-					{
-						"abilities": []
-					}
-				],
-				"parameters": [],
-				"return": [
-					{
-						"Struct": {
-							"address": "0x1",
-							"module": "string",
-							"name": "String",
-							"typeArguments": []
-						}
-					}
-				]
-			},
-			"harvest": {
-				"visibility": "Public",
-				"isEntry": true,
-				"typeParameters": [
-					{
-						"abilities": []
-					}
-				],
-				"parameters": [
-					{
-						"MutableReference": {
-							"Struct": {
-								"address": "0x1b089c63a8cfe583ba10a11258d5e83960e76a4c64adb37538cd2ac1546651af",
-								"module": "fair_launch",
-								"name": "Storage",
-								"typeArguments": []
-							}
-						}
-					},
-					{
-						"Reference": {
-							"Struct": {
-								"address": "0x2",
-								"module": "clock",
-								"name": "Clock",
-								"typeArguments": []
-							}
-						}
-					},
-					{
-						"MutableReference": {
-							"Struct": {
-								"address": "0x2",
-								"module": "tx_context",
-								"name": "TxContext",
-								"typeArguments": []
-							}
-						}
-					}
-				],
-				"return": []
-			},
-			"harvest_with_cap": {
-				"visibility": "Public",
-				"isEntry": false,
-				"typeParameters": [
-					{
-						"abilities": []
-					}
-				],
-				"parameters": [
-					{
-						"MutableReference": {
-							"Struct": {
-								"address": "0x1b089c63a8cfe583ba10a11258d5e83960e76a4c64adb37538cd2ac1546651af",
-								"module": "fair_launch",
-								"name": "Storage",
-								"typeArguments": []
-							}
-						}
-					},
-					{
-						"Reference": {
-							"Struct": {
-								"address": "0x1b089c63a8cfe583ba10a11258d5e83960e76a4c64adb37538cd2ac1546651af",
-								"module": "fair_launch",
-								"name": "UserCapability",
-								"typeArguments": [
+						},
+						{
+							"name": "stake_debt_token_allowance",
+							"position": 7,
+							"type": {
+								"typeParameterInstantiation": [
 									{
-										"TypeParameter": 0
-									}
-								]
-							}
-						}
-					},
-					{
-						"Reference": {
-							"Struct": {
-								"address": "0x2",
-								"module": "clock",
-								"name": "Clock",
-								"typeArguments": []
-							}
-						}
-					},
-					{
-						"MutableReference": {
-							"Struct": {
-								"address": "0x2",
-								"module": "tx_context",
-								"name": "TxContext",
-								"typeArguments": []
-							}
-						}
-					}
-				],
-				"return": [
-					{
-						"Struct": {
-							"address": "0x2",
-							"module": "coin",
-							"name": "Coin",
-							"typeArguments": [
-								{
-									"Struct": {
-										"address": "0x81ab0208cd5b4edb97d655fcb8ca456a078ef05a54c18b104a10e223872cb9cc",
-										"module": "mole",
-										"name": "MOLE",
-										"typeArguments": []
-									}
-								}
-							]
-						}
-					}
-				]
-			},
-			"initialize": {
-				"visibility": "Public",
-				"isEntry": true,
-				"typeParameters": [],
-				"parameters": [
-					{
-						"Reference": {
-							"Struct": {
-								"address": "0x1b089c63a8cfe583ba10a11258d5e83960e76a4c64adb37538cd2ac1546651af",
-								"module": "fair_launch",
-								"name": "AdminCap",
-								"typeArguments": []
-							}
-						}
-					},
-					{
-						"Struct": {
-							"address": "0x81ab0208cd5b4edb97d655fcb8ca456a078ef05a54c18b104a10e223872cb9cc",
-							"module": "mole",
-							"name": "AdminCap",
-							"typeArguments": []
-						}
-					},
-					"U64",
-					"U64",
-					"U64",
-					"Address",
-					{
-						"MutableReference": {
-							"Struct": {
-								"address": "0x2",
-								"module": "tx_context",
-								"name": "TxContext",
-								"typeArguments": []
-							}
-						}
-					}
-				],
-				"return": []
-			},
-			"is_stake_debt_token_allow": {
-				"visibility": "Public",
-				"isEntry": false,
-				"typeParameters": [],
-				"parameters": [
-					{
-						"Reference": {
-							"Struct": {
-								"address": "0x1b089c63a8cfe583ba10a11258d5e83960e76a4c64adb37538cd2ac1546651af",
-								"module": "fair_launch",
-								"name": "Storage",
-								"typeArguments": []
-							}
-						}
-					},
-					"U64",
-					"Address",
-					"Bool"
-				],
-				"return": [
-					"Bool"
-				]
-			},
-			"manual_mint": {
-				"visibility": "Public",
-				"isEntry": true,
-				"typeParameters": [],
-				"parameters": [
-					{
-						"Reference": {
-							"Struct": {
-								"address": "0x1b089c63a8cfe583ba10a11258d5e83960e76a4c64adb37538cd2ac1546651af",
-								"module": "fair_launch",
-								"name": "AdminCap",
-								"typeArguments": []
-							}
-						}
-					},
-					{
-						"MutableReference": {
-							"Struct": {
-								"address": "0x1b089c63a8cfe583ba10a11258d5e83960e76a4c64adb37538cd2ac1546651af",
-								"module": "fair_launch",
-								"name": "Storage",
-								"typeArguments": []
-							}
-						}
-					},
-					{
-						"MutableReference": {
-							"Struct": {
-								"address": "0x81ab0208cd5b4edb97d655fcb8ca456a078ef05a54c18b104a10e223872cb9cc",
-								"module": "mole",
-								"name": "MoleCoinInfo",
-								"typeArguments": []
-							}
-						}
-					},
-					"Address",
-					"U64",
-					{
-						"MutableReference": {
-							"Struct": {
-								"address": "0x2",
-								"module": "tx_context",
-								"name": "TxContext",
-								"typeArguments": []
-							}
-						}
-					}
-				],
-				"return": []
-			},
-			"mass_update_pools": {
-				"visibility": "Public",
-				"isEntry": false,
-				"typeParameters": [],
-				"parameters": [
-					{
-						"MutableReference": {
-							"Struct": {
-								"address": "0x1b089c63a8cfe583ba10a11258d5e83960e76a4c64adb37538cd2ac1546651af",
-								"module": "fair_launch",
-								"name": "Storage",
-								"typeArguments": []
-							}
-						}
-					},
-					{
-						"Reference": {
-							"Struct": {
-								"address": "0x2",
-								"module": "clock",
-								"name": "Clock",
-								"typeArguments": []
-							}
-						}
-					},
-					{
-						"MutableReference": {
-							"Struct": {
-								"address": "0x2",
-								"module": "tx_context",
-								"name": "TxContext",
-								"typeArguments": []
-							}
-						}
-					}
-				],
-				"return": []
-			},
-			"mul_div": {
-				"visibility": "Public",
-				"isEntry": false,
-				"typeParameters": [],
-				"parameters": [
-					"U64",
-					"U64",
-					"U64"
-				],
-				"return": [
-					"U64"
-				]
-			},
-			"mul_to_u128": {
-				"visibility": "Public",
-				"isEntry": false,
-				"typeParameters": [],
-				"parameters": [
-					"U64",
-					"U64"
-				],
-				"return": [
-					"U128"
-				]
-			},
-			"pause": {
-				"visibility": "Public",
-				"isEntry": true,
-				"typeParameters": [],
-				"parameters": [
-					{
-						"Reference": {
-							"Struct": {
-								"address": "0x1b089c63a8cfe583ba10a11258d5e83960e76a4c64adb37538cd2ac1546651af",
-								"module": "fair_launch_emergency",
-								"name": "EmergencyAdminCap",
-								"typeArguments": []
-							}
-						}
-					},
-					{
-						"MutableReference": {
-							"Struct": {
-								"address": "0x1b089c63a8cfe583ba10a11258d5e83960e76a4c64adb37538cd2ac1546651af",
-								"module": "fair_launch",
-								"name": "Storage",
-								"typeArguments": []
-							}
-						}
-					}
-				],
-				"return": []
-			},
-			"pending_mole": {
-				"visibility": "Public",
-				"isEntry": false,
-				"typeParameters": [
-					{
-						"abilities": []
-					}
-				],
-				"parameters": [
-					{
-						"MutableReference": {
-							"Struct": {
-								"address": "0x1b089c63a8cfe583ba10a11258d5e83960e76a4c64adb37538cd2ac1546651af",
-								"module": "fair_launch",
-								"name": "Storage",
-								"typeArguments": []
-							}
-						}
-					},
-					"Address",
-					"Bool",
-					{
-						"Reference": {
-							"Struct": {
-								"address": "0x2",
-								"module": "clock",
-								"name": "Clock",
-								"typeArguments": []
-							}
-						}
-					}
-				],
-				"return": [
-					"U64"
-				]
-			},
-			"pool_length": {
-				"visibility": "Public",
-				"isEntry": false,
-				"typeParameters": [],
-				"parameters": [
-					{
-						"Reference": {
-							"Struct": {
-								"address": "0x1b089c63a8cfe583ba10a11258d5e83960e76a4c64adb37538cd2ac1546651af",
-								"module": "fair_launch",
-								"name": "Storage",
-								"typeArguments": []
-							}
-						}
-					}
-				],
-				"return": [
-					"U64"
-				]
-			},
-			"resume": {
-				"visibility": "Public",
-				"isEntry": true,
-				"typeParameters": [],
-				"parameters": [
-					{
-						"Reference": {
-							"Struct": {
-								"address": "0x1b089c63a8cfe583ba10a11258d5e83960e76a4c64adb37538cd2ac1546651af",
-								"module": "fair_launch_emergency",
-								"name": "EmergencyAdminCap",
-								"typeArguments": []
-							}
-						}
-					},
-					{
-						"MutableReference": {
-							"Struct": {
-								"address": "0x1b089c63a8cfe583ba10a11258d5e83960e76a4c64adb37538cd2ac1546651af",
-								"module": "fair_launch",
-								"name": "Storage",
-								"typeArguments": []
-							}
-						}
-					}
-				],
-				"return": []
-			},
-			"set_dev": {
-				"visibility": "Public",
-				"isEntry": true,
-				"typeParameters": [],
-				"parameters": [
-					{
-						"MutableReference": {
-							"Struct": {
-								"address": "0x1b089c63a8cfe583ba10a11258d5e83960e76a4c64adb37538cd2ac1546651af",
-								"module": "fair_launch",
-								"name": "Storage",
-								"typeArguments": []
-							}
-						}
-					},
-					"Address",
-					{
-						"MutableReference": {
-							"Struct": {
-								"address": "0x2",
-								"module": "tx_context",
-								"name": "TxContext",
-								"typeArguments": []
-							}
-						}
-					}
-				],
-				"return": []
-			},
-			"set_max_mole_per_second": {
-				"visibility": "Public",
-				"isEntry": true,
-				"typeParameters": [],
-				"parameters": [
-					{
-						"Reference": {
-							"Struct": {
-								"address": "0x1b089c63a8cfe583ba10a11258d5e83960e76a4c64adb37538cd2ac1546651af",
-								"module": "fair_launch",
-								"name": "AdminCap",
-								"typeArguments": []
-							}
-						}
-					},
-					{
-						"MutableReference": {
-							"Struct": {
-								"address": "0x1b089c63a8cfe583ba10a11258d5e83960e76a4c64adb37538cd2ac1546651af",
-								"module": "fair_launch",
-								"name": "Storage",
-								"typeArguments": []
-							}
-						}
-					},
-					"U64"
-				],
-				"return": []
-			},
-			"set_mole_per_second": {
-				"visibility": "Public",
-				"isEntry": true,
-				"typeParameters": [],
-				"parameters": [
-					{
-						"Reference": {
-							"Struct": {
-								"address": "0x1b089c63a8cfe583ba10a11258d5e83960e76a4c64adb37538cd2ac1546651af",
-								"module": "fair_launch",
-								"name": "AdminCap",
-								"typeArguments": []
-							}
-						}
-					},
-					{
-						"MutableReference": {
-							"Struct": {
-								"address": "0x1b089c63a8cfe583ba10a11258d5e83960e76a4c64adb37538cd2ac1546651af",
-								"module": "fair_launch",
-								"name": "Storage",
-								"typeArguments": []
-							}
-						}
-					},
-					"U64",
-					"Bool",
-					{
-						"Reference": {
-							"Struct": {
-								"address": "0x2",
-								"module": "clock",
-								"name": "Clock",
-								"typeArguments": []
-							}
-						}
-					},
-					{
-						"MutableReference": {
-							"Struct": {
-								"address": "0x2",
-								"module": "tx_context",
-								"name": "TxContext",
-								"typeArguments": []
-							}
-						}
-					}
-				],
-				"return": []
-			},
-			"set_pool": {
-				"visibility": "Public",
-				"isEntry": true,
-				"typeParameters": [
-					{
-						"abilities": []
-					}
-				],
-				"parameters": [
-					{
-						"Reference": {
-							"Struct": {
-								"address": "0x1b089c63a8cfe583ba10a11258d5e83960e76a4c64adb37538cd2ac1546651af",
-								"module": "fair_launch",
-								"name": "AdminCap",
-								"typeArguments": []
-							}
-						}
-					},
-					{
-						"MutableReference": {
-							"Struct": {
-								"address": "0x1b089c63a8cfe583ba10a11258d5e83960e76a4c64adb37538cd2ac1546651af",
-								"module": "fair_launch",
-								"name": "Storage",
-								"typeArguments": []
-							}
-						}
-					},
-					"U64",
-					"Bool",
-					{
-						"Reference": {
-							"Struct": {
-								"address": "0x2",
-								"module": "clock",
-								"name": "Clock",
-								"typeArguments": []
-							}
-						}
-					},
-					{
-						"MutableReference": {
-							"Struct": {
-								"address": "0x2",
-								"module": "tx_context",
-								"name": "TxContext",
-								"typeArguments": []
-							}
-						}
-					}
-				],
-				"return": []
-			},
-			"total_alloc_point": {
-				"visibility": "Public",
-				"isEntry": false,
-				"typeParameters": [],
-				"parameters": [
-					{
-						"MutableReference": {
-							"Struct": {
-								"address": "0x1b089c63a8cfe583ba10a11258d5e83960e76a4c64adb37538cd2ac1546651af",
-								"module": "fair_launch",
-								"name": "Storage",
-								"typeArguments": []
-							}
-						}
-					}
-				],
-				"return": [
-					"U64"
-				]
-			},
-			"update_pool": {
-				"visibility": "Public",
-				"isEntry": false,
-				"typeParameters": [],
-				"parameters": [
-					{
-						"MutableReference": {
-							"Struct": {
-								"address": "0x1b089c63a8cfe583ba10a11258d5e83960e76a4c64adb37538cd2ac1546651af",
-								"module": "fair_launch",
-								"name": "Storage",
-								"typeArguments": []
-							}
-						}
-					},
-					"U64",
-					{
-						"Reference": {
-							"Struct": {
-								"address": "0x2",
-								"module": "clock",
-								"name": "Clock",
-								"typeArguments": []
-							}
-						}
-					},
-					{
-						"MutableReference": {
-							"Struct": {
-								"address": "0x2",
-								"module": "tx_context",
-								"name": "TxContext",
-								"typeArguments": []
-							}
-						}
-					}
-				],
-				"return": []
-			},
-			"upgrade_mole_coin_version": {
-				"visibility": "Private",
-				"isEntry": true,
-				"typeParameters": [],
-				"parameters": [
-					{
-						"Reference": {
-							"Struct": {
-								"address": "0x1b089c63a8cfe583ba10a11258d5e83960e76a4c64adb37538cd2ac1546651af",
-								"module": "fair_launch",
-								"name": "AdminCap",
-								"typeArguments": []
-							}
-						}
-					},
-					{
-						"MutableReference": {
-							"Struct": {
-								"address": "0x1b089c63a8cfe583ba10a11258d5e83960e76a4c64adb37538cd2ac1546651af",
-								"module": "fair_launch",
-								"name": "Storage",
-								"typeArguments": []
-							}
-						}
-					},
-					"U64"
-				],
-				"return": []
-			},
-			"upgrade_package_version": {
-				"visibility": "Private",
-				"isEntry": true,
-				"typeParameters": [],
-				"parameters": [
-					{
-						"Reference": {
-							"Struct": {
-								"address": "0x1b089c63a8cfe583ba10a11258d5e83960e76a4c64adb37538cd2ac1546651af",
-								"module": "fair_launch",
-								"name": "AdminCap",
-								"typeArguments": []
-							}
-						}
-					},
-					{
-						"MutableReference": {
-							"Struct": {
-								"address": "0x1b089c63a8cfe583ba10a11258d5e83960e76a4c64adb37538cd2ac1546651af",
-								"module": "fair_launch",
-								"name": "Storage",
-								"typeArguments": []
-							}
-						}
-					},
-					"U64"
-				],
-				"return": []
-			},
-			"withdraw": {
-				"visibility": "Public",
-				"isEntry": true,
-				"typeParameters": [
-					{
-						"abilities": []
-					}
-				],
-				"parameters": [
-					{
-						"MutableReference": {
-							"Struct": {
-								"address": "0x1b089c63a8cfe583ba10a11258d5e83960e76a4c64adb37538cd2ac1546651af",
-								"module": "fair_launch",
-								"name": "Storage",
-								"typeArguments": []
-							}
-						}
-					},
-					"Address",
-					"U64",
-					{
-						"Reference": {
-							"Struct": {
-								"address": "0x2",
-								"module": "clock",
-								"name": "Clock",
-								"typeArguments": []
-							}
-						}
-					},
-					{
-						"MutableReference": {
-							"Struct": {
-								"address": "0x2",
-								"module": "tx_context",
-								"name": "TxContext",
-								"typeArguments": []
-							}
-						}
-					}
-				],
-				"return": []
-			},
-			"withdraw_all": {
-				"visibility": "Public",
-				"isEntry": true,
-				"typeParameters": [
-					{
-						"abilities": []
-					}
-				],
-				"parameters": [
-					{
-						"MutableReference": {
-							"Struct": {
-								"address": "0x1b089c63a8cfe583ba10a11258d5e83960e76a4c64adb37538cd2ac1546651af",
-								"module": "fair_launch",
-								"name": "Storage",
-								"typeArguments": []
-							}
-						}
-					},
-					"Address",
-					{
-						"Reference": {
-							"Struct": {
-								"address": "0x2",
-								"module": "clock",
-								"name": "Clock",
-								"typeArguments": []
-							}
-						}
-					},
-					{
-						"MutableReference": {
-							"Struct": {
-								"address": "0x2",
-								"module": "tx_context",
-								"name": "TxContext",
-								"typeArguments": []
-							}
-						}
-					}
-				],
-				"return": []
-			},
-			"withdraw_mole_rewards_bounty": {
-				"visibility": "Public",
-				"isEntry": true,
-				"typeParameters": [
-					{
-						"abilities": []
-					},
-					{
-						"abilities": []
-					},
-					{
-						"abilities": []
-					}
-				],
-				"parameters": [
-					{
-						"Reference": {
-							"Struct": {
-								"address": "0x1b089c63a8cfe583ba10a11258d5e83960e76a4c64adb37538cd2ac1546651af",
-								"module": "fair_launch",
-								"name": "AdminCap",
-								"typeArguments": []
-							}
-						}
-					},
-					{
-						"MutableReference": {
-							"Struct": {
-								"address": "0x1b089c63a8cfe583ba10a11258d5e83960e76a4c64adb37538cd2ac1546651af",
-								"module": "fair_launch",
-								"name": "Storage",
-								"typeArguments": []
-							}
-						}
-					},
-					"Bool",
-					"U64",
-					{
-						"MutableReference": {
-							"Struct": {
-								"address": "0x2",
-								"module": "tx_context",
-								"name": "TxContext",
-								"typeArguments": []
-							}
-						}
-					}
-				],
-				"return": []
-			},
-			"withdraw_with_cap": {
-				"visibility": "Public",
-				"isEntry": false,
-				"typeParameters": [
-					{
-						"abilities": []
-					}
-				],
-				"parameters": [
-					{
-						"MutableReference": {
-							"Struct": {
-								"address": "0x1b089c63a8cfe583ba10a11258d5e83960e76a4c64adb37538cd2ac1546651af",
-								"module": "fair_launch",
-								"name": "Storage",
-								"typeArguments": []
-							}
-						}
-					},
-					{
-						"Reference": {
-							"Struct": {
-								"address": "0x1b089c63a8cfe583ba10a11258d5e83960e76a4c64adb37538cd2ac1546651af",
-								"module": "fair_launch",
-								"name": "UserCapability",
-								"typeArguments": [
+										"typeParameterInstantiation": [],
+										"type": 6
+									},
 									{
-										"TypeParameter": 0
+										"typeParameterInstantiation": [
+											{
+												"typeParameterInstantiation": [],
+												"type": 10,
+												"typeName": "0x1b089c63a8cfe583ba10a11258d5e83960e76a4c64adb37538cd2ac1546651af::fair_launch::User"
+											},
+											{
+												"typeParameterInstantiation": [],
+												"type": 2
+											}
+										],
+										"type": 10,
+										"typeName": "0x0000000000000000000000000000000000000000000000000000000000000002::table::Table"
 									}
-								]
+								],
+								"type": 10,
+								"typeName": "0x0000000000000000000000000000000000000000000000000000000000000002::table::Table"
 							}
 						}
-					},
-					"Address",
-					"Bool",
-					"U64",
-					{
-						"Reference": {
-							"Struct": {
-								"address": "0x2",
-								"module": "clock",
-								"name": "Clock",
-								"typeArguments": []
+					],
+					"variants": [],
+					"typeName": "0x1b089c63a8cfe583ba10a11258d5e83960e76a4c64adb37538cd2ac1546651af::fair_launch::PoolInfoStore",
+					"definingId": "0x1b089c63a8cfe583ba10a11258d5e83960e76a4c64adb37538cd2ac1546651af",
+					"module": "fair_launch",
+					"name": "PoolInfoStore",
+					"kind": 1
+				},
+				{
+					"abilities": [
+						4
+					],
+					"typeParameters": [],
+					"fields": [
+						{
+							"name": "id",
+							"position": 0,
+							"type": {
+								"typeParameterInstantiation": [],
+								"type": 10,
+								"typeName": "0x0000000000000000000000000000000000000000000000000000000000000002::object::UID"
 							}
-						}
-					},
-					{
-						"MutableReference": {
-							"Struct": {
-								"address": "0x2",
-								"module": "tx_context",
-								"name": "TxContext",
-								"typeArguments": []
+						},
+						{
+							"name": "pool_infos",
+							"position": 1,
+							"type": {
+								"typeParameterInstantiation": [],
+								"type": 10,
+								"typeName": "0x1b089c63a8cfe583ba10a11258d5e83960e76a4c64adb37538cd2ac1546651af::fair_launch::PoolInfoStore"
 							}
-						}
-					}
-				],
-				"return": [
-					{
-						"Struct": {
-							"address": "0x2",
-							"module": "coin",
-							"name": "Coin",
-							"typeArguments": [
-								{
-									"TypeParameter": 0
-								}
-							]
-						}
-					},
-					{
-						"Struct": {
-							"address": "0x2",
-							"module": "coin",
-							"name": "Coin",
-							"typeArguments": [
-								{
-									"Struct": {
-										"address": "0x81ab0208cd5b4edb97d655fcb8ca456a078ef05a54c18b104a10e223872cb9cc",
-										"module": "mole",
-										"name": "MOLE",
-										"typeArguments": []
+						},
+						{
+							"name": "emergency_status",
+							"position": 2,
+							"type": {
+								"typeParameterInstantiation": [],
+								"type": 10,
+								"typeName": "0x1b089c63a8cfe583ba10a11258d5e83960e76a4c64adb37538cd2ac1546651af::fair_launch_emergency::EmergencyStatus"
+							}
+						},
+						{
+							"name": "pools",
+							"position": 3,
+							"type": {
+								"typeParameterInstantiation": [],
+								"type": 10,
+								"typeName": "0x0000000000000000000000000000000000000000000000000000000000000002::bag::Bag"
+							}
+						},
+						{
+							"name": "mole_admin_cap",
+							"position": 4,
+							"type": {
+								"typeParameterInstantiation": [],
+								"type": 10,
+								"typeName": "0x81ab0208cd5b4edb97d655fcb8ca456a078ef05a54c18b104a10e223872cb9cc::mole::AdminCap"
+							}
+						},
+						{
+							"name": "package_version",
+							"position": 5,
+							"type": {
+								"typeParameterInstantiation": [],
+								"type": 6
+							}
+						},
+						{
+							"name": "mole_reward_bounty",
+							"position": 6,
+							"type": {
+								"typeParameterInstantiation": [
+									{
+										"typeParameterInstantiation": [],
+										"type": 10,
+										"typeName": "0x81ab0208cd5b4edb97d655fcb8ca456a078ef05a54c18b104a10e223872cb9cc::mole::MOLE"
 									}
-								}
-							]
+								],
+								"type": 10,
+								"typeName": "0x0000000000000000000000000000000000000000000000000000000000000002::balance::Balance"
+							}
 						}
-					}
-				]
-			}
+					],
+					"variants": [],
+					"typeName": "0x1b089c63a8cfe583ba10a11258d5e83960e76a4c64adb37538cd2ac1546651af::fair_launch::Storage",
+					"definingId": "0x1b089c63a8cfe583ba10a11258d5e83960e76a4c64adb37538cd2ac1546651af",
+					"module": "fair_launch",
+					"name": "Storage",
+					"kind": 1
+				},
+				{
+					"abilities": [
+						1,
+						2,
+						3
+					],
+					"typeParameters": [],
+					"fields": [
+						{
+							"name": "address",
+							"position": 0,
+							"type": {
+								"typeParameterInstantiation": [],
+								"type": 1
+							}
+						},
+						{
+							"name": "is_object",
+							"position": 1,
+							"type": {
+								"typeParameterInstantiation": [],
+								"type": 2
+							}
+						}
+					],
+					"variants": [],
+					"typeName": "0x1b089c63a8cfe583ba10a11258d5e83960e76a4c64adb37538cd2ac1546651af::fair_launch::User",
+					"definingId": "0x1b089c63a8cfe583ba10a11258d5e83960e76a4c64adb37538cd2ac1546651af",
+					"module": "fair_launch",
+					"name": "User",
+					"kind": 1
+				},
+				{
+					"abilities": [
+						3
+					],
+					"typeParameters": [
+						{
+							"constraints": [],
+							"isPhantom": true
+						}
+					],
+					"fields": [
+						{
+							"name": "user",
+							"position": 0,
+							"type": {
+								"typeParameterInstantiation": [],
+								"type": 1
+							}
+						},
+						{
+							"name": "is_object",
+							"position": 1,
+							"type": {
+								"typeParameterInstantiation": [],
+								"type": 2
+							}
+						}
+					],
+					"variants": [],
+					"typeName": "0x1b089c63a8cfe583ba10a11258d5e83960e76a4c64adb37538cd2ac1546651af::fair_launch::UserCapability",
+					"definingId": "0x1b089c63a8cfe583ba10a11258d5e83960e76a4c64adb37538cd2ac1546651af",
+					"module": "fair_launch",
+					"name": "UserCapability",
+					"kind": 1
+				},
+				{
+					"abilities": [
+						3
+					],
+					"typeParameters": [
+						{
+							"constraints": [],
+							"isPhantom": true
+						}
+					],
+					"fields": [
+						{
+							"name": "amount",
+							"position": 0,
+							"type": {
+								"typeParameterInstantiation": [],
+								"type": 6
+							}
+						},
+						{
+							"name": "reward_debt",
+							"position": 1,
+							"type": {
+								"typeParameterInstantiation": [],
+								"type": 6
+							}
+						}
+					],
+					"variants": [],
+					"typeName": "0x1b089c63a8cfe583ba10a11258d5e83960e76a4c64adb37538cd2ac1546651af::fair_launch::UserInfo",
+					"definingId": "0x1b089c63a8cfe583ba10a11258d5e83960e76a4c64adb37538cd2ac1546651af",
+					"module": "fair_launch",
+					"name": "UserInfo",
+					"kind": 1
+				},
+				{
+					"abilities": [
+						1,
+						2
+					],
+					"typeParameters": [
+						{
+							"constraints": [],
+							"isPhantom": true
+						}
+					],
+					"fields": [
+						{
+							"name": "user",
+							"position": 0,
+							"type": {
+								"typeParameterInstantiation": [],
+								"type": 1
+							}
+						},
+						{
+							"name": "pid",
+							"position": 1,
+							"type": {
+								"typeParameterInstantiation": [],
+								"type": 6
+							}
+						},
+						{
+							"name": "amount",
+							"position": 2,
+							"type": {
+								"typeParameterInstantiation": [],
+								"type": 6
+							}
+						}
+					],
+					"variants": [],
+					"typeName": "0x1b089c63a8cfe583ba10a11258d5e83960e76a4c64adb37538cd2ac1546651af::fair_launch::WithdrawEvent",
+					"definingId": "0x1b089c63a8cfe583ba10a11258d5e83960e76a4c64adb37538cd2ac1546651af",
+					"module": "fair_launch",
+					"name": "WithdrawEvent",
+					"kind": 1
+				}
+			],
+			"functions": [
+				{
+					"typeParameters": [
+						{
+							"constraints": []
+						}
+					],
+					"parameters": [
+						{
+							"reference": 1,
+							"body": {
+								"typeParameterInstantiation": [],
+								"type": 10,
+								"typeName": "0x1b089c63a8cfe583ba10a11258d5e83960e76a4c64adb37538cd2ac1546651af::fair_launch::AdminCap"
+							}
+						},
+						{
+							"reference": 2,
+							"body": {
+								"typeParameterInstantiation": [],
+								"type": 10,
+								"typeName": "0x1b089c63a8cfe583ba10a11258d5e83960e76a4c64adb37538cd2ac1546651af::fair_launch::Storage"
+							}
+						},
+						{
+							"body": {
+								"typeParameterInstantiation": [],
+								"type": 6
+							}
+						},
+						{
+							"body": {
+								"typeParameterInstantiation": [],
+								"type": 2
+							}
+						},
+						{
+							"body": {
+								"typeParameterInstantiation": [],
+								"type": 2
+							}
+						},
+						{
+							"reference": 1,
+							"body": {
+								"typeParameterInstantiation": [],
+								"type": 10,
+								"typeName": "0x0000000000000000000000000000000000000000000000000000000000000002::clock::Clock"
+							}
+						},
+						{
+							"reference": 2,
+							"body": {
+								"typeParameterInstantiation": [],
+								"type": 10,
+								"typeName": "0x0000000000000000000000000000000000000000000000000000000000000002::tx_context::TxContext"
+							}
+						}
+					],
+					"returns": [],
+					"name": "add_pool",
+					"visibility": 2,
+					"isEntry": true
+				},
+				{
+					"typeParameters": [
+						{
+							"constraints": []
+						}
+					],
+					"parameters": [
+						{
+							"reference": 2,
+							"body": {
+								"typeParameterInstantiation": [],
+								"type": 10,
+								"typeName": "0x1b089c63a8cfe583ba10a11258d5e83960e76a4c64adb37538cd2ac1546651af::fair_launch::Storage"
+							}
+						}
+					],
+					"returns": [
+						{
+							"body": {
+								"typeParameterInstantiation": [],
+								"type": 6
+							}
+						}
+					],
+					"name": "alloc_point",
+					"visibility": 2,
+					"isEntry": false
+				},
+				{
+					"typeParameters": [],
+					"parameters": [
+						{
+							"reference": 1,
+							"body": {
+								"typeParameterInstantiation": [],
+								"type": 10,
+								"typeName": "0x1b089c63a8cfe583ba10a11258d5e83960e76a4c64adb37538cd2ac1546651af::fair_launch::AdminCap"
+							}
+						},
+						{
+							"reference": 2,
+							"body": {
+								"typeParameterInstantiation": [],
+								"type": 10,
+								"typeName": "0x1b089c63a8cfe583ba10a11258d5e83960e76a4c64adb37538cd2ac1546651af::fair_launch::Storage"
+							}
+						},
+						{
+							"body": {
+								"typeParameterInstantiation": [],
+								"type": 6
+							}
+						},
+						{
+							"body": {
+								"typeParameterInstantiation": [],
+								"type": 1
+							}
+						},
+						{
+							"body": {
+								"typeParameterInstantiation": [],
+								"type": 2
+							}
+						},
+						{
+							"body": {
+								"typeParameterInstantiation": [],
+								"type": 2
+							}
+						},
+						{
+							"reference": 2,
+							"body": {
+								"typeParameterInstantiation": [],
+								"type": 10,
+								"typeName": "0x0000000000000000000000000000000000000000000000000000000000000002::tx_context::TxContext"
+							}
+						}
+					],
+					"returns": [],
+					"name": "approve_stake_debt_token",
+					"visibility": 2,
+					"isEntry": true
+				},
+				{
+					"typeParameters": [],
+					"parameters": [
+						{
+							"reference": 1,
+							"body": {
+								"typeParameterInstantiation": [],
+								"type": 10,
+								"typeName": "0x1b089c63a8cfe583ba10a11258d5e83960e76a4c64adb37538cd2ac1546651af::fair_launch::AdminCap"
+							}
+						},
+						{
+							"reference": 2,
+							"body": {
+								"typeParameterInstantiation": [],
+								"type": 10,
+								"typeName": "0x1b089c63a8cfe583ba10a11258d5e83960e76a4c64adb37538cd2ac1546651af::fair_launch::Storage"
+							}
+						},
+						{
+							"body": {
+								"typeParameterInstantiation": [
+									{
+										"typeParameterInstantiation": [],
+										"type": 6
+									}
+								],
+								"type": 9
+							}
+						},
+						{
+							"body": {
+								"typeParameterInstantiation": [
+									{
+										"typeParameterInstantiation": [],
+										"type": 1
+									}
+								],
+								"type": 9
+							}
+						},
+						{
+							"body": {
+								"typeParameterInstantiation": [],
+								"type": 2
+							}
+						},
+						{
+							"body": {
+								"typeParameterInstantiation": [],
+								"type": 2
+							}
+						},
+						{
+							"reference": 2,
+							"body": {
+								"typeParameterInstantiation": [],
+								"type": 10,
+								"typeName": "0x0000000000000000000000000000000000000000000000000000000000000002::tx_context::TxContext"
+							}
+						}
+					],
+					"returns": [],
+					"name": "approve_stake_debt_tokens",
+					"visibility": 2,
+					"isEntry": true
+				},
+				{
+					"typeParameters": [
+						{
+							"constraints": []
+						}
+					],
+					"parameters": [
+						{
+							"reference": 2,
+							"body": {
+								"typeParameterInstantiation": [],
+								"type": 10,
+								"typeName": "0x1b089c63a8cfe583ba10a11258d5e83960e76a4c64adb37538cd2ac1546651af::fair_launch::Storage"
+							}
+						}
+					],
+					"returns": [
+						{
+							"reference": 2,
+							"body": {
+								"typeParameterInstantiation": [
+									{
+										"typeParameterInstantiation": [],
+										"type": 11,
+										"typeParameter": 0
+									}
+								],
+								"type": 10,
+								"typeName": "0x1b089c63a8cfe583ba10a11258d5e83960e76a4c64adb37538cd2ac1546651af::fair_launch::Pool"
+							}
+						}
+					],
+					"name": "borrow_mut_pool",
+					"visibility": 1,
+					"isEntry": false
+				},
+				{
+					"typeParameters": [
+						{
+							"constraints": []
+						}
+					],
+					"parameters": [
+						{
+							"reference": 2,
+							"body": {
+								"typeParameterInstantiation": [],
+								"type": 10,
+								"typeName": "0x0000000000000000000000000000000000000000000000000000000000000002::bag::Bag"
+							}
+						}
+					],
+					"returns": [
+						{
+							"reference": 2,
+							"body": {
+								"typeParameterInstantiation": [
+									{
+										"typeParameterInstantiation": [],
+										"type": 11,
+										"typeParameter": 0
+									}
+								],
+								"type": 10,
+								"typeName": "0x1b089c63a8cfe583ba10a11258d5e83960e76a4c64adb37538cd2ac1546651af::fair_launch::Pool"
+							}
+						}
+					],
+					"name": "borrow_mut_pool_from_pools",
+					"visibility": 1,
+					"isEntry": false
+				},
+				{
+					"typeParameters": [
+						{
+							"constraints": []
+						}
+					],
+					"parameters": [
+						{
+							"reference": 2,
+							"body": {
+								"typeParameterInstantiation": [
+									{
+										"typeParameterInstantiation": [],
+										"type": 11,
+										"typeParameter": 0
+									}
+								],
+								"type": 10,
+								"typeName": "0x1b089c63a8cfe583ba10a11258d5e83960e76a4c64adb37538cd2ac1546651af::fair_launch::Pool"
+							}
+						},
+						{
+							"body": {
+								"typeParameterInstantiation": [],
+								"type": 10,
+								"typeName": "0x1b089c63a8cfe583ba10a11258d5e83960e76a4c64adb37538cd2ac1546651af::fair_launch::User"
+							}
+						}
+					],
+					"returns": [
+						{
+							"reference": 2,
+							"body": {
+								"typeParameterInstantiation": [
+									{
+										"typeParameterInstantiation": [],
+										"type": 11,
+										"typeParameter": 0
+									}
+								],
+								"type": 10,
+								"typeName": "0x1b089c63a8cfe583ba10a11258d5e83960e76a4c64adb37538cd2ac1546651af::fair_launch::UserInfo"
+							}
+						}
+					],
+					"name": "borrow_mut_user_info",
+					"visibility": 1,
+					"isEntry": false
+				},
+				{
+					"typeParameters": [],
+					"parameters": [
+						{
+							"reference": 1,
+							"body": {
+								"typeParameterInstantiation": [],
+								"type": 10,
+								"typeName": "0x1b089c63a8cfe583ba10a11258d5e83960e76a4c64adb37538cd2ac1546651af::fair_launch::Storage"
+							}
+						}
+					],
+					"returns": [],
+					"name": "checked_package_version",
+					"visibility": 2,
+					"isEntry": false
+				},
+				{
+					"typeParameters": [],
+					"parameters": [
+						{
+							"body": {
+								"typeParameterInstantiation": [],
+								"type": 6
+							}
+						},
+						{
+							"body": {
+								"typeParameterInstantiation": [],
+								"type": 7
+							}
+						}
+					],
+					"returns": [
+						{
+							"body": {
+								"typeParameterInstantiation": [],
+								"type": 6
+							}
+						}
+					],
+					"name": "compute_reward_debt",
+					"visibility": 1,
+					"isEntry": false
+				},
+				{
+					"typeParameters": [
+						{
+							"constraints": []
+						}
+					],
+					"parameters": [
+						{
+							"reference": 2,
+							"body": {
+								"typeParameterInstantiation": [],
+								"type": 10,
+								"typeName": "0x1b089c63a8cfe583ba10a11258d5e83960e76a4c64adb37538cd2ac1546651af::fair_launch::Storage"
+							}
+						},
+						{
+							"body": {
+								"typeParameterInstantiation": [],
+								"type": 1
+							}
+						},
+						{
+							"body": {
+								"typeParameterInstantiation": [
+									{
+										"typeParameterInstantiation": [
+											{
+												"typeParameterInstantiation": [],
+												"type": 11,
+												"typeParameter": 0
+											}
+										],
+										"type": 10,
+										"typeName": "0x0000000000000000000000000000000000000000000000000000000000000002::coin::Coin"
+									}
+								],
+								"type": 9
+							}
+						},
+						{
+							"body": {
+								"typeParameterInstantiation": [],
+								"type": 6
+							}
+						},
+						{
+							"reference": 1,
+							"body": {
+								"typeParameterInstantiation": [],
+								"type": 10,
+								"typeName": "0x0000000000000000000000000000000000000000000000000000000000000002::clock::Clock"
+							}
+						},
+						{
+							"reference": 2,
+							"body": {
+								"typeParameterInstantiation": [],
+								"type": 10,
+								"typeName": "0x0000000000000000000000000000000000000000000000000000000000000002::tx_context::TxContext"
+							}
+						}
+					],
+					"returns": [],
+					"name": "deposit",
+					"visibility": 2,
+					"isEntry": true
+				},
+				{
+					"typeParameters": [
+						{
+							"constraints": []
+						}
+					],
+					"parameters": [
+						{
+							"reference": 2,
+							"body": {
+								"typeParameterInstantiation": [],
+								"type": 10,
+								"typeName": "0x1b089c63a8cfe583ba10a11258d5e83960e76a4c64adb37538cd2ac1546651af::fair_launch::Storage"
+							}
+						},
+						{
+							"body": {
+								"typeParameterInstantiation": [],
+								"type": 1
+							}
+						},
+						{
+							"body": {
+								"typeParameterInstantiation": [
+									{
+										"typeParameterInstantiation": [],
+										"type": 11,
+										"typeParameter": 0
+									}
+								],
+								"type": 10,
+								"typeName": "0x0000000000000000000000000000000000000000000000000000000000000002::coin::Coin"
+							}
+						},
+						{
+							"body": {
+								"typeParameterInstantiation": [],
+								"type": 6
+							}
+						},
+						{
+							"reference": 1,
+							"body": {
+								"typeParameterInstantiation": [],
+								"type": 10,
+								"typeName": "0x0000000000000000000000000000000000000000000000000000000000000002::clock::Clock"
+							}
+						},
+						{
+							"reference": 2,
+							"body": {
+								"typeParameterInstantiation": [],
+								"type": 10,
+								"typeName": "0x0000000000000000000000000000000000000000000000000000000000000002::tx_context::TxContext"
+							}
+						}
+					],
+					"returns": [],
+					"name": "deposit_single",
+					"visibility": 2,
+					"isEntry": true
+				},
+				{
+					"typeParameters": [
+						{
+							"constraints": []
+						}
+					],
+					"parameters": [
+						{
+							"reference": 2,
+							"body": {
+								"typeParameterInstantiation": [],
+								"type": 10,
+								"typeName": "0x1b089c63a8cfe583ba10a11258d5e83960e76a4c64adb37538cd2ac1546651af::fair_launch::Storage"
+							}
+						},
+						{
+							"reference": 1,
+							"body": {
+								"typeParameterInstantiation": [
+									{
+										"typeParameterInstantiation": [],
+										"type": 11,
+										"typeParameter": 0
+									}
+								],
+								"type": 10,
+								"typeName": "0x1b089c63a8cfe583ba10a11258d5e83960e76a4c64adb37538cd2ac1546651af::fair_launch::UserCapability"
+							}
+						},
+						{
+							"body": {
+								"typeParameterInstantiation": [],
+								"type": 1
+							}
+						},
+						{
+							"body": {
+								"typeParameterInstantiation": [],
+								"type": 2
+							}
+						},
+						{
+							"body": {
+								"typeParameterInstantiation": [
+									{
+										"typeParameterInstantiation": [],
+										"type": 11,
+										"typeParameter": 0
+									}
+								],
+								"type": 10,
+								"typeName": "0x0000000000000000000000000000000000000000000000000000000000000002::coin::Coin"
+							}
+						},
+						{
+							"reference": 1,
+							"body": {
+								"typeParameterInstantiation": [],
+								"type": 10,
+								"typeName": "0x0000000000000000000000000000000000000000000000000000000000000002::clock::Clock"
+							}
+						},
+						{
+							"reference": 2,
+							"body": {
+								"typeParameterInstantiation": [],
+								"type": 10,
+								"typeName": "0x0000000000000000000000000000000000000000000000000000000000000002::tx_context::TxContext"
+							}
+						}
+					],
+					"returns": [
+						{
+							"body": {
+								"typeParameterInstantiation": [
+									{
+										"typeParameterInstantiation": [],
+										"type": 10,
+										"typeName": "0x81ab0208cd5b4edb97d655fcb8ca456a078ef05a54c18b104a10e223872cb9cc::mole::MOLE"
+									}
+								],
+								"type": 10,
+								"typeName": "0x0000000000000000000000000000000000000000000000000000000000000002::coin::Coin"
+							}
+						}
+					],
+					"name": "deposit_with_cap",
+					"visibility": 2,
+					"isEntry": false
+				},
+				{
+					"typeParameters": [
+						{
+							"constraints": []
+						}
+					],
+					"parameters": [
+						{
+							"reference": 2,
+							"body": {
+								"typeParameterInstantiation": [],
+								"type": 10,
+								"typeName": "0x1b089c63a8cfe583ba10a11258d5e83960e76a4c64adb37538cd2ac1546651af::fair_launch::Storage"
+							}
+						},
+						{
+							"reference": 2,
+							"body": {
+								"typeParameterInstantiation": [],
+								"type": 10,
+								"typeName": "0x0000000000000000000000000000000000000000000000000000000000000002::tx_context::TxContext"
+							}
+						}
+					],
+					"returns": [],
+					"name": "emergency_withdraw",
+					"visibility": 2,
+					"isEntry": true
+				},
+				{
+					"typeParameters": [
+						{
+							"constraints": []
+						}
+					],
+					"parameters": [
+						{
+							"reference": 1,
+							"body": {
+								"typeParameterInstantiation": [],
+								"type": 10,
+								"typeName": "0x1b089c63a8cfe583ba10a11258d5e83960e76a4c64adb37538cd2ac1546651af::fair_launch::Storage"
+							}
+						}
+					],
+					"returns": [
+						{
+							"body": {
+								"typeParameterInstantiation": [],
+								"type": 2
+							}
+						}
+					],
+					"name": "exists_pool",
+					"visibility": 2,
+					"isEntry": false
+				},
+				{
+					"typeParameters": [
+						{
+							"constraints": []
+						}
+					],
+					"parameters": [
+						{
+							"reference": 1,
+							"body": {
+								"typeParameterInstantiation": [],
+								"type": 10,
+								"typeName": "0x1b089c63a8cfe583ba10a11258d5e83960e76a4c64adb37538cd2ac1546651af::fair_launch::AdminCap"
+							}
+						},
+						{
+							"body": {
+								"typeParameterInstantiation": [],
+								"type": 1
+							}
+						},
+						{
+							"body": {
+								"typeParameterInstantiation": [],
+								"type": 2
+							}
+						}
+					],
+					"returns": [
+						{
+							"body": {
+								"typeParameterInstantiation": [
+									{
+										"typeParameterInstantiation": [],
+										"type": 11,
+										"typeParameter": 0
+									}
+								],
+								"type": 10,
+								"typeName": "0x1b089c63a8cfe583ba10a11258d5e83960e76a4c64adb37538cd2ac1546651af::fair_launch::UserCapability"
+							}
+						}
+					],
+					"name": "extract_user_cap",
+					"visibility": 2,
+					"isEntry": false
+				},
+				{
+					"typeParameters": [
+						{
+							"constraints": []
+						}
+					],
+					"parameters": [
+						{
+							"reference": 2,
+							"body": {
+								"typeParameterInstantiation": [],
+								"type": 10,
+								"typeName": "0x1b089c63a8cfe583ba10a11258d5e83960e76a4c64adb37538cd2ac1546651af::fair_launch::Storage"
+							}
+						}
+					],
+					"returns": [
+						{
+							"body": {
+								"typeParameterInstantiation": [],
+								"type": 6
+							}
+						}
+					],
+					"name": "get_pid",
+					"visibility": 2,
+					"isEntry": false
+				},
+				{
+					"typeParameters": [
+						{
+							"constraints": []
+						}
+					],
+					"parameters": [],
+					"returns": [
+						{
+							"body": {
+								"typeParameterInstantiation": [],
+								"type": 10,
+								"typeName": "0x0000000000000000000000000000000000000000000000000000000000000001::string::String"
+							}
+						}
+					],
+					"name": "get_pool_name",
+					"visibility": 2,
+					"isEntry": false
+				},
+				{
+					"typeParameters": [
+						{
+							"constraints": []
+						}
+					],
+					"parameters": [
+						{
+							"reference": 1,
+							"body": {
+								"typeParameterInstantiation": [
+									{
+										"typeParameterInstantiation": [],
+										"type": 11,
+										"typeParameter": 0
+									}
+								],
+								"type": 10,
+								"typeName": "0x1b089c63a8cfe583ba10a11258d5e83960e76a4c64adb37538cd2ac1546651af::fair_launch::UserCapability"
+							}
+						}
+					],
+					"returns": [
+						{
+							"body": {
+								"typeParameterInstantiation": [],
+								"type": 10,
+								"typeName": "0x1b089c63a8cfe583ba10a11258d5e83960e76a4c64adb37538cd2ac1546651af::fair_launch::User"
+							}
+						}
+					],
+					"name": "get_user_from_cap",
+					"visibility": 1,
+					"isEntry": false
+				},
+				{
+					"typeParameters": [
+						{
+							"constraints": []
+						}
+					],
+					"parameters": [
+						{
+							"reference": 2,
+							"body": {
+								"typeParameterInstantiation": [],
+								"type": 10,
+								"typeName": "0x1b089c63a8cfe583ba10a11258d5e83960e76a4c64adb37538cd2ac1546651af::fair_launch::Storage"
+							}
+						},
+						{
+							"reference": 1,
+							"body": {
+								"typeParameterInstantiation": [],
+								"type": 10,
+								"typeName": "0x0000000000000000000000000000000000000000000000000000000000000002::clock::Clock"
+							}
+						},
+						{
+							"reference": 2,
+							"body": {
+								"typeParameterInstantiation": [],
+								"type": 10,
+								"typeName": "0x0000000000000000000000000000000000000000000000000000000000000002::tx_context::TxContext"
+							}
+						}
+					],
+					"returns": [],
+					"name": "harvest",
+					"visibility": 2,
+					"isEntry": true
+				},
+				{
+					"typeParameters": [
+						{
+							"constraints": []
+						}
+					],
+					"parameters": [
+						{
+							"reference": 2,
+							"body": {
+								"typeParameterInstantiation": [],
+								"type": 10,
+								"typeName": "0x1b089c63a8cfe583ba10a11258d5e83960e76a4c64adb37538cd2ac1546651af::fair_launch::Storage"
+							}
+						},
+						{
+							"reference": 1,
+							"body": {
+								"typeParameterInstantiation": [
+									{
+										"typeParameterInstantiation": [],
+										"type": 11,
+										"typeParameter": 0
+									}
+								],
+								"type": 10,
+								"typeName": "0x1b089c63a8cfe583ba10a11258d5e83960e76a4c64adb37538cd2ac1546651af::fair_launch::UserCapability"
+							}
+						},
+						{
+							"reference": 1,
+							"body": {
+								"typeParameterInstantiation": [],
+								"type": 10,
+								"typeName": "0x0000000000000000000000000000000000000000000000000000000000000002::clock::Clock"
+							}
+						},
+						{
+							"reference": 2,
+							"body": {
+								"typeParameterInstantiation": [],
+								"type": 10,
+								"typeName": "0x0000000000000000000000000000000000000000000000000000000000000002::tx_context::TxContext"
+							}
+						}
+					],
+					"returns": [
+						{
+							"body": {
+								"typeParameterInstantiation": [
+									{
+										"typeParameterInstantiation": [],
+										"type": 10,
+										"typeName": "0x81ab0208cd5b4edb97d655fcb8ca456a078ef05a54c18b104a10e223872cb9cc::mole::MOLE"
+									}
+								],
+								"type": 10,
+								"typeName": "0x0000000000000000000000000000000000000000000000000000000000000002::coin::Coin"
+							}
+						}
+					],
+					"name": "harvest_with_cap",
+					"visibility": 2,
+					"isEntry": false
+				},
+				{
+					"typeParameters": [],
+					"parameters": [
+						{
+							"reference": 2,
+							"body": {
+								"typeParameterInstantiation": [],
+								"type": 10,
+								"typeName": "0x0000000000000000000000000000000000000000000000000000000000000002::tx_context::TxContext"
+							}
+						}
+					],
+					"returns": [],
+					"name": "init",
+					"visibility": 1,
+					"isEntry": false
+				},
+				{
+					"typeParameters": [],
+					"parameters": [
+						{
+							"reference": 1,
+							"body": {
+								"typeParameterInstantiation": [],
+								"type": 10,
+								"typeName": "0x1b089c63a8cfe583ba10a11258d5e83960e76a4c64adb37538cd2ac1546651af::fair_launch::AdminCap"
+							}
+						},
+						{
+							"body": {
+								"typeParameterInstantiation": [],
+								"type": 10,
+								"typeName": "0x81ab0208cd5b4edb97d655fcb8ca456a078ef05a54c18b104a10e223872cb9cc::mole::AdminCap"
+							}
+						},
+						{
+							"body": {
+								"typeParameterInstantiation": [],
+								"type": 6
+							}
+						},
+						{
+							"body": {
+								"typeParameterInstantiation": [],
+								"type": 6
+							}
+						},
+						{
+							"body": {
+								"typeParameterInstantiation": [],
+								"type": 6
+							}
+						},
+						{
+							"body": {
+								"typeParameterInstantiation": [],
+								"type": 1
+							}
+						},
+						{
+							"reference": 2,
+							"body": {
+								"typeParameterInstantiation": [],
+								"type": 10,
+								"typeName": "0x0000000000000000000000000000000000000000000000000000000000000002::tx_context::TxContext"
+							}
+						}
+					],
+					"returns": [],
+					"name": "initialize",
+					"visibility": 2,
+					"isEntry": true
+				},
+				{
+					"typeParameters": [],
+					"parameters": [
+						{
+							"reference": 1,
+							"body": {
+								"typeParameterInstantiation": [],
+								"type": 10,
+								"typeName": "0x1b089c63a8cfe583ba10a11258d5e83960e76a4c64adb37538cd2ac1546651af::fair_launch::Storage"
+							}
+						},
+						{
+							"body": {
+								"typeParameterInstantiation": [],
+								"type": 6
+							}
+						},
+						{
+							"body": {
+								"typeParameterInstantiation": [],
+								"type": 1
+							}
+						},
+						{
+							"body": {
+								"typeParameterInstantiation": [],
+								"type": 2
+							}
+						}
+					],
+					"returns": [
+						{
+							"body": {
+								"typeParameterInstantiation": [],
+								"type": 2
+							}
+						}
+					],
+					"name": "is_stake_debt_token_allow",
+					"visibility": 2,
+					"isEntry": false
+				},
+				{
+					"typeParameters": [],
+					"parameters": [
+						{
+							"reference": 1,
+							"body": {
+								"typeParameterInstantiation": [
+									{
+										"typeParameterInstantiation": [],
+										"type": 6
+									},
+									{
+										"typeParameterInstantiation": [
+											{
+												"typeParameterInstantiation": [],
+												"type": 10,
+												"typeName": "0x1b089c63a8cfe583ba10a11258d5e83960e76a4c64adb37538cd2ac1546651af::fair_launch::User"
+											},
+											{
+												"typeParameterInstantiation": [],
+												"type": 2
+											}
+										],
+										"type": 10,
+										"typeName": "0x0000000000000000000000000000000000000000000000000000000000000002::table::Table"
+									}
+								],
+								"type": 10,
+								"typeName": "0x0000000000000000000000000000000000000000000000000000000000000002::table::Table"
+							}
+						},
+						{
+							"body": {
+								"typeParameterInstantiation": [],
+								"type": 6
+							}
+						},
+						{
+							"body": {
+								"typeParameterInstantiation": [],
+								"type": 10,
+								"typeName": "0x1b089c63a8cfe583ba10a11258d5e83960e76a4c64adb37538cd2ac1546651af::fair_launch::User"
+							}
+						}
+					],
+					"returns": [
+						{
+							"body": {
+								"typeParameterInstantiation": [],
+								"type": 2
+							}
+						}
+					],
+					"name": "is_stake_debt_token_allow_inner",
+					"visibility": 1,
+					"isEntry": false
+				},
+				{
+					"typeParameters": [],
+					"parameters": [
+						{
+							"reference": 1,
+							"body": {
+								"typeParameterInstantiation": [],
+								"type": 10,
+								"typeName": "0x1b089c63a8cfe583ba10a11258d5e83960e76a4c64adb37538cd2ac1546651af::fair_launch::AdminCap"
+							}
+						},
+						{
+							"reference": 2,
+							"body": {
+								"typeParameterInstantiation": [],
+								"type": 10,
+								"typeName": "0x1b089c63a8cfe583ba10a11258d5e83960e76a4c64adb37538cd2ac1546651af::fair_launch::Storage"
+							}
+						},
+						{
+							"reference": 2,
+							"body": {
+								"typeParameterInstantiation": [],
+								"type": 10,
+								"typeName": "0x81ab0208cd5b4edb97d655fcb8ca456a078ef05a54c18b104a10e223872cb9cc::mole::MoleCoinInfo"
+							}
+						},
+						{
+							"body": {
+								"typeParameterInstantiation": [],
+								"type": 1
+							}
+						},
+						{
+							"body": {
+								"typeParameterInstantiation": [],
+								"type": 6
+							}
+						},
+						{
+							"reference": 2,
+							"body": {
+								"typeParameterInstantiation": [],
+								"type": 10,
+								"typeName": "0x0000000000000000000000000000000000000000000000000000000000000002::tx_context::TxContext"
+							}
+						}
+					],
+					"returns": [],
+					"name": "manual_mint",
+					"visibility": 2,
+					"isEntry": true
+				},
+				{
+					"typeParameters": [],
+					"parameters": [
+						{
+							"reference": 2,
+							"body": {
+								"typeParameterInstantiation": [],
+								"type": 10,
+								"typeName": "0x1b089c63a8cfe583ba10a11258d5e83960e76a4c64adb37538cd2ac1546651af::fair_launch::Storage"
+							}
+						},
+						{
+							"reference": 1,
+							"body": {
+								"typeParameterInstantiation": [],
+								"type": 10,
+								"typeName": "0x0000000000000000000000000000000000000000000000000000000000000002::clock::Clock"
+							}
+						},
+						{
+							"reference": 2,
+							"body": {
+								"typeParameterInstantiation": [],
+								"type": 10,
+								"typeName": "0x0000000000000000000000000000000000000000000000000000000000000002::tx_context::TxContext"
+							}
+						}
+					],
+					"returns": [],
+					"name": "mass_update_pools",
+					"visibility": 2,
+					"isEntry": false
+				},
+				{
+					"typeParameters": [],
+					"parameters": [
+						{
+							"body": {
+								"typeParameterInstantiation": [],
+								"type": 6
+							}
+						},
+						{
+							"body": {
+								"typeParameterInstantiation": [],
+								"type": 6
+							}
+						},
+						{
+							"body": {
+								"typeParameterInstantiation": [],
+								"type": 6
+							}
+						}
+					],
+					"returns": [
+						{
+							"body": {
+								"typeParameterInstantiation": [],
+								"type": 6
+							}
+						}
+					],
+					"name": "mul_div",
+					"visibility": 2,
+					"isEntry": false
+				},
+				{
+					"typeParameters": [],
+					"parameters": [
+						{
+							"body": {
+								"typeParameterInstantiation": [],
+								"type": 6
+							}
+						},
+						{
+							"body": {
+								"typeParameterInstantiation": [],
+								"type": 6
+							}
+						}
+					],
+					"returns": [
+						{
+							"body": {
+								"typeParameterInstantiation": [],
+								"type": 7
+							}
+						}
+					],
+					"name": "mul_to_u128",
+					"visibility": 2,
+					"isEntry": false
+				},
+				{
+					"typeParameters": [],
+					"parameters": [
+						{
+							"reference": 1,
+							"body": {
+								"typeParameterInstantiation": [],
+								"type": 10,
+								"typeName": "0x0000000000000000000000000000000000000000000000000000000000000002::clock::Clock"
+							}
+						}
+					],
+					"returns": [
+						{
+							"body": {
+								"typeParameterInstantiation": [],
+								"type": 6
+							}
+						}
+					],
+					"name": "now_seconds",
+					"visibility": 1,
+					"isEntry": false
+				},
+				{
+					"typeParameters": [],
+					"parameters": [
+						{
+							"reference": 1,
+							"body": {
+								"typeParameterInstantiation": [],
+								"type": 10,
+								"typeName": "0x1b089c63a8cfe583ba10a11258d5e83960e76a4c64adb37538cd2ac1546651af::fair_launch_emergency::EmergencyAdminCap"
+							}
+						},
+						{
+							"reference": 2,
+							"body": {
+								"typeParameterInstantiation": [],
+								"type": 10,
+								"typeName": "0x1b089c63a8cfe583ba10a11258d5e83960e76a4c64adb37538cd2ac1546651af::fair_launch::Storage"
+							}
+						}
+					],
+					"returns": [],
+					"name": "pause",
+					"visibility": 2,
+					"isEntry": true
+				},
+				{
+					"typeParameters": [
+						{
+							"constraints": []
+						}
+					],
+					"parameters": [
+						{
+							"reference": 2,
+							"body": {
+								"typeParameterInstantiation": [],
+								"type": 10,
+								"typeName": "0x1b089c63a8cfe583ba10a11258d5e83960e76a4c64adb37538cd2ac1546651af::fair_launch::Storage"
+							}
+						},
+						{
+							"body": {
+								"typeParameterInstantiation": [],
+								"type": 1
+							}
+						},
+						{
+							"body": {
+								"typeParameterInstantiation": [],
+								"type": 2
+							}
+						},
+						{
+							"reference": 1,
+							"body": {
+								"typeParameterInstantiation": [],
+								"type": 10,
+								"typeName": "0x0000000000000000000000000000000000000000000000000000000000000002::clock::Clock"
+							}
+						}
+					],
+					"returns": [
+						{
+							"body": {
+								"typeParameterInstantiation": [],
+								"type": 6
+							}
+						}
+					],
+					"name": "pending_mole",
+					"visibility": 2,
+					"isEntry": false
+				},
+				{
+					"typeParameters": [],
+					"parameters": [
+						{
+							"reference": 1,
+							"body": {
+								"typeParameterInstantiation": [],
+								"type": 10,
+								"typeName": "0x1b089c63a8cfe583ba10a11258d5e83960e76a4c64adb37538cd2ac1546651af::fair_launch::Storage"
+							}
+						}
+					],
+					"returns": [
+						{
+							"body": {
+								"typeParameterInstantiation": [],
+								"type": 6
+							}
+						}
+					],
+					"name": "pool_length",
+					"visibility": 2,
+					"isEntry": false
+				},
+				{
+					"typeParameters": [],
+					"parameters": [
+						{
+							"reference": 1,
+							"body": {
+								"typeParameterInstantiation": [],
+								"type": 10,
+								"typeName": "0x1b089c63a8cfe583ba10a11258d5e83960e76a4c64adb37538cd2ac1546651af::fair_launch_emergency::EmergencyAdminCap"
+							}
+						},
+						{
+							"reference": 2,
+							"body": {
+								"typeParameterInstantiation": [],
+								"type": 10,
+								"typeName": "0x1b089c63a8cfe583ba10a11258d5e83960e76a4c64adb37538cd2ac1546651af::fair_launch::Storage"
+							}
+						}
+					],
+					"returns": [],
+					"name": "resume",
+					"visibility": 2,
+					"isEntry": true
+				},
+				{
+					"typeParameters": [],
+					"parameters": [
+						{
+							"reference": 2,
+							"body": {
+								"typeParameterInstantiation": [
+									{
+										"typeParameterInstantiation": [],
+										"type": 10,
+										"typeName": "0x81ab0208cd5b4edb97d655fcb8ca456a078ef05a54c18b104a10e223872cb9cc::mole::MOLE"
+									}
+								],
+								"type": 10,
+								"typeName": "0x0000000000000000000000000000000000000000000000000000000000000002::balance::Balance"
+							}
+						},
+						{
+							"body": {
+								"typeParameterInstantiation": [],
+								"type": 6
+							}
+						},
+						{
+							"reference": 2,
+							"body": {
+								"typeParameterInstantiation": [],
+								"type": 10,
+								"typeName": "0x0000000000000000000000000000000000000000000000000000000000000002::tx_context::TxContext"
+							}
+						}
+					],
+					"returns": [
+						{
+							"body": {
+								"typeParameterInstantiation": [
+									{
+										"typeParameterInstantiation": [],
+										"type": 10,
+										"typeName": "0x81ab0208cd5b4edb97d655fcb8ca456a078ef05a54c18b104a10e223872cb9cc::mole::MOLE"
+									}
+								],
+								"type": 10,
+								"typeName": "0x0000000000000000000000000000000000000000000000000000000000000002::coin::Coin"
+							}
+						}
+					],
+					"name": "safe_mole_extract",
+					"visibility": 1,
+					"isEntry": false
+				},
+				{
+					"typeParameters": [],
+					"parameters": [
+						{
+							"reference": 2,
+							"body": {
+								"typeParameterInstantiation": [],
+								"type": 10,
+								"typeName": "0x1b089c63a8cfe583ba10a11258d5e83960e76a4c64adb37538cd2ac1546651af::fair_launch::Storage"
+							}
+						},
+						{
+							"body": {
+								"typeParameterInstantiation": [],
+								"type": 1
+							}
+						},
+						{
+							"reference": 2,
+							"body": {
+								"typeParameterInstantiation": [],
+								"type": 10,
+								"typeName": "0x0000000000000000000000000000000000000000000000000000000000000002::tx_context::TxContext"
+							}
+						}
+					],
+					"returns": [],
+					"name": "set_dev",
+					"visibility": 2,
+					"isEntry": true
+				},
+				{
+					"typeParameters": [],
+					"parameters": [
+						{
+							"reference": 1,
+							"body": {
+								"typeParameterInstantiation": [],
+								"type": 10,
+								"typeName": "0x1b089c63a8cfe583ba10a11258d5e83960e76a4c64adb37538cd2ac1546651af::fair_launch::AdminCap"
+							}
+						},
+						{
+							"reference": 2,
+							"body": {
+								"typeParameterInstantiation": [],
+								"type": 10,
+								"typeName": "0x1b089c63a8cfe583ba10a11258d5e83960e76a4c64adb37538cd2ac1546651af::fair_launch::Storage"
+							}
+						},
+						{
+							"body": {
+								"typeParameterInstantiation": [],
+								"type": 6
+							}
+						}
+					],
+					"returns": [],
+					"name": "set_max_mole_per_second",
+					"visibility": 2,
+					"isEntry": true
+				},
+				{
+					"typeParameters": [],
+					"parameters": [
+						{
+							"reference": 1,
+							"body": {
+								"typeParameterInstantiation": [],
+								"type": 10,
+								"typeName": "0x1b089c63a8cfe583ba10a11258d5e83960e76a4c64adb37538cd2ac1546651af::fair_launch::AdminCap"
+							}
+						},
+						{
+							"reference": 2,
+							"body": {
+								"typeParameterInstantiation": [],
+								"type": 10,
+								"typeName": "0x1b089c63a8cfe583ba10a11258d5e83960e76a4c64adb37538cd2ac1546651af::fair_launch::Storage"
+							}
+						},
+						{
+							"body": {
+								"typeParameterInstantiation": [],
+								"type": 6
+							}
+						},
+						{
+							"body": {
+								"typeParameterInstantiation": [],
+								"type": 2
+							}
+						},
+						{
+							"reference": 1,
+							"body": {
+								"typeParameterInstantiation": [],
+								"type": 10,
+								"typeName": "0x0000000000000000000000000000000000000000000000000000000000000002::clock::Clock"
+							}
+						},
+						{
+							"reference": 2,
+							"body": {
+								"typeParameterInstantiation": [],
+								"type": 10,
+								"typeName": "0x0000000000000000000000000000000000000000000000000000000000000002::tx_context::TxContext"
+							}
+						}
+					],
+					"returns": [],
+					"name": "set_mole_per_second",
+					"visibility": 2,
+					"isEntry": true
+				},
+				{
+					"typeParameters": [
+						{
+							"constraints": []
+						}
+					],
+					"parameters": [
+						{
+							"reference": 1,
+							"body": {
+								"typeParameterInstantiation": [],
+								"type": 10,
+								"typeName": "0x1b089c63a8cfe583ba10a11258d5e83960e76a4c64adb37538cd2ac1546651af::fair_launch::AdminCap"
+							}
+						},
+						{
+							"reference": 2,
+							"body": {
+								"typeParameterInstantiation": [],
+								"type": 10,
+								"typeName": "0x1b089c63a8cfe583ba10a11258d5e83960e76a4c64adb37538cd2ac1546651af::fair_launch::Storage"
+							}
+						},
+						{
+							"body": {
+								"typeParameterInstantiation": [],
+								"type": 6
+							}
+						},
+						{
+							"body": {
+								"typeParameterInstantiation": [],
+								"type": 2
+							}
+						},
+						{
+							"reference": 1,
+							"body": {
+								"typeParameterInstantiation": [],
+								"type": 10,
+								"typeName": "0x0000000000000000000000000000000000000000000000000000000000000002::clock::Clock"
+							}
+						},
+						{
+							"reference": 2,
+							"body": {
+								"typeParameterInstantiation": [],
+								"type": 10,
+								"typeName": "0x0000000000000000000000000000000000000000000000000000000000000002::tx_context::TxContext"
+							}
+						}
+					],
+					"returns": [],
+					"name": "set_pool",
+					"visibility": 2,
+					"isEntry": true
+				},
+				{
+					"typeParameters": [],
+					"parameters": [
+						{
+							"reference": 2,
+							"body": {
+								"typeParameterInstantiation": [],
+								"type": 10,
+								"typeName": "0x1b089c63a8cfe583ba10a11258d5e83960e76a4c64adb37538cd2ac1546651af::fair_launch::Storage"
+							}
+						}
+					],
+					"returns": [
+						{
+							"body": {
+								"typeParameterInstantiation": [],
+								"type": 6
+							}
+						}
+					],
+					"name": "total_alloc_point",
+					"visibility": 2,
+					"isEntry": false
+				},
+				{
+					"typeParameters": [],
+					"parameters": [
+						{
+							"reference": 2,
+							"body": {
+								"typeParameterInstantiation": [],
+								"type": 10,
+								"typeName": "0x1b089c63a8cfe583ba10a11258d5e83960e76a4c64adb37538cd2ac1546651af::fair_launch::Storage"
+							}
+						},
+						{
+							"body": {
+								"typeParameterInstantiation": [],
+								"type": 6
+							}
+						},
+						{
+							"reference": 1,
+							"body": {
+								"typeParameterInstantiation": [],
+								"type": 10,
+								"typeName": "0x0000000000000000000000000000000000000000000000000000000000000002::clock::Clock"
+							}
+						},
+						{
+							"reference": 2,
+							"body": {
+								"typeParameterInstantiation": [],
+								"type": 10,
+								"typeName": "0x0000000000000000000000000000000000000000000000000000000000000002::tx_context::TxContext"
+							}
+						}
+					],
+					"returns": [],
+					"name": "update_pool",
+					"visibility": 2,
+					"isEntry": false
+				},
+				{
+					"typeParameters": [],
+					"parameters": [
+						{
+							"reference": 1,
+							"body": {
+								"typeParameterInstantiation": [],
+								"type": 10,
+								"typeName": "0x1b089c63a8cfe583ba10a11258d5e83960e76a4c64adb37538cd2ac1546651af::fair_launch::AdminCap"
+							}
+						},
+						{
+							"reference": 2,
+							"body": {
+								"typeParameterInstantiation": [],
+								"type": 10,
+								"typeName": "0x1b089c63a8cfe583ba10a11258d5e83960e76a4c64adb37538cd2ac1546651af::fair_launch::Storage"
+							}
+						},
+						{
+							"body": {
+								"typeParameterInstantiation": [],
+								"type": 6
+							}
+						}
+					],
+					"returns": [],
+					"name": "upgrade_mole_coin_version",
+					"visibility": 1,
+					"isEntry": true
+				},
+				{
+					"typeParameters": [],
+					"parameters": [
+						{
+							"reference": 1,
+							"body": {
+								"typeParameterInstantiation": [],
+								"type": 10,
+								"typeName": "0x1b089c63a8cfe583ba10a11258d5e83960e76a4c64adb37538cd2ac1546651af::fair_launch::AdminCap"
+							}
+						},
+						{
+							"reference": 2,
+							"body": {
+								"typeParameterInstantiation": [],
+								"type": 10,
+								"typeName": "0x1b089c63a8cfe583ba10a11258d5e83960e76a4c64adb37538cd2ac1546651af::fair_launch::Storage"
+							}
+						},
+						{
+							"body": {
+								"typeParameterInstantiation": [],
+								"type": 6
+							}
+						}
+					],
+					"returns": [],
+					"name": "upgrade_package_version",
+					"visibility": 1,
+					"isEntry": true
+				},
+				{
+					"typeParameters": [
+						{
+							"constraints": []
+						}
+					],
+					"parameters": [
+						{
+							"reference": 2,
+							"body": {
+								"typeParameterInstantiation": [],
+								"type": 10,
+								"typeName": "0x1b089c63a8cfe583ba10a11258d5e83960e76a4c64adb37538cd2ac1546651af::fair_launch::Storage"
+							}
+						},
+						{
+							"body": {
+								"typeParameterInstantiation": [],
+								"type": 1
+							}
+						},
+						{
+							"body": {
+								"typeParameterInstantiation": [],
+								"type": 6
+							}
+						},
+						{
+							"reference": 1,
+							"body": {
+								"typeParameterInstantiation": [],
+								"type": 10,
+								"typeName": "0x0000000000000000000000000000000000000000000000000000000000000002::clock::Clock"
+							}
+						},
+						{
+							"reference": 2,
+							"body": {
+								"typeParameterInstantiation": [],
+								"type": 10,
+								"typeName": "0x0000000000000000000000000000000000000000000000000000000000000002::tx_context::TxContext"
+							}
+						}
+					],
+					"returns": [],
+					"name": "withdraw",
+					"visibility": 2,
+					"isEntry": true
+				},
+				{
+					"typeParameters": [
+						{
+							"constraints": []
+						}
+					],
+					"parameters": [
+						{
+							"reference": 2,
+							"body": {
+								"typeParameterInstantiation": [],
+								"type": 10,
+								"typeName": "0x1b089c63a8cfe583ba10a11258d5e83960e76a4c64adb37538cd2ac1546651af::fair_launch::Storage"
+							}
+						},
+						{
+							"body": {
+								"typeParameterInstantiation": [],
+								"type": 1
+							}
+						},
+						{
+							"reference": 1,
+							"body": {
+								"typeParameterInstantiation": [],
+								"type": 10,
+								"typeName": "0x0000000000000000000000000000000000000000000000000000000000000002::clock::Clock"
+							}
+						},
+						{
+							"reference": 2,
+							"body": {
+								"typeParameterInstantiation": [],
+								"type": 10,
+								"typeName": "0x0000000000000000000000000000000000000000000000000000000000000002::tx_context::TxContext"
+							}
+						}
+					],
+					"returns": [],
+					"name": "withdraw_all",
+					"visibility": 2,
+					"isEntry": true
+				},
+				{
+					"typeParameters": [
+						{
+							"constraints": []
+						}
+					],
+					"parameters": [
+						{
+							"reference": 2,
+							"body": {
+								"typeParameterInstantiation": [],
+								"type": 10,
+								"typeName": "0x1b089c63a8cfe583ba10a11258d5e83960e76a4c64adb37538cd2ac1546651af::fair_launch::Storage"
+							}
+						},
+						{
+							"body": {
+								"typeParameterInstantiation": [],
+								"type": 1
+							}
+						},
+						{
+							"body": {
+								"typeParameterInstantiation": [],
+								"type": 6
+							}
+						},
+						{
+							"reference": 1,
+							"body": {
+								"typeParameterInstantiation": [],
+								"type": 10,
+								"typeName": "0x0000000000000000000000000000000000000000000000000000000000000002::clock::Clock"
+							}
+						},
+						{
+							"reference": 2,
+							"body": {
+								"typeParameterInstantiation": [],
+								"type": 10,
+								"typeName": "0x0000000000000000000000000000000000000000000000000000000000000002::tx_context::TxContext"
+							}
+						}
+					],
+					"returns": [],
+					"name": "withdraw_inner",
+					"visibility": 1,
+					"isEntry": false
+				},
+				{
+					"typeParameters": [
+						{
+							"constraints": []
+						},
+						{
+							"constraints": []
+						},
+						{
+							"constraints": []
+						}
+					],
+					"parameters": [
+						{
+							"reference": 1,
+							"body": {
+								"typeParameterInstantiation": [],
+								"type": 10,
+								"typeName": "0x1b089c63a8cfe583ba10a11258d5e83960e76a4c64adb37538cd2ac1546651af::fair_launch::AdminCap"
+							}
+						},
+						{
+							"reference": 2,
+							"body": {
+								"typeParameterInstantiation": [],
+								"type": 10,
+								"typeName": "0x1b089c63a8cfe583ba10a11258d5e83960e76a4c64adb37538cd2ac1546651af::fair_launch::Storage"
+							}
+						},
+						{
+							"body": {
+								"typeParameterInstantiation": [],
+								"type": 2
+							}
+						},
+						{
+							"body": {
+								"typeParameterInstantiation": [],
+								"type": 6
+							}
+						},
+						{
+							"reference": 2,
+							"body": {
+								"typeParameterInstantiation": [],
+								"type": 10,
+								"typeName": "0x0000000000000000000000000000000000000000000000000000000000000002::tx_context::TxContext"
+							}
+						}
+					],
+					"returns": [],
+					"name": "withdraw_mole_rewards_bounty",
+					"visibility": 2,
+					"isEntry": true
+				},
+				{
+					"typeParameters": [
+						{
+							"constraints": []
+						}
+					],
+					"parameters": [
+						{
+							"reference": 2,
+							"body": {
+								"typeParameterInstantiation": [],
+								"type": 10,
+								"typeName": "0x1b089c63a8cfe583ba10a11258d5e83960e76a4c64adb37538cd2ac1546651af::fair_launch::Storage"
+							}
+						},
+						{
+							"reference": 1,
+							"body": {
+								"typeParameterInstantiation": [
+									{
+										"typeParameterInstantiation": [],
+										"type": 11,
+										"typeParameter": 0
+									}
+								],
+								"type": 10,
+								"typeName": "0x1b089c63a8cfe583ba10a11258d5e83960e76a4c64adb37538cd2ac1546651af::fair_launch::UserCapability"
+							}
+						},
+						{
+							"body": {
+								"typeParameterInstantiation": [],
+								"type": 1
+							}
+						},
+						{
+							"body": {
+								"typeParameterInstantiation": [],
+								"type": 2
+							}
+						},
+						{
+							"body": {
+								"typeParameterInstantiation": [],
+								"type": 6
+							}
+						},
+						{
+							"reference": 1,
+							"body": {
+								"typeParameterInstantiation": [],
+								"type": 10,
+								"typeName": "0x0000000000000000000000000000000000000000000000000000000000000002::clock::Clock"
+							}
+						},
+						{
+							"reference": 2,
+							"body": {
+								"typeParameterInstantiation": [],
+								"type": 10,
+								"typeName": "0x0000000000000000000000000000000000000000000000000000000000000002::tx_context::TxContext"
+							}
+						}
+					],
+					"returns": [
+						{
+							"body": {
+								"typeParameterInstantiation": [
+									{
+										"typeParameterInstantiation": [],
+										"type": 11,
+										"typeParameter": 0
+									}
+								],
+								"type": 10,
+								"typeName": "0x0000000000000000000000000000000000000000000000000000000000000002::coin::Coin"
+							}
+						},
+						{
+							"body": {
+								"typeParameterInstantiation": [
+									{
+										"typeParameterInstantiation": [],
+										"type": 10,
+										"typeName": "0x81ab0208cd5b4edb97d655fcb8ca456a078ef05a54c18b104a10e223872cb9cc::mole::MOLE"
+									}
+								],
+								"type": 10,
+								"typeName": "0x0000000000000000000000000000000000000000000000000000000000000002::coin::Coin"
+							}
+						}
+					],
+					"name": "withdraw_with_cap",
+					"visibility": 2,
+					"isEntry": false
+				}
+			],
+			"name": "fair_launch"
 		}
 	},
 	{
-		"fileFormatVersion": 6,
 		"address": "0x1b089c63a8cfe583ba10a11258d5e83960e76a4c64adb37538cd2ac1546651af",
-		"name": "fair_launch_emergency",
-		"friends": [
-			{
-				"address": "0x1b089c63a8cfe583ba10a11258d5e83960e76a4c64adb37538cd2ac1546651af",
-				"name": "fair_launch"
-			}
-		],
-		"structs": {
-			"EmergencyAdminCap": {
-				"abilities": {
+		"module": {
+			"datatypes": [
+				{
 					"abilities": [
-						"Store",
-						"Key"
-					]
-				},
-				"typeParameters": [],
-				"fields": [
-					{
-						"name": "id",
-						"type": {
-							"Struct": {
-								"address": "0x2",
-								"module": "object",
-								"name": "UID",
-								"typeArguments": []
+						3,
+						4
+					],
+					"typeParameters": [],
+					"fields": [
+						{
+							"name": "id",
+							"position": 0,
+							"type": {
+								"typeParameterInstantiation": [],
+								"type": 10,
+								"typeName": "0x0000000000000000000000000000000000000000000000000000000000000002::object::UID"
 							}
 						}
-					}
-				]
-			},
-			"EmergencyStatus": {
-				"abilities": {
+					],
+					"variants": [],
+					"typeName": "0x1b089c63a8cfe583ba10a11258d5e83960e76a4c64adb37538cd2ac1546651af::fair_launch_emergency::EmergencyAdminCap",
+					"definingId": "0x1b089c63a8cfe583ba10a11258d5e83960e76a4c64adb37538cd2ac1546651af",
+					"module": "fair_launch_emergency",
+					"name": "EmergencyAdminCap",
+					"kind": 1
+				},
+				{
 					"abilities": [
-						"Store",
-						"Key"
-					]
+						3,
+						4
+					],
+					"typeParameters": [],
+					"fields": [
+						{
+							"name": "id",
+							"position": 0,
+							"type": {
+								"typeParameterInstantiation": [],
+								"type": 10,
+								"typeName": "0x0000000000000000000000000000000000000000000000000000000000000002::object::UID"
+							}
+						},
+						{
+							"name": "pause",
+							"position": 1,
+							"type": {
+								"typeParameterInstantiation": [],
+								"type": 2
+							}
+						}
+					],
+					"variants": [],
+					"typeName": "0x1b089c63a8cfe583ba10a11258d5e83960e76a4c64adb37538cd2ac1546651af::fair_launch_emergency::EmergencyStatus",
+					"definingId": "0x1b089c63a8cfe583ba10a11258d5e83960e76a4c64adb37538cd2ac1546651af",
+					"module": "fair_launch_emergency",
+					"name": "EmergencyStatus",
+					"kind": 1
+				}
+			],
+			"functions": [
+				{
+					"typeParameters": [],
+					"parameters": [
+						{
+							"reference": 1,
+							"body": {
+								"typeParameterInstantiation": [],
+								"type": 10,
+								"typeName": "0x1b089c63a8cfe583ba10a11258d5e83960e76a4c64adb37538cd2ac1546651af::fair_launch_emergency::EmergencyStatus"
+							}
+						}
+					],
+					"returns": [],
+					"name": "assert_no_emergency",
+					"visibility": 2,
+					"isEntry": false
 				},
-				"typeParameters": [],
-				"fields": [
-					{
-						"name": "id",
-						"type": {
-							"Struct": {
-								"address": "0x2",
-								"module": "object",
-								"name": "UID",
-								"typeArguments": []
+				{
+					"typeParameters": [],
+					"parameters": [
+						{
+							"reference": 2,
+							"body": {
+								"typeParameterInstantiation": [],
+								"type": 10,
+								"typeName": "0x0000000000000000000000000000000000000000000000000000000000000002::tx_context::TxContext"
 							}
 						}
-					},
-					{
-						"name": "pause",
-						"type": "Bool"
-					}
-				]
-			}
-		},
-		"exposedFunctions": {
-			"assert_no_emergency": {
-				"visibility": "Public",
-				"isEntry": false,
-				"typeParameters": [],
-				"parameters": [
-					{
-						"Reference": {
-							"Struct": {
-								"address": "0x1b089c63a8cfe583ba10a11258d5e83960e76a4c64adb37538cd2ac1546651af",
-								"module": "fair_launch_emergency",
-								"name": "EmergencyStatus",
-								"typeArguments": []
+					],
+					"returns": [
+						{
+							"body": {
+								"typeParameterInstantiation": [],
+								"type": 10,
+								"typeName": "0x1b089c63a8cfe583ba10a11258d5e83960e76a4c64adb37538cd2ac1546651af::fair_launch_emergency::EmergencyStatus"
 							}
 						}
-					}
-				],
-				"return": []
-			},
-			"initialize": {
-				"visibility": "Friend",
-				"isEntry": false,
-				"typeParameters": [],
-				"parameters": [
-					{
-						"MutableReference": {
-							"Struct": {
-								"address": "0x2",
-								"module": "tx_context",
-								"name": "TxContext",
-								"typeArguments": []
+					],
+					"name": "initialize",
+					"visibility": 3,
+					"isEntry": false
+				},
+				{
+					"typeParameters": [],
+					"parameters": [
+						{
+							"reference": 1,
+							"body": {
+								"typeParameterInstantiation": [],
+								"type": 10,
+								"typeName": "0x1b089c63a8cfe583ba10a11258d5e83960e76a4c64adb37538cd2ac1546651af::fair_launch_emergency::EmergencyStatus"
 							}
 						}
-					}
-				],
-				"return": [
-					{
-						"Struct": {
-							"address": "0x1b089c63a8cfe583ba10a11258d5e83960e76a4c64adb37538cd2ac1546651af",
-							"module": "fair_launch_emergency",
-							"name": "EmergencyStatus",
-							"typeArguments": []
-						}
-					}
-				]
-			},
-			"is_emergency": {
-				"visibility": "Public",
-				"isEntry": false,
-				"typeParameters": [],
-				"parameters": [
-					{
-						"Reference": {
-							"Struct": {
-								"address": "0x1b089c63a8cfe583ba10a11258d5e83960e76a4c64adb37538cd2ac1546651af",
-								"module": "fair_launch_emergency",
-								"name": "EmergencyStatus",
-								"typeArguments": []
+					],
+					"returns": [
+						{
+							"body": {
+								"typeParameterInstantiation": [],
+								"type": 2
 							}
 						}
-					}
-				],
-				"return": [
-					"Bool"
-				]
-			},
-			"pause": {
-				"visibility": "Public",
-				"isEntry": true,
-				"typeParameters": [],
-				"parameters": [
-					{
-						"Reference": {
-							"Struct": {
-								"address": "0x1b089c63a8cfe583ba10a11258d5e83960e76a4c64adb37538cd2ac1546651af",
-								"module": "fair_launch_emergency",
-								"name": "EmergencyAdminCap",
-								"typeArguments": []
+					],
+					"name": "is_emergency",
+					"visibility": 2,
+					"isEntry": false
+				},
+				{
+					"typeParameters": [],
+					"parameters": [
+						{
+							"reference": 1,
+							"body": {
+								"typeParameterInstantiation": [],
+								"type": 10,
+								"typeName": "0x1b089c63a8cfe583ba10a11258d5e83960e76a4c64adb37538cd2ac1546651af::fair_launch_emergency::EmergencyAdminCap"
+							}
+						},
+						{
+							"reference": 2,
+							"body": {
+								"typeParameterInstantiation": [],
+								"type": 10,
+								"typeName": "0x1b089c63a8cfe583ba10a11258d5e83960e76a4c64adb37538cd2ac1546651af::fair_launch_emergency::EmergencyStatus"
 							}
 						}
-					},
-					{
-						"MutableReference": {
-							"Struct": {
-								"address": "0x1b089c63a8cfe583ba10a11258d5e83960e76a4c64adb37538cd2ac1546651af",
-								"module": "fair_launch_emergency",
-								"name": "EmergencyStatus",
-								"typeArguments": []
+					],
+					"returns": [],
+					"name": "pause",
+					"visibility": 2,
+					"isEntry": true
+				},
+				{
+					"typeParameters": [],
+					"parameters": [
+						{
+							"reference": 1,
+							"body": {
+								"typeParameterInstantiation": [],
+								"type": 10,
+								"typeName": "0x1b089c63a8cfe583ba10a11258d5e83960e76a4c64adb37538cd2ac1546651af::fair_launch_emergency::EmergencyAdminCap"
+							}
+						},
+						{
+							"reference": 2,
+							"body": {
+								"typeParameterInstantiation": [],
+								"type": 10,
+								"typeName": "0x1b089c63a8cfe583ba10a11258d5e83960e76a4c64adb37538cd2ac1546651af::fair_launch_emergency::EmergencyStatus"
 							}
 						}
-					}
-				],
-				"return": []
-			},
-			"resume": {
-				"visibility": "Public",
-				"isEntry": true,
-				"typeParameters": [],
-				"parameters": [
-					{
-						"Reference": {
-							"Struct": {
-								"address": "0x1b089c63a8cfe583ba10a11258d5e83960e76a4c64adb37538cd2ac1546651af",
-								"module": "fair_launch_emergency",
-								"name": "EmergencyAdminCap",
-								"typeArguments": []
-							}
-						}
-					},
-					{
-						"MutableReference": {
-							"Struct": {
-								"address": "0x1b089c63a8cfe583ba10a11258d5e83960e76a4c64adb37538cd2ac1546651af",
-								"module": "fair_launch_emergency",
-								"name": "EmergencyStatus",
-								"typeArguments": []
-							}
-						}
-					}
-				],
-				"return": []
-			}
+					],
+					"returns": [],
+					"name": "resume",
+					"visibility": 2,
+					"isEntry": true
+				}
+			],
+			"name": "fair_launch_emergency"
 		}
 	}
 ]

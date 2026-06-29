@@ -22,7 +22,7 @@ export class User extends AbstractEntity  {
 	@Required
 	@Column("String")
 	id: String
-  constructor(data: UserConstructorInput) {super()}
+  constructor(data: Partial<UserConstructorInput>) {super()}
   
   
   static update(values: UpdateValues<UserConstructorInput>): Promise<void> {

@@ -280,34 +280,33 @@ export async function fetchPositions(ctx: SuiAddressContext) {
 
 export async function getLatestPoolPrice(ctx: SuiAddressContext, pool: string) {
   const obj = await ctx.client.getObject({
-    id: pool,
-    options: {
-      showContent: true,
+    objectId: pool,
+    include: {
+      json: true,
     },
   });
-  const content = obj.data?.content as any;
-  return BigInt(content.fields.current_sqrt_price);
+  const content = obj.object.json as any;
+  return BigInt(content.current_sqrt_price);
 }
 
 const owners: { [id: string]: string } = {};
 
 export async function getPositionOwner(ctx: SuiAddressContext, id: string) {
   if (!owners[id]) {
-    const obj = await ctx.client.getObject({
-      id,
-      options: {
-        showOwner: true,
-      },
-    });
+    let obj;
+    try {
+      obj = await ctx.client.getObject({
+        objectId: id,
+      });
+    } catch (e) {
+      return "none";
+    }
     if (!obj) {
       throw new Error("get object error " + id);
     }
-    if (obj.error) {
-      return "none";
-    }
+    const objOwner = obj.object?.owner;
     const owner =
-      (obj as any)?.data?.owner?.AddressOwner ??
-      (obj as any)?.data?.owner?.ObjectOwner;
+      objOwner?.AddressOwner ?? objOwner?.ObjectOwner;
     if (!owner) {
       throw new Error("no owner for " + id);
     }

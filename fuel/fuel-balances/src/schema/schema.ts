@@ -47,7 +47,7 @@ export class L1Balance extends AbstractEntity  {
 	@Required
 	@Column("BigInt")
 	amount: BigInt
-  constructor(data: L1BalanceConstructorInput) {super()}
+  constructor(data: Partial<L1BalanceConstructorInput>) {super()}
   
   
   static update(values: UpdateValues<L1BalanceConstructorInput>): Promise<void> {
@@ -93,7 +93,7 @@ export class L2Balance extends AbstractEntity  {
 	@Required
 	@Column("BigInt")
 	amount: BigInt
-  constructor(data: L2BalanceConstructorInput) {super()}
+  constructor(data: Partial<L2BalanceConstructorInput>) {super()}
   
   
   static update(values: UpdateValues<L2BalanceConstructorInput>): Promise<void> {

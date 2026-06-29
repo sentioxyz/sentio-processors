@@ -20,10 +20,13 @@ describe('Test Processor', () => {
             bindings: [
                 {
                     data: {
-                        aptEvent: {
-                            rawTransaction: JSON.stringify(testData3),
-                            rawEvent: JSON.stringify(testData3.events[0]),
-                            eventIndex: 0
+                        value: {
+                            case: "aptEvent" as const,
+                            value: {
+                                rawTransaction: JSON.stringify(testData3),
+                                rawEvent: JSON.stringify(testData3.events[0]),
+                                eventIndex: 0
+                            }
                         },
                     },
                     handlerIds: [0],

@@ -1,1743 +1,2210 @@
-{
-      "safe_math": {
-        "fileFormatVersion": 6,
-        "address": "0xa0eba10b173538c8fecca1dff298e488402cc9ff374f8a12ca7758eebe830b66",
-        "name": "safe_math",
-        "friends": [],
-        "structs": {},
-        "exposedFunctions": {
-          "safe_mul_div_u64": {
-            "visibility": "Public",
-            "isEntry": false,
-            "typeParameters": [],
-            "parameters": [
-              "U64",
-              "U64",
-              "U64"
-            ],
-            "return": [
-              "U64"
-            ]
-          }
+[
+  {
+    "address": "0xa0eba10b173538c8fecca1dff298e488402cc9ff374f8a12ca7758eebe830b66",
+    "module": {
+      "name": "safe_math",
+      "datatypes": [],
+      "functions": [
+        {
+          "name": "safe_mul_div_u64",
+          "visibility": 2,
+          "isEntry": false,
+          "typeParameters": [],
+          "parameters": [
+            {
+              "body": {
+                "type": 6,
+                "typeParameterInstantiation": []
+              }
+            },
+            {
+              "body": {
+                "type": 6,
+                "typeParameterInstantiation": []
+              }
+            },
+            {
+              "body": {
+                "type": 6,
+                "typeParameterInstantiation": []
+              }
+            }
+          ],
+          "returns": [
+            {
+              "body": {
+                "type": 6,
+                "typeParameterInstantiation": []
+              }
+            }
+          ]
         }
-      },
-      "spot_dex": {
-        "fileFormatVersion": 6,
-        "address": "0xa0eba10b173538c8fecca1dff298e488402cc9ff374f8a12ca7758eebe830b66",
-        "name": "spot_dex",
-        "friends": [],
-        "structs": {
-          "ConfigUpdatedEvent": {
-            "abilities": {
-              "abilities": [
-                "Copy",
-                "Drop"
-              ]
+      ]
+    }
+  },
+  {
+    "address": "0xa0eba10b173538c8fecca1dff298e488402cc9ff374f8a12ca7758eebe830b66",
+    "module": {
+      "name": "spot_dex",
+      "datatypes": [
+        {
+          "name": "ConfigUpdatedEvent",
+          "kind": 1,
+          "abilities": [
+            1,
+            2
+          ],
+          "typeParameters": [],
+          "fields": [
+            {
+              "name": "protocol_fee_percent_uc",
+              "position": 0,
+              "type": {
+                "type": 6,
+                "typeParameterInstantiation": []
+              }
             },
-            "typeParameters": [],
-            "fields": [
-              {
-                "name": "protocol_fee_percent_uc",
-                "type": "U64"
-              },
-              {
-                "name": "lp_fee_percent_uc",
-                "type": "U64"
-              },
-              {
-                "name": "protocol_fee_percent_stable",
-                "type": "U64"
-              },
-              {
-                "name": "lp_fee_percent_stable",
-                "type": "U64"
-              },
-              {
-                "name": "is_swap_enabled",
-                "type": "Bool"
-              },
-              {
-                "name": "is_deposit_enabled",
-                "type": "Bool"
-              },
-              {
-                "name": "is_withdraw_enabled",
-                "type": "Bool"
-              },
-              {
-                "name": "admin",
-                "type": "Address"
+            {
+              "name": "lp_fee_percent_uc",
+              "position": 1,
+              "type": {
+                "type": 6,
+                "typeParameterInstantiation": []
               }
-            ]
-          },
-          "KriyaLPToken": {
-            "abilities": {
-              "abilities": [
-                "Store",
-                "Key"
-              ]
             },
-            "typeParameters": [
-              {
-                "constraints": {
-                  "abilities": []
-                },
-                "isPhantom": true
-              },
-              {
-                "constraints": {
-                  "abilities": []
-                },
-                "isPhantom": true
+            {
+              "name": "protocol_fee_percent_stable",
+              "position": 2,
+              "type": {
+                "type": 6,
+                "typeParameterInstantiation": []
               }
-            ],
-            "fields": [
-              {
-                "name": "id",
-                "type": {
-                  "Struct": {
-                    "address": "0x2",
-                    "module": "object",
-                    "name": "UID",
-                    "typeArguments": []
-                  }
-                }
-              },
-              {
-                "name": "pool_id",
-                "type": {
-                  "Struct": {
-                    "address": "0x2",
-                    "module": "object",
-                    "name": "ID",
-                    "typeArguments": []
-                  }
-                }
-              },
-              {
-                "name": "lsp",
-                "type": {
-                  "Struct": {
-                    "address": "0x2",
-                    "module": "coin",
-                    "name": "Coin",
-                    "typeArguments": [
-                      {
-                        "Struct": {
-                          "address": "0xa0eba10b173538c8fecca1dff298e488402cc9ff374f8a12ca7758eebe830b66",
-                          "module": "spot_dex",
-                          "name": "LSP",
-                          "typeArguments": [
-                            {
-                              "TypeParameter": 0
-                            },
-                            {
-                              "TypeParameter": 1
-                            }
-                          ]
-                        }
-                      }
-                    ]
-                  }
-                }
-              }
-            ]
-          },
-          "LSP": {
-            "abilities": {
-              "abilities": [
-                "Drop"
-              ]
             },
-            "typeParameters": [
-              {
-                "constraints": {
-                  "abilities": []
-                },
-                "isPhantom": true
-              },
-              {
-                "constraints": {
-                  "abilities": []
-                },
-                "isPhantom": true
+            {
+              "name": "lp_fee_percent_stable",
+              "position": 3,
+              "type": {
+                "type": 6,
+                "typeParameterInstantiation": []
               }
-            ],
-            "fields": [
-              {
-                "name": "dummy_field",
-                "type": "Bool"
-              }
-            ]
-          },
-          "LiquidityAddedEvent": {
-            "abilities": {
-              "abilities": [
-                "Copy",
-                "Drop"
-              ]
             },
-            "typeParameters": [],
-            "fields": [
-              {
-                "name": "pool_id",
-                "type": {
-                  "Struct": {
-                    "address": "0x2",
-                    "module": "object",
-                    "name": "ID",
-                    "typeArguments": []
-                  }
-                }
-              },
-              {
-                "name": "liquidity_provider",
-                "type": "Address"
-              },
-              {
-                "name": "amount_x",
-                "type": "U64"
-              },
-              {
-                "name": "amount_y",
-                "type": "U64"
-              },
-              {
-                "name": "lsp_minted",
-                "type": "U64"
+            {
+              "name": "is_swap_enabled",
+              "position": 4,
+              "type": {
+                "type": 2,
+                "typeParameterInstantiation": []
               }
-            ]
-          },
-          "LiquidityRemovedEvent": {
-            "abilities": {
-              "abilities": [
-                "Copy",
-                "Drop"
-              ]
             },
-            "typeParameters": [],
-            "fields": [
-              {
-                "name": "pool_id",
-                "type": {
-                  "Struct": {
-                    "address": "0x2",
-                    "module": "object",
-                    "name": "ID",
-                    "typeArguments": []
-                  }
-                }
-              },
-              {
-                "name": "liquidity_provider",
-                "type": "Address"
-              },
-              {
-                "name": "amount_x",
-                "type": "U64"
-              },
-              {
-                "name": "amount_y",
-                "type": "U64"
-              },
-              {
-                "name": "lsp_burned",
-                "type": "U64"
+            {
+              "name": "is_deposit_enabled",
+              "position": 5,
+              "type": {
+                "type": 2,
+                "typeParameterInstantiation": []
               }
-            ]
-          },
-          "Pool": {
-            "abilities": {
-              "abilities": [
-                "Key"
-              ]
             },
-            "typeParameters": [
-              {
-                "constraints": {
-                  "abilities": []
-                },
-                "isPhantom": true
-              },
-              {
-                "constraints": {
-                  "abilities": []
-                },
-                "isPhantom": true
+            {
+              "name": "is_withdraw_enabled",
+              "position": 6,
+              "type": {
+                "type": 2,
+                "typeParameterInstantiation": []
               }
-            ],
-            "fields": [
-              {
-                "name": "id",
-                "type": {
-                  "Struct": {
-                    "address": "0x2",
-                    "module": "object",
-                    "name": "UID",
-                    "typeArguments": []
-                  }
-                }
-              },
-              {
-                "name": "token_y",
-                "type": {
-                  "Struct": {
-                    "address": "0x2",
-                    "module": "balance",
-                    "name": "Balance",
-                    "typeArguments": [
-                      {
-                        "TypeParameter": 1
-                      }
-                    ]
-                  }
-                }
-              },
-              {
-                "name": "token_x",
-                "type": {
-                  "Struct": {
-                    "address": "0x2",
-                    "module": "balance",
-                    "name": "Balance",
-                    "typeArguments": [
-                      {
-                        "TypeParameter": 0
-                      }
-                    ]
-                  }
-                }
-              },
-              {
-                "name": "lsp_supply",
-                "type": {
-                  "Struct": {
-                    "address": "0x2",
-                    "module": "balance",
-                    "name": "Supply",
-                    "typeArguments": [
-                      {
-                        "Struct": {
-                          "address": "0xa0eba10b173538c8fecca1dff298e488402cc9ff374f8a12ca7758eebe830b66",
-                          "module": "spot_dex",
-                          "name": "LSP",
-                          "typeArguments": [
-                            {
-                              "TypeParameter": 0
-                            },
-                            {
-                              "TypeParameter": 1
-                            }
-                          ]
-                        }
-                      }
-                    ]
-                  }
-                }
-              },
-              {
-                "name": "lsp_locked",
-                "type": {
-                  "Struct": {
-                    "address": "0x2",
-                    "module": "balance",
-                    "name": "Balance",
-                    "typeArguments": [
-                      {
-                        "Struct": {
-                          "address": "0xa0eba10b173538c8fecca1dff298e488402cc9ff374f8a12ca7758eebe830b66",
-                          "module": "spot_dex",
-                          "name": "LSP",
-                          "typeArguments": [
-                            {
-                              "TypeParameter": 0
-                            },
-                            {
-                              "TypeParameter": 1
-                            }
-                          ]
-                        }
-                      }
-                    ]
-                  }
-                }
-              },
-              {
-                "name": "lp_fee_percent",
-                "type": "U64"
-              },
-              {
-                "name": "protocol_fee_percent",
-                "type": "U64"
-              },
-              {
-                "name": "protocol_fee_x",
-                "type": {
-                  "Struct": {
-                    "address": "0x2",
-                    "module": "balance",
-                    "name": "Balance",
-                    "typeArguments": [
-                      {
-                        "TypeParameter": 0
-                      }
-                    ]
-                  }
-                }
-              },
-              {
-                "name": "protocol_fee_y",
-                "type": {
-                  "Struct": {
-                    "address": "0x2",
-                    "module": "balance",
-                    "name": "Balance",
-                    "typeArguments": [
-                      {
-                        "TypeParameter": 1
-                      }
-                    ]
-                  }
-                }
-              },
-              {
-                "name": "is_stable",
-                "type": "Bool"
-              },
-              {
-                "name": "scaleX",
-                "type": "U64"
-              },
-              {
-                "name": "scaleY",
-                "type": "U64"
-              },
-              {
-                "name": "is_swap_enabled",
-                "type": "Bool"
-              },
-              {
-                "name": "is_deposit_enabled",
-                "type": "Bool"
-              },
-              {
-                "name": "is_withdraw_enabled",
-                "type": "Bool"
-              }
-            ]
-          },
-          "PoolCreatedEvent": {
-            "abilities": {
-              "abilities": [
-                "Copy",
-                "Drop"
-              ]
             },
-            "typeParameters": [],
-            "fields": [
-              {
-                "name": "pool_id",
-                "type": {
-                  "Struct": {
-                    "address": "0x2",
-                    "module": "object",
-                    "name": "ID",
-                    "typeArguments": []
-                  }
-                }
-              },
-              {
-                "name": "creator",
-                "type": "Address"
-              },
-              {
-                "name": "lp_fee_percent",
-                "type": "U64"
-              },
-              {
-                "name": "protocol_fee_percent",
-                "type": "U64"
-              },
-              {
-                "name": "is_stable",
-                "type": "Bool"
-              },
-              {
-                "name": "scaleX",
-                "type": "U64"
-              },
-              {
-                "name": "scaleY",
-                "type": "U64"
+            {
+              "name": "admin",
+              "position": 7,
+              "type": {
+                "type": 1,
+                "typeParameterInstantiation": []
               }
-            ]
-          },
-          "PoolUpdatedEvent": {
-            "abilities": {
-              "abilities": [
-                "Copy",
-                "Drop"
-              ]
-            },
-            "typeParameters": [],
-            "fields": [
-              {
-                "name": "pool_id",
-                "type": {
-                  "Struct": {
-                    "address": "0x2",
-                    "module": "object",
-                    "name": "ID",
-                    "typeArguments": []
-                  }
-                }
-              },
-              {
-                "name": "lp_fee_percent",
-                "type": "U64"
-              },
-              {
-                "name": "protocol_fee_percent",
-                "type": "U64"
-              },
-              {
-                "name": "is_stable",
-                "type": "Bool"
-              },
-              {
-                "name": "scaleX",
-                "type": "U64"
-              },
-              {
-                "name": "scaleY",
-                "type": "U64"
-              }
-            ]
-          },
-          "ProtocolConfigs": {
-            "abilities": {
-              "abilities": [
-                "Key"
-              ]
-            },
-            "typeParameters": [],
-            "fields": [
-              {
-                "name": "id",
-                "type": {
-                  "Struct": {
-                    "address": "0x2",
-                    "module": "object",
-                    "name": "UID",
-                    "typeArguments": []
-                  }
-                }
-              },
-              {
-                "name": "protocol_fee_percent_uc",
-                "type": "U64"
-              },
-              {
-                "name": "lp_fee_percent_uc",
-                "type": "U64"
-              },
-              {
-                "name": "protocol_fee_percent_stable",
-                "type": "U64"
-              },
-              {
-                "name": "lp_fee_percent_stable",
-                "type": "U64"
-              },
-              {
-                "name": "is_swap_enabled",
-                "type": "Bool"
-              },
-              {
-                "name": "is_deposit_enabled",
-                "type": "Bool"
-              },
-              {
-                "name": "is_withdraw_enabled",
-                "type": "Bool"
-              },
-              {
-                "name": "admin",
-                "type": "Address"
-              },
-              {
-                "name": "whitelisted_addresses",
-                "type": {
-                  "Struct": {
-                    "address": "0x2",
-                    "module": "table",
-                    "name": "Table",
-                    "typeArguments": [
-                      "Address",
-                      "Bool"
-                    ]
-                  }
-                }
-              }
-            ]
-          },
-          "SwapEvent": {
-            "abilities": {
-              "abilities": [
-                "Copy",
-                "Drop"
-              ]
-            },
-            "typeParameters": [
-              {
-                "constraints": {
-                  "abilities": []
-                },
-                "isPhantom": true
-              }
-            ],
-            "fields": [
-              {
-                "name": "pool_id",
-                "type": {
-                  "Struct": {
-                    "address": "0x2",
-                    "module": "object",
-                    "name": "ID",
-                    "typeArguments": []
-                  }
-                }
-              },
-              {
-                "name": "user",
-                "type": "Address"
-              },
-              {
-                "name": "reserve_x",
-                "type": "U64"
-              },
-              {
-                "name": "reserve_y",
-                "type": "U64"
-              },
-              {
-                "name": "amount_in",
-                "type": "U64"
-              },
-              {
-                "name": "amount_out",
-                "type": "U64"
-              }
-            ]
-          },
-          "WhitelistUpdatedEvent": {
-            "abilities": {
-              "abilities": [
-                "Copy",
-                "Drop"
-              ]
-            },
-            "typeParameters": [],
-            "fields": [
-              {
-                "name": "addr",
-                "type": "Address"
-              },
-              {
-                "name": "is_whitelisted",
-                "type": "Bool"
-              }
-            ]
-          }
+            }
+          ],
+          "variants": []
         },
-        "exposedFunctions": {
-          "add_liquidity": {
-            "visibility": "Public",
-            "isEntry": false,
-            "typeParameters": [
-              {
-                "abilities": []
-              },
-              {
-                "abilities": []
+        {
+          "name": "KriyaLPToken",
+          "kind": 1,
+          "abilities": [
+            3,
+            4
+          ],
+          "typeParameters": [
+            {
+              "constraints": []
+            },
+            {
+              "constraints": []
+            }
+          ],
+          "fields": [
+            {
+              "name": "id",
+              "position": 0,
+              "type": {
+                "type": 10,
+                "typeName": "0x2::object::UID",
+                "typeParameterInstantiation": []
               }
-            ],
-            "parameters": [
-              {
-                "MutableReference": {
-                  "Struct": {
-                    "address": "0xa0eba10b173538c8fecca1dff298e488402cc9ff374f8a12ca7758eebe830b66",
-                    "module": "spot_dex",
-                    "name": "Pool",
-                    "typeArguments": [
+            },
+            {
+              "name": "pool_id",
+              "position": 1,
+              "type": {
+                "type": 10,
+                "typeName": "0x2::object::ID",
+                "typeParameterInstantiation": []
+              }
+            },
+            {
+              "name": "lsp",
+              "position": 2,
+              "type": {
+                "type": 10,
+                "typeName": "0x2::coin::Coin",
+                "typeParameterInstantiation": [
+                  {
+                    "type": 10,
+                    "typeName": "0xa0eba10b173538c8fecca1dff298e488402cc9ff374f8a12ca7758eebe830b66::spot_dex::LSP",
+                    "typeParameterInstantiation": [
                       {
-                        "TypeParameter": 0
+                        "type": 11,
+                        "typeParameter": 0,
+                        "typeParameterInstantiation": []
                       },
                       {
-                        "TypeParameter": 1
+                        "type": 11,
+                        "typeParameter": 1,
+                        "typeParameterInstantiation": []
                       }
                     ]
                   }
-                }
-              },
-              {
-                "Struct": {
-                  "address": "0x2",
-                  "module": "coin",
-                  "name": "Coin",
-                  "typeArguments": [
-                    {
-                      "TypeParameter": 1
-                    }
-                  ]
-                }
-              },
-              {
-                "Struct": {
-                  "address": "0x2",
-                  "module": "coin",
-                  "name": "Coin",
-                  "typeArguments": [
-                    {
-                      "TypeParameter": 0
-                    }
-                  ]
-                }
-              },
-              "U64",
-              "U64",
-              "U64",
-              "U64",
-              {
-                "MutableReference": {
-                  "Struct": {
-                    "address": "0x2",
-                    "module": "tx_context",
-                    "name": "TxContext",
-                    "typeArguments": []
+                ]
+              }
+            }
+          ],
+          "variants": []
+        },
+        {
+          "name": "LSP",
+          "kind": 1,
+          "abilities": [
+            2
+          ],
+          "typeParameters": [
+            {
+              "constraints": []
+            },
+            {
+              "constraints": []
+            }
+          ],
+          "fields": [
+            {
+              "name": "dummy_field",
+              "position": 0,
+              "type": {
+                "type": 2,
+                "typeParameterInstantiation": []
+              }
+            }
+          ],
+          "variants": []
+        },
+        {
+          "name": "LiquidityAddedEvent",
+          "kind": 1,
+          "abilities": [
+            1,
+            2
+          ],
+          "typeParameters": [],
+          "fields": [
+            {
+              "name": "pool_id",
+              "position": 0,
+              "type": {
+                "type": 10,
+                "typeName": "0x2::object::ID",
+                "typeParameterInstantiation": []
+              }
+            },
+            {
+              "name": "liquidity_provider",
+              "position": 1,
+              "type": {
+                "type": 1,
+                "typeParameterInstantiation": []
+              }
+            },
+            {
+              "name": "amount_x",
+              "position": 2,
+              "type": {
+                "type": 6,
+                "typeParameterInstantiation": []
+              }
+            },
+            {
+              "name": "amount_y",
+              "position": 3,
+              "type": {
+                "type": 6,
+                "typeParameterInstantiation": []
+              }
+            },
+            {
+              "name": "lsp_minted",
+              "position": 4,
+              "type": {
+                "type": 6,
+                "typeParameterInstantiation": []
+              }
+            }
+          ],
+          "variants": []
+        },
+        {
+          "name": "LiquidityRemovedEvent",
+          "kind": 1,
+          "abilities": [
+            1,
+            2
+          ],
+          "typeParameters": [],
+          "fields": [
+            {
+              "name": "pool_id",
+              "position": 0,
+              "type": {
+                "type": 10,
+                "typeName": "0x2::object::ID",
+                "typeParameterInstantiation": []
+              }
+            },
+            {
+              "name": "liquidity_provider",
+              "position": 1,
+              "type": {
+                "type": 1,
+                "typeParameterInstantiation": []
+              }
+            },
+            {
+              "name": "amount_x",
+              "position": 2,
+              "type": {
+                "type": 6,
+                "typeParameterInstantiation": []
+              }
+            },
+            {
+              "name": "amount_y",
+              "position": 3,
+              "type": {
+                "type": 6,
+                "typeParameterInstantiation": []
+              }
+            },
+            {
+              "name": "lsp_burned",
+              "position": 4,
+              "type": {
+                "type": 6,
+                "typeParameterInstantiation": []
+              }
+            }
+          ],
+          "variants": []
+        },
+        {
+          "name": "Pool",
+          "kind": 1,
+          "abilities": [
+            4
+          ],
+          "typeParameters": [
+            {
+              "constraints": []
+            },
+            {
+              "constraints": []
+            }
+          ],
+          "fields": [
+            {
+              "name": "id",
+              "position": 0,
+              "type": {
+                "type": 10,
+                "typeName": "0x2::object::UID",
+                "typeParameterInstantiation": []
+              }
+            },
+            {
+              "name": "token_y",
+              "position": 1,
+              "type": {
+                "type": 10,
+                "typeName": "0x2::balance::Balance",
+                "typeParameterInstantiation": [
+                  {
+                    "type": 11,
+                    "typeParameter": 1,
+                    "typeParameterInstantiation": []
                   }
-                }
+                ]
               }
-            ],
-            "return": [
-              {
-                "Struct": {
-                  "address": "0xa0eba10b173538c8fecca1dff298e488402cc9ff374f8a12ca7758eebe830b66",
-                  "module": "spot_dex",
-                  "name": "KriyaLPToken",
-                  "typeArguments": [
-                    {
-                      "TypeParameter": 0
-                    },
-                    {
-                      "TypeParameter": 1
-                    }
-                  ]
-                }
+            },
+            {
+              "name": "token_x",
+              "position": 2,
+              "type": {
+                "type": 10,
+                "typeName": "0x2::balance::Balance",
+                "typeParameterInstantiation": [
+                  {
+                    "type": 11,
+                    "typeParameter": 0,
+                    "typeParameterInstantiation": []
+                  }
+                ]
               }
-            ]
-          },
-          "add_liquidity_": {
-            "visibility": "Public",
-            "isEntry": true,
-            "typeParameters": [
-              {
-                "abilities": []
-              },
-              {
-                "abilities": []
-              }
-            ],
-            "parameters": [
-              {
-                "MutableReference": {
-                  "Struct": {
-                    "address": "0xa0eba10b173538c8fecca1dff298e488402cc9ff374f8a12ca7758eebe830b66",
-                    "module": "spot_dex",
-                    "name": "Pool",
-                    "typeArguments": [
+            },
+            {
+              "name": "lsp_supply",
+              "position": 3,
+              "type": {
+                "type": 10,
+                "typeName": "0x2::balance::Supply",
+                "typeParameterInstantiation": [
+                  {
+                    "type": 10,
+                    "typeName": "0xa0eba10b173538c8fecca1dff298e488402cc9ff374f8a12ca7758eebe830b66::spot_dex::LSP",
+                    "typeParameterInstantiation": [
                       {
-                        "TypeParameter": 0
+                        "type": 11,
+                        "typeParameter": 0,
+                        "typeParameterInstantiation": []
                       },
                       {
-                        "TypeParameter": 1
+                        "type": 11,
+                        "typeParameter": 1,
+                        "typeParameterInstantiation": []
                       }
                     ]
                   }
-                }
-              },
-              {
-                "Struct": {
-                  "address": "0x2",
-                  "module": "coin",
-                  "name": "Coin",
-                  "typeArguments": [
-                    {
-                      "TypeParameter": 1
-                    }
-                  ]
-                }
-              },
-              {
-                "Struct": {
-                  "address": "0x2",
-                  "module": "coin",
-                  "name": "Coin",
-                  "typeArguments": [
-                    {
-                      "TypeParameter": 0
-                    }
-                  ]
-                }
-              },
-              "U64",
-              "U64",
-              "U64",
-              "U64",
-              {
-                "MutableReference": {
-                  "Struct": {
-                    "address": "0x2",
-                    "module": "tx_context",
-                    "name": "TxContext",
-                    "typeArguments": []
-                  }
-                }
+                ]
               }
-            ],
-            "return": []
-          },
-          "claim_fees": {
-            "visibility": "Public",
-            "isEntry": true,
-            "typeParameters": [
-              {
-                "abilities": []
-              },
-              {
-                "abilities": []
-              }
-            ],
-            "parameters": [
-              {
-                "MutableReference": {
-                  "Struct": {
-                    "address": "0xa0eba10b173538c8fecca1dff298e488402cc9ff374f8a12ca7758eebe830b66",
-                    "module": "spot_dex",
-                    "name": "Pool",
-                    "typeArguments": [
+            },
+            {
+              "name": "lsp_locked",
+              "position": 4,
+              "type": {
+                "type": 10,
+                "typeName": "0x2::balance::Balance",
+                "typeParameterInstantiation": [
+                  {
+                    "type": 10,
+                    "typeName": "0xa0eba10b173538c8fecca1dff298e488402cc9ff374f8a12ca7758eebe830b66::spot_dex::LSP",
+                    "typeParameterInstantiation": [
                       {
-                        "TypeParameter": 0
+                        "type": 11,
+                        "typeParameter": 0,
+                        "typeParameterInstantiation": []
                       },
                       {
-                        "TypeParameter": 1
+                        "type": 11,
+                        "typeParameter": 1,
+                        "typeParameterInstantiation": []
                       }
                     ]
                   }
-                }
-              },
-              {
-                "Reference": {
-                  "Struct": {
-                    "address": "0xa0eba10b173538c8fecca1dff298e488402cc9ff374f8a12ca7758eebe830b66",
-                    "module": "spot_dex",
-                    "name": "ProtocolConfigs",
-                    "typeArguments": []
-                  }
-                }
-              },
-              "U64",
-              "U64",
-              {
-                "MutableReference": {
-                  "Struct": {
-                    "address": "0x2",
-                    "module": "tx_context",
-                    "name": "TxContext",
-                    "typeArguments": []
-                  }
-                }
+                ]
               }
-            ],
-            "return": []
-          },
-          "create_pool": {
-            "visibility": "Public",
-            "isEntry": false,
-            "typeParameters": [
-              {
-                "abilities": []
-              },
-              {
-                "abilities": []
+            },
+            {
+              "name": "lp_fee_percent",
+              "position": 5,
+              "type": {
+                "type": 6,
+                "typeParameterInstantiation": []
               }
-            ],
-            "parameters": [
-              {
-                "Reference": {
-                  "Struct": {
-                    "address": "0xa0eba10b173538c8fecca1dff298e488402cc9ff374f8a12ca7758eebe830b66",
-                    "module": "spot_dex",
-                    "name": "ProtocolConfigs",
-                    "typeArguments": []
-                  }
-                }
-              },
-              "Bool",
-              {
-                "Reference": {
-                  "Struct": {
-                    "address": "0x2",
-                    "module": "coin",
-                    "name": "CoinMetadata",
-                    "typeArguments": [
-                      {
-                        "TypeParameter": 0
-                      }
-                    ]
-                  }
-                }
-              },
-              {
-                "Reference": {
-                  "Struct": {
-                    "address": "0x2",
-                    "module": "coin",
-                    "name": "CoinMetadata",
-                    "typeArguments": [
-                      {
-                        "TypeParameter": 1
-                      }
-                    ]
-                  }
-                }
-              },
-              {
-                "MutableReference": {
-                  "Struct": {
-                    "address": "0x2",
-                    "module": "tx_context",
-                    "name": "TxContext",
-                    "typeArguments": []
-                  }
-                }
+            },
+            {
+              "name": "protocol_fee_percent",
+              "position": 6,
+              "type": {
+                "type": 6,
+                "typeParameterInstantiation": []
               }
-            ],
-            "return": [
-              {
-                "Struct": {
-                  "address": "0xa0eba10b173538c8fecca1dff298e488402cc9ff374f8a12ca7758eebe830b66",
-                  "module": "spot_dex",
-                  "name": "Pool",
-                  "typeArguments": [
-                    {
-                      "TypeParameter": 0
-                    },
-                    {
-                      "TypeParameter": 1
-                    }
-                  ]
-                }
+            },
+            {
+              "name": "protocol_fee_x",
+              "position": 7,
+              "type": {
+                "type": 10,
+                "typeName": "0x2::balance::Balance",
+                "typeParameterInstantiation": [
+                  {
+                    "type": 11,
+                    "typeParameter": 0,
+                    "typeParameterInstantiation": []
+                  }
+                ]
               }
-            ]
-          },
-          "create_pool_": {
-            "visibility": "Public",
-            "isEntry": true,
-            "typeParameters": [
-              {
-                "abilities": []
-              },
-              {
-                "abilities": []
+            },
+            {
+              "name": "protocol_fee_y",
+              "position": 8,
+              "type": {
+                "type": 10,
+                "typeName": "0x2::balance::Balance",
+                "typeParameterInstantiation": [
+                  {
+                    "type": 11,
+                    "typeParameter": 1,
+                    "typeParameterInstantiation": []
+                  }
+                ]
               }
-            ],
-            "parameters": [
-              {
-                "Reference": {
-                  "Struct": {
-                    "address": "0xa0eba10b173538c8fecca1dff298e488402cc9ff374f8a12ca7758eebe830b66",
-                    "module": "spot_dex",
-                    "name": "ProtocolConfigs",
-                    "typeArguments": []
-                  }
-                }
-              },
-              "Bool",
-              {
-                "Reference": {
-                  "Struct": {
-                    "address": "0x2",
-                    "module": "coin",
-                    "name": "CoinMetadata",
-                    "typeArguments": [
-                      {
-                        "TypeParameter": 0
-                      }
-                    ]
-                  }
-                }
-              },
-              {
-                "Reference": {
-                  "Struct": {
-                    "address": "0x2",
-                    "module": "coin",
-                    "name": "CoinMetadata",
-                    "typeArguments": [
-                      {
-                        "TypeParameter": 1
-                      }
-                    ]
-                  }
-                }
-              },
-              {
-                "MutableReference": {
-                  "Struct": {
-                    "address": "0x2",
-                    "module": "tx_context",
-                    "name": "TxContext",
-                    "typeArguments": []
-                  }
-                }
+            },
+            {
+              "name": "is_stable",
+              "position": 9,
+              "type": {
+                "type": 2,
+                "typeParameterInstantiation": []
               }
-            ],
-            "return": []
-          },
-          "get_reserves": {
-            "visibility": "Public",
-            "isEntry": false,
-            "typeParameters": [
-              {
-                "abilities": []
-              },
-              {
-                "abilities": []
+            },
+            {
+              "name": "scaleX",
+              "position": 10,
+              "type": {
+                "type": 6,
+                "typeParameterInstantiation": []
               }
-            ],
-            "parameters": [
-              {
-                "Reference": {
-                  "Struct": {
-                    "address": "0xa0eba10b173538c8fecca1dff298e488402cc9ff374f8a12ca7758eebe830b66",
-                    "module": "spot_dex",
-                    "name": "Pool",
-                    "typeArguments": [
-                      {
-                        "TypeParameter": 0
-                      },
-                      {
-                        "TypeParameter": 1
-                      }
-                    ]
-                  }
-                }
+            },
+            {
+              "name": "scaleY",
+              "position": 11,
+              "type": {
+                "type": 6,
+                "typeParameterInstantiation": []
               }
-            ],
-            "return": [
-              "U64",
-              "U64",
-              "U64"
-            ]
-          },
-          "remove_liquidity": {
-            "visibility": "Public",
-            "isEntry": false,
-            "typeParameters": [
-              {
-                "abilities": []
-              },
-              {
-                "abilities": []
+            },
+            {
+              "name": "is_swap_enabled",
+              "position": 12,
+              "type": {
+                "type": 2,
+                "typeParameterInstantiation": []
               }
-            ],
-            "parameters": [
-              {
-                "MutableReference": {
-                  "Struct": {
-                    "address": "0xa0eba10b173538c8fecca1dff298e488402cc9ff374f8a12ca7758eebe830b66",
-                    "module": "spot_dex",
-                    "name": "Pool",
-                    "typeArguments": [
-                      {
-                        "TypeParameter": 0
-                      },
-                      {
-                        "TypeParameter": 1
-                      }
-                    ]
-                  }
-                }
-              },
-              {
-                "Struct": {
-                  "address": "0xa0eba10b173538c8fecca1dff298e488402cc9ff374f8a12ca7758eebe830b66",
-                  "module": "spot_dex",
-                  "name": "KriyaLPToken",
-                  "typeArguments": [
-                    {
-                      "TypeParameter": 0
-                    },
-                    {
-                      "TypeParameter": 1
-                    }
-                  ]
-                }
-              },
-              "U64",
-              {
-                "MutableReference": {
-                  "Struct": {
-                    "address": "0x2",
-                    "module": "tx_context",
-                    "name": "TxContext",
-                    "typeArguments": []
-                  }
-                }
+            },
+            {
+              "name": "is_deposit_enabled",
+              "position": 13,
+              "type": {
+                "type": 2,
+                "typeParameterInstantiation": []
               }
-            ],
-            "return": [
-              {
-                "Struct": {
-                  "address": "0x2",
-                  "module": "coin",
-                  "name": "Coin",
-                  "typeArguments": [
-                    {
-                      "TypeParameter": 1
-                    }
-                  ]
-                }
-              },
-              {
-                "Struct": {
-                  "address": "0x2",
-                  "module": "coin",
-                  "name": "Coin",
-                  "typeArguments": [
-                    {
-                      "TypeParameter": 0
-                    }
-                  ]
-                }
+            },
+            {
+              "name": "is_withdraw_enabled",
+              "position": 14,
+              "type": {
+                "type": 2,
+                "typeParameterInstantiation": []
               }
-            ]
-          },
-          "remove_liquidity_": {
-            "visibility": "Public",
-            "isEntry": true,
-            "typeParameters": [
-              {
-                "abilities": []
-              },
-              {
-                "abilities": []
+            }
+          ],
+          "variants": []
+        },
+        {
+          "name": "PoolCreatedEvent",
+          "kind": 1,
+          "abilities": [
+            1,
+            2
+          ],
+          "typeParameters": [],
+          "fields": [
+            {
+              "name": "pool_id",
+              "position": 0,
+              "type": {
+                "type": 10,
+                "typeName": "0x2::object::ID",
+                "typeParameterInstantiation": []
               }
-            ],
-            "parameters": [
-              {
-                "MutableReference": {
-                  "Struct": {
-                    "address": "0xa0eba10b173538c8fecca1dff298e488402cc9ff374f8a12ca7758eebe830b66",
-                    "module": "spot_dex",
-                    "name": "Pool",
-                    "typeArguments": [
-                      {
-                        "TypeParameter": 0
-                      },
-                      {
-                        "TypeParameter": 1
-                      }
-                    ]
-                  }
-                }
-              },
-              {
-                "Struct": {
-                  "address": "0xa0eba10b173538c8fecca1dff298e488402cc9ff374f8a12ca7758eebe830b66",
-                  "module": "spot_dex",
-                  "name": "KriyaLPToken",
-                  "typeArguments": [
-                    {
-                      "TypeParameter": 0
-                    },
-                    {
-                      "TypeParameter": 1
-                    }
-                  ]
-                }
-              },
-              "U64",
-              {
-                "MutableReference": {
-                  "Struct": {
-                    "address": "0x2",
-                    "module": "tx_context",
-                    "name": "TxContext",
-                    "typeArguments": []
-                  }
-                }
+            },
+            {
+              "name": "creator",
+              "position": 1,
+              "type": {
+                "type": 1,
+                "typeParameterInstantiation": []
               }
-            ],
-            "return": []
-          },
-          "remove_whitelisted_address_config": {
-            "visibility": "Public",
-            "isEntry": true,
-            "typeParameters": [],
-            "parameters": [
-              {
-                "MutableReference": {
-                  "Struct": {
-                    "address": "0xa0eba10b173538c8fecca1dff298e488402cc9ff374f8a12ca7758eebe830b66",
-                    "module": "spot_dex",
-                    "name": "ProtocolConfigs",
-                    "typeArguments": []
-                  }
-                }
-              },
-              "Address",
-              {
-                "MutableReference": {
-                  "Struct": {
-                    "address": "0x2",
-                    "module": "tx_context",
-                    "name": "TxContext",
-                    "typeArguments": []
-                  }
-                }
+            },
+            {
+              "name": "lp_fee_percent",
+              "position": 2,
+              "type": {
+                "type": 6,
+                "typeParameterInstantiation": []
               }
-            ],
-            "return": []
-          },
-          "set_pause_config": {
-            "visibility": "Public",
-            "isEntry": true,
-            "typeParameters": [],
-            "parameters": [
-              {
-                "MutableReference": {
-                  "Struct": {
-                    "address": "0xa0eba10b173538c8fecca1dff298e488402cc9ff374f8a12ca7758eebe830b66",
-                    "module": "spot_dex",
-                    "name": "ProtocolConfigs",
-                    "typeArguments": []
-                  }
-                }
-              },
-              "Bool",
-              "Bool",
-              "Bool",
-              {
-                "MutableReference": {
-                  "Struct": {
-                    "address": "0x2",
-                    "module": "tx_context",
-                    "name": "TxContext",
-                    "typeArguments": []
-                  }
-                }
+            },
+            {
+              "name": "protocol_fee_percent",
+              "position": 3,
+              "type": {
+                "type": 6,
+                "typeParameterInstantiation": []
               }
-            ],
-            "return": []
-          },
-          "set_stable_fee_config": {
-            "visibility": "Public",
-            "isEntry": true,
-            "typeParameters": [],
-            "parameters": [
-              {
-                "MutableReference": {
-                  "Struct": {
-                    "address": "0xa0eba10b173538c8fecca1dff298e488402cc9ff374f8a12ca7758eebe830b66",
-                    "module": "spot_dex",
-                    "name": "ProtocolConfigs",
-                    "typeArguments": []
-                  }
-                }
-              },
-              "U64",
-              "U64",
-              {
-                "MutableReference": {
-                  "Struct": {
-                    "address": "0x2",
-                    "module": "tx_context",
-                    "name": "TxContext",
-                    "typeArguments": []
-                  }
-                }
+            },
+            {
+              "name": "is_stable",
+              "position": 4,
+              "type": {
+                "type": 2,
+                "typeParameterInstantiation": []
               }
-            ],
-            "return": []
-          },
-          "set_uc_fee_config": {
-            "visibility": "Public",
-            "isEntry": true,
-            "typeParameters": [],
-            "parameters": [
-              {
-                "MutableReference": {
-                  "Struct": {
-                    "address": "0xa0eba10b173538c8fecca1dff298e488402cc9ff374f8a12ca7758eebe830b66",
-                    "module": "spot_dex",
-                    "name": "ProtocolConfigs",
-                    "typeArguments": []
-                  }
-                }
-              },
-              "U64",
-              "U64",
-              {
-                "MutableReference": {
-                  "Struct": {
-                    "address": "0x2",
-                    "module": "tx_context",
-                    "name": "TxContext",
-                    "typeArguments": []
-                  }
-                }
+            },
+            {
+              "name": "scaleX",
+              "position": 5,
+              "type": {
+                "type": 6,
+                "typeParameterInstantiation": []
               }
-            ],
-            "return": []
-          },
-          "set_whitelisted_address_config": {
-            "visibility": "Public",
-            "isEntry": true,
-            "typeParameters": [],
-            "parameters": [
-              {
-                "MutableReference": {
-                  "Struct": {
-                    "address": "0xa0eba10b173538c8fecca1dff298e488402cc9ff374f8a12ca7758eebe830b66",
-                    "module": "spot_dex",
-                    "name": "ProtocolConfigs",
-                    "typeArguments": []
-                  }
-                }
-              },
-              "Address",
-              {
-                "MutableReference": {
-                  "Struct": {
-                    "address": "0x2",
-                    "module": "tx_context",
-                    "name": "TxContext",
-                    "typeArguments": []
-                  }
-                }
+            },
+            {
+              "name": "scaleY",
+              "position": 6,
+              "type": {
+                "type": 6,
+                "typeParameterInstantiation": []
               }
-            ],
-            "return": []
-          },
-          "swap_token_x": {
-            "visibility": "Public",
-            "isEntry": false,
-            "typeParameters": [
-              {
-                "abilities": []
-              },
-              {
-                "abilities": []
+            }
+          ],
+          "variants": []
+        },
+        {
+          "name": "PoolUpdatedEvent",
+          "kind": 1,
+          "abilities": [
+            1,
+            2
+          ],
+          "typeParameters": [],
+          "fields": [
+            {
+              "name": "pool_id",
+              "position": 0,
+              "type": {
+                "type": 10,
+                "typeName": "0x2::object::ID",
+                "typeParameterInstantiation": []
               }
-            ],
-            "parameters": [
-              {
-                "MutableReference": {
-                  "Struct": {
-                    "address": "0xa0eba10b173538c8fecca1dff298e488402cc9ff374f8a12ca7758eebe830b66",
-                    "module": "spot_dex",
-                    "name": "Pool",
-                    "typeArguments": [
-                      {
-                        "TypeParameter": 0
-                      },
-                      {
-                        "TypeParameter": 1
-                      }
-                    ]
-                  }
-                }
-              },
-              {
-                "Struct": {
-                  "address": "0x2",
-                  "module": "coin",
-                  "name": "Coin",
-                  "typeArguments": [
-                    {
-                      "TypeParameter": 0
-                    }
-                  ]
-                }
-              },
-              "U64",
-              "U64",
-              {
-                "MutableReference": {
-                  "Struct": {
-                    "address": "0x2",
-                    "module": "tx_context",
-                    "name": "TxContext",
-                    "typeArguments": []
-                  }
-                }
+            },
+            {
+              "name": "lp_fee_percent",
+              "position": 1,
+              "type": {
+                "type": 6,
+                "typeParameterInstantiation": []
               }
-            ],
-            "return": [
-              {
-                "Struct": {
-                  "address": "0x2",
-                  "module": "coin",
-                  "name": "Coin",
-                  "typeArguments": [
-                    {
-                      "TypeParameter": 1
-                    }
-                  ]
-                }
+            },
+            {
+              "name": "protocol_fee_percent",
+              "position": 2,
+              "type": {
+                "type": 6,
+                "typeParameterInstantiation": []
               }
-            ]
-          },
-          "swap_token_x_": {
-            "visibility": "Public",
-            "isEntry": true,
-            "typeParameters": [
-              {
-                "abilities": []
-              },
-              {
-                "abilities": []
+            },
+            {
+              "name": "is_stable",
+              "position": 3,
+              "type": {
+                "type": 2,
+                "typeParameterInstantiation": []
               }
-            ],
-            "parameters": [
-              {
-                "MutableReference": {
-                  "Struct": {
-                    "address": "0xa0eba10b173538c8fecca1dff298e488402cc9ff374f8a12ca7758eebe830b66",
-                    "module": "spot_dex",
-                    "name": "Pool",
-                    "typeArguments": [
-                      {
-                        "TypeParameter": 0
-                      },
-                      {
-                        "TypeParameter": 1
-                      }
-                    ]
-                  }
-                }
-              },
-              {
-                "Struct": {
-                  "address": "0x2",
-                  "module": "coin",
-                  "name": "Coin",
-                  "typeArguments": [
-                    {
-                      "TypeParameter": 0
-                    }
-                  ]
-                }
-              },
-              "U64",
-              "U64",
-              {
-                "MutableReference": {
-                  "Struct": {
-                    "address": "0x2",
-                    "module": "tx_context",
-                    "name": "TxContext",
-                    "typeArguments": []
-                  }
-                }
+            },
+            {
+              "name": "scaleX",
+              "position": 4,
+              "type": {
+                "type": 6,
+                "typeParameterInstantiation": []
               }
-            ],
-            "return": []
-          },
-          "swap_token_y": {
-            "visibility": "Public",
-            "isEntry": false,
-            "typeParameters": [
-              {
-                "abilities": []
-              },
-              {
-                "abilities": []
+            },
+            {
+              "name": "scaleY",
+              "position": 5,
+              "type": {
+                "type": 6,
+                "typeParameterInstantiation": []
               }
-            ],
-            "parameters": [
-              {
-                "MutableReference": {
-                  "Struct": {
-                    "address": "0xa0eba10b173538c8fecca1dff298e488402cc9ff374f8a12ca7758eebe830b66",
-                    "module": "spot_dex",
-                    "name": "Pool",
-                    "typeArguments": [
-                      {
-                        "TypeParameter": 0
-                      },
-                      {
-                        "TypeParameter": 1
-                      }
-                    ]
-                  }
-                }
-              },
-              {
-                "Struct": {
-                  "address": "0x2",
-                  "module": "coin",
-                  "name": "Coin",
-                  "typeArguments": [
-                    {
-                      "TypeParameter": 1
-                    }
-                  ]
-                }
-              },
-              "U64",
-              "U64",
-              {
-                "MutableReference": {
-                  "Struct": {
-                    "address": "0x2",
-                    "module": "tx_context",
-                    "name": "TxContext",
-                    "typeArguments": []
-                  }
-                }
+            }
+          ],
+          "variants": []
+        },
+        {
+          "name": "ProtocolConfigs",
+          "kind": 1,
+          "abilities": [
+            4
+          ],
+          "typeParameters": [],
+          "fields": [
+            {
+              "name": "id",
+              "position": 0,
+              "type": {
+                "type": 10,
+                "typeName": "0x2::object::UID",
+                "typeParameterInstantiation": []
               }
-            ],
-            "return": [
-              {
-                "Struct": {
-                  "address": "0x2",
-                  "module": "coin",
-                  "name": "Coin",
-                  "typeArguments": [
-                    {
-                      "TypeParameter": 0
-                    }
-                  ]
-                }
+            },
+            {
+              "name": "protocol_fee_percent_uc",
+              "position": 1,
+              "type": {
+                "type": 6,
+                "typeParameterInstantiation": []
               }
-            ]
-          },
-          "swap_token_y_": {
-            "visibility": "Public",
-            "isEntry": true,
-            "typeParameters": [
-              {
-                "abilities": []
-              },
-              {
-                "abilities": []
+            },
+            {
+              "name": "lp_fee_percent_uc",
+              "position": 2,
+              "type": {
+                "type": 6,
+                "typeParameterInstantiation": []
               }
-            ],
-            "parameters": [
-              {
-                "MutableReference": {
-                  "Struct": {
-                    "address": "0xa0eba10b173538c8fecca1dff298e488402cc9ff374f8a12ca7758eebe830b66",
-                    "module": "spot_dex",
-                    "name": "Pool",
-                    "typeArguments": [
-                      {
-                        "TypeParameter": 0
-                      },
-                      {
-                        "TypeParameter": 1
-                      }
-                    ]
-                  }
-                }
-              },
-              {
-                "Struct": {
-                  "address": "0x2",
-                  "module": "coin",
-                  "name": "Coin",
-                  "typeArguments": [
-                    {
-                      "TypeParameter": 1
-                    }
-                  ]
-                }
-              },
-              "U64",
-              "U64",
-              {
-                "MutableReference": {
-                  "Struct": {
-                    "address": "0x2",
-                    "module": "tx_context",
-                    "name": "TxContext",
-                    "typeArguments": []
-                  }
-                }
+            },
+            {
+              "name": "protocol_fee_percent_stable",
+              "position": 3,
+              "type": {
+                "type": 6,
+                "typeParameterInstantiation": []
               }
-            ],
-            "return": []
-          },
-          "update_fees": {
-            "visibility": "Public",
-            "isEntry": true,
-            "typeParameters": [
-              {
-                "abilities": []
-              },
-              {
-                "abilities": []
+            },
+            {
+              "name": "lp_fee_percent_stable",
+              "position": 4,
+              "type": {
+                "type": 6,
+                "typeParameterInstantiation": []
               }
-            ],
-            "parameters": [
-              {
-                "MutableReference": {
-                  "Struct": {
-                    "address": "0xa0eba10b173538c8fecca1dff298e488402cc9ff374f8a12ca7758eebe830b66",
-                    "module": "spot_dex",
-                    "name": "Pool",
-                    "typeArguments": [
-                      {
-                        "TypeParameter": 0
-                      },
-                      {
-                        "TypeParameter": 1
-                      }
-                    ]
-                  }
-                }
-              },
-              {
-                "Reference": {
-                  "Struct": {
-                    "address": "0xa0eba10b173538c8fecca1dff298e488402cc9ff374f8a12ca7758eebe830b66",
-                    "module": "spot_dex",
-                    "name": "ProtocolConfigs",
-                    "typeArguments": []
-                  }
-                }
-              },
-              {
-                "MutableReference": {
-                  "Struct": {
-                    "address": "0x2",
-                    "module": "tx_context",
-                    "name": "TxContext",
-                    "typeArguments": []
-                  }
-                }
+            },
+            {
+              "name": "is_swap_enabled",
+              "position": 5,
+              "type": {
+                "type": 2,
+                "typeParameterInstantiation": []
               }
-            ],
-            "return": []
-          },
-          "update_pool": {
-            "visibility": "Public",
-            "isEntry": true,
-            "typeParameters": [
-              {
-                "abilities": []
-              },
-              {
-                "abilities": []
+            },
+            {
+              "name": "is_deposit_enabled",
+              "position": 6,
+              "type": {
+                "type": 2,
+                "typeParameterInstantiation": []
               }
-            ],
-            "parameters": [
-              {
-                "MutableReference": {
-                  "Struct": {
-                    "address": "0xa0eba10b173538c8fecca1dff298e488402cc9ff374f8a12ca7758eebe830b66",
-                    "module": "spot_dex",
-                    "name": "Pool",
-                    "typeArguments": [
-                      {
-                        "TypeParameter": 0
-                      },
-                      {
-                        "TypeParameter": 1
-                      }
-                    ]
-                  }
-                }
-              },
-              {
-                "Reference": {
-                  "Struct": {
-                    "address": "0xa0eba10b173538c8fecca1dff298e488402cc9ff374f8a12ca7758eebe830b66",
-                    "module": "spot_dex",
-                    "name": "ProtocolConfigs",
-                    "typeArguments": []
-                  }
-                }
-              },
-              {
-                "MutableReference": {
-                  "Struct": {
-                    "address": "0x2",
-                    "module": "tx_context",
-                    "name": "TxContext",
-                    "typeArguments": []
-                  }
-                }
+            },
+            {
+              "name": "is_withdraw_enabled",
+              "position": 7,
+              "type": {
+                "type": 2,
+                "typeParameterInstantiation": []
               }
-            ],
-            "return": []
-          }
+            },
+            {
+              "name": "admin",
+              "position": 8,
+              "type": {
+                "type": 1,
+                "typeParameterInstantiation": []
+              }
+            },
+            {
+              "name": "whitelisted_addresses",
+              "position": 9,
+              "type": {
+                "type": 10,
+                "typeName": "0x2::table::Table",
+                "typeParameterInstantiation": [
+                  {
+                    "type": 1,
+                    "typeParameterInstantiation": []
+                  },
+                  {
+                    "type": 2,
+                    "typeParameterInstantiation": []
+                  }
+                ]
+              }
+            }
+          ],
+          "variants": []
+        },
+        {
+          "name": "SwapEvent",
+          "kind": 1,
+          "abilities": [
+            1,
+            2
+          ],
+          "typeParameters": [
+            {
+              "constraints": []
+            }
+          ],
+          "fields": [
+            {
+              "name": "pool_id",
+              "position": 0,
+              "type": {
+                "type": 10,
+                "typeName": "0x2::object::ID",
+                "typeParameterInstantiation": []
+              }
+            },
+            {
+              "name": "user",
+              "position": 1,
+              "type": {
+                "type": 1,
+                "typeParameterInstantiation": []
+              }
+            },
+            {
+              "name": "reserve_x",
+              "position": 2,
+              "type": {
+                "type": 6,
+                "typeParameterInstantiation": []
+              }
+            },
+            {
+              "name": "reserve_y",
+              "position": 3,
+              "type": {
+                "type": 6,
+                "typeParameterInstantiation": []
+              }
+            },
+            {
+              "name": "amount_in",
+              "position": 4,
+              "type": {
+                "type": 6,
+                "typeParameterInstantiation": []
+              }
+            },
+            {
+              "name": "amount_out",
+              "position": 5,
+              "type": {
+                "type": 6,
+                "typeParameterInstantiation": []
+              }
+            }
+          ],
+          "variants": []
+        },
+        {
+          "name": "WhitelistUpdatedEvent",
+          "kind": 1,
+          "abilities": [
+            1,
+            2
+          ],
+          "typeParameters": [],
+          "fields": [
+            {
+              "name": "addr",
+              "position": 0,
+              "type": {
+                "type": 1,
+                "typeParameterInstantiation": []
+              }
+            },
+            {
+              "name": "is_whitelisted",
+              "position": 1,
+              "type": {
+                "type": 2,
+                "typeParameterInstantiation": []
+              }
+            }
+          ],
+          "variants": []
         }
-      },
-      "utils": {
-        "fileFormatVersion": 6,
-        "address": "0xa0eba10b173538c8fecca1dff298e488402cc9ff374f8a12ca7758eebe830b66",
-        "name": "utils",
-        "friends": [],
-        "structs": {},
-        "exposedFunctions": {
-          "get_input_price_stable": {
-            "visibility": "Public",
-            "isEntry": false,
-            "typeParameters": [],
-            "parameters": [
-              "U64",
-              "U64",
-              "U64",
-              "U64",
-              "U64",
-              "U64"
-            ],
-            "return": [
-              "U64"
-            ]
-          },
-          "get_input_price_uncorrelated": {
-            "visibility": "Public",
-            "isEntry": false,
-            "typeParameters": [],
-            "parameters": [
-              "U64",
-              "U64",
-              "U64",
-              "U64"
-            ],
-            "return": [
-              "U64"
-            ]
-          },
-          "lp_value": {
-            "visibility": "Public",
-            "isEntry": false,
-            "typeParameters": [],
-            "parameters": [
-              "U128",
-              "U64",
-              "U128",
-              "U64"
-            ],
-            "return": [
-              "U256"
-            ]
-          }
+      ],
+      "functions": [
+        {
+          "name": "add_liquidity",
+          "visibility": 2,
+          "isEntry": false,
+          "typeParameters": [
+            {
+              "constraints": []
+            },
+            {
+              "constraints": []
+            }
+          ],
+          "parameters": [
+            {
+              "reference": 2,
+              "body": {
+                "type": 10,
+                "typeName": "0xa0eba10b173538c8fecca1dff298e488402cc9ff374f8a12ca7758eebe830b66::spot_dex::Pool",
+                "typeParameterInstantiation": [
+                  {
+                    "type": 11,
+                    "typeParameter": 0,
+                    "typeParameterInstantiation": []
+                  },
+                  {
+                    "type": 11,
+                    "typeParameter": 1,
+                    "typeParameterInstantiation": []
+                  }
+                ]
+              }
+            },
+            {
+              "body": {
+                "type": 10,
+                "typeName": "0x2::coin::Coin",
+                "typeParameterInstantiation": [
+                  {
+                    "type": 11,
+                    "typeParameter": 1,
+                    "typeParameterInstantiation": []
+                  }
+                ]
+              }
+            },
+            {
+              "body": {
+                "type": 10,
+                "typeName": "0x2::coin::Coin",
+                "typeParameterInstantiation": [
+                  {
+                    "type": 11,
+                    "typeParameter": 0,
+                    "typeParameterInstantiation": []
+                  }
+                ]
+              }
+            },
+            {
+              "body": {
+                "type": 6,
+                "typeParameterInstantiation": []
+              }
+            },
+            {
+              "body": {
+                "type": 6,
+                "typeParameterInstantiation": []
+              }
+            },
+            {
+              "body": {
+                "type": 6,
+                "typeParameterInstantiation": []
+              }
+            },
+            {
+              "body": {
+                "type": 6,
+                "typeParameterInstantiation": []
+              }
+            },
+            {
+              "reference": 2,
+              "body": {
+                "type": 10,
+                "typeName": "0x2::tx_context::TxContext",
+                "typeParameterInstantiation": []
+              }
+            }
+          ],
+          "returns": [
+            {
+              "body": {
+                "type": 10,
+                "typeName": "0xa0eba10b173538c8fecca1dff298e488402cc9ff374f8a12ca7758eebe830b66::spot_dex::KriyaLPToken",
+                "typeParameterInstantiation": [
+                  {
+                    "type": 11,
+                    "typeParameter": 0,
+                    "typeParameterInstantiation": []
+                  },
+                  {
+                    "type": 11,
+                    "typeParameter": 1,
+                    "typeParameterInstantiation": []
+                  }
+                ]
+              }
+            }
+          ]
+        },
+        {
+          "name": "add_liquidity_",
+          "visibility": 2,
+          "isEntry": true,
+          "typeParameters": [
+            {
+              "constraints": []
+            },
+            {
+              "constraints": []
+            }
+          ],
+          "parameters": [
+            {
+              "reference": 2,
+              "body": {
+                "type": 10,
+                "typeName": "0xa0eba10b173538c8fecca1dff298e488402cc9ff374f8a12ca7758eebe830b66::spot_dex::Pool",
+                "typeParameterInstantiation": [
+                  {
+                    "type": 11,
+                    "typeParameter": 0,
+                    "typeParameterInstantiation": []
+                  },
+                  {
+                    "type": 11,
+                    "typeParameter": 1,
+                    "typeParameterInstantiation": []
+                  }
+                ]
+              }
+            },
+            {
+              "body": {
+                "type": 10,
+                "typeName": "0x2::coin::Coin",
+                "typeParameterInstantiation": [
+                  {
+                    "type": 11,
+                    "typeParameter": 1,
+                    "typeParameterInstantiation": []
+                  }
+                ]
+              }
+            },
+            {
+              "body": {
+                "type": 10,
+                "typeName": "0x2::coin::Coin",
+                "typeParameterInstantiation": [
+                  {
+                    "type": 11,
+                    "typeParameter": 0,
+                    "typeParameterInstantiation": []
+                  }
+                ]
+              }
+            },
+            {
+              "body": {
+                "type": 6,
+                "typeParameterInstantiation": []
+              }
+            },
+            {
+              "body": {
+                "type": 6,
+                "typeParameterInstantiation": []
+              }
+            },
+            {
+              "body": {
+                "type": 6,
+                "typeParameterInstantiation": []
+              }
+            },
+            {
+              "body": {
+                "type": 6,
+                "typeParameterInstantiation": []
+              }
+            },
+            {
+              "reference": 2,
+              "body": {
+                "type": 10,
+                "typeName": "0x2::tx_context::TxContext",
+                "typeParameterInstantiation": []
+              }
+            }
+          ],
+          "returns": []
+        },
+        {
+          "name": "claim_fees",
+          "visibility": 2,
+          "isEntry": true,
+          "typeParameters": [
+            {
+              "constraints": []
+            },
+            {
+              "constraints": []
+            }
+          ],
+          "parameters": [
+            {
+              "reference": 2,
+              "body": {
+                "type": 10,
+                "typeName": "0xa0eba10b173538c8fecca1dff298e488402cc9ff374f8a12ca7758eebe830b66::spot_dex::Pool",
+                "typeParameterInstantiation": [
+                  {
+                    "type": 11,
+                    "typeParameter": 0,
+                    "typeParameterInstantiation": []
+                  },
+                  {
+                    "type": 11,
+                    "typeParameter": 1,
+                    "typeParameterInstantiation": []
+                  }
+                ]
+              }
+            },
+            {
+              "reference": 1,
+              "body": {
+                "type": 10,
+                "typeName": "0xa0eba10b173538c8fecca1dff298e488402cc9ff374f8a12ca7758eebe830b66::spot_dex::ProtocolConfigs",
+                "typeParameterInstantiation": []
+              }
+            },
+            {
+              "body": {
+                "type": 6,
+                "typeParameterInstantiation": []
+              }
+            },
+            {
+              "body": {
+                "type": 6,
+                "typeParameterInstantiation": []
+              }
+            },
+            {
+              "reference": 2,
+              "body": {
+                "type": 10,
+                "typeName": "0x2::tx_context::TxContext",
+                "typeParameterInstantiation": []
+              }
+            }
+          ],
+          "returns": []
+        },
+        {
+          "name": "create_pool",
+          "visibility": 2,
+          "isEntry": false,
+          "typeParameters": [
+            {
+              "constraints": []
+            },
+            {
+              "constraints": []
+            }
+          ],
+          "parameters": [
+            {
+              "reference": 1,
+              "body": {
+                "type": 10,
+                "typeName": "0xa0eba10b173538c8fecca1dff298e488402cc9ff374f8a12ca7758eebe830b66::spot_dex::ProtocolConfigs",
+                "typeParameterInstantiation": []
+              }
+            },
+            {
+              "body": {
+                "type": 2,
+                "typeParameterInstantiation": []
+              }
+            },
+            {
+              "reference": 1,
+              "body": {
+                "type": 10,
+                "typeName": "0x2::coin::CoinMetadata",
+                "typeParameterInstantiation": [
+                  {
+                    "type": 11,
+                    "typeParameter": 0,
+                    "typeParameterInstantiation": []
+                  }
+                ]
+              }
+            },
+            {
+              "reference": 1,
+              "body": {
+                "type": 10,
+                "typeName": "0x2::coin::CoinMetadata",
+                "typeParameterInstantiation": [
+                  {
+                    "type": 11,
+                    "typeParameter": 1,
+                    "typeParameterInstantiation": []
+                  }
+                ]
+              }
+            },
+            {
+              "reference": 2,
+              "body": {
+                "type": 10,
+                "typeName": "0x2::tx_context::TxContext",
+                "typeParameterInstantiation": []
+              }
+            }
+          ],
+          "returns": [
+            {
+              "body": {
+                "type": 10,
+                "typeName": "0xa0eba10b173538c8fecca1dff298e488402cc9ff374f8a12ca7758eebe830b66::spot_dex::Pool",
+                "typeParameterInstantiation": [
+                  {
+                    "type": 11,
+                    "typeParameter": 0,
+                    "typeParameterInstantiation": []
+                  },
+                  {
+                    "type": 11,
+                    "typeParameter": 1,
+                    "typeParameterInstantiation": []
+                  }
+                ]
+              }
+            }
+          ]
+        },
+        {
+          "name": "create_pool_",
+          "visibility": 2,
+          "isEntry": true,
+          "typeParameters": [
+            {
+              "constraints": []
+            },
+            {
+              "constraints": []
+            }
+          ],
+          "parameters": [
+            {
+              "reference": 1,
+              "body": {
+                "type": 10,
+                "typeName": "0xa0eba10b173538c8fecca1dff298e488402cc9ff374f8a12ca7758eebe830b66::spot_dex::ProtocolConfigs",
+                "typeParameterInstantiation": []
+              }
+            },
+            {
+              "body": {
+                "type": 2,
+                "typeParameterInstantiation": []
+              }
+            },
+            {
+              "reference": 1,
+              "body": {
+                "type": 10,
+                "typeName": "0x2::coin::CoinMetadata",
+                "typeParameterInstantiation": [
+                  {
+                    "type": 11,
+                    "typeParameter": 0,
+                    "typeParameterInstantiation": []
+                  }
+                ]
+              }
+            },
+            {
+              "reference": 1,
+              "body": {
+                "type": 10,
+                "typeName": "0x2::coin::CoinMetadata",
+                "typeParameterInstantiation": [
+                  {
+                    "type": 11,
+                    "typeParameter": 1,
+                    "typeParameterInstantiation": []
+                  }
+                ]
+              }
+            },
+            {
+              "reference": 2,
+              "body": {
+                "type": 10,
+                "typeName": "0x2::tx_context::TxContext",
+                "typeParameterInstantiation": []
+              }
+            }
+          ],
+          "returns": []
+        },
+        {
+          "name": "get_reserves",
+          "visibility": 2,
+          "isEntry": false,
+          "typeParameters": [
+            {
+              "constraints": []
+            },
+            {
+              "constraints": []
+            }
+          ],
+          "parameters": [
+            {
+              "reference": 1,
+              "body": {
+                "type": 10,
+                "typeName": "0xa0eba10b173538c8fecca1dff298e488402cc9ff374f8a12ca7758eebe830b66::spot_dex::Pool",
+                "typeParameterInstantiation": [
+                  {
+                    "type": 11,
+                    "typeParameter": 0,
+                    "typeParameterInstantiation": []
+                  },
+                  {
+                    "type": 11,
+                    "typeParameter": 1,
+                    "typeParameterInstantiation": []
+                  }
+                ]
+              }
+            }
+          ],
+          "returns": [
+            {
+              "body": {
+                "type": 6,
+                "typeParameterInstantiation": []
+              }
+            },
+            {
+              "body": {
+                "type": 6,
+                "typeParameterInstantiation": []
+              }
+            },
+            {
+              "body": {
+                "type": 6,
+                "typeParameterInstantiation": []
+              }
+            }
+          ]
+        },
+        {
+          "name": "remove_liquidity",
+          "visibility": 2,
+          "isEntry": false,
+          "typeParameters": [
+            {
+              "constraints": []
+            },
+            {
+              "constraints": []
+            }
+          ],
+          "parameters": [
+            {
+              "reference": 2,
+              "body": {
+                "type": 10,
+                "typeName": "0xa0eba10b173538c8fecca1dff298e488402cc9ff374f8a12ca7758eebe830b66::spot_dex::Pool",
+                "typeParameterInstantiation": [
+                  {
+                    "type": 11,
+                    "typeParameter": 0,
+                    "typeParameterInstantiation": []
+                  },
+                  {
+                    "type": 11,
+                    "typeParameter": 1,
+                    "typeParameterInstantiation": []
+                  }
+                ]
+              }
+            },
+            {
+              "body": {
+                "type": 10,
+                "typeName": "0xa0eba10b173538c8fecca1dff298e488402cc9ff374f8a12ca7758eebe830b66::spot_dex::KriyaLPToken",
+                "typeParameterInstantiation": [
+                  {
+                    "type": 11,
+                    "typeParameter": 0,
+                    "typeParameterInstantiation": []
+                  },
+                  {
+                    "type": 11,
+                    "typeParameter": 1,
+                    "typeParameterInstantiation": []
+                  }
+                ]
+              }
+            },
+            {
+              "body": {
+                "type": 6,
+                "typeParameterInstantiation": []
+              }
+            },
+            {
+              "reference": 2,
+              "body": {
+                "type": 10,
+                "typeName": "0x2::tx_context::TxContext",
+                "typeParameterInstantiation": []
+              }
+            }
+          ],
+          "returns": [
+            {
+              "body": {
+                "type": 10,
+                "typeName": "0x2::coin::Coin",
+                "typeParameterInstantiation": [
+                  {
+                    "type": 11,
+                    "typeParameter": 1,
+                    "typeParameterInstantiation": []
+                  }
+                ]
+              }
+            },
+            {
+              "body": {
+                "type": 10,
+                "typeName": "0x2::coin::Coin",
+                "typeParameterInstantiation": [
+                  {
+                    "type": 11,
+                    "typeParameter": 0,
+                    "typeParameterInstantiation": []
+                  }
+                ]
+              }
+            }
+          ]
+        },
+        {
+          "name": "remove_liquidity_",
+          "visibility": 2,
+          "isEntry": true,
+          "typeParameters": [
+            {
+              "constraints": []
+            },
+            {
+              "constraints": []
+            }
+          ],
+          "parameters": [
+            {
+              "reference": 2,
+              "body": {
+                "type": 10,
+                "typeName": "0xa0eba10b173538c8fecca1dff298e488402cc9ff374f8a12ca7758eebe830b66::spot_dex::Pool",
+                "typeParameterInstantiation": [
+                  {
+                    "type": 11,
+                    "typeParameter": 0,
+                    "typeParameterInstantiation": []
+                  },
+                  {
+                    "type": 11,
+                    "typeParameter": 1,
+                    "typeParameterInstantiation": []
+                  }
+                ]
+              }
+            },
+            {
+              "body": {
+                "type": 10,
+                "typeName": "0xa0eba10b173538c8fecca1dff298e488402cc9ff374f8a12ca7758eebe830b66::spot_dex::KriyaLPToken",
+                "typeParameterInstantiation": [
+                  {
+                    "type": 11,
+                    "typeParameter": 0,
+                    "typeParameterInstantiation": []
+                  },
+                  {
+                    "type": 11,
+                    "typeParameter": 1,
+                    "typeParameterInstantiation": []
+                  }
+                ]
+              }
+            },
+            {
+              "body": {
+                "type": 6,
+                "typeParameterInstantiation": []
+              }
+            },
+            {
+              "reference": 2,
+              "body": {
+                "type": 10,
+                "typeName": "0x2::tx_context::TxContext",
+                "typeParameterInstantiation": []
+              }
+            }
+          ],
+          "returns": []
+        },
+        {
+          "name": "remove_whitelisted_address_config",
+          "visibility": 2,
+          "isEntry": true,
+          "typeParameters": [],
+          "parameters": [
+            {
+              "reference": 2,
+              "body": {
+                "type": 10,
+                "typeName": "0xa0eba10b173538c8fecca1dff298e488402cc9ff374f8a12ca7758eebe830b66::spot_dex::ProtocolConfigs",
+                "typeParameterInstantiation": []
+              }
+            },
+            {
+              "body": {
+                "type": 1,
+                "typeParameterInstantiation": []
+              }
+            },
+            {
+              "reference": 2,
+              "body": {
+                "type": 10,
+                "typeName": "0x2::tx_context::TxContext",
+                "typeParameterInstantiation": []
+              }
+            }
+          ],
+          "returns": []
+        },
+        {
+          "name": "set_pause_config",
+          "visibility": 2,
+          "isEntry": true,
+          "typeParameters": [],
+          "parameters": [
+            {
+              "reference": 2,
+              "body": {
+                "type": 10,
+                "typeName": "0xa0eba10b173538c8fecca1dff298e488402cc9ff374f8a12ca7758eebe830b66::spot_dex::ProtocolConfigs",
+                "typeParameterInstantiation": []
+              }
+            },
+            {
+              "body": {
+                "type": 2,
+                "typeParameterInstantiation": []
+              }
+            },
+            {
+              "body": {
+                "type": 2,
+                "typeParameterInstantiation": []
+              }
+            },
+            {
+              "body": {
+                "type": 2,
+                "typeParameterInstantiation": []
+              }
+            },
+            {
+              "reference": 2,
+              "body": {
+                "type": 10,
+                "typeName": "0x2::tx_context::TxContext",
+                "typeParameterInstantiation": []
+              }
+            }
+          ],
+          "returns": []
+        },
+        {
+          "name": "set_stable_fee_config",
+          "visibility": 2,
+          "isEntry": true,
+          "typeParameters": [],
+          "parameters": [
+            {
+              "reference": 2,
+              "body": {
+                "type": 10,
+                "typeName": "0xa0eba10b173538c8fecca1dff298e488402cc9ff374f8a12ca7758eebe830b66::spot_dex::ProtocolConfigs",
+                "typeParameterInstantiation": []
+              }
+            },
+            {
+              "body": {
+                "type": 6,
+                "typeParameterInstantiation": []
+              }
+            },
+            {
+              "body": {
+                "type": 6,
+                "typeParameterInstantiation": []
+              }
+            },
+            {
+              "reference": 2,
+              "body": {
+                "type": 10,
+                "typeName": "0x2::tx_context::TxContext",
+                "typeParameterInstantiation": []
+              }
+            }
+          ],
+          "returns": []
+        },
+        {
+          "name": "set_uc_fee_config",
+          "visibility": 2,
+          "isEntry": true,
+          "typeParameters": [],
+          "parameters": [
+            {
+              "reference": 2,
+              "body": {
+                "type": 10,
+                "typeName": "0xa0eba10b173538c8fecca1dff298e488402cc9ff374f8a12ca7758eebe830b66::spot_dex::ProtocolConfigs",
+                "typeParameterInstantiation": []
+              }
+            },
+            {
+              "body": {
+                "type": 6,
+                "typeParameterInstantiation": []
+              }
+            },
+            {
+              "body": {
+                "type": 6,
+                "typeParameterInstantiation": []
+              }
+            },
+            {
+              "reference": 2,
+              "body": {
+                "type": 10,
+                "typeName": "0x2::tx_context::TxContext",
+                "typeParameterInstantiation": []
+              }
+            }
+          ],
+          "returns": []
+        },
+        {
+          "name": "set_whitelisted_address_config",
+          "visibility": 2,
+          "isEntry": true,
+          "typeParameters": [],
+          "parameters": [
+            {
+              "reference": 2,
+              "body": {
+                "type": 10,
+                "typeName": "0xa0eba10b173538c8fecca1dff298e488402cc9ff374f8a12ca7758eebe830b66::spot_dex::ProtocolConfigs",
+                "typeParameterInstantiation": []
+              }
+            },
+            {
+              "body": {
+                "type": 1,
+                "typeParameterInstantiation": []
+              }
+            },
+            {
+              "reference": 2,
+              "body": {
+                "type": 10,
+                "typeName": "0x2::tx_context::TxContext",
+                "typeParameterInstantiation": []
+              }
+            }
+          ],
+          "returns": []
+        },
+        {
+          "name": "swap_token_x",
+          "visibility": 2,
+          "isEntry": false,
+          "typeParameters": [
+            {
+              "constraints": []
+            },
+            {
+              "constraints": []
+            }
+          ],
+          "parameters": [
+            {
+              "reference": 2,
+              "body": {
+                "type": 10,
+                "typeName": "0xa0eba10b173538c8fecca1dff298e488402cc9ff374f8a12ca7758eebe830b66::spot_dex::Pool",
+                "typeParameterInstantiation": [
+                  {
+                    "type": 11,
+                    "typeParameter": 0,
+                    "typeParameterInstantiation": []
+                  },
+                  {
+                    "type": 11,
+                    "typeParameter": 1,
+                    "typeParameterInstantiation": []
+                  }
+                ]
+              }
+            },
+            {
+              "body": {
+                "type": 10,
+                "typeName": "0x2::coin::Coin",
+                "typeParameterInstantiation": [
+                  {
+                    "type": 11,
+                    "typeParameter": 0,
+                    "typeParameterInstantiation": []
+                  }
+                ]
+              }
+            },
+            {
+              "body": {
+                "type": 6,
+                "typeParameterInstantiation": []
+              }
+            },
+            {
+              "body": {
+                "type": 6,
+                "typeParameterInstantiation": []
+              }
+            },
+            {
+              "reference": 2,
+              "body": {
+                "type": 10,
+                "typeName": "0x2::tx_context::TxContext",
+                "typeParameterInstantiation": []
+              }
+            }
+          ],
+          "returns": [
+            {
+              "body": {
+                "type": 10,
+                "typeName": "0x2::coin::Coin",
+                "typeParameterInstantiation": [
+                  {
+                    "type": 11,
+                    "typeParameter": 1,
+                    "typeParameterInstantiation": []
+                  }
+                ]
+              }
+            }
+          ]
+        },
+        {
+          "name": "swap_token_x_",
+          "visibility": 2,
+          "isEntry": true,
+          "typeParameters": [
+            {
+              "constraints": []
+            },
+            {
+              "constraints": []
+            }
+          ],
+          "parameters": [
+            {
+              "reference": 2,
+              "body": {
+                "type": 10,
+                "typeName": "0xa0eba10b173538c8fecca1dff298e488402cc9ff374f8a12ca7758eebe830b66::spot_dex::Pool",
+                "typeParameterInstantiation": [
+                  {
+                    "type": 11,
+                    "typeParameter": 0,
+                    "typeParameterInstantiation": []
+                  },
+                  {
+                    "type": 11,
+                    "typeParameter": 1,
+                    "typeParameterInstantiation": []
+                  }
+                ]
+              }
+            },
+            {
+              "body": {
+                "type": 10,
+                "typeName": "0x2::coin::Coin",
+                "typeParameterInstantiation": [
+                  {
+                    "type": 11,
+                    "typeParameter": 0,
+                    "typeParameterInstantiation": []
+                  }
+                ]
+              }
+            },
+            {
+              "body": {
+                "type": 6,
+                "typeParameterInstantiation": []
+              }
+            },
+            {
+              "body": {
+                "type": 6,
+                "typeParameterInstantiation": []
+              }
+            },
+            {
+              "reference": 2,
+              "body": {
+                "type": 10,
+                "typeName": "0x2::tx_context::TxContext",
+                "typeParameterInstantiation": []
+              }
+            }
+          ],
+          "returns": []
+        },
+        {
+          "name": "swap_token_y",
+          "visibility": 2,
+          "isEntry": false,
+          "typeParameters": [
+            {
+              "constraints": []
+            },
+            {
+              "constraints": []
+            }
+          ],
+          "parameters": [
+            {
+              "reference": 2,
+              "body": {
+                "type": 10,
+                "typeName": "0xa0eba10b173538c8fecca1dff298e488402cc9ff374f8a12ca7758eebe830b66::spot_dex::Pool",
+                "typeParameterInstantiation": [
+                  {
+                    "type": 11,
+                    "typeParameter": 0,
+                    "typeParameterInstantiation": []
+                  },
+                  {
+                    "type": 11,
+                    "typeParameter": 1,
+                    "typeParameterInstantiation": []
+                  }
+                ]
+              }
+            },
+            {
+              "body": {
+                "type": 10,
+                "typeName": "0x2::coin::Coin",
+                "typeParameterInstantiation": [
+                  {
+                    "type": 11,
+                    "typeParameter": 1,
+                    "typeParameterInstantiation": []
+                  }
+                ]
+              }
+            },
+            {
+              "body": {
+                "type": 6,
+                "typeParameterInstantiation": []
+              }
+            },
+            {
+              "body": {
+                "type": 6,
+                "typeParameterInstantiation": []
+              }
+            },
+            {
+              "reference": 2,
+              "body": {
+                "type": 10,
+                "typeName": "0x2::tx_context::TxContext",
+                "typeParameterInstantiation": []
+              }
+            }
+          ],
+          "returns": [
+            {
+              "body": {
+                "type": 10,
+                "typeName": "0x2::coin::Coin",
+                "typeParameterInstantiation": [
+                  {
+                    "type": 11,
+                    "typeParameter": 0,
+                    "typeParameterInstantiation": []
+                  }
+                ]
+              }
+            }
+          ]
+        },
+        {
+          "name": "swap_token_y_",
+          "visibility": 2,
+          "isEntry": true,
+          "typeParameters": [
+            {
+              "constraints": []
+            },
+            {
+              "constraints": []
+            }
+          ],
+          "parameters": [
+            {
+              "reference": 2,
+              "body": {
+                "type": 10,
+                "typeName": "0xa0eba10b173538c8fecca1dff298e488402cc9ff374f8a12ca7758eebe830b66::spot_dex::Pool",
+                "typeParameterInstantiation": [
+                  {
+                    "type": 11,
+                    "typeParameter": 0,
+                    "typeParameterInstantiation": []
+                  },
+                  {
+                    "type": 11,
+                    "typeParameter": 1,
+                    "typeParameterInstantiation": []
+                  }
+                ]
+              }
+            },
+            {
+              "body": {
+                "type": 10,
+                "typeName": "0x2::coin::Coin",
+                "typeParameterInstantiation": [
+                  {
+                    "type": 11,
+                    "typeParameter": 1,
+                    "typeParameterInstantiation": []
+                  }
+                ]
+              }
+            },
+            {
+              "body": {
+                "type": 6,
+                "typeParameterInstantiation": []
+              }
+            },
+            {
+              "body": {
+                "type": 6,
+                "typeParameterInstantiation": []
+              }
+            },
+            {
+              "reference": 2,
+              "body": {
+                "type": 10,
+                "typeName": "0x2::tx_context::TxContext",
+                "typeParameterInstantiation": []
+              }
+            }
+          ],
+          "returns": []
+        },
+        {
+          "name": "update_fees",
+          "visibility": 2,
+          "isEntry": true,
+          "typeParameters": [
+            {
+              "constraints": []
+            },
+            {
+              "constraints": []
+            }
+          ],
+          "parameters": [
+            {
+              "reference": 2,
+              "body": {
+                "type": 10,
+                "typeName": "0xa0eba10b173538c8fecca1dff298e488402cc9ff374f8a12ca7758eebe830b66::spot_dex::Pool",
+                "typeParameterInstantiation": [
+                  {
+                    "type": 11,
+                    "typeParameter": 0,
+                    "typeParameterInstantiation": []
+                  },
+                  {
+                    "type": 11,
+                    "typeParameter": 1,
+                    "typeParameterInstantiation": []
+                  }
+                ]
+              }
+            },
+            {
+              "reference": 1,
+              "body": {
+                "type": 10,
+                "typeName": "0xa0eba10b173538c8fecca1dff298e488402cc9ff374f8a12ca7758eebe830b66::spot_dex::ProtocolConfigs",
+                "typeParameterInstantiation": []
+              }
+            },
+            {
+              "reference": 2,
+              "body": {
+                "type": 10,
+                "typeName": "0x2::tx_context::TxContext",
+                "typeParameterInstantiation": []
+              }
+            }
+          ],
+          "returns": []
+        },
+        {
+          "name": "update_pool",
+          "visibility": 2,
+          "isEntry": true,
+          "typeParameters": [
+            {
+              "constraints": []
+            },
+            {
+              "constraints": []
+            }
+          ],
+          "parameters": [
+            {
+              "reference": 2,
+              "body": {
+                "type": 10,
+                "typeName": "0xa0eba10b173538c8fecca1dff298e488402cc9ff374f8a12ca7758eebe830b66::spot_dex::Pool",
+                "typeParameterInstantiation": [
+                  {
+                    "type": 11,
+                    "typeParameter": 0,
+                    "typeParameterInstantiation": []
+                  },
+                  {
+                    "type": 11,
+                    "typeParameter": 1,
+                    "typeParameterInstantiation": []
+                  }
+                ]
+              }
+            },
+            {
+              "reference": 1,
+              "body": {
+                "type": 10,
+                "typeName": "0xa0eba10b173538c8fecca1dff298e488402cc9ff374f8a12ca7758eebe830b66::spot_dex::ProtocolConfigs",
+                "typeParameterInstantiation": []
+              }
+            },
+            {
+              "reference": 2,
+              "body": {
+                "type": 10,
+                "typeName": "0x2::tx_context::TxContext",
+                "typeParameterInstantiation": []
+              }
+            }
+          ],
+          "returns": []
         }
-      }
-}
+      ]
+    }
+  },
+  {
+    "address": "0xa0eba10b173538c8fecca1dff298e488402cc9ff374f8a12ca7758eebe830b66",
+    "module": {
+      "name": "utils",
+      "datatypes": [],
+      "functions": [
+        {
+          "name": "get_input_price_stable",
+          "visibility": 2,
+          "isEntry": false,
+          "typeParameters": [],
+          "parameters": [
+            {
+              "body": {
+                "type": 6,
+                "typeParameterInstantiation": []
+              }
+            },
+            {
+              "body": {
+                "type": 6,
+                "typeParameterInstantiation": []
+              }
+            },
+            {
+              "body": {
+                "type": 6,
+                "typeParameterInstantiation": []
+              }
+            },
+            {
+              "body": {
+                "type": 6,
+                "typeParameterInstantiation": []
+              }
+            },
+            {
+              "body": {
+                "type": 6,
+                "typeParameterInstantiation": []
+              }
+            },
+            {
+              "body": {
+                "type": 6,
+                "typeParameterInstantiation": []
+              }
+            }
+          ],
+          "returns": [
+            {
+              "body": {
+                "type": 6,
+                "typeParameterInstantiation": []
+              }
+            }
+          ]
+        },
+        {
+          "name": "get_input_price_uncorrelated",
+          "visibility": 2,
+          "isEntry": false,
+          "typeParameters": [],
+          "parameters": [
+            {
+              "body": {
+                "type": 6,
+                "typeParameterInstantiation": []
+              }
+            },
+            {
+              "body": {
+                "type": 6,
+                "typeParameterInstantiation": []
+              }
+            },
+            {
+              "body": {
+                "type": 6,
+                "typeParameterInstantiation": []
+              }
+            },
+            {
+              "body": {
+                "type": 6,
+                "typeParameterInstantiation": []
+              }
+            }
+          ],
+          "returns": [
+            {
+              "body": {
+                "type": 6,
+                "typeParameterInstantiation": []
+              }
+            }
+          ]
+        },
+        {
+          "name": "lp_value",
+          "visibility": 2,
+          "isEntry": false,
+          "typeParameters": [],
+          "parameters": [
+            {
+              "body": {
+                "type": 7,
+                "typeParameterInstantiation": []
+              }
+            },
+            {
+              "body": {
+                "type": 6,
+                "typeParameterInstantiation": []
+              }
+            },
+            {
+              "body": {
+                "type": 7,
+                "typeParameterInstantiation": []
+              }
+            },
+            {
+              "body": {
+                "type": 6,
+                "typeParameterInstantiation": []
+              }
+            }
+          ],
+          "returns": [
+            {
+              "body": {
+                "type": 8,
+                "typeParameterInstantiation": []
+              }
+            }
+          ]
+        }
+      ]
+    }
+  }
+]

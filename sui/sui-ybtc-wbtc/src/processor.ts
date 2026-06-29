@@ -43,7 +43,7 @@ SuiObjectProcessor.bind({
   startCheckpoint
 }).onTimeInterval(
   async (self, objects, ctx) => {
-    const { coin_a, coin_b } = self.fields as unknown as TurbosPool.Pool<any, any, any>
+    const { coin_a, coin_b } = self.json as unknown as TurbosPool.Pool<any, any, any>
     await handlePoolTvl(ctx, self.type, coin_a, coin_b, 'turbos')
   },
   60 * 12,
@@ -55,7 +55,7 @@ SuiObjectProcessor.bind({
   startCheckpoint
 }).onTimeInterval(
   async (self, objects, ctx) => {
-    const { reserve_x, reserve_y } = self.fields as unknown as MomentumPool.Pool<any, any>
+    const { reserve_x, reserve_y } = self.json as unknown as MomentumPool.Pool<any, any>
     await handlePoolTvl(ctx, self.type, reserve_x, reserve_y, 'momentum')
   },
   60 * 12,

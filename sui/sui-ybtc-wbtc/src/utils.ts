@@ -20,10 +20,10 @@ export function getPoolCoins(type: string) {
 async function buildPoolInfo(ctx: SuiContext | SuiObjectContext, pool: string): Promise<PoolInfo> {
   let [symbol_a, symbol_b, decimal_a, decimal_b] = ['', '', 0, 0]
   try {
-    const obj = await ctx.client.getObject({ id: pool, options: { showType: true, showContent: true } })
+    const obj = await ctx.client.getObject({ objectId: pool, include: { json: true } })
     let [coin_a_full_address, coin_b_full_address] = ['', '']
-    if (obj.data?.type) {
-      ;[coin_a_full_address, coin_b_full_address] = getPoolCoins(obj.data.type)
+    if (obj.object?.type) {
+      ;[coin_a_full_address, coin_b_full_address] = getPoolCoins(obj.object.type)
     }
     const coinInfo_a = await getCoinInfoWithFallback(coin_a_full_address)
     const coinInfo_b = await getCoinInfoWithFallback(coin_b_full_address)

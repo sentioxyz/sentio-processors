@@ -82,7 +82,7 @@ async function getMarketInfo(ctx: AptosContext, marketId: bigint) {
     // @ts-expect-error ??
   }, ctx.version.toString()))[0]
 
-  return (await ctx.coder.decodeType(res, registry.MarketInfoView.type()))!
+  return (await ctx.coder.decodeType<registry.MarketInfoView, typeof res>(res, registry.MarketInfoView.type()))!
 }
 
 async function getPair(marketView: registry.MarketInfoView) {

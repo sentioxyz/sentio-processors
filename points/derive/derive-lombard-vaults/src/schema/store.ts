@@ -57,7 +57,7 @@ export class DeriveVaultUserSnapshot extends AbstractEntity  {
 	@Required
 	@Column("BigDecimal")
 	vaultToUnderlying: BigDecimal
-  constructor(data: DeriveVaultUserSnapshotConstructorInput) {super()}
+  constructor(data: Partial<DeriveVaultUserSnapshotConstructorInput>) {super()}
   
   
   static update(values: UpdateValues<DeriveVaultUserSnapshotConstructorInput>): Promise<void> {
@@ -95,7 +95,7 @@ export class DeriveVaultTokenPrice extends AbstractEntity  {
 	@Required
 	@Column("BigDecimal")
 	vaultToUnderlying: BigDecimal
-  constructor(data: DeriveVaultTokenPriceConstructorInput) {super()}
+  constructor(data: Partial<DeriveVaultTokenPriceConstructorInput>) {super()}
   
   
   static update(values: UpdateValues<DeriveVaultTokenPriceConstructorInput>): Promise<void> {

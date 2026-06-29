@@ -1,4 +1,3 @@
-import { addressTypeFromJSON } from "@sentio/sdk";
 import { EthChainId } from "@sentio/sdk/eth";
 
 export const CONFIG = {

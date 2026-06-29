@@ -4,7 +4,14 @@ import { getPoolInfo, START_CHECKPOINT, recordTx, recordSwap } from './utils.js'
 import { getCoinInfoWithFallback } from '@sentio/sdk/sui/ext'
 import { usdPools } from './pools.js'
 
-async function handleEvent(evt: pool.AddLiquidityEventInstance, ctx: SuiContext) {
+async function handleEvent(
+  evt:
+    | pool.AddLiquidityEventInstance
+    | pool.RemoveLiquidityEventInstance
+    | pool.OpenPositionEventInstance
+    | pool.ClosePositionEventInstance,
+  ctx: SuiContext
+) {
   const { pool } = evt.data_decoded
   const { symbol_a, symbol_b } = await getPoolInfo(ctx, pool)
   if (symbol_a.includes('USD') || symbol_b.includes('USD')) {
@@ -34,7 +41,7 @@ pool
 
 const poolTemplate = new SuiObjectProcessorTemplate().onTimeInterval(
   async (self, objects, ctx) => {
-    const { coin_a, coin_b } = self.fields as unknown as pool.Pool<any, any>
+    const { coin_a, coin_b } = self.json as unknown as pool.Pool<any, any>
     const { symbol_a, symbol_b, decimal_a, decimal_b } = await getPoolInfo(ctx, ctx.address)
     if (symbol_a.includes('USD')) {
       ctx.eventLogger.emit('defi', {
@@ -71,7 +78,7 @@ const poolTemplate = new SuiObjectProcessorTemplate().onTimeInterval(
 usdPools.cetus.forEach((poolId) =>
   SuiObjectProcessor.bind({ objectId: poolId, startCheckpoint: START_CHECKPOINT }).onTimeInterval(
     async (self, objects, ctx) => {
-      const { coin_a, coin_b } = self.fields as unknown as pool.Pool<any, any>
+      const { coin_a, coin_b } = self.json as unknown as pool.Pool<any, any>
       const { symbol_a, symbol_b, decimal_a, decimal_b } = await getPoolInfo(ctx, ctx.address)
       if (symbol_a.includes('USD')) {
         ctx.eventLogger.emit('defi', {

@@ -1,5 +1,5 @@
 import { pool, factory } from "./types/sui/0x1eabed72c53feb3805120a081dc15963c204dc8d091542592abaf7a35689b2fb.js"
-import { SuiObjectProcessor, SuiContext, SuiObjectContext, SuiObjectProcessorTemplate, SuiWrappedObjectProcessor, SuiObjectTypeProcessor } from "@sentio/sdk/sui"
+import { SuiObjectProcessor, SuiContext, SuiObjectContext, SuiObjectProcessorTemplate, SuiWrappedObjectProcessor, SuiObjectTypeProcessor, TypedSuiMoveObject } from "@sentio/sdk/sui"
 import { getPriceBySymbol, getPriceByType, token } from "@sentio/sdk/utils"
 import * as constant from './constant-cetus.js'
 // import './cetus-launchpad.js'
@@ -219,10 +219,14 @@ pool.bind({
   })
   .onEventCollectRewardEvent(async (event, ctx) => {
 
-    if (processedMap.has(ctx.transaction.digest)) {
+    const digest = ctx.transaction.digest
+    if (!digest) {
       return
     }
-    processedMap.set(ctx.transaction.digest, Promise.resolve())
+    if (processedMap.has(digest)) {
+      return
+    }
+    processedMap.set(digest, Promise.resolve())
 
     //debug
     // if (ctx.transaction.digest != "HeFFdLQu5ZX3Aqzk935kPf3TXTBuZ9usKFecAYCxv8DR") return
@@ -231,24 +235,26 @@ pool.bind({
     let rewardCoinCallInfo: token.TokenInfo[] = []
     let rewardCoinEventInfo: any[] = []
 
-    //@ts-ignore
-    const transactions = ctx.transaction.transaction?.data.transaction.transactions
+    const _d = ctx.transaction.transaction?.kind?.data
+    const transactions = _d?.oneofKind === 'programmableTransaction' ? _d.programmableTransaction.commands : []
     for (let i = 0; i < transactions.length; i++) {
-      if (transactions[i].MoveCall
-        && (transactions[i].MoveCall.package == "0xd43348b8879c1457f882b02555ba862f2bc87bcc31b16294ca14a82f608875d2")
-        && (transactions[i].MoveCall.module == "pool_script_v2")
-        && (transactions[i].MoveCall.function == "collect_reward")) {
-        const coinType = transactions[i].MoveCall.type_arguments[transactions[i].MoveCall.type_arguments.length - 1]
+      const cmd = transactions[i].command
+      const moveCall = cmd.oneofKind === 'moveCall' ? cmd.moveCall : undefined
+      if (moveCall
+        && (moveCall.package == "0xd43348b8879c1457f882b02555ba862f2bc87bcc31b16294ca14a82f608875d2")
+        && (moveCall.module == "pool_script_v2")
+        && (moveCall.function == "collect_reward")) {
+        const coinType = moveCall.typeArguments[moveCall.typeArguments.length - 1]
         console.log(`call i=${i} coinType ${coinType}`)
         const tokenInfo = await helper.getOrCreateCoin(ctx, coinType)
         rewardCoinCallInfo.push(tokenInfo)
       }
     }
 
-    const events = ctx.transaction.events
+    const events = ctx.transaction.events?.events
     if (events) {
       for (let i = 0; i < events.length; i++) {
-        if (events[i].type == "0x1eabed72c53feb3805120a081dc15963c204dc8d091542592abaf7a35689b2fb::pool::CollectRewardEvent") {
+        if (events[i].eventType == "0x1eabed72c53feb3805120a081dc15963c204dc8d091542592abaf7a35689b2fb::pool::CollectRewardEvent") {
           interface EventInfo {
             amount: number,
             pool: string,
@@ -259,7 +265,7 @@ pool.bind({
             amount,
             pool,
             position
-          }: EventInfo = events[i].parsedJson
+          }: EventInfo = events[i].json
           console.log(`event i=${i} amount ${amount} pool ${pool} position ${position}`)
 
           rewardCoinEventInfo.push({
@@ -292,7 +298,7 @@ pool.bind({
 SuiObjectTypeProcessor.bind({
   objectType: pool.Pool.type(),
 })
-  .onTimeInterval(async (self, _, ctx) => {
+  .onTimeInterval(async (self: TypedSuiMoveObject<pool.Pool<any, any>>, _, ctx) => {
     if (!self) { return }
     console.log(`ctx ${ctx.objectId} ctx.timestamp ${ctx.timestamp}`)
 

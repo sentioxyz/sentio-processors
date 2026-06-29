@@ -1,4 +1,3 @@
-// @ts-nocheck
 import { SuiObjectProcessor, SuiContext, SuiObjectContext } from "@sentio/sdk/sui"
 import { getPriceByType, token } from "@sentio/sdk/utils"
 import { SuiNetwork } from "@sentio/sdk/sui"
@@ -47,7 +46,7 @@ let poolInfoMap = new Map<string, Promise<poolInfo>>()
 let coinInfoMap = new Map<string, Promise<token.TokenInfo>>()
 
 export async function buildCoinInfo(ctx: SuiContext | SuiObjectContext, coinAddress: string): Promise<token.TokenInfo> {
-    const metadata = await ctx.client.getCoinMetadata({ coinType: coinAddress })
+    const metadata = (await ctx.client.getCoinMetadata({ coinType: coinAddress })).coinMetadata!
     const symbol = metadata.symbol
     const decimal = metadata.decimals
     const name = metadata.name
@@ -72,10 +71,11 @@ export const getOrCreateCoin = async function (ctx: SuiContext | SuiObjectContex
 export async function buildPoolInfo(ctx: SuiContext | SuiObjectContext, pool: string): Promise<poolInfo> {
     let [symbol_a, symbol_b, decimal_a, decimal_b, pairName, type, fee_label] = ["", "", 0, 0, "", "", "", "NaN"]
 
-    const obj = await ctx.client.getObject({ id: pool, options: { showType: true, showContent: true } })
-    type = obj.data.type
-    if (obj.data.content.fields.fee_rate) {
-        fee_label = (Number(obj.data.content.fields.fee_rate) / 10000).toFixed(2) + "%"
+    const obj = (await ctx.client.getObject({ objectId: pool, include: { json: true } })).object
+    type = obj.type
+    const f = obj.json as any
+    if (f?.fee_rate) {
+        fee_label = (Number(f.fee_rate) / 10000).toFixed(2) + "%"
     }
     let [coin_a_full_address, coin_b_full_address] = ["", ""]
     if (type) {
@@ -110,8 +110,9 @@ export const getOrCreatePool = async function (ctx: SuiContext | SuiObjectContex
 }
 
 export async function getPoolPrice(ctx: SuiContext | SuiObjectContext, pool: string) {
-    const obj = await ctx.client.getObject({ id: pool, options: { showType: true, showContent: true } })
-    const current_sqrt_price = Number(obj.data.content.fields.current_sqrt_price)
+    const obj = (await ctx.client.getObject({ objectId: pool, include: { json: true } })).object
+    const f = obj.json as any
+    const current_sqrt_price = Number(f?.current_sqrt_price)
     if (!current_sqrt_price) { console.log(`get pool price error at ${ctx}`) }
     const poolInfo = await getOrCreatePool(ctx, pool)
     const pairName = poolInfo.pairName

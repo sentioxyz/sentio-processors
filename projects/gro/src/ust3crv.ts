@@ -5,7 +5,7 @@ import { getGroVaultContract } from './types/eth/grovault.js'
 import { MetapoolProcessor, MetapoolContext } from './types/eth/metapool.js'
 import { StableConvexXPoolProcessor, StableConvexXPoolContext } from './types/eth/stableconvexxpool.js'
 import { UST_3CRV_POOL, UST_STRATEGY, GRO_VAULT, CRV3_POOL, FRAX_POOL, TUSD_POOL, LUSD_POOL } from './constant.js'
-import { Block } from 'ethers'
+import { RichBlock } from '@sentio/sdk/eth'
 
 const DAI_INDEX = 1
 const USDC_INDEX = 2
@@ -17,7 +17,7 @@ const USDT_DECIMAL = 6
 const CRV3_DECIMAL = 18
 
 const generateCrvMetapoolHandler = function(name: string, decimal: number) {
-  const metapoolHandler = async function(block: Block, ctx: MetapoolContext) {
+  const metapoolHandler = async function(block: RichBlock, ctx: MetapoolContext) {
     const oneU = 10n ** BigInt(decimal)
     const priceInDAI = (await ctx.contract.get_dy_underlying(0, DAI_INDEX, oneU)).scaleDown(DAI_DECIMAL)
     const priceInUSDC = (await ctx.contract.get_dy_underlying(0, USDC_INDEX, oneU)).scaleDown(USDC_DECIMAL)
@@ -59,7 +59,7 @@ const generateCrvMetapoolHandler = function(name: string, decimal: number) {
 //   ctx.meter.Gauge('CRV_amount').record(crv3Amoumt)
 // }
 
-const crv3poolHandler = async function(block: Block, ctx: MetapoolContext) {
+const crv3poolHandler = async function(block: RichBlock, ctx: MetapoolContext) {
   const oneUsdt = 10n ** BigInt(USDT_DECIMAL)
   const priceInDAI = scaleDown((await ctx.contract.get_dy_underlying(2, 0, oneUsdt)), DAI_DECIMAL)
   const priceInUSDC = scaleDown((await ctx.contract.get_dy_underlying(2, 1, oneUsdt)), USDC_DECIMAL)

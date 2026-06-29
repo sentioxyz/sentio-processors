@@ -37,7 +37,7 @@ export class Balance extends AbstractEntity  {
 	@Required
 	@Column("BigInt")
 	balance: BigInt
-  constructor(data: BalanceConstructorInput) {super()}
+  constructor(data: Partial<BalanceConstructorInput>) {super()}
   
   
   static update(values: UpdateValues<BalanceConstructorInput>): Promise<void> {

@@ -1,5 +1,6 @@
 import { SuiContext, SuiObjectContext, SuiNetwork } from "@sentio/sdk/sui"
 import { getPriceBySymbol, getPriceByType, token } from "@sentio/sdk/utils"
+import { bcs } from "@mysten/sui/bcs"
 
 
 //get full coin address with suffix
@@ -58,7 +59,7 @@ export async function buildCoinInfo(ctx: SuiContext | SuiObjectContext, coinAddr
     let retryCounter = 0;
     while (retryCounter++ <= 50) {
         try {
-            const metadata = await ctx.client.getCoinMetadata({ coinType: coinAddress })
+            const metadata = (await ctx.client.getCoinMetadata({ coinType: coinAddress })).coinMetadata
             if (metadata == null) {
                 break
             }
@@ -105,9 +106,9 @@ export async function buildPoolInfo(ctx: SuiContext | SuiObjectContext, pool: st
     let [symbol_a, symbol_b, decimal_a, decimal_b, pairName, fee, type, type_a, type_b] = ["", "", 0, 0, "", 0, "", "", ""]
 
     try {
-        const obj = await ctx.client.getObject({ id: pool, options: { showType: true, showContent: true } })
+        const obj = await ctx.client.getObject({ objectId: pool, include: { json: true } })
         //@ts-ignore
-        type = obj.data.type
+        type = obj.object.type
 
         if (type) {
             [type_a, type_b] = getCoinFullAddress(type)
@@ -120,7 +121,7 @@ export async function buildPoolInfo(ctx: SuiContext | SuiObjectContext, pool: st
         decimal_a = coinInfo_a.decimal
         decimal_b = coinInfo_b.decimal
         //@ts-ignore
-        fee = Number(obj.data?.content.fields.fee_rate) / 10 ** 6
+        fee = Number(obj.object.json?.fee_rate) / 10 ** 6
 
         pairName = symbol_a + "-" + symbol_b + `-${fee * 100}%`
 
@@ -169,11 +170,11 @@ export async function buildMultiAssetPoolInfo(ctx: SuiContext, pool: string): Pr
 
     try {
         console.log("get pool", pool)
-        const obj = await ctx.client.getObject({ id: pool, options: { showType: true, showContent: true } })
-        console.log("obj data ", JSON.stringify(obj.data))
+        const obj = await ctx.client.getObject({ objectId: pool, include: { json: true } })
+        console.log("obj data ", JSON.stringify(obj.object))
 
         //@ts-ignore
-        for (const type of obj.data?.content.fields.type_names) {
+        for (const type of obj.object.json?.type_names) {
             const coinType = "0x" + type
             console.log("coinType 1 ", coinType)
             const coinInfo = await getOrCreateCoin(ctx, coinType)
@@ -222,9 +223,9 @@ export const getOrCreateMultiAssetPool = async function (ctx: SuiContext, pool: 
 
 
 export async function getPoolPrice(ctx: SuiContext, pool: string) {
-    const obj = await ctx.client.getObject({ id: pool, options: { showType: true, showContent: true } })
+    const obj = await ctx.client.getObject({ objectId: pool, include: { json: true } })
     //@ts-ignore
-    const current_sqrt_price = Number(obj.data.content.fields.current_sqrt_price)
+    const current_sqrt_price = Number(obj.object.json?.current_sqrt_price)
     if (!current_sqrt_price) { console.log(`get pool price error at ${ctx}`) }
     const poolInfo = await getOrCreatePool(ctx, pool)
     const pairName = poolInfo.pairName
@@ -352,23 +353,35 @@ export async function calculateSingleTypeValueUSD(ctx: SuiContext | SuiObjectCon
 }
 
 export async function getFlowXPoolId(ctx: SuiContext, coin_a: string, coin_b: string) {
-    const getDynamicFieldObjectXY = await ctx.client.getDynamicFieldObject({
-        parentId: "0xd15e209f5a250d6055c264975fee57ec09bf9d6acdda3b5f866f76023d1563e6",
-        name: {
-            type: '0x1::string::String',
-            value: `LP-${coin_a}-${coin_b}`,
-        }
-    })
-    console.log("getDynamicFieldObjectXY", JSON.stringify(getDynamicFieldObjectXY))
-    const getDynamicFieldObjectYX = await ctx.client.getDynamicFieldObject({
-        parentId: "0xd15e209f5a250d6055c264975fee57ec09bf9d6acdda3b5f866f76023d1563e6",
-        name: {
-            type: '0x1::string::String',
-            value: `LP-${coin_b}-${coin_a}`,
-        }
-    })
+    let objectIdXY: string | undefined
+    let objectIdYX: string | undefined
+    try {
+        const getDynamicFieldObjectXY = await ctx.client.getDynamicField({
+            parentId: "0xd15e209f5a250d6055c264975fee57ec09bf9d6acdda3b5f866f76023d1563e6",
+            name: {
+                type: '0x1::string::String',
+                bcs: bcs.string().serialize(`LP-${coin_a}-${coin_b}`).toBytes(),
+            }
+        })
+        console.log("getDynamicFieldObjectXY", JSON.stringify(getDynamicFieldObjectXY))
+        objectIdXY = getDynamicFieldObjectXY.dynamicField?.fieldId
+    } catch (e) {
+        console.log(`${e.message} getDynamicField XY error`)
+    }
+    try {
+        const getDynamicFieldObjectYX = await ctx.client.getDynamicField({
+            parentId: "0xd15e209f5a250d6055c264975fee57ec09bf9d6acdda3b5f866f76023d1563e6",
+            name: {
+                type: '0x1::string::String',
+                bcs: bcs.string().serialize(`LP-${coin_b}-${coin_a}`).toBytes(),
+            }
+        })
+        objectIdYX = getDynamicFieldObjectYX.dynamicField?.fieldId
+    } catch (e) {
+        console.log(`${e.message} getDynamicField YX error`)
+    }
 
-    const pool_id = getDynamicFieldObjectXY.data?.objectId || getDynamicFieldObjectYX.data?.objectId || '0x';
+    const pool_id = objectIdXY || objectIdYX || '0x';
     return pool_id
 }
 
