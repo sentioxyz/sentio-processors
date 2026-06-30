@@ -22,7 +22,7 @@ interface MetadataConstructorInput {
   description: String;
   icon_url?: String;
   digest: String;
-  timestamp: Int;
+  timestamp: BigInt;
 }
 @Entity("Metadata")
 export class Metadata extends AbstractEntity  {
@@ -59,8 +59,8 @@ export class Metadata extends AbstractEntity  {
 	digest: String
 
 	@Required
-	@Column("Int")
-	timestamp: Int
+	@Column("BigInt")
+	timestamp: BigInt
   constructor(data: Partial<MetadataConstructorInput>) {super()}
   
   
@@ -79,7 +79,7 @@ const source = `type Metadata @entity {
     description: String! # Description of the token
     icon_url: String
     digest: String! # transaction digest created the metadata
-    timestamp: Int! # timestamp of the metadata creation
+    timestamp: BigInt! # timestamp of the metadata creation (epoch ms; BigInt to avoid int32 overflow)
 }`
 DatabaseSchema.register({
   source,

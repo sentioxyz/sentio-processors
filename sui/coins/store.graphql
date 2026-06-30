@@ -7,5 +7,5 @@ type Metadata @entity {
     description: String! # Description of the token
     icon_url: String
     digest: String! # transaction digest created the metadata
-    timestamp: Int! # timestamp of the metadata creation
+    timestamp: BigInt! # timestamp of the metadata creation (epoch ms; BigInt to avoid int32 overflow)
 }

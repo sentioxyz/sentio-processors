@@ -20,7 +20,7 @@ SuiObjectTypeProcessor.bind({
         description: 'native SUI token',
         icon_url: undefined,
         digest: ctx.txDigest,
-        timestamp: 0
+        timestamp: 0n
       }))
       native = true
     }
@@ -44,7 +44,7 @@ SuiObjectTypeProcessor.bind({
           description: metadata.description,
           icon_url: metadata.iconUrl || undefined,
           digest: ctx.txDigest,
-          timestamp: ctx.timestamp.getTime()
+          timestamp: BigInt(ctx.timestamp.getTime())
         }))
       }
     } else {
