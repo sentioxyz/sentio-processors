@@ -28,27 +28,34 @@ SuiObjectTypeProcessor.bind({
     if (change.idOperation !== 'Created') {
       continue
     }
-    const obj = await ctx.client.getObject({ objectId: change.objectId, include: { json: true } })
-    const t = parseMoveType(obj.object.type)
-    const coinType = t.typeArgs[0].getSignature()
+    try {
+      const obj = await ctx.client.getObject({ objectId: change.objectId, include: { json: true } })
+      const t = parseMoveType(obj.object.type)
+      const coinType = t.typeArgs[0].getSignature()
 
-    const metadata = (await ctx.client.getCoinMetadata({ coinType })).coinMetadata
-    if (metadata) {
-      if (metadata.id) {
-        await ctx.store.upsert(new Metadata({
-          id: metadata.id,
-          coin_type: coinType,
-          name: metadata.name,
-          symbol: metadata.symbol,
-          decimals: metadata.decimals,
-          description: metadata.description,
-          icon_url: metadata.iconUrl || undefined,
-          digest: ctx.txDigest,
-          timestamp: ctx.timestamp
-        }))
+      const metadata = (await ctx.client.getCoinMetadata({ coinType })).coinMetadata
+      if (metadata) {
+        if (metadata.id) {
+          await ctx.store.upsert(new Metadata({
+            id: metadata.id,
+            coin_type: coinType,
+            name: metadata.name,
+            symbol: metadata.symbol,
+            decimals: metadata.decimals,
+            description: metadata.description,
+            icon_url: metadata.iconUrl || undefined,
+            digest: ctx.txDigest,
+            timestamp: ctx.timestamp
+          }))
+        }
+      } else {
+        console.error(`Failed to fetch metadata for coin type: ${coinType}`)
       }
-    } else {
-      console.error(`Failed to fetch metadata for coin type: ${coinType}`)
+    } catch (e) {
+      // SDK 4's gRPC getObject/getCoinMetadata throw when the object/coin is not
+      // found (e.g. already deleted or wrapped). SDK 3's JSON-RPC returned an empty
+      // result, so the old processor silently skipped it — preserve that behavior.
+      console.log(`skip object change ${change.objectId}: ${e.message}`)
     }
   }
 })
