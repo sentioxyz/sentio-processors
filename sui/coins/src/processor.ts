@@ -29,8 +29,26 @@ SuiObjectTypeProcessor.bind({
       continue
     }
     try {
-      const obj = await ctx.client.getObject({ objectId: change.objectId, include: { json: true } })
-      const t = parseMoveType(obj.object.type)
+      // Version-pinned ("past") read: onObjectChange reacts to a historical change,
+      // and the object may be gone at the latest version (deleted/wrapped) — which is
+      // why latest getObject throws "not found". Read it at change.outputVersion to
+      // get it as it was. We only need the object type (to derive the coin type), so
+      // request just object_type. Fall back to latest if the node pruned that version.
+      let objType: string | undefined
+      try {
+        const past = await ctx.client.ledgerService.getObject({
+          objectId: change.objectId,
+          version: change.outputVersion ? BigInt(change.outputVersion) : undefined,
+          readMask: { paths: ['object_type'] }
+        })
+        objType = past.response.object?.objectType
+      } catch {
+        // historical version unavailable (pruned) — fall through to latest
+      }
+      if (!objType) {
+        objType = (await ctx.client.getObject({ objectId: change.objectId, include: { json: true } })).object.type
+      }
+      const t = parseMoveType(objType)
       const coinType = t.typeArgs[0].getSignature()
 
       const metadata = (await ctx.client.getCoinMetadata({ coinType })).coinMetadata
