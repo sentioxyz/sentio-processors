@@ -1,7 +1,7 @@
 import { metricRule, sqlRowRule } from '../lib/spec.mjs'
 
 export const project = { owner: 'navi', slug: 'navi-production-new', id: 'e2kx9fDv' }
-export const muted = true
+export const muted = false // live since 2026-08-17; set true to silence this domain
 
 /**
  * Indexer and oracle liveness. These are the rules that make the other 80

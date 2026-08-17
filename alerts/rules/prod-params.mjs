@@ -11,11 +11,12 @@ export const project = { owner: 'navi', slug: 'navi-production-new', id: 'e2kx9f
 
 /**
  * Burn-in switch. While true every rule is created with `mute: true`: it
- * evaluates and records FIRING/NORMAL, but delivers nothing. Watch
- * `node alerts/inspect.mjs` for a few days, tighten whatever is noisy, then set
- * this to false and re-apply.
+ * evaluates and records FIRING/NORMAL, but delivers nothing. Set back to true
+ * and re-apply to silence this whole domain without deleting anything.
+ *
+ * Live since 2026-08-17.
  */
-export const muted = true
+export const muted = false
 
 /**
  * Metric label names, verified 2026-08-16 against the live series. These are

@@ -1,7 +1,7 @@
 import { priceDeviationRule, oracleRatioRule } from '../lib/spec.mjs'
 
 export const project = { owner: 'navi', slug: 'navi-production-new', id: 'e2kx9fDv' }
-export const muted = true
+export const muted = false // live since 2026-08-17; set true to silence this domain
 
 /**
  * Oracle price monitoring. This is the domain that genuinely needs one rule per

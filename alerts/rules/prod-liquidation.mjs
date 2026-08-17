@@ -1,7 +1,7 @@
 import { logRule, sqlColumnRule, sqlRowRule } from '../lib/spec.mjs'
 
 export const project = { owner: 'navi', slug: 'navi-production-new', id: 'e2kx9fDv' }
-export const muted = true
+export const muted = false // live since 2026-08-17; set true to silence this domain
 
 /**
  * Liquidation monitoring, one rule per failure shape rather than one per asset.

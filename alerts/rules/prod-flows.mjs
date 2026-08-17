@@ -2,7 +2,7 @@ import { sqlBoundsRule, sqlRowRule, sqlColumnRule, logRule } from '../lib/spec.m
 import { NETFLOW_HOURLY, ACTION_SIZE } from '../bounds.flows.generated.mjs'
 
 export const project = { owner: 'navi', slug: 'navi-production-new', id: 'e2kx9fDv' }
-export const muted = true
+export const muted = false // live since 2026-08-17; set true to silence this domain
 
 /**
  * Fund-flow monitoring.
