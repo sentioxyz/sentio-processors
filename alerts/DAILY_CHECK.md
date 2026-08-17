@@ -79,3 +79,11 @@ Do not present these as new:
 - `Borrow rate out of bounds` — `nUSDC@7`.
 
 A *change* in this set is worth reporting. The set staying the same is worth one line.
+
+## Closed, do not raise again
+
+- **SUI liquid-staking tokens priced at SUI spot** (haSui/vSui/stSUI oracle ignoring the
+  staking exchange rate). Intentional, for a reason on the contract side. The widened
+  tolerances in `rules/prod-price.mjs` are deliberate.
+- **`SUI@9` and `nUSDC@3` above 95% utilisation.** Both sit inside their configured 0.96
+  cap. Only utilisation exceeding a pool's own `borrowCapCeiling` is a finding.

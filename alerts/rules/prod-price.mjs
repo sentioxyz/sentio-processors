@@ -28,9 +28,10 @@ const WIDER = { BLUE: 0.03, CETUS: 0.03, IKA: 0.03, XAUM: 0.03 }
  * The three SUI liquid-staking tokens are priced by NAVI's oracle at essentially
  * the SUI spot price, ignoring the staking exchange rate — measured haSui -7.45%,
  * vSui -6.28%, stSUI -4.30%, while plain SUI matches market within 0.16%. These
- * tolerances are set above the current gap purely so the rules are not permanently
- * red; they are NOT an endorsement of the pricing. Tighten to DEFAULT_TOLERANCE
- * once the exchange rate is applied, and treat any widening as urgent meanwhile.
+ * tolerances are set above the current gap. Raised with the team on 2026-08-17 and
+ * closed: this is intentional, there is a specific reason for it on the contract side.
+ * So these stay widened — do NOT tighten them to DEFAULT_TOLERANCE. What they still
+ * catch is the gap *growing* beyond where it sits today, which would be new.
  */
 const LST_TOLERANCE = { haSui: 0.1, vSui: 0.09, stSUI: 0.07 }
 

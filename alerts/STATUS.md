@@ -10,9 +10,12 @@ untouched and uncommitted.
    `HA6P3L8e` = #alert-navi-lending-warning, both wired up and verified.
 2. ~~Connect your GitHub account to claude.ai~~ — done, the routine now clones the repo
    fine.
-3. **Allow `app.sentio.xyz` in the cloud environment's network egress settings**
-   (environment `env_01AQPX818Uirz8HURNMbYEng`). Until then the daily check reaches the
-   repo but not Sentio. See the Daily check section.
+3. **Allow `app.sentio.xyz` in the cloud environment's network access settings.** At
+   claude.ai/code, open the environment selector, hover **Default** and click its settings
+   icon. Set **Network access** from `Trusted` to `Custom`, put `app.sentio.xyz` on its own
+   line under **Allowed domains**, and tick *Also include default list of common package
+   managers* so the Trusted defaults are kept. Personal environments need no admin. Until
+   this is done the daily check reaches the repo but not Sentio.
 
 All one-time. Everything after them is code.
 
@@ -57,13 +60,12 @@ channel change — and the reason `--recreate` exists.
 
 ## Two things found on the way that need a decision
 
-**1. The SUI liquid-staking tokens are priced at SUI spot.** Measured against Sentio's
-market feed: haSui −7.45%, vSui −6.28%, stSUI −4.30%, while plain SUI matches within
-0.17%. The oracle values for all three sit within 0.3% of the SUI oracle value, so the
-staking exchange rate looks like it is not being applied. Under-pricing *collateral* is
-conservative and safe; under-pricing LST-denominated *debt* is not. Worth confirming
-which side of the book that oracle feeds. (Sentio's own LST price could in principle be
-the wrong one, but tracking SUI 1:1 is the more likely explanation.)
+**1. ~~The SUI liquid-staking tokens are priced at SUI spot.~~ CLOSED — intentional.**
+Measured haSui −7.45%, vSui −6.28%, stSUI −4.30% against Sentio's market feed while plain
+SUI matched within 0.17%, i.e. the staking exchange rate is not applied. Raised on
+2026-08-17 and closed the same day: there is a specific reason for this on the contract
+side. Do not re-raise it, and keep the widened LST tolerances in `rules/prod-price.mjs`
+rather than tightening them to the 2% default.
 
 **2. `LZWBTC@0` is borrowed past its configured cap.** Utilisation 0.6441 against a
 `borrowCapCeiling` of 0.5 — 129% of the cap. `SUI@9` (0.9587) and `nUSDC@3` (0.9506) are
