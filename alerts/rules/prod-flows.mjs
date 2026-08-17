@@ -54,7 +54,9 @@ export const rules = [
     window: '15 minute',
     bounds: ACTION_SIZE,
     for: '1m',
-    interval: '5m',
+    // 15m rather than 5m: seven of the fourteen SQL rules were being rejected by
+    // the analytics tier quota, so they never evaluated. See STATUS.md.
+    interval: '15m',
   }),
 
   // Flashloan volume, not count: count is extremely spiky (30d p95 11, p99 99,
@@ -101,6 +103,6 @@ order by n desc`,
     op: '>',
     threshold: 0,
     for: '1m',
-    interval: '5m',
+    interval: '15m', // quota, see the note above
   }),
 ]

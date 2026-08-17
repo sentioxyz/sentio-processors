@@ -54,7 +54,10 @@ where timestamp > now() - interval 15 minute`,
     op: '>',
     threshold: 50000,
     for: '1m',
-    interval: '5m',
+    // 15m rather than 5m: seven of the fourteen SQL rules were being rejected by
+    // the analytics tier quota, so they never evaluated at all. A slower rule that
+    // runs beats a faster one that is refused. See STATUS.md.
+    interval: '15m',
   }),
 
   // Same account liquidated repeatedly inside an hour: either a cascading position
@@ -102,6 +105,6 @@ where timestamp > now() - interval 15 minute
   and collateral_usd < debt_usd
 order by shortfall desc`,
     for: '1m',
-    interval: '5m',
+    interval: '15m', // quota, see the note above
   }),
 ]

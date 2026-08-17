@@ -15,6 +15,7 @@ import { fileURLToPath } from 'node:url'
 import { dirname, join } from 'node:path'
 import { listRules, createRule, updateRule, deleteRule, pool } from './lib/api.mjs'
 import { MANAGED_PREFIX } from './lib/spec.mjs'
+import { canonical } from './lib/diff.mjs'
 import { assertChannelsConfigured } from './channels.mjs'
 
 const HERE = dirname(fileURLToPath(import.meta.url))
@@ -39,63 +40,6 @@ const only = args.includes('--file') ? args[args.indexOf('--file') + 1] : undefi
 if (!['plan', 'apply'].includes(command)) {
   console.error(`unknown command ${command}, expected plan|apply`)
   process.exit(2)
-}
-
-function prune_(value, key) {
-  if (value === undefined || value === null || value === '') return undefined
-  if (key === 'disabled' && value === false) return undefined
-  if (Array.isArray(value)) {
-    const arr = value.map((v) => prune_(v)).filter((v) => v !== undefined)
-    return arr.length ? arr : undefined
-  }
-  if (typeof value === 'object') {
-    const out = {}
-    for (const k of Object.keys(value).sort()) {
-      const v = prune_(value[k], k)
-      if (v !== undefined) out[k] = v
-    }
-    return Object.keys(out).length ? out : undefined
-  }
-  return value
-}
-
-/**
- * The server echoes back all three condition blocks, filling the two that do
- * not apply with zero-valued defaults, and adds `threshold2: 0` even when the
- * operator is not `between`. Compare only the block the alertType selects.
- */
-function conditionOf(rule) {
-  const type = rule.alertType ?? 'METRIC'
-  const raw = type === 'METRIC' ? rule.condition : type === 'LOG' ? rule.logCondition : rule.sqlCondition
-  return dropUnusedThreshold2(raw)
-}
-
-function dropUnusedThreshold2(node) {
-  if (!node || typeof node !== 'object') return node
-  if (Array.isArray(node)) return node.map(dropUnusedThreshold2)
-  const out = {}
-  for (const [k, v] of Object.entries(node)) out[k] = dropUnusedThreshold2(v)
-  if (out.comparisonOp !== 'between' && out.threshold2 === 0) delete out.threshold2
-  return out
-}
-
-/** Fields we own. Everything else the server sets is ignored when diffing. */
-function canonical(rule) {
-  return JSON.stringify(
-    prune_({
-      subject: rule.subject,
-      message: rule.message,
-      group: rule.group,
-      alertType: rule.alertType ?? 'METRIC',
-      for: rule.for,
-      interval: rule.interval,
-      renotifyDuration: rule.renotifyDuration?.value ? rule.renotifyDuration : undefined,
-      renotifyLimit: rule.renotifyLimit || undefined,
-      condition: conditionOf(rule),
-      mute: rule.mute || undefined,
-      channels: (rule.channels ?? []).map((c) => c.id).sort(),
-    }) ?? {},
-  )
 }
 
 async function syncFile(mod, file) {

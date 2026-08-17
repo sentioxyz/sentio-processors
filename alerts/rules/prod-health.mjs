@@ -55,6 +55,8 @@ from Liquidation
 where timestamp > now() - interval 15 minute
   and (toFloat64(debt_price_normalized) = 0 or toFloat64(collateral_price_normalized) = 0)`,
     for: '1m',
-    interval: '5m',
+    // 15m rather than 5m: seven of the fourteen SQL rules were being rejected by
+    // the analytics tier quota, so they never evaluated. See STATUS.md.
+    interval: '15m',
   }),
 ]
