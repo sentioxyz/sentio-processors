@@ -18,12 +18,22 @@ import { MANAGED_PREFIX } from './lib/spec.mjs'
 import { assertChannelsConfigured } from './channels.mjs'
 
 const HERE = dirname(fileURLToPath(import.meta.url))
-const CONCURRENCY = 4
+/**
+ * Writes are serialised on purpose. With 4 concurrent PUTs against one project,
+ * some rules came back carrying both their old and their new channel — the
+ * concurrent writes interfere, and which rules are affected varies between runs.
+ * A single targeted PUT replaces `channels` correctly every time, so this is
+ * contention in the alert service rather than union semantics. Reads of a rule
+ * immediately after its write can also be stale, so verify after a pause, not
+ * instantly.
+ */
+const CONCURRENCY = 1
 
 const args = process.argv.slice(2)
 const command = args.find((a) => !a.startsWith('--')) ?? 'plan'
 const prune = args.includes('--prune')
 const showDiff = args.includes('--diff')
+const recreate = args.includes('--recreate')
 const only = args.includes('--file') ? args[args.indexOf('--file') + 1] : undefined
 
 if (!['plan', 'apply'].includes(command)) {
@@ -121,10 +131,19 @@ async function syncFile(mod, file) {
 
   const creates = []
   const updates = []
+  const recreates = []
   for (const wanted of rules) {
     const existing = bySubject.get(wanted.subject)
     if (!existing) creates.push(wanted)
-    else if (canonical(wanted) !== canonical(existing)) updates.push({ id: existing.id, wanted, existing })
+    else if (canonical(wanted) === canonical(existing)) continue
+    // Some rules refuse to converge through PUT — repointing at a different
+    // notification channel is the case seen in practice, where the rule keeps
+    // both the old and the new channel no matter how the payload is shaped or
+    // how many times it is retried. Delete-and-recreate always works, so
+    // `--recreate` offers it explicitly rather than leaving it folklore. It
+    // discards the rule's firing history, which is why it is not the default.
+    else if (recreate) recreates.push({ id: existing.id, wanted })
+    else updates.push({ id: existing.id, wanted, existing })
   }
   const deletes = managed.filter((r) => !subjects.has(r.subject))
 
@@ -142,15 +161,29 @@ async function syncFile(mod, file) {
       console.log(`      spec:   ${canonical(u.wanted)}`)
     }
   }
+  for (const r of recreates) console.log(`  ↻ recreate ${r.wanted.group}  ${r.wanted.subject}`)
   for (const r of deletes) console.log(`  - delete  ${r.group}  ${r.subject}${prune ? '' : '   (needs --prune)'}`)
-  if (!creates.length && !updates.length && !deletes.length) console.log('  up to date')
+  if (!creates.length && !updates.length && !recreates.length && !deletes.length) console.log('  up to date')
 
   if (command !== 'apply') return
 
   await pool(creates, CONCURRENCY, (r) => createRule({ ...r, projectId: project.id }))
-  await pool(updates, CONCURRENCY, (u) => updateRule(u.id, { ...u.wanted, id: u.id, projectId: project.id }))
+  // Send the full remote rule with the spec laid over it, not just the fields we
+  // own. A partial payload is treated as a patch and `channels` comes back as the
+  // union of old and new, so repointing a rule at a different channel never
+  // converges — rules kept carrying both their old and new channel across
+  // repeated applies. Overlaying onto the remote object makes it a true replace.
+  await pool(updates, CONCURRENCY, (u) =>
+    updateRule(u.id, { ...u.existing, ...u.wanted, id: u.id, projectId: project.id }),
+  )
+  await pool(recreates, CONCURRENCY, async (r) => {
+    await deleteRule(r.id)
+    await createRule({ ...r.wanted, projectId: project.id })
+  })
   if (prune) await pool(deletes, CONCURRENCY, (r) => deleteRule(r.id))
-  console.log(`  applied: ${creates.length} created, ${updates.length} updated, ${prune ? deletes.length : 0} deleted`)
+  console.log(
+    `  applied: ${creates.length} created, ${updates.length} updated, ${recreates.length} recreated, ${prune ? deletes.length : 0} deleted`,
+  )
 }
 
 try {

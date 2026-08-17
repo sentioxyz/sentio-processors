@@ -8,6 +8,7 @@ node alerts/sync.mjs plan                       # diff, touches nothing
 node alerts/sync.mjs plan --diff                # same, prints the field-level diff
 node alerts/sync.mjs apply                      # create + update
 node alerts/sync.mjs apply --prune              # also delete managed rules dropped from the spec
+node alerts/sync.mjs apply --recreate           # delete+recreate instead of PUT, see below
 node alerts/sync.mjs plan --file navi-vault     # one rule file only
 
 node alerts/inspect.mjs                         # server state of every managed rule

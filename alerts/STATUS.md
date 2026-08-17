@@ -6,7 +6,8 @@ untouched and uncommitted.
 
 ## What you need to do, in one place
 
-1. **Two Sentio channels** in the web UI, then give me the ids — see the section below.
+1. ~~Two Sentio channels~~ — done. `Jdd2WOaD` = #alert-navi-lending-critical,
+   `HA6P3L8e` = #alert-navi-lending-warning, both wired up and verified.
 2. ~~Connect your GitHub account to claude.ai~~ — done, the routine now clones the repo
    fine.
 3. **Allow `app.sentio.xyz` in the cloud environment's network egress settings**
@@ -42,9 +43,17 @@ touching the server with `node alerts/inspect.mjs --dry-run`.
 4. Put the ids in `alerts/channels.mjs`, replacing the burn-in placeholder, and run
    `node alerts/sync.mjs apply`. Rules update in place; nothing is re-created.
 
-**Both tiers currently point at the pre-existing org default telegram channel
-`087i9RCH` (sentio-navi) as a placeholder.** Do not set `muted = false` in any rule
-file before the real ids are in, or the critical rules fire into that group.
+Routing verified 2026-08-17 after the channels were wired up: 24 critical rules to
+#alert-navi-lending-critical, 5 normal rules to #alert-navi-lending-warning, no rule still
+carrying the old telegram placeholder, all 29 still muted.
+
+Getting there needed `apply --recreate`: repointing a rule at a different channel does not
+converge through PUT. Four rules held on to both their old and new channel through
+serialised writes, full-object payloads and repeated retries. Worth knowing before the next
+channel change — and the reason `--recreate` exists.
+
+**The only thing left is `muted`.** Flipping it to false in the five rule files and running
+`apply` is the moment real Slack messages start. Worth doing with someone watching.
 
 ## Two things found on the way that need a decision
 

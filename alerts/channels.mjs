@@ -11,28 +11,30 @@
  * the raw Slack webhook URL.
  */
 /**
- * BURN-IN PLACEHOLDER — both tiers point at the pre-existing org default telegram
- * channel so the rules could be applied and start collecting firing history before
- * the real channels exist. Every rule is created with `mute: true`, so nothing is
- * delivered here: a muted rule was observed FIRING with an active alert instance
- * and `lastNotified: null`.
- *
- * Replace both entries with the real critical / normal channel ids and re-run
- * `node alerts/sync.mjs apply` — the rules update in place, no re-creation.
- * DO NOT set `muted = false` in the rule files until this is done, or 48 critical
- * rules will fire into the sentio-navi telegram group.
+ * Created in the web UI on 2026-08-17 and verified with
+ * `GET /api/v1/alerts/channels/{id}`. Only the ids live here — the channel objects
+ * also carry raw Slack webhook URLs, which must not be committed.
  */
 export const CHANNELS = {
-  critical: { id: '087i9RCH', projectId: 'hXovp1EL', type: 'TELEGRAM' }, // TODO: real critical channel
-  normal: { id: '087i9RCH', projectId: 'hXovp1EL', type: 'TELEGRAM' }, // TODO: real normal channel
+  critical: { id: 'Jdd2WOaD', projectId: 'e2kx9fDv', type: 'SLACK' }, // #alert-navi-lending-critical
+  normal: { id: 'HA6P3L8e', projectId: 'e2kx9fDv', type: 'SLACK' }, // #alert-navi-lending-warning
 }
 
-/** Channel ids already in use by hand-made rules, kept here for reference. */
+/** Channel ids in use by hand-made rules elsewhere, kept here for reference. */
 export const KNOWN_CHANNELS = {
   'navi-vault slack #lending-vault-alert': { id: 'yjj21rIH', projectId: 'rNITGeqT', type: 'SLACK' },
   'astros telegram aggregator-alert': { id: 'bTth0XLc', projectId: 'lDlwJYP3', type: 'TELEGRAM' },
   'org default telegram sentio-navi': { id: '087i9RCH', projectId: 'hXovp1EL', type: 'TELEGRAM' },
 }
+
+/**
+ * There is no endpoint that lists channels — only `GET /v1/alerts/channels/{id}`,
+ * a fetch by id. So an id is discoverable only by reading it out of a rule that
+ * already references the channel, or from the web UI. Probed and confirmed absent:
+ * /v1/channels, /v1/alerts/channels, /v1/notification(s)/channels,
+ * /v1/projects/{id}/channels, /v1/alerts/channels/project/{id}, and the by-id route
+ * does not accept a channel name.
+ */
 
 export function assertChannelsConfigured() {
   for (const [severity, c] of Object.entries(CHANNELS)) {
