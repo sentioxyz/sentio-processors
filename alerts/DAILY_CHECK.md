@@ -4,6 +4,13 @@ Read-only. Do **not** create, update, delete or apply any alert rule, and do **n
 commit or push anything. The key the routine supplies has scope `read:project` only, so
 writes are rejected server-side, but do not attempt them.
 
+## Environment prerequisite
+
+The cloud environment's egress proxy must allow `app.sentio.xyz`. Without it every rule
+fails identically with `403 Host not in allowlist: app.sentio.xyz`, which comes from the
+session proxy and not from Sentio. That is a hard block — do not retry it as if it were
+one of the transient failures below; report it and stop.
+
 ## Setup
 
 1. `git checkout feat/sentio-alerts-as-code`
@@ -52,6 +59,10 @@ Keep the final message short. It is the whole product of the run.
 2. Rules that failed for a non-transient reason, with the error.
 3. Anything that changed versus `STATUS.md`.
 4. If nothing would fire and nothing failed, say exactly that in one line and stop.
+
+Send a push notification only when there is something the human has to act on: a rule that
+would fire and is not in the known-firing list below, or a non-transient failure. A clean
+run does not warrant a push.
 
 Do not speculate about causes beyond what the data shows, and do not propose threshold
 changes — a rule firing once is not evidence that its threshold is wrong. Report what

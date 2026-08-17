@@ -7,12 +7,13 @@ untouched and uncommitted.
 ## What you need to do, in one place
 
 1. **Two Sentio channels** in the web UI, then give me the ids — see the section below.
-2. **Connect your GitHub account to claude.ai** if you want the daily check to run without
-   your laptop: saving a cloud routine that clones a private repo is rejected with
-   `Connect your GitHub account before saving a routine that uses a GitHub repository`.
-   Do it at https://claude.ai/customize/connectors, then the routine can be created.
+2. ~~Connect your GitHub account to claude.ai~~ — done, the routine now clones the repo
+   fine.
+3. **Allow `app.sentio.xyz` in the cloud environment's network egress settings**
+   (environment `env_01AQPX818Uirz8HURNMbYEng`). Until then the daily check reaches the
+   repo but not Sentio. See the Daily check section.
 
-Both are one-time. Everything after them is code.
+All one-time. Everything after them is code.
 
 ## Live state on Sentio
 
@@ -167,9 +168,17 @@ small value carries no signal. Re-run after adding a market.
 rather than in the routine prompt means they are version-controlled and editable without
 touching the schedule.
 
-The routine itself is not created yet — it needs the GitHub connection above. Intended
-schedule: daily at 09:00 America/Los_Angeles (`0 16 * * *` UTC), model claude-sonnet-5,
-read-only tools, using the `read:project` Sentio key so it cannot write even by mistake.
+The routine exists: `trig_01TfMJBkVrpFyB8MBNULTEiA`, daily at 09:00 America/Los_Angeles
+(`0 16 * * *` UTC), claude-sonnet-5, read-only tools, using the `read:project` Sentio key
+so it cannot write even by mistake. It can push to a phone, so results do not have to be
+read off the web page.
+
+**It cannot reach Sentio yet.** The first run cloned the repo, checked out the branch and
+ran correctly, but every rule failed with `403 Host not in allowlist: app.sentio.xyz` —
+the cloud environment's egress proxy, not Sentio. `app.sentio.xyz` has to be added to the
+egress allowlist for environment `env_01AQPX818Uirz8HURNMbYEng`. The routine is left
+enabled so it keeps failing visibly rather than being forgotten; it starts working the
+moment the allowlist is fixed, no redeploy needed.
 
 Note that reading alert rule state (`GET /v1/alerts/rule/project/...`) requires WRITE
 access on Sentio — a read-only key gets 403. So the scheduled check uses `--dry-run`, which
