@@ -1,0 +1,74 @@
+# Alert rule definition for `sentio alert create|update --file`.
+# Verified round-trip (create -> list -> update -> delete) on 2026-08-13.
+#
+# Channels: only the `id` is honoured. A channel object without an id is
+# silently dropped by the server and the rule falls back to the org default
+# channel, so new channels still have to be created once in the web UI.
+# Grab ids with: sentio alert list --project navi/<slug> --yaml
+
+rule:
+  # id / projectId are only needed for `alert update` (which has no --project flag)
+  # id: <RULE_ID>
+  # projectId: <PROJECT_ID>
+
+  alertType: SQL # METRIC | LOG | SQL
+  subject: "⚠️ example alert"
+  message: |-
+    {{ range .Samples }}• {{ .some_column }} = {{ .another_column }}
+    {{ end }}
+
+  for: # condition must hold this long before firing
+    value: 5
+    unit: m
+  interval: # evaluation cadence
+    value: 1
+    unit: m
+
+  channels:
+    - id: yjj21rIH # SLACK "Navi Vault Alert" -> #lending-vault-alert
+      projectId: rNITGeqT
+      type: SLACK
+
+  sqlCondition:
+    sqlQuery: |
+      select timestamp, rate
+      from BorrowRate
+      where timestamp between $startTime and $endTime
+    columnCondition:
+      timeColumn: timestamp
+      valueColumn: rate
+      aggregation: MAX # COUNT | SUM | AVG | MAX | MIN | LAST
+      comparisonOp: ">" # > >= == != < <= between
+      threshold: 0.5
+      # threshold2: 0.9   # only for `between`
+
+  # --- alertType: LOG -------------------------------------------------------
+  # logCondition.query is Elasticsearch query-string syntax.
+  # Ranges must be `field:>value`; `field > value` is rejected at eval time.
+  #
+  # logCondition:
+  #   query: "eventName:VaultSnapshotError"
+  #   comparisonOp: ">"
+  #   threshold: 0
+
+  # --- alertType: METRIC ----------------------------------------------------
+  # condition:
+  #   comparisonOp: ">"
+  #   threshold: 100000
+  #   formula:
+  #     expression: a - b
+  #   insightQueries:
+  #     - metricsQuery:
+  #         id: a
+  #         alias: inflow
+  #         query: inflow
+  #         labelSelector:
+  #           meta.chain: "1"
+  #         aggregate:
+  #           op: SUM
+  #     - metricsQuery:
+  #         id: b
+  #         alias: outflow
+  #         query: outflow
+  #         aggregate:
+  #           op: SUM
