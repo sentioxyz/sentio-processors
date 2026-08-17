@@ -14,6 +14,14 @@ export const muted = true
  * used for the thin-liquidity small caps that were already near 0.9%.
  */
 const DEFAULT_TOLERANCE = 0.02
+
+/**
+ * The `oracle` metric emits roughly every 11 minutes per coin, so the critical
+ * default of `for: 2m` leaves most evaluation windows with no sample at all and
+ * the rule sits in NO_DATA forever. Observed live: all 27 price rules stayed
+ * NO_DATA on the 2m window. The window has to be a multiple of the data cadence.
+ */
+const PRICE_CADENCE = { for: '30m', interval: '5m' }
 const WIDER = { BLUE: 0.03, CETUS: 0.03, IKA: 0.03, XAUM: 0.03 }
 
 /**
@@ -62,12 +70,32 @@ const RATIO_PAIRS = [
   ['wUSDT', 'nUSDC'],
 ]
 
+/**
+ * BLOCKED — do not re-enable without re-testing.
+ *
+ * `priceQuery` is accepted inside an alert condition's insightQueries and the
+ * rule saves cleanly, but the alert engine never evaluates it. All 27 deviation
+ * rules were applied live on 2026-08-17 and every one of them either reported the
+ * degenerate `abs(a/b-1) = 1` (with the price input marked disabled) or sat in
+ * NO_DATA (with it enabled), on both a 2m and a 30m window. The identical formula
+ * returns correct values through the insights API — 0.0017 for SUI — so the
+ * expression is right and the alert-side price data source is the gap.
+ *
+ * Metric-to-metric formulas are unaffected: the RATIO_PAIRS rules below work, and
+ * `Pool utilisation critical` returned real values (SUI@9 = 0.9587).
+ *
+ * Next thing to try: have the processor emit the market price as its own metric,
+ * then express deviation as metric-to-metric, which is the path known to work.
+ */
+const PRICE_DEVIATION_WORKS = false
+
 export const rules = [
-  ...PRICED.map((coin) =>
+  ...(PRICE_DEVIATION_WORKS ? PRICED : []).map((coin) =>
     priceDeviationRule({
       severity: LST_TOLERANCE[coin] ? 'normal' : 'critical',
       coin,
       maxDeviation: LST_TOLERANCE[coin] ?? WIDER[coin] ?? DEFAULT_TOLERANCE,
+      ...PRICE_CADENCE,
       message: `NAVI oracle for ${coin} has drifted from the market price by more than the allowed band.`,
     }),
   ),
@@ -77,6 +105,7 @@ export const rules = [
       a,
       b,
       tolerance: 0.02,
+      ...PRICE_CADENCE,
       message: `${a} and ${b} wrap the same underlying but their oracle prices have diverged.`,
     }),
   ),

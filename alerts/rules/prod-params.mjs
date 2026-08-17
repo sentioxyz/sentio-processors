@@ -100,6 +100,7 @@ export const rules = [
     },
     op: '>',
     threshold: 0.9,
+    ...BOUNDS_CADENCE,
   }),
   formulaRule({
     severity: 'normal',
@@ -112,6 +113,7 @@ export const rules = [
     },
     op: '>',
     threshold: 0.9,
+    ...BOUNDS_CADENCE,
   }),
   formulaRule({
     severity: 'critical',
@@ -124,6 +126,7 @@ export const rules = [
     },
     op: '>',
     threshold: 0.95,
+    ...BOUNDS_CADENCE,
   }),
 
   // --- treasury / revenue --------------------------------------------------
@@ -135,6 +138,7 @@ export const rules = [
     groupBy: BY_COIN,
     op: '<',
     threshold: 0,
+    ...BOUNDS_CADENCE,
   }),
 
   // --- parameter change events ---------------------------------------------

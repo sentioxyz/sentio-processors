@@ -85,7 +85,44 @@ for (const file of files) {
       const grouped = queries.some((q) => (q.metricsQuery?.aggregate?.grouping ?? []).length)
       if (hasPrice && grouped) problems.push('price query mixed with a grouped metric — the formula will not align, pin one coin with labelSelector')
 
-      console.log(`  ${problems.length ? '✗' : '·'} ${r.subject}${problems.length ? '' : ': ok'}`)
+      // Checking that each input resolves is not enough: a formula whose inputs
+      // resolve individually can still degenerate. `disabled: true` on an input
+      // made every price rule report exactly abs(a/b-1) = 1 and fire forever, and
+      // an input-only check could not see it. So evaluate the formula itself and
+      // compare the result against the threshold the rule will use.
+      const formula = r.condition?.formula?.expression
+      let evaluated
+      if (formula && !problems.length) {
+        try {
+          const series = insightSeries(
+            await queryInsights(
+              project.owner,
+              project.slug,
+              queries.map((q) => ({
+                dataSource: q.priceQuery ? 'PRICE' : 'METRICS',
+                ...(q.priceQuery ? { priceQuery: q.priceQuery } : { metricsQuery: q.metricsQuery }),
+              })),
+              [{ id: 'f', alias: 'formula', expression: formula }],
+            ),
+          )
+          const result = series.filter((s) => !/^(avg|sum|min|max|count|price|oracle)/i.test(s.label))
+          if (!result.length) problems.push(`formula "${formula}" produced no series`)
+          else {
+            const values = result.map((s) => Number(s.value)).filter(Number.isFinite)
+            const op = r.condition.comparisonOp
+            const t = r.condition.threshold
+            const breaches = values.filter((v) => (op === '>' ? v > t : op === '<' ? v < t : false))
+            evaluated = `${formula} = ${values.map((v) => Number(v).toPrecision(4)).join(', ')}  ${op} ${t}`
+            if (breaches.length === values.length && values.length) {
+              problems.push(`every series already breaches the threshold: ${evaluated} — check for a degenerate formula`)
+            }
+          }
+        } catch (e) {
+          problems.push(`formula evaluation failed — ${String(e).split('\n')[0]}`)
+        }
+      }
+
+      console.log(`  ${problems.length ? '✗' : '·'} ${r.subject}${problems.length ? '' : `: ok${evaluated ? `  [${evaluated}]` : ''}`}`)
       for (const p of problems) console.log(`      ${p}`)
     })
     continue

@@ -99,6 +99,11 @@ export function formulaRule(opts) {
           labelSelector: q.labels ?? {},
           aggregate: { op: checkAggr(q.aggr ?? 'AVG'), grouping: q.groupBy ?? [] },
           functions: q.functions ?? [],
+          // Formula inputs must be `disabled: true`. That is what the web UI emits
+          // and what the engine expects — it means "feed the formula, do not plot".
+          // With false, the condition produced no data at all and every formula
+          // rule sat in NO_DATA (verified live 2026-08-17, both with a 2m and a 30m
+          // window, so it is not a data-cadence problem).
           disabled: true,
         },
       })),
