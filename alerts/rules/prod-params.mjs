@@ -1,4 +1,4 @@
-import { metricRule, formulaRule, logRule, sqlBoundsRule } from '../lib/spec.mjs'
+import { metricRule, logRule, sqlBoundsRule, sqlRowRule } from '../lib/spec.mjs'
 import {
   BOUNDS_currentBorrowRate,
   BOUNDS_currentSupplyRate,
@@ -88,44 +88,45 @@ export const rules = [
     ...BOUNDS_CADENCE,
   }),
 
-  // --- capacity ------------------------------------------------------------
-  formulaRule({
-    severity: 'normal',
-    subject: 'Supply cap almost full',
-    message: '{{ range .Samples }}• {{ .coin_symbol }}@{{ .market_id }} supply cap utilisation = {{ .Value }}\n{{ end }}',
-    expression: 'a / b',
-    queries: {
-      a: { metric: 'total_supply', groupBy: BY_POOL },
-      b: { metric: 'supplyCapCeiling', groupBy: BY_POOL },
-    },
-    op: '>',
-    threshold: 0.9,
-    ...BOUNDS_CADENCE,
-  }),
-  formulaRule({
-    severity: 'normal',
-    subject: 'Borrow cap almost full',
-    message: '{{ range .Samples }}• {{ .coin_symbol }}@{{ .market_id }} borrow cap utilisation = {{ .Value }}\n{{ end }}',
-    expression: 'a / b',
-    queries: {
-      a: { metric: 'total_borrow', groupBy: BY_POOL },
-      b: { metric: 'borrowCapCeiling', groupBy: BY_POOL },
-    },
-    op: '>',
-    threshold: 0.9,
-    ...BOUNDS_CADENCE,
-  }),
-  formulaRule({
+  /**
+   * Utilisation against each pool's own configured cap ratio.
+   *
+   * This replaces three formula rules that were all silently wrong:
+   *  - `total_supply / supplyCapCeiling` is off by 10^decimals. total_supply is
+   *    normalised (SUI@0 = 2.6e7) while supplyCapCeiling is raw (5.5e16), so the
+   *    ratio came out at ~1e-9 for every pool and the rule could never fire.
+   *  - `total_borrow / borrowCapCeiling` is nonsense: borrowCapCeiling is a RATIO
+   *    parameter (0.96, 0.92, 0.8), not an absolute ceiling. The formula returned
+   *    1.4e8.
+   *  - a hard `total_borrow / total_supply > 0.95` was an arbitrary number. SUI@9
+   *    at 0.9587 and nUSDC@3 at 0.951 are both inside their configured 0.96 cap,
+   *    so that threshold reported two non-problems.
+   *
+   * Comparing utilisation against the pool's own borrowCapCeiling is unit-free
+   * and needs no decimals table, because both sides are ratios.
+   *
+   * Supply-cap fullness is deliberately NOT covered: it needs per-token decimals
+   * to reconcile the two units, and there is no decimals column in the warehouse.
+   * See STATUS.md.
+   */
+  sqlRowRule({
     severity: 'critical',
-    subject: 'Pool utilisation critical',
-    message: '{{ range .Samples }}• {{ .coin_symbol }}@{{ .market_id }} utilisation = {{ .Value }}\n{{ end }}',
-    expression: 'a / b',
-    queries: {
-      a: { metric: 'total_borrow', groupBy: BY_POOL },
-      b: { metric: 'total_supply', groupBy: BY_POOL },
-    },
-    op: '>',
-    threshold: 0.95,
+    subject: 'Utilisation approaching configured borrow cap',
+    message: '{{ range .Samples }}\u2022 {{ .series }} utilisation {{ .utilisation }} against cap {{ .cap }}\n{{ end }}',
+    sql: `select ts as timestamp, k as series, utilisation, cap
+from (
+  select concat(token, '@', toString(market_id)) as k,
+         max(timestamp) as ts,
+         argMax(toFloat64(total_borrow), timestamp) as bor,
+         argMax(toFloat64(total_supply), timestamp) as sup,
+         argMax(toFloat64(borrowCapCeiling), timestamp) as cap,
+         round(bor / nullIf(sup, 0), 4) as utilisation
+  from indexNumberEventV2
+  where timestamp > now() - interval 1 hour
+  group by k
+)
+where sup > 0 and cap > 0 and utilisation > cap * 0.98
+order by utilisation desc`,
     ...BOUNDS_CADENCE,
   }),
 

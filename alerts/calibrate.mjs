@@ -45,6 +45,9 @@ const emit = args.includes('--emit')
 // window functions — goes through --inner: any SQL returning `grp` and `v` columns.
 const inner = flag('--inner')
 const minN = Number(flag('--min-n', '30'))
+// For "is this single action unusually large", only the upper bound is a signal —
+// a dust-sized withdrawal is not an anomaly. Emits [0, hi].
+const upperOnly = args.includes('--upper-only')
 const pad = Number(flag('--pad', '2'))
 
 /** Round to 3 significant digits so the emitted map stays readable. */
@@ -87,7 +90,7 @@ for (const column of inner ? ['custom'] : columns) {
     for (const r of rows) {
       // Widen away from zero in both directions: dividing a negative p1 by pad
       // would tighten it, which is the opposite of what padding is for.
-      const lo = sig(Number(r.p1) < 0 ? Number(r.p1) * pad : Number(r.p1) / pad)
+      const lo = upperOnly ? 0 : sig(Number(r.p1) < 0 ? Number(r.p1) * pad : Number(r.p1) / pad)
       const hi = sig(Number(r.p99) < 0 ? Number(r.p99) / pad : Number(r.p99) * pad)
       if (Number(r.n) < minN) {
         console.log(`  // '${r.grp}': [${lo}, ${hi}],  // only ${r.n} samples, too few to calibrate`)

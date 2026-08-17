@@ -4,24 +4,34 @@ Branch `feat/sentio-alerts-as-code`, pushed. Nothing else in the repo was touche
 the `sui/navi/*` edits and untracked files that were already in the working tree are
 untouched and uncommitted.
 
+## What you need to do, in one place
+
+1. **Two Sentio channels** in the web UI, then give me the ids — see the section below.
+2. **Connect your GitHub account to claude.ai** if you want the daily check to run without
+   your laptop: saving a cloud routine that clones a private repo is rejected with
+   `Connect your GitHub account before saving a routine that uses a GitHub repository`.
+   Do it at https://claude.ai/customize/connectors, then the routine can be created.
+
+Both are one-time. Everything after them is code.
+
 ## Live state on Sentio
 
-**31 rules on `navi/navi-production-new`, all `mute: true`.** They evaluate and record
+**29 rules on `navi/navi-production-new`, all `mute: true`.** They evaluate and record
 FIRING/NORMAL but deliver nothing. Verified: a muted rule was observed FIRING with an
 active alert instance and `lastNotified: null`.
 
 | namespace | rules | what it covers |
 |---|---|---|
-| `prod-params` | 10 | rate / LTV / cap bounds (243 bound checks inside 5 SQL rules), cap utilisation, fee pool, fee-rate changes |
+| `prod-params` | 8 | rate / LTV / cap bounds (243 bound checks inside 5 SQL rules), utilisation vs configured cap, fee pool, fee-rate changes |
 | `prod-price` | 8 | wrapper-to-wrapper oracle consistency |
 | `prod-liquidation` | 5 | rate, single size, repeat account, bad debt |
-| `prod-flows` | 5 | hourly net flow per coin, single action share of pool, flashloan volume, treasury movements |
+| `prod-flows` | 5 | hourly net flow per coin, unusually large single action, flashloan volume, treasury movements |
 | `prod-health` | 3 | indexer stall, asset stopped reporting, zero-price liquidation |
 
 Reproduce the state with `node alerts/inspect.mjs`, or validate the spec without
 touching the server with `node alerts/inspect.mjs --dry-run`.
 
-## What you need to do (5 minutes, the only UI-bound step)
+## The Sentio channel step in detail
 
 1. Create the two notification channels in the Sentio web UI (critical, normal).
 2. Attach each to any one throwaway alert, so the ids become readable.
@@ -45,9 +55,39 @@ conservative and safe; under-pricing LST-denominated *debt* is not. Worth confir
 which side of the book that oracle feeds. (Sentio's own LST price could in principle be
 the wrong one, but tracking SUI 1:1 is the more likely explanation.)
 
-**2. Two pools are above 95% utilisation right now.** `Pool utilisation critical`
-returned real values: `SUI@9 = 0.9587`, `nUSDC@3 = 0.9510`. Either genuine and worth
-acting on, or the 0.95 threshold is too tight for those two markets.
+**2. `LZWBTC@0` is borrowed past its configured cap.** Utilisation 0.6441 against a
+`borrowCapCeiling` of 0.5 — 129% of the cap. `SUI@9` (0.9587) and `nUSDC@3` (0.9506) are
+merely *near* their 0.96 cap, which is normal.
+
+Correcting an earlier version of this file: it reported SUI@9 and nUSDC@3 as "above 95%
+utilisation" and treated that as the finding. That was an artefact of an arbitrary hard
+0.95 threshold — both pools are inside their configured caps. The real signal is LZWBTC@0,
+and it only became visible once the rule compared utilisation against each pool's own cap.
+
+## Three more silent-wrongness bugs, found by running the dry-run against live data
+
+None of these errored. All three computed a number, and the number was meaningless. This
+is the failure mode that matters at this scale, and only comparing the output against
+reality catches it.
+
+- **`UserInteraction.reserve` is the asset id (0, 1, 2 …), not the pool balance.** The
+  "single action took a large share of the pool" rule divided by it and produced shares
+  above 274%. Replaced with per-coin calibrated size bounds, which keep the comparison
+  inside one coin so the units cancel.
+- **`supplyCapCeiling` is raw on-chain units while `total_supply` is normalised** — SUI@0
+  is 5.5e16 against 2.6e7. Their ratio came out at ~1e-9 for every pool, so the supply-cap
+  rule could never have fired.
+- **`borrowCapCeiling` is a ratio parameter (0.96, 0.92, 0.5), not an absolute ceiling.**
+  `total_borrow / borrowCapCeiling` returned 1.4e8.
+
+All three cap/utilisation formula rules were replaced by one SQL rule comparing utilisation
+against each pool's own `borrowCapCeiling`, which is unit-free because both sides are
+ratios. That is also what surfaced the LZWBTC@0 finding above.
+
+**Supply-cap fullness is now uncovered.** It needs per-token decimals to reconcile the two
+units and there is no decimals column in the warehouse. `WithdrawTreasuryV2` carries both
+`amount` and `amount_normalized`, so decimals could be derived from it for coins that have
+had a treasury withdrawal — untried.
 
 ## Open item: oracle-vs-market deviation does not work
 
@@ -62,7 +102,7 @@ The identical formula returns correct values through the insights API — 0.0017
 so the expression is right and the alert-side price data source is the gap.
 
 Metric-to-metric formulas are fine: the 8 wrapper-ratio rules work, and
-`Pool utilisation critical` returns real numbers. The code is kept behind
+`Utilisation approaching configured borrow cap` returns real numbers. The code is kept behind
 `PRICE_DEVIATION_WORKS = false` in `rules/prod-price.mjs`; the 27 rules were pruned off
 the server so nobody learns to ignore a permanently grey alert.
 
@@ -76,7 +116,7 @@ BTC or SUI complex drifting together.
 
 ## Second open item: SQL evaluation is hitting the tier quota
 
-Between 2 and 9 of the 31 rules carry
+Between 2 and 9 of the 29 rules carry
 `ResourceExhausted: too many requests in queue, current: 100, limit: 100` at any moment.
 It rotates and self-heals per rule, so evaluations are being skipped rather than lost
 permanently, but it means the SQL rules are not reliably running.
@@ -117,4 +157,22 @@ single global rate threshold is useless because the same token behaves different
 market — `HAEDAL@0` is a flat 0.3008 while `HAEDAL@3` is a flat 0.
 
 Regenerate any calibration with `node alerts/calibrate.mjs`; `--emit` prints a
-paste-ready bounds map. Re-run after adding a market.
+paste-ready bounds map, `--upper-only` for the "is this unusually large" checks where a
+small value carries no signal. Re-run after adding a market.
+
+## Daily check
+
+`alerts/DAILY_CHECK.md` holds the instructions for a scheduled cloud agent that runs
+`inspect.mjs --dry-run` and reports what would fire. Keeping the instructions in the repo
+rather than in the routine prompt means they are version-controlled and editable without
+touching the schedule.
+
+The routine itself is not created yet — it needs the GitHub connection above. Intended
+schedule: daily at 09:00 America/Los_Angeles (`0 16 * * *` UTC), model claude-sonnet-5,
+read-only tools, using the `read:project` Sentio key so it cannot write even by mistake.
+
+Note that reading alert rule state (`GET /v1/alerts/rule/project/...`) requires WRITE
+access on Sentio — a read-only key gets 403. So the scheduled check uses `--dry-run`, which
+only needs SQL and insights. That is the better view anyway: it evaluates each rule's own
+condition directly, independent of the alert engine, which is currently unreliable because
+of the quota contention above.

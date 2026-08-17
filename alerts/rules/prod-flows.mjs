@@ -1,5 +1,5 @@
 import { sqlBoundsRule, sqlRowRule, sqlColumnRule, logRule } from '../lib/spec.mjs'
-import { NETFLOW_HOURLY } from '../bounds.flows.generated.mjs'
+import { NETFLOW_HOURLY, ACTION_SIZE } from '../bounds.flows.generated.mjs'
 
 export const project = { owner: 'navi', slug: 'navi-production-new', id: 'e2kx9fDv' }
 export const muted = true
@@ -31,23 +31,28 @@ export const rules = [
     interval: '15m',
   }),
 
-  // A single withdrawal or borrow taking a large slice of what the pool holds.
-  // Ratio-based, so it needs no per-coin calibration and no decimals.
-  sqlRowRule({
+  /**
+   * A single withdrawal or borrow far larger than anything seen in the last 30
+   * days for that coin.
+   *
+   * The obvious version of this rule — `amount / reserve > 0.25` — was wrong and
+   * silently so: `UserInteraction.reserve` is the ASSET ID (0, 1, 2 …), not the
+   * pool balance, so the ratio was meaningless and produced "shares" above 274%.
+   * Comparing against the pool balance instead does not work either, because
+   * `amount` is raw on-chain units while `total_supply` is normalised, and there
+   * is no decimals column to reconcile them. Per-coin calibrated bounds sidestep
+   * both problems: the comparison stays inside one coin, so units cancel.
+   */
+  sqlBoundsRule({
     severity: 'critical',
-    subject: 'Single action took a large share of the pool',
-    message: '{{ range .Samples }}• {{ .coin_symbol }} {{ .type }} by {{ .sender }} = {{ .share }} of pool\n{{ end }}',
-    sql: `with actions as (
-  select timestamp, coin_symbol, type, sender, toFloat64(amount) as amount, toFloat64(reserve) as reserve
-  from UserInteraction
-  where timestamp > now() - interval 15 minute
-    and type in ('WithdrawEvent', 'BorrowEvent')
-    and toFloat64(reserve) > 0
-)
-select timestamp, coin_symbol, type, sender, round(amount / reserve, 4) as share
-from actions
-where amount / reserve > 0.25
-order by share desc`,
+    subject: 'Single action unusually large',
+    message: '{{ range .Samples }}• {{ .series }} amount {{ .value }}  (30d p99 x5 = {{ .hi }})\n{{ end }}',
+    table: 'UserInteraction',
+    keyExpr: "concat(coin_symbol, '/', type)",
+    valueExpr: 'max(toFloat64(amount))',
+    where: "type in ('WithdrawEvent', 'BorrowEvent')",
+    window: '15 minute',
+    bounds: ACTION_SIZE,
     for: '1m',
     interval: '5m',
   }),
