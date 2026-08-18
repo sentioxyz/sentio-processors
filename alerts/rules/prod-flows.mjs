@@ -48,7 +48,8 @@ export const rules = [
     subject: 'Single action unusually large',
     message: '{{ range .Samples }}• {{ .series }} amount {{ .value }}  (30d p99 x5 = {{ .hi }})\n{{ end }}',
     table: 'UserInteraction',
-    keyExpr: "concat(coin_symbol, '/', type)",
+    keyExpr: "concat(coin_symbol, '/', type)", // join key, must match ACTION_SIZE
+    labelExpr: "concat(coin_symbol, ' ', replaceOne(type, 'Event', ''))",
     valueExpr: 'max(toFloat64(amount))',
     where: "type in ('WithdrawEvent', 'BorrowEvent')",
     window: '15 minute',
@@ -65,13 +66,18 @@ export const rules = [
   sqlRowRule({
     severity: 'normal',
     subject: 'Flashloan volume unusually large',
-    message: '{{ range .Samples }}• {{ .coinType }}: {{ .n }} loans, total {{ .total }}\n{{ end }}',
-    sql: `select ts as timestamp, coinType, n, total
+    message: '{{ range .Samples }}• {{ .asset }}: {{ .n }} loans, total {{ .total }}\n{{ end }}',
+    sql: `select ts as timestamp, asset, n, total
 from (
-  select max(timestamp) as ts, coinType, count() as n, sum(toFloat64(amount)) as total
+  select max(timestamp) as ts,
+         -- coinType is the full 0x...::mod::SYMBOL type; the trailing symbol is
+         -- the only part a reader needs.
+         arrayElement(splitByString('::', coinType), -1) as asset,
+         count() as n,
+         sum(toFloat64(amount)) as total
   from flashloan
   where timestamp > now() - interval 1 hour
-  group by coinType
+  group by asset
   having n > 300
 )
 order by n desc`,

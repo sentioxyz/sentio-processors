@@ -32,6 +32,13 @@ const BY_COIN = ['coin_symbol'] // feePoolNetGrowth and the treasury metrics car
 const boundsMessage = '{{ range .Samples }}• {{ .series }} = {{ .value }}  (expected {{ .lo }} .. {{ .hi }})\n{{ end }}'
 
 /**
+ * The bounds tables are keyed on `token@market_id` and must stay that way, but
+ * `nUSDC@7` is not something a reader can decode. `labelExpr` is display only, so
+ * the join key stays stable while the message names the market.
+ */
+const POOL_LABEL = `concat(token, ' in ', ${marketNameExpr()})`
+
+/**
  * `indexNumberEventV2` emits roughly every 11 minutes per series (measured: 921
  * samples over 10050 minutes for SUI@0), so evaluating these on the 1m default
  * would re-scan the same rows ten times over. It also matters operationally: the
@@ -53,6 +60,7 @@ export const rules = [
     message: boundsMessage,
     column: 'currentBorrowRate',
     bounds: BOUNDS_currentBorrowRate,
+    labelExpr: POOL_LABEL,
     ...BOUNDS_CADENCE,
   }),
   sqlBoundsRule({
@@ -61,6 +69,7 @@ export const rules = [
     message: boundsMessage,
     column: 'currentSupplyRate',
     bounds: BOUNDS_currentSupplyRate,
+    labelExpr: POOL_LABEL,
     ...BOUNDS_CADENCE,
   }),
   sqlBoundsRule({
@@ -69,6 +78,7 @@ export const rules = [
     message: boundsMessage,
     column: 'ltv',
     bounds: BOUNDS_ltv,
+    labelExpr: POOL_LABEL,
     ...BOUNDS_CADENCE,
   }),
   // Caps are configuration, not market data: any move here means somebody
@@ -79,6 +89,7 @@ export const rules = [
     message: boundsMessage,
     column: 'supplyCapCeiling',
     bounds: BOUNDS_supplyCapCeiling,
+    labelExpr: POOL_LABEL,
     ...BOUNDS_CADENCE,
   }),
   sqlBoundsRule({
@@ -87,6 +98,7 @@ export const rules = [
     message: boundsMessage,
     column: 'borrowCapCeiling',
     bounds: BOUNDS_borrowCapCeiling,
+    labelExpr: POOL_LABEL,
     ...BOUNDS_CADENCE,
   }),
 

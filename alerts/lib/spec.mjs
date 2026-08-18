@@ -248,6 +248,11 @@ export function sqlBoundsRule(opts) {
     // anything aggregated over the window — hourly net flow, counts, ratios.
     valueExpr = column ? `toFloat64(argMax(${column}, timestamp))` : undefined,
     keyExpr = "concat(token, '@', toString(market_id))",
+    // `keyExpr` is the join key against the bounds table and must stay stable —
+    // every generated bounds map is keyed on it. `labelExpr` is what the reader
+    // sees, so it can be as verbose as it likes. Without the split, messages
+    // said `nUSDC@7`, which nobody can decode without the market roster.
+    labelExpr = keyExpr,
     where,
     bounds,
     window = '1 hour',
@@ -261,6 +266,7 @@ export function sqlBoundsRule(opts) {
   // Float64 bounds table has to be cast explicitly.
   const sql = `with latest as (
   select ${keyExpr} as k,
+         any(${labelExpr}) as label,
          ${valueExpr} as v,
          max(timestamp) as ts
   from ${table}
@@ -274,7 +280,7 @@ bounds as (
   )
 )
 select latest.ts as timestamp,
-       latest.k as series,
+       latest.label as series,
        latest.v as value,
        bounds.lo as lo,
        bounds.hi as hi

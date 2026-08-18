@@ -1,4 +1,5 @@
 import { metricRule, sqlRowRule } from '../lib/spec.mjs'
+import { marketNameExpr } from '../markets.mjs'
 
 export const project = { owner: 'navi', slug: 'navi-production-new', id: 'e2kx9fDv' }
 export const muted = false // live since 2026-08-17; set true to silence this domain
@@ -29,7 +30,7 @@ export const rules = [
     subject: 'Asset stopped reporting',
     message: '{{ range .Samples }}• {{ .series }} last seen {{ .last_seen }}\n{{ end }}',
     sql: `with recent as (
-  select concat(token, '@', toString(market_id)) as k, max(timestamp) as last_seen
+  select concat(token, ' in ', ${marketNameExpr()}) as k, max(timestamp) as last_seen
   from indexNumberEventV2
   where timestamp > now() - interval 1 day
   group by k
