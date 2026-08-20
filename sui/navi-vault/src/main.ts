@@ -6,21 +6,18 @@ import {
   getVaultByAddress,
   getCoinSymbolByType,
   getDecimalByCoinType,
+  getMarketName,
+  VaultInfo,
+  NAVI_VAULT_PACKAGE,
+  START_CHECKPOINT,
+} from "./config.js";
+import {
   normalizeCoinType,
   scaleAmount,
   scaleWad,
-  VaultInfo,
   DEFAULT_COIN_DECIMAL,
 } from "./utils.js";
-
-// The defining package address. Event types keep this address across upgrades,
-// so the processor always binds here.
-const NAVI_VAULT_PACKAGE =
-  "0x51cecaacaed0bd436f04ebbd8ba0ca1627c9c4d0e54ad28eff095ca78591518c";
-
-// navi_vault was published at checkpoint 289808972 (2026-06-21). Start a little
-// before to be safe.
-const START_CHECKPOINT = 289800000n;
+import { VaultStateProcessor } from "./state-processor.js";
 
 // ---------------------------------------------------------------------------
 // Metrics
@@ -33,18 +30,33 @@ const vaultCapGauge = Gauge.register("vault_cap");
 // ---------------------------------------------------------------------------
 // Helpers
 // ---------------------------------------------------------------------------
-// Resolve the vault's underlying symbol / coin type / decimals for an event.
+const UNKNOWN_VAULT = "UNKNOWN";
+
+// Resolve a vault's labels for an event.
+//
+// `vault_key` is the unique per-vault label and the one metrics group by;
+// `vault_symbol` is the underlying asset and DELIBERATELY not unique — SUI and
+// SUI_PRIME are both 0x2::sui::SUI, so grouping a metric by symbol alone silently
+// merges two vaults into one series.
 function vaultLabels(vaultId: string): {
+  vault_key: string;
   vault_symbol: string;
   coin_type: string;
   decimals: number;
 } {
   const info: VaultInfo | undefined = getVaultByAddress(vaultId);
   return {
-    vault_symbol: info?.symbol ?? "UNKNOWN",
+    vault_key: info?.key ?? UNKNOWN_VAULT,
+    vault_symbol: info?.symbol ?? UNKNOWN_VAULT,
     coin_type: info?.coinType ?? "unknown",
     decimals: info?.decimals ?? DEFAULT_COIN_DECIMAL,
   };
+}
+
+// Identity labels only, for event logs that carry no scaled amounts.
+function vaultTags(vaultId: string): { vault_key: string; vault_symbol: string } {
+  const { vault_key, vault_symbol } = vaultLabels(vaultId);
+  return { vault_key, vault_symbol };
 }
 
 // ---------------------------------------------------------------------------
@@ -134,21 +146,23 @@ async function onCreateReceipt(event: events.CreateReceiptEventInstance, ctx: Su
 // ---------------------------------------------------------------------------
 async function onDeposit(event: events.DepositEventInstance, ctx: SuiContext) {
   const d = event.data_decoded;
-  const { vault_symbol, coin_type, decimals } = vaultLabels(d.vault);
+  const { vault_key, vault_symbol, coin_type, decimals } = vaultLabels(d.vault);
   const amountNorm = scaleAmount(d.amount, decimals);
   const sharesNorm = scaleAmount(d.shares, decimals);
 
-  depositVolume.add(ctx, amountNorm, { vault_symbol });
+  depositVolume.add(ctx, amountNorm, { vault_key, vault_symbol });
 
   ctx.eventLogger.emit("Deposit", {
     vault: d.vault,
     sender: d.sender,
     receipt_id: d.receipt_id,
     pool_address: d.pool_address,
+    market_name: getMarketName(d.vault, d.pool_address),
     amount: d.amount.toString(),
     shares: d.shares.toString(),
     amount_normalized: amountNorm,
     shares_normalized: sharesNorm,
+    vault_key,
     vault_symbol,
     coin_type,
     decimals,
@@ -159,21 +173,23 @@ async function onDeposit(event: events.DepositEventInstance, ctx: SuiContext) {
 
 async function onWithdraw(event: events.WithdrawEventInstance, ctx: SuiContext) {
   const d = event.data_decoded;
-  const { vault_symbol, coin_type, decimals } = vaultLabels(d.vault);
+  const { vault_key, vault_symbol, coin_type, decimals } = vaultLabels(d.vault);
   const amountNorm = scaleAmount(d.amount, decimals);
   const sharesNorm = scaleAmount(d.shares_burned, decimals);
 
-  withdrawVolume.add(ctx, amountNorm, { vault_symbol });
+  withdrawVolume.add(ctx, amountNorm, { vault_key, vault_symbol });
 
   ctx.eventLogger.emit("Withdraw", {
     vault: d.vault,
     sender: d.sender,
     receipt_id: d.receipt_id,
     pool_address: d.pool_address,
+    market_name: getMarketName(d.vault, d.pool_address),
     amount: d.amount.toString(),
     shares_burned: d.shares_burned.toString(),
     amount_normalized: amountNorm,
     shares_burned_normalized: sharesNorm,
+    vault_key,
     vault_symbol,
     coin_type,
     decimals,
@@ -196,7 +212,7 @@ async function onClaimReward(event: events.ClaimRewardEventInstance, ctx: SuiCon
     reward_symbol: rewardSymbol,
     amount: d.amount.toString(),
     amount_normalized: scaleAmount(d.amount, rewardDecimals),
-    vault_symbol: vaultLabels(d.vault).vault_symbol,
+    ...vaultTags(d.vault),
     timestamp: ctx.timestamp,
     tx_hash: ctx.transaction.digest,
   });
@@ -207,13 +223,15 @@ async function onClaimReward(event: events.ClaimRewardEventInstance, ctx: SuiCon
 // ---------------------------------------------------------------------------
 async function onAllocate(event: events.AllocateEventInstance, ctx: SuiContext) {
   const d = event.data_decoded;
-  const { vault_symbol, coin_type, decimals } = vaultLabels(d.vault);
+  const { vault_key, vault_symbol, coin_type, decimals } = vaultLabels(d.vault);
   ctx.eventLogger.emit("Allocate", {
     vault: d.vault,
     sender: d.sender,
     pool_address: d.pool_address,
+    market_name: getMarketName(d.vault, d.pool_address),
     amount: d.amount.toString(),
     amount_normalized: scaleAmount(d.amount, decimals),
+    vault_key,
     vault_symbol,
     coin_type,
     timestamp: ctx.timestamp,
@@ -223,13 +241,15 @@ async function onAllocate(event: events.AllocateEventInstance, ctx: SuiContext) 
 
 async function onDeallocate(event: events.DeallocateEventInstance, ctx: SuiContext) {
   const d = event.data_decoded;
-  const { vault_symbol, coin_type, decimals } = vaultLabels(d.vault);
+  const { vault_key, vault_symbol, coin_type, decimals } = vaultLabels(d.vault);
   ctx.eventLogger.emit("Deallocate", {
     vault: d.vault,
     sender: d.sender,
     pool_address: d.pool_address,
+    market_name: getMarketName(d.vault, d.pool_address),
     amount: d.amount.toString(),
     amount_normalized: scaleAmount(d.amount, decimals),
+    vault_key,
     vault_symbol,
     coin_type,
     timestamp: ctx.timestamp,
@@ -239,19 +259,22 @@ async function onDeallocate(event: events.DeallocateEventInstance, ctx: SuiConte
 
 async function onSyncMarketBalance(event: events.SyncMarketBalanceEventInstance, ctx: SuiContext) {
   const d = event.data_decoded;
-  const { vault_symbol, coin_type, decimals } = vaultLabels(d.vault);
+  const { vault_key, vault_symbol, coin_type, decimals } = vaultLabels(d.vault);
   const balanceNorm = scaleAmount(d.current_balance, decimals);
 
   marketBalance.record(ctx, balanceNorm, {
+    vault_key,
     vault_symbol,
-    pool_address: d.pool_address,
+    market_name: getMarketName(d.vault, d.pool_address),
   });
 
   ctx.eventLogger.emit("SyncMarketBalance", {
     vault: d.vault,
     pool_address: d.pool_address,
+    market_name: getMarketName(d.vault, d.pool_address),
     current_balance: d.current_balance.toString(),
     current_balance_normalized: balanceNorm,
+    vault_key,
     vault_symbol,
     coin_type,
     timestamp: ctx.timestamp,
@@ -270,7 +293,7 @@ async function onCollectReward(event: events.CollectRewardEventInstance, ctx: Su
     reward_symbol: getCoinSymbolByType(rewardCoinType),
     amount: d.amount.toString(),
     amount_normalized: scaleAmount(d.amount, rewardDecimals),
-    vault_symbol: vaultLabels(d.vault).vault_symbol,
+    ...vaultTags(d.vault),
     timestamp: ctx.timestamp,
     tx_hash: ctx.transaction.digest,
   });
@@ -281,12 +304,13 @@ async function onCollectReward(event: events.CollectRewardEventInstance, ctx: Su
 // ---------------------------------------------------------------------------
 async function onClaimManagementFee(event: events.ClaimManagementFeeEventInstance, ctx: SuiContext) {
   const d = event.data_decoded;
-  const { vault_symbol, decimals } = vaultLabels(d.vault);
+  const { vault_key, vault_symbol, decimals } = vaultLabels(d.vault);
   ctx.eventLogger.emit("ClaimManagementFee", {
     vault: d.vault,
     receipt_id: d.receipt_id,
     shares: d.shares.toString(),
     shares_normalized: scaleAmount(d.shares, decimals),
+    vault_key,
     vault_symbol,
     timestamp: ctx.timestamp,
     tx_hash: ctx.transaction.digest,
@@ -295,12 +319,13 @@ async function onClaimManagementFee(event: events.ClaimManagementFeeEventInstanc
 
 async function onClaimPerformanceFee(event: events.ClaimPerformanceFeeEventInstance, ctx: SuiContext) {
   const d = event.data_decoded;
-  const { vault_symbol, decimals } = vaultLabels(d.vault);
+  const { vault_key, vault_symbol, decimals } = vaultLabels(d.vault);
   ctx.eventLogger.emit("ClaimPerformanceFee", {
     vault: d.vault,
     receipt_id: d.receipt_id,
     shares: d.shares.toString(),
     shares_normalized: scaleAmount(d.shares, decimals),
+    vault_key,
     vault_symbol,
     timestamp: ctx.timestamp,
     tx_hash: ctx.transaction.digest,
@@ -315,7 +340,7 @@ async function onSetManagementFee(event: events.SetManagementFeeEventInstance, c
     new_fee: d.new_fee.toString(),
     old_fee_rate: scaleWad(d.old_fee),
     new_fee_rate: scaleWad(d.new_fee),
-    vault_symbol: vaultLabels(d.vault).vault_symbol,
+    ...vaultTags(d.vault),
     timestamp: ctx.timestamp,
     tx_hash: ctx.transaction.digest,
   });
@@ -329,7 +354,7 @@ async function onSetPerformanceFee(event: events.SetPerformanceFeeEventInstance,
     new_fee: d.new_fee.toString(),
     old_fee_rate: scaleWad(d.old_fee),
     new_fee_rate: scaleWad(d.new_fee),
-    vault_symbol: vaultLabels(d.vault).vault_symbol,
+    ...vaultTags(d.vault),
     timestamp: ctx.timestamp,
     tx_hash: ctx.transaction.digest,
   });
@@ -345,7 +370,7 @@ async function onProposalCreated(event: events.ProposalCreatedEventInstance, ctx
     proposal_type: d.proposal_type,
     subject: d.subject,
     executable_at: d.executable_at.toString(),
-    vault_symbol: vaultLabels(d.vault).vault_symbol,
+    ...vaultTags(d.vault),
     timestamp: ctx.timestamp,
     tx_hash: ctx.transaction.digest,
   });
@@ -357,7 +382,7 @@ async function onProposalExecuted(event: events.ProposalExecutedEventInstance, c
     vault: d.vault,
     proposal_type: d.proposal_type,
     subject: d.subject,
-    vault_symbol: vaultLabels(d.vault).vault_symbol,
+    ...vaultTags(d.vault),
     timestamp: ctx.timestamp,
     tx_hash: ctx.transaction.digest,
   });
@@ -369,7 +394,7 @@ async function onProposalCancelled(event: events.ProposalCancelledEventInstance,
     vault: d.vault,
     proposal_type: d.proposal_type,
     subject: d.subject,
-    vault_symbol: vaultLabels(d.vault).vault_symbol,
+    ...vaultTags(d.vault),
     timestamp: ctx.timestamp,
     tx_hash: ctx.transaction.digest,
   });
@@ -383,7 +408,8 @@ async function onSetDefaultMarket(event: events.SetDefaultMarketEventInstance, c
   ctx.eventLogger.emit("SetDefaultMarket", {
     vault: d.vault,
     pool_address: d.pool_address,
-    vault_symbol: vaultLabels(d.vault).vault_symbol,
+    market_name: getMarketName(d.vault, d.pool_address),
+    ...vaultTags(d.vault),
     timestamp: ctx.timestamp,
     tx_hash: ctx.transaction.digest,
   });
@@ -394,8 +420,9 @@ async function onSetMarketStatus(event: events.SetMarketStatusEventInstance, ctx
   ctx.eventLogger.emit("SetMarketStatus", {
     vault: d.vault,
     pool_address: d.pool_address,
+    market_name: getMarketName(d.vault, d.pool_address),
     target_status: d.target_status, // 0 = Active, 1 = Disabled
-    vault_symbol: vaultLabels(d.vault).vault_symbol,
+    ...vaultTags(d.vault),
     timestamp: ctx.timestamp,
     tx_hash: ctx.transaction.digest,
   });
@@ -403,10 +430,11 @@ async function onSetMarketStatus(event: events.SetMarketStatusEventInstance, ctx
 
 async function onAddMarket(event: events.AddMarketEventInstance, ctx: SuiContext) {
   const d = event.data_decoded;
-  const { vault_symbol, decimals } = vaultLabels(d.vault);
+  const { vault_key, vault_symbol, decimals } = vaultLabels(d.vault);
   ctx.eventLogger.emit("AddMarket", {
     vault: d.vault,
     pool_address: d.pool_address,
+    market_name: getMarketName(d.vault, d.pool_address),
     cap: d.cap.toString(),
     cap_normalized: scaleAmount(d.cap, decimals),
     penalty: d.penalty.toString(),
@@ -415,6 +443,7 @@ async function onAddMarket(event: events.AddMarketEventInstance, ctx: SuiContext
     asset_id: d.asset_id,
     incentive_v3_address: d.incentive_v3_address,
     incentive_v2_address: d.incentive_v2_address,
+    vault_key,
     vault_symbol,
     timestamp: ctx.timestamp,
     tx_hash: ctx.transaction.digest,
@@ -423,14 +452,16 @@ async function onAddMarket(event: events.AddMarketEventInstance, ctx: SuiContext
 
 async function onSetMarketCapAndPenalty(event: events.SetMarketCapAndPenaltyEventInstance, ctx: SuiContext) {
   const d = event.data_decoded;
-  const { vault_symbol, decimals } = vaultLabels(d.vault);
+  const { vault_key, vault_symbol, decimals } = vaultLabels(d.vault);
   ctx.eventLogger.emit("SetMarketCapAndPenalty", {
     vault: d.vault,
     pool_address: d.pool_address,
+    market_name: getMarketName(d.vault, d.pool_address),
     cap: d.cap.toString(),
     cap_normalized: scaleAmount(d.cap, decimals),
     penalty: d.penalty.toString(),
     penalty_rate: scaleWad(d.penalty),
+    vault_key,
     vault_symbol,
     timestamp: ctx.timestamp,
     tx_hash: ctx.transaction.digest,
@@ -439,13 +470,14 @@ async function onSetMarketCapAndPenalty(event: events.SetMarketCapAndPenaltyEven
 
 async function onSetVaultCap(event: events.SetVaultCapEventInstance, ctx: SuiContext) {
   const d = event.data_decoded;
-  const { vault_symbol, decimals } = vaultLabels(d.vault);
+  const { vault_key, vault_symbol, decimals } = vaultLabels(d.vault);
   const capNorm = scaleAmount(d.vault_cap, decimals);
-  vaultCapGauge.record(ctx, capNorm, { vault_symbol });
+  vaultCapGauge.record(ctx, capNorm, { vault_key, vault_symbol });
   ctx.eventLogger.emit("SetVaultCap", {
     vault: d.vault,
     vault_cap: d.vault_cap.toString(),
     vault_cap_normalized: capNorm,
+    vault_key,
     vault_symbol,
     timestamp: ctx.timestamp,
     tx_hash: ctx.transaction.digest,
@@ -454,12 +486,14 @@ async function onSetVaultCap(event: events.SetVaultCapEventInstance, ctx: SuiCon
 
 async function onSetLoss(event: events.SetLossEventInstance, ctx: SuiContext) {
   const d = event.data_decoded;
-  const { vault_symbol, decimals } = vaultLabels(d.vault);
+  const { vault_key, vault_symbol, decimals } = vaultLabels(d.vault);
   ctx.eventLogger.emit("SetLoss", {
     vault: d.vault,
     pool_address: d.pool_address,
+    market_name: getMarketName(d.vault, d.pool_address),
     loss: d.loss.toString(),
     loss_normalized: scaleAmount(d.loss, decimals),
+    vault_key,
     vault_symbol,
     timestamp: ctx.timestamp,
     tx_hash: ctx.transaction.digest,
@@ -475,7 +509,7 @@ async function onAllocatorAdded(event: events.AllocatorAddedEventInstance, ctx: 
     vault: d.vault,
     cap_id: d.cap_id,
     recipient: d.recipient,
-    vault_symbol: vaultLabels(d.vault).vault_symbol,
+    ...vaultTags(d.vault),
     timestamp: ctx.timestamp,
     tx_hash: ctx.transaction.digest,
   });
@@ -496,7 +530,7 @@ async function onCuratorAdded(event: events.CuratorAddedEventInstance, ctx: SuiC
     vault: d.vault,
     cap_id: d.cap_id,
     recipient: d.recipient,
-    vault_symbol: vaultLabels(d.vault).vault_symbol,
+    ...vaultTags(d.vault),
     timestamp: ctx.timestamp,
     tx_hash: ctx.transaction.digest,
   });
@@ -519,7 +553,7 @@ async function onSetPaused(event: events.SetPausedEventInstance, ctx: SuiContext
   ctx.eventLogger.emit("SetPaused", {
     vault: d.vault,
     paused: d.paused,
-    vault_symbol: vaultLabels(d.vault).vault_symbol,
+    ...vaultTags(d.vault),
     timestamp: ctx.timestamp,
     tx_hash: ctx.transaction.digest,
   });
@@ -555,10 +589,11 @@ async function onRewardRuleCreated(event: events.RewardRuleCreatedEventInstance,
   ctx.eventLogger.emit("RewardRuleCreated", {
     vault: d.vault,
     navi_pool_id: d.navi_pool_id,
+    market_name: getMarketName(d.vault, d.navi_pool_id),
     reward_coin_type: rewardCoinType,
     reward_symbol: getCoinSymbolByType(rewardCoinType),
     incentive_rule_id: d.incentive_rule_id,
-    vault_symbol: vaultLabels(d.vault).vault_symbol,
+    ...vaultTags(d.vault),
     timestamp: ctx.timestamp,
     tx_hash: ctx.transaction.digest,
   });
@@ -570,10 +605,11 @@ async function onRewardRuleReactivated(event: events.RewardRuleReactivatedEventI
   ctx.eventLogger.emit("RewardRuleReactivated", {
     vault: d.vault,
     navi_pool_id: d.navi_pool_id,
+    market_name: getMarketName(d.vault, d.navi_pool_id),
     reward_coin_type: rewardCoinType,
     reward_symbol: getCoinSymbolByType(rewardCoinType),
     incentive_rule_id: d.incentive_rule_id,
-    vault_symbol: vaultLabels(d.vault).vault_symbol,
+    ...vaultTags(d.vault),
     timestamp: ctx.timestamp,
     tx_hash: ctx.transaction.digest,
   });
@@ -585,9 +621,10 @@ async function onRewardRuleDisabled(event: events.RewardRuleDisabledEventInstanc
   ctx.eventLogger.emit("RewardRuleDisabled", {
     vault: d.vault,
     navi_pool_id: d.navi_pool_id,
+    market_name: getMarketName(d.vault, d.navi_pool_id),
     reward_coin_type: rewardCoinType,
     reward_symbol: getCoinSymbolByType(rewardCoinType),
-    vault_symbol: vaultLabels(d.vault).vault_symbol,
+    ...vaultTags(d.vault),
     timestamp: ctx.timestamp,
     tx_hash: ctx.transaction.digest,
   });
@@ -603,7 +640,7 @@ async function onDepositRewardBalance(event: events.DepositRewardBalanceEventIns
     reward_symbol: getCoinSymbolByType(rewardCoinType),
     amount: d.amount.toString(),
     amount_normalized: scaleAmount(d.amount, rewardDecimals),
-    vault_symbol: vaultLabels(d.vault).vault_symbol,
+    ...vaultTags(d.vault),
     timestamp: ctx.timestamp,
     tx_hash: ctx.transaction.digest,
   });
@@ -621,7 +658,7 @@ async function onSetRewardRate(event: events.SetRewardRateEventInstance, ctx: Su
     total_supply_normalized: scaleAmount(d.total_supply, rewardDecimals),
     duration_ms: d.duration_ms.toString(),
     rate: d.rate.toString(), // RAY-scaled (1e27) per-ms rate
-    vault_symbol: vaultLabels(d.vault).vault_symbol,
+    ...vaultTags(d.vault),
     timestamp: ctx.timestamp,
     tx_hash: ctx.transaction.digest,
   });
@@ -637,10 +674,11 @@ async function onWithdrawReward(event: events.WithdrawRewardEventInstance, ctx: 
     reward_symbol: getCoinSymbolByType(rewardCoinType),
     amount: d.amount.toString(),
     amount_normalized: scaleAmount(d.amount, rewardDecimals),
-    vault_symbol: vaultLabels(d.vault).vault_symbol,
+    ...vaultTags(d.vault),
     timestamp: ctx.timestamp,
     tx_hash: ctx.transaction.digest,
   });
 }
 
 NaviVaultProcessor();
+VaultStateProcessor();

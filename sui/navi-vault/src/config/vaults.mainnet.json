@@ -1,0 +1,311 @@
+{
+  "network": "mainnet",
+  "generatedAt": "2026-08-05T06:45:58.096Z",
+  "note": "Generated from chain by navi_vault_setup/dump_vaults.ts. Do not hand-edit; re-run instead.",
+  "package": {
+    "callTarget": "0x13e1e0ddcf3a76cde006d530e98a0f985c446013cfedeae6dd067a2f1ea88ff5",
+    "callTargetNote": "Use for every move call. Calling an older id runs the older code.",
+    "typeIdentity": "0x51cecaacaed0bd436f04ebbd8ba0ca1627c9c4d0e54ad28eff095ca78591518c",
+    "typeIdentityNote": "Object and event types keep the ORIGINAL package id forever — a Sui upgrade does not change type identity. Filter owned objects / events by this, never by callTarget."
+  },
+  "types": {
+    "vault": "0x51cecaacaed0bd436f04ebbd8ba0ca1627c9c4d0e54ad28eff095ca78591518c::navi_vault::Vault<COIN_TYPE>",
+    "timelocks": "0x51cecaacaed0bd436f04ebbd8ba0ca1627c9c4d0e54ad28eff095ca78591518c::navi_vault::Timelocks<COIN_TYPE>",
+    "receipt": "0x51cecaacaed0bd436f04ebbd8ba0ca1627c9c4d0e54ad28eff095ca78591518c::navi_vault::Receipt",
+    "receiptNote": "Receipt is NOT generic — a single type covers all four vaults. To list a user's positions, filter their owned objects by this exact type, then match each object's `vault_address` field against the vault you care about. Filtering by Receipt<CoinType> finds nothing."
+  },
+  "sharedObjects": {
+    "clock": "0x6",
+    "priceOracle": "0x1568865ed9a0b5ec414220e8f79b3d04c77acc82358f6e5ae4635687392ffbef",
+    "incentiveV2": "0xf87a8acb8b81d14307894d12595541a73f19933f88e1326d5be349c7a6f7559c",
+    "suiSystemState": "0x5"
+  },
+  "ptbRecipe": {
+    "note": "deposit and withdraw BOTH abort unless every market was synced and every active market reward rule was collected IN THE SAME TRANSACTION. Emit the commands in this order.",
+    "steps": [
+      "1. oracle: <oracle.package>::<oracle.entry>(clock, oracle.config, priceOracle, oracle.supraOracleHolder, feeds[COIN].pythPriceInfoObject, oracle.switchboardAggregator, feeds[COIN].naviPriceFeed) — skip it and deallocate/withdraw abort 1502.",
+      "2. sync: navi_vault::sync_market_balance<CoinType>(vault, market.storage, market.pool, clock) — ONCE PER MARKET in vaults[].markets, all of them, or abort 10006 (E_MARKET_NOT_READ).",
+      "3. collect: navi_vault::collect_reward<CoinType, RewardCoinType>(vault, clock, rule.storage, rule.incentiveV3, rule.rewardFund, rule.index) — for every rule with mustCollectBeforeWithdraw=true, or abort E_REWARDS_NOT_COLLECTED.",
+      "4. deposit(vault, receiptOpt, clock, storage, pool, coin, amount, incentiveV2, incentiveV3) or withdraw(vault, receipt, clock, priceOracle, storage, pool, amount, maxShares, fromDefault, incentiveV2, incentiveV3, suiSystemState)."
+    ],
+    "depositOnlyGoesToDefaultMarket": "deposit asserts the pool is the vault default_market (E_DEFAULT_MARKET_MISMATCH). Use the market flagged isDefault; withdrawing from it also takes no penalty.",
+    "claimRewardIsSeparate": "claim_reward(vault, receipt, clock) pays out of the vault and needs neither the rewardFund nor the sync/collect preamble."
+  },
+  "liveFields": {
+    "note": "version / paused / vaultCap / withdrawPenalty / depositCap below are a SNAPSHOT — the admin or curator can change them without a redeploy. Read them from the Vault object at runtime rather than trusting this file. Everything else (ids, coin types, asset ids) only changes when a vault or market is added."
+  },
+  "oracle": {
+    "package": "0x4837ae94425107554c8847721cf9954c1ad8e10520433b9e37dc11c507148bea",
+    "entry": "oracle_pro::update_single_price_v3",
+    "config": "0x1afe1cb83634f581606cc73c4487ddd8cc39a944b951283af23f7d69d5589478",
+    "supraOracleHolder": "0xaa0315f0748c1f24ddb2b45f7939cff40f7a8104af5ccbc4a1d32f870c0b4105",
+    "switchboardAggregator": "0x1fa7566f40f93cdbafd5a029a231e06664219444debb59beec2fe3f19ca08b7e",
+    "note": "Refresh a coin price before deallocate/withdraw or it aborts 1502 (invalid_price).",
+    "feeds": {
+      "USDC": {
+        "pythPriceInfoObject": "0x6ddfc6f9921e55998cbc2e68f78eba897981d79ac17f66c5277bc38954a2a3f8",
+        "naviPriceFeed": "0xe120611435395f144b4bcc4466a00b6b26d7a27318f96e148648852a9dd6b31c"
+      },
+      "SUI": {
+        "pythPriceInfoObject": "0x89b2add829cb6fcd017153fff428bc9faec4d06d643ecfc435af5b55a9e987f0",
+        "naviPriceFeed": "0x2cab9b151ca1721624b09b421cc57d0bb26a1feb5da1f821492204b098ec35c9"
+      }
+    }
+  },
+  "vaults": [
+    {
+      "key": "SUI",
+      "displayName": "SUI High Yield",
+      "vault": "0x864527a8ed2435aed828b46c6d9d0244506b418761cca25b7dd47a83c7797a29",
+      "timelocks": "0x04523a8d1f1a3019f9b8f5e61984544d5dfc467ec0e91d64f228a17e30737264",
+      "coinType": "0x2::sui::SUI",
+      "decimals": 9,
+      "objectType": "0x51cecaacaed0bd436f04ebbd8ba0ca1627c9c4d0e54ad28eff095ca78591518c::navi_vault::Vault<0x2::sui::SUI>",
+      "version": 2,
+      "paused": false,
+      "performanceFee": "0.05",
+      "managementFee": "0",
+      "vaultCap": "3000000",
+      "vaultCapRaw": "3000000000000000",
+      "defaultMarket": "main",
+      "markets": [
+        {
+          "name": "main",
+          "pool": "0x96df0fce3c471489f4debaaa762cf960b3d97820bd1f3f025ff8190730e958c5",
+          "storage": "0xbb4e2f4b6205c2e2a2db47aeb4f830796ec7c005f88537ee775986639bc442fe",
+          "incentiveV3": "0x62982dad27fb10bb314b3384d5de8d2ac2d72ab2dbeae5d801dbdb9efa816c80",
+          "assetId": 0,
+          "isDefault": true,
+          "withdrawPenalty": "0.02",
+          "depositCap": "unlimited"
+        },
+        {
+          "name": "suieco",
+          "pool": "0xc1dfd32ec30a1ba16e8c1d32a284718ac8f41765722f27fe7fb9d0b38a570ae0",
+          "storage": "0xdf18372bc9c588b96c7553bc811467a9166ed9be472b40cb45c226175377c558",
+          "incentiveV3": "0x5ddc7f50eff9396f3f401a6194dda7b64c2ffc64fd581d119c44ae0587119309",
+          "assetId": 0,
+          "isDefault": false,
+          "withdrawPenalty": "0.02",
+          "depositCap": "unlimited"
+        },
+        {
+          "name": "vsui-sui",
+          "pool": "0x3f2d878005dd9d5caf56467bc0c55f93bb5a3c83a5c7fb057032a0abf1bad4bf",
+          "storage": "0xafb982de1a436b1cc8a14ecd2d787762599b65d3a6b75b84b10939b1e17d9381",
+          "incentiveV3": "0x5a1d3333b37d206033bb49859d306e546cc8d9b81a0c854d899752227a91a2de",
+          "assetId": 1,
+          "isDefault": false,
+          "withdrawPenalty": "0.02",
+          "depositCap": "unlimited"
+        }
+      ],
+      "rewardRules": [
+        {
+          "index": 0,
+          "naviPoolId": "0x96df0fce3c471489f4debaaa762cf960b3d97820bd1f3f025ff8190730e958c5",
+          "incentiveRuleId": "0xd483f186fa678d5f93912f5960f97f29796c12902245b79b9b7a87a4ca407e5a",
+          "rewardCoinType": "0x549e8b69270defbfafd4f94e17ec44cdbdd99820b33bda2278dea3b9a32d3f55::cert::CERT",
+          "isVaultNative": false,
+          "isActive": true,
+          "mustCollectBeforeWithdraw": true,
+          "rewardFund": "0x7093cf7549d5e5b35bfde2177223d1050f71655c7f676a5e610ee70eb4d93b5c",
+          "storage": "0xbb4e2f4b6205c2e2a2db47aeb4f830796ec7c005f88537ee775986639bc442fe",
+          "incentiveV3": "0x62982dad27fb10bb314b3384d5de8d2ac2d72ab2dbeae5d801dbdb9efa816c80"
+        }
+      ]
+    },
+    {
+      "key": "USDC",
+      "displayName": "USDC High Yield",
+      "vault": "0x54359eb5d0e4364bd26989899fdb472f5594d1885e1f0d816ef4a066cab2ae4c",
+      "timelocks": "0x80696a1a627f9e02059c9dfed0e94ef7905424bc602ff85d3ad9fc47638887a6",
+      "coinType": "0xdba34672e30cb065b1f93e3ab55318768fd6fef66c15942c9f7cb846e2f900e7::usdc::USDC",
+      "decimals": 6,
+      "objectType": "0x51cecaacaed0bd436f04ebbd8ba0ca1627c9c4d0e54ad28eff095ca78591518c::navi_vault::Vault<0xdba34672e30cb065b1f93e3ab55318768fd6fef66c15942c9f7cb846e2f900e7::usdc::USDC>",
+      "version": 2,
+      "paused": false,
+      "performanceFee": "0.05",
+      "managementFee": "0",
+      "vaultCap": "3000000",
+      "vaultCapRaw": "3000000000000",
+      "defaultMarket": "main",
+      "markets": [
+        {
+          "name": "main",
+          "pool": "0xa3582097b4c57630046c0c49a88bfc6b202a3ec0a9db5597c31765f7563755a8",
+          "storage": "0xbb4e2f4b6205c2e2a2db47aeb4f830796ec7c005f88537ee775986639bc442fe",
+          "incentiveV3": "0x62982dad27fb10bb314b3384d5de8d2ac2d72ab2dbeae5d801dbdb9efa816c80",
+          "assetId": 10,
+          "isDefault": true,
+          "withdrawPenalty": "0.02",
+          "depositCap": "unlimited"
+        },
+        {
+          "name": "suieco",
+          "pool": "0x085b81d73c936f453a407b0ca5aaebe5a4feafe198e150dba316ce3881444967",
+          "storage": "0xdf18372bc9c588b96c7553bc811467a9166ed9be472b40cb45c226175377c558",
+          "incentiveV3": "0x5ddc7f50eff9396f3f401a6194dda7b64c2ffc64fd581d119c44ae0587119309",
+          "assetId": 1,
+          "isDefault": false,
+          "withdrawPenalty": "0.02",
+          "depositCap": "unlimited"
+        },
+        {
+          "name": "ember",
+          "pool": "0x660194c215d84cf9ac1de39de440edc059671ce04ee8131374159472a791ff84",
+          "storage": "0xc2b6a52f0da7f91389eaffe4f68f4cacee43aa616bb8a4371118eafaf07cdd90",
+          "incentiveV3": "0x715f4d383c3fbc999c9a8030d540bf2348d65cac1cb6aa8e9fab31cd408bff55",
+          "assetId": 0,
+          "isDefault": false,
+          "withdrawPenalty": "0.02",
+          "depositCap": "unlimited"
+        },
+        {
+          "name": "matrixdock",
+          "pool": "0xb2236866d2aacdd2368ffbb4c8afd6832e6a612aa7632fe13bdcdcd47db84208",
+          "storage": "0x199c1d5c2d58a4b05bbfa2338d02ad2676572a8a59ac148a5475b5c0fc53ed9f",
+          "incentiveV3": "0x98612a501041cb7b57edeae28b2029f55a294aae5736ab2dda629523125d7197",
+          "assetId": 0,
+          "isDefault": false,
+          "withdrawPenalty": "0.02",
+          "depositCap": "unlimited"
+        },
+        {
+          "name": "sui-usdc",
+          "pool": "0x981de52ee841ac80387e0edd85c944197a273110043351e1bf5242b47c23abe8",
+          "storage": "0x51c5ad179214eb5e170dd93ba6f9b15948002caf85f7e2b091ef46d2dc2ce5b6",
+          "incentiveV3": "0x78b4a72683b9a36ea30877a27fd0040adbc0539fc11c2f2507fb560a83b82815",
+          "assetId": 1,
+          "isDefault": false,
+          "withdrawPenalty": "0.02",
+          "depositCap": "unlimited"
+        }
+      ],
+      "rewardRules": [
+        {
+          "index": 0,
+          "naviPoolId": "0xa3582097b4c57630046c0c49a88bfc6b202a3ec0a9db5597c31765f7563755a8",
+          "incentiveRuleId": "0xae82946d6cae4d5e7a779325394959fd7c2505405de71b2c01a2aac6ec3ab9da",
+          "rewardCoinType": "0x549e8b69270defbfafd4f94e17ec44cdbdd99820b33bda2278dea3b9a32d3f55::cert::CERT",
+          "isVaultNative": false,
+          "isActive": true,
+          "mustCollectBeforeWithdraw": true,
+          "rewardFund": "0x7093cf7549d5e5b35bfde2177223d1050f71655c7f676a5e610ee70eb4d93b5c",
+          "storage": "0xbb4e2f4b6205c2e2a2db47aeb4f830796ec7c005f88537ee775986639bc442fe",
+          "incentiveV3": "0x62982dad27fb10bb314b3384d5de8d2ac2d72ab2dbeae5d801dbdb9efa816c80"
+        },
+        {
+          "index": 1,
+          "naviPoolId": "0x0000000000000000000000000000000000000000000000000000000000000000",
+          "incentiveRuleId": "0x0000000000000000000000000000000000000000000000000000000000000000",
+          "rewardCoinType": "0x0000000000000000000000000000000000000000000000000000000000000002::sui::SUI",
+          "isVaultNative": true,
+          "isActive": false,
+          "mustCollectBeforeWithdraw": false,
+          "rewardFund": null,
+          "storage": null,
+          "incentiveV3": null
+        }
+      ]
+    },
+    {
+      "key": "SUI_PRIME",
+      "displayName": "SUI Prime",
+      "vault": "0x01236ff6c66c0c668950f9702629b42f372bf478793d055d2a7eca15e0b0d1e7",
+      "timelocks": "0x3f1533e62792cb686b3dd794d408a83a653a1f3b553224c70c7dfcc8b290dcf4",
+      "coinType": "0x2::sui::SUI",
+      "decimals": 9,
+      "objectType": "0x51cecaacaed0bd436f04ebbd8ba0ca1627c9c4d0e54ad28eff095ca78591518c::navi_vault::Vault<0x2::sui::SUI>",
+      "version": 2,
+      "paused": false,
+      "performanceFee": "0.05",
+      "managementFee": "0",
+      "vaultCap": "5000000",
+      "vaultCapRaw": "5000000000000000",
+      "defaultMarket": "vsui-sui",
+      "markets": [
+        {
+          "name": "vsui-sui",
+          "pool": "0x3f2d878005dd9d5caf56467bc0c55f93bb5a3c83a5c7fb057032a0abf1bad4bf",
+          "storage": "0xafb982de1a436b1cc8a14ecd2d787762599b65d3a6b75b84b10939b1e17d9381",
+          "incentiveV3": "0x5a1d3333b37d206033bb49859d306e546cc8d9b81a0c854d899752227a91a2de",
+          "assetId": 1,
+          "isDefault": true,
+          "withdrawPenalty": "0.02",
+          "depositCap": "unlimited"
+        },
+        {
+          "name": "hasui-sui",
+          "pool": "0xe75ea5ed5f37d8c86b1f2742dd408d380ab5845bb1aabeba8fbee38dd5824765",
+          "storage": "0x6b945adccadf11cd7ec39f8c2c225a4267004a74587871cac86f9fa3dbf3be63",
+          "incentiveV3": "0x036e2854c386099d3bb44533160079e13a2e081952065b37467f859c6b73eb64",
+          "assetId": 1,
+          "isDefault": false,
+          "withdrawPenalty": "0.02",
+          "depositCap": "unlimited"
+        }
+      ],
+      "rewardRules": []
+    },
+    {
+      "key": "USDC_PRIME",
+      "displayName": "USDC Prime",
+      "vault": "0x908c978d1a007aec4bcdc8233a0273de27ab059b9e6611bdad083457abb7f062",
+      "timelocks": "0x0aaebd50fbc34041706d2e153fbfe31b475f38e6055bb788340aa9eecba45364",
+      "coinType": "0xdba34672e30cb065b1f93e3ab55318768fd6fef66c15942c9f7cb846e2f900e7::usdc::USDC",
+      "decimals": 6,
+      "objectType": "0x51cecaacaed0bd436f04ebbd8ba0ca1627c9c4d0e54ad28eff095ca78591518c::navi_vault::Vault<0xdba34672e30cb065b1f93e3ab55318768fd6fef66c15942c9f7cb846e2f900e7::usdc::USDC>",
+      "version": 2,
+      "paused": false,
+      "performanceFee": "0.05",
+      "managementFee": "0",
+      "vaultCap": "10000000",
+      "vaultCapRaw": "10000000000000",
+      "defaultMarket": "sui-usdc",
+      "markets": [
+        {
+          "name": "sui-usdc",
+          "pool": "0x981de52ee841ac80387e0edd85c944197a273110043351e1bf5242b47c23abe8",
+          "storage": "0x51c5ad179214eb5e170dd93ba6f9b15948002caf85f7e2b091ef46d2dc2ce5b6",
+          "incentiveV3": "0x78b4a72683b9a36ea30877a27fd0040adbc0539fc11c2f2507fb560a83b82815",
+          "assetId": 1,
+          "isDefault": true,
+          "withdrawPenalty": "0.02",
+          "depositCap": "unlimited"
+        },
+        {
+          "name": "lzwbtc-usdc",
+          "pool": "0x04b66a9a2619d2c22b4845133945ab3e7e613a470af1c66861587a6e72fc3c32",
+          "storage": "0x79db6cdbfb59a067be7d78c1003079f56d817ac33b5d372b3165daf09f31ed69",
+          "incentiveV3": "0xf0263a942969226ec12fd81f1bac355d08150b4c0c730bd88a598ce8e8de1df9",
+          "assetId": 1,
+          "isDefault": false,
+          "withdrawPenalty": "0.02",
+          "depositCap": "unlimited"
+        },
+        {
+          "name": "vsui-usdc",
+          "pool": "0xa5416a944ea690a26ef6cf1e3745dabd73f84d4143a741b2a2bb0e217f4f8d65",
+          "storage": "0x35fecf669e7794ad25d289c2a23f065e518351acae09c5032d7237e185257924",
+          "incentiveV3": "0xa7955f8aea32d8624b0c26c64c714a5c7abd3f5ef5a6a8b04bb35d5442f7c46b",
+          "assetId": 1,
+          "isDefault": false,
+          "withdrawPenalty": "0.02",
+          "depositCap": "unlimited"
+        },
+        {
+          "name": "xbtc-usdc",
+          "pool": "0x8ef9ddbe70a3e796a5c191bb0418a2f1a03f5f6d10244bcc0c666826e066eb4b",
+          "storage": "0x7db5c000524bfe55bb2bc343886f29eabc38f706dc1655900055fa5b60ee00a5",
+          "incentiveV3": "0xfc707b0a65ccf21cba1a7c8e0fa4dbabfdda605a8f3b957c8dcf19aa3921315f",
+          "assetId": 1,
+          "isDefault": false,
+          "withdrawPenalty": "0.02",
+          "depositCap": "unlimited"
+        }
+      ],
+      "rewardRules": []
+    }
+  ]
+}

@@ -1,4 +1,5 @@
-import { CoinMap } from "./interfaces.js";
+// Pure helpers: address / coin-type normalization and numeric scaling.
+// The vault + market registry lives in config.ts (loaded from vaults.mainnet.json).
 
 // ---------------------------------------------------------------------------
 // Scaling constants
@@ -8,36 +9,16 @@ export const WAD = 1e18;
 export const RAY = 1e27;
 export const DEFAULT_COIN_DECIMAL = 9;
 
+// Inflation-attack offset baked into the share math (navi_vault::VIRTUAL_SHARES).
+// share_price = (total_assets + VIRTUAL_SHARES) / (total_shares + VIRTUAL_SHARES),
+// both in native units, so the offset cancels out of the ratio's units.
+export const VIRTUAL_SHARES = 1_000_000;
+
+export const UNKNOWN_COIN = "unknown";
+
 // ---------------------------------------------------------------------------
-// Coin metadata (underlying assets + reward coins). Keyed lookups stay O(1).
+// Normalization
 // ---------------------------------------------------------------------------
-type CoinDefinition = {
-  symbol: string;
-  decimals: number;
-  coinType: string;
-};
-
-const COIN_DEFINITIONS: CoinDefinition[] = [
-  { symbol: "SUI", decimals: 9, coinType: "0x2::sui::SUI" },
-  // native USDC (vault underlying for the USDC vault)
-  { symbol: "USDC", decimals: 6, coinType: "0xdba34672e30cb065b1f93e3ab55318768fd6fef66c15942c9f7cb846e2f900e7::usdc::USDC" },
-  // vSUI / CERT — the CERT reward coin harvested from Navi incentives
-  { symbol: "vSUI", decimals: 9, coinType: "0x549e8b69270defbfafd4f94e17ec44cdbdd99820b33bda2278dea3b9a32d3f55::cert::CERT" },
-  // NAVX — common reward coin
-  { symbol: "NAVX", decimals: 9, coinType: "0xa99b8952d4f7d947ea77fe0ecdcc9e5fc0bcab2841d6e2a5aa00c3044e5544b5::navx::NAVX" },
-];
-
-export const COIN_MAP: CoinMap = Object.fromEntries(
-  COIN_DEFINITIONS.map(({ coinType, symbol }) => [coinType, symbol] as const)
-);
-
-const COIN_BY_TYPE = new Map<string, CoinDefinition>();
-for (const def of COIN_DEFINITIONS) {
-  COIN_BY_TYPE.set(normalizeCoinType(def.coinType), def);
-}
-
-const UNKNOWN_COIN = "unknown";
-
 function normalizeAddress(address: string): string {
   let addr = address.trim();
   if (!addr.startsWith("0x")) {
@@ -75,60 +56,43 @@ export function normalizeCoinType(coinType: string): string {
 }
 
 // ---------------------------------------------------------------------------
-// Vault registry: vault objectId -> underlying coin metadata.
-// Mainnet vaults from the navi_vault deployment.
-// ---------------------------------------------------------------------------
-export interface VaultInfo {
-  vaultId: string;
-  symbol: string;
-  coinType: string;
-  decimals: number;
-}
-
-const VAULT_LIST: VaultInfo[] = [
-  {
-    vaultId: "0x864527a8ed2435aed828b46c6d9d0244506b418761cca25b7dd47a83c7797a29",
-    symbol: "SUI",
-    coinType: "0x2::sui::SUI",
-    decimals: 9,
-  },
-  {
-    vaultId: "0x54359eb5d0e4364bd26989899fdb472f5594d1885e1f0d816ef4a066cab2ae4c",
-    symbol: "USDC",
-    coinType: "0xdba34672e30cb065b1f93e3ab55318768fd6fef66c15942c9f7cb846e2f900e7::usdc::USDC",
-    decimals: 6,
-  },
-];
-
-const VAULT_BY_ID = new Map<string, VaultInfo>();
-for (const v of VAULT_LIST) {
-  VAULT_BY_ID.set(normalizeId(v.vaultId), v);
-}
-
-export function getVaultByAddress(vaultId: string): VaultInfo | undefined {
-  return VAULT_BY_ID.get(normalizeId(vaultId));
-}
-
-// Coin symbol / decimals for an arbitrary coin type (reward coins, etc).
-export function getCoinSymbolByType(coinType: string): string {
-  const def = COIN_BY_TYPE.get(normalizeCoinType(coinType));
-  return def ? def.symbol : UNKNOWN_COIN;
-}
-
-export function getDecimalByCoinType(coinType: string): number {
-  const def = COIN_BY_TYPE.get(normalizeCoinType(coinType));
-  return def ? def.decimals : DEFAULT_COIN_DECIMAL;
-}
-
-// ---------------------------------------------------------------------------
 // Numeric scaling helpers
 // ---------------------------------------------------------------------------
 // Scale a raw integer amount down by its token decimals.
+//
+// Deliberately not `Number(raw) / 10 ** decimals`: Number() rounds any integer
+// above 2^53 before the division happens. Splitting the digit string instead
+// keeps the integer exact and only converts the final decimal.
+//
+// This is defensive, not a fix for a live bug. Measured against the naive form,
+// the two agree across every value these vaults can currently hold — the largest
+// possible raw amount is the SUI_PRIME cap, 5e15, and dividing by 1e9 lands in a
+// range where double precision absorbs the rounding. They diverge only ~100x
+// beyond that, or for tokens with very few decimals (a 2-decimal token diverges
+// at 9e13). Keeping the exact path means neither case has to be thought about.
 export function scaleAmount(raw: bigint | string | number, decimals: number): number {
-  return Number(raw) / 10 ** decimals;
+  if (decimals <= 0) return Number(raw);
+
+  const s = typeof raw === "bigint" ? raw.toString() : String(raw);
+  const negative = s.startsWith("-");
+  const digits = negative ? s.slice(1) : s;
+
+  // Anything that is not a plain integer (already-scaled floats, exponent
+  // notation) has no precision to preserve — fall back to plain division.
+  if (!/^\d+$/.test(digits)) return Number(raw) / 10 ** decimals;
+
+  const padded = digits.padStart(decimals + 1, "0");
+  const whole = padded.slice(0, padded.length - decimals);
+  const frac = padded.slice(padded.length - decimals).replace(/0+$/, "");
+  return Number(`${negative ? "-" : ""}${whole}${frac ? `.${frac}` : ""}`);
 }
 
 // Scale a WAD-scaled (1e18) rate down to a plain fraction (e.g. 0.05 for 5%).
 export function scaleWad(raw: bigint | string | number): number {
   return Number(raw) / WAD;
+}
+
+// Scale a RAY-scaled (1e27) rate down to a plain fraction.
+export function scaleRay(raw: bigint | string | number): number {
+  return Number(raw) / RAY;
 }

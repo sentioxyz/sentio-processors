@@ -1,11 +1,15 @@
 // Post-codegen patch for sui/navi-vault generated types.
 //
-// `sentio gen` (CLI 2.30.x) cannot fully model two things in the navi_vault
-// package, and emits TypeScript that fails the build's type-check:
+// `sentio gen` cannot fully model two things in the navi_vault package, and
+// emits TypeScript that fails the build's type-check:
 //   1. `TimelockProposal` is a Move `enum` with a phantom type param. Codegen
 //      emits a non-generic namespace but references it as `TimelockProposal<T>`.
 //   2. `lending_core::account` (dependency package) has no generated namespace,
 //      so `...account.AccountCap` is an unresolved member.
+//
+// On CLI 4.x only (2) still fires — 4.x models Move enums properly, so the
+// TimelockProposal rules below are no-ops there. They are kept so the script
+// still works if someone builds on the older 2.30.x toolchain.
 //
 // None of this touches the `events` module that the processor actually uses, so
 // we relax the broken type references to `any`. Idempotent — safe to re-run

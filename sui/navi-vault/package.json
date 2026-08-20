@@ -5,16 +5,16 @@
   "type": "module",
   "scripts": {
     "build": "sentio build --skip-gen",
-    "gen": "sentio gen && node scripts/patch-generated-types.mjs",
+    "gen": "node scripts/convert-sui-abis.mjs && sentio gen && node scripts/patch-generated-types.mjs",
     "test": "sentio test",
     "upload": "sentio upload --skip-gen",
-    "postinstall": "sentio gen && node scripts/patch-generated-types.mjs"
+    "postinstall": "node scripts/convert-sui-abis.mjs && sentio gen && node scripts/patch-generated-types.mjs"
   },
   "dependencies": {
-    "@sentio/sdk": "^2.59.4"
+    "@sentio/sdk": "^4.3.4"
   },
   "devDependencies": {
-    "@sentio/cli": "^2.25.5",
+    "@sentio/cli": "^4.2.3",
     "@types/jest": "^29.5.14",
     "typescript": "^5.5.2"
   }
