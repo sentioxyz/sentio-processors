@@ -1,0 +1,74 @@
+# Sentio alerts, fully from the CLI / local files
+# Verified 2026-08-13 against @sentio/cli 4.2.3 (repo devDep is 2.30.6, which has NO `alert` command).
+# Node >= 24.11 is what cli 4.x asks for; it ran fine on node 22 with an EBADENGINE warning.
+
+# ---------------------------------------------------------------------------
+# 0. auth (once). Uses ~/.sentio/config.json, same key the repo already uses.
+# ---------------------------------------------------------------------------
+npx -y @sentio/cli@latest login --status
+npx -y @sentio/cli@latest login --api-key <KEY>
+
+# ---------------------------------------------------------------------------
+# 1. find the notification channel id you want to attach
+#    There is NO channel CRUD endpoint. Channels are created in the UI only.
+#    But every existing rule echoes its full channel object, id included:
+# ---------------------------------------------------------------------------
+npx -y @sentio/cli@latest alert list --project navi/navi-vault --yaml
+npx -y @sentio/cli@latest alert list --project navi/astros    --yaml
+
+# known channel ids (2026-08-13):
+#   yjj21rIH  SLACK     "Navi Vault Alert"  -> NAVI Protocol / #lending-vault-alert
+#   bTth0XLc  TELEGRAM  "aggregator-alert"  -> chat -4509765776
+#   087i9RCH  TELEGRAM  "sentio-navi"       -> chat -992576883  (org default)
+
+# ---------------------------------------------------------------------------
+# 2. create / update / inspect / delete a rule from a local yaml file
+#    (see scripts/sentio-alert.example.yaml)
+# ---------------------------------------------------------------------------
+npx -y @sentio/cli@latest alert create --project navi/<slug> --file scripts/sentio-alert.example.yaml --yaml
+npx -y @sentio/cli@latest alert list   --project navi/<slug> --yaml
+npx -y @sentio/cli@latest alert get    <RULE_ID> --project navi/<slug> --yaml
+
+# update takes NO --project; put `id:` and `projectId:` inside the yaml instead
+npx -y @sentio/cli@latest alert update <RULE_ID> --file scripts/sentio-alert.example.yaml --yaml
+npx -y @sentio/cli@latest alert delete <RULE_ID>
+
+# one-liner form, no file needed
+npx -y @sentio/cli@latest alert create --project navi/<slug> --type SQL \
+  --subject "Borrow rate spike" \
+  --query 'select timestamp, rate from BorrowRate' \
+  --time-column timestamp --value-column rate --sql-aggr MAX --op '>' --threshold 0.5 \
+  --for 5m --interval 1m
+
+# print the full file-format doc
+npx -y @sentio/cli@latest alert create --doc
+
+# ---------------------------------------------------------------------------
+# 3. debug loop
+#    There is no test-fire / preview endpoint. Debug the query, not the rule.
+# ---------------------------------------------------------------------------
+# SQL alert  -> run the exact same SQL locally first (best type for this reason)
+npx -y @sentio/cli@latest data sql --project navi/<slug> \
+  --query "select timestamp, rate from BorrowRate order by timestamp desc limit 20"
+
+# METRIC alert -> same query via insights
+npx -y @sentio/cli@latest data metrics --project navi/<slug>
+npx -y @sentio/cli@latest data query --project navi/<slug> --metric <name> --aggr avg --start -24h --end now
+
+# LOG alert -> logCondition.query is Elasticsearch query-string syntax
+#   ranges MUST be `field:>value`, NOT `field > value`
+npx -y @sentio/cli@latest data events --project navi/<slug>
+
+# after it has run at least one interval, the rendered subject/message and the
+# samples that fed the Go template come back here:
+npx -y @sentio/cli@latest alert get <RULE_ID> --project navi/<slug> --yaml
+
+# ---------------------------------------------------------------------------
+# 4. raw REST, if you'd rather script it (host api.sentio.xyz, header `api-key`)
+# ---------------------------------------------------------------------------
+#   POST   /api/v1/alerts/rule                 create   body {"rule": {...}}
+#   PUT    /api/v1/alerts/rule/{id}            update
+#   DELETE /api/v1/alerts/rule/{id}            delete
+#   GET    /api/v1/alerts/rule/project/{pid}   list rules (+ their channels)
+#   GET    /api/v1/alerts/{ruleId}             rule + firing instances + mute
+# full spec: gh api repos/sentioxyz/sentio-ai-kit/contents/skills/sentio-platform/references/openapi.swagger.json
