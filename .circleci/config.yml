@@ -12,7 +12,8 @@ jobs:
 #      branches:
 #        ignore:
 #          - main
-    executor: node/default # use the default executor defined within the orb
+    docker:
+      - image: cimg/node:26.13.0
     steps:
       - checkout
       - node/install-packages:
