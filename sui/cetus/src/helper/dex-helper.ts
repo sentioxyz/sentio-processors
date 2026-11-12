@@ -3,24 +3,48 @@ import { getPriceBySymbol, getPriceByType, token } from "@sentio/sdk/utils"
 import { bcs } from "@mysten/sui/bcs"
 
 
-//get full coin address with suffix
+//get full coin addresses [coin_a, coin_b] from a pool type string like
+//`0x...::pool::Pool<A, B>` or `0x...::pool::Pool<A,B>` (gRPC omits the space).
+//Splits the generic arguments on the top-level comma so nested generics are handled.
 export function getCoinFullAddress(type: string) {
-    let coin_a_address = ""
-    let coin_b_address = ""
-
-    const regex_a = /<[^,]+,/g;
-    const regex_b = /0x[^\s>]+>/g;
-    const matches_a = type.match(regex_a)
-    const matches_b = type.match(regex_b)
-    if (matches_a) {
-        coin_a_address = matches_a[0].slice(1, -1)
+    const start = type.indexOf("<")
+    const end = type.lastIndexOf(">")
+    if (start < 0 || end <= start) {
+        return ["", ""]
     }
-    if (matches_b) {
-        coin_b_address = matches_b[0].slice(0, -1)
+    const inner = type.slice(start + 1, end)
+    const args: string[] = []
+    let depth = 0
+    let last = 0
+    for (let i = 0; i < inner.length; i++) {
+        const c = inner[i]
+        if (c == "<") depth++
+        else if (c == ">") depth--
+        else if (c == "," && depth == 0) {
+            args.push(inner.slice(last, i).trim())
+            last = i + 1
+        }
     }
-    return [coin_a_address, coin_b_address]
+    args.push(inner.slice(last).trim())
+    if (args.length < 2) {
+        return ["", ""]
+    }
+    return [args[0], args[1]]
+}
 
-    return ["", ""]
+const Q64 = 2 ** 64
+
+//convert a Q64.64 sqrt price to prices in both directions, adjusted by coin decimals.
+//a2b = sqrt^2 / 2^128 * 10^(decimal_a - decimal_b), b2a = 2^128 / sqrt^2 * 10^(decimal_b - decimal_a)
+export function sqrtPriceToPrices(sqrt_price: bigint | number | string, decimal_a: number, decimal_b: number) {
+    const ratio = Number(sqrt_price) / Q64
+    const ratio_sq = ratio * ratio
+    if (!ratio_sq || !Number.isFinite(ratio_sq)) {
+        return { a2b: 0, b2a: 0 }
+    }
+    const a2b = ratio_sq * 10 ** (decimal_a - decimal_b)
+    const b2a = 10 ** (decimal_b - decimal_a) / ratio_sq
+    return { a2b, b2a }
 }
 
 export interface poolInfo {
@@ -222,30 +246,13 @@ export const getOrCreateMultiAssetPool = async function (ctx: SuiContext, pool: 
 }
 
 
-export async function getPoolPrice(ctx: SuiContext, pool: string) {
-    const obj = await ctx.client.getObject({ objectId: pool, include: { json: true } })
-    //@ts-ignore
-    const current_sqrt_price = Number(obj.object.json?.current_sqrt_price)
-    if (!current_sqrt_price) { console.log(`get pool price error at ${ctx}`) }
-    const poolInfo = await getOrCreatePool(ctx, pool)
-    const pairName = poolInfo.pairName
-    const coin_b2a_price = 1 / (Number(current_sqrt_price) ** 2) * (2 ** 128) * 10 ** (poolInfo.decimal_b - poolInfo.decimal_a)
-    const coin_a2b_price = 1 / coin_b2a_price
-    ctx.meter.Gauge("a2b_price").record(coin_a2b_price, { pairName })
-    ctx.meter.Gauge("b2a_price").record(coin_b2a_price, { pairName })
-    return coin_a2b_price
-}
-
 export async function getA2bPrice(ctx: SuiContext, sqrt_price: bigint, poolInfo: poolInfo) {
     if (!sqrt_price || !poolInfo) {
         console.log(`get pool sqrt price error ${sqrt_price} ${poolInfo} at ${ctx.timestamp}`)
         return 0
     }
 
-    const coin_b2a_price = 1 / (Number(sqrt_price) ** 2) * (2 ** 128) * 10 ** (poolInfo.decimal_b - poolInfo.decimal_a)
-    const coin_a2b_price = 1 / coin_b2a_price
-
-    return coin_a2b_price
+    return sqrtPriceToPrices(sqrt_price, poolInfo.decimal_a, poolInfo.decimal_b).a2b
 }
 
 
@@ -385,14 +392,15 @@ export async function getFlowXPoolId(ctx: SuiContext, coin_a: string, coin_b: st
     return pool_id
 }
 
-export async function calculateFee_USD(ctx: SuiContext, pool: string, amount: number, atob: Boolean, date: Date) {
+//sqrt_price: the pool's sqrt price at the time of the swap (e.g. the event's after_sqrt_price)
+export async function calculateFee_USD(ctx: SuiContext, pool: string, amount: number, atob: Boolean, date: Date, sqrt_price: bigint) {
     let vol = 0
 
     try {
         const poolInfo = await getOrCreatePool(ctx, pool)
         const price_a = await getPriceBySymbol(poolInfo.symbol_a, date)
         const price_b = await getPriceBySymbol(poolInfo.symbol_b, date)
-        const coin_a2b_price = await getPoolPrice(ctx, pool)
+        const { a2b: coin_a2b_price, b2a: coin_b2a_price } = sqrtPriceToPrices(sqrt_price, poolInfo.decimal_a, poolInfo.decimal_b)
 
         if (!price_a && !price_b) {
             console.log(`price not in sui coinlist, calculate fee failed at ${JSON.stringify(poolInfo)} at ${pool}`)
@@ -405,7 +413,7 @@ export async function calculateFee_USD(ctx: SuiContext, pool: string, amount: nu
         }
         else {
             if (price_b) vol = amount * price_b
-            else if (price_a) vol = amount / coin_a2b_price * price_a
+            else if (price_a) vol = amount * coin_b2a_price * price_a
         }
     }
     catch (e) {
