@@ -72,7 +72,7 @@ pool.bind({
 
     const usd_volume = await helper.calculateSwapVol_USD(ctx, poolInfo, amount_in, amount_out, atob)
 
-    const fee_amount_usd = await helper.calculateFee_USD(ctx, pool, fee_amount, atob, ctx.timestamp)
+    const fee_amount_usd = await helper.calculateFee_USD(ctx, pool, fee_amount, atob, ctx.timestamp, after_sqrt_price)
 
     ctx.eventLogger.emit("SwapEvent", {
       distinctId: event.sender,
@@ -342,9 +342,7 @@ SuiObjectTypeProcessor.bind({
       })
       //record price
       //@ts-ignore
-      const current_sqrt_price = Number(self.data_decoded.current_sqrt_price)
-      let coin_b2a_price = 1 / (Number(current_sqrt_price) ** 2) * (2 ** 128) * 10 ** (decimal_b - decimal_a)
-      let coin_a2b_price = 1 / coin_b2a_price
+      const { a2b: coin_a2b_price, b2a: coin_b2a_price } = helper.sqrtPriceToPrices(self.data_decoded.current_sqrt_price, decimal_a, decimal_b)
       // ctx.meter.Gauge("a2b_price").record(coin_a2b_price, { pairName, project: "cetus" })
       ctx.eventLogger.emit("a2b_price", {
         coin_a2b_price,
