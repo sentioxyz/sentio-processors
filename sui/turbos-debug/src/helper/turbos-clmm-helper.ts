@@ -93,12 +93,16 @@ export async function buildCoinInfo(
 ): Promise<token.TokenInfo> {
   let [symbol, decimal, name] = ["unk", 100, "unk"];
   try {
-    const metadata = await ctx.client.getCoinMetadata({
-      coinType: coinAddress,
-    });
-    symbol = metadata!.symbol;
-    decimal = metadata!.decimals;
-    name = metadata!.name;
+    const metadata = (
+      await ctx.client.getCoinMetadata({
+        coinType: coinAddress,
+      })
+    ).coinMetadata;
+    if (metadata) {
+      symbol = metadata.symbol;
+      decimal = metadata.decimals;
+      name = metadata.name;
+    }
     console.log(`build coin metadata ${symbol} ${decimal} ${name}`);
   } catch (e) {
     console.log(`Build coin error ${e.message}}`);
@@ -148,21 +152,20 @@ export async function buildPoolInfo(
     current_tick,
   ] = ["", "", "", "", 0, 0, "", "", "", "", "NaN", ""];
   try {
-    // @ts-ignore
-    const obj = await ctx.client.getObject({
-      id: pool,
-      options: { showType: true, showContent: true },
-    });
-    // @ts-ignore
-    type = obj!.data.type;
-    // @ts-ignore
-    if (obj!.data.content.fields.fee) {
-      fee_label =
-        (Number(obj!.data.content.fields.fee) / 10000).toFixed(2) + "%";
+    const obj = (
+      await ctx.client.getObject({
+        objectId: pool,
+        include: { json: true },
+      })
+    ).object;
+    type = obj.type;
+    const f = obj.json as any;
+    if (f?.fee) {
+      fee_label = (Number(f.fee) / 10000).toFixed(2) + "%";
     }
 
-    if (obj!.data.content.fields.tick_current_index.fields.bits) {
-      current_tick = obj!.data.content.fields.tick_current_index.fields.bits;
+    if (f?.tick_current_index?.fields?.bits) {
+      current_tick = f.tick_current_index.fields.bits;
     }
 
     let [coin_a_full_address, coin_b_full_address] = ["", ""];
@@ -220,12 +223,14 @@ export async function getPoolPrice(
 ) {
   let coin_a2b_price = 0;
   try {
-    // @ts-ignore
-    const obj = await ctx.client.getObject({
-      id: pool,
-      options: { showType: true, showContent: true },
-    });
-    const sqrt_price = Number(obj!.data.content.fields.sqrt_price);
+    const obj = (
+      await ctx.client.getObject({
+        objectId: pool,
+        include: { json: true },
+      })
+    ).object;
+    const f = obj.json as any;
+    const sqrt_price = Number(f?.sqrt_price);
     if (!sqrt_price) {
       console.log(`get pool price error at ${ctx}`);
     }
@@ -351,15 +356,16 @@ export async function getPoolRewardCoinType(
     decimals: 9,
   };
   try {
-    // @ts-ignore
-    const obj = await ctx.client.getObject({
-      id: objectId,
-      options: { showType: true, showContent: true },
-    });
-    const type = obj!.data.content.type;
+    const obj = (
+      await ctx.client.getObject({
+        objectId,
+        include: { json: true },
+      })
+    ).object;
+    const type = obj.type;
     const typeArray = type.match(/\<([^)]*)\>/);
-    const coinType = typeArray[1];
-    const coin = await ctx.client.getCoinMetadata({ coinType });
+    const coinType = typeArray![1];
+    const coin = (await ctx.client.getCoinMetadata({ coinType })).coinMetadata;
 
     rewardCoin.type = coinType;
     rewardCoin.symbol = coin!.symbol;
@@ -386,13 +392,15 @@ export async function calculateTokenValue_USD(
   }
 
   try {
-    // @ts-ignore
-    const obj = await ctx.client.getObject({
-      id: pool,
-      options: { showType: true, showContent: true },
-    });
-    const coin_a = Number(obj!.data.content.fields.coin_a || 0);
-    const coin_b = Number(obj!.data.content.fields.coin_b || 0);
+    const obj = (
+      await ctx.client.getObject({
+        objectId: pool,
+        include: { json: true },
+      })
+    ).object;
+    const f = obj.json as any;
+    const coin_a = Number(f?.coin_a || 0);
+    const coin_b = Number(f?.coin_b || 0);
 
     const poolInfo = await getOrCreatePool(ctx, pool);
 
@@ -521,14 +529,16 @@ export async function getCurrentTickStatus(
   pool: string
 ) {
   let current_tick = "";
-  // @ts-ignore
-  const obj = await ctx.client.getObject({
-    id: pool,
-    options: { showType: true, showContent: true },
-  });
+  const obj = (
+    await ctx.client.getObject({
+      objectId: pool,
+      include: { json: true },
+    })
+  ).object;
 
-  if (obj!.data.content.fields.tick_current_index.fields.bits) {
-    current_tick = obj!.data.content.fields.tick_current_index.fields.bits;
+  const f = obj.json as any;
+  if (f?.tick_current_index?.fields?.bits) {
+    current_tick = f.tick_current_index.fields.bits;
   }
 
   return current_tick === MAX_TICK_INDEX || current_tick === MIN_TICK_INDEX;
@@ -592,15 +602,16 @@ export async function getVaultCoinType(
     decimals: 9,
   };
   try {
-    // @ts-ignore
-    const obj = await ctx.client.getObject({
-      id: objectId,
-      options: { showType: true, showContent: true },
-    });
-    const type = obj!.data.content.type;
+    const obj = (
+      await ctx.client.getObject({
+        objectId,
+        include: { json: true },
+      })
+    ).object;
+    const type = obj.type;
     const typeArray = type.match(/\<([^)]*)\>/);
-    const coinType = typeArray[1];
-    const coin = await ctx.client.getCoinMetadata({ coinType });
+    const coinType = typeArray![1];
+    const coin = (await ctx.client.getCoinMetadata({ coinType })).coinMetadata;
 
     rewardCoin.type = coinType;
     rewardCoin.symbol = coin!.symbol;

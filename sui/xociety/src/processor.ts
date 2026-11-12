@@ -45,37 +45,33 @@ SuiObjectTypeProcessor.bind({
 .onObjectChange(async(objectChanges, ctx)=>{
 
   for (const objectChange of objectChanges) {
-    if (objectChange.type=='published')
-      return
-    if (objectChange.objectType!=_0x2.token.Token.TYPE_QNAME+'<'+ntx.NTX.TYPE_QNAME+'>')
+    if (objectChange.outputState=='PackageWrite')
       return
 
 
     //handle the ntc obj change, only mutate and create op
-    const [owner, amount] =await getObjectOwnerAmount(ctx, objectChange.objectId, objectChange.version)
+    const [objectType, owner, amount] =await getObjectTypeOwnerAmount(ctx, objectChange.objectId)
+
+    if (objectType!=_0x2.token.Token.TYPE_QNAME+'<'+ntx.NTX.TYPE_QNAME+'>')
+      return
 
 
     ctx.eventLogger.emit("NtxObjectChange", {
       distinctId: owner,
-      sender: objectChange.sender,
       objectId: objectChange.objectId,
       amount,
-      version: objectChange.version
+      version: objectChange.outputVersion
     })
 
   }
 })
 
 
-async function getObjectOwnerAmount(ctx: SuiObjectChangeContext, objectId:string, version: string) {
-  const obj = await ctx.client.tryGetPastObject({ id: objectId, version: parseInt(version), options: { showOwner: true, showContent: true } })
-  if (obj.status=='VersionFound')
-    {
-      //@ts-ignore
-      const owner = obj.details.owner.AddressOwner??"null"
-      //@ts-ignore
-      const amount = obj.details.content.fields.balance??0
-      return [owner, amount]
-    }
-  return ["null",0]
+async function getObjectTypeOwnerAmount(ctx: SuiObjectChangeContext, objectId:string): Promise<[string, string, any]> {
+  const { object } = await ctx.client.getObject({ objectId, include: { json: true } })
+  const objectType = object.type
+  const owner = object.owner?.$kind=='AddressOwner' ? object.owner.AddressOwner : "null"
+  //@ts-ignore
+  const amount = object.json?.balance??0
+  return [objectType, owner, amount]
 }

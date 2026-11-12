@@ -15,7 +15,7 @@ export async function buildCoinInfo(ctx: SuiContext | SuiObjectContext, coinAddr
     let retryCounter = 0;
     while (retryCounter++ <= 50) {
         try {
-            const metadata = await ctx.client.getCoinMetadata({ coinType: coinAddress })
+            const metadata = (await ctx.client.getCoinMetadata({ coinType: coinAddress })).coinMetadata
             if (metadata == null) {
                 break
             }
@@ -149,13 +149,12 @@ SuiGlobalProcessor.bind({
                 const amount = balanceChanges[i].amount
                 const coinType = balanceChanges[i].coinType
                 /** Owner of the balance change */
-                const owner: any = balanceChanges[i].owner as any;
-                const ownerAddress = owner.AddressOwner || owner.ObjectOwner;
+                const ownerAddress = balanceChanges[i].address;
 
                 if (ownerAddress == "0xd56948cebf0a3309e13980126bcc8ef4d7733305cd7b412fa00167d57741984e") {
                     console.log("test owner", ownerAddress)
 
-                    const events = ctx.transaction.events;
+                    const events = ctx.transaction.events?.events;
                     console.log("test transactionId", ctx.transaction.digest)
 
                     if (events) {
@@ -169,8 +168,8 @@ SuiGlobalProcessor.bind({
                                     owner: ownerAddress,
                                     txHash: ctx.transaction.digest,
                                     user: event.sender,
-                                    eventType: event.type,
-                                    eventId: event.id,
+                                    eventType: event.eventType,
+                                    eventId: { txDigest: ctx.transaction.digest, eventSeq: String(i) },
                                 })
                             }
                         }

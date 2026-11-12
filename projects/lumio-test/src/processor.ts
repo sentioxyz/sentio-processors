@@ -1,7 +1,7 @@
 import { EthChainId, EthContext, GenericProcessor, GlobalContext, GlobalProcessor } from '@sentio/sdk/eth'
 import { POL_TRANSFER_TOPIC, PolygonRollupManager, PolygonValidiumEtrog, PolygonZkEVMBridgeV2 } from './constant.js'
 
-GlobalProcessor.bind({ network: EthChainId.LUMIO_TESTNET }).onTransaction(
+GlobalProcessor.bind({ network: (9990 as unknown as EthChainId) }).onTransaction(
   async (tx, ctx) => {
     // const provider = ctx.contract.provider
     // const hexBlockNumber = tx.blockNumber?.toString(16)
@@ -30,8 +30,8 @@ GlobalProcessor.bind({ network: EthChainId.LUMIO_TESTNET }).onTransaction(
 
 function gasCost(ctx: EthContext) {
   return (
-      BigInt(
-          ctx.transactionReceipt?.effectiveGasPrice || ctx.transactionReceipt?.gasPrice || ctx.transaction?.gasPrice || 0n,
-      ) * BigInt(ctx.transactionReceipt?.gasUsed || 0)
+    BigInt(
+      ctx.transactionReceipt?.effectiveGasPrice || ctx.transactionReceipt?.gasPrice || ctx.transaction?.gasPrice || 0n,
+    ) * BigInt(ctx.transactionReceipt?.gasUsed || 0)
   )
 }

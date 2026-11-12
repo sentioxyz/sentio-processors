@@ -1,428 +1,525 @@
 [
 	{
-		"fileFormatVersion": 6,
 		"address": "0x27f4248cd9107569e22f6bf2b7598d30b8ea9d740a02e4fbd7b36270896661d9",
-		"name": "locker",
-		"friends": [],
-		"structs": {
-			"ClaimEvent": {
-				"abilities": {
+		"module": {
+			"datatypes": [
+				{
 					"abilities": [
-						"Copy",
-						"Drop"
-					]
-				},
-				"typeParameters": [],
-				"fields": [
-					{
-						"name": "recipient",
-						"type": "Address"
-					},
-					{
-						"name": "amount",
-						"type": "U64"
-					},
-					{
-						"name": "claimed_time_ms",
-						"type": "U64"
-					}
-				]
-			},
-			"LOCKER": {
-				"abilities": {
-					"abilities": [
-						"Drop"
-					]
-				},
-				"typeParameters": [],
-				"fields": [
-					{
-						"name": "dummy_field",
-						"type": "Bool"
-					}
-				]
-			},
-			"Lock": {
-				"abilities": {
-					"abilities": [
-						"Store",
-						"Key"
-					]
-				},
-				"typeParameters": [
-					{
-						"constraints": {
-							"abilities": []
+						1,
+						2
+					],
+					"typeParameters": [],
+					"fields": [
+						{
+							"name": "recipient",
+							"position": 0,
+							"type": {
+								"typeParameterInstantiation": [],
+								"type": 1
+							}
 						},
-						"isPhantom": true
-					}
-				],
-				"fields": [
-					{
-						"name": "id",
-						"type": {
-							"Struct": {
-								"address": "0x2",
-								"module": "object",
-								"name": "UID",
-								"typeArguments": []
+						{
+							"name": "amount",
+							"position": 1,
+							"type": {
+								"typeParameterInstantiation": [],
+								"type": 6
+							}
+						},
+						{
+							"name": "claimed_time_ms",
+							"position": 2,
+							"type": {
+								"typeParameterInstantiation": [],
+								"type": 6
 							}
 						}
-					},
-					{
-						"name": "name",
-						"type": {
-							"Struct": {
-								"address": "0x1",
-								"module": "string",
-								"name": "String",
-								"typeArguments": []
+					],
+					"variants": [],
+					"typeName": "0x27f4248cd9107569e22f6bf2b7598d30b8ea9d740a02e4fbd7b36270896661d9::locker::ClaimEvent",
+					"definingId": "0x27f4248cd9107569e22f6bf2b7598d30b8ea9d740a02e4fbd7b36270896661d9",
+					"module": "locker",
+					"name": "ClaimEvent",
+					"kind": 1
+				},
+				{
+					"abilities": [
+						2
+					],
+					"typeParameters": [],
+					"fields": [
+						{
+							"name": "dummy_field",
+							"position": 0,
+							"type": {
+								"typeParameterInstantiation": [],
+								"type": 2
 							}
 						}
-					},
-					{
-						"name": "logo_url",
-						"type": {
-							"Struct": {
-								"address": "0x2",
-								"module": "url",
-								"name": "Url",
-								"typeArguments": []
-							}
+					],
+					"variants": [],
+					"typeName": "0x27f4248cd9107569e22f6bf2b7598d30b8ea9d740a02e4fbd7b36270896661d9::locker::LOCKER",
+					"definingId": "0x27f4248cd9107569e22f6bf2b7598d30b8ea9d740a02e4fbd7b36270896661d9",
+					"module": "locker",
+					"name": "LOCKER",
+					"kind": 1
+				},
+				{
+					"abilities": [
+						3,
+						4
+					],
+					"typeParameters": [
+						{
+							"constraints": [],
+							"isPhantom": true
 						}
-					},
-					{
-						"name": "owner",
-						"type": "Address"
-					},
-					{
-						"name": "token_address",
-						"type": {
-							"Struct": {
-								"address": "0x1",
-								"module": "string",
-								"name": "String",
-								"typeArguments": []
+					],
+					"fields": [
+						{
+							"name": "id",
+							"position": 0,
+							"type": {
+								"typeParameterInstantiation": [],
+								"type": 10,
+								"typeName": "0x0000000000000000000000000000000000000000000000000000000000000002::object::UID"
 							}
-						}
-					},
-					{
-						"name": "decimals",
-						"type": "U64"
-					},
-					{
-						"name": "amount",
-						"type": "U64"
-					},
-					{
-						"name": "balance",
-						"type": {
-							"Struct": {
-								"address": "0x2",
-								"module": "balance",
-								"name": "Balance",
-								"typeArguments": [
+						},
+						{
+							"name": "name",
+							"position": 1,
+							"type": {
+								"typeParameterInstantiation": [],
+								"type": 10,
+								"typeName": "0x0000000000000000000000000000000000000000000000000000000000000001::string::String"
+							}
+						},
+						{
+							"name": "logo_url",
+							"position": 2,
+							"type": {
+								"typeParameterInstantiation": [],
+								"type": 10,
+								"typeName": "0x0000000000000000000000000000000000000000000000000000000000000002::url::Url"
+							}
+						},
+						{
+							"name": "owner",
+							"position": 3,
+							"type": {
+								"typeParameterInstantiation": [],
+								"type": 1
+							}
+						},
+						{
+							"name": "token_address",
+							"position": 4,
+							"type": {
+								"typeParameterInstantiation": [],
+								"type": 10,
+								"typeName": "0x0000000000000000000000000000000000000000000000000000000000000001::string::String"
+							}
+						},
+						{
+							"name": "decimals",
+							"position": 5,
+							"type": {
+								"typeParameterInstantiation": [],
+								"type": 6
+							}
+						},
+						{
+							"name": "amount",
+							"position": 6,
+							"type": {
+								"typeParameterInstantiation": [],
+								"type": 6
+							}
+						},
+						{
+							"name": "balance",
+							"position": 7,
+							"type": {
+								"typeParameterInstantiation": [
 									{
-										"TypeParameter": 0
+										"typeParameterInstantiation": [],
+										"type": 11,
+										"typeParameter": 0
 									}
-								]
+								],
+								"type": 10,
+								"typeName": "0x0000000000000000000000000000000000000000000000000000000000000002::balance::Balance"
+							}
+						},
+						{
+							"name": "unlock_time",
+							"position": 8,
+							"type": {
+								"typeParameterInstantiation": [],
+								"type": 6
+							}
+						},
+						{
+							"name": "is_claimed",
+							"position": 9,
+							"type": {
+								"typeParameterInstantiation": [],
+								"type": 2
 							}
 						}
-					},
-					{
-						"name": "unlock_time",
-						"type": "U64"
-					},
-					{
-						"name": "is_claimed",
-						"type": "Bool"
-					}
-				]
-			},
-			"LockItem": {
-				"abilities": {
-					"abilities": [
-						"Store",
-						"Key"
-					]
+					],
+					"variants": [],
+					"typeName": "0x27f4248cd9107569e22f6bf2b7598d30b8ea9d740a02e4fbd7b36270896661d9::locker::Lock",
+					"definingId": "0x27f4248cd9107569e22f6bf2b7598d30b8ea9d740a02e4fbd7b36270896661d9",
+					"module": "locker",
+					"name": "Lock",
+					"kind": 1
 				},
-				"typeParameters": [],
-				"fields": [
-					{
-						"name": "id",
-						"type": {
-							"Struct": {
-								"address": "0x2",
-								"module": "object",
-								"name": "UID",
-								"typeArguments": []
-							}
-						}
-					},
-					{
-						"name": "lock_id",
-						"type": {
-							"Struct": {
-								"address": "0x2",
-								"module": "object",
-								"name": "ID",
-								"typeArguments": []
-							}
-						}
-					}
-				]
-			},
-			"Locks": {
-				"abilities": {
+				{
 					"abilities": [
-						"Store",
-						"Key"
-					]
-				},
-				"typeParameters": [],
-				"fields": [
-					{
-						"name": "id",
-						"type": {
-							"Struct": {
-								"address": "0x2",
-								"module": "object",
-								"name": "UID",
-								"typeArguments": []
+						3,
+						4
+					],
+					"typeParameters": [],
+					"fields": [
+						{
+							"name": "id",
+							"position": 0,
+							"type": {
+								"typeParameterInstantiation": [],
+								"type": 10,
+								"typeName": "0x0000000000000000000000000000000000000000000000000000000000000002::object::UID"
+							}
+						},
+						{
+							"name": "lock_id",
+							"position": 1,
+							"type": {
+								"typeParameterInstantiation": [],
+								"type": 10,
+								"typeName": "0x0000000000000000000000000000000000000000000000000000000000000002::object::ID"
 							}
 						}
-					},
-					{
-						"name": "size",
-						"type": "U64"
-					},
-					{
-						"name": "lock_list",
-						"type": {
-							"Struct": {
-								"address": "0x2",
-								"module": "object_table",
-								"name": "ObjectTable",
-								"typeArguments": [
+					],
+					"variants": [],
+					"typeName": "0x27f4248cd9107569e22f6bf2b7598d30b8ea9d740a02e4fbd7b36270896661d9::locker::LockItem",
+					"definingId": "0x27f4248cd9107569e22f6bf2b7598d30b8ea9d740a02e4fbd7b36270896661d9",
+					"module": "locker",
+					"name": "LockItem",
+					"kind": 1
+				},
+				{
+					"abilities": [
+						3,
+						4
+					],
+					"typeParameters": [],
+					"fields": [
+						{
+							"name": "id",
+							"position": 0,
+							"type": {
+								"typeParameterInstantiation": [],
+								"type": 10,
+								"typeName": "0x0000000000000000000000000000000000000000000000000000000000000002::object::UID"
+							}
+						},
+						{
+							"name": "size",
+							"position": 1,
+							"type": {
+								"typeParameterInstantiation": [],
+								"type": 6
+							}
+						},
+						{
+							"name": "lock_list",
+							"position": 2,
+							"type": {
+								"typeParameterInstantiation": [
 									{
-										"Struct": {
-											"address": "0x2",
-											"module": "object",
-											"name": "ID",
-											"typeArguments": []
-										}
+										"typeParameterInstantiation": [],
+										"type": 10,
+										"typeName": "0x0000000000000000000000000000000000000000000000000000000000000002::object::ID"
 									},
 									{
-										"Struct": {
-											"address": "0x27f4248cd9107569e22f6bf2b7598d30b8ea9d740a02e4fbd7b36270896661d9",
-											"module": "locker",
-											"name": "LockItem",
-											"typeArguments": []
-										}
+										"typeParameterInstantiation": [],
+										"type": 10,
+										"typeName": "0x27f4248cd9107569e22f6bf2b7598d30b8ea9d740a02e4fbd7b36270896661d9::locker::LockItem"
 									}
-								]
+								],
+								"type": 10,
+								"typeName": "0x0000000000000000000000000000000000000000000000000000000000000002::object_table::ObjectTable"
 							}
 						}
-					}
-				]
-			}
-		},
-		"exposedFunctions": {
-			"add_locked_coins": {
-				"visibility": "Public",
-				"isEntry": true,
-				"typeParameters": [
-					{
-						"abilities": []
-					}
-				],
-				"parameters": [
-					{
-						"MutableReference": {
-							"Struct": {
-								"address": "0x27f4248cd9107569e22f6bf2b7598d30b8ea9d740a02e4fbd7b36270896661d9",
-								"module": "locker",
-								"name": "Locks",
-								"typeArguments": []
-							}
+					],
+					"variants": [],
+					"typeName": "0x27f4248cd9107569e22f6bf2b7598d30b8ea9d740a02e4fbd7b36270896661d9::locker::Locks",
+					"definingId": "0x27f4248cd9107569e22f6bf2b7598d30b8ea9d740a02e4fbd7b36270896661d9",
+					"module": "locker",
+					"name": "Locks",
+					"kind": 1
+				}
+			],
+			"functions": [
+				{
+					"typeParameters": [
+						{
+							"constraints": []
 						}
-					},
-					{
-						"Reference": {
-							"Struct": {
-								"address": "0x2",
-								"module": "clock",
-								"name": "Clock",
-								"typeArguments": []
+					],
+					"parameters": [
+						{
+							"reference": 2,
+							"body": {
+								"typeParameterInstantiation": [],
+								"type": 10,
+								"typeName": "0x27f4248cd9107569e22f6bf2b7598d30b8ea9d740a02e4fbd7b36270896661d9::locker::Locks"
 							}
-						}
-					},
-					{
-						"Vector": "U8"
-					},
-					{
-						"Vector": "U8"
-					},
-					{
-						"Vector": "U8"
-					},
-					"U64",
-					"U64",
-					{
-						"Vector": {
-							"Struct": {
-								"address": "0x2",
-								"module": "coin",
-								"name": "Coin",
-								"typeArguments": [
+						},
+						{
+							"reference": 1,
+							"body": {
+								"typeParameterInstantiation": [],
+								"type": 10,
+								"typeName": "0x0000000000000000000000000000000000000000000000000000000000000002::clock::Clock"
+							}
+						},
+						{
+							"body": {
+								"typeParameterInstantiation": [
 									{
-										"TypeParameter": 0
+										"typeParameterInstantiation": [],
+										"type": 3
 									}
-								]
+								],
+								"type": 9
 							}
-						}
-					},
-					"U64",
-					{
-						"MutableReference": {
-							"Struct": {
-								"address": "0x2",
-								"module": "tx_context",
-								"name": "TxContext",
-								"typeArguments": []
-							}
-						}
-					}
-				],
-				"return": []
-			},
-			"claim": {
-				"visibility": "Public",
-				"isEntry": true,
-				"typeParameters": [
-					{
-						"abilities": []
-					}
-				],
-				"parameters": [
-					{
-						"MutableReference": {
-							"Struct": {
-								"address": "0x27f4248cd9107569e22f6bf2b7598d30b8ea9d740a02e4fbd7b36270896661d9",
-								"module": "locker",
-								"name": "Lock",
-								"typeArguments": [
+						},
+						{
+							"body": {
+								"typeParameterInstantiation": [
 									{
-										"TypeParameter": 0
+										"typeParameterInstantiation": [],
+										"type": 3
 									}
-								]
+								],
+								"type": 9
 							}
-						}
-					},
-					{
-						"Reference": {
-							"Struct": {
-								"address": "0x2",
-								"module": "clock",
-								"name": "Clock",
-								"typeArguments": []
-							}
-						}
-					},
-					{
-						"MutableReference": {
-							"Struct": {
-								"address": "0x2",
-								"module": "tx_context",
-								"name": "TxContext",
-								"typeArguments": []
-							}
-						}
-					}
-				],
-				"return": []
-			},
-			"update_name": {
-				"visibility": "Public",
-				"isEntry": true,
-				"typeParameters": [
-					{
-						"abilities": []
-					}
-				],
-				"parameters": [
-					{
-						"MutableReference": {
-							"Struct": {
-								"address": "0x27f4248cd9107569e22f6bf2b7598d30b8ea9d740a02e4fbd7b36270896661d9",
-								"module": "locker",
-								"name": "Lock",
-								"typeArguments": [
+						},
+						{
+							"body": {
+								"typeParameterInstantiation": [
 									{
-										"TypeParameter": 0
+										"typeParameterInstantiation": [],
+										"type": 3
 									}
-								]
+								],
+								"type": 9
 							}
-						}
-					},
-					{
-						"Struct": {
-							"address": "0x1",
-							"module": "string",
-							"name": "String",
-							"typeArguments": []
-						}
-					},
-					{
-						"MutableReference": {
-							"Struct": {
-								"address": "0x2",
-								"module": "tx_context",
-								"name": "TxContext",
-								"typeArguments": []
+						},
+						{
+							"body": {
+								"typeParameterInstantiation": [],
+								"type": 6
 							}
-						}
-					}
-				],
-				"return": []
-			},
-			"update_time": {
-				"visibility": "Public",
-				"isEntry": true,
-				"typeParameters": [
-					{
-						"abilities": []
-					}
-				],
-				"parameters": [
-					{
-						"MutableReference": {
-							"Struct": {
-								"address": "0x27f4248cd9107569e22f6bf2b7598d30b8ea9d740a02e4fbd7b36270896661d9",
-								"module": "locker",
-								"name": "Lock",
-								"typeArguments": [
+						},
+						{
+							"body": {
+								"typeParameterInstantiation": [],
+								"type": 6
+							}
+						},
+						{
+							"body": {
+								"typeParameterInstantiation": [
 									{
-										"TypeParameter": 0
+										"typeParameterInstantiation": [
+											{
+												"typeParameterInstantiation": [],
+												"type": 11,
+												"typeParameter": 0
+											}
+										],
+										"type": 10,
+										"typeName": "0x0000000000000000000000000000000000000000000000000000000000000002::coin::Coin"
 									}
-								]
+								],
+								"type": 9
+							}
+						},
+						{
+							"body": {
+								"typeParameterInstantiation": [],
+								"type": 6
+							}
+						},
+						{
+							"reference": 2,
+							"body": {
+								"typeParameterInstantiation": [],
+								"type": 10,
+								"typeName": "0x0000000000000000000000000000000000000000000000000000000000000002::tx_context::TxContext"
 							}
 						}
-					},
-					"U64",
-					{
-						"MutableReference": {
-							"Struct": {
-								"address": "0x2",
-								"module": "tx_context",
-								"name": "TxContext",
-								"typeArguments": []
+					],
+					"returns": [],
+					"name": "add_locked_coins",
+					"visibility": 2,
+					"isEntry": true
+				},
+				{
+					"typeParameters": [
+						{
+							"constraints": []
+						}
+					],
+					"parameters": [
+						{
+							"reference": 2,
+							"body": {
+								"typeParameterInstantiation": [
+									{
+										"typeParameterInstantiation": [],
+										"type": 11,
+										"typeParameter": 0
+									}
+								],
+								"type": 10,
+								"typeName": "0x27f4248cd9107569e22f6bf2b7598d30b8ea9d740a02e4fbd7b36270896661d9::locker::Lock"
+							}
+						},
+						{
+							"reference": 1,
+							"body": {
+								"typeParameterInstantiation": [],
+								"type": 10,
+								"typeName": "0x0000000000000000000000000000000000000000000000000000000000000002::clock::Clock"
+							}
+						},
+						{
+							"reference": 2,
+							"body": {
+								"typeParameterInstantiation": [],
+								"type": 10,
+								"typeName": "0x0000000000000000000000000000000000000000000000000000000000000002::tx_context::TxContext"
 							}
 						}
-					}
-				],
-				"return": []
-			}
+					],
+					"returns": [],
+					"name": "claim",
+					"visibility": 2,
+					"isEntry": true
+				},
+				{
+					"typeParameters": [],
+					"parameters": [
+						{
+							"body": {
+								"typeParameterInstantiation": [],
+								"type": 10,
+								"typeName": "0x27f4248cd9107569e22f6bf2b7598d30b8ea9d740a02e4fbd7b36270896661d9::locker::LOCKER"
+							}
+						},
+						{
+							"reference": 2,
+							"body": {
+								"typeParameterInstantiation": [],
+								"type": 10,
+								"typeName": "0x0000000000000000000000000000000000000000000000000000000000000002::tx_context::TxContext"
+							}
+						}
+					],
+					"returns": [],
+					"name": "init",
+					"visibility": 1,
+					"isEntry": false
+				},
+				{
+					"typeParameters": [
+						{
+							"constraints": []
+						}
+					],
+					"parameters": [
+						{
+							"reference": 2,
+							"body": {
+								"typeParameterInstantiation": [
+									{
+										"typeParameterInstantiation": [],
+										"type": 11,
+										"typeParameter": 0
+									}
+								],
+								"type": 10,
+								"typeName": "0x27f4248cd9107569e22f6bf2b7598d30b8ea9d740a02e4fbd7b36270896661d9::locker::Lock"
+							}
+						},
+						{
+							"body": {
+								"typeParameterInstantiation": [],
+								"type": 10,
+								"typeName": "0x0000000000000000000000000000000000000000000000000000000000000001::string::String"
+							}
+						},
+						{
+							"reference": 2,
+							"body": {
+								"typeParameterInstantiation": [],
+								"type": 10,
+								"typeName": "0x0000000000000000000000000000000000000000000000000000000000000002::tx_context::TxContext"
+							}
+						}
+					],
+					"returns": [],
+					"name": "update_name",
+					"visibility": 2,
+					"isEntry": true
+				},
+				{
+					"typeParameters": [
+						{
+							"constraints": []
+						}
+					],
+					"parameters": [
+						{
+							"reference": 2,
+							"body": {
+								"typeParameterInstantiation": [
+									{
+										"typeParameterInstantiation": [],
+										"type": 11,
+										"typeParameter": 0
+									}
+								],
+								"type": 10,
+								"typeName": "0x27f4248cd9107569e22f6bf2b7598d30b8ea9d740a02e4fbd7b36270896661d9::locker::Lock"
+							}
+						},
+						{
+							"body": {
+								"typeParameterInstantiation": [],
+								"type": 6
+							}
+						},
+						{
+							"reference": 2,
+							"body": {
+								"typeParameterInstantiation": [],
+								"type": 10,
+								"typeName": "0x0000000000000000000000000000000000000000000000000000000000000002::tx_context::TxContext"
+							}
+						}
+					],
+					"returns": [],
+					"name": "update_time",
+					"visibility": 2,
+					"isEntry": true
+				}
+			],
+			"name": "locker"
 		}
 	}
 ]

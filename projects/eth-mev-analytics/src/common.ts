@@ -158,7 +158,7 @@ export const chainConfigs = [
     tailMode: true,
   },
   {
-    chainID: EthChainId.BINANCE,
+    chainID: EthChainId.BSC,
     nativeTokenWrappedAddress:
       "0xbb4cdb9cbd36b01bd1cbaebf2de08d9173bc095c".toLowerCase(),
     blackListedAddresses: new Set<string>([

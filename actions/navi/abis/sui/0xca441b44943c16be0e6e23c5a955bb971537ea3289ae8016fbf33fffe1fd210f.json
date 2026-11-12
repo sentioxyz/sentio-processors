@@ -1,0 +1,401 @@
+[
+  {
+    "address": "0xca441b44943c16be0e6e23c5a955bb971537ea3289ae8016fbf33fffe1fd210f",
+    "module": {
+      "name": "oracle",
+      "datatypes": [
+        {
+          "name": "OracleAdminCap",
+          "kind": 1,
+          "abilities": [
+            3,
+            4
+          ],
+          "typeParameters": [],
+          "fields": [
+            {
+              "name": "id",
+              "position": 0,
+              "type": {
+                "type": 10,
+                "typeName": "0x2::object::UID",
+                "typeParameterInstantiation": []
+              }
+            }
+          ],
+          "variants": []
+        },
+        {
+          "name": "OracleFeederCap",
+          "kind": 1,
+          "abilities": [
+            3,
+            4
+          ],
+          "typeParameters": [],
+          "fields": [
+            {
+              "name": "id",
+              "position": 0,
+              "type": {
+                "type": 10,
+                "typeName": "0x2::object::UID",
+                "typeParameterInstantiation": []
+              }
+            }
+          ],
+          "variants": []
+        },
+        {
+          "name": "Price",
+          "kind": 1,
+          "abilities": [
+            3
+          ],
+          "typeParameters": [],
+          "fields": [
+            {
+              "name": "value",
+              "position": 0,
+              "type": {
+                "type": 8,
+                "typeParameterInstantiation": []
+              }
+            },
+            {
+              "name": "decimal",
+              "position": 1,
+              "type": {
+                "type": 3,
+                "typeParameterInstantiation": []
+              }
+            },
+            {
+              "name": "timestamp",
+              "position": 2,
+              "type": {
+                "type": 6,
+                "typeParameterInstantiation": []
+              }
+            }
+          ],
+          "variants": []
+        },
+        {
+          "name": "PriceOracle",
+          "kind": 1,
+          "abilities": [
+            4
+          ],
+          "typeParameters": [],
+          "fields": [
+            {
+              "name": "id",
+              "position": 0,
+              "type": {
+                "type": 10,
+                "typeName": "0x2::object::UID",
+                "typeParameterInstantiation": []
+              }
+            },
+            {
+              "name": "version",
+              "position": 1,
+              "type": {
+                "type": 6,
+                "typeParameterInstantiation": []
+              }
+            },
+            {
+              "name": "update_interval",
+              "position": 2,
+              "type": {
+                "type": 6,
+                "typeParameterInstantiation": []
+              }
+            },
+            {
+              "name": "price_oracles",
+              "position": 3,
+              "type": {
+                "type": 10,
+                "typeName": "0x2::table::Table",
+                "typeParameterInstantiation": [
+                  {
+                    "type": 3,
+                    "typeParameterInstantiation": []
+                  },
+                  {
+                    "type": 10,
+                    "typeName": "0xca441b44943c16be0e6e23c5a955bb971537ea3289ae8016fbf33fffe1fd210f::oracle::Price",
+                    "typeParameterInstantiation": []
+                  }
+                ]
+              }
+            }
+          ],
+          "variants": []
+        }
+      ],
+      "functions": [
+        {
+          "name": "get_token_price",
+          "visibility": 2,
+          "isEntry": false,
+          "typeParameters": [],
+          "parameters": [
+            {
+              "reference": 1,
+              "body": {
+                "type": 10,
+                "typeName": "0x2::clock::Clock",
+                "typeParameterInstantiation": []
+              }
+            },
+            {
+              "reference": 1,
+              "body": {
+                "type": 10,
+                "typeName": "0xca441b44943c16be0e6e23c5a955bb971537ea3289ae8016fbf33fffe1fd210f::oracle::PriceOracle",
+                "typeParameterInstantiation": []
+              }
+            },
+            {
+              "body": {
+                "type": 3,
+                "typeParameterInstantiation": []
+              }
+            }
+          ],
+          "returns": [
+            {
+              "body": {
+                "type": 2,
+                "typeParameterInstantiation": []
+              }
+            },
+            {
+              "body": {
+                "type": 8,
+                "typeParameterInstantiation": []
+              }
+            },
+            {
+              "body": {
+                "type": 3,
+                "typeParameterInstantiation": []
+              }
+            }
+          ]
+        },
+        {
+          "name": "register_token_price",
+          "visibility": 2,
+          "isEntry": true,
+          "typeParameters": [],
+          "parameters": [
+            {
+              "reference": 1,
+              "body": {
+                "type": 10,
+                "typeName": "0xca441b44943c16be0e6e23c5a955bb971537ea3289ae8016fbf33fffe1fd210f::oracle::OracleAdminCap",
+                "typeParameterInstantiation": []
+              }
+            },
+            {
+              "reference": 1,
+              "body": {
+                "type": 10,
+                "typeName": "0x2::clock::Clock",
+                "typeParameterInstantiation": []
+              }
+            },
+            {
+              "reference": 2,
+              "body": {
+                "type": 10,
+                "typeName": "0xca441b44943c16be0e6e23c5a955bb971537ea3289ae8016fbf33fffe1fd210f::oracle::PriceOracle",
+                "typeParameterInstantiation": []
+              }
+            },
+            {
+              "body": {
+                "type": 3,
+                "typeParameterInstantiation": []
+              }
+            },
+            {
+              "body": {
+                "type": 8,
+                "typeParameterInstantiation": []
+              }
+            },
+            {
+              "body": {
+                "type": 3,
+                "typeParameterInstantiation": []
+              }
+            }
+          ],
+          "returns": []
+        },
+        {
+          "name": "set_update_interval",
+          "visibility": 2,
+          "isEntry": true,
+          "typeParameters": [],
+          "parameters": [
+            {
+              "reference": 1,
+              "body": {
+                "type": 10,
+                "typeName": "0xca441b44943c16be0e6e23c5a955bb971537ea3289ae8016fbf33fffe1fd210f::oracle::OracleAdminCap",
+                "typeParameterInstantiation": []
+              }
+            },
+            {
+              "reference": 2,
+              "body": {
+                "type": 10,
+                "typeName": "0xca441b44943c16be0e6e23c5a955bb971537ea3289ae8016fbf33fffe1fd210f::oracle::PriceOracle",
+                "typeParameterInstantiation": []
+              }
+            },
+            {
+              "body": {
+                "type": 6,
+                "typeParameterInstantiation": []
+              }
+            }
+          ],
+          "returns": []
+        },
+        {
+          "name": "update_token_price",
+          "visibility": 2,
+          "isEntry": true,
+          "typeParameters": [],
+          "parameters": [
+            {
+              "reference": 1,
+              "body": {
+                "type": 10,
+                "typeName": "0xca441b44943c16be0e6e23c5a955bb971537ea3289ae8016fbf33fffe1fd210f::oracle::OracleFeederCap",
+                "typeParameterInstantiation": []
+              }
+            },
+            {
+              "reference": 1,
+              "body": {
+                "type": 10,
+                "typeName": "0x2::clock::Clock",
+                "typeParameterInstantiation": []
+              }
+            },
+            {
+              "reference": 2,
+              "body": {
+                "type": 10,
+                "typeName": "0xca441b44943c16be0e6e23c5a955bb971537ea3289ae8016fbf33fffe1fd210f::oracle::PriceOracle",
+                "typeParameterInstantiation": []
+              }
+            },
+            {
+              "body": {
+                "type": 3,
+                "typeParameterInstantiation": []
+              }
+            },
+            {
+              "body": {
+                "type": 8,
+                "typeParameterInstantiation": []
+              }
+            }
+          ],
+          "returns": []
+        },
+        {
+          "name": "update_token_price_batch",
+          "visibility": 2,
+          "isEntry": true,
+          "typeParameters": [],
+          "parameters": [
+            {
+              "reference": 1,
+              "body": {
+                "type": 10,
+                "typeName": "0xca441b44943c16be0e6e23c5a955bb971537ea3289ae8016fbf33fffe1fd210f::oracle::OracleFeederCap",
+                "typeParameterInstantiation": []
+              }
+            },
+            {
+              "reference": 1,
+              "body": {
+                "type": 10,
+                "typeName": "0x2::clock::Clock",
+                "typeParameterInstantiation": []
+              }
+            },
+            {
+              "reference": 2,
+              "body": {
+                "type": 10,
+                "typeName": "0xca441b44943c16be0e6e23c5a955bb971537ea3289ae8016fbf33fffe1fd210f::oracle::PriceOracle",
+                "typeParameterInstantiation": []
+              }
+            },
+            {
+              "body": {
+                "type": 9,
+                "typeParameterInstantiation": [
+                  {
+                    "type": 3,
+                    "typeParameterInstantiation": []
+                  }
+                ]
+              }
+            },
+            {
+              "body": {
+                "type": 9,
+                "typeParameterInstantiation": [
+                  {
+                    "type": 8,
+                    "typeParameterInstantiation": []
+                  }
+                ]
+              }
+            }
+          ],
+          "returns": []
+        },
+        {
+          "name": "version_migrate",
+          "visibility": 1,
+          "isEntry": true,
+          "typeParameters": [],
+          "parameters": [
+            {
+              "reference": 1,
+              "body": {
+                "type": 10,
+                "typeName": "0xca441b44943c16be0e6e23c5a955bb971537ea3289ae8016fbf33fffe1fd210f::oracle::OracleAdminCap",
+                "typeParameterInstantiation": []
+              }
+            },
+            {
+              "reference": 2,
+              "body": {
+                "type": 10,
+                "typeName": "0xca441b44943c16be0e6e23c5a955bb971537ea3289ae8016fbf33fffe1fd210f::oracle::PriceOracle",
+                "typeParameterInstantiation": []
+              }
+            }
+          ],
+          "returns": []
+        }
+      ]
+    }
+  }
+]

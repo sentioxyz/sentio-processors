@@ -115,13 +115,13 @@ export async function buildPoolInfo(ctx: SuiContext | SuiObjectContext, pool: st
 
     let [symbol_a, symbol_b, decimal_a, decimal_b, pairName, pairFullName, type, fee_label] = ["", "", 0, 0, "", "", "", "", "NaN"]
     try {
-        const obj = await ctx.client.getObject({ id: pool, options: { showType: true, showContent: true } })
+        const obj = await ctx.client.getObject({ objectId: pool, include: { json: true } })
         //@ts-ignore
-        type = obj.data.type
+        type = obj.object.type
         //@ts-ignore
-        if (obj.data.content.fields.fee) {
+        if (obj.object.json.fee) {
             //@ts-ignore
-            fee_label = (Number(obj.data.content.fields.fee) / 10000).toFixed(2) + "%"
+            fee_label = (Number(obj.object.json.fee) / 10000).toFixed(2) + "%"
         }
         let [coin_a_full_address, coin_b_full_address] = ["", ""]
         if (type) {
@@ -164,9 +164,9 @@ export const getOrCreatePool = async function (ctx: SuiContext | SuiObjectContex
 export async function getPoolPrice(ctx: SuiContext | SuiObjectContext, pool: string) {
     let coin_a2b_price = 0
     try {
-        const obj = await ctx.client.getObject({ id: pool, options: { showType: true, showContent: true } })
+        const obj = await ctx.client.getObject({ objectId: pool, include: { json: true } })
         //@ts-ignore
-        const sqrt_price = Number(obj.data.content.fields.sqrt_price)
+        const sqrt_price = Number(obj.object.json.sqrt_price)
         if (!sqrt_price) { console.log(`get pool price error at ${ctx}`) }
         const poolInfo = await getOrCreatePool(ctx, pool)
         const pairName = poolInfo.pairName

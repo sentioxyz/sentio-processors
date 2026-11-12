@@ -1,723 +1,2102 @@
 [
 	{
-		"fileFormatVersion": 6,
 		"address": "0x5d8fbbf6f908a4af8c6d072669a462d53e03eb3c1d863bd0359dc818c69ea706",
-		"name": "SupraSValueFeed",
-		"friends": [],
-		"structs": {
-			"CoherentCluster": {
-				"abilities": {
+		"module": {
+			"datatypes": [
+				{
 					"abilities": [
-						"Copy",
-						"Drop"
-					]
-				},
-				"typeParameters": [],
-				"fields": [
-					{
-						"name": "data_hash",
-						"type": {
-							"Vector": "U8"
-						}
-					},
-					{
-						"name": "pair",
-						"type": {
-							"Vector": "U32"
-						}
-					},
-					{
-						"name": "prices",
-						"type": {
-							"Vector": "U128"
-						}
-					},
-					{
-						"name": "timestamp",
-						"type": {
-							"Vector": "U128"
-						}
-					},
-					{
-						"name": "decimals",
-						"type": {
-							"Vector": "U16"
-						}
-					}
-				]
-			},
-			"DkgState": {
-				"abilities": {
-					"abilities": [
-						"Store",
-						"Key"
-					]
-				},
-				"typeParameters": [],
-				"fields": [
-					{
-						"name": "id",
-						"type": {
-							"Struct": {
-								"address": "0x2",
-								"module": "object",
-								"name": "UID",
-								"typeArguments": []
-							}
-						}
-					},
-					{
-						"name": "public_key",
-						"type": {
-							"Vector": "U8"
-						}
-					}
-				]
-			},
-			"Entry": {
-				"abilities": {
-					"abilities": [
-						"Copy",
-						"Drop",
-						"Store"
-					]
-				},
-				"typeParameters": [],
-				"fields": [
-					{
-						"name": "value",
-						"type": "U128"
-					},
-					{
-						"name": "decimal",
-						"type": "U16"
-					},
-					{
-						"name": "timestamp",
-						"type": "U128"
-					},
-					{
-						"name": "round",
-						"type": "U64"
-					}
-				]
-			},
-			"MinBatch": {
-				"abilities": {
-					"abilities": [
-						"Drop"
-					]
-				},
-				"typeParameters": [],
-				"fields": [
-					{
-						"name": "protocol",
-						"type": {
-							"Vector": "U8"
-						}
-					},
-					{
-						"name": "txn_hashes",
-						"type": {
-							"Vector": {
-								"Vector": "U8"
-							}
-						}
-					}
-				]
-			},
-			"MinBlock": {
-				"abilities": {
-					"abilities": [
-						"Drop"
-					]
-				},
-				"typeParameters": [],
-				"fields": [
-					{
-						"name": "round",
-						"type": {
-							"Vector": "U8"
-						}
-					},
-					{
-						"name": "timestamp",
-						"type": {
-							"Vector": "U8"
-						}
-					},
-					{
-						"name": "author",
-						"type": {
-							"Vector": "U8"
-						}
-					},
-					{
-						"name": "qc_hash",
-						"type": {
-							"Vector": "U8"
-						}
-					},
-					{
-						"name": "batch_hashes",
-						"type": {
-							"Vector": {
-								"Vector": "U8"
-							}
-						}
-					}
-				]
-			},
-			"MinTxn": {
-				"abilities": {
-					"abilities": [
-						"Drop"
-					]
-				},
-				"typeParameters": [],
-				"fields": [
-					{
-						"name": "cluster_hashes",
-						"type": {
-							"Vector": {
-								"Vector": "U8"
-							}
-						}
-					},
-					{
-						"name": "sender",
-						"type": {
-							"Vector": "U8"
-						}
-					},
-					{
-						"name": "protocol",
-						"type": {
-							"Vector": "U8"
-						}
-					},
-					{
-						"name": "tx_sub_type",
-						"type": "U8"
-					}
-				]
-			},
-			"OracleHolder": {
-				"abilities": {
-					"abilities": [
-						"Store",
-						"Key"
-					]
-				},
-				"typeParameters": [],
-				"fields": [
-					{
-						"name": "id",
-						"type": {
-							"Struct": {
-								"address": "0x2",
-								"module": "object",
-								"name": "UID",
-								"typeArguments": []
-							}
-						}
-					},
-					{
-						"name": "version",
-						"type": "U64"
-					},
-					{
-						"name": "owner",
-						"type": {
-							"Struct": {
-								"address": "0x2",
-								"module": "object",
-								"name": "ID",
-								"typeArguments": []
-							}
-						}
-					},
-					{
-						"name": "feeds",
-						"type": {
-							"Struct": {
-								"address": "0x2",
-								"module": "table",
-								"name": "Table",
-								"typeArguments": [
-									"U32",
+						1,
+						2
+					],
+					"typeParameters": [],
+					"fields": [
+						{
+							"name": "data_hash",
+							"position": 0,
+							"type": {
+								"typeParameterInstantiation": [
 									{
-										"Struct": {
-											"address": "0x5d8fbbf6f908a4af8c6d072669a462d53e03eb3c1d863bd0359dc818c69ea706",
-											"module": "SupraSValueFeed",
-											"name": "Entry",
-											"typeArguments": []
-										}
+										"typeParameterInstantiation": [],
+										"type": 3
 									}
-								]
+								],
+								"type": 9
+							}
+						},
+						{
+							"name": "pair",
+							"position": 1,
+							"type": {
+								"typeParameterInstantiation": [
+									{
+										"typeParameterInstantiation": [],
+										"type": 5
+									}
+								],
+								"type": 9
+							}
+						},
+						{
+							"name": "prices",
+							"position": 2,
+							"type": {
+								"typeParameterInstantiation": [
+									{
+										"typeParameterInstantiation": [],
+										"type": 7
+									}
+								],
+								"type": 9
+							}
+						},
+						{
+							"name": "timestamp",
+							"position": 3,
+							"type": {
+								"typeParameterInstantiation": [
+									{
+										"typeParameterInstantiation": [],
+										"type": 7
+									}
+								],
+								"type": 9
+							}
+						},
+						{
+							"name": "decimals",
+							"position": 4,
+							"type": {
+								"typeParameterInstantiation": [
+									{
+										"typeParameterInstantiation": [],
+										"type": 4
+									}
+								],
+								"type": 9
 							}
 						}
-					}
-				]
-			},
-			"Origin": {
-				"abilities": {
-					"abilities": [
-						"Drop"
-					]
+					],
+					"variants": [],
+					"typeName": "0x5d8fbbf6f908a4af8c6d072669a462d53e03eb3c1d863bd0359dc818c69ea706::SupraSValueFeed::CoherentCluster",
+					"definingId": "0x5d8fbbf6f908a4af8c6d072669a462d53e03eb3c1d863bd0359dc818c69ea706",
+					"module": "SupraSValueFeed",
+					"name": "CoherentCluster",
+					"kind": 1
 				},
-				"typeParameters": [],
-				"fields": [
-					{
-						"name": "id",
-						"type": {
-							"Vector": "U8"
-						}
-					},
-					{
-						"name": "member_index",
-						"type": "U64"
-					},
-					{
-						"name": "committee_index",
-						"type": "U64"
-					}
-				]
-			},
-			"OwnerCap": {
-				"abilities": {
+				{
 					"abilities": [
-						"Key"
-					]
-				},
-				"typeParameters": [],
-				"fields": [
-					{
-						"name": "id",
-						"type": {
-							"Struct": {
-								"address": "0x2",
-								"module": "object",
-								"name": "UID",
-								"typeArguments": []
+						3,
+						4
+					],
+					"typeParameters": [],
+					"fields": [
+						{
+							"name": "id",
+							"position": 0,
+							"type": {
+								"typeParameterInstantiation": [],
+								"type": 10,
+								"typeName": "0x0000000000000000000000000000000000000000000000000000000000000002::object::UID"
+							}
+						},
+						{
+							"name": "public_key",
+							"position": 1,
+							"type": {
+								"typeParameterInstantiation": [
+									{
+										"typeParameterInstantiation": [],
+										"type": 3
+									}
+								],
+								"type": 9
 							}
 						}
-					}
-				]
-			},
-			"Price": {
-				"abilities": {
+					],
+					"variants": [],
+					"typeName": "0x5d8fbbf6f908a4af8c6d072669a462d53e03eb3c1d863bd0359dc818c69ea706::SupraSValueFeed::DkgState",
+					"definingId": "0x5d8fbbf6f908a4af8c6d072669a462d53e03eb3c1d863bd0359dc818c69ea706",
+					"module": "SupraSValueFeed",
+					"name": "DkgState",
+					"kind": 1
+				},
+				{
 					"abilities": [
-						"Drop"
-					]
+						1,
+						2,
+						3
+					],
+					"typeParameters": [],
+					"fields": [
+						{
+							"name": "value",
+							"position": 0,
+							"type": {
+								"typeParameterInstantiation": [],
+								"type": 7
+							}
+						},
+						{
+							"name": "decimal",
+							"position": 1,
+							"type": {
+								"typeParameterInstantiation": [],
+								"type": 4
+							}
+						},
+						{
+							"name": "timestamp",
+							"position": 2,
+							"type": {
+								"typeParameterInstantiation": [],
+								"type": 7
+							}
+						},
+						{
+							"name": "round",
+							"position": 3,
+							"type": {
+								"typeParameterInstantiation": [],
+								"type": 6
+							}
+						}
+					],
+					"variants": [],
+					"typeName": "0x5d8fbbf6f908a4af8c6d072669a462d53e03eb3c1d863bd0359dc818c69ea706::SupraSValueFeed::Entry",
+					"definingId": "0x5d8fbbf6f908a4af8c6d072669a462d53e03eb3c1d863bd0359dc818c69ea706",
+					"module": "SupraSValueFeed",
+					"name": "Entry",
+					"kind": 1
 				},
-				"typeParameters": [],
-				"fields": [
-					{
-						"name": "pair",
-						"type": "U32"
-					},
-					{
-						"name": "value",
-						"type": "U128"
-					},
-					{
-						"name": "decimal",
-						"type": "U16"
-					},
-					{
-						"name": "timestamp",
-						"type": "U128"
-					},
-					{
-						"name": "round",
-						"type": "U64"
-					}
-				]
-			},
-			"SCCProcessedEvent": {
-				"abilities": {
+				{
 					"abilities": [
-						"Copy",
-						"Drop"
-					]
-				},
-				"typeParameters": [],
-				"fields": [
-					{
-						"name": "hash",
-						"type": {
-							"Vector": "U8"
+						2
+					],
+					"typeParameters": [],
+					"fields": [
+						{
+							"name": "protocol",
+							"position": 0,
+							"type": {
+								"typeParameterInstantiation": [
+									{
+										"typeParameterInstantiation": [],
+										"type": 3
+									}
+								],
+								"type": 9
+							}
+						},
+						{
+							"name": "txn_hashes",
+							"position": 1,
+							"type": {
+								"typeParameterInstantiation": [
+									{
+										"typeParameterInstantiation": [
+											{
+												"typeParameterInstantiation": [],
+												"type": 3
+											}
+										],
+										"type": 9
+									}
+								],
+								"type": 9
+							}
 						}
-					}
-				]
-			},
-			"SignedCoherentCluster": {
-				"abilities": {
+					],
+					"variants": [],
+					"typeName": "0x5d8fbbf6f908a4af8c6d072669a462d53e03eb3c1d863bd0359dc818c69ea706::SupraSValueFeed::MinBatch",
+					"definingId": "0x5d8fbbf6f908a4af8c6d072669a462d53e03eb3c1d863bd0359dc818c69ea706",
+					"module": "SupraSValueFeed",
+					"name": "MinBatch",
+					"kind": 1
+				},
+				{
 					"abilities": [
-						"Drop"
-					]
+						2
+					],
+					"typeParameters": [],
+					"fields": [
+						{
+							"name": "round",
+							"position": 0,
+							"type": {
+								"typeParameterInstantiation": [
+									{
+										"typeParameterInstantiation": [],
+										"type": 3
+									}
+								],
+								"type": 9
+							}
+						},
+						{
+							"name": "timestamp",
+							"position": 1,
+							"type": {
+								"typeParameterInstantiation": [
+									{
+										"typeParameterInstantiation": [],
+										"type": 3
+									}
+								],
+								"type": 9
+							}
+						},
+						{
+							"name": "author",
+							"position": 2,
+							"type": {
+								"typeParameterInstantiation": [
+									{
+										"typeParameterInstantiation": [],
+										"type": 3
+									}
+								],
+								"type": 9
+							}
+						},
+						{
+							"name": "qc_hash",
+							"position": 3,
+							"type": {
+								"typeParameterInstantiation": [
+									{
+										"typeParameterInstantiation": [],
+										"type": 3
+									}
+								],
+								"type": 9
+							}
+						},
+						{
+							"name": "batch_hashes",
+							"position": 4,
+							"type": {
+								"typeParameterInstantiation": [
+									{
+										"typeParameterInstantiation": [
+											{
+												"typeParameterInstantiation": [],
+												"type": 3
+											}
+										],
+										"type": 9
+									}
+								],
+								"type": 9
+							}
+						}
+					],
+					"variants": [],
+					"typeName": "0x5d8fbbf6f908a4af8c6d072669a462d53e03eb3c1d863bd0359dc818c69ea706::SupraSValueFeed::MinBlock",
+					"definingId": "0x5d8fbbf6f908a4af8c6d072669a462d53e03eb3c1d863bd0359dc818c69ea706",
+					"module": "SupraSValueFeed",
+					"name": "MinBlock",
+					"kind": 1
 				},
-				"typeParameters": [],
-				"fields": [
-					{
-						"name": "cc",
-						"type": {
-							"Struct": {
-								"address": "0x5d8fbbf6f908a4af8c6d072669a462d53e03eb3c1d863bd0359dc818c69ea706",
-								"module": "SupraSValueFeed",
-								"name": "CoherentCluster",
-								"typeArguments": []
-							}
-						}
-					},
-					{
-						"name": "qc",
-						"type": {
-							"Vector": "U8"
-						}
-					},
-					{
-						"name": "round",
-						"type": "U64"
-					},
-					{
-						"name": "origin",
-						"type": {
-							"Struct": {
-								"address": "0x5d8fbbf6f908a4af8c6d072669a462d53e03eb3c1d863bd0359dc818c69ea706",
-								"module": "SupraSValueFeed",
-								"name": "Origin",
-								"typeArguments": []
-							}
-						}
-					}
-				]
-			},
-			"Vote": {
-				"abilities": {
+				{
 					"abilities": [
-						"Drop"
-					]
+						2
+					],
+					"typeParameters": [],
+					"fields": [
+						{
+							"name": "cluster_hashes",
+							"position": 0,
+							"type": {
+								"typeParameterInstantiation": [
+									{
+										"typeParameterInstantiation": [
+											{
+												"typeParameterInstantiation": [],
+												"type": 3
+											}
+										],
+										"type": 9
+									}
+								],
+								"type": 9
+							}
+						},
+						{
+							"name": "sender",
+							"position": 1,
+							"type": {
+								"typeParameterInstantiation": [
+									{
+										"typeParameterInstantiation": [],
+										"type": 3
+									}
+								],
+								"type": 9
+							}
+						},
+						{
+							"name": "protocol",
+							"position": 2,
+							"type": {
+								"typeParameterInstantiation": [
+									{
+										"typeParameterInstantiation": [],
+										"type": 3
+									}
+								],
+								"type": 9
+							}
+						},
+						{
+							"name": "tx_sub_type",
+							"position": 3,
+							"type": {
+								"typeParameterInstantiation": [],
+								"type": 3
+							}
+						}
+					],
+					"variants": [],
+					"typeName": "0x5d8fbbf6f908a4af8c6d072669a462d53e03eb3c1d863bd0359dc818c69ea706::SupraSValueFeed::MinTxn",
+					"definingId": "0x5d8fbbf6f908a4af8c6d072669a462d53e03eb3c1d863bd0359dc818c69ea706",
+					"module": "SupraSValueFeed",
+					"name": "MinTxn",
+					"kind": 1
 				},
-				"typeParameters": [],
-				"fields": [
-					{
-						"name": "smr_block",
-						"type": {
-							"Struct": {
-								"address": "0x5d8fbbf6f908a4af8c6d072669a462d53e03eb3c1d863bd0359dc818c69ea706",
-								"module": "SupraSValueFeed",
-								"name": "MinBlock",
-								"typeArguments": []
+				{
+					"abilities": [
+						3,
+						4
+					],
+					"typeParameters": [],
+					"fields": [
+						{
+							"name": "id",
+							"position": 0,
+							"type": {
+								"typeParameterInstantiation": [],
+								"type": 10,
+								"typeName": "0x0000000000000000000000000000000000000000000000000000000000000002::object::UID"
+							}
+						},
+						{
+							"name": "version",
+							"position": 1,
+							"type": {
+								"typeParameterInstantiation": [],
+								"type": 6
+							}
+						},
+						{
+							"name": "owner",
+							"position": 2,
+							"type": {
+								"typeParameterInstantiation": [],
+								"type": 10,
+								"typeName": "0x0000000000000000000000000000000000000000000000000000000000000002::object::ID"
+							}
+						},
+						{
+							"name": "feeds",
+							"position": 3,
+							"type": {
+								"typeParameterInstantiation": [
+									{
+										"typeParameterInstantiation": [],
+										"type": 5
+									},
+									{
+										"typeParameterInstantiation": [],
+										"type": 10,
+										"typeName": "0x5d8fbbf6f908a4af8c6d072669a462d53e03eb3c1d863bd0359dc818c69ea706::SupraSValueFeed::Entry"
+									}
+								],
+								"type": 10,
+								"typeName": "0x0000000000000000000000000000000000000000000000000000000000000002::table::Table"
 							}
 						}
-					},
-					{
-						"name": "round",
-						"type": "U64"
-					}
-				]
-			}
-		},
-		"exposedFunctions": {
-			"add_public_key": {
-				"visibility": "Private",
-				"isEntry": true,
-				"typeParameters": [],
-				"parameters": [
-					{
-						"MutableReference": {
-							"Struct": {
-								"address": "0x5d8fbbf6f908a4af8c6d072669a462d53e03eb3c1d863bd0359dc818c69ea706",
-								"module": "SupraSValueFeed",
-								"name": "OwnerCap",
-								"typeArguments": []
+					],
+					"variants": [],
+					"typeName": "0x5d8fbbf6f908a4af8c6d072669a462d53e03eb3c1d863bd0359dc818c69ea706::SupraSValueFeed::OracleHolder",
+					"definingId": "0x5d8fbbf6f908a4af8c6d072669a462d53e03eb3c1d863bd0359dc818c69ea706",
+					"module": "SupraSValueFeed",
+					"name": "OracleHolder",
+					"kind": 1
+				},
+				{
+					"abilities": [
+						2
+					],
+					"typeParameters": [],
+					"fields": [
+						{
+							"name": "id",
+							"position": 0,
+							"type": {
+								"typeParameterInstantiation": [
+									{
+										"typeParameterInstantiation": [],
+										"type": 3
+									}
+								],
+								"type": 9
+							}
+						},
+						{
+							"name": "member_index",
+							"position": 1,
+							"type": {
+								"typeParameterInstantiation": [],
+								"type": 6
+							}
+						},
+						{
+							"name": "committee_index",
+							"position": 2,
+							"type": {
+								"typeParameterInstantiation": [],
+								"type": 6
 							}
 						}
-					},
-					{
-						"Vector": "U8"
-					},
-					{
-						"MutableReference": {
-							"Struct": {
-								"address": "0x2",
-								"module": "tx_context",
-								"name": "TxContext",
-								"typeArguments": []
+					],
+					"variants": [],
+					"typeName": "0x5d8fbbf6f908a4af8c6d072669a462d53e03eb3c1d863bd0359dc818c69ea706::SupraSValueFeed::Origin",
+					"definingId": "0x5d8fbbf6f908a4af8c6d072669a462d53e03eb3c1d863bd0359dc818c69ea706",
+					"module": "SupraSValueFeed",
+					"name": "Origin",
+					"kind": 1
+				},
+				{
+					"abilities": [
+						4
+					],
+					"typeParameters": [],
+					"fields": [
+						{
+							"name": "id",
+							"position": 0,
+							"type": {
+								"typeParameterInstantiation": [],
+								"type": 10,
+								"typeName": "0x0000000000000000000000000000000000000000000000000000000000000002::object::UID"
 							}
 						}
-					}
-				],
-				"return": []
-			},
-			"extract_price": {
-				"visibility": "Public",
-				"isEntry": false,
-				"typeParameters": [],
-				"parameters": [
-					{
-						"Reference": {
-							"Struct": {
-								"address": "0x5d8fbbf6f908a4af8c6d072669a462d53e03eb3c1d863bd0359dc818c69ea706",
-								"module": "SupraSValueFeed",
-								"name": "Price",
-								"typeArguments": []
+					],
+					"variants": [],
+					"typeName": "0x5d8fbbf6f908a4af8c6d072669a462d53e03eb3c1d863bd0359dc818c69ea706::SupraSValueFeed::OwnerCap",
+					"definingId": "0x5d8fbbf6f908a4af8c6d072669a462d53e03eb3c1d863bd0359dc818c69ea706",
+					"module": "SupraSValueFeed",
+					"name": "OwnerCap",
+					"kind": 1
+				},
+				{
+					"abilities": [
+						2
+					],
+					"typeParameters": [],
+					"fields": [
+						{
+							"name": "pair",
+							"position": 0,
+							"type": {
+								"typeParameterInstantiation": [],
+								"type": 5
+							}
+						},
+						{
+							"name": "value",
+							"position": 1,
+							"type": {
+								"typeParameterInstantiation": [],
+								"type": 7
+							}
+						},
+						{
+							"name": "decimal",
+							"position": 2,
+							"type": {
+								"typeParameterInstantiation": [],
+								"type": 4
+							}
+						},
+						{
+							"name": "timestamp",
+							"position": 3,
+							"type": {
+								"typeParameterInstantiation": [],
+								"type": 7
+							}
+						},
+						{
+							"name": "round",
+							"position": 4,
+							"type": {
+								"typeParameterInstantiation": [],
+								"type": 6
 							}
 						}
-					}
-				],
-				"return": [
-					"U32",
-					"U128",
-					"U16",
-					"U128",
-					"U64"
-				]
-			},
-			"get_price": {
-				"visibility": "Public",
-				"isEntry": false,
-				"typeParameters": [],
-				"parameters": [
-					{
-						"Reference": {
-							"Struct": {
-								"address": "0x5d8fbbf6f908a4af8c6d072669a462d53e03eb3c1d863bd0359dc818c69ea706",
-								"module": "SupraSValueFeed",
-								"name": "OracleHolder",
-								"typeArguments": []
+					],
+					"variants": [],
+					"typeName": "0x5d8fbbf6f908a4af8c6d072669a462d53e03eb3c1d863bd0359dc818c69ea706::SupraSValueFeed::Price",
+					"definingId": "0x5d8fbbf6f908a4af8c6d072669a462d53e03eb3c1d863bd0359dc818c69ea706",
+					"module": "SupraSValueFeed",
+					"name": "Price",
+					"kind": 1
+				},
+				{
+					"abilities": [
+						1,
+						2
+					],
+					"typeParameters": [],
+					"fields": [
+						{
+							"name": "hash",
+							"position": 0,
+							"type": {
+								"typeParameterInstantiation": [
+									{
+										"typeParameterInstantiation": [],
+										"type": 3
+									}
+								],
+								"type": 9
 							}
 						}
-					},
-					"U32"
-				],
-				"return": [
-					"U128",
-					"U16",
-					"U128",
-					"U64"
-				]
-			},
-			"get_prices": {
-				"visibility": "Public",
-				"isEntry": false,
-				"typeParameters": [],
-				"parameters": [
-					{
-						"Reference": {
-							"Struct": {
-								"address": "0x5d8fbbf6f908a4af8c6d072669a462d53e03eb3c1d863bd0359dc818c69ea706",
-								"module": "SupraSValueFeed",
-								"name": "OracleHolder",
-								"typeArguments": []
+					],
+					"variants": [],
+					"typeName": "0x5d8fbbf6f908a4af8c6d072669a462d53e03eb3c1d863bd0359dc818c69ea706::SupraSValueFeed::SCCProcessedEvent",
+					"definingId": "0x5d8fbbf6f908a4af8c6d072669a462d53e03eb3c1d863bd0359dc818c69ea706",
+					"module": "SupraSValueFeed",
+					"name": "SCCProcessedEvent",
+					"kind": 1
+				},
+				{
+					"abilities": [
+						2
+					],
+					"typeParameters": [],
+					"fields": [
+						{
+							"name": "cc",
+							"position": 0,
+							"type": {
+								"typeParameterInstantiation": [],
+								"type": 10,
+								"typeName": "0x5d8fbbf6f908a4af8c6d072669a462d53e03eb3c1d863bd0359dc818c69ea706::SupraSValueFeed::CoherentCluster"
+							}
+						},
+						{
+							"name": "qc",
+							"position": 1,
+							"type": {
+								"typeParameterInstantiation": [
+									{
+										"typeParameterInstantiation": [],
+										"type": 3
+									}
+								],
+								"type": 9
+							}
+						},
+						{
+							"name": "round",
+							"position": 2,
+							"type": {
+								"typeParameterInstantiation": [],
+								"type": 6
+							}
+						},
+						{
+							"name": "origin",
+							"position": 3,
+							"type": {
+								"typeParameterInstantiation": [],
+								"type": 10,
+								"typeName": "0x5d8fbbf6f908a4af8c6d072669a462d53e03eb3c1d863bd0359dc818c69ea706::SupraSValueFeed::Origin"
 							}
 						}
-					},
-					{
-						"Vector": "U32"
-					}
-				],
-				"return": [
-					{
-						"Vector": {
-							"Struct": {
-								"address": "0x5d8fbbf6f908a4af8c6d072669a462d53e03eb3c1d863bd0359dc818c69ea706",
-								"module": "SupraSValueFeed",
-								"name": "Price",
-								"typeArguments": []
+					],
+					"variants": [],
+					"typeName": "0x5d8fbbf6f908a4af8c6d072669a462d53e03eb3c1d863bd0359dc818c69ea706::SupraSValueFeed::SignedCoherentCluster",
+					"definingId": "0x5d8fbbf6f908a4af8c6d072669a462d53e03eb3c1d863bd0359dc818c69ea706",
+					"module": "SupraSValueFeed",
+					"name": "SignedCoherentCluster",
+					"kind": 1
+				},
+				{
+					"abilities": [
+						2
+					],
+					"typeParameters": [],
+					"fields": [
+						{
+							"name": "smr_block",
+							"position": 0,
+							"type": {
+								"typeParameterInstantiation": [],
+								"type": 10,
+								"typeName": "0x5d8fbbf6f908a4af8c6d072669a462d53e03eb3c1d863bd0359dc818c69ea706::SupraSValueFeed::MinBlock"
+							}
+						},
+						{
+							"name": "round",
+							"position": 1,
+							"type": {
+								"typeParameterInstantiation": [],
+								"type": 6
 							}
 						}
-					}
-				]
-			},
-			"migrate": {
-				"visibility": "Private",
-				"isEntry": true,
-				"typeParameters": [],
-				"parameters": [
-					{
-						"Reference": {
-							"Struct": {
-								"address": "0x5d8fbbf6f908a4af8c6d072669a462d53e03eb3c1d863bd0359dc818c69ea706",
-								"module": "SupraSValueFeed",
-								"name": "OwnerCap",
-								"typeArguments": []
+					],
+					"variants": [],
+					"typeName": "0x5d8fbbf6f908a4af8c6d072669a462d53e03eb3c1d863bd0359dc818c69ea706::SupraSValueFeed::Vote",
+					"definingId": "0x5d8fbbf6f908a4af8c6d072669a462d53e03eb3c1d863bd0359dc818c69ea706",
+					"module": "SupraSValueFeed",
+					"name": "Vote",
+					"kind": 1
+				}
+			],
+			"functions": [
+				{
+					"typeParameters": [],
+					"parameters": [
+						{
+							"reference": 2,
+							"body": {
+								"typeParameterInstantiation": [],
+								"type": 10,
+								"typeName": "0x5d8fbbf6f908a4af8c6d072669a462d53e03eb3c1d863bd0359dc818c69ea706::SupraSValueFeed::OwnerCap"
+							}
+						},
+						{
+							"body": {
+								"typeParameterInstantiation": [
+									{
+										"typeParameterInstantiation": [],
+										"type": 3
+									}
+								],
+								"type": 9
+							}
+						},
+						{
+							"reference": 2,
+							"body": {
+								"typeParameterInstantiation": [],
+								"type": 10,
+								"typeName": "0x0000000000000000000000000000000000000000000000000000000000000002::tx_context::TxContext"
 							}
 						}
-					},
-					{
-						"MutableReference": {
-							"Struct": {
-								"address": "0x5d8fbbf6f908a4af8c6d072669a462d53e03eb3c1d863bd0359dc818c69ea706",
-								"module": "SupraSValueFeed",
-								"name": "OracleHolder",
-								"typeArguments": []
+					],
+					"returns": [],
+					"name": "add_public_key",
+					"visibility": 1,
+					"isEntry": true
+				},
+				{
+					"typeParameters": [],
+					"parameters": [
+						{
+							"reference": 1,
+							"body": {
+								"typeParameterInstantiation": [],
+								"type": 10,
+								"typeName": "0x5d8fbbf6f908a4af8c6d072669a462d53e03eb3c1d863bd0359dc818c69ea706::SupraSValueFeed::MinBatch"
+							}
+						},
+						{
+							"reference": 1,
+							"body": {
+								"typeParameterInstantiation": [
+									{
+										"typeParameterInstantiation": [
+											{
+												"typeParameterInstantiation": [],
+												"type": 3
+											}
+										],
+										"type": 9
+									}
+								],
+								"type": 9
+							}
+						},
+						{
+							"body": {
+								"typeParameterInstantiation": [],
+								"type": 6
 							}
 						}
-					}
-				],
-				"return": []
-			},
-			"process_cluster": {
-				"visibility": "Private",
-				"isEntry": true,
-				"typeParameters": [],
-				"parameters": [
-					{
-						"Reference": {
-							"Struct": {
-								"address": "0x5d8fbbf6f908a4af8c6d072669a462d53e03eb3c1d863bd0359dc818c69ea706",
-								"module": "SupraSValueFeed",
-								"name": "DkgState",
-								"typeArguments": []
+					],
+					"returns": [
+						{
+							"body": {
+								"typeParameterInstantiation": [],
+								"type": 2
 							}
 						}
-					},
-					{
-						"MutableReference": {
-							"Struct": {
-								"address": "0x5d8fbbf6f908a4af8c6d072669a462d53e03eb3c1d863bd0359dc818c69ea706",
-								"module": "SupraSValueFeed",
-								"name": "OracleHolder",
-								"typeArguments": []
+					],
+					"name": "batch_verification",
+					"visibility": 1,
+					"isEntry": false
+				},
+				{
+					"typeParameters": [],
+					"parameters": [
+						{
+							"body": {
+								"typeParameterInstantiation": [
+									{
+										"typeParameterInstantiation": [],
+										"type": 3
+									}
+								],
+								"type": 9
+							}
+						},
+						{
+							"reference": 2,
+							"body": {
+								"typeParameterInstantiation": [],
+								"type": 10,
+								"typeName": "0x0000000000000000000000000000000000000000000000000000000000000002::tx_context::TxContext"
 							}
 						}
-					},
-					{
-						"Vector": {
-							"Vector": "U8"
-						}
-					},
-					{
-						"Vector": {
-							"Vector": "U8"
-						}
-					},
-					{
-						"Vector": {
-							"Vector": "U8"
-						}
-					},
-					{
-						"Vector": {
-							"Vector": "U8"
-						}
-					},
-					{
-						"Vector": {
-							"Vector": {
-								"Vector": "U8"
+					],
+					"returns": [],
+					"name": "create_dkg_state",
+					"visibility": 1,
+					"isEntry": false
+				},
+				{
+					"typeParameters": [],
+					"parameters": [
+						{
+							"reference": 2,
+							"body": {
+								"typeParameterInstantiation": [],
+								"type": 10,
+								"typeName": "0x0000000000000000000000000000000000000000000000000000000000000002::tx_context::TxContext"
+							}
+						},
+						{
+							"reference": 1,
+							"body": {
+								"typeParameterInstantiation": [],
+								"type": 10,
+								"typeName": "0x5d8fbbf6f908a4af8c6d072669a462d53e03eb3c1d863bd0359dc818c69ea706::SupraSValueFeed::OwnerCap"
 							}
 						}
-					},
-					{
-						"Vector": "U64"
-					},
-					{
-						"Vector": {
-							"Vector": "U8"
-						}
-					},
-					{
-						"Vector": {
-							"Vector": {
-								"Vector": "U8"
+					],
+					"returns": [],
+					"name": "create_oracle_holder",
+					"visibility": 1,
+					"isEntry": false
+				},
+				{
+					"typeParameters": [],
+					"parameters": [
+						{
+							"body": {
+								"typeParameterInstantiation": [],
+								"type": 10,
+								"typeName": "0x5d8fbbf6f908a4af8c6d072669a462d53e03eb3c1d863bd0359dc818c69ea706::SupraSValueFeed::OwnerCap"
+							}
+						},
+						{
+							"reference": 2,
+							"body": {
+								"typeParameterInstantiation": [],
+								"type": 10,
+								"typeName": "0x0000000000000000000000000000000000000000000000000000000000000002::tx_context::TxContext"
 							}
 						}
-					},
-					{
-						"Vector": {
-							"Vector": {
-								"Vector": "U8"
+					],
+					"returns": [],
+					"name": "create_owner",
+					"visibility": 1,
+					"isEntry": false
+				},
+				{
+					"typeParameters": [],
+					"parameters": [
+						{
+							"reference": 1,
+							"body": {
+								"typeParameterInstantiation": [],
+								"type": 10,
+								"typeName": "0x5d8fbbf6f908a4af8c6d072669a462d53e03eb3c1d863bd0359dc818c69ea706::SupraSValueFeed::Price"
 							}
 						}
-					},
-					{
-						"Vector": {
-							"Vector": "U8"
-						}
-					},
-					{
-						"Vector": {
-							"Vector": "U8"
-						}
-					},
-					{
-						"Vector": "U8"
-					},
-					{
-						"Vector": {
-							"Vector": "U8"
-						}
-					},
-					{
-						"Vector": {
-							"Vector": "U32"
-						}
-					},
-					{
-						"Vector": {
-							"Vector": "U128"
-						}
-					},
-					{
-						"Vector": {
-							"Vector": "U128"
-						}
-					},
-					{
-						"Vector": {
-							"Vector": "U16"
-						}
-					},
-					{
-						"Vector": {
-							"Vector": "U8"
-						}
-					},
-					{
-						"Vector": "U64"
-					},
-					{
-						"Vector": {
-							"Vector": "U8"
-						}
-					},
-					{
-						"Vector": "U64"
-					},
-					{
-						"Vector": "U64"
-					},
-					{
-						"Vector": "U64"
-					},
-					{
-						"Vector": "U64"
-					},
-					{
-						"Vector": "U64"
-					},
-					{
-						"Vector": {
-							"Vector": "U8"
-						}
-					},
-					{
-						"MutableReference": {
-							"Struct": {
-								"address": "0x2",
-								"module": "tx_context",
-								"name": "TxContext",
-								"typeArguments": []
+					],
+					"returns": [
+						{
+							"body": {
+								"typeParameterInstantiation": [],
+								"type": 5
+							}
+						},
+						{
+							"body": {
+								"typeParameterInstantiation": [],
+								"type": 7
+							}
+						},
+						{
+							"body": {
+								"typeParameterInstantiation": [],
+								"type": 4
+							}
+						},
+						{
+							"body": {
+								"typeParameterInstantiation": [],
+								"type": 7
+							}
+						},
+						{
+							"body": {
+								"typeParameterInstantiation": [],
+								"type": 6
 							}
 						}
-					}
-				],
-				"return": []
-			}
+					],
+					"name": "extract_price",
+					"visibility": 2,
+					"isEntry": false
+				},
+				{
+					"typeParameters": [],
+					"parameters": [
+						{
+							"reference": 1,
+							"body": {
+								"typeParameterInstantiation": [],
+								"type": 10,
+								"typeName": "0x5d8fbbf6f908a4af8c6d072669a462d53e03eb3c1d863bd0359dc818c69ea706::SupraSValueFeed::OracleHolder"
+							}
+						},
+						{
+							"body": {
+								"typeParameterInstantiation": [],
+								"type": 5
+							}
+						}
+					],
+					"returns": [
+						{
+							"body": {
+								"typeParameterInstantiation": [],
+								"type": 7
+							}
+						},
+						{
+							"body": {
+								"typeParameterInstantiation": [],
+								"type": 4
+							}
+						},
+						{
+							"body": {
+								"typeParameterInstantiation": [],
+								"type": 7
+							}
+						},
+						{
+							"body": {
+								"typeParameterInstantiation": [],
+								"type": 6
+							}
+						}
+					],
+					"name": "get_price",
+					"visibility": 2,
+					"isEntry": false
+				},
+				{
+					"typeParameters": [],
+					"parameters": [
+						{
+							"reference": 1,
+							"body": {
+								"typeParameterInstantiation": [],
+								"type": 10,
+								"typeName": "0x5d8fbbf6f908a4af8c6d072669a462d53e03eb3c1d863bd0359dc818c69ea706::SupraSValueFeed::OracleHolder"
+							}
+						},
+						{
+							"body": {
+								"typeParameterInstantiation": [
+									{
+										"typeParameterInstantiation": [],
+										"type": 5
+									}
+								],
+								"type": 9
+							}
+						}
+					],
+					"returns": [
+						{
+							"body": {
+								"typeParameterInstantiation": [
+									{
+										"typeParameterInstantiation": [],
+										"type": 10,
+										"typeName": "0x5d8fbbf6f908a4af8c6d072669a462d53e03eb3c1d863bd0359dc818c69ea706::SupraSValueFeed::Price"
+									}
+								],
+								"type": 9
+							}
+						}
+					],
+					"name": "get_prices",
+					"visibility": 2,
+					"isEntry": false
+				},
+				{
+					"typeParameters": [],
+					"parameters": [
+						{
+							"reference": 1,
+							"body": {
+								"typeParameterInstantiation": [],
+								"type": 10,
+								"typeName": "0x5d8fbbf6f908a4af8c6d072669a462d53e03eb3c1d863bd0359dc818c69ea706::SupraSValueFeed::MinBatch"
+							}
+						}
+					],
+					"returns": [
+						{
+							"body": {
+								"typeParameterInstantiation": [
+									{
+										"typeParameterInstantiation": [],
+										"type": 3
+									}
+								],
+								"type": 9
+							}
+						}
+					],
+					"name": "hash_min_batch",
+					"visibility": 1,
+					"isEntry": false
+				},
+				{
+					"typeParameters": [],
+					"parameters": [
+						{
+							"reference": 1,
+							"body": {
+								"typeParameterInstantiation": [],
+								"type": 10,
+								"typeName": "0x5d8fbbf6f908a4af8c6d072669a462d53e03eb3c1d863bd0359dc818c69ea706::SupraSValueFeed::MinTxn"
+							}
+						}
+					],
+					"returns": [
+						{
+							"body": {
+								"typeParameterInstantiation": [
+									{
+										"typeParameterInstantiation": [],
+										"type": 3
+									}
+								],
+								"type": 9
+							}
+						}
+					],
+					"name": "hash_min_txn",
+					"visibility": 1,
+					"isEntry": false
+				},
+				{
+					"typeParameters": [],
+					"parameters": [
+						{
+							"reference": 1,
+							"body": {
+								"typeParameterInstantiation": [],
+								"type": 10,
+								"typeName": "0x5d8fbbf6f908a4af8c6d072669a462d53e03eb3c1d863bd0359dc818c69ea706::SupraSValueFeed::SignedCoherentCluster"
+							}
+						}
+					],
+					"returns": [
+						{
+							"body": {
+								"typeParameterInstantiation": [
+									{
+										"typeParameterInstantiation": [],
+										"type": 3
+									}
+								],
+								"type": 9
+							}
+						}
+					],
+					"name": "hash_scc",
+					"visibility": 1,
+					"isEntry": false
+				},
+				{
+					"typeParameters": [],
+					"parameters": [
+						{
+							"reference": 2,
+							"body": {
+								"typeParameterInstantiation": [],
+								"type": 10,
+								"typeName": "0x0000000000000000000000000000000000000000000000000000000000000002::tx_context::TxContext"
+							}
+						}
+					],
+					"returns": [],
+					"name": "init",
+					"visibility": 1,
+					"isEntry": false
+				},
+				{
+					"typeParameters": [],
+					"parameters": [
+						{
+							"reference": 1,
+							"body": {
+								"typeParameterInstantiation": [],
+								"type": 10,
+								"typeName": "0x5d8fbbf6f908a4af8c6d072669a462d53e03eb3c1d863bd0359dc818c69ea706::SupraSValueFeed::OwnerCap"
+							}
+						},
+						{
+							"reference": 2,
+							"body": {
+								"typeParameterInstantiation": [],
+								"type": 10,
+								"typeName": "0x5d8fbbf6f908a4af8c6d072669a462d53e03eb3c1d863bd0359dc818c69ea706::SupraSValueFeed::OracleHolder"
+							}
+						}
+					],
+					"returns": [],
+					"name": "migrate",
+					"visibility": 1,
+					"isEntry": true
+				},
+				{
+					"typeParameters": [],
+					"parameters": [
+						{
+							"body": {
+								"typeParameterInstantiation": [
+									{
+										"typeParameterInstantiation": [],
+										"type": 3
+									}
+								],
+								"type": 9
+							}
+						},
+						{
+							"body": {
+								"typeParameterInstantiation": [
+									{
+										"typeParameterInstantiation": [
+											{
+												"typeParameterInstantiation": [],
+												"type": 3
+											}
+										],
+										"type": 9
+									}
+								],
+								"type": 9
+							}
+						}
+					],
+					"returns": [
+						{
+							"body": {
+								"typeParameterInstantiation": [],
+								"type": 10,
+								"typeName": "0x5d8fbbf6f908a4af8c6d072669a462d53e03eb3c1d863bd0359dc818c69ea706::SupraSValueFeed::MinBatch"
+							}
+						}
+					],
+					"name": "new_min_batch",
+					"visibility": 1,
+					"isEntry": false
+				},
+				{
+					"typeParameters": [],
+					"parameters": [
+						{
+							"body": {
+								"typeParameterInstantiation": [
+									{
+										"typeParameterInstantiation": [
+											{
+												"typeParameterInstantiation": [],
+												"type": 3
+											}
+										],
+										"type": 9
+									}
+								],
+								"type": 9
+							}
+						},
+						{
+							"body": {
+								"typeParameterInstantiation": [
+									{
+										"typeParameterInstantiation": [],
+										"type": 3
+									}
+								],
+								"type": 9
+							}
+						},
+						{
+							"body": {
+								"typeParameterInstantiation": [
+									{
+										"typeParameterInstantiation": [],
+										"type": 3
+									}
+								],
+								"type": 9
+							}
+						},
+						{
+							"body": {
+								"typeParameterInstantiation": [],
+								"type": 3
+							}
+						}
+					],
+					"returns": [
+						{
+							"body": {
+								"typeParameterInstantiation": [],
+								"type": 10,
+								"typeName": "0x5d8fbbf6f908a4af8c6d072669a462d53e03eb3c1d863bd0359dc818c69ea706::SupraSValueFeed::MinTxn"
+							}
+						}
+					],
+					"name": "new_min_txn",
+					"visibility": 1,
+					"isEntry": false
+				},
+				{
+					"typeParameters": [],
+					"parameters": [
+						{
+							"body": {
+								"typeParameterInstantiation": [
+									{
+										"typeParameterInstantiation": [],
+										"type": 3
+									}
+								],
+								"type": 9
+							}
+						},
+						{
+							"body": {
+								"typeParameterInstantiation": [
+									{
+										"typeParameterInstantiation": [],
+										"type": 5
+									}
+								],
+								"type": 9
+							}
+						},
+						{
+							"body": {
+								"typeParameterInstantiation": [
+									{
+										"typeParameterInstantiation": [],
+										"type": 7
+									}
+								],
+								"type": 9
+							}
+						},
+						{
+							"body": {
+								"typeParameterInstantiation": [
+									{
+										"typeParameterInstantiation": [],
+										"type": 7
+									}
+								],
+								"type": 9
+							}
+						},
+						{
+							"body": {
+								"typeParameterInstantiation": [
+									{
+										"typeParameterInstantiation": [],
+										"type": 4
+									}
+								],
+								"type": 9
+							}
+						},
+						{
+							"body": {
+								"typeParameterInstantiation": [
+									{
+										"typeParameterInstantiation": [],
+										"type": 3
+									}
+								],
+								"type": 9
+							}
+						},
+						{
+							"body": {
+								"typeParameterInstantiation": [],
+								"type": 6
+							}
+						},
+						{
+							"body": {
+								"typeParameterInstantiation": [
+									{
+										"typeParameterInstantiation": [],
+										"type": 3
+									}
+								],
+								"type": 9
+							}
+						},
+						{
+							"body": {
+								"typeParameterInstantiation": [],
+								"type": 6
+							}
+						},
+						{
+							"body": {
+								"typeParameterInstantiation": [],
+								"type": 6
+							}
+						}
+					],
+					"returns": [
+						{
+							"body": {
+								"typeParameterInstantiation": [],
+								"type": 10,
+								"typeName": "0x5d8fbbf6f908a4af8c6d072669a462d53e03eb3c1d863bd0359dc818c69ea706::SupraSValueFeed::SignedCoherentCluster"
+							}
+						}
+					],
+					"name": "new_scc",
+					"visibility": 1,
+					"isEntry": false
+				},
+				{
+					"typeParameters": [],
+					"parameters": [
+						{
+							"body": {
+								"typeParameterInstantiation": [
+									{
+										"typeParameterInstantiation": [],
+										"type": 3
+									}
+								],
+								"type": 9
+							}
+						},
+						{
+							"body": {
+								"typeParameterInstantiation": [
+									{
+										"typeParameterInstantiation": [],
+										"type": 3
+									}
+								],
+								"type": 9
+							}
+						},
+						{
+							"body": {
+								"typeParameterInstantiation": [
+									{
+										"typeParameterInstantiation": [],
+										"type": 3
+									}
+								],
+								"type": 9
+							}
+						},
+						{
+							"body": {
+								"typeParameterInstantiation": [
+									{
+										"typeParameterInstantiation": [],
+										"type": 3
+									}
+								],
+								"type": 9
+							}
+						},
+						{
+							"body": {
+								"typeParameterInstantiation": [
+									{
+										"typeParameterInstantiation": [
+											{
+												"typeParameterInstantiation": [],
+												"type": 3
+											}
+										],
+										"type": 9
+									}
+								],
+								"type": 9
+							}
+						},
+						{
+							"body": {
+								"typeParameterInstantiation": [],
+								"type": 6
+							}
+						}
+					],
+					"returns": [
+						{
+							"body": {
+								"typeParameterInstantiation": [],
+								"type": 10,
+								"typeName": "0x5d8fbbf6f908a4af8c6d072669a462d53e03eb3c1d863bd0359dc818c69ea706::SupraSValueFeed::Vote"
+							}
+						}
+					],
+					"name": "new_vote",
+					"visibility": 1,
+					"isEntry": false
+				},
+				{
+					"typeParameters": [],
+					"parameters": [
+						{
+							"reference": 1,
+							"body": {
+								"typeParameterInstantiation": [],
+								"type": 10,
+								"typeName": "0x5d8fbbf6f908a4af8c6d072669a462d53e03eb3c1d863bd0359dc818c69ea706::SupraSValueFeed::DkgState"
+							}
+						},
+						{
+							"reference": 2,
+							"body": {
+								"typeParameterInstantiation": [],
+								"type": 10,
+								"typeName": "0x5d8fbbf6f908a4af8c6d072669a462d53e03eb3c1d863bd0359dc818c69ea706::SupraSValueFeed::OracleHolder"
+							}
+						},
+						{
+							"body": {
+								"typeParameterInstantiation": [
+									{
+										"typeParameterInstantiation": [
+											{
+												"typeParameterInstantiation": [],
+												"type": 3
+											}
+										],
+										"type": 9
+									}
+								],
+								"type": 9
+							}
+						},
+						{
+							"body": {
+								"typeParameterInstantiation": [
+									{
+										"typeParameterInstantiation": [
+											{
+												"typeParameterInstantiation": [],
+												"type": 3
+											}
+										],
+										"type": 9
+									}
+								],
+								"type": 9
+							}
+						},
+						{
+							"body": {
+								"typeParameterInstantiation": [
+									{
+										"typeParameterInstantiation": [
+											{
+												"typeParameterInstantiation": [],
+												"type": 3
+											}
+										],
+										"type": 9
+									}
+								],
+								"type": 9
+							}
+						},
+						{
+							"body": {
+								"typeParameterInstantiation": [
+									{
+										"typeParameterInstantiation": [
+											{
+												"typeParameterInstantiation": [],
+												"type": 3
+											}
+										],
+										"type": 9
+									}
+								],
+								"type": 9
+							}
+						},
+						{
+							"body": {
+								"typeParameterInstantiation": [
+									{
+										"typeParameterInstantiation": [
+											{
+												"typeParameterInstantiation": [
+													{
+														"typeParameterInstantiation": [],
+														"type": 3
+													}
+												],
+												"type": 9
+											}
+										],
+										"type": 9
+									}
+								],
+								"type": 9
+							}
+						},
+						{
+							"body": {
+								"typeParameterInstantiation": [
+									{
+										"typeParameterInstantiation": [],
+										"type": 6
+									}
+								],
+								"type": 9
+							}
+						},
+						{
+							"body": {
+								"typeParameterInstantiation": [
+									{
+										"typeParameterInstantiation": [
+											{
+												"typeParameterInstantiation": [],
+												"type": 3
+											}
+										],
+										"type": 9
+									}
+								],
+								"type": 9
+							}
+						},
+						{
+							"body": {
+								"typeParameterInstantiation": [
+									{
+										"typeParameterInstantiation": [
+											{
+												"typeParameterInstantiation": [
+													{
+														"typeParameterInstantiation": [],
+														"type": 3
+													}
+												],
+												"type": 9
+											}
+										],
+										"type": 9
+									}
+								],
+								"type": 9
+							}
+						},
+						{
+							"body": {
+								"typeParameterInstantiation": [
+									{
+										"typeParameterInstantiation": [
+											{
+												"typeParameterInstantiation": [
+													{
+														"typeParameterInstantiation": [],
+														"type": 3
+													}
+												],
+												"type": 9
+											}
+										],
+										"type": 9
+									}
+								],
+								"type": 9
+							}
+						},
+						{
+							"body": {
+								"typeParameterInstantiation": [
+									{
+										"typeParameterInstantiation": [
+											{
+												"typeParameterInstantiation": [],
+												"type": 3
+											}
+										],
+										"type": 9
+									}
+								],
+								"type": 9
+							}
+						},
+						{
+							"body": {
+								"typeParameterInstantiation": [
+									{
+										"typeParameterInstantiation": [
+											{
+												"typeParameterInstantiation": [],
+												"type": 3
+											}
+										],
+										"type": 9
+									}
+								],
+								"type": 9
+							}
+						},
+						{
+							"body": {
+								"typeParameterInstantiation": [
+									{
+										"typeParameterInstantiation": [],
+										"type": 3
+									}
+								],
+								"type": 9
+							}
+						},
+						{
+							"body": {
+								"typeParameterInstantiation": [
+									{
+										"typeParameterInstantiation": [
+											{
+												"typeParameterInstantiation": [],
+												"type": 3
+											}
+										],
+										"type": 9
+									}
+								],
+								"type": 9
+							}
+						},
+						{
+							"body": {
+								"typeParameterInstantiation": [
+									{
+										"typeParameterInstantiation": [
+											{
+												"typeParameterInstantiation": [],
+												"type": 5
+											}
+										],
+										"type": 9
+									}
+								],
+								"type": 9
+							}
+						},
+						{
+							"body": {
+								"typeParameterInstantiation": [
+									{
+										"typeParameterInstantiation": [
+											{
+												"typeParameterInstantiation": [],
+												"type": 7
+											}
+										],
+										"type": 9
+									}
+								],
+								"type": 9
+							}
+						},
+						{
+							"body": {
+								"typeParameterInstantiation": [
+									{
+										"typeParameterInstantiation": [
+											{
+												"typeParameterInstantiation": [],
+												"type": 7
+											}
+										],
+										"type": 9
+									}
+								],
+								"type": 9
+							}
+						},
+						{
+							"body": {
+								"typeParameterInstantiation": [
+									{
+										"typeParameterInstantiation": [
+											{
+												"typeParameterInstantiation": [],
+												"type": 4
+											}
+										],
+										"type": 9
+									}
+								],
+								"type": 9
+							}
+						},
+						{
+							"body": {
+								"typeParameterInstantiation": [
+									{
+										"typeParameterInstantiation": [
+											{
+												"typeParameterInstantiation": [],
+												"type": 3
+											}
+										],
+										"type": 9
+									}
+								],
+								"type": 9
+							}
+						},
+						{
+							"body": {
+								"typeParameterInstantiation": [
+									{
+										"typeParameterInstantiation": [],
+										"type": 6
+									}
+								],
+								"type": 9
+							}
+						},
+						{
+							"body": {
+								"typeParameterInstantiation": [
+									{
+										"typeParameterInstantiation": [
+											{
+												"typeParameterInstantiation": [],
+												"type": 3
+											}
+										],
+										"type": 9
+									}
+								],
+								"type": 9
+							}
+						},
+						{
+							"body": {
+								"typeParameterInstantiation": [
+									{
+										"typeParameterInstantiation": [],
+										"type": 6
+									}
+								],
+								"type": 9
+							}
+						},
+						{
+							"body": {
+								"typeParameterInstantiation": [
+									{
+										"typeParameterInstantiation": [],
+										"type": 6
+									}
+								],
+								"type": 9
+							}
+						},
+						{
+							"body": {
+								"typeParameterInstantiation": [
+									{
+										"typeParameterInstantiation": [],
+										"type": 6
+									}
+								],
+								"type": 9
+							}
+						},
+						{
+							"body": {
+								"typeParameterInstantiation": [
+									{
+										"typeParameterInstantiation": [],
+										"type": 6
+									}
+								],
+								"type": 9
+							}
+						},
+						{
+							"body": {
+								"typeParameterInstantiation": [
+									{
+										"typeParameterInstantiation": [],
+										"type": 6
+									}
+								],
+								"type": 9
+							}
+						},
+						{
+							"body": {
+								"typeParameterInstantiation": [
+									{
+										"typeParameterInstantiation": [
+											{
+												"typeParameterInstantiation": [],
+												"type": 3
+											}
+										],
+										"type": 9
+									}
+								],
+								"type": 9
+							}
+						},
+						{
+							"reference": 2,
+							"body": {
+								"typeParameterInstantiation": [],
+								"type": 10,
+								"typeName": "0x0000000000000000000000000000000000000000000000000000000000000002::tx_context::TxContext"
+							}
+						}
+					],
+					"returns": [],
+					"name": "process_cluster",
+					"visibility": 1,
+					"isEntry": true
+				},
+				{
+					"typeParameters": [],
+					"parameters": [
+						{
+							"reference": 1,
+							"body": {
+								"typeParameterInstantiation": [],
+								"type": 10,
+								"typeName": "0x5d8fbbf6f908a4af8c6d072669a462d53e03eb3c1d863bd0359dc818c69ea706::SupraSValueFeed::SignedCoherentCluster"
+							}
+						},
+						{
+							"reference": 1,
+							"body": {
+								"typeParameterInstantiation": [
+									{
+										"typeParameterInstantiation": [
+											{
+												"typeParameterInstantiation": [],
+												"type": 3
+											}
+										],
+										"type": 9
+									}
+								],
+								"type": 9
+							}
+						},
+						{
+							"body": {
+								"typeParameterInstantiation": [],
+								"type": 6
+							}
+						}
+					],
+					"returns": [
+						{
+							"body": {
+								"typeParameterInstantiation": [],
+								"type": 2
+							}
+						}
+					],
+					"name": "scc_verification",
+					"visibility": 1,
+					"isEntry": false
+				},
+				{
+					"typeParameters": [],
+					"parameters": [
+						{
+							"reference": 1,
+							"body": {
+								"typeParameterInstantiation": [],
+								"type": 10,
+								"typeName": "0x5d8fbbf6f908a4af8c6d072669a462d53e03eb3c1d863bd0359dc818c69ea706::SupraSValueFeed::Vote"
+							}
+						}
+					],
+					"returns": [
+						{
+							"body": {
+								"typeParameterInstantiation": [
+									{
+										"typeParameterInstantiation": [],
+										"type": 3
+									}
+								],
+								"type": 9
+							}
+						}
+					],
+					"name": "smr_hash_vote",
+					"visibility": 1,
+					"isEntry": false
+				},
+				{
+					"typeParameters": [],
+					"parameters": [
+						{
+							"reference": 1,
+							"body": {
+								"typeParameterInstantiation": [],
+								"type": 10,
+								"typeName": "0x5d8fbbf6f908a4af8c6d072669a462d53e03eb3c1d863bd0359dc818c69ea706::SupraSValueFeed::MinTxn"
+							}
+						},
+						{
+							"reference": 1,
+							"body": {
+								"typeParameterInstantiation": [
+									{
+										"typeParameterInstantiation": [
+											{
+												"typeParameterInstantiation": [],
+												"type": 3
+											}
+										],
+										"type": 9
+									}
+								],
+								"type": 9
+							}
+						},
+						{
+							"body": {
+								"typeParameterInstantiation": [],
+								"type": 6
+							}
+						}
+					],
+					"returns": [
+						{
+							"body": {
+								"typeParameterInstantiation": [],
+								"type": 2
+							}
+						}
+					],
+					"name": "transaction_verification",
+					"visibility": 1,
+					"isEntry": false
+				},
+				{
+					"typeParameters": [],
+					"parameters": [
+						{
+							"reference": 2,
+							"body": {
+								"typeParameterInstantiation": [],
+								"type": 10,
+								"typeName": "0x5d8fbbf6f908a4af8c6d072669a462d53e03eb3c1d863bd0359dc818c69ea706::SupraSValueFeed::OracleHolder"
+							}
+						},
+						{
+							"body": {
+								"typeParameterInstantiation": [],
+								"type": 10,
+								"typeName": "0x5d8fbbf6f908a4af8c6d072669a462d53e03eb3c1d863bd0359dc818c69ea706::SupraSValueFeed::SignedCoherentCluster"
+							}
+						}
+					],
+					"returns": [],
+					"name": "update_price",
+					"visibility": 1,
+					"isEntry": false
+				},
+				{
+					"typeParameters": [
+						{
+							"constraints": [
+								1,
+								2
+							]
+						}
+					],
+					"parameters": [
+						{
+							"reference": 2,
+							"body": {
+								"typeParameterInstantiation": [
+									{
+										"typeParameterInstantiation": [],
+										"type": 11,
+										"typeParameter": 0
+									}
+								],
+								"type": 9
+							}
+						},
+						{
+							"body": {
+								"typeParameterInstantiation": [
+									{
+										"typeParameterInstantiation": [
+											{
+												"typeParameterInstantiation": [],
+												"type": 11,
+												"typeParameter": 0
+											}
+										],
+										"type": 9
+									}
+								],
+								"type": 9
+							}
+						}
+					],
+					"returns": [],
+					"name": "vector_flatten_concate",
+					"visibility": 1,
+					"isEntry": false
+				},
+				{
+					"typeParameters": [],
+					"parameters": [
+						{
+							"body": {
+								"typeParameterInstantiation": [
+									{
+										"typeParameterInstantiation": [],
+										"type": 3
+									}
+								],
+								"type": 9
+							}
+						},
+						{
+							"body": {
+								"typeParameterInstantiation": [
+									{
+										"typeParameterInstantiation": [],
+										"type": 3
+									}
+								],
+								"type": 9
+							}
+						},
+						{
+							"body": {
+								"typeParameterInstantiation": [
+									{
+										"typeParameterInstantiation": [],
+										"type": 3
+									}
+								],
+								"type": 9
+							}
+						}
+					],
+					"returns": [
+						{
+							"body": {
+								"typeParameterInstantiation": [],
+								"type": 2
+							}
+						}
+					],
+					"name": "verify_signature",
+					"visibility": 1,
+					"isEntry": false
+				},
+				{
+					"typeParameters": [],
+					"parameters": [
+						{
+							"body": {
+								"typeParameterInstantiation": [
+									{
+										"typeParameterInstantiation": [],
+										"type": 3
+									}
+								],
+								"type": 9
+							}
+						},
+						{
+							"reference": 1,
+							"body": {
+								"typeParameterInstantiation": [],
+								"type": 10,
+								"typeName": "0x5d8fbbf6f908a4af8c6d072669a462d53e03eb3c1d863bd0359dc818c69ea706::SupraSValueFeed::Vote"
+							}
+						},
+						{
+							"body": {
+								"typeParameterInstantiation": [
+									{
+										"typeParameterInstantiation": [],
+										"type": 3
+									}
+								],
+								"type": 9
+							}
+						}
+					],
+					"returns": [
+						{
+							"body": {
+								"typeParameterInstantiation": [],
+								"type": 2
+							}
+						}
+					],
+					"name": "vote_verification",
+					"visibility": 1,
+					"isEntry": false
+				}
+			],
+			"name": "SupraSValueFeed"
 		}
 	}
 ]

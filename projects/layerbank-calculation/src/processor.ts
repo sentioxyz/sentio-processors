@@ -34,7 +34,7 @@ async function recordUserBalance(ctx: LayerbankContext | LtokenContext, lToken: 
     borrowBalance,
     exchangeRate,
     timestamp: ctx.timestamp.toString(),
-    txHash: ctx.transactionHash,
+    txHash: ctx.transactionHash ?? '',
     trigger: eventName
   }))
 }

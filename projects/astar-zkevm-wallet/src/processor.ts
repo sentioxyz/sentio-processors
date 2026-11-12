@@ -11,7 +11,7 @@ const tokensInfo = new Map<string, token.TokenInfo>()
 async function getTokenInfo(address: string) {
   let info = tokensInfo.get(address)
   if (!info) {
-    info = await token.getERC20TokenInfo(EthChainId.ASTAR_ZKEVM, address)
+    info = await token.getERC20TokenInfo(3776 as unknown as EthChainId, address)
     tokensInfo.set(address, info)
   }
   return info
@@ -37,7 +37,7 @@ async function getTokenInfo(address: string) {
   '0x5D8cfF95D7A57c0BF50B30b43c7CC0D52825D4a9'
 ].map((address) => {
   ERC20Processor.bind({
-    network: EthChainId.ASTAR_ZKEVM,
+    network: 3776 as unknown as EthChainId,
     address
   }).onEventTransfer(async (evt, ctx) => {
     const info = await getTokenInfo(address)

@@ -18,7 +18,7 @@ const resourceAddress_v05 = '0x3851f155e7fc5ec98ce9dbcaf04b2cb0521c562463bd128f9
 import { AptosDex, getPairValue, getPriceForToken, getTokenInfoWithFallback } from '@sentio/sdk/aptos/ext'
 // } from "@sentio-processor/common/aptos"
 
-import { AccountEventTracker, BigDecimal, scaleDown } from '@sentio/sdk'
+import { BigDecimal, scaleDown } from '@sentio/sdk'
 
 import {
   inputUsd,
@@ -63,8 +63,8 @@ function addTokens() {
 addTokens()
 
 // TODO to remove
-export const accountTracker = AccountEventTracker.register('users')
-export const lps = AccountEventTracker.register('lps')
+// export const accountTracker = AccountEventTracker.register('users')
+// export const lps = AccountEventTracker.register('lps')
 
 type PoolType<T0, T1, T2> = v05.liquidity_pool.LiquidityPool<T0, T1, T2>
 
@@ -149,7 +149,7 @@ liquidity_pool
     }
   })
   .onEventSwapEvent(async (evt, ctx) => {
-    accountTracker.trackEvent(ctx, { distinctId: ctx.transaction.sender })
+    // accountTracker.trackEvent(ctx, { distinctId: ctx.transaction.sender })
 
     const value = await liquidSwap.recordTradingVolume(
       ctx,
@@ -191,7 +191,7 @@ liquidity_pool
     // })
   })
   .onEventFlashloanEvent(async (evt, ctx) => {
-    accountTracker.trackEvent(ctx, { distinctId: ctx.transaction.sender })
+    // accountTracker.trackEvent(ctx, { distinctId: ctx.transaction.sender })
 
     const coinXInfo = await getTokenInfoWithFallback(evt.type_arguments[0], ctx.network)
     const coinYInfo = await getTokenInfoWithFallback(evt.type_arguments[1], ctx.network)

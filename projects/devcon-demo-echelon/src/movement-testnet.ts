@@ -3,10 +3,10 @@ import { lending } from "./types/aptos/movement-porto/0x3dc5ef372359b6ab006bb517
 
 lending
 lending.bind({
-    network: AptosNetwork.MOVEMENT_PORTO
+    network: AptosNetwork.MOVEMENT_TEST_NET
 })
     .onEventBorrowEvent(async (event, ctx) => {
-        const market = event.data_decoded.market_obj.inner
+        const market = event.data_decoded.market_obj
         const amount = event.data_decoded.amount
         ctx.eventLogger.emit("Borrow", {
             market,
@@ -17,7 +17,7 @@ lending.bind({
         ctx.meter.Counter("borrowCounter").add(1, { market })
     })
     .onEventCreateMarketEvent(async (event, ctx) => {
-        const market = event.data_decoded.market_obj.inner
+        const market = event.data_decoded.market_obj
         ctx.meter.Counter("createMarketCounter").add(1, { market })
 
     })

@@ -1,744 +1,692 @@
-{
-  "hyperspace": {
-    "fileFormatVersion": 6,
+[
+  {
     "address": "0x9a84b6a7914aedd6741e73cc2ca23cbc77e22ed3c5f884c072a51868fedde45b",
-    "name": "hyperspace",
-    "friends": [],
-    "structs": {
-      "Extension": {
-        "abilities": {
+    "module": {
+      "name": "hyperspace",
+      "datatypes": [
+        {
+          "name": "Extension",
+          "kind": 1,
           "abilities": [
-            "Copy",
-            "Drop",
-            "Store"
-          ]
-        },
-        "typeParameters": [
-          {
-            "constraints": {
-              "abilities": []
-            },
-            "isPhantom": true
-          }
-        ],
-        "fields": [
-          {
-            "name": "dummy_field",
-            "type": "Bool"
-          }
-        ]
-      },
-      "HYPERSPACE": {
-        "abilities": {
-          "abilities": [
-            "Drop"
-          ]
-        },
-        "typeParameters": [],
-        "fields": [
-          {
-            "name": "dummy_field",
-            "type": "Bool"
-          }
-        ]
-      },
-      "Hyperspace": {
-        "abilities": {
-          "abilities": [
-            "Store",
-            "Key"
-          ]
-        },
-        "typeParameters": [],
-        "fields": [
-          {
-            "name": "id",
-            "type": {
-              "Struct": {
-                "address": "0x2",
-                "module": "object",
-                "name": "UID",
-                "typeArguments": []
+            1,
+            2,
+            3
+          ],
+          "typeParameters": [
+            {
+              "constraints": []
+            }
+          ],
+          "fields": [
+            {
+              "name": "dummy_field",
+              "position": 0,
+              "type": {
+                "type": 2,
+                "typeParameterInstantiation": []
               }
             }
-          }
-        ]
-      },
-      "ItemDelisted": {
-        "abilities": {
-          "abilities": [
-            "Copy",
-            "Drop"
-          ]
+          ],
+          "variants": []
         },
-        "typeParameters": [
-          {
-            "constraints": {
-              "abilities": []
-            },
-            "isPhantom": true
-          },
-          {
-            "constraints": {
-              "abilities": []
-            },
-            "isPhantom": true
-          }
-        ],
-        "fields": [
-          {
-            "name": "kiosk",
-            "type": {
-              "Struct": {
-                "address": "0x2",
-                "module": "object",
-                "name": "ID",
-                "typeArguments": []
-              }
-            }
-          },
-          {
-            "name": "id",
-            "type": {
-              "Struct": {
-                "address": "0x2",
-                "module": "object",
-                "name": "ID",
-                "typeArguments": []
-              }
-            }
-          }
-        ]
-      },
-      "ItemListed": {
-        "abilities": {
+        {
+          "name": "HYPERSPACE",
+          "kind": 1,
           "abilities": [
-            "Copy",
-            "Drop"
-          ]
+            2
+          ],
+          "typeParameters": [],
+          "fields": [
+            {
+              "name": "dummy_field",
+              "position": 0,
+              "type": {
+                "type": 2,
+                "typeParameterInstantiation": []
+              }
+            }
+          ],
+          "variants": []
         },
-        "typeParameters": [
-          {
-            "constraints": {
-              "abilities": []
-            },
-            "isPhantom": true
-          },
-          {
-            "constraints": {
-              "abilities": []
-            },
-            "isPhantom": true
-          }
-        ],
-        "fields": [
-          {
-            "name": "kiosk",
-            "type": {
-              "Struct": {
-                "address": "0x2",
-                "module": "object",
-                "name": "ID",
-                "typeArguments": []
-              }
-            }
-          },
-          {
-            "name": "id",
-            "type": {
-              "Struct": {
-                "address": "0x2",
-                "module": "object",
-                "name": "ID",
-                "typeArguments": []
-              }
-            }
-          },
-          {
-            "name": "price",
-            "type": "U64"
-          }
-        ]
-      },
-      "ItemPurchased": {
-        "abilities": {
+        {
+          "name": "Hyperspace",
+          "kind": 1,
           "abilities": [
-            "Copy",
-            "Drop"
-          ]
+            3,
+            4
+          ],
+          "typeParameters": [],
+          "fields": [
+            {
+              "name": "id",
+              "position": 0,
+              "type": {
+                "type": 10,
+                "typeName": "0x2::object::UID",
+                "typeParameterInstantiation": []
+              }
+            }
+          ],
+          "variants": []
         },
-        "typeParameters": [
-          {
-            "constraints": {
-              "abilities": [
-                "Store",
-                "Key"
+        {
+          "name": "ItemDelisted",
+          "kind": 1,
+          "abilities": [
+            1,
+            2
+          ],
+          "typeParameters": [
+            {
+              "constraints": []
+            },
+            {
+              "constraints": []
+            }
+          ],
+          "fields": [
+            {
+              "name": "kiosk",
+              "position": 0,
+              "type": {
+                "type": 10,
+                "typeName": "0x2::object::ID",
+                "typeParameterInstantiation": []
+              }
+            },
+            {
+              "name": "id",
+              "position": 1,
+              "type": {
+                "type": 10,
+                "typeName": "0x2::object::ID",
+                "typeParameterInstantiation": []
+              }
+            }
+          ],
+          "variants": []
+        },
+        {
+          "name": "ItemListed",
+          "kind": 1,
+          "abilities": [
+            1,
+            2
+          ],
+          "typeParameters": [
+            {
+              "constraints": []
+            },
+            {
+              "constraints": []
+            }
+          ],
+          "fields": [
+            {
+              "name": "kiosk",
+              "position": 0,
+              "type": {
+                "type": 10,
+                "typeName": "0x2::object::ID",
+                "typeParameterInstantiation": []
+              }
+            },
+            {
+              "name": "id",
+              "position": 1,
+              "type": {
+                "type": 10,
+                "typeName": "0x2::object::ID",
+                "typeParameterInstantiation": []
+              }
+            },
+            {
+              "name": "price",
+              "position": 2,
+              "type": {
+                "type": 6,
+                "typeParameterInstantiation": []
+              }
+            }
+          ],
+          "variants": []
+        },
+        {
+          "name": "ItemPurchased",
+          "kind": 1,
+          "abilities": [
+            1,
+            2
+          ],
+          "typeParameters": [
+            {
+              "constraints": [
+                3,
+                4
+              ]
+            }
+          ],
+          "fields": [
+            {
+              "name": "kiosk",
+              "position": 0,
+              "type": {
+                "type": 10,
+                "typeName": "0x2::object::ID",
+                "typeParameterInstantiation": []
+              }
+            },
+            {
+              "name": "id",
+              "position": 1,
+              "type": {
+                "type": 10,
+                "typeName": "0x2::object::ID",
+                "typeParameterInstantiation": []
+              }
+            },
+            {
+              "name": "price",
+              "position": 2,
+              "type": {
+                "type": 6,
+                "typeParameterInstantiation": []
+              }
+            }
+          ],
+          "variants": []
+        },
+        {
+          "name": "Marketplace",
+          "kind": 1,
+          "abilities": [
+            3
+          ],
+          "typeParameters": [],
+          "fields": [
+            {
+              "name": "storage",
+              "position": 0,
+              "type": {
+                "type": 10,
+                "typeName": "0x2::bag::Bag",
+                "typeParameterInstantiation": []
+              }
+            },
+            {
+              "name": "transfer_policy_id",
+              "position": 1,
+              "type": {
+                "type": 10,
+                "typeName": "0x2::object::ID",
+                "typeParameterInstantiation": []
+              }
+            }
+          ],
+          "variants": []
+        }
+      ],
+      "functions": [
+        {
+          "name": "delist",
+          "visibility": 2,
+          "isEntry": false,
+          "typeParameters": [
+            {
+              "constraints": [
+                3,
+                4
               ]
             },
-            "isPhantom": true
-          }
-        ],
-        "fields": [
-          {
-            "name": "kiosk",
-            "type": {
-              "Struct": {
-                "address": "0x2",
-                "module": "object",
-                "name": "ID",
-                "typeArguments": []
+            {
+              "constraints": [
+                3,
+                4
+              ]
+            }
+          ],
+          "parameters": [
+            {
+              "reference": 2,
+              "body": {
+                "type": 10,
+                "typeName": "0x2::kiosk::Kiosk",
+                "typeParameterInstantiation": []
+              }
+            },
+            {
+              "reference": 1,
+              "body": {
+                "type": 10,
+                "typeName": "0x2::kiosk::KioskOwnerCap",
+                "typeParameterInstantiation": []
+              }
+            },
+            {
+              "body": {
+                "type": 10,
+                "typeName": "0x2::object::ID",
+                "typeParameterInstantiation": []
               }
             }
-          },
-          {
-            "name": "id",
-            "type": {
-              "Struct": {
-                "address": "0x2",
-                "module": "object",
-                "name": "ID",
-                "typeArguments": []
-              }
-            }
-          },
-          {
-            "name": "price",
-            "type": "U64"
-          }
-        ]
-      },
-      "Marketplace": {
-        "abilities": {
-          "abilities": [
-            "Store"
-          ]
+          ],
+          "returns": []
         },
-        "typeParameters": [],
-        "fields": [
-          {
-            "name": "storage",
-            "type": {
-              "Struct": {
-                "address": "0x2",
-                "module": "bag",
-                "name": "Bag",
-                "typeArguments": []
+        {
+          "name": "install",
+          "visibility": 2,
+          "isEntry": false,
+          "typeParameters": [
+            {
+              "constraints": [
+                3,
+                4
+              ]
+            }
+          ],
+          "parameters": [
+            {
+              "reference": 2,
+              "body": {
+                "type": 10,
+                "typeName": "0x2::kiosk::Kiosk",
+                "typeParameterInstantiation": []
               }
-            }
-          },
-          {
-            "name": "transfer_policy_id",
-            "type": {
-              "Struct": {
-                "address": "0x2",
-                "module": "object",
-                "name": "ID",
-                "typeArguments": []
+            },
+            {
+              "reference": 1,
+              "body": {
+                "type": 10,
+                "typeName": "0x2::kiosk::KioskOwnerCap",
+                "typeParameterInstantiation": []
               }
-            }
-          }
-        ]
-      }
-    },
-    "exposedFunctions": {
-      "delist": {
-        "visibility": "Public",
-        "isEntry": false,
-        "typeParameters": [
-          {
-            "abilities": [
-              "Store",
-              "Key"
-            ]
-          },
-          {
-            "abilities": [
-              "Store",
-              "Key"
-            ]
-          }
-        ],
-        "parameters": [
-          {
-            "MutableReference": {
-              "Struct": {
-                "address": "0x2",
-                "module": "kiosk",
-                "name": "Kiosk",
-                "typeArguments": []
-              }
-            }
-          },
-          {
-            "Reference": {
-              "Struct": {
-                "address": "0x2",
-                "module": "kiosk",
-                "name": "KioskOwnerCap",
-                "typeArguments": []
-              }
-            }
-          },
-          {
-            "Struct": {
-              "address": "0x2",
-              "module": "object",
-              "name": "ID",
-              "typeArguments": []
-            }
-          }
-        ],
-        "return": []
-      },
-      "install": {
-        "visibility": "Public",
-        "isEntry": false,
-        "typeParameters": [
-          {
-            "abilities": [
-              "Store",
-              "Key"
-            ]
-          }
-        ],
-        "parameters": [
-          {
-            "MutableReference": {
-              "Struct": {
-                "address": "0x2",
-                "module": "kiosk",
-                "name": "Kiosk",
-                "typeArguments": []
-              }
-            }
-          },
-          {
-            "Reference": {
-              "Struct": {
-                "address": "0x2",
-                "module": "kiosk",
-                "name": "KioskOwnerCap",
-                "typeArguments": []
-              }
-            }
-          },
-          {
-            "Reference": {
-              "Struct": {
-                "address": "0x2",
-                "module": "transfer_policy",
-                "name": "TransferPolicy",
-                "typeArguments": [
+            },
+            {
+              "reference": 1,
+              "body": {
+                "type": 10,
+                "typeName": "0x2::transfer_policy::TransferPolicy",
+                "typeParameterInstantiation": [
                   {
-                    "TypeParameter": 0
+                    "type": 11,
+                    "typeParameter": 0,
+                    "typeParameterInstantiation": []
+                  }
+                ]
+              }
+            },
+            {
+              "reference": 2,
+              "body": {
+                "type": 10,
+                "typeName": "0x2::tx_context::TxContext",
+                "typeParameterInstantiation": []
+              }
+            }
+          ],
+          "returns": []
+        },
+        {
+          "name": "list",
+          "visibility": 2,
+          "isEntry": false,
+          "typeParameters": [
+            {
+              "constraints": [
+                3,
+                4
+              ]
+            },
+            {
+              "constraints": [
+                3,
+                4
+              ]
+            }
+          ],
+          "parameters": [
+            {
+              "reference": 2,
+              "body": {
+                "type": 10,
+                "typeName": "0x2::kiosk::Kiosk",
+                "typeParameterInstantiation": []
+              }
+            },
+            {
+              "reference": 1,
+              "body": {
+                "type": 10,
+                "typeName": "0x2::kiosk::KioskOwnerCap",
+                "typeParameterInstantiation": []
+              }
+            },
+            {
+              "body": {
+                "type": 10,
+                "typeName": "0x2::object::ID",
+                "typeParameterInstantiation": []
+              }
+            },
+            {
+              "body": {
+                "type": 6,
+                "typeParameterInstantiation": []
+              }
+            },
+            {
+              "reference": 2,
+              "body": {
+                "type": 10,
+                "typeName": "0x2::tx_context::TxContext",
+                "typeParameterInstantiation": []
+              }
+            }
+          ],
+          "returns": []
+        },
+        {
+          "name": "purchase",
+          "visibility": 2,
+          "isEntry": false,
+          "typeParameters": [
+            {
+              "constraints": [
+                3,
+                4
+              ]
+            },
+            {
+              "constraints": [
+                3,
+                4
+              ]
+            }
+          ],
+          "parameters": [
+            {
+              "reference": 2,
+              "body": {
+                "type": 10,
+                "typeName": "0x2::kiosk::Kiosk",
+                "typeParameterInstantiation": []
+              }
+            },
+            {
+              "body": {
+                "type": 10,
+                "typeName": "0x2::object::ID",
+                "typeParameterInstantiation": []
+              }
+            },
+            {
+              "body": {
+                "type": 10,
+                "typeName": "0x2::coin::Coin",
+                "typeParameterInstantiation": [
+                  {
+                    "type": 10,
+                    "typeName": "0x2::sui::SUI",
+                    "typeParameterInstantiation": []
                   }
                 ]
               }
             }
-          },
-          {
-            "MutableReference": {
-              "Struct": {
-                "address": "0x2",
-                "module": "tx_context",
-                "name": "TxContext",
-                "typeArguments": []
+          ],
+          "returns": [
+            {
+              "body": {
+                "type": 11,
+                "typeParameter": 0,
+                "typeParameterInstantiation": []
               }
-            }
-          }
-        ],
-        "return": []
-      },
-      "list": {
-        "visibility": "Public",
-        "isEntry": false,
-        "typeParameters": [
-          {
-            "abilities": [
-              "Store",
-              "Key"
-            ]
-          },
-          {
-            "abilities": [
-              "Store",
-              "Key"
-            ]
-          }
-        ],
-        "parameters": [
-          {
-            "MutableReference": {
-              "Struct": {
-                "address": "0x2",
-                "module": "kiosk",
-                "name": "Kiosk",
-                "typeArguments": []
-              }
-            }
-          },
-          {
-            "Reference": {
-              "Struct": {
-                "address": "0x2",
-                "module": "kiosk",
-                "name": "KioskOwnerCap",
-                "typeArguments": []
-              }
-            }
-          },
-          {
-            "Struct": {
-              "address": "0x2",
-              "module": "object",
-              "name": "ID",
-              "typeArguments": []
-            }
-          },
-          "U64",
-          {
-            "MutableReference": {
-              "Struct": {
-                "address": "0x2",
-                "module": "tx_context",
-                "name": "TxContext",
-                "typeArguments": []
-              }
-            }
-          }
-        ],
-        "return": []
-      },
-      "purchase": {
-        "visibility": "Public",
-        "isEntry": false,
-        "typeParameters": [
-          {
-            "abilities": [
-              "Store",
-              "Key"
-            ]
-          },
-          {
-            "abilities": [
-              "Store",
-              "Key"
-            ]
-          }
-        ],
-        "parameters": [
-          {
-            "MutableReference": {
-              "Struct": {
-                "address": "0x2",
-                "module": "kiosk",
-                "name": "Kiosk",
-                "typeArguments": []
-              }
-            }
-          },
-          {
-            "Struct": {
-              "address": "0x2",
-              "module": "object",
-              "name": "ID",
-              "typeArguments": []
-            }
-          },
-          {
-            "Struct": {
-              "address": "0x2",
-              "module": "coin",
-              "name": "Coin",
-              "typeArguments": [
-                {
-                  "Struct": {
-                    "address": "0x2",
-                    "module": "sui",
-                    "name": "SUI",
-                    "typeArguments": []
-                  }
-                }
-              ]
-            }
-          }
-        ],
-        "return": [
-          {
-            "TypeParameter": 0
-          },
-          {
-            "Struct": {
-              "address": "0x2",
-              "module": "transfer_policy",
-              "name": "TransferRequest",
-              "typeArguments": [
-                {
-                  "TypeParameter": 0
-                }
-              ]
-            }
-          },
-          {
-            "Struct": {
-              "address": "0x2",
-              "module": "transfer_policy",
-              "name": "TransferRequest",
-              "typeArguments": [
-                {
-                  "Struct": {
-                    "address": "0x9a84b6a7914aedd6741e73cc2ca23cbc77e22ed3c5f884c072a51868fedde45b",
-                    "module": "hyperspace",
-                    "name": "Hyperspace",
-                    "typeArguments": []
-                  }
-                }
-              ]
-            }
-          },
-          {
-            "Struct": {
-              "address": "0x2",
-              "module": "transfer_policy",
-              "name": "TransferRequest",
-              "typeArguments": [
-                {
-                  "TypeParameter": 1
-                }
-              ]
-            }
-          }
-        ]
-      },
-      "purchase_silent": {
-        "visibility": "Public",
-        "isEntry": false,
-        "typeParameters": [
-          {
-            "abilities": [
-              "Store",
-              "Key"
-            ]
-          },
-          {
-            "abilities": [
-              "Store",
-              "Key"
-            ]
-          }
-        ],
-        "parameters": [
-          {
-            "MutableReference": {
-              "Struct": {
-                "address": "0x2",
-                "module": "kiosk",
-                "name": "Kiosk",
-                "typeArguments": []
-              }
-            }
-          },
-          {
-            "MutableReference": {
-              "Struct": {
-                "address": "0x2",
-                "module": "kiosk",
-                "name": "Kiosk",
-                "typeArguments": []
-              }
-            }
-          },
-          {
-            "MutableReference": {
-              "Struct": {
-                "address": "0x2",
-                "module": "kiosk",
-                "name": "KioskOwnerCap",
-                "typeArguments": []
-              }
-            }
-          },
-          {
-            "MutableReference": {
-              "Struct": {
-                "address": "0x2",
-                "module": "transfer_policy",
-                "name": "TransferPolicy",
-                "typeArguments": [
+            },
+            {
+              "body": {
+                "type": 10,
+                "typeName": "0x2::transfer_policy::TransferRequest",
+                "typeParameterInstantiation": [
                   {
-                    "TypeParameter": 0
+                    "type": 11,
+                    "typeParameter": 0,
+                    "typeParameterInstantiation": []
+                  }
+                ]
+              }
+            },
+            {
+              "body": {
+                "type": 10,
+                "typeName": "0x2::transfer_policy::TransferRequest",
+                "typeParameterInstantiation": [
+                  {
+                    "type": 10,
+                    "typeName": "0x9a84b6a7914aedd6741e73cc2ca23cbc77e22ed3c5f884c072a51868fedde45b::hyperspace::Hyperspace",
+                    "typeParameterInstantiation": []
+                  }
+                ]
+              }
+            },
+            {
+              "body": {
+                "type": 10,
+                "typeName": "0x2::transfer_policy::TransferRequest",
+                "typeParameterInstantiation": [
+                  {
+                    "type": 11,
+                    "typeParameter": 1,
+                    "typeParameterInstantiation": []
                   }
                 ]
               }
             }
-          },
-          {
-            "MutableReference": {
-              "Struct": {
-                "address": "0x2",
-                "module": "transfer_policy",
-                "name": "TransferPolicy",
-                "typeArguments": [
+          ]
+        },
+        {
+          "name": "purchase_silent",
+          "visibility": 2,
+          "isEntry": false,
+          "typeParameters": [
+            {
+              "constraints": [
+                3,
+                4
+              ]
+            },
+            {
+              "constraints": [
+                3,
+                4
+              ]
+            }
+          ],
+          "parameters": [
+            {
+              "reference": 2,
+              "body": {
+                "type": 10,
+                "typeName": "0x2::kiosk::Kiosk",
+                "typeParameterInstantiation": []
+              }
+            },
+            {
+              "reference": 2,
+              "body": {
+                "type": 10,
+                "typeName": "0x2::kiosk::Kiosk",
+                "typeParameterInstantiation": []
+              }
+            },
+            {
+              "reference": 2,
+              "body": {
+                "type": 10,
+                "typeName": "0x2::kiosk::KioskOwnerCap",
+                "typeParameterInstantiation": []
+              }
+            },
+            {
+              "reference": 2,
+              "body": {
+                "type": 10,
+                "typeName": "0x2::transfer_policy::TransferPolicy",
+                "typeParameterInstantiation": [
                   {
-                    "Struct": {
-                      "address": "0x9a84b6a7914aedd6741e73cc2ca23cbc77e22ed3c5f884c072a51868fedde45b",
-                      "module": "hyperspace",
-                      "name": "Hyperspace",
-                      "typeArguments": []
-                    }
+                    "type": 11,
+                    "typeParameter": 0,
+                    "typeParameterInstantiation": []
                   }
                 ]
               }
-            }
-          },
-          {
-            "MutableReference": {
-              "Struct": {
-                "address": "0x2",
-                "module": "transfer_policy",
-                "name": "TransferPolicy",
-                "typeArguments": [
+            },
+            {
+              "reference": 2,
+              "body": {
+                "type": 10,
+                "typeName": "0x2::transfer_policy::TransferPolicy",
+                "typeParameterInstantiation": [
                   {
-                    "TypeParameter": 1
+                    "type": 10,
+                    "typeName": "0x9a84b6a7914aedd6741e73cc2ca23cbc77e22ed3c5f884c072a51868fedde45b::hyperspace::Hyperspace",
+                    "typeParameterInstantiation": []
                   }
                 ]
               }
-            }
-          },
-          {
-            "Struct": {
-              "address": "0x2",
-              "module": "object",
-              "name": "ID",
-              "typeArguments": []
-            }
-          },
-          {
-            "Struct": {
-              "address": "0x2",
-              "module": "coin",
-              "name": "Coin",
-              "typeArguments": [
-                {
-                  "Struct": {
-                    "address": "0x2",
-                    "module": "sui",
-                    "name": "SUI",
-                    "typeArguments": []
+            },
+            {
+              "reference": 2,
+              "body": {
+                "type": 10,
+                "typeName": "0x2::transfer_policy::TransferPolicy",
+                "typeParameterInstantiation": [
+                  {
+                    "type": 11,
+                    "typeParameter": 1,
+                    "typeParameterInstantiation": []
                   }
-                }
-              ]
-            }
-          },
-          {
-            "Struct": {
-              "address": "0x2",
-              "module": "coin",
-              "name": "Coin",
-              "typeArguments": [
-                {
-                  "Struct": {
-                    "address": "0x2",
-                    "module": "sui",
-                    "name": "SUI",
-                    "typeArguments": []
+                ]
+              }
+            },
+            {
+              "body": {
+                "type": 10,
+                "typeName": "0x2::object::ID",
+                "typeParameterInstantiation": []
+              }
+            },
+            {
+              "body": {
+                "type": 10,
+                "typeName": "0x2::coin::Coin",
+                "typeParameterInstantiation": [
+                  {
+                    "type": 10,
+                    "typeName": "0x2::sui::SUI",
+                    "typeParameterInstantiation": []
                   }
-                }
-              ]
-            }
-          },
-          {
-            "Struct": {
-              "address": "0x2",
-              "module": "coin",
-              "name": "Coin",
-              "typeArguments": [
-                {
-                  "Struct": {
-                    "address": "0x2",
-                    "module": "sui",
-                    "name": "SUI",
-                    "typeArguments": []
+                ]
+              }
+            },
+            {
+              "body": {
+                "type": 10,
+                "typeName": "0x2::coin::Coin",
+                "typeParameterInstantiation": [
+                  {
+                    "type": 10,
+                    "typeName": "0x2::sui::SUI",
+                    "typeParameterInstantiation": []
                   }
-                }
-              ]
-            }
-          },
-          {
-            "Struct": {
-              "address": "0x2",
-              "module": "coin",
-              "name": "Coin",
-              "typeArguments": [
-                {
-                  "Struct": {
-                    "address": "0x2",
-                    "module": "sui",
-                    "name": "SUI",
-                    "typeArguments": []
+                ]
+              }
+            },
+            {
+              "body": {
+                "type": 10,
+                "typeName": "0x2::coin::Coin",
+                "typeParameterInstantiation": [
+                  {
+                    "type": 10,
+                    "typeName": "0x2::sui::SUI",
+                    "typeParameterInstantiation": []
                   }
-                }
-              ]
-            }
-          },
-          {
-            "MutableReference": {
-              "Struct": {
-                "address": "0x2",
-                "module": "tx_context",
-                "name": "TxContext",
-                "typeArguments": []
+                ]
+              }
+            },
+            {
+              "body": {
+                "type": 10,
+                "typeName": "0x2::coin::Coin",
+                "typeParameterInstantiation": [
+                  {
+                    "type": 10,
+                    "typeName": "0x2::sui::SUI",
+                    "typeParameterInstantiation": []
+                  }
+                ]
+              }
+            },
+            {
+              "reference": 2,
+              "body": {
+                "type": 10,
+                "typeName": "0x2::tx_context::TxContext",
+                "typeParameterInstantiation": []
               }
             }
-          }
-        ],
-        "return": []
-      }
+          ],
+          "returns": []
+        }
+      ]
     }
   },
-  "hyperspace_mp": {
-    "fileFormatVersion": 6,
+  {
     "address": "0x9a84b6a7914aedd6741e73cc2ca23cbc77e22ed3c5f884c072a51868fedde45b",
-    "name": "hyperspace_mp",
-    "friends": [],
-    "structs": {
-      "HYPERSPACE_MP": {
-        "abilities": {
+    "module": {
+      "name": "hyperspace_mp",
+      "datatypes": [
+        {
+          "name": "HYPERSPACE_MP",
+          "kind": 1,
           "abilities": [
-            "Drop"
-          ]
-        },
-        "typeParameters": [],
-        "fields": [
-          {
-            "name": "dummy_field",
-            "type": "Bool"
-          }
-        ]
-      },
-      "Hyperspace_mp": {
-        "abilities": {
-          "abilities": [
-            "Store",
-            "Key"
-          ]
-        },
-        "typeParameters": [],
-        "fields": [
-          {
-            "name": "id",
-            "type": {
-              "Struct": {
-                "address": "0x2",
-                "module": "object",
-                "name": "UID",
-                "typeArguments": []
+            2
+          ],
+          "typeParameters": [],
+          "fields": [
+            {
+              "name": "dummy_field",
+              "position": 0,
+              "type": {
+                "type": 2,
+                "typeParameterInstantiation": []
               }
             }
-          }
-        ]
-      }
-    },
-    "exposedFunctions": {}
+          ],
+          "variants": []
+        },
+        {
+          "name": "Hyperspace_mp",
+          "kind": 1,
+          "abilities": [
+            3,
+            4
+          ],
+          "typeParameters": [],
+          "fields": [
+            {
+              "name": "id",
+              "position": 0,
+              "type": {
+                "type": 10,
+                "typeName": "0x2::object::UID",
+                "typeParameterInstantiation": []
+              }
+            }
+          ],
+          "variants": []
+        }
+      ],
+      "functions": []
+    }
   }
-}
+]

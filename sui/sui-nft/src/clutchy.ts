@@ -54,7 +54,7 @@ mint_event.bind()
 
       const mint: Mint = {
         evt_type: MintType.MINT,
-        sender: ctx.transaction.transaction?.data.sender!,
+        sender: ctx.transaction.transaction?.sender!,
         project: "clutchy",
         collection_name: "", // TODO
         // collection_id: collection_id,
@@ -70,7 +70,7 @@ mint_event.bind()
 
       const mint: Mint = {
         evt_type: MintType.BURN,
-        sender: ctx.transaction.transaction?.data.sender!,
+        sender: ctx.transaction.transaction?.sender!,
         project: "clutchy",
         collection_name: "", // TODO
         // collection_id: collection_id,

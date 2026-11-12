@@ -10,9 +10,11 @@ export async function getGlobalState(ctx: CErc20UpgradableContext) {
     (await storeGet(ctx, GlobalState, GLOBAL_STATE_ID)) ??
     new GlobalState({
       id: GLOBAL_STATE_ID,
+      network: ctx.chainId.toString(),
       totalPositiveNetBalance: 0n,
       totalSupply: await ctx.contract.totalSupply(),
       totalBorrow: await ctx.contract.totalBorrows(),
+      exchangeRateRaw: await ctx.contract.exchangeRateStored(),
     })
   );
 }

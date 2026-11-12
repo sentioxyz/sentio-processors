@@ -1,1099 +1,1138 @@
-{
-  "Market": {
-    "fileFormatVersion": 6,
+[
+  {
     "address": "0x3164fcf73eb6b41ff3d2129346141bd68469964c2d95a5b1533e8d16e6ea6e13",
-    "name": "Market",
-    "friends": [],
-    "structs": {
-      "BuyEvent": {
-        "abilities": {
+    "module": {
+      "name": "Market",
+      "datatypes": [
+        {
+          "name": "BuyEvent",
+          "kind": 1,
           "abilities": [
-            "Copy",
-            "Drop"
-          ]
-        },
-        "typeParameters": [
-          {
-            "constraints": {
-              "abilities": []
+            1,
+            2
+          ],
+          "typeParameters": [
+            {
+              "constraints": []
+            }
+          ],
+          "fields": [
+            {
+              "name": "seller",
+              "position": 0,
+              "type": {
+                "type": 1,
+                "typeParameterInstantiation": []
+              }
             },
-            "isPhantom": true
-          }
-        ],
-        "fields": [
-          {
-            "name": "seller",
-            "type": "Address"
-          },
-          {
-            "name": "buyer",
-            "type": "Address"
-          },
-          {
-            "name": "listing_id",
-            "type": {
-              "Struct": {
-                "address": "0x2",
-                "module": "object",
-                "name": "ID",
-                "typeArguments": []
+            {
+              "name": "buyer",
+              "position": 1,
+              "type": {
+                "type": 1,
+                "typeParameterInstantiation": []
               }
-            }
-          },
-          {
-            "name": "nft_id",
-            "type": {
-              "Struct": {
-                "address": "0x2",
-                "module": "object",
-                "name": "ID",
-                "typeArguments": []
-              }
-            }
-          },
-          {
-            "name": "marketplace",
-            "type": {
-              "Struct": {
-                "address": "0x2",
-                "module": "object",
-                "name": "ID",
-                "typeArguments": []
-              }
-            }
-          },
-          {
-            "name": "price",
-            "type": "U64"
-          }
-        ]
-      },
-      "ChangePriceEvent": {
-        "abilities": {
-          "abilities": [
-            "Copy",
-            "Drop"
-          ]
-        },
-        "typeParameters": [
-          {
-            "constraints": {
-              "abilities": []
             },
-            "isPhantom": true
-          }
-        ],
-        "fields": [
-          {
-            "name": "seller",
-            "type": "Address"
-          },
-          {
-            "name": "listing_id",
-            "type": {
-              "Struct": {
-                "address": "0x2",
-                "module": "object",
-                "name": "ID",
-                "typeArguments": []
+            {
+              "name": "listing_id",
+              "position": 2,
+              "type": {
+                "type": 10,
+                "typeName": "0x2::object::ID",
+                "typeParameterInstantiation": []
               }
-            }
-          },
-          {
-            "name": "nft_id",
-            "type": {
-              "Struct": {
-                "address": "0x2",
-                "module": "object",
-                "name": "ID",
-                "typeArguments": []
-              }
-            }
-          },
-          {
-            "name": "marketplace",
-            "type": {
-              "Struct": {
-                "address": "0x2",
-                "module": "object",
-                "name": "ID",
-                "typeArguments": []
-              }
-            }
-          },
-          {
-            "name": "old_price",
-            "type": "U64"
-          },
-          {
-            "name": "new_price",
-            "type": "U64"
-          }
-        ]
-      },
-      "DelistEvent": {
-        "abilities": {
-          "abilities": [
-            "Copy",
-            "Drop"
-          ]
-        },
-        "typeParameters": [
-          {
-            "constraints": {
-              "abilities": []
             },
-            "isPhantom": true
-          }
-        ],
-        "fields": [
-          {
-            "name": "seller",
-            "type": "Address"
-          },
-          {
-            "name": "listing_id",
-            "type": {
-              "Struct": {
-                "address": "0x2",
-                "module": "object",
-                "name": "ID",
-                "typeArguments": []
+            {
+              "name": "nft_id",
+              "position": 3,
+              "type": {
+                "type": 10,
+                "typeName": "0x2::object::ID",
+                "typeParameterInstantiation": []
               }
-            }
-          },
-          {
-            "name": "nft_id",
-            "type": {
-              "Struct": {
-                "address": "0x2",
-                "module": "object",
-                "name": "ID",
-                "typeArguments": []
-              }
-            }
-          },
-          {
-            "name": "marketplace",
-            "type": {
-              "Struct": {
-                "address": "0x2",
-                "module": "object",
-                "name": "ID",
-                "typeArguments": []
-              }
-            }
-          }
-        ]
-      },
-      "Item": {
-        "abilities": {
-          "abilities": [
-            "Copy",
-            "Drop",
-            "Store"
-          ]
-        },
-        "typeParameters": [],
-        "fields": [
-          {
-            "name": "id",
-            "type": {
-              "Struct": {
-                "address": "0x2",
-                "module": "object",
-                "name": "ID",
-                "typeArguments": []
-              }
-            }
-          }
-        ]
-      },
-      "ListEvent": {
-        "abilities": {
-          "abilities": [
-            "Copy",
-            "Drop"
-          ]
-        },
-        "typeParameters": [
-          {
-            "constraints": {
-              "abilities": []
             },
-            "isPhantom": true
-          }
-        ],
-        "fields": [
-          {
-            "name": "seller",
-            "type": "Address"
-          },
-          {
-            "name": "listing_id",
-            "type": {
-              "Struct": {
-                "address": "0x2",
-                "module": "object",
-                "name": "ID",
-                "typeArguments": []
+            {
+              "name": "marketplace",
+              "position": 4,
+              "type": {
+                "type": 10,
+                "typeName": "0x2::object::ID",
+                "typeParameterInstantiation": []
               }
-            }
-          },
-          {
-            "name": "nft_id",
-            "type": {
-              "Struct": {
-                "address": "0x2",
-                "module": "object",
-                "name": "ID",
-                "typeArguments": []
-              }
-            }
-          },
-          {
-            "name": "price",
-            "type": "U64"
-          },
-          {
-            "name": "marketplace",
-            "type": {
-              "Struct": {
-                "address": "0x2",
-                "module": "object",
-                "name": "ID",
-                "typeArguments": []
-              }
-            }
-          },
-          {
-            "name": "does_royalty",
-            "type": "Bool"
-          }
-        ]
-      },
-      "Listing": {
-        "abilities": {
-          "abilities": [
-            "Store",
-            "Key"
-          ]
-        },
-        "typeParameters": [
-          {
-            "constraints": {
-              "abilities": []
             },
-            "isPhantom": true
-          }
-        ],
-        "fields": [
-          {
-            "name": "id",
-            "type": {
-              "Struct": {
-                "address": "0x2",
-                "module": "object",
-                "name": "UID",
-                "typeArguments": []
+            {
+              "name": "price",
+              "position": 5,
+              "type": {
+                "type": 6,
+                "typeParameterInstantiation": []
               }
             }
-          },
-          {
-            "name": "nft",
-            "type": {
-              "Struct": {
-                "address": "0x2",
-                "module": "object",
-                "name": "ID",
-                "typeArguments": []
+          ],
+          "variants": []
+        },
+        {
+          "name": "ChangePriceEvent",
+          "kind": 1,
+          "abilities": [
+            1,
+            2
+          ],
+          "typeParameters": [
+            {
+              "constraints": []
+            }
+          ],
+          "fields": [
+            {
+              "name": "seller",
+              "position": 0,
+              "type": {
+                "type": 1,
+                "typeParameterInstantiation": []
+              }
+            },
+            {
+              "name": "listing_id",
+              "position": 1,
+              "type": {
+                "type": 10,
+                "typeName": "0x2::object::ID",
+                "typeParameterInstantiation": []
+              }
+            },
+            {
+              "name": "nft_id",
+              "position": 2,
+              "type": {
+                "type": 10,
+                "typeName": "0x2::object::ID",
+                "typeParameterInstantiation": []
+              }
+            },
+            {
+              "name": "marketplace",
+              "position": 3,
+              "type": {
+                "type": 10,
+                "typeName": "0x2::object::ID",
+                "typeParameterInstantiation": []
+              }
+            },
+            {
+              "name": "old_price",
+              "position": 4,
+              "type": {
+                "type": 6,
+                "typeParameterInstantiation": []
+              }
+            },
+            {
+              "name": "new_price",
+              "position": 5,
+              "type": {
+                "type": 6,
+                "typeParameterInstantiation": []
               }
             }
-          },
-          {
-            "name": "seller",
-            "type": "Address"
-          },
-          {
-            "name": "price",
-            "type": "U64"
-          },
-          {
-            "name": "market_id",
-            "type": {
-              "Struct": {
-                "address": "0x2",
-                "module": "object",
-                "name": "ID",
-                "typeArguments": []
+          ],
+          "variants": []
+        },
+        {
+          "name": "DelistEvent",
+          "kind": 1,
+          "abilities": [
+            1,
+            2
+          ],
+          "typeParameters": [
+            {
+              "constraints": []
+            }
+          ],
+          "fields": [
+            {
+              "name": "seller",
+              "position": 0,
+              "type": {
+                "type": 1,
+                "typeParameterInstantiation": []
+              }
+            },
+            {
+              "name": "listing_id",
+              "position": 1,
+              "type": {
+                "type": 10,
+                "typeName": "0x2::object::ID",
+                "typeParameterInstantiation": []
+              }
+            },
+            {
+              "name": "nft_id",
+              "position": 2,
+              "type": {
+                "type": 10,
+                "typeName": "0x2::object::ID",
+                "typeParameterInstantiation": []
+              }
+            },
+            {
+              "name": "marketplace",
+              "position": 3,
+              "type": {
+                "type": 10,
+                "typeName": "0x2::object::ID",
+                "typeParameterInstantiation": []
               }
             }
-          },
-          {
-            "name": "does_royalty",
-            "type": "Bool"
-          }
-        ]
-      }
-    },
-    "exposedFunctions": {
-      "buy_generic": {
-        "visibility": "Public",
-        "isEntry": false,
-        "typeParameters": [
-          {
-            "abilities": [
-              "Store",
-              "Key"
-            ]
-          },
-          {
-            "abilities": []
-          }
-        ],
-        "parameters": [
-          {
-            "Reference": {
-              "Struct": {
-                "address": "0x56714d6578dafaaec566c1483ac0fc5fb206b506455a8d59b043d67d243243eb",
-                "module": "version",
-                "name": "Version",
-                "typeArguments": []
+          ],
+          "variants": []
+        },
+        {
+          "name": "Item",
+          "kind": 1,
+          "abilities": [
+            1,
+            2,
+            3
+          ],
+          "typeParameters": [],
+          "fields": [
+            {
+              "name": "id",
+              "position": 0,
+              "type": {
+                "type": 10,
+                "typeName": "0x2::object::ID",
+                "typeParameterInstantiation": []
               }
             }
-          },
-          {
-            "MutableReference": {
-              "Struct": {
-                "address": "0x3164fcf73eb6b41ff3d2129346141bd68469964c2d95a5b1533e8d16e6ea6e13",
-                "module": "Market",
-                "name": "Listing",
-                "typeArguments": [
+          ],
+          "variants": []
+        },
+        {
+          "name": "ListEvent",
+          "kind": 1,
+          "abilities": [
+            1,
+            2
+          ],
+          "typeParameters": [
+            {
+              "constraints": []
+            }
+          ],
+          "fields": [
+            {
+              "name": "seller",
+              "position": 0,
+              "type": {
+                "type": 1,
+                "typeParameterInstantiation": []
+              }
+            },
+            {
+              "name": "listing_id",
+              "position": 1,
+              "type": {
+                "type": 10,
+                "typeName": "0x2::object::ID",
+                "typeParameterInstantiation": []
+              }
+            },
+            {
+              "name": "nft_id",
+              "position": 2,
+              "type": {
+                "type": 10,
+                "typeName": "0x2::object::ID",
+                "typeParameterInstantiation": []
+              }
+            },
+            {
+              "name": "price",
+              "position": 3,
+              "type": {
+                "type": 6,
+                "typeParameterInstantiation": []
+              }
+            },
+            {
+              "name": "marketplace",
+              "position": 4,
+              "type": {
+                "type": 10,
+                "typeName": "0x2::object::ID",
+                "typeParameterInstantiation": []
+              }
+            },
+            {
+              "name": "does_royalty",
+              "position": 5,
+              "type": {
+                "type": 2,
+                "typeParameterInstantiation": []
+              }
+            }
+          ],
+          "variants": []
+        },
+        {
+          "name": "Listing",
+          "kind": 1,
+          "abilities": [
+            3,
+            4
+          ],
+          "typeParameters": [
+            {
+              "constraints": []
+            }
+          ],
+          "fields": [
+            {
+              "name": "id",
+              "position": 0,
+              "type": {
+                "type": 10,
+                "typeName": "0x2::object::UID",
+                "typeParameterInstantiation": []
+              }
+            },
+            {
+              "name": "nft",
+              "position": 1,
+              "type": {
+                "type": 10,
+                "typeName": "0x2::object::ID",
+                "typeParameterInstantiation": []
+              }
+            },
+            {
+              "name": "seller",
+              "position": 2,
+              "type": {
+                "type": 1,
+                "typeParameterInstantiation": []
+              }
+            },
+            {
+              "name": "price",
+              "position": 3,
+              "type": {
+                "type": 6,
+                "typeParameterInstantiation": []
+              }
+            },
+            {
+              "name": "market_id",
+              "position": 4,
+              "type": {
+                "type": 10,
+                "typeName": "0x2::object::ID",
+                "typeParameterInstantiation": []
+              }
+            },
+            {
+              "name": "does_royalty",
+              "position": 5,
+              "type": {
+                "type": 2,
+                "typeParameterInstantiation": []
+              }
+            }
+          ],
+          "variants": []
+        }
+      ],
+      "functions": [
+        {
+          "name": "buy_generic",
+          "visibility": 2,
+          "isEntry": false,
+          "typeParameters": [
+            {
+              "constraints": [
+                3,
+                4
+              ]
+            },
+            {
+              "constraints": []
+            }
+          ],
+          "parameters": [
+            {
+              "reference": 1,
+              "body": {
+                "type": 10,
+                "typeName": "0x56714d6578dafaaec566c1483ac0fc5fb206b506455a8d59b043d67d243243eb::version::Version",
+                "typeParameterInstantiation": []
+              }
+            },
+            {
+              "reference": 2,
+              "body": {
+                "type": 10,
+                "typeName": "0x3164fcf73eb6b41ff3d2129346141bd68469964c2d95a5b1533e8d16e6ea6e13::Market::Listing",
+                "typeParameterInstantiation": [
                   {
-                    "TypeParameter": 1
+                    "type": 11,
+                    "typeParameter": 1,
+                    "typeParameterInstantiation": []
+                  }
+                ]
+              }
+            },
+            {
+              "reference": 2,
+              "body": {
+                "type": 10,
+                "typeName": "0x3164fcf73eb6b41ff3d2129346141bd68469964c2d95a5b1533e8d16e6ea6e13::marketplace::MarketPlace",
+                "typeParameterInstantiation": [
+                  {
+                    "type": 11,
+                    "typeParameter": 1,
+                    "typeParameterInstantiation": []
+                  }
+                ]
+              }
+            },
+            {
+              "body": {
+                "type": 10,
+                "typeName": "0x2::coin::Coin",
+                "typeParameterInstantiation": [
+                  {
+                    "type": 11,
+                    "typeParameter": 1,
+                    "typeParameterInstantiation": []
+                  }
+                ]
+              }
+            },
+            {
+              "reference": 2,
+              "body": {
+                "type": 10,
+                "typeName": "0x2::tx_context::TxContext",
+                "typeParameterInstantiation": []
+              }
+            }
+          ],
+          "returns": [
+            {
+              "body": {
+                "type": 10,
+                "typeName": "0x2::coin::Coin",
+                "typeParameterInstantiation": [
+                  {
+                    "type": 11,
+                    "typeParameter": 1,
+                    "typeParameterInstantiation": []
                   }
                 ]
               }
             }
-          },
-          {
-            "MutableReference": {
-              "Struct": {
-                "address": "0x3164fcf73eb6b41ff3d2129346141bd68469964c2d95a5b1533e8d16e6ea6e13",
-                "module": "marketplace",
-                "name": "MarketPlace",
-                "typeArguments": [
-                  {
-                    "TypeParameter": 1
-                  }
-                ]
-              }
-            }
-          },
-          {
-            "Struct": {
-              "address": "0x2",
-              "module": "coin",
-              "name": "Coin",
-              "typeArguments": [
-                {
-                  "TypeParameter": 1
-                }
+          ]
+        },
+        {
+          "name": "buy_with_sui",
+          "visibility": 2,
+          "isEntry": false,
+          "typeParameters": [
+            {
+              "constraints": [
+                3,
+                4
               ]
             }
-          },
-          {
-            "MutableReference": {
-              "Struct": {
-                "address": "0x2",
-                "module": "tx_context",
-                "name": "TxContext",
-                "typeArguments": []
+          ],
+          "parameters": [
+            {
+              "reference": 1,
+              "body": {
+                "type": 10,
+                "typeName": "0x56714d6578dafaaec566c1483ac0fc5fb206b506455a8d59b043d67d243243eb::version::Version",
+                "typeParameterInstantiation": []
+              }
+            },
+            {
+              "reference": 2,
+              "body": {
+                "type": 10,
+                "typeName": "0x2::transfer_policy::TransferPolicy",
+                "typeParameterInstantiation": [
+                  {
+                    "type": 11,
+                    "typeParameter": 0,
+                    "typeParameterInstantiation": []
+                  }
+                ]
+              }
+            },
+            {
+              "reference": 2,
+              "body": {
+                "type": 10,
+                "typeName": "0x3164fcf73eb6b41ff3d2129346141bd68469964c2d95a5b1533e8d16e6ea6e13::Market::Listing",
+                "typeParameterInstantiation": [
+                  {
+                    "type": 10,
+                    "typeName": "0x2::sui::SUI",
+                    "typeParameterInstantiation": []
+                  }
+                ]
+              }
+            },
+            {
+              "reference": 2,
+              "body": {
+                "type": 10,
+                "typeName": "0x3164fcf73eb6b41ff3d2129346141bd68469964c2d95a5b1533e8d16e6ea6e13::marketplace::MarketPlace",
+                "typeParameterInstantiation": [
+                  {
+                    "type": 10,
+                    "typeName": "0x2::sui::SUI",
+                    "typeParameterInstantiation": []
+                  }
+                ]
+              }
+            },
+            {
+              "body": {
+                "type": 10,
+                "typeName": "0x2::coin::Coin",
+                "typeParameterInstantiation": [
+                  {
+                    "type": 10,
+                    "typeName": "0x2::sui::SUI",
+                    "typeParameterInstantiation": []
+                  }
+                ]
+              }
+            },
+            {
+              "reference": 2,
+              "body": {
+                "type": 10,
+                "typeName": "0x2::tx_context::TxContext",
+                "typeParameterInstantiation": []
               }
             }
-          }
-        ],
-        "return": [
-          {
-            "Struct": {
-              "address": "0x2",
-              "module": "coin",
-              "name": "Coin",
-              "typeArguments": [
-                {
-                  "TypeParameter": 1
-                }
+          ],
+          "returns": [
+            {
+              "body": {
+                "type": 10,
+                "typeName": "0x2::coin::Coin",
+                "typeParameterInstantiation": [
+                  {
+                    "type": 10,
+                    "typeName": "0x2::sui::SUI",
+                    "typeParameterInstantiation": []
+                  }
+                ]
+              }
+            }
+          ]
+        },
+        {
+          "name": "change_price",
+          "visibility": 2,
+          "isEntry": true,
+          "typeParameters": [
+            {
+              "constraints": []
+            }
+          ],
+          "parameters": [
+            {
+              "reference": 1,
+              "body": {
+                "type": 10,
+                "typeName": "0x56714d6578dafaaec566c1483ac0fc5fb206b506455a8d59b043d67d243243eb::version::Version",
+                "typeParameterInstantiation": []
+              }
+            },
+            {
+              "reference": 2,
+              "body": {
+                "type": 10,
+                "typeName": "0x3164fcf73eb6b41ff3d2129346141bd68469964c2d95a5b1533e8d16e6ea6e13::Market::Listing",
+                "typeParameterInstantiation": [
+                  {
+                    "type": 11,
+                    "typeParameter": 0,
+                    "typeParameterInstantiation": []
+                  }
+                ]
+              }
+            },
+            {
+              "body": {
+                "type": 6,
+                "typeParameterInstantiation": []
+              }
+            },
+            {
+              "reference": 2,
+              "body": {
+                "type": 10,
+                "typeName": "0x2::tx_context::TxContext",
+                "typeParameterInstantiation": []
+              }
+            }
+          ],
+          "returns": []
+        },
+        {
+          "name": "delist_generic",
+          "visibility": 2,
+          "isEntry": false,
+          "typeParameters": [
+            {
+              "constraints": [
+                3,
+                4
               ]
+            },
+            {
+              "constraints": []
             }
-          }
-        ]
-      },
-      "buy_with_sui": {
-        "visibility": "Public",
-        "isEntry": false,
-        "typeParameters": [
-          {
-            "abilities": [
-              "Store",
-              "Key"
-            ]
-          }
-        ],
-        "parameters": [
-          {
-            "Reference": {
-              "Struct": {
-                "address": "0x56714d6578dafaaec566c1483ac0fc5fb206b506455a8d59b043d67d243243eb",
-                "module": "version",
-                "name": "Version",
-                "typeArguments": []
+          ],
+          "parameters": [
+            {
+              "reference": 1,
+              "body": {
+                "type": 10,
+                "typeName": "0x56714d6578dafaaec566c1483ac0fc5fb206b506455a8d59b043d67d243243eb::version::Version",
+                "typeParameterInstantiation": []
               }
-            }
-          },
-          {
-            "MutableReference": {
-              "Struct": {
-                "address": "0x2",
-                "module": "transfer_policy",
-                "name": "TransferPolicy",
-                "typeArguments": [
+            },
+            {
+              "reference": 2,
+              "body": {
+                "type": 10,
+                "typeName": "0x3164fcf73eb6b41ff3d2129346141bd68469964c2d95a5b1533e8d16e6ea6e13::Market::Listing",
+                "typeParameterInstantiation": [
                   {
-                    "TypeParameter": 0
+                    "type": 11,
+                    "typeParameter": 1,
+                    "typeParameterInstantiation": []
                   }
                 ]
               }
-            }
-          },
-          {
-            "MutableReference": {
-              "Struct": {
-                "address": "0x3164fcf73eb6b41ff3d2129346141bd68469964c2d95a5b1533e8d16e6ea6e13",
-                "module": "Market",
-                "name": "Listing",
-                "typeArguments": [
-                  {
-                    "Struct": {
-                      "address": "0x2",
-                      "module": "sui",
-                      "name": "SUI",
-                      "typeArguments": []
-                    }
-                  }
-                ]
+            },
+            {
+              "reference": 2,
+              "body": {
+                "type": 10,
+                "typeName": "0x2::tx_context::TxContext",
+                "typeParameterInstantiation": []
               }
             }
-          },
-          {
-            "MutableReference": {
-              "Struct": {
-                "address": "0x3164fcf73eb6b41ff3d2129346141bd68469964c2d95a5b1533e8d16e6ea6e13",
-                "module": "marketplace",
-                "name": "MarketPlace",
-                "typeArguments": [
-                  {
-                    "Struct": {
-                      "address": "0x2",
-                      "module": "sui",
-                      "name": "SUI",
-                      "typeArguments": []
-                    }
-                  }
-                ]
-              }
-            }
-          },
-          {
-            "Struct": {
-              "address": "0x2",
-              "module": "coin",
-              "name": "Coin",
-              "typeArguments": [
-                {
-                  "Struct": {
-                    "address": "0x2",
-                    "module": "sui",
-                    "name": "SUI",
-                    "typeArguments": []
-                  }
-                }
+          ],
+          "returns": []
+        },
+        {
+          "name": "list_generic",
+          "visibility": 2,
+          "isEntry": false,
+          "typeParameters": [
+            {
+              "constraints": [
+                3,
+                4
               ]
+            },
+            {
+              "constraints": []
             }
-          },
-          {
-            "MutableReference": {
-              "Struct": {
-                "address": "0x2",
-                "module": "tx_context",
-                "name": "TxContext",
-                "typeArguments": []
+          ],
+          "parameters": [
+            {
+              "reference": 1,
+              "body": {
+                "type": 10,
+                "typeName": "0x56714d6578dafaaec566c1483ac0fc5fb206b506455a8d59b043d67d243243eb::version::Version",
+                "typeParameterInstantiation": []
               }
-            }
-          }
-        ],
-        "return": [
-          {
-            "Struct": {
-              "address": "0x2",
-              "module": "coin",
-              "name": "Coin",
-              "typeArguments": [
-                {
-                  "Struct": {
-                    "address": "0x2",
-                    "module": "sui",
-                    "name": "SUI",
-                    "typeArguments": []
-                  }
-                }
-              ]
-            }
-          }
-        ]
-      },
-      "change_price": {
-        "visibility": "Public",
-        "isEntry": true,
-        "typeParameters": [
-          {
-            "abilities": []
-          }
-        ],
-        "parameters": [
-          {
-            "Reference": {
-              "Struct": {
-                "address": "0x56714d6578dafaaec566c1483ac0fc5fb206b506455a8d59b043d67d243243eb",
-                "module": "version",
-                "name": "Version",
-                "typeArguments": []
+            },
+            {
+              "body": {
+                "type": 11,
+                "typeParameter": 0,
+                "typeParameterInstantiation": []
               }
-            }
-          },
-          {
-            "MutableReference": {
-              "Struct": {
-                "address": "0x3164fcf73eb6b41ff3d2129346141bd68469964c2d95a5b1533e8d16e6ea6e13",
-                "module": "Market",
-                "name": "Listing",
-                "typeArguments": [
+            },
+            {
+              "body": {
+                "type": 6,
+                "typeParameterInstantiation": []
+              }
+            },
+            {
+              "reference": 1,
+              "body": {
+                "type": 10,
+                "typeName": "0x3164fcf73eb6b41ff3d2129346141bd68469964c2d95a5b1533e8d16e6ea6e13::marketplace::MarketPlace",
+                "typeParameterInstantiation": [
                   {
-                    "TypeParameter": 0
+                    "type": 11,
+                    "typeParameter": 1,
+                    "typeParameterInstantiation": []
                   }
                 ]
               }
-            }
-          },
-          "U64",
-          {
-            "MutableReference": {
-              "Struct": {
-                "address": "0x2",
-                "module": "tx_context",
-                "name": "TxContext",
-                "typeArguments": []
+            },
+            {
+              "body": {
+                "type": 2,
+                "typeParameterInstantiation": []
+              }
+            },
+            {
+              "reference": 2,
+              "body": {
+                "type": 10,
+                "typeName": "0x2::tx_context::TxContext",
+                "typeParameterInstantiation": []
               }
             }
-          }
-        ],
-        "return": []
-      },
-      "delist_generic": {
-        "visibility": "Public",
-        "isEntry": false,
-        "typeParameters": [
-          {
-            "abilities": [
-              "Store",
-              "Key"
-            ]
-          },
-          {
-            "abilities": []
-          }
-        ],
-        "parameters": [
-          {
-            "Reference": {
-              "Struct": {
-                "address": "0x56714d6578dafaaec566c1483ac0fc5fb206b506455a8d59b043d67d243243eb",
-                "module": "version",
-                "name": "Version",
-                "typeArguments": []
-              }
-            }
-          },
-          {
-            "MutableReference": {
-              "Struct": {
-                "address": "0x3164fcf73eb6b41ff3d2129346141bd68469964c2d95a5b1533e8d16e6ea6e13",
-                "module": "Market",
-                "name": "Listing",
-                "typeArguments": [
-                  {
-                    "TypeParameter": 1
-                  }
-                ]
-              }
-            }
-          },
-          {
-            "MutableReference": {
-              "Struct": {
-                "address": "0x2",
-                "module": "tx_context",
-                "name": "TxContext",
-                "typeArguments": []
-              }
-            }
-          }
-        ],
-        "return": []
-      },
-      "list_generic": {
-        "visibility": "Public",
-        "isEntry": false,
-        "typeParameters": [
-          {
-            "abilities": [
-              "Store",
-              "Key"
-            ]
-          },
-          {
-            "abilities": []
-          }
-        ],
-        "parameters": [
-          {
-            "Reference": {
-              "Struct": {
-                "address": "0x56714d6578dafaaec566c1483ac0fc5fb206b506455a8d59b043d67d243243eb",
-                "module": "version",
-                "name": "Version",
-                "typeArguments": []
-              }
-            }
-          },
-          {
-            "TypeParameter": 0
-          },
-          "U64",
-          {
-            "Reference": {
-              "Struct": {
-                "address": "0x3164fcf73eb6b41ff3d2129346141bd68469964c2d95a5b1533e8d16e6ea6e13",
-                "module": "marketplace",
-                "name": "MarketPlace",
-                "typeArguments": [
-                  {
-                    "TypeParameter": 1
-                  }
-                ]
-              }
-            }
-          },
-          "Bool",
-          {
-            "MutableReference": {
-              "Struct": {
-                "address": "0x2",
-                "module": "tx_context",
-                "name": "TxContext",
-                "typeArguments": []
-              }
-            }
-          }
-        ],
-        "return": []
-      }
+          ],
+          "returns": []
+        }
+      ]
     }
   },
-  "marketplace": {
-    "fileFormatVersion": 6,
+  {
     "address": "0x3164fcf73eb6b41ff3d2129346141bd68469964c2d95a5b1533e8d16e6ea6e13",
-    "name": "marketplace",
-    "friends": [],
-    "structs": {
-      "MarketPlace": {
-        "abilities": {
+    "module": {
+      "name": "marketplace",
+      "datatypes": [
+        {
+          "name": "MarketPlace",
+          "kind": 1,
           "abilities": [
-            "Store",
-            "Key"
+            3,
+            4
+          ],
+          "typeParameters": [
+            {
+              "constraints": []
+            }
+          ],
+          "fields": [
+            {
+              "name": "id",
+              "position": 0,
+              "type": {
+                "type": 10,
+                "typeName": "0x2::object::UID",
+                "typeParameterInstantiation": []
+              }
+            },
+            {
+              "name": "beneficiary",
+              "position": 1,
+              "type": {
+                "type": 1,
+                "typeParameterInstantiation": []
+              }
+            },
+            {
+              "name": "fee_bps",
+              "position": 2,
+              "type": {
+                "type": 6,
+                "typeParameterInstantiation": []
+              }
+            },
+            {
+              "name": "profit",
+              "position": 3,
+              "type": {
+                "type": 10,
+                "typeName": "0x2::balance::Balance",
+                "typeParameterInstantiation": [
+                  {
+                    "type": 11,
+                    "typeParameter": 0,
+                    "typeParameterInstantiation": []
+                  }
+                ]
+              }
+            }
+          ],
+          "variants": []
+        }
+      ],
+      "functions": [
+        {
+          "name": "calc_market_fee",
+          "visibility": 2,
+          "isEntry": false,
+          "typeParameters": [
+            {
+              "constraints": []
+            }
+          ],
+          "parameters": [
+            {
+              "reference": 1,
+              "body": {
+                "type": 10,
+                "typeName": "0x3164fcf73eb6b41ff3d2129346141bd68469964c2d95a5b1533e8d16e6ea6e13::marketplace::MarketPlace",
+                "typeParameterInstantiation": [
+                  {
+                    "type": 11,
+                    "typeParameter": 0,
+                    "typeParameterInstantiation": []
+                  }
+                ]
+              }
+            },
+            {
+              "body": {
+                "type": 6,
+                "typeParameterInstantiation": []
+              }
+            }
+          ],
+          "returns": [
+            {
+              "body": {
+                "type": 6,
+                "typeParameterInstantiation": []
+              }
+            }
           ]
         },
-        "typeParameters": [
-          {
-            "constraints": {
-              "abilities": []
+        {
+          "name": "create_market",
+          "visibility": 2,
+          "isEntry": true,
+          "typeParameters": [
+            {
+              "constraints": []
+            }
+          ],
+          "parameters": [
+            {
+              "body": {
+                "type": 1,
+                "typeParameterInstantiation": []
+              }
             },
-            "isPhantom": true
-          }
-        ],
-        "fields": [
-          {
-            "name": "id",
-            "type": {
-              "Struct": {
-                "address": "0x2",
-                "module": "object",
-                "name": "UID",
-                "typeArguments": []
+            {
+              "body": {
+                "type": 6,
+                "typeParameterInstantiation": []
+              }
+            },
+            {
+              "reference": 2,
+              "body": {
+                "type": 10,
+                "typeName": "0x2::tx_context::TxContext",
+                "typeParameterInstantiation": []
               }
             }
-          },
-          {
-            "name": "beneficiary",
-            "type": "Address"
-          },
-          {
-            "name": "fee_bps",
-            "type": "U64"
-          },
-          {
-            "name": "profit",
-            "type": {
-              "Struct": {
-                "address": "0x2",
-                "module": "balance",
-                "name": "Balance",
-                "typeArguments": [
+          ],
+          "returns": []
+        },
+        {
+          "name": "deposit_profit",
+          "visibility": 2,
+          "isEntry": false,
+          "typeParameters": [
+            {
+              "constraints": []
+            }
+          ],
+          "parameters": [
+            {
+              "reference": 2,
+              "body": {
+                "type": 10,
+                "typeName": "0x3164fcf73eb6b41ff3d2129346141bd68469964c2d95a5b1533e8d16e6ea6e13::marketplace::MarketPlace",
+                "typeParameterInstantiation": [
                   {
-                    "TypeParameter": 0
+                    "type": 11,
+                    "typeParameter": 0,
+                    "typeParameterInstantiation": []
+                  }
+                ]
+              }
+            },
+            {
+              "body": {
+                "type": 10,
+                "typeName": "0x2::balance::Balance",
+                "typeParameterInstantiation": [
+                  {
+                    "type": 11,
+                    "typeParameter": 0,
+                    "typeParameterInstantiation": []
                   }
                 ]
               }
             }
-          }
-        ]
-      }
-    },
-    "exposedFunctions": {
-      "calc_market_fee": {
-        "visibility": "Public",
-        "isEntry": false,
-        "typeParameters": [
-          {
-            "abilities": []
-          }
-        ],
-        "parameters": [
-          {
-            "Reference": {
-              "Struct": {
-                "address": "0x3164fcf73eb6b41ff3d2129346141bd68469964c2d95a5b1533e8d16e6ea6e13",
-                "module": "marketplace",
-                "name": "MarketPlace",
-                "typeArguments": [
+          ],
+          "returns": []
+        },
+        {
+          "name": "get_beneficiary",
+          "visibility": 2,
+          "isEntry": false,
+          "typeParameters": [
+            {
+              "constraints": []
+            }
+          ],
+          "parameters": [
+            {
+              "reference": 1,
+              "body": {
+                "type": 10,
+                "typeName": "0x3164fcf73eb6b41ff3d2129346141bd68469964c2d95a5b1533e8d16e6ea6e13::marketplace::MarketPlace",
+                "typeParameterInstantiation": [
                   {
-                    "TypeParameter": 0
+                    "type": 11,
+                    "typeParameter": 0,
+                    "typeParameterInstantiation": []
                   }
                 ]
               }
             }
-          },
-          "U64"
-        ],
-        "return": [
-          "U64"
-        ]
-      },
-      "create_market": {
-        "visibility": "Public",
-        "isEntry": true,
-        "typeParameters": [
-          {
-            "abilities": []
-          }
-        ],
-        "parameters": [
-          "Address",
-          "U64",
-          {
-            "MutableReference": {
-              "Struct": {
-                "address": "0x2",
-                "module": "tx_context",
-                "name": "TxContext",
-                "typeArguments": []
+          ],
+          "returns": [
+            {
+              "body": {
+                "type": 1,
+                "typeParameterInstantiation": []
               }
             }
-          }
-        ],
-        "return": []
-      },
-      "deposit_profit": {
-        "visibility": "Public",
-        "isEntry": false,
-        "typeParameters": [
-          {
-            "abilities": []
-          }
-        ],
-        "parameters": [
-          {
-            "MutableReference": {
-              "Struct": {
-                "address": "0x3164fcf73eb6b41ff3d2129346141bd68469964c2d95a5b1533e8d16e6ea6e13",
-                "module": "marketplace",
-                "name": "MarketPlace",
-                "typeArguments": [
+          ]
+        },
+        {
+          "name": "get_profit",
+          "visibility": 2,
+          "isEntry": false,
+          "typeParameters": [
+            {
+              "constraints": []
+            }
+          ],
+          "parameters": [
+            {
+              "reference": 1,
+              "body": {
+                "type": 10,
+                "typeName": "0x3164fcf73eb6b41ff3d2129346141bd68469964c2d95a5b1533e8d16e6ea6e13::marketplace::MarketPlace",
+                "typeParameterInstantiation": [
                   {
-                    "TypeParameter": 0
+                    "type": 11,
+                    "typeParameter": 0,
+                    "typeParameterInstantiation": []
                   }
                 ]
               }
             }
-          },
-          {
-            "Struct": {
-              "address": "0x2",
-              "module": "balance",
-              "name": "Balance",
-              "typeArguments": [
-                {
-                  "TypeParameter": 0
-                }
-              ]
+          ],
+          "returns": [
+            {
+              "body": {
+                "type": 6,
+                "typeParameterInstantiation": []
+              }
             }
-          }
-        ],
-        "return": []
-      },
-      "get_beneficiary": {
-        "visibility": "Public",
-        "isEntry": false,
-        "typeParameters": [
-          {
-            "abilities": []
-          }
-        ],
-        "parameters": [
-          {
-            "Reference": {
-              "Struct": {
-                "address": "0x3164fcf73eb6b41ff3d2129346141bd68469964c2d95a5b1533e8d16e6ea6e13",
-                "module": "marketplace",
-                "name": "MarketPlace",
-                "typeArguments": [
+          ]
+        },
+        {
+          "name": "withdraw_profit",
+          "visibility": 2,
+          "isEntry": false,
+          "typeParameters": [
+            {
+              "constraints": []
+            }
+          ],
+          "parameters": [
+            {
+              "reference": 1,
+              "body": {
+                "type": 10,
+                "typeName": "0x56714d6578dafaaec566c1483ac0fc5fb206b506455a8d59b043d67d243243eb::version::Version",
+                "typeParameterInstantiation": []
+              }
+            },
+            {
+              "reference": 2,
+              "body": {
+                "type": 10,
+                "typeName": "0x3164fcf73eb6b41ff3d2129346141bd68469964c2d95a5b1533e8d16e6ea6e13::marketplace::MarketPlace",
+                "typeParameterInstantiation": [
                   {
-                    "TypeParameter": 0
+                    "type": 11,
+                    "typeParameter": 0,
+                    "typeParameterInstantiation": []
+                  }
+                ]
+              }
+            },
+            {
+              "body": {
+                "type": 6,
+                "typeParameterInstantiation": []
+              }
+            },
+            {
+              "reference": 2,
+              "body": {
+                "type": 10,
+                "typeName": "0x2::tx_context::TxContext",
+                "typeParameterInstantiation": []
+              }
+            }
+          ],
+          "returns": [
+            {
+              "body": {
+                "type": 10,
+                "typeName": "0x2::coin::Coin",
+                "typeParameterInstantiation": [
+                  {
+                    "type": 11,
+                    "typeParameter": 0,
+                    "typeParameterInstantiation": []
                   }
                 ]
               }
             }
-          }
-        ],
-        "return": [
-          "Address"
-        ]
-      },
-      "get_profit": {
-        "visibility": "Public",
-        "isEntry": false,
-        "typeParameters": [
-          {
-            "abilities": []
-          }
-        ],
-        "parameters": [
-          {
-            "Reference": {
-              "Struct": {
-                "address": "0x3164fcf73eb6b41ff3d2129346141bd68469964c2d95a5b1533e8d16e6ea6e13",
-                "module": "marketplace",
-                "name": "MarketPlace",
-                "typeArguments": [
-                  {
-                    "TypeParameter": 0
-                  }
-                ]
-              }
-            }
-          }
-        ],
-        "return": [
-          "U64"
-        ]
-      },
-      "withdraw_profit": {
-        "visibility": "Public",
-        "isEntry": false,
-        "typeParameters": [
-          {
-            "abilities": []
-          }
-        ],
-        "parameters": [
-          {
-            "Reference": {
-              "Struct": {
-                "address": "0x56714d6578dafaaec566c1483ac0fc5fb206b506455a8d59b043d67d243243eb",
-                "module": "version",
-                "name": "Version",
-                "typeArguments": []
-              }
-            }
-          },
-          {
-            "MutableReference": {
-              "Struct": {
-                "address": "0x3164fcf73eb6b41ff3d2129346141bd68469964c2d95a5b1533e8d16e6ea6e13",
-                "module": "marketplace",
-                "name": "MarketPlace",
-                "typeArguments": [
-                  {
-                    "TypeParameter": 0
-                  }
-                ]
-              }
-            }
-          },
-          "U64",
-          {
-            "MutableReference": {
-              "Struct": {
-                "address": "0x2",
-                "module": "tx_context",
-                "name": "TxContext",
-                "typeArguments": []
-              }
-            }
-          }
-        ],
-        "return": [
-          {
-            "Struct": {
-              "address": "0x2",
-              "module": "coin",
-              "name": "Coin",
-              "typeArguments": [
-                {
-                  "TypeParameter": 0
-                }
-              ]
-            }
-          }
-        ]
-      }
+          ]
+        }
+      ]
     }
   },
-  "utils": {
-    "fileFormatVersion": 6,
+  {
     "address": "0x3164fcf73eb6b41ff3d2129346141bd68469964c2d95a5b1533e8d16e6ea6e13",
-    "name": "utils",
-    "friends": [],
-    "structs": {
-      "UTILS": {
-        "abilities": {
+    "module": {
+      "name": "utils",
+      "datatypes": [
+        {
+          "name": "UTILS",
+          "kind": 1,
           "abilities": [
-            "Drop"
-          ]
+            2
+          ],
+          "typeParameters": [],
+          "fields": [
+            {
+              "name": "dummy_field",
+              "position": 0,
+              "type": {
+                "type": 2,
+                "typeParameterInstantiation": []
+              }
+            }
+          ],
+          "variants": []
+        }
+      ],
+      "functions": [
+        {
+          "name": "check_version",
+          "visibility": 2,
+          "isEntry": false,
+          "typeParameters": [],
+          "parameters": [
+            {
+              "reference": 1,
+              "body": {
+                "type": 10,
+                "typeName": "0x56714d6578dafaaec566c1483ac0fc5fb206b506455a8d59b043d67d243243eb::version::Version",
+                "typeParameterInstantiation": []
+              }
+            }
+          ],
+          "returns": []
         },
-        "typeParameters": [],
-        "fields": [
-          {
-            "name": "dummy_field",
-            "type": "Bool"
-          }
-        ]
-      }
-    },
-    "exposedFunctions": {
-      "check_version": {
-        "visibility": "Public",
-        "isEntry": false,
-        "typeParameters": [],
-        "parameters": [
-          {
-            "Reference": {
-              "Struct": {
-                "address": "0x56714d6578dafaaec566c1483ac0fc5fb206b506455a8d59b043d67d243243eb",
-                "module": "version",
-                "name": "Version",
-                "typeArguments": []
+        {
+          "name": "new_version",
+          "visibility": 2,
+          "isEntry": false,
+          "typeParameters": [],
+          "parameters": [
+            {
+              "reference": 1,
+              "body": {
+                "type": 10,
+                "typeName": "0x2::package::Publisher",
+                "typeParameterInstantiation": []
+              }
+            },
+            {
+              "reference": 2,
+              "body": {
+                "type": 10,
+                "typeName": "0x56714d6578dafaaec566c1483ac0fc5fb206b506455a8d59b043d67d243243eb::version::Version",
+                "typeParameterInstantiation": []
+              }
+            },
+            {
+              "reference": 2,
+              "body": {
+                "type": 10,
+                "typeName": "0x2::tx_context::TxContext",
+                "typeParameterInstantiation": []
               }
             }
-          }
-        ],
-        "return": []
-      },
-      "new_version": {
-        "visibility": "Public",
-        "isEntry": false,
-        "typeParameters": [],
-        "parameters": [
-          {
-            "Reference": {
-              "Struct": {
-                "address": "0x2",
-                "module": "package",
-                "name": "Publisher",
-                "typeArguments": []
+          ],
+          "returns": []
+        },
+        {
+          "name": "set_version",
+          "visibility": 2,
+          "isEntry": false,
+          "typeParameters": [],
+          "parameters": [
+            {
+              "reference": 1,
+              "body": {
+                "type": 10,
+                "typeName": "0x2::package::Publisher",
+                "typeParameterInstantiation": []
+              }
+            },
+            {
+              "reference": 2,
+              "body": {
+                "type": 10,
+                "typeName": "0x56714d6578dafaaec566c1483ac0fc5fb206b506455a8d59b043d67d243243eb::version::Version",
+                "typeParameterInstantiation": []
+              }
+            },
+            {
+              "body": {
+                "type": 6,
+                "typeParameterInstantiation": []
+              }
+            },
+            {
+              "reference": 2,
+              "body": {
+                "type": 10,
+                "typeName": "0x2::tx_context::TxContext",
+                "typeParameterInstantiation": []
               }
             }
-          },
-          {
-            "MutableReference": {
-              "Struct": {
-                "address": "0x56714d6578dafaaec566c1483ac0fc5fb206b506455a8d59b043d67d243243eb",
-                "module": "version",
-                "name": "Version",
-                "typeArguments": []
-              }
-            }
-          },
-          {
-            "MutableReference": {
-              "Struct": {
-                "address": "0x2",
-                "module": "tx_context",
-                "name": "TxContext",
-                "typeArguments": []
-              }
-            }
-          }
-        ],
-        "return": []
-      },
-      "set_version": {
-        "visibility": "Public",
-        "isEntry": false,
-        "typeParameters": [],
-        "parameters": [
-          {
-            "Reference": {
-              "Struct": {
-                "address": "0x2",
-                "module": "package",
-                "name": "Publisher",
-                "typeArguments": []
-              }
-            }
-          },
-          {
-            "MutableReference": {
-              "Struct": {
-                "address": "0x56714d6578dafaaec566c1483ac0fc5fb206b506455a8d59b043d67d243243eb",
-                "module": "version",
-                "name": "Version",
-                "typeArguments": []
-              }
-            }
-          },
-          "U64",
-          {
-            "MutableReference": {
-              "Struct": {
-                "address": "0x2",
-                "module": "tx_context",
-                "name": "TxContext",
-                "typeArguments": []
-              }
-            }
-          }
-        ],
-        "return": []
-      }
+          ],
+          "returns": []
+        }
+      ]
     }
   }
-}
+]

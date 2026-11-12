@@ -18,7 +18,7 @@ pool
     network: SuiNetwork.MAIN_NET,
   })
   .onEventSwapEvent(async (event, ctx) => {
-    if (ctx.transaction.events[0].packageId == SWAP) {
+    if (ctx.transaction.events?.events?.[0].packageId == SWAP) {
       console.log("Add OmniSwap Event:", ctx.transaction.digest)
       ctx.meter.Counter("swap_counter").add(1, { project: "omniswap" });
       const pool = event.data_decoded.pool;
@@ -46,7 +46,7 @@ pool
 
       ctx.eventLogger.emit("SwapEvent", {
         project: "omniswap",
-        distinctId: ctx.transaction.transaction.data.sender,
+        distinctId: ctx.transaction.transaction?.sender,
         pool,
         amount_in,
         amount_out,
@@ -102,7 +102,7 @@ lending_logic
 
     ctx.eventLogger.emit("LendingEvent", {
       project: "omnilending",
-      distinctId: ctx.transaction.transaction.data.sender,
+      distinctId: ctx.transaction.transaction?.sender,
       user_id,
       call_name,
       symbol,

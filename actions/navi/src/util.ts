@@ -1,4 +1,4 @@
-import { getFullnodeUrl, SuiClient } from '@mysten/sui.js/client'
+import { getClient, SuiNetwork } from '@sentio/sdk/sui'
 
 export interface TokenInfo {
     symbol: string
@@ -7,7 +7,7 @@ export interface TokenInfo {
 }
 
 
-const client = new SuiClient({ url: getFullnodeUrl('mainnet') })
+const client = getClient(SuiNetwork.MAIN_NET)
 
 let coinInfoMap = new Map<string, Promise<TokenInfo>>()
 
@@ -22,7 +22,7 @@ export async function getOrCreateCoin(coinAddress: string): Promise<TokenInfo> {
 }
 
 export async function buildCoinInfo(coinAddress: string): Promise<TokenInfo> {
-    const metadata = await client.getCoinMetadata({ coinType: coinAddress })
+    const metadata = (await client.getCoinMetadata({ coinType: coinAddress })).coinMetadata
     //@ts-ignore
     const symbol = metadata.symbol
     //@ts-ignore

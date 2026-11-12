@@ -1,216 +1,276 @@
 [
 	{
-		"fileFormatVersion": 6,
 		"address": "0x56714d6578dafaaec566c1483ac0fc5fb206b506455a8d59b043d67d243243eb",
-		"name": "version",
-		"friends": [],
-		"structs": {
-			"VERSION": {
-				"abilities": {
+		"module": {
+			"datatypes": [
+				{
 					"abilities": [
-						"Drop"
-					]
+						2
+					],
+					"typeParameters": [],
+					"fields": [
+						{
+							"name": "dummy_field",
+							"position": 0,
+							"type": {
+								"typeParameterInstantiation": [],
+								"type": 2
+							}
+						}
+					],
+					"variants": [],
+					"typeName": "0x56714d6578dafaaec566c1483ac0fc5fb206b506455a8d59b043d67d243243eb::version::VERSION",
+					"definingId": "0x56714d6578dafaaec566c1483ac0fc5fb206b506455a8d59b043d67d243243eb",
+					"module": "version",
+					"name": "VERSION",
+					"kind": 1
 				},
-				"typeParameters": [],
-				"fields": [
-					{
-						"name": "dummy_field",
-						"type": "Bool"
-					}
-				]
-			},
-			"Version": {
-				"abilities": {
+				{
 					"abilities": [
-						"Key"
-					]
+						4
+					],
+					"typeParameters": [],
+					"fields": [
+						{
+							"name": "id",
+							"position": 0,
+							"type": {
+								"typeParameterInstantiation": [],
+								"type": 10,
+								"typeName": "0x0000000000000000000000000000000000000000000000000000000000000002::object::UID"
+							}
+						},
+						{
+							"name": "versions",
+							"position": 1,
+							"type": {
+								"typeParameterInstantiation": [
+									{
+										"typeParameterInstantiation": [],
+										"type": 1
+									},
+									{
+										"typeParameterInstantiation": [],
+										"type": 6
+									}
+								],
+								"type": 10,
+								"typeName": "0x0000000000000000000000000000000000000000000000000000000000000002::table::Table"
+							}
+						}
+					],
+					"variants": [],
+					"typeName": "0x56714d6578dafaaec566c1483ac0fc5fb206b506455a8d59b043d67d243243eb::version::Version",
+					"definingId": "0x56714d6578dafaaec566c1483ac0fc5fb206b506455a8d59b043d67d243243eb",
+					"module": "version",
+					"name": "Version",
+					"kind": 1
+				}
+			],
+			"functions": [
+				{
+					"typeParameters": [],
+					"parameters": [
+						{
+							"reference": 1,
+							"body": {
+								"typeParameterInstantiation": [],
+								"type": 10,
+								"typeName": "0x0000000000000000000000000000000000000000000000000000000000000002::package::Publisher"
+							}
+						},
+						{
+							"reference": 2,
+							"body": {
+								"typeParameterInstantiation": [],
+								"type": 10,
+								"typeName": "0x56714d6578dafaaec566c1483ac0fc5fb206b506455a8d59b043d67d243243eb::version::Version"
+							}
+						}
+					],
+					"returns": [],
+					"name": "add",
+					"visibility": 2,
+					"isEntry": true
 				},
-				"typeParameters": [],
-				"fields": [
-					{
-						"name": "id",
-						"type": {
-							"Struct": {
-								"address": "0x2",
-								"module": "object",
-								"name": "UID",
-								"typeArguments": []
+				{
+					"typeParameters": [],
+					"parameters": [
+						{
+							"reference": 1,
+							"body": {
+								"typeParameterInstantiation": [],
+								"type": 10,
+								"typeName": "0x0000000000000000000000000000000000000000000000000000000000000002::package::Publisher"
+							}
+						},
+						{
+							"reference": 2,
+							"body": {
+								"typeParameterInstantiation": [],
+								"type": 10,
+								"typeName": "0x56714d6578dafaaec566c1483ac0fc5fb206b506455a8d59b043d67d243243eb::version::Version"
 							}
 						}
-					},
-					{
-						"name": "versions",
-						"type": {
-							"Struct": {
-								"address": "0x2",
-								"module": "table",
-								"name": "Table",
-								"typeArguments": [
-									"Address",
-									"U64"
-								]
+					],
+					"returns": [
+						{
+							"reference": 2,
+							"body": {
+								"typeParameterInstantiation": [],
+								"type": 6
 							}
 						}
-					}
-				]
-			}
-		},
-		"exposedFunctions": {
-			"add": {
-				"visibility": "Public",
-				"isEntry": true,
-				"typeParameters": [],
-				"parameters": [
-					{
-						"Reference": {
-							"Struct": {
-								"address": "0x2",
-								"module": "package",
-								"name": "Publisher",
-								"typeArguments": []
+					],
+					"name": "borrow_mut",
+					"visibility": 2,
+					"isEntry": false
+				},
+				{
+					"typeParameters": [],
+					"parameters": [
+						{
+							"reference": 1,
+							"body": {
+								"typeParameterInstantiation": [],
+								"type": 10,
+								"typeName": "0x56714d6578dafaaec566c1483ac0fc5fb206b506455a8d59b043d67d243243eb::version::Version"
+							}
+						},
+						{
+							"body": {
+								"typeParameterInstantiation": [],
+								"type": 1
 							}
 						}
-					},
-					{
-						"MutableReference": {
-							"Struct": {
-								"address": "0x56714d6578dafaaec566c1483ac0fc5fb206b506455a8d59b043d67d243243eb",
-								"module": "version",
-								"name": "Version",
-								"typeArguments": []
+					],
+					"returns": [
+						{
+							"body": {
+								"typeParameterInstantiation": [],
+								"type": 2
 							}
 						}
-					}
-				],
-				"return": []
-			},
-			"borrow_mut": {
-				"visibility": "Public",
-				"isEntry": false,
-				"typeParameters": [],
-				"parameters": [
-					{
-						"Reference": {
-							"Struct": {
-								"address": "0x2",
-								"module": "package",
-								"name": "Publisher",
-								"typeArguments": []
+					],
+					"name": "contains",
+					"visibility": 2,
+					"isEntry": false
+				},
+				{
+					"typeParameters": [],
+					"parameters": [
+						{
+							"reference": 1,
+							"body": {
+								"typeParameterInstantiation": [],
+								"type": 10,
+								"typeName": "0x56714d6578dafaaec566c1483ac0fc5fb206b506455a8d59b043d67d243243eb::version::Version"
+							}
+						},
+						{
+							"body": {
+								"typeParameterInstantiation": [],
+								"type": 1
 							}
 						}
-					},
-					{
-						"MutableReference": {
-							"Struct": {
-								"address": "0x56714d6578dafaaec566c1483ac0fc5fb206b506455a8d59b043d67d243243eb",
-								"module": "version",
-								"name": "Version",
-								"typeArguments": []
+					],
+					"returns": [
+						{
+							"body": {
+								"typeParameterInstantiation": [],
+								"type": 6
 							}
 						}
-					}
-				],
-				"return": [
-					{
-						"MutableReference": "U64"
-					}
-				]
-			},
-			"contains": {
-				"visibility": "Public",
-				"isEntry": false,
-				"typeParameters": [],
-				"parameters": [
-					{
-						"Reference": {
-							"Struct": {
-								"address": "0x56714d6578dafaaec566c1483ac0fc5fb206b506455a8d59b043d67d243243eb",
-								"module": "version",
-								"name": "Version",
-								"typeArguments": []
+					],
+					"name": "get",
+					"visibility": 2,
+					"isEntry": false
+				},
+				{
+					"typeParameters": [
+						{
+							"constraints": []
+						}
+					],
+					"parameters": [
+						{
+							"reference": 1,
+							"body": {
+								"typeParameterInstantiation": [],
+								"type": 10,
+								"typeName": "0x56714d6578dafaaec566c1483ac0fc5fb206b506455a8d59b043d67d243243eb::version::Version"
 							}
 						}
-					},
-					"Address"
-				],
-				"return": [
-					"Bool"
-				]
-			},
-			"get": {
-				"visibility": "Public",
-				"isEntry": false,
-				"typeParameters": [],
-				"parameters": [
-					{
-						"Reference": {
-							"Struct": {
-								"address": "0x56714d6578dafaaec566c1483ac0fc5fb206b506455a8d59b043d67d243243eb",
-								"module": "version",
-								"name": "Version",
-								"typeArguments": []
+					],
+					"returns": [
+						{
+							"body": {
+								"typeParameterInstantiation": [],
+								"type": 6
 							}
 						}
-					},
-					"Address"
-				],
-				"return": [
-					"U64"
-				]
-			},
-			"get_by_T": {
-				"visibility": "Public",
-				"isEntry": false,
-				"typeParameters": [
-					{
-						"abilities": []
-					}
-				],
-				"parameters": [
-					{
-						"Reference": {
-							"Struct": {
-								"address": "0x56714d6578dafaaec566c1483ac0fc5fb206b506455a8d59b043d67d243243eb",
-								"module": "version",
-								"name": "Version",
-								"typeArguments": []
+					],
+					"name": "get_by_T",
+					"visibility": 2,
+					"isEntry": false
+				},
+				{
+					"typeParameters": [],
+					"parameters": [
+						{
+							"body": {
+								"typeParameterInstantiation": [],
+								"type": 10,
+								"typeName": "0x56714d6578dafaaec566c1483ac0fc5fb206b506455a8d59b043d67d243243eb::version::VERSION"
+							}
+						},
+						{
+							"reference": 2,
+							"body": {
+								"typeParameterInstantiation": [],
+								"type": 10,
+								"typeName": "0x0000000000000000000000000000000000000000000000000000000000000002::tx_context::TxContext"
 							}
 						}
-					}
-				],
-				"return": [
-					"U64"
-				]
-			},
-			"set": {
-				"visibility": "Public",
-				"isEntry": true,
-				"typeParameters": [],
-				"parameters": [
-					{
-						"Reference": {
-							"Struct": {
-								"address": "0x2",
-								"module": "package",
-								"name": "Publisher",
-								"typeArguments": []
+					],
+					"returns": [],
+					"name": "init",
+					"visibility": 1,
+					"isEntry": false
+				},
+				{
+					"typeParameters": [],
+					"parameters": [
+						{
+							"reference": 1,
+							"body": {
+								"typeParameterInstantiation": [],
+								"type": 10,
+								"typeName": "0x0000000000000000000000000000000000000000000000000000000000000002::package::Publisher"
+							}
+						},
+						{
+							"reference": 2,
+							"body": {
+								"typeParameterInstantiation": [],
+								"type": 10,
+								"typeName": "0x56714d6578dafaaec566c1483ac0fc5fb206b506455a8d59b043d67d243243eb::version::Version"
+							}
+						},
+						{
+							"body": {
+								"typeParameterInstantiation": [],
+								"type": 6
 							}
 						}
-					},
-					{
-						"MutableReference": {
-							"Struct": {
-								"address": "0x56714d6578dafaaec566c1483ac0fc5fb206b506455a8d59b043d67d243243eb",
-								"module": "version",
-								"name": "Version",
-								"typeArguments": []
-							}
-						}
-					},
-					"U64"
-				],
-				"return": []
-			}
+					],
+					"returns": [],
+					"name": "set",
+					"visibility": 2,
+					"isEntry": true
+				}
+			],
+			"name": "version"
 		}
 	}
 ]

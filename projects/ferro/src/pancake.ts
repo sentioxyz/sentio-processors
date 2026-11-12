@@ -57,7 +57,7 @@ const TokenExchangeHandler = async (event: TokenExchangeEvent, ctx: PancakePoolC
 }
 
 // PancakeFactoryProcessor.bind({
-//   network: EthChainId.BINANCE,
+//   network: EthChainId.BSC,
 //   address: "0x36bBb126e75351C0DfB651e39b38fe0BC436FFD2"
 // })
 //   .onEventNewStableSwapPair(async (event: NewStableSwapPairEvent, ctx: PancakeFactoryContext) => {
@@ -83,7 +83,7 @@ const TokenExchangeHandler = async (event: TokenExchangeEvent, ctx: PancakePoolC
 
 for (let address in constant.PoolInfoMap) {
   PancakePoolProcessor.bind({
-    network: EthChainId.BINANCE,
+    network: EthChainId.BSC,
     address: address,
     // startBlock: 28343440
   })

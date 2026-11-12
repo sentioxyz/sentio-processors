@@ -2,7 +2,7 @@ import { lending } from "./types/aptos/0xc6bc659f1649553c1a3fa05d9727433dc03843b
 
 lending.bind()
     .onEventBorrowEvent(async (event, ctx) => {
-        const market = event.data_decoded.market_obj.inner
+        const market = event.data_decoded.market_obj
 
         ctx.eventLogger.emit("Borrow", {
             market,
@@ -12,7 +12,7 @@ lending.bind()
         ctx.meter.Counter("borrowCounter").add(1, { market })
     })
     .onEventCreateMarketEvent(async (event, ctx) => {
-        const market = event.data_decoded.market_obj.inner
+        const market = event.data_decoded.market_obj
 
         ctx.eventLogger.emit("CreateMarket", {
             market,

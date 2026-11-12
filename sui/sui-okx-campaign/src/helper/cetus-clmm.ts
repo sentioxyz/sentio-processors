@@ -1,4 +1,3 @@
-// @ts-nocheck
 import { SuiObjectProcessor, SuiContext, SuiObjectContext } from "@sentio/sdk/sui"
 import { getPriceByType, token } from "@sentio/sdk/utils"
 import { SuiNetwork } from "@sentio/sdk/sui"
@@ -50,10 +49,12 @@ let coinInfoMap = new Map<string, Promise<token.TokenInfo>>()
 export async function buildCoinInfo(ctx: SuiContext | SuiObjectContext, coinAddress: string): Promise<token.TokenInfo> {
     let [symbol, name, decimal] = ["unk", "unk", 0]
     try {
-        const metadata = await ctx.client.getCoinMetadata({ coinType: coinAddress })
-        symbol = metadata.symbol
-        decimal = metadata.decimals
-        name = metadata.name
+        const metadata = (await ctx.client.getCoinMetadata({ coinType: coinAddress })).coinMetadata
+        if (metadata) {
+            symbol = metadata.symbol
+            decimal = metadata.decimals
+            name = metadata.name
+        }
         console.log(`build coin metadata ${symbol} ${decimal} ${name}`)
     }
     catch (e) {
@@ -88,10 +89,11 @@ export const getOrCreateCoin = async function (ctx: SuiContext | SuiObjectContex
 export async function buildPoolInfo(ctx: SuiContext | SuiObjectContext, pool: string): Promise<poolInfo> {
     let [symbol_a, symbol_b, decimal_a, decimal_b, pairName, type, fee_label] = ["", "", 0, 0, "", "", "", "NaN"]
     try {
-        const obj = await ctx.client.getObject({ id: pool, options: { showType: true, showContent: true } })
-        type = obj.data.type
-        if (obj.data.content.fields.fee_rate) {
-            fee_label = (Number(obj.data.content.fields.fee_rate) / 10000).toFixed(2) + "%"
+        const obj = (await ctx.client.getObject({ objectId: pool, include: { json: true } })).object
+        type = obj.type
+        const f = obj.json as any
+        if (f?.fee_rate) {
+            fee_label = (Number(f.fee_rate) / 10000).toFixed(2) + "%"
         }
         else {
             console.log(`no fee label ${pool}`)
@@ -142,8 +144,8 @@ export const getOrCreatePool = async function (ctx: SuiContext | SuiObjectContex
 export async function buildIDOPoolInfo(ctx: SuiContext | SuiObjectContext, pool: string): Promise<poolInfo> {
     let [symbol_a, symbol_b, decimal_a, decimal_b, pairName, type] = ["", "", 0, 0, "", "", ""]
     try {
-        const obj = await ctx.client.getObject({ id: pool, options: { showType: true, showContent: true } })
-        type = obj.data.type
+        const obj = (await ctx.client.getObject({ objectId: pool, include: { json: true } })).object
+        type = obj.type
 
         let [coin_a_full_address, coin_b_full_address] = ["", ""]
         if (type) {
@@ -190,8 +192,8 @@ export const getOrCreatIDOPool = async function (ctx: SuiContext | SuiObjectCont
 
 
 export async function getPoolPrice(ctx: SuiContext | SuiObjectContext, pool: string) {
-    const obj = await ctx.client.getObject({ id: pool, options: { showType: true, showContent: true } })
-    const current_sqrt_price = Number(obj.data.content.fields.current_sqrt_price)
+    const obj = (await ctx.client.getObject({ objectId: pool, include: { json: true } })).object
+    const current_sqrt_price = Number((obj.json as any).current_sqrt_price)
     if (!current_sqrt_price) { console.log(`get pool price error at ${ctx}`) }
     const poolInfo = await getOrCreatePool(ctx, pool)
     const pairName = poolInfo.pairName

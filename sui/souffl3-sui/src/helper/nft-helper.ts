@@ -1,4 +1,3 @@
-// @ts-nocheck
 import { SuiContext } from "@sentio/sdk/sui"
 
 export function getCollectionName(type: string) {
@@ -12,10 +11,10 @@ export function getCollectionName(type: string) {
 export async function getNftName(ctx: SuiContext, nft: string) {
     let NFTName = "unk"
     try {
-        const obj = await ctx.client.getObject({ id: nft, options: { showContent: true } })
-        NFTName = obj.data.content.fields.name
+        const obj = await ctx.client.getObject({ objectId: nft, include: { json: true } })
+        NFTName = (obj.object.json as any)?.name
     }
-    catch (e) { console.log(`${e.message}, getNftName error at ${ctx.transaction.digest}`) }
+    catch (e: any) { console.log(`${e.message}, getNftName error at ${ctx.transaction.digest}`) }
     return NFTName
 }
 
@@ -23,12 +22,12 @@ export async function getNftName(ctx: SuiContext, nft: string) {
 export async function getNftAndCollectionName(ctx: SuiContext, nft: string) {
     let [NFTName, collectionName] = ["unk", "unk"]
     try {
-        const obj = await ctx.client.getObject({ id: nft, options: { showType: true, showContent: true } })
-        NFTName = obj.data.content.fields.name
-        const type = obj.data.type
+        const obj = await ctx.client.getObject({ objectId: nft, include: { json: true } })
+        NFTName = (obj.object.json as any)?.name
+        const type = obj.object.type
         console.log(NFTName, " ", type)
         collectionName = getCollectionName(type).slice(0, -1)
     }
-    catch (e) { console.log(`${e.message}, getNftName error at ${ctx.transaction.digest}`) }
+    catch (e: any) { console.log(`${e.message}, getNftName error at ${ctx.transaction.digest}`) }
     return [NFTName, collectionName]
 }

@@ -1,1938 +1,2163 @@
 [
 	{
-		"fileFormatVersion": 6,
 		"address": "0xf145ee6d09aae034924f80672bc76db2415dfd1b1bed863ac289af9d94e2c4fc",
-		"name": "bucket_oracle",
-		"friends": [],
-		"structs": {
-			"AdminCap": {
-				"abilities": {
+		"module": {
+			"datatypes": [
+				{
 					"abilities": [
-						"Key"
-					]
-				},
-				"typeParameters": [],
-				"fields": [
-					{
-						"name": "id",
-						"type": {
-							"Struct": {
-								"address": "0x2",
-								"module": "object",
-								"name": "UID",
-								"typeArguments": []
+						4
+					],
+					"typeParameters": [],
+					"fields": [
+						{
+							"name": "id",
+							"position": 0,
+							"type": {
+								"typeParameterInstantiation": [],
+								"type": 10,
+								"typeName": "0x0000000000000000000000000000000000000000000000000000000000000002::object::UID"
 							}
 						}
-					}
-				]
-			},
-			"BucketOracle": {
-				"abilities": {
-					"abilities": [
-						"Key"
-					]
+					],
+					"variants": [],
+					"typeName": "0xf145ee6d09aae034924f80672bc76db2415dfd1b1bed863ac289af9d94e2c4fc::bucket_oracle::AdminCap",
+					"definingId": "0xf145ee6d09aae034924f80672bc76db2415dfd1b1bed863ac289af9d94e2c4fc",
+					"module": "bucket_oracle",
+					"name": "AdminCap",
+					"kind": 1
 				},
-				"typeParameters": [],
-				"fields": [
-					{
-						"name": "id",
-						"type": {
-							"Struct": {
-								"address": "0x2",
-								"module": "object",
-								"name": "UID",
-								"typeArguments": []
+				{
+					"abilities": [
+						4
+					],
+					"typeParameters": [],
+					"fields": [
+						{
+							"name": "id",
+							"position": 0,
+							"type": {
+								"typeParameterInstantiation": [],
+								"type": 10,
+								"typeName": "0x0000000000000000000000000000000000000000000000000000000000000002::object::UID"
 							}
-						}
-					},
-					{
-						"name": "version",
-						"type": "U64"
-					}
-				]
-			},
-			"PriceType": {
-				"abilities": {
-					"abilities": [
-						"Copy",
-						"Drop",
-						"Store"
-					]
-				},
-				"typeParameters": [
-					{
-						"constraints": {
-							"abilities": []
 						},
-						"isPhantom": true
-					}
-				],
-				"fields": [
-					{
-						"name": "dummy_field",
-						"type": "Bool"
-					}
-				]
-			}
-		},
-		"exposedFunctions": {
-			"borrow_single_oracle": {
-				"visibility": "Public",
-				"isEntry": false,
-				"typeParameters": [
-					{
-						"abilities": []
-					}
-				],
-				"parameters": [
-					{
-						"Reference": {
-							"Struct": {
-								"address": "0xf145ee6d09aae034924f80672bc76db2415dfd1b1bed863ac289af9d94e2c4fc",
-								"module": "bucket_oracle",
-								"name": "BucketOracle",
-								"typeArguments": []
+						{
+							"name": "version",
+							"position": 1,
+							"type": {
+								"typeParameterInstantiation": [],
+								"type": 6
 							}
 						}
-					}
-				],
-				"return": [
-					{
-						"Reference": {
-							"Struct": {
-								"address": "0xf145ee6d09aae034924f80672bc76db2415dfd1b1bed863ac289af9d94e2c4fc",
-								"module": "single_oracle",
-								"name": "SingleOracle",
-								"typeArguments": [
-									{
-										"TypeParameter": 0
-									}
-								]
-							}
-						}
-					}
-				]
-			},
-			"borrow_single_oracle_mut": {
-				"visibility": "Public",
-				"isEntry": false,
-				"typeParameters": [
-					{
-						"abilities": []
-					}
-				],
-				"parameters": [
-					{
-						"MutableReference": {
-							"Struct": {
-								"address": "0xf145ee6d09aae034924f80672bc76db2415dfd1b1bed863ac289af9d94e2c4fc",
-								"module": "bucket_oracle",
-								"name": "BucketOracle",
-								"typeArguments": []
-							}
-						}
-					}
-				],
-				"return": [
-					{
-						"MutableReference": {
-							"Struct": {
-								"address": "0xf145ee6d09aae034924f80672bc76db2415dfd1b1bed863ac289af9d94e2c4fc",
-								"module": "single_oracle",
-								"name": "SingleOracle",
-								"typeArguments": [
-									{
-										"TypeParameter": 0
-									}
-								]
-							}
-						}
-					}
-				]
-			},
-			"create_single_oracle": {
-				"visibility": "Public",
-				"isEntry": true,
-				"typeParameters": [
-					{
-						"abilities": []
-					}
-				],
-				"parameters": [
-					{
-						"Reference": {
-							"Struct": {
-								"address": "0xf145ee6d09aae034924f80672bc76db2415dfd1b1bed863ac289af9d94e2c4fc",
-								"module": "bucket_oracle",
-								"name": "AdminCap",
-								"typeArguments": []
-							}
-						}
-					},
-					{
-						"MutableReference": {
-							"Struct": {
-								"address": "0xf145ee6d09aae034924f80672bc76db2415dfd1b1bed863ac289af9d94e2c4fc",
-								"module": "bucket_oracle",
-								"name": "BucketOracle",
-								"typeArguments": []
-							}
-						}
-					},
-					"U8",
-					"U64",
-					"U64",
-					{
-						"Struct": {
-							"address": "0x1",
-							"module": "option",
-							"name": "Option",
-							"typeArguments": [
-								"Address"
-							]
-						}
-					},
-					{
-						"Struct": {
-							"address": "0x1",
-							"module": "option",
-							"name": "Option",
-							"typeArguments": [
-								"Address"
-							]
-						}
-					},
-					{
-						"Struct": {
-							"address": "0x1",
-							"module": "option",
-							"name": "Option",
-							"typeArguments": [
-								"U32"
-							]
-						}
-					},
-					{
-						"MutableReference": {
-							"Struct": {
-								"address": "0x2",
-								"module": "tx_context",
-								"name": "TxContext",
-								"typeArguments": []
-							}
-						}
-					}
-				],
-				"return": []
-			},
-			"get_price": {
-				"visibility": "Public",
-				"isEntry": false,
-				"typeParameters": [
-					{
-						"abilities": []
-					}
-				],
-				"parameters": [
-					{
-						"Reference": {
-							"Struct": {
-								"address": "0xf145ee6d09aae034924f80672bc76db2415dfd1b1bed863ac289af9d94e2c4fc",
-								"module": "bucket_oracle",
-								"name": "BucketOracle",
-								"typeArguments": []
-							}
-						}
-					},
-					{
-						"Reference": {
-							"Struct": {
-								"address": "0x2",
-								"module": "clock",
-								"name": "Clock",
-								"typeArguments": []
-							}
-						}
-					}
-				],
-				"return": [
-					"U64",
-					"U64"
-				]
-			},
-			"update_package_version": {
-				"visibility": "Public",
-				"isEntry": true,
-				"typeParameters": [
-					{
-						"abilities": []
-					}
-				],
-				"parameters": [
-					{
-						"Reference": {
-							"Struct": {
-								"address": "0xf145ee6d09aae034924f80672bc76db2415dfd1b1bed863ac289af9d94e2c4fc",
-								"module": "bucket_oracle",
-								"name": "AdminCap",
-								"typeArguments": []
-							}
-						}
-					},
-					{
-						"MutableReference": {
-							"Struct": {
-								"address": "0xf145ee6d09aae034924f80672bc76db2415dfd1b1bed863ac289af9d94e2c4fc",
-								"module": "bucket_oracle",
-								"name": "BucketOracle",
-								"typeArguments": []
-							}
-						}
-					},
-					"U64"
-				],
-				"return": []
-			},
-			"update_price_from_pyth": {
-				"visibility": "Public",
-				"isEntry": true,
-				"typeParameters": [
-					{
-						"abilities": []
-					}
-				],
-				"parameters": [
-					{
-						"MutableReference": {
-							"Struct": {
-								"address": "0xf145ee6d09aae034924f80672bc76db2415dfd1b1bed863ac289af9d94e2c4fc",
-								"module": "bucket_oracle",
-								"name": "BucketOracle",
-								"typeArguments": []
-							}
-						}
-					},
-					{
-						"Reference": {
-							"Struct": {
-								"address": "0x2",
-								"module": "clock",
-								"name": "Clock",
-								"typeArguments": []
-							}
-						}
-					},
-					{
-						"Reference": {
-							"Struct": {
-								"address": "0x5306f64e312b581766351c07af79c72fcb1cd25147157fdc2f8ad76de9a3fb6a",
-								"module": "state",
-								"name": "State",
-								"typeArguments": []
-							}
-						}
-					},
-					{
-						"Reference": {
-							"Struct": {
-								"address": "0xb53b0f4174108627fbee72e2498b58d6a2714cded53fac537034c220d26302",
-								"module": "state",
-								"name": "State",
-								"typeArguments": []
-							}
-						}
-					},
-					{
-						"MutableReference": {
-							"Struct": {
-								"address": "0xb53b0f4174108627fbee72e2498b58d6a2714cded53fac537034c220d26302",
-								"module": "price_info",
-								"name": "PriceInfoObject",
-								"typeArguments": []
-							}
-						}
-					},
-					{
-						"Vector": "U8"
-					},
-					{
-						"Struct": {
-							"address": "0x2",
-							"module": "coin",
-							"name": "Coin",
-							"typeArguments": [
-								{
-									"Struct": {
-										"address": "0x2",
-										"module": "sui",
-										"name": "SUI",
-										"typeArguments": []
-									}
-								}
-							]
-						}
-					}
-				],
-				"return": []
-			},
-			"update_price_from_pyth_read_only": {
-				"visibility": "Public",
-				"isEntry": true,
-				"typeParameters": [
-					{
-						"abilities": []
-					}
-				],
-				"parameters": [
-					{
-						"MutableReference": {
-							"Struct": {
-								"address": "0xf145ee6d09aae034924f80672bc76db2415dfd1b1bed863ac289af9d94e2c4fc",
-								"module": "bucket_oracle",
-								"name": "BucketOracle",
-								"typeArguments": []
-							}
-						}
-					},
-					{
-						"Reference": {
-							"Struct": {
-								"address": "0x2",
-								"module": "clock",
-								"name": "Clock",
-								"typeArguments": []
-							}
-						}
-					},
-					{
-						"Reference": {
-							"Struct": {
-								"address": "0xb53b0f4174108627fbee72e2498b58d6a2714cded53fac537034c220d26302",
-								"module": "state",
-								"name": "State",
-								"typeArguments": []
-							}
-						}
-					},
-					{
-						"MutableReference": {
-							"Struct": {
-								"address": "0xb53b0f4174108627fbee72e2498b58d6a2714cded53fac537034c220d26302",
-								"module": "price_info",
-								"name": "PriceInfoObject",
-								"typeArguments": []
-							}
-						}
-					}
-				],
-				"return": []
-			},
-			"update_price_from_switchboard": {
-				"visibility": "Public",
-				"isEntry": true,
-				"typeParameters": [
-					{
-						"abilities": []
-					}
-				],
-				"parameters": [
-					{
-						"MutableReference": {
-							"Struct": {
-								"address": "0xf145ee6d09aae034924f80672bc76db2415dfd1b1bed863ac289af9d94e2c4fc",
-								"module": "bucket_oracle",
-								"name": "BucketOracle",
-								"typeArguments": []
-							}
-						}
-					},
-					{
-						"Reference": {
-							"Struct": {
-								"address": "0x2",
-								"module": "clock",
-								"name": "Clock",
-								"typeArguments": []
-							}
-						}
-					},
-					{
-						"Reference": {
-							"Struct": {
-								"address": "0x8d79f4d920b03d88faca1e421af023a87fbb1e4a6fd200248e6e9998d09e470",
-								"module": "aggregator",
-								"name": "Aggregator",
-								"typeArguments": []
-							}
-						}
-					}
-				],
-				"return": []
-			},
-			"update_pyth_config": {
-				"visibility": "Public",
-				"isEntry": true,
-				"typeParameters": [
-					{
-						"abilities": []
-					}
-				],
-				"parameters": [
-					{
-						"Reference": {
-							"Struct": {
-								"address": "0xf145ee6d09aae034924f80672bc76db2415dfd1b1bed863ac289af9d94e2c4fc",
-								"module": "bucket_oracle",
-								"name": "AdminCap",
-								"typeArguments": []
-							}
-						}
-					},
-					{
-						"MutableReference": {
-							"Struct": {
-								"address": "0xf145ee6d09aae034924f80672bc76db2415dfd1b1bed863ac289af9d94e2c4fc",
-								"module": "bucket_oracle",
-								"name": "BucketOracle",
-								"typeArguments": []
-							}
-						}
-					},
-					{
-						"Struct": {
-							"address": "0x1",
-							"module": "option",
-							"name": "Option",
-							"typeArguments": [
-								"Address"
-							]
-						}
-					}
-				],
-				"return": []
-			},
-			"update_supra_config": {
-				"visibility": "Public",
-				"isEntry": true,
-				"typeParameters": [
-					{
-						"abilities": []
-					}
-				],
-				"parameters": [
-					{
-						"Reference": {
-							"Struct": {
-								"address": "0xf145ee6d09aae034924f80672bc76db2415dfd1b1bed863ac289af9d94e2c4fc",
-								"module": "bucket_oracle",
-								"name": "AdminCap",
-								"typeArguments": []
-							}
-						}
-					},
-					{
-						"MutableReference": {
-							"Struct": {
-								"address": "0xf145ee6d09aae034924f80672bc76db2415dfd1b1bed863ac289af9d94e2c4fc",
-								"module": "bucket_oracle",
-								"name": "BucketOracle",
-								"typeArguments": []
-							}
-						}
-					},
-					{
-						"Struct": {
-							"address": "0x1",
-							"module": "option",
-							"name": "Option",
-							"typeArguments": [
-								"U32"
-							]
-						}
-					}
-				],
-				"return": []
-			},
-			"update_switchboard_config": {
-				"visibility": "Public",
-				"isEntry": true,
-				"typeParameters": [
-					{
-						"abilities": []
-					}
-				],
-				"parameters": [
-					{
-						"Reference": {
-							"Struct": {
-								"address": "0xf145ee6d09aae034924f80672bc76db2415dfd1b1bed863ac289af9d94e2c4fc",
-								"module": "bucket_oracle",
-								"name": "AdminCap",
-								"typeArguments": []
-							}
-						}
-					},
-					{
-						"MutableReference": {
-							"Struct": {
-								"address": "0xf145ee6d09aae034924f80672bc76db2415dfd1b1bed863ac289af9d94e2c4fc",
-								"module": "bucket_oracle",
-								"name": "BucketOracle",
-								"typeArguments": []
-							}
-						}
-					},
-					{
-						"Struct": {
-							"address": "0x1",
-							"module": "option",
-							"name": "Option",
-							"typeArguments": [
-								"Address"
-							]
-						}
-					}
-				],
-				"return": []
-			},
-			"update_threshold": {
-				"visibility": "Public",
-				"isEntry": true,
-				"typeParameters": [
-					{
-						"abilities": []
-					}
-				],
-				"parameters": [
-					{
-						"Reference": {
-							"Struct": {
-								"address": "0xf145ee6d09aae034924f80672bc76db2415dfd1b1bed863ac289af9d94e2c4fc",
-								"module": "bucket_oracle",
-								"name": "AdminCap",
-								"typeArguments": []
-							}
-						}
-					},
-					{
-						"MutableReference": {
-							"Struct": {
-								"address": "0xf145ee6d09aae034924f80672bc76db2415dfd1b1bed863ac289af9d94e2c4fc",
-								"module": "bucket_oracle",
-								"name": "BucketOracle",
-								"typeArguments": []
-							}
-						}
-					},
-					"U64"
-				],
-				"return": []
-			}
-		}
-	},
-	{
-		"fileFormatVersion": 6,
-		"address": "0xf145ee6d09aae034924f80672bc76db2415dfd1b1bed863ac289af9d94e2c4fc",
-		"name": "price_aggregator",
-		"friends": [
-			{
-				"address": "0xf145ee6d09aae034924f80672bc76db2415dfd1b1bed863ac289af9d94e2c4fc",
-				"name": "single_oracle"
-			}
-		],
-		"structs": {
-			"PriceInfo": {
-				"abilities": {
+					],
+					"variants": [],
+					"typeName": "0xf145ee6d09aae034924f80672bc76db2415dfd1b1bed863ac289af9d94e2c4fc::bucket_oracle::BucketOracle",
+					"definingId": "0xf145ee6d09aae034924f80672bc76db2415dfd1b1bed863ac289af9d94e2c4fc",
+					"module": "bucket_oracle",
+					"name": "BucketOracle",
+					"kind": 1
+				},
+				{
 					"abilities": [
-						"Copy",
-						"Drop"
-					]
-				},
-				"typeParameters": [],
-				"fields": [
-					{
-						"name": "price",
-						"type": "U64"
-					},
-					{
-						"name": "timestamp",
-						"type": "U64"
-					}
-				]
-			},
-			"PriceVector": {
-				"abilities": {
-					"abilities": [
-						"Copy",
-						"Drop"
-					]
-				},
-				"typeParameters": [],
-				"fields": [
-					{
-						"name": "vec",
-						"type": {
-							"Vector": "U64"
+						1,
+						2,
+						3
+					],
+					"typeParameters": [
+						{
+							"constraints": [],
+							"isPhantom": true
 						}
-					}
-				]
-			}
-		},
-		"exposedFunctions": {
-			"aggregate_price": {
-				"visibility": "Friend",
-				"isEntry": false,
-				"typeParameters": [],
-				"parameters": [
-					{
-						"Reference": {
-							"Struct": {
-								"address": "0x2",
-								"module": "clock",
-								"name": "Clock",
-								"typeArguments": []
+					],
+					"fields": [
+						{
+							"name": "dummy_field",
+							"position": 0,
+							"type": {
+								"typeParameterInstantiation": [],
+								"type": 2
 							}
 						}
-					},
-					{
-						"Vector": {
-							"Struct": {
-								"address": "0xf145ee6d09aae034924f80672bc76db2415dfd1b1bed863ac289af9d94e2c4fc",
-								"module": "price_aggregator",
-								"name": "PriceInfo",
-								"typeArguments": []
+					],
+					"variants": [],
+					"typeName": "0xf145ee6d09aae034924f80672bc76db2415dfd1b1bed863ac289af9d94e2c4fc::bucket_oracle::PriceType",
+					"definingId": "0xf145ee6d09aae034924f80672bc76db2415dfd1b1bed863ac289af9d94e2c4fc",
+					"module": "bucket_oracle",
+					"name": "PriceType",
+					"kind": 1
+				}
+			],
+			"functions": [
+				{
+					"typeParameters": [
+						{
+							"constraints": []
+						}
+					],
+					"parameters": [
+						{
+							"reference": 1,
+							"body": {
+								"typeParameterInstantiation": [],
+								"type": 10,
+								"typeName": "0xf145ee6d09aae034924f80672bc76db2415dfd1b1bed863ac289af9d94e2c4fc::bucket_oracle::BucketOracle"
 							}
 						}
-					},
-					"U64",
-					"U64"
-				],
-				"return": [
-					"U64"
-				]
-			},
-			"extract": {
-				"visibility": "Public",
-				"isEntry": false,
-				"typeParameters": [],
-				"parameters": [
-					{
-						"Reference": {
-							"Struct": {
-								"address": "0xf145ee6d09aae034924f80672bc76db2415dfd1b1bed863ac289af9d94e2c4fc",
-								"module": "price_aggregator",
-								"name": "PriceInfo",
-								"typeArguments": []
-							}
-						}
-					}
-				],
-				"return": [
-					"U64",
-					"U64"
-				]
-			},
-			"new": {
-				"visibility": "Public",
-				"isEntry": false,
-				"typeParameters": [],
-				"parameters": [
-					"U64",
-					"U64"
-				],
-				"return": [
-					{
-						"Struct": {
-							"address": "0xf145ee6d09aae034924f80672bc76db2415dfd1b1bed863ac289af9d94e2c4fc",
-							"module": "price_aggregator",
-							"name": "PriceInfo",
-							"typeArguments": []
-						}
-					}
-				]
-			},
-			"push_price": {
-				"visibility": "Public",
-				"isEntry": false,
-				"typeParameters": [],
-				"parameters": [
-					{
-						"MutableReference": {
-							"Vector": {
-								"Struct": {
-									"address": "0xf145ee6d09aae034924f80672bc76db2415dfd1b1bed863ac289af9d94e2c4fc",
-									"module": "price_aggregator",
-									"name": "PriceInfo",
-									"typeArguments": []
-								}
-							}
-						}
-					},
-					{
-						"Struct": {
-							"address": "0x1",
-							"module": "option",
-							"name": "Option",
-							"typeArguments": [
-								{
-									"Struct": {
-										"address": "0xf145ee6d09aae034924f80672bc76db2415dfd1b1bed863ac289af9d94e2c4fc",
-										"module": "price_aggregator",
-										"name": "PriceInfo",
-										"typeArguments": []
-									}
-								}
-							]
-						}
-					}
-				],
-				"return": []
-			}
-		}
-	},
-	{
-		"fileFormatVersion": 6,
-		"address": "0xf145ee6d09aae034924f80672bc76db2415dfd1b1bed863ac289af9d94e2c4fc",
-		"name": "pyth_parser",
-		"friends": [],
-		"structs": {},
-		"exposedFunctions": {
-			"parse_config": {
-				"visibility": "Public",
-				"isEntry": false,
-				"typeParameters": [],
-				"parameters": [
-					{
-						"Struct": {
-							"address": "0x1",
-							"module": "option",
-							"name": "Option",
-							"typeArguments": [
-								"Address"
-							]
-						}
-					}
-				],
-				"return": [
-					{
-						"Struct": {
-							"address": "0x1",
-							"module": "option",
-							"name": "Option",
-							"typeArguments": [
-								{
-									"Struct": {
-										"address": "0x2",
-										"module": "object",
-										"name": "ID",
-										"typeArguments": []
-									}
-								}
-							]
-						}
-					}
-				]
-			},
-			"parse_price": {
-				"visibility": "Public",
-				"isEntry": false,
-				"typeParameters": [],
-				"parameters": [
-					{
-						"Reference": {
-							"Struct": {
-								"address": "0x5306f64e312b581766351c07af79c72fcb1cd25147157fdc2f8ad76de9a3fb6a",
-								"module": "state",
-								"name": "State",
-								"typeArguments": []
-							}
-						}
-					},
-					{
-						"Reference": {
-							"Struct": {
-								"address": "0xb53b0f4174108627fbee72e2498b58d6a2714cded53fac537034c220d26302",
-								"module": "state",
-								"name": "State",
-								"typeArguments": []
-							}
-						}
-					},
-					{
-						"Reference": {
-							"Struct": {
-								"address": "0x2",
-								"module": "clock",
-								"name": "Clock",
-								"typeArguments": []
-							}
-						}
-					},
-					{
-						"MutableReference": {
-							"Struct": {
-								"address": "0xb53b0f4174108627fbee72e2498b58d6a2714cded53fac537034c220d26302",
-								"module": "price_info",
-								"name": "PriceInfoObject",
-								"typeArguments": []
-							}
-						}
-					},
-					{
-						"Vector": "U8"
-					},
-					{
-						"Struct": {
-							"address": "0x2",
-							"module": "coin",
-							"name": "Coin",
-							"typeArguments": [
-								{
-									"Struct": {
-										"address": "0x2",
-										"module": "sui",
-										"name": "SUI",
-										"typeArguments": []
-									}
-								}
-							]
-						}
-					},
-					"U8"
-				],
-				"return": [
-					{
-						"Struct": {
-							"address": "0x1",
-							"module": "option",
-							"name": "Option",
-							"typeArguments": [
-								{
-									"Struct": {
-										"address": "0xf145ee6d09aae034924f80672bc76db2415dfd1b1bed863ac289af9d94e2c4fc",
-										"module": "price_aggregator",
-										"name": "PriceInfo",
-										"typeArguments": []
-									}
-								}
-							]
-						}
-					}
-				]
-			},
-			"parse_price_read_only": {
-				"visibility": "Public",
-				"isEntry": false,
-				"typeParameters": [],
-				"parameters": [
-					{
-						"Reference": {
-							"Struct": {
-								"address": "0xb53b0f4174108627fbee72e2498b58d6a2714cded53fac537034c220d26302",
-								"module": "state",
-								"name": "State",
-								"typeArguments": []
-							}
-						}
-					},
-					{
-						"Reference": {
-							"Struct": {
-								"address": "0x2",
-								"module": "clock",
-								"name": "Clock",
-								"typeArguments": []
-							}
-						}
-					},
-					{
-						"MutableReference": {
-							"Struct": {
-								"address": "0xb53b0f4174108627fbee72e2498b58d6a2714cded53fac537034c220d26302",
-								"module": "price_info",
-								"name": "PriceInfoObject",
-								"typeArguments": []
-							}
-						}
-					},
-					"U8"
-				],
-				"return": [
-					{
-						"Struct": {
-							"address": "0x1",
-							"module": "option",
-							"name": "Option",
-							"typeArguments": [
-								{
-									"Struct": {
-										"address": "0xf145ee6d09aae034924f80672bc76db2415dfd1b1bed863ac289af9d94e2c4fc",
-										"module": "price_aggregator",
-										"name": "PriceInfo",
-										"typeArguments": []
-									}
-								}
-							]
-						}
-					}
-				]
-			}
-		}
-	},
-	{
-		"fileFormatVersion": 6,
-		"address": "0xf145ee6d09aae034924f80672bc76db2415dfd1b1bed863ac289af9d94e2c4fc",
-		"name": "single_oracle",
-		"friends": [
-			{
-				"address": "0xf145ee6d09aae034924f80672bc76db2415dfd1b1bed863ac289af9d94e2c4fc",
-				"name": "bucket_oracle"
-			}
-		],
-		"structs": {
-			"ParsePriceEvent": {
-				"abilities": {
-					"abilities": [
-						"Copy",
-						"Drop"
-					]
-				},
-				"typeParameters": [],
-				"fields": [
-					{
-						"name": "coin_type",
-						"type": {
-							"Struct": {
-								"address": "0x1",
-								"module": "ascii",
-								"name": "String",
-								"typeArguments": []
-							}
-						}
-					},
-					{
-						"name": "source_id",
-						"type": "U8"
-					},
-					{
-						"name": "price_info",
-						"type": {
-							"Struct": {
-								"address": "0x1",
-								"module": "option",
-								"name": "Option",
-								"typeArguments": [
+					],
+					"returns": [
+						{
+							"reference": 1,
+							"body": {
+								"typeParameterInstantiation": [
 									{
-										"Struct": {
-											"address": "0xf145ee6d09aae034924f80672bc76db2415dfd1b1bed863ac289af9d94e2c4fc",
-											"module": "price_aggregator",
-											"name": "PriceInfo",
-											"typeArguments": []
-										}
+										"typeParameterInstantiation": [],
+										"type": 11,
+										"typeParameter": 0
 									}
-								]
+								],
+								"type": 10,
+								"typeName": "0xf145ee6d09aae034924f80672bc76db2415dfd1b1bed863ac289af9d94e2c4fc::single_oracle::SingleOracle"
 							}
 						}
-					}
-				]
-			},
-			"PriceCollector": {
-				"abilities": {
-					"abilities": []
+					],
+					"name": "borrow_single_oracle",
+					"visibility": 2,
+					"isEntry": false
 				},
-				"typeParameters": [
-					{
-						"constraints": {
-							"abilities": []
+				{
+					"typeParameters": [
+						{
+							"constraints": []
+						}
+					],
+					"parameters": [
+						{
+							"reference": 2,
+							"body": {
+								"typeParameterInstantiation": [],
+								"type": 10,
+								"typeName": "0xf145ee6d09aae034924f80672bc76db2415dfd1b1bed863ac289af9d94e2c4fc::bucket_oracle::BucketOracle"
+							}
+						}
+					],
+					"returns": [
+						{
+							"reference": 2,
+							"body": {
+								"typeParameterInstantiation": [
+									{
+										"typeParameterInstantiation": [],
+										"type": 11,
+										"typeParameter": 0
+									}
+								],
+								"type": 10,
+								"typeName": "0xf145ee6d09aae034924f80672bc76db2415dfd1b1bed863ac289af9d94e2c4fc::single_oracle::SingleOracle"
+							}
+						}
+					],
+					"name": "borrow_single_oracle_mut",
+					"visibility": 2,
+					"isEntry": false
+				},
+				{
+					"typeParameters": [
+						{
+							"constraints": []
+						}
+					],
+					"parameters": [
+						{
+							"reference": 1,
+							"body": {
+								"typeParameterInstantiation": [],
+								"type": 10,
+								"typeName": "0xf145ee6d09aae034924f80672bc76db2415dfd1b1bed863ac289af9d94e2c4fc::bucket_oracle::AdminCap"
+							}
 						},
-						"isPhantom": true
-					}
-				],
-				"fields": [
-					{
-						"name": "switchboard_result",
-						"type": {
-							"Struct": {
-								"address": "0x1",
-								"module": "option",
-								"name": "Option",
-								"typeArguments": [
-									{
-										"Struct": {
-											"address": "0xf145ee6d09aae034924f80672bc76db2415dfd1b1bed863ac289af9d94e2c4fc",
-											"module": "price_aggregator",
-											"name": "PriceInfo",
-											"typeArguments": []
-										}
-									}
-								]
+						{
+							"reference": 2,
+							"body": {
+								"typeParameterInstantiation": [],
+								"type": 10,
+								"typeName": "0xf145ee6d09aae034924f80672bc76db2415dfd1b1bed863ac289af9d94e2c4fc::bucket_oracle::BucketOracle"
 							}
-						}
-					},
-					{
-						"name": "pyth_result",
-						"type": {
-							"Struct": {
-								"address": "0x1",
-								"module": "option",
-								"name": "Option",
-								"typeArguments": [
-									{
-										"Struct": {
-											"address": "0xf145ee6d09aae034924f80672bc76db2415dfd1b1bed863ac289af9d94e2c4fc",
-											"module": "price_aggregator",
-											"name": "PriceInfo",
-											"typeArguments": []
-										}
-									}
-								]
-							}
-						}
-					},
-					{
-						"name": "supra_result",
-						"type": {
-							"Struct": {
-								"address": "0x1",
-								"module": "option",
-								"name": "Option",
-								"typeArguments": [
-									{
-										"Struct": {
-											"address": "0xf145ee6d09aae034924f80672bc76db2415dfd1b1bed863ac289af9d94e2c4fc",
-											"module": "price_aggregator",
-											"name": "PriceInfo",
-											"typeArguments": []
-										}
-									}
-								]
-							}
-						}
-					}
-				]
-			},
-			"SingleOracle": {
-				"abilities": {
-					"abilities": [
-						"Store",
-						"Key"
-					]
-				},
-				"typeParameters": [
-					{
-						"constraints": {
-							"abilities": []
 						},
-						"isPhantom": true
-					}
-				],
-				"fields": [
-					{
-						"name": "id",
-						"type": {
-							"Struct": {
-								"address": "0x2",
-								"module": "object",
-								"name": "UID",
-								"typeArguments": []
+						{
+							"body": {
+								"typeParameterInstantiation": [],
+								"type": 3
 							}
-						}
-					},
-					{
-						"name": "price",
-						"type": "U64"
-					},
-					{
-						"name": "precision_decimal",
-						"type": "U8"
-					},
-					{
-						"name": "precision",
-						"type": "U64"
-					},
-					{
-						"name": "tolerance_ms",
-						"type": "U64"
-					},
-					{
-						"name": "threshold",
-						"type": "U64"
-					},
-					{
-						"name": "latest_update_ms",
-						"type": "U64"
-					},
-					{
-						"name": "switchboard_config",
-						"type": {
-							"Struct": {
-								"address": "0x1",
-								"module": "option",
-								"name": "Option",
-								"typeArguments": [
+						},
+						{
+							"body": {
+								"typeParameterInstantiation": [],
+								"type": 6
+							}
+						},
+						{
+							"body": {
+								"typeParameterInstantiation": [],
+								"type": 6
+							}
+						},
+						{
+							"body": {
+								"typeParameterInstantiation": [
 									{
-										"Struct": {
-											"address": "0x2",
-											"module": "object",
-											"name": "ID",
-											"typeArguments": []
-										}
+										"typeParameterInstantiation": [],
+										"type": 1
 									}
-								]
+								],
+								"type": 10,
+								"typeName": "0x0000000000000000000000000000000000000000000000000000000000000001::option::Option"
 							}
-						}
-					},
-					{
-						"name": "pyth_config",
-						"type": {
-							"Struct": {
-								"address": "0x1",
-								"module": "option",
-								"name": "Option",
-								"typeArguments": [
+						},
+						{
+							"body": {
+								"typeParameterInstantiation": [
 									{
-										"Struct": {
-											"address": "0x2",
-											"module": "object",
-											"name": "ID",
-											"typeArguments": []
-										}
+										"typeParameterInstantiation": [],
+										"type": 1
 									}
-								]
+								],
+								"type": 10,
+								"typeName": "0x0000000000000000000000000000000000000000000000000000000000000001::option::Option"
 							}
-						}
-					},
-					{
-						"name": "supra_config",
-						"type": {
-							"Struct": {
-								"address": "0x1",
-								"module": "option",
-								"name": "Option",
-								"typeArguments": [
-									"U32"
-								]
-							}
-						}
-					}
-				]
-			}
-		},
-		"exposedFunctions": {
-			"collect_price_from_pyth": {
-				"visibility": "Public",
-				"isEntry": false,
-				"typeParameters": [
-					{
-						"abilities": []
-					}
-				],
-				"parameters": [
-					{
-						"Reference": {
-							"Struct": {
-								"address": "0xf145ee6d09aae034924f80672bc76db2415dfd1b1bed863ac289af9d94e2c4fc",
-								"module": "single_oracle",
-								"name": "SingleOracle",
-								"typeArguments": [
+						},
+						{
+							"body": {
+								"typeParameterInstantiation": [
 									{
-										"TypeParameter": 0
+										"typeParameterInstantiation": [],
+										"type": 5
 									}
-								]
+								],
+								"type": 10,
+								"typeName": "0x0000000000000000000000000000000000000000000000000000000000000001::option::Option"
+							}
+						},
+						{
+							"reference": 2,
+							"body": {
+								"typeParameterInstantiation": [],
+								"type": 10,
+								"typeName": "0x0000000000000000000000000000000000000000000000000000000000000002::tx_context::TxContext"
 							}
 						}
-					},
-					{
-						"MutableReference": {
-							"Struct": {
-								"address": "0xf145ee6d09aae034924f80672bc76db2415dfd1b1bed863ac289af9d94e2c4fc",
-								"module": "single_oracle",
-								"name": "PriceCollector",
-								"typeArguments": [
+					],
+					"returns": [],
+					"name": "create_single_oracle",
+					"visibility": 2,
+					"isEntry": true
+				},
+				{
+					"typeParameters": [
+						{
+							"constraints": []
+						}
+					],
+					"parameters": [
+						{
+							"reference": 1,
+							"body": {
+								"typeParameterInstantiation": [],
+								"type": 10,
+								"typeName": "0xf145ee6d09aae034924f80672bc76db2415dfd1b1bed863ac289af9d94e2c4fc::bucket_oracle::BucketOracle"
+							}
+						},
+						{
+							"reference": 1,
+							"body": {
+								"typeParameterInstantiation": [],
+								"type": 10,
+								"typeName": "0x0000000000000000000000000000000000000000000000000000000000000002::clock::Clock"
+							}
+						}
+					],
+					"returns": [
+						{
+							"body": {
+								"typeParameterInstantiation": [],
+								"type": 6
+							}
+						},
+						{
+							"body": {
+								"typeParameterInstantiation": [],
+								"type": 6
+							}
+						}
+					],
+					"name": "get_price",
+					"visibility": 2,
+					"isEntry": false
+				},
+				{
+					"typeParameters": [],
+					"parameters": [
+						{
+							"reference": 2,
+							"body": {
+								"typeParameterInstantiation": [],
+								"type": 10,
+								"typeName": "0x0000000000000000000000000000000000000000000000000000000000000002::tx_context::TxContext"
+							}
+						}
+					],
+					"returns": [],
+					"name": "init",
+					"visibility": 1,
+					"isEntry": false
+				},
+				{
+					"typeParameters": [],
+					"parameters": [
+						{
+							"reference": 2,
+							"body": {
+								"typeParameterInstantiation": [],
+								"type": 10,
+								"typeName": "0x0000000000000000000000000000000000000000000000000000000000000002::tx_context::TxContext"
+							}
+						}
+					],
+					"returns": [
+						{
+							"body": {
+								"typeParameterInstantiation": [],
+								"type": 10,
+								"typeName": "0xf145ee6d09aae034924f80672bc76db2415dfd1b1bed863ac289af9d94e2c4fc::bucket_oracle::BucketOracle"
+							}
+						},
+						{
+							"body": {
+								"typeParameterInstantiation": [],
+								"type": 10,
+								"typeName": "0xf145ee6d09aae034924f80672bc76db2415dfd1b1bed863ac289af9d94e2c4fc::bucket_oracle::AdminCap"
+							}
+						}
+					],
+					"name": "new_oracle",
+					"visibility": 1,
+					"isEntry": false
+				},
+				{
+					"typeParameters": [
+						{
+							"constraints": []
+						}
+					],
+					"parameters": [
+						{
+							"reference": 1,
+							"body": {
+								"typeParameterInstantiation": [],
+								"type": 10,
+								"typeName": "0xf145ee6d09aae034924f80672bc76db2415dfd1b1bed863ac289af9d94e2c4fc::bucket_oracle::AdminCap"
+							}
+						},
+						{
+							"reference": 2,
+							"body": {
+								"typeParameterInstantiation": [],
+								"type": 10,
+								"typeName": "0xf145ee6d09aae034924f80672bc76db2415dfd1b1bed863ac289af9d94e2c4fc::bucket_oracle::BucketOracle"
+							}
+						},
+						{
+							"body": {
+								"typeParameterInstantiation": [],
+								"type": 6
+							}
+						}
+					],
+					"returns": [],
+					"name": "update_package_version",
+					"visibility": 2,
+					"isEntry": true
+				},
+				{
+					"typeParameters": [
+						{
+							"constraints": []
+						}
+					],
+					"parameters": [
+						{
+							"reference": 2,
+							"body": {
+								"typeParameterInstantiation": [],
+								"type": 10,
+								"typeName": "0xf145ee6d09aae034924f80672bc76db2415dfd1b1bed863ac289af9d94e2c4fc::bucket_oracle::BucketOracle"
+							}
+						},
+						{
+							"reference": 1,
+							"body": {
+								"typeParameterInstantiation": [],
+								"type": 10,
+								"typeName": "0x0000000000000000000000000000000000000000000000000000000000000002::clock::Clock"
+							}
+						},
+						{
+							"reference": 1,
+							"body": {
+								"typeParameterInstantiation": [],
+								"type": 10,
+								"typeName": "0x5306f64e312b581766351c07af79c72fcb1cd25147157fdc2f8ad76de9a3fb6a::state::State"
+							}
+						},
+						{
+							"reference": 1,
+							"body": {
+								"typeParameterInstantiation": [],
+								"type": 10,
+								"typeName": "0x00b53b0f4174108627fbee72e2498b58d6a2714cded53fac537034c220d26302::state::State"
+							}
+						},
+						{
+							"reference": 2,
+							"body": {
+								"typeParameterInstantiation": [],
+								"type": 10,
+								"typeName": "0x00b53b0f4174108627fbee72e2498b58d6a2714cded53fac537034c220d26302::price_info::PriceInfoObject"
+							}
+						},
+						{
+							"body": {
+								"typeParameterInstantiation": [
 									{
-										"TypeParameter": 0
+										"typeParameterInstantiation": [],
+										"type": 3
 									}
-								]
+								],
+								"type": 9
 							}
-						}
-					},
-					{
-						"Reference": {
-							"Struct": {
-								"address": "0x2",
-								"module": "clock",
-								"name": "Clock",
-								"typeArguments": []
-							}
-						}
-					},
-					{
-						"Reference": {
-							"Struct": {
-								"address": "0x5306f64e312b581766351c07af79c72fcb1cd25147157fdc2f8ad76de9a3fb6a",
-								"module": "state",
-								"name": "State",
-								"typeArguments": []
-							}
-						}
-					},
-					{
-						"Reference": {
-							"Struct": {
-								"address": "0xb53b0f4174108627fbee72e2498b58d6a2714cded53fac537034c220d26302",
-								"module": "state",
-								"name": "State",
-								"typeArguments": []
-							}
-						}
-					},
-					{
-						"MutableReference": {
-							"Struct": {
-								"address": "0xb53b0f4174108627fbee72e2498b58d6a2714cded53fac537034c220d26302",
-								"module": "price_info",
-								"name": "PriceInfoObject",
-								"typeArguments": []
-							}
-						}
-					},
-					{
-						"Vector": "U8"
-					},
-					{
-						"Struct": {
-							"address": "0x2",
-							"module": "coin",
-							"name": "Coin",
-							"typeArguments": [
-								{
-									"Struct": {
-										"address": "0x2",
-										"module": "sui",
-										"name": "SUI",
-										"typeArguments": []
-									}
-								}
-							]
-						}
-					}
-				],
-				"return": []
-			},
-			"collect_price_from_pyth_read_only": {
-				"visibility": "Public",
-				"isEntry": false,
-				"typeParameters": [
-					{
-						"abilities": []
-					}
-				],
-				"parameters": [
-					{
-						"Reference": {
-							"Struct": {
-								"address": "0xf145ee6d09aae034924f80672bc76db2415dfd1b1bed863ac289af9d94e2c4fc",
-								"module": "single_oracle",
-								"name": "SingleOracle",
-								"typeArguments": [
+						},
+						{
+							"body": {
+								"typeParameterInstantiation": [
 									{
-										"TypeParameter": 0
+										"typeParameterInstantiation": [],
+										"type": 10,
+										"typeName": "0x0000000000000000000000000000000000000000000000000000000000000002::sui::SUI"
 									}
-								]
+								],
+								"type": 10,
+								"typeName": "0x0000000000000000000000000000000000000000000000000000000000000002::coin::Coin"
 							}
 						}
-					},
-					{
-						"MutableReference": {
-							"Struct": {
-								"address": "0xf145ee6d09aae034924f80672bc76db2415dfd1b1bed863ac289af9d94e2c4fc",
-								"module": "single_oracle",
-								"name": "PriceCollector",
-								"typeArguments": [
+					],
+					"returns": [],
+					"name": "update_price_from_pyth",
+					"visibility": 2,
+					"isEntry": true
+				},
+				{
+					"typeParameters": [
+						{
+							"constraints": []
+						}
+					],
+					"parameters": [
+						{
+							"reference": 2,
+							"body": {
+								"typeParameterInstantiation": [],
+								"type": 10,
+								"typeName": "0xf145ee6d09aae034924f80672bc76db2415dfd1b1bed863ac289af9d94e2c4fc::bucket_oracle::BucketOracle"
+							}
+						},
+						{
+							"reference": 1,
+							"body": {
+								"typeParameterInstantiation": [],
+								"type": 10,
+								"typeName": "0x0000000000000000000000000000000000000000000000000000000000000002::clock::Clock"
+							}
+						},
+						{
+							"reference": 1,
+							"body": {
+								"typeParameterInstantiation": [],
+								"type": 10,
+								"typeName": "0x00b53b0f4174108627fbee72e2498b58d6a2714cded53fac537034c220d26302::state::State"
+							}
+						},
+						{
+							"reference": 2,
+							"body": {
+								"typeParameterInstantiation": [],
+								"type": 10,
+								"typeName": "0x00b53b0f4174108627fbee72e2498b58d6a2714cded53fac537034c220d26302::price_info::PriceInfoObject"
+							}
+						}
+					],
+					"returns": [],
+					"name": "update_price_from_pyth_read_only",
+					"visibility": 2,
+					"isEntry": true
+				},
+				{
+					"typeParameters": [
+						{
+							"constraints": []
+						}
+					],
+					"parameters": [
+						{
+							"reference": 2,
+							"body": {
+								"typeParameterInstantiation": [],
+								"type": 10,
+								"typeName": "0xf145ee6d09aae034924f80672bc76db2415dfd1b1bed863ac289af9d94e2c4fc::bucket_oracle::BucketOracle"
+							}
+						},
+						{
+							"reference": 1,
+							"body": {
+								"typeParameterInstantiation": [],
+								"type": 10,
+								"typeName": "0x0000000000000000000000000000000000000000000000000000000000000002::clock::Clock"
+							}
+						},
+						{
+							"reference": 1,
+							"body": {
+								"typeParameterInstantiation": [],
+								"type": 10,
+								"typeName": "0x08d79f4d920b03d88faca1e421af023a87fbb1e4a6fd200248e6e9998d09e470::aggregator::Aggregator"
+							}
+						}
+					],
+					"returns": [],
+					"name": "update_price_from_switchboard",
+					"visibility": 2,
+					"isEntry": true
+				},
+				{
+					"typeParameters": [
+						{
+							"constraints": []
+						}
+					],
+					"parameters": [
+						{
+							"reference": 1,
+							"body": {
+								"typeParameterInstantiation": [],
+								"type": 10,
+								"typeName": "0xf145ee6d09aae034924f80672bc76db2415dfd1b1bed863ac289af9d94e2c4fc::bucket_oracle::AdminCap"
+							}
+						},
+						{
+							"reference": 2,
+							"body": {
+								"typeParameterInstantiation": [],
+								"type": 10,
+								"typeName": "0xf145ee6d09aae034924f80672bc76db2415dfd1b1bed863ac289af9d94e2c4fc::bucket_oracle::BucketOracle"
+							}
+						},
+						{
+							"body": {
+								"typeParameterInstantiation": [
 									{
-										"TypeParameter": 0
+										"typeParameterInstantiation": [],
+										"type": 1
 									}
-								]
+								],
+								"type": 10,
+								"typeName": "0x0000000000000000000000000000000000000000000000000000000000000001::option::Option"
 							}
 						}
-					},
-					{
-						"Reference": {
-							"Struct": {
-								"address": "0x2",
-								"module": "clock",
-								"name": "Clock",
-								"typeArguments": []
-							}
+					],
+					"returns": [],
+					"name": "update_pyth_config",
+					"visibility": 2,
+					"isEntry": true
+				},
+				{
+					"typeParameters": [
+						{
+							"constraints": []
 						}
-					},
-					{
-						"Reference": {
-							"Struct": {
-								"address": "0xb53b0f4174108627fbee72e2498b58d6a2714cded53fac537034c220d26302",
-								"module": "state",
-								"name": "State",
-								"typeArguments": []
+					],
+					"parameters": [
+						{
+							"reference": 1,
+							"body": {
+								"typeParameterInstantiation": [],
+								"type": 10,
+								"typeName": "0xf145ee6d09aae034924f80672bc76db2415dfd1b1bed863ac289af9d94e2c4fc::bucket_oracle::AdminCap"
 							}
-						}
-					},
-					{
-						"MutableReference": {
-							"Struct": {
-								"address": "0xb53b0f4174108627fbee72e2498b58d6a2714cded53fac537034c220d26302",
-								"module": "price_info",
-								"name": "PriceInfoObject",
-								"typeArguments": []
+						},
+						{
+							"reference": 2,
+							"body": {
+								"typeParameterInstantiation": [],
+								"type": 10,
+								"typeName": "0xf145ee6d09aae034924f80672bc76db2415dfd1b1bed863ac289af9d94e2c4fc::bucket_oracle::BucketOracle"
 							}
-						}
-					}
-				],
-				"return": []
-			},
-			"collect_price_from_supra": {
-				"visibility": "Public",
-				"isEntry": false,
-				"typeParameters": [
-					{
-						"abilities": []
-					}
-				],
-				"parameters": [
-					{
-						"Reference": {
-							"Struct": {
-								"address": "0xf145ee6d09aae034924f80672bc76db2415dfd1b1bed863ac289af9d94e2c4fc",
-								"module": "single_oracle",
-								"name": "SingleOracle",
-								"typeArguments": [
+						},
+						{
+							"body": {
+								"typeParameterInstantiation": [
 									{
-										"TypeParameter": 0
+										"typeParameterInstantiation": [],
+										"type": 5
 									}
-								]
+								],
+								"type": 10,
+								"typeName": "0x0000000000000000000000000000000000000000000000000000000000000001::option::Option"
 							}
 						}
-					},
-					{
-						"MutableReference": {
-							"Struct": {
-								"address": "0xf145ee6d09aae034924f80672bc76db2415dfd1b1bed863ac289af9d94e2c4fc",
-								"module": "single_oracle",
-								"name": "PriceCollector",
-								"typeArguments": [
+					],
+					"returns": [],
+					"name": "update_supra_config",
+					"visibility": 2,
+					"isEntry": true
+				},
+				{
+					"typeParameters": [
+						{
+							"constraints": []
+						}
+					],
+					"parameters": [
+						{
+							"reference": 1,
+							"body": {
+								"typeParameterInstantiation": [],
+								"type": 10,
+								"typeName": "0xf145ee6d09aae034924f80672bc76db2415dfd1b1bed863ac289af9d94e2c4fc::bucket_oracle::AdminCap"
+							}
+						},
+						{
+							"reference": 2,
+							"body": {
+								"typeParameterInstantiation": [],
+								"type": 10,
+								"typeName": "0xf145ee6d09aae034924f80672bc76db2415dfd1b1bed863ac289af9d94e2c4fc::bucket_oracle::BucketOracle"
+							}
+						},
+						{
+							"body": {
+								"typeParameterInstantiation": [
 									{
-										"TypeParameter": 0
+										"typeParameterInstantiation": [],
+										"type": 1
 									}
-								]
+								],
+								"type": 10,
+								"typeName": "0x0000000000000000000000000000000000000000000000000000000000000001::option::Option"
 							}
 						}
-					},
-					{
-						"Reference": {
-							"Struct": {
-								"address": "0x5d8fbbf6f908a4af8c6d072669a462d53e03eb3c1d863bd0359dc818c69ea706",
-								"module": "SupraSValueFeed",
-								"name": "OracleHolder",
-								"typeArguments": []
+					],
+					"returns": [],
+					"name": "update_switchboard_config",
+					"visibility": 2,
+					"isEntry": true
+				},
+				{
+					"typeParameters": [
+						{
+							"constraints": []
+						}
+					],
+					"parameters": [
+						{
+							"reference": 1,
+							"body": {
+								"typeParameterInstantiation": [],
+								"type": 10,
+								"typeName": "0xf145ee6d09aae034924f80672bc76db2415dfd1b1bed863ac289af9d94e2c4fc::bucket_oracle::AdminCap"
+							}
+						},
+						{
+							"reference": 2,
+							"body": {
+								"typeParameterInstantiation": [],
+								"type": 10,
+								"typeName": "0xf145ee6d09aae034924f80672bc76db2415dfd1b1bed863ac289af9d94e2c4fc::bucket_oracle::BucketOracle"
+							}
+						},
+						{
+							"body": {
+								"typeParameterInstantiation": [],
+								"type": 6
 							}
 						}
-					},
-					"U32"
-				],
-				"return": []
-			},
-			"collect_price_from_switchboard": {
-				"visibility": "Public",
-				"isEntry": false,
-				"typeParameters": [
-					{
-						"abilities": []
-					}
-				],
-				"parameters": [
-					{
-						"Reference": {
-							"Struct": {
-								"address": "0xf145ee6d09aae034924f80672bc76db2415dfd1b1bed863ac289af9d94e2c4fc",
-								"module": "single_oracle",
-								"name": "SingleOracle",
-								"typeArguments": [
-									{
-										"TypeParameter": 0
-									}
-								]
-							}
-						}
-					},
-					{
-						"MutableReference": {
-							"Struct": {
-								"address": "0xf145ee6d09aae034924f80672bc76db2415dfd1b1bed863ac289af9d94e2c4fc",
-								"module": "single_oracle",
-								"name": "PriceCollector",
-								"typeArguments": [
-									{
-										"TypeParameter": 0
-									}
-								]
-							}
-						}
-					},
-					{
-						"Reference": {
-							"Struct": {
-								"address": "0x8d79f4d920b03d88faca1e421af023a87fbb1e4a6fd200248e6e9998d09e470",
-								"module": "aggregator",
-								"name": "Aggregator",
-								"typeArguments": []
-							}
-						}
-					}
-				],
-				"return": []
-			},
-			"get_price": {
-				"visibility": "Public",
-				"isEntry": false,
-				"typeParameters": [
-					{
-						"abilities": []
-					}
-				],
-				"parameters": [
-					{
-						"Reference": {
-							"Struct": {
-								"address": "0xf145ee6d09aae034924f80672bc76db2415dfd1b1bed863ac289af9d94e2c4fc",
-								"module": "single_oracle",
-								"name": "SingleOracle",
-								"typeArguments": [
-									{
-										"TypeParameter": 0
-									}
-								]
-							}
-						}
-					},
-					{
-						"Reference": {
-							"Struct": {
-								"address": "0x2",
-								"module": "clock",
-								"name": "Clock",
-								"typeArguments": []
-							}
-						}
-					}
-				],
-				"return": [
-					"U64",
-					"U64"
-				]
-			},
-			"issue_price_collector": {
-				"visibility": "Public",
-				"isEntry": false,
-				"typeParameters": [
-					{
-						"abilities": []
-					}
-				],
-				"parameters": [],
-				"return": [
-					{
-						"Struct": {
-							"address": "0xf145ee6d09aae034924f80672bc76db2415dfd1b1bed863ac289af9d94e2c4fc",
-							"module": "single_oracle",
-							"name": "PriceCollector",
-							"typeArguments": [
-								{
-									"TypeParameter": 0
-								}
-							]
-						}
-					}
-				]
-			},
-			"new": {
-				"visibility": "Friend",
-				"isEntry": false,
-				"typeParameters": [
-					{
-						"abilities": []
-					}
-				],
-				"parameters": [
-					"U8",
-					"U64",
-					"U64",
-					{
-						"Struct": {
-							"address": "0x1",
-							"module": "option",
-							"name": "Option",
-							"typeArguments": [
-								"Address"
-							]
-						}
-					},
-					{
-						"Struct": {
-							"address": "0x1",
-							"module": "option",
-							"name": "Option",
-							"typeArguments": [
-								"Address"
-							]
-						}
-					},
-					{
-						"Struct": {
-							"address": "0x1",
-							"module": "option",
-							"name": "Option",
-							"typeArguments": [
-								"U32"
-							]
-						}
-					},
-					{
-						"MutableReference": {
-							"Struct": {
-								"address": "0x2",
-								"module": "tx_context",
-								"name": "TxContext",
-								"typeArguments": []
-							}
-						}
-					}
-				],
-				"return": [
-					{
-						"Struct": {
-							"address": "0xf145ee6d09aae034924f80672bc76db2415dfd1b1bed863ac289af9d94e2c4fc",
-							"module": "single_oracle",
-							"name": "SingleOracle",
-							"typeArguments": [
-								{
-									"TypeParameter": 0
-								}
-							]
-						}
-					}
-				]
-			},
-			"update_oracle_price": {
-				"visibility": "Public",
-				"isEntry": false,
-				"typeParameters": [
-					{
-						"abilities": []
-					}
-				],
-				"parameters": [
-					{
-						"MutableReference": {
-							"Struct": {
-								"address": "0xf145ee6d09aae034924f80672bc76db2415dfd1b1bed863ac289af9d94e2c4fc",
-								"module": "single_oracle",
-								"name": "SingleOracle",
-								"typeArguments": [
-									{
-										"TypeParameter": 0
-									}
-								]
-							}
-						}
-					},
-					{
-						"Reference": {
-							"Struct": {
-								"address": "0x2",
-								"module": "clock",
-								"name": "Clock",
-								"typeArguments": []
-							}
-						}
-					},
-					{
-						"Struct": {
-							"address": "0xf145ee6d09aae034924f80672bc76db2415dfd1b1bed863ac289af9d94e2c4fc",
-							"module": "single_oracle",
-							"name": "PriceCollector",
-							"typeArguments": [
-								{
-									"TypeParameter": 0
-								}
-							]
-						}
-					}
-				],
-				"return": []
-			},
-			"update_pyth_config": {
-				"visibility": "Friend",
-				"isEntry": false,
-				"typeParameters": [
-					{
-						"abilities": []
-					}
-				],
-				"parameters": [
-					{
-						"MutableReference": {
-							"Struct": {
-								"address": "0xf145ee6d09aae034924f80672bc76db2415dfd1b1bed863ac289af9d94e2c4fc",
-								"module": "single_oracle",
-								"name": "SingleOracle",
-								"typeArguments": [
-									{
-										"TypeParameter": 0
-									}
-								]
-							}
-						}
-					},
-					{
-						"Struct": {
-							"address": "0x1",
-							"module": "option",
-							"name": "Option",
-							"typeArguments": [
-								"Address"
-							]
-						}
-					}
-				],
-				"return": []
-			},
-			"update_supra_config": {
-				"visibility": "Friend",
-				"isEntry": false,
-				"typeParameters": [
-					{
-						"abilities": []
-					}
-				],
-				"parameters": [
-					{
-						"MutableReference": {
-							"Struct": {
-								"address": "0xf145ee6d09aae034924f80672bc76db2415dfd1b1bed863ac289af9d94e2c4fc",
-								"module": "single_oracle",
-								"name": "SingleOracle",
-								"typeArguments": [
-									{
-										"TypeParameter": 0
-									}
-								]
-							}
-						}
-					},
-					{
-						"Struct": {
-							"address": "0x1",
-							"module": "option",
-							"name": "Option",
-							"typeArguments": [
-								"U32"
-							]
-						}
-					}
-				],
-				"return": []
-			},
-			"update_switchboard_config": {
-				"visibility": "Friend",
-				"isEntry": false,
-				"typeParameters": [
-					{
-						"abilities": []
-					}
-				],
-				"parameters": [
-					{
-						"MutableReference": {
-							"Struct": {
-								"address": "0xf145ee6d09aae034924f80672bc76db2415dfd1b1bed863ac289af9d94e2c4fc",
-								"module": "single_oracle",
-								"name": "SingleOracle",
-								"typeArguments": [
-									{
-										"TypeParameter": 0
-									}
-								]
-							}
-						}
-					},
-					{
-						"Struct": {
-							"address": "0x1",
-							"module": "option",
-							"name": "Option",
-							"typeArguments": [
-								"Address"
-							]
-						}
-					}
-				],
-				"return": []
-			},
-			"update_threshold": {
-				"visibility": "Friend",
-				"isEntry": false,
-				"typeParameters": [
-					{
-						"abilities": []
-					}
-				],
-				"parameters": [
-					{
-						"MutableReference": {
-							"Struct": {
-								"address": "0xf145ee6d09aae034924f80672bc76db2415dfd1b1bed863ac289af9d94e2c4fc",
-								"module": "single_oracle",
-								"name": "SingleOracle",
-								"typeArguments": [
-									{
-										"TypeParameter": 0
-									}
-								]
-							}
-						}
-					},
-					"U64"
-				],
-				"return": []
-			}
+					],
+					"returns": [],
+					"name": "update_threshold",
+					"visibility": 2,
+					"isEntry": true
+				}
+			],
+			"name": "bucket_oracle"
 		}
 	},
 	{
-		"fileFormatVersion": 6,
 		"address": "0xf145ee6d09aae034924f80672bc76db2415dfd1b1bed863ac289af9d94e2c4fc",
-		"name": "supra_parser",
-		"friends": [],
-		"structs": {},
-		"exposedFunctions": {
-			"parse_price": {
-				"visibility": "Public",
-				"isEntry": false,
-				"typeParameters": [],
-				"parameters": [
-					{
-						"Reference": {
-							"Struct": {
-								"address": "0x5d8fbbf6f908a4af8c6d072669a462d53e03eb3c1d863bd0359dc818c69ea706",
-								"module": "SupraSValueFeed",
-								"name": "OracleHolder",
-								"typeArguments": []
+		"module": {
+			"datatypes": [
+				{
+					"abilities": [
+						1,
+						2
+					],
+					"typeParameters": [],
+					"fields": [
+						{
+							"name": "price",
+							"position": 0,
+							"type": {
+								"typeParameterInstantiation": [],
+								"type": 6
+							}
+						},
+						{
+							"name": "timestamp",
+							"position": 1,
+							"type": {
+								"typeParameterInstantiation": [],
+								"type": 6
 							}
 						}
-					},
-					"U32",
-					"U8"
-				],
-				"return": [
-					{
-						"Struct": {
-							"address": "0x1",
-							"module": "option",
-							"name": "Option",
-							"typeArguments": [
-								{
-									"Struct": {
-										"address": "0xf145ee6d09aae034924f80672bc76db2415dfd1b1bed863ac289af9d94e2c4fc",
-										"module": "price_aggregator",
-										"name": "PriceInfo",
-										"typeArguments": []
+					],
+					"variants": [],
+					"typeName": "0xf145ee6d09aae034924f80672bc76db2415dfd1b1bed863ac289af9d94e2c4fc::price_aggregator::PriceInfo",
+					"definingId": "0xf145ee6d09aae034924f80672bc76db2415dfd1b1bed863ac289af9d94e2c4fc",
+					"module": "price_aggregator",
+					"name": "PriceInfo",
+					"kind": 1
+				},
+				{
+					"abilities": [
+						1,
+						2
+					],
+					"typeParameters": [],
+					"fields": [
+						{
+							"name": "vec",
+							"position": 0,
+							"type": {
+								"typeParameterInstantiation": [
+									{
+										"typeParameterInstantiation": [],
+										"type": 6
 									}
-								}
-							]
+								],
+								"type": 9
+							}
 						}
-					}
-				]
-			}
+					],
+					"variants": [],
+					"typeName": "0xf145ee6d09aae034924f80672bc76db2415dfd1b1bed863ac289af9d94e2c4fc::price_aggregator::PriceVector",
+					"definingId": "0xf145ee6d09aae034924f80672bc76db2415dfd1b1bed863ac289af9d94e2c4fc",
+					"module": "price_aggregator",
+					"name": "PriceVector",
+					"kind": 1
+				}
+			],
+			"functions": [
+				{
+					"typeParameters": [],
+					"parameters": [
+						{
+							"reference": 1,
+							"body": {
+								"typeParameterInstantiation": [],
+								"type": 10,
+								"typeName": "0x0000000000000000000000000000000000000000000000000000000000000002::clock::Clock"
+							}
+						},
+						{
+							"body": {
+								"typeParameterInstantiation": [
+									{
+										"typeParameterInstantiation": [],
+										"type": 10,
+										"typeName": "0xf145ee6d09aae034924f80672bc76db2415dfd1b1bed863ac289af9d94e2c4fc::price_aggregator::PriceInfo"
+									}
+								],
+								"type": 9
+							}
+						},
+						{
+							"body": {
+								"typeParameterInstantiation": [],
+								"type": 6
+							}
+						},
+						{
+							"body": {
+								"typeParameterInstantiation": [],
+								"type": 6
+							}
+						}
+					],
+					"returns": [
+						{
+							"body": {
+								"typeParameterInstantiation": [],
+								"type": 6
+							}
+						}
+					],
+					"name": "aggregate_price",
+					"visibility": 3,
+					"isEntry": false
+				},
+				{
+					"typeParameters": [],
+					"parameters": [
+						{
+							"reference": 1,
+							"body": {
+								"typeParameterInstantiation": [],
+								"type": 10,
+								"typeName": "0xf145ee6d09aae034924f80672bc76db2415dfd1b1bed863ac289af9d94e2c4fc::price_aggregator::PriceInfo"
+							}
+						}
+					],
+					"returns": [
+						{
+							"body": {
+								"typeParameterInstantiation": [],
+								"type": 6
+							}
+						},
+						{
+							"body": {
+								"typeParameterInstantiation": [],
+								"type": 6
+							}
+						}
+					],
+					"name": "extract",
+					"visibility": 2,
+					"isEntry": false
+				},
+				{
+					"typeParameters": [],
+					"parameters": [
+						{
+							"body": {
+								"typeParameterInstantiation": [],
+								"type": 6
+							}
+						},
+						{
+							"body": {
+								"typeParameterInstantiation": [],
+								"type": 6
+							}
+						}
+					],
+					"returns": [
+						{
+							"body": {
+								"typeParameterInstantiation": [],
+								"type": 10,
+								"typeName": "0xf145ee6d09aae034924f80672bc76db2415dfd1b1bed863ac289af9d94e2c4fc::price_aggregator::PriceInfo"
+							}
+						}
+					],
+					"name": "new",
+					"visibility": 2,
+					"isEntry": false
+				},
+				{
+					"typeParameters": [],
+					"parameters": [
+						{
+							"body": {
+								"typeParameterInstantiation": [
+									{
+										"typeParameterInstantiation": [],
+										"type": 6
+									}
+								],
+								"type": 9
+							}
+						},
+						{
+							"body": {
+								"typeParameterInstantiation": [],
+								"type": 6
+							}
+						}
+					],
+					"returns": [
+						{
+							"body": {
+								"typeParameterInstantiation": [],
+								"type": 6
+							}
+						}
+					],
+					"name": "process_prices",
+					"visibility": 1,
+					"isEntry": false
+				},
+				{
+					"typeParameters": [],
+					"parameters": [
+						{
+							"reference": 2,
+							"body": {
+								"typeParameterInstantiation": [
+									{
+										"typeParameterInstantiation": [],
+										"type": 10,
+										"typeName": "0xf145ee6d09aae034924f80672bc76db2415dfd1b1bed863ac289af9d94e2c4fc::price_aggregator::PriceInfo"
+									}
+								],
+								"type": 9
+							}
+						},
+						{
+							"body": {
+								"typeParameterInstantiation": [
+									{
+										"typeParameterInstantiation": [],
+										"type": 10,
+										"typeName": "0xf145ee6d09aae034924f80672bc76db2415dfd1b1bed863ac289af9d94e2c4fc::price_aggregator::PriceInfo"
+									}
+								],
+								"type": 10,
+								"typeName": "0x0000000000000000000000000000000000000000000000000000000000000001::option::Option"
+							}
+						}
+					],
+					"returns": [],
+					"name": "push_price",
+					"visibility": 2,
+					"isEntry": false
+				}
+			],
+			"name": "price_aggregator"
 		}
 	},
 	{
-		"fileFormatVersion": 6,
 		"address": "0xf145ee6d09aae034924f80672bc76db2415dfd1b1bed863ac289af9d94e2c4fc",
-		"name": "switchboard_parser",
-		"friends": [],
-		"structs": {},
-		"exposedFunctions": {
-			"parse_config": {
-				"visibility": "Public",
-				"isEntry": false,
-				"typeParameters": [],
-				"parameters": [
-					{
-						"Struct": {
-							"address": "0x1",
-							"module": "option",
-							"name": "Option",
-							"typeArguments": [
-								"Address"
-							]
-						}
-					}
-				],
-				"return": [
-					{
-						"Struct": {
-							"address": "0x1",
-							"module": "option",
-							"name": "Option",
-							"typeArguments": [
-								{
-									"Struct": {
-										"address": "0x2",
-										"module": "object",
-										"name": "ID",
-										"typeArguments": []
+		"module": {
+			"datatypes": [],
+			"functions": [
+				{
+					"typeParameters": [],
+					"parameters": [
+						{
+							"body": {
+								"typeParameterInstantiation": [
+									{
+										"typeParameterInstantiation": [],
+										"type": 1
 									}
-								}
-							]
-						}
-					}
-				]
-			},
-			"parse_price": {
-				"visibility": "Public",
-				"isEntry": false,
-				"typeParameters": [],
-				"parameters": [
-					{
-						"Reference": {
-							"Struct": {
-								"address": "0x8d79f4d920b03d88faca1e421af023a87fbb1e4a6fd200248e6e9998d09e470",
-								"module": "aggregator",
-								"name": "Aggregator",
-								"typeArguments": []
+								],
+								"type": 10,
+								"typeName": "0x0000000000000000000000000000000000000000000000000000000000000001::option::Option"
 							}
 						}
-					},
-					"U8"
-				],
-				"return": [
-					{
-						"Struct": {
-							"address": "0x1",
-							"module": "option",
-							"name": "Option",
-							"typeArguments": [
-								{
-									"Struct": {
-										"address": "0xf145ee6d09aae034924f80672bc76db2415dfd1b1bed863ac289af9d94e2c4fc",
-										"module": "price_aggregator",
-										"name": "PriceInfo",
-										"typeArguments": []
+					],
+					"returns": [
+						{
+							"body": {
+								"typeParameterInstantiation": [
+									{
+										"typeParameterInstantiation": [],
+										"type": 10,
+										"typeName": "0x0000000000000000000000000000000000000000000000000000000000000002::object::ID"
 									}
-								}
-							]
+								],
+								"type": 10,
+								"typeName": "0x0000000000000000000000000000000000000000000000000000000000000001::option::Option"
+							}
 						}
-					}
-				]
-			}
+					],
+					"name": "parse_config",
+					"visibility": 2,
+					"isEntry": false
+				},
+				{
+					"typeParameters": [],
+					"parameters": [
+						{
+							"reference": 1,
+							"body": {
+								"typeParameterInstantiation": [],
+								"type": 10,
+								"typeName": "0x5306f64e312b581766351c07af79c72fcb1cd25147157fdc2f8ad76de9a3fb6a::state::State"
+							}
+						},
+						{
+							"reference": 1,
+							"body": {
+								"typeParameterInstantiation": [],
+								"type": 10,
+								"typeName": "0x00b53b0f4174108627fbee72e2498b58d6a2714cded53fac537034c220d26302::state::State"
+							}
+						},
+						{
+							"reference": 1,
+							"body": {
+								"typeParameterInstantiation": [],
+								"type": 10,
+								"typeName": "0x0000000000000000000000000000000000000000000000000000000000000002::clock::Clock"
+							}
+						},
+						{
+							"reference": 2,
+							"body": {
+								"typeParameterInstantiation": [],
+								"type": 10,
+								"typeName": "0x00b53b0f4174108627fbee72e2498b58d6a2714cded53fac537034c220d26302::price_info::PriceInfoObject"
+							}
+						},
+						{
+							"body": {
+								"typeParameterInstantiation": [
+									{
+										"typeParameterInstantiation": [],
+										"type": 3
+									}
+								],
+								"type": 9
+							}
+						},
+						{
+							"body": {
+								"typeParameterInstantiation": [
+									{
+										"typeParameterInstantiation": [],
+										"type": 10,
+										"typeName": "0x0000000000000000000000000000000000000000000000000000000000000002::sui::SUI"
+									}
+								],
+								"type": 10,
+								"typeName": "0x0000000000000000000000000000000000000000000000000000000000000002::coin::Coin"
+							}
+						},
+						{
+							"body": {
+								"typeParameterInstantiation": [],
+								"type": 3
+							}
+						}
+					],
+					"returns": [
+						{
+							"body": {
+								"typeParameterInstantiation": [
+									{
+										"typeParameterInstantiation": [],
+										"type": 10,
+										"typeName": "0xf145ee6d09aae034924f80672bc76db2415dfd1b1bed863ac289af9d94e2c4fc::price_aggregator::PriceInfo"
+									}
+								],
+								"type": 10,
+								"typeName": "0x0000000000000000000000000000000000000000000000000000000000000001::option::Option"
+							}
+						}
+					],
+					"name": "parse_price",
+					"visibility": 2,
+					"isEntry": false
+				},
+				{
+					"typeParameters": [],
+					"parameters": [
+						{
+							"reference": 1,
+							"body": {
+								"typeParameterInstantiation": [],
+								"type": 10,
+								"typeName": "0x00b53b0f4174108627fbee72e2498b58d6a2714cded53fac537034c220d26302::state::State"
+							}
+						},
+						{
+							"reference": 1,
+							"body": {
+								"typeParameterInstantiation": [],
+								"type": 10,
+								"typeName": "0x0000000000000000000000000000000000000000000000000000000000000002::clock::Clock"
+							}
+						},
+						{
+							"reference": 2,
+							"body": {
+								"typeParameterInstantiation": [],
+								"type": 10,
+								"typeName": "0x00b53b0f4174108627fbee72e2498b58d6a2714cded53fac537034c220d26302::price_info::PriceInfoObject"
+							}
+						},
+						{
+							"body": {
+								"typeParameterInstantiation": [],
+								"type": 3
+							}
+						}
+					],
+					"returns": [
+						{
+							"body": {
+								"typeParameterInstantiation": [
+									{
+										"typeParameterInstantiation": [],
+										"type": 10,
+										"typeName": "0xf145ee6d09aae034924f80672bc76db2415dfd1b1bed863ac289af9d94e2c4fc::price_aggregator::PriceInfo"
+									}
+								],
+								"type": 10,
+								"typeName": "0x0000000000000000000000000000000000000000000000000000000000000001::option::Option"
+							}
+						}
+					],
+					"name": "parse_price_read_only",
+					"visibility": 2,
+					"isEntry": false
+				}
+			],
+			"name": "pyth_parser"
+		}
+	},
+	{
+		"address": "0xf145ee6d09aae034924f80672bc76db2415dfd1b1bed863ac289af9d94e2c4fc",
+		"module": {
+			"datatypes": [
+				{
+					"abilities": [
+						1,
+						2
+					],
+					"typeParameters": [],
+					"fields": [
+						{
+							"name": "coin_type",
+							"position": 0,
+							"type": {
+								"typeParameterInstantiation": [],
+								"type": 10,
+								"typeName": "0x0000000000000000000000000000000000000000000000000000000000000001::ascii::String"
+							}
+						},
+						{
+							"name": "source_id",
+							"position": 1,
+							"type": {
+								"typeParameterInstantiation": [],
+								"type": 3
+							}
+						},
+						{
+							"name": "price_info",
+							"position": 2,
+							"type": {
+								"typeParameterInstantiation": [
+									{
+										"typeParameterInstantiation": [],
+										"type": 10,
+										"typeName": "0xf145ee6d09aae034924f80672bc76db2415dfd1b1bed863ac289af9d94e2c4fc::price_aggregator::PriceInfo"
+									}
+								],
+								"type": 10,
+								"typeName": "0x0000000000000000000000000000000000000000000000000000000000000001::option::Option"
+							}
+						}
+					],
+					"variants": [],
+					"typeName": "0xf145ee6d09aae034924f80672bc76db2415dfd1b1bed863ac289af9d94e2c4fc::single_oracle::ParsePriceEvent",
+					"definingId": "0xf145ee6d09aae034924f80672bc76db2415dfd1b1bed863ac289af9d94e2c4fc",
+					"module": "single_oracle",
+					"name": "ParsePriceEvent",
+					"kind": 1
+				},
+				{
+					"abilities": [],
+					"typeParameters": [
+						{
+							"constraints": [],
+							"isPhantom": true
+						}
+					],
+					"fields": [
+						{
+							"name": "switchboard_result",
+							"position": 0,
+							"type": {
+								"typeParameterInstantiation": [
+									{
+										"typeParameterInstantiation": [],
+										"type": 10,
+										"typeName": "0xf145ee6d09aae034924f80672bc76db2415dfd1b1bed863ac289af9d94e2c4fc::price_aggregator::PriceInfo"
+									}
+								],
+								"type": 10,
+								"typeName": "0x0000000000000000000000000000000000000000000000000000000000000001::option::Option"
+							}
+						},
+						{
+							"name": "pyth_result",
+							"position": 1,
+							"type": {
+								"typeParameterInstantiation": [
+									{
+										"typeParameterInstantiation": [],
+										"type": 10,
+										"typeName": "0xf145ee6d09aae034924f80672bc76db2415dfd1b1bed863ac289af9d94e2c4fc::price_aggregator::PriceInfo"
+									}
+								],
+								"type": 10,
+								"typeName": "0x0000000000000000000000000000000000000000000000000000000000000001::option::Option"
+							}
+						},
+						{
+							"name": "supra_result",
+							"position": 2,
+							"type": {
+								"typeParameterInstantiation": [
+									{
+										"typeParameterInstantiation": [],
+										"type": 10,
+										"typeName": "0xf145ee6d09aae034924f80672bc76db2415dfd1b1bed863ac289af9d94e2c4fc::price_aggregator::PriceInfo"
+									}
+								],
+								"type": 10,
+								"typeName": "0x0000000000000000000000000000000000000000000000000000000000000001::option::Option"
+							}
+						}
+					],
+					"variants": [],
+					"typeName": "0xf145ee6d09aae034924f80672bc76db2415dfd1b1bed863ac289af9d94e2c4fc::single_oracle::PriceCollector",
+					"definingId": "0xf145ee6d09aae034924f80672bc76db2415dfd1b1bed863ac289af9d94e2c4fc",
+					"module": "single_oracle",
+					"name": "PriceCollector",
+					"kind": 1
+				},
+				{
+					"abilities": [
+						3,
+						4
+					],
+					"typeParameters": [
+						{
+							"constraints": [],
+							"isPhantom": true
+						}
+					],
+					"fields": [
+						{
+							"name": "id",
+							"position": 0,
+							"type": {
+								"typeParameterInstantiation": [],
+								"type": 10,
+								"typeName": "0x0000000000000000000000000000000000000000000000000000000000000002::object::UID"
+							}
+						},
+						{
+							"name": "price",
+							"position": 1,
+							"type": {
+								"typeParameterInstantiation": [],
+								"type": 6
+							}
+						},
+						{
+							"name": "precision_decimal",
+							"position": 2,
+							"type": {
+								"typeParameterInstantiation": [],
+								"type": 3
+							}
+						},
+						{
+							"name": "precision",
+							"position": 3,
+							"type": {
+								"typeParameterInstantiation": [],
+								"type": 6
+							}
+						},
+						{
+							"name": "tolerance_ms",
+							"position": 4,
+							"type": {
+								"typeParameterInstantiation": [],
+								"type": 6
+							}
+						},
+						{
+							"name": "threshold",
+							"position": 5,
+							"type": {
+								"typeParameterInstantiation": [],
+								"type": 6
+							}
+						},
+						{
+							"name": "latest_update_ms",
+							"position": 6,
+							"type": {
+								"typeParameterInstantiation": [],
+								"type": 6
+							}
+						},
+						{
+							"name": "switchboard_config",
+							"position": 7,
+							"type": {
+								"typeParameterInstantiation": [
+									{
+										"typeParameterInstantiation": [],
+										"type": 10,
+										"typeName": "0x0000000000000000000000000000000000000000000000000000000000000002::object::ID"
+									}
+								],
+								"type": 10,
+								"typeName": "0x0000000000000000000000000000000000000000000000000000000000000001::option::Option"
+							}
+						},
+						{
+							"name": "pyth_config",
+							"position": 8,
+							"type": {
+								"typeParameterInstantiation": [
+									{
+										"typeParameterInstantiation": [],
+										"type": 10,
+										"typeName": "0x0000000000000000000000000000000000000000000000000000000000000002::object::ID"
+									}
+								],
+								"type": 10,
+								"typeName": "0x0000000000000000000000000000000000000000000000000000000000000001::option::Option"
+							}
+						},
+						{
+							"name": "supra_config",
+							"position": 9,
+							"type": {
+								"typeParameterInstantiation": [
+									{
+										"typeParameterInstantiation": [],
+										"type": 5
+									}
+								],
+								"type": 10,
+								"typeName": "0x0000000000000000000000000000000000000000000000000000000000000001::option::Option"
+							}
+						}
+					],
+					"variants": [],
+					"typeName": "0xf145ee6d09aae034924f80672bc76db2415dfd1b1bed863ac289af9d94e2c4fc::single_oracle::SingleOracle",
+					"definingId": "0xf145ee6d09aae034924f80672bc76db2415dfd1b1bed863ac289af9d94e2c4fc",
+					"module": "single_oracle",
+					"name": "SingleOracle",
+					"kind": 1
+				}
+			],
+			"functions": [
+				{
+					"typeParameters": [
+						{
+							"constraints": []
+						}
+					],
+					"parameters": [
+						{
+							"reference": 1,
+							"body": {
+								"typeParameterInstantiation": [
+									{
+										"typeParameterInstantiation": [],
+										"type": 11,
+										"typeParameter": 0
+									}
+								],
+								"type": 10,
+								"typeName": "0xf145ee6d09aae034924f80672bc76db2415dfd1b1bed863ac289af9d94e2c4fc::single_oracle::SingleOracle"
+							}
+						},
+						{
+							"reference": 2,
+							"body": {
+								"typeParameterInstantiation": [
+									{
+										"typeParameterInstantiation": [],
+										"type": 11,
+										"typeParameter": 0
+									}
+								],
+								"type": 10,
+								"typeName": "0xf145ee6d09aae034924f80672bc76db2415dfd1b1bed863ac289af9d94e2c4fc::single_oracle::PriceCollector"
+							}
+						},
+						{
+							"reference": 1,
+							"body": {
+								"typeParameterInstantiation": [],
+								"type": 10,
+								"typeName": "0x0000000000000000000000000000000000000000000000000000000000000002::clock::Clock"
+							}
+						},
+						{
+							"reference": 1,
+							"body": {
+								"typeParameterInstantiation": [],
+								"type": 10,
+								"typeName": "0x5306f64e312b581766351c07af79c72fcb1cd25147157fdc2f8ad76de9a3fb6a::state::State"
+							}
+						},
+						{
+							"reference": 1,
+							"body": {
+								"typeParameterInstantiation": [],
+								"type": 10,
+								"typeName": "0x00b53b0f4174108627fbee72e2498b58d6a2714cded53fac537034c220d26302::state::State"
+							}
+						},
+						{
+							"reference": 2,
+							"body": {
+								"typeParameterInstantiation": [],
+								"type": 10,
+								"typeName": "0x00b53b0f4174108627fbee72e2498b58d6a2714cded53fac537034c220d26302::price_info::PriceInfoObject"
+							}
+						},
+						{
+							"body": {
+								"typeParameterInstantiation": [
+									{
+										"typeParameterInstantiation": [],
+										"type": 3
+									}
+								],
+								"type": 9
+							}
+						},
+						{
+							"body": {
+								"typeParameterInstantiation": [
+									{
+										"typeParameterInstantiation": [],
+										"type": 10,
+										"typeName": "0x0000000000000000000000000000000000000000000000000000000000000002::sui::SUI"
+									}
+								],
+								"type": 10,
+								"typeName": "0x0000000000000000000000000000000000000000000000000000000000000002::coin::Coin"
+							}
+						}
+					],
+					"returns": [],
+					"name": "collect_price_from_pyth",
+					"visibility": 2,
+					"isEntry": false
+				},
+				{
+					"typeParameters": [
+						{
+							"constraints": []
+						}
+					],
+					"parameters": [
+						{
+							"reference": 1,
+							"body": {
+								"typeParameterInstantiation": [
+									{
+										"typeParameterInstantiation": [],
+										"type": 11,
+										"typeParameter": 0
+									}
+								],
+								"type": 10,
+								"typeName": "0xf145ee6d09aae034924f80672bc76db2415dfd1b1bed863ac289af9d94e2c4fc::single_oracle::SingleOracle"
+							}
+						},
+						{
+							"reference": 2,
+							"body": {
+								"typeParameterInstantiation": [
+									{
+										"typeParameterInstantiation": [],
+										"type": 11,
+										"typeParameter": 0
+									}
+								],
+								"type": 10,
+								"typeName": "0xf145ee6d09aae034924f80672bc76db2415dfd1b1bed863ac289af9d94e2c4fc::single_oracle::PriceCollector"
+							}
+						},
+						{
+							"reference": 1,
+							"body": {
+								"typeParameterInstantiation": [],
+								"type": 10,
+								"typeName": "0x0000000000000000000000000000000000000000000000000000000000000002::clock::Clock"
+							}
+						},
+						{
+							"reference": 1,
+							"body": {
+								"typeParameterInstantiation": [],
+								"type": 10,
+								"typeName": "0x00b53b0f4174108627fbee72e2498b58d6a2714cded53fac537034c220d26302::state::State"
+							}
+						},
+						{
+							"reference": 2,
+							"body": {
+								"typeParameterInstantiation": [],
+								"type": 10,
+								"typeName": "0x00b53b0f4174108627fbee72e2498b58d6a2714cded53fac537034c220d26302::price_info::PriceInfoObject"
+							}
+						}
+					],
+					"returns": [],
+					"name": "collect_price_from_pyth_read_only",
+					"visibility": 2,
+					"isEntry": false
+				},
+				{
+					"typeParameters": [
+						{
+							"constraints": []
+						}
+					],
+					"parameters": [
+						{
+							"reference": 1,
+							"body": {
+								"typeParameterInstantiation": [
+									{
+										"typeParameterInstantiation": [],
+										"type": 11,
+										"typeParameter": 0
+									}
+								],
+								"type": 10,
+								"typeName": "0xf145ee6d09aae034924f80672bc76db2415dfd1b1bed863ac289af9d94e2c4fc::single_oracle::SingleOracle"
+							}
+						},
+						{
+							"reference": 2,
+							"body": {
+								"typeParameterInstantiation": [
+									{
+										"typeParameterInstantiation": [],
+										"type": 11,
+										"typeParameter": 0
+									}
+								],
+								"type": 10,
+								"typeName": "0xf145ee6d09aae034924f80672bc76db2415dfd1b1bed863ac289af9d94e2c4fc::single_oracle::PriceCollector"
+							}
+						},
+						{
+							"reference": 1,
+							"body": {
+								"typeParameterInstantiation": [],
+								"type": 10,
+								"typeName": "0x5d8fbbf6f908a4af8c6d072669a462d53e03eb3c1d863bd0359dc818c69ea706::SupraSValueFeed::OracleHolder"
+							}
+						},
+						{
+							"body": {
+								"typeParameterInstantiation": [],
+								"type": 5
+							}
+						}
+					],
+					"returns": [],
+					"name": "collect_price_from_supra",
+					"visibility": 2,
+					"isEntry": false
+				},
+				{
+					"typeParameters": [
+						{
+							"constraints": []
+						}
+					],
+					"parameters": [
+						{
+							"reference": 1,
+							"body": {
+								"typeParameterInstantiation": [
+									{
+										"typeParameterInstantiation": [],
+										"type": 11,
+										"typeParameter": 0
+									}
+								],
+								"type": 10,
+								"typeName": "0xf145ee6d09aae034924f80672bc76db2415dfd1b1bed863ac289af9d94e2c4fc::single_oracle::SingleOracle"
+							}
+						},
+						{
+							"reference": 2,
+							"body": {
+								"typeParameterInstantiation": [
+									{
+										"typeParameterInstantiation": [],
+										"type": 11,
+										"typeParameter": 0
+									}
+								],
+								"type": 10,
+								"typeName": "0xf145ee6d09aae034924f80672bc76db2415dfd1b1bed863ac289af9d94e2c4fc::single_oracle::PriceCollector"
+							}
+						},
+						{
+							"reference": 1,
+							"body": {
+								"typeParameterInstantiation": [],
+								"type": 10,
+								"typeName": "0x08d79f4d920b03d88faca1e421af023a87fbb1e4a6fd200248e6e9998d09e470::aggregator::Aggregator"
+							}
+						}
+					],
+					"returns": [],
+					"name": "collect_price_from_switchboard",
+					"visibility": 2,
+					"isEntry": false
+				},
+				{
+					"typeParameters": [
+						{
+							"constraints": []
+						}
+					],
+					"parameters": [
+						{
+							"reference": 1,
+							"body": {
+								"typeParameterInstantiation": [
+									{
+										"typeParameterInstantiation": [],
+										"type": 11,
+										"typeParameter": 0
+									}
+								],
+								"type": 10,
+								"typeName": "0xf145ee6d09aae034924f80672bc76db2415dfd1b1bed863ac289af9d94e2c4fc::single_oracle::SingleOracle"
+							}
+						},
+						{
+							"reference": 1,
+							"body": {
+								"typeParameterInstantiation": [],
+								"type": 10,
+								"typeName": "0x0000000000000000000000000000000000000000000000000000000000000002::clock::Clock"
+							}
+						}
+					],
+					"returns": [
+						{
+							"body": {
+								"typeParameterInstantiation": [],
+								"type": 6
+							}
+						},
+						{
+							"body": {
+								"typeParameterInstantiation": [],
+								"type": 6
+							}
+						}
+					],
+					"name": "get_price",
+					"visibility": 2,
+					"isEntry": false
+				},
+				{
+					"typeParameters": [
+						{
+							"constraints": []
+						}
+					],
+					"parameters": [],
+					"returns": [
+						{
+							"body": {
+								"typeParameterInstantiation": [
+									{
+										"typeParameterInstantiation": [],
+										"type": 11,
+										"typeParameter": 0
+									}
+								],
+								"type": 10,
+								"typeName": "0xf145ee6d09aae034924f80672bc76db2415dfd1b1bed863ac289af9d94e2c4fc::single_oracle::PriceCollector"
+							}
+						}
+					],
+					"name": "issue_price_collector",
+					"visibility": 2,
+					"isEntry": false
+				},
+				{
+					"typeParameters": [
+						{
+							"constraints": []
+						}
+					],
+					"parameters": [
+						{
+							"body": {
+								"typeParameterInstantiation": [],
+								"type": 3
+							}
+						},
+						{
+							"body": {
+								"typeParameterInstantiation": [],
+								"type": 6
+							}
+						},
+						{
+							"body": {
+								"typeParameterInstantiation": [],
+								"type": 6
+							}
+						},
+						{
+							"body": {
+								"typeParameterInstantiation": [
+									{
+										"typeParameterInstantiation": [],
+										"type": 1
+									}
+								],
+								"type": 10,
+								"typeName": "0x0000000000000000000000000000000000000000000000000000000000000001::option::Option"
+							}
+						},
+						{
+							"body": {
+								"typeParameterInstantiation": [
+									{
+										"typeParameterInstantiation": [],
+										"type": 1
+									}
+								],
+								"type": 10,
+								"typeName": "0x0000000000000000000000000000000000000000000000000000000000000001::option::Option"
+							}
+						},
+						{
+							"body": {
+								"typeParameterInstantiation": [
+									{
+										"typeParameterInstantiation": [],
+										"type": 5
+									}
+								],
+								"type": 10,
+								"typeName": "0x0000000000000000000000000000000000000000000000000000000000000001::option::Option"
+							}
+						},
+						{
+							"reference": 2,
+							"body": {
+								"typeParameterInstantiation": [],
+								"type": 10,
+								"typeName": "0x0000000000000000000000000000000000000000000000000000000000000002::tx_context::TxContext"
+							}
+						}
+					],
+					"returns": [
+						{
+							"body": {
+								"typeParameterInstantiation": [
+									{
+										"typeParameterInstantiation": [],
+										"type": 11,
+										"typeParameter": 0
+									}
+								],
+								"type": 10,
+								"typeName": "0xf145ee6d09aae034924f80672bc76db2415dfd1b1bed863ac289af9d94e2c4fc::single_oracle::SingleOracle"
+							}
+						}
+					],
+					"name": "new",
+					"visibility": 3,
+					"isEntry": false
+				},
+				{
+					"typeParameters": [
+						{
+							"constraints": []
+						}
+					],
+					"parameters": [
+						{
+							"reference": 2,
+							"body": {
+								"typeParameterInstantiation": [
+									{
+										"typeParameterInstantiation": [],
+										"type": 11,
+										"typeParameter": 0
+									}
+								],
+								"type": 10,
+								"typeName": "0xf145ee6d09aae034924f80672bc76db2415dfd1b1bed863ac289af9d94e2c4fc::single_oracle::SingleOracle"
+							}
+						},
+						{
+							"reference": 1,
+							"body": {
+								"typeParameterInstantiation": [],
+								"type": 10,
+								"typeName": "0x0000000000000000000000000000000000000000000000000000000000000002::clock::Clock"
+							}
+						},
+						{
+							"body": {
+								"typeParameterInstantiation": [
+									{
+										"typeParameterInstantiation": [],
+										"type": 11,
+										"typeParameter": 0
+									}
+								],
+								"type": 10,
+								"typeName": "0xf145ee6d09aae034924f80672bc76db2415dfd1b1bed863ac289af9d94e2c4fc::single_oracle::PriceCollector"
+							}
+						}
+					],
+					"returns": [],
+					"name": "update_oracle_price",
+					"visibility": 2,
+					"isEntry": false
+				},
+				{
+					"typeParameters": [
+						{
+							"constraints": []
+						}
+					],
+					"parameters": [
+						{
+							"reference": 2,
+							"body": {
+								"typeParameterInstantiation": [
+									{
+										"typeParameterInstantiation": [],
+										"type": 11,
+										"typeParameter": 0
+									}
+								],
+								"type": 10,
+								"typeName": "0xf145ee6d09aae034924f80672bc76db2415dfd1b1bed863ac289af9d94e2c4fc::single_oracle::SingleOracle"
+							}
+						},
+						{
+							"body": {
+								"typeParameterInstantiation": [
+									{
+										"typeParameterInstantiation": [],
+										"type": 1
+									}
+								],
+								"type": 10,
+								"typeName": "0x0000000000000000000000000000000000000000000000000000000000000001::option::Option"
+							}
+						}
+					],
+					"returns": [],
+					"name": "update_pyth_config",
+					"visibility": 3,
+					"isEntry": false
+				},
+				{
+					"typeParameters": [
+						{
+							"constraints": []
+						}
+					],
+					"parameters": [
+						{
+							"reference": 2,
+							"body": {
+								"typeParameterInstantiation": [
+									{
+										"typeParameterInstantiation": [],
+										"type": 11,
+										"typeParameter": 0
+									}
+								],
+								"type": 10,
+								"typeName": "0xf145ee6d09aae034924f80672bc76db2415dfd1b1bed863ac289af9d94e2c4fc::single_oracle::SingleOracle"
+							}
+						},
+						{
+							"body": {
+								"typeParameterInstantiation": [
+									{
+										"typeParameterInstantiation": [],
+										"type": 5
+									}
+								],
+								"type": 10,
+								"typeName": "0x0000000000000000000000000000000000000000000000000000000000000001::option::Option"
+							}
+						}
+					],
+					"returns": [],
+					"name": "update_supra_config",
+					"visibility": 3,
+					"isEntry": false
+				},
+				{
+					"typeParameters": [
+						{
+							"constraints": []
+						}
+					],
+					"parameters": [
+						{
+							"reference": 2,
+							"body": {
+								"typeParameterInstantiation": [
+									{
+										"typeParameterInstantiation": [],
+										"type": 11,
+										"typeParameter": 0
+									}
+								],
+								"type": 10,
+								"typeName": "0xf145ee6d09aae034924f80672bc76db2415dfd1b1bed863ac289af9d94e2c4fc::single_oracle::SingleOracle"
+							}
+						},
+						{
+							"body": {
+								"typeParameterInstantiation": [
+									{
+										"typeParameterInstantiation": [],
+										"type": 1
+									}
+								],
+								"type": 10,
+								"typeName": "0x0000000000000000000000000000000000000000000000000000000000000001::option::Option"
+							}
+						}
+					],
+					"returns": [],
+					"name": "update_switchboard_config",
+					"visibility": 3,
+					"isEntry": false
+				},
+				{
+					"typeParameters": [
+						{
+							"constraints": []
+						}
+					],
+					"parameters": [
+						{
+							"reference": 2,
+							"body": {
+								"typeParameterInstantiation": [
+									{
+										"typeParameterInstantiation": [],
+										"type": 11,
+										"typeParameter": 0
+									}
+								],
+								"type": 10,
+								"typeName": "0xf145ee6d09aae034924f80672bc76db2415dfd1b1bed863ac289af9d94e2c4fc::single_oracle::SingleOracle"
+							}
+						},
+						{
+							"body": {
+								"typeParameterInstantiation": [],
+								"type": 6
+							}
+						}
+					],
+					"returns": [],
+					"name": "update_threshold",
+					"visibility": 3,
+					"isEntry": false
+				}
+			],
+			"name": "single_oracle"
+		}
+	},
+	{
+		"address": "0xf145ee6d09aae034924f80672bc76db2415dfd1b1bed863ac289af9d94e2c4fc",
+		"module": {
+			"datatypes": [],
+			"functions": [
+				{
+					"typeParameters": [],
+					"parameters": [
+						{
+							"reference": 1,
+							"body": {
+								"typeParameterInstantiation": [],
+								"type": 10,
+								"typeName": "0x5d8fbbf6f908a4af8c6d072669a462d53e03eb3c1d863bd0359dc818c69ea706::SupraSValueFeed::OracleHolder"
+							}
+						},
+						{
+							"body": {
+								"typeParameterInstantiation": [],
+								"type": 5
+							}
+						},
+						{
+							"body": {
+								"typeParameterInstantiation": [],
+								"type": 3
+							}
+						}
+					],
+					"returns": [
+						{
+							"body": {
+								"typeParameterInstantiation": [
+									{
+										"typeParameterInstantiation": [],
+										"type": 10,
+										"typeName": "0xf145ee6d09aae034924f80672bc76db2415dfd1b1bed863ac289af9d94e2c4fc::price_aggregator::PriceInfo"
+									}
+								],
+								"type": 10,
+								"typeName": "0x0000000000000000000000000000000000000000000000000000000000000001::option::Option"
+							}
+						}
+					],
+					"name": "parse_price",
+					"visibility": 2,
+					"isEntry": false
+				}
+			],
+			"name": "supra_parser"
+		}
+	},
+	{
+		"address": "0xf145ee6d09aae034924f80672bc76db2415dfd1b1bed863ac289af9d94e2c4fc",
+		"module": {
+			"datatypes": [],
+			"functions": [
+				{
+					"typeParameters": [],
+					"parameters": [
+						{
+							"reference": 1,
+							"body": {
+								"typeParameterInstantiation": [],
+								"type": 10,
+								"typeName": "0x08d79f4d920b03d88faca1e421af023a87fbb1e4a6fd200248e6e9998d09e470::aggregator::Aggregator"
+							}
+						}
+					],
+					"returns": [
+						{
+							"body": {
+								"typeParameterInstantiation": [],
+								"type": 7
+							}
+						},
+						{
+							"body": {
+								"typeParameterInstantiation": [],
+								"type": 3
+							}
+						},
+						{
+							"body": {
+								"typeParameterInstantiation": [],
+								"type": 6
+							}
+						}
+					],
+					"name": "extract_aggregator_info",
+					"visibility": 1,
+					"isEntry": false
+				},
+				{
+					"typeParameters": [],
+					"parameters": [
+						{
+							"body": {
+								"typeParameterInstantiation": [
+									{
+										"typeParameterInstantiation": [],
+										"type": 1
+									}
+								],
+								"type": 10,
+								"typeName": "0x0000000000000000000000000000000000000000000000000000000000000001::option::Option"
+							}
+						}
+					],
+					"returns": [
+						{
+							"body": {
+								"typeParameterInstantiation": [
+									{
+										"typeParameterInstantiation": [],
+										"type": 10,
+										"typeName": "0x0000000000000000000000000000000000000000000000000000000000000002::object::ID"
+									}
+								],
+								"type": 10,
+								"typeName": "0x0000000000000000000000000000000000000000000000000000000000000001::option::Option"
+							}
+						}
+					],
+					"name": "parse_config",
+					"visibility": 2,
+					"isEntry": false
+				},
+				{
+					"typeParameters": [],
+					"parameters": [
+						{
+							"reference": 1,
+							"body": {
+								"typeParameterInstantiation": [],
+								"type": 10,
+								"typeName": "0x08d79f4d920b03d88faca1e421af023a87fbb1e4a6fd200248e6e9998d09e470::aggregator::Aggregator"
+							}
+						},
+						{
+							"body": {
+								"typeParameterInstantiation": [],
+								"type": 3
+							}
+						}
+					],
+					"returns": [
+						{
+							"body": {
+								"typeParameterInstantiation": [
+									{
+										"typeParameterInstantiation": [],
+										"type": 10,
+										"typeName": "0xf145ee6d09aae034924f80672bc76db2415dfd1b1bed863ac289af9d94e2c4fc::price_aggregator::PriceInfo"
+									}
+								],
+								"type": 10,
+								"typeName": "0x0000000000000000000000000000000000000000000000000000000000000001::option::Option"
+							}
+						}
+					],
+					"name": "parse_price",
+					"visibility": 2,
+					"isEntry": false
+				}
+			],
+			"name": "switchboard_parser"
 		}
 	}
 ]

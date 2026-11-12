@@ -26,7 +26,7 @@ GLOBAL_CONFIG.execution = {
 
 let lastEigenRatioTimestamp: number | undefined = undefined;
 
-const fetchConfig: EthFetchConfig = {
+const fetchConfig = {
   transaction: true,
   transactionReceipt: false,
   transactionReceiptLogs: false,

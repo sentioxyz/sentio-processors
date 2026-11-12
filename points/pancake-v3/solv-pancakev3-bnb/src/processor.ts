@@ -15,7 +15,7 @@ import { PositionSnapshot } from "./schema/store.js"
 import { getPoolArgs, updatePoolArgs } from "./pool_args.js"
 import { PancakeStakingBNBChainProcessor } from "./types/eth/pancakestakingbnbchain.js"
 
-const NETWORK = EthChainId.BINANCE
+const NETWORK = EthChainId.BSC
 const NONFUNGIBLE_POSITION_MANAGER_CONTRACT_ADDRESS = "0x46a15b0b27311cedf172ab29e4f4766fbe7f4364"
 const POOL_ADDRESS = "0x12197d7a4fE2d67F9f97ae64D82A44c24B7Ad407"
 const TOKEN0_ADDRESS = "0x4aae823a6a0b376De6A78e74eCC5b079d38cBCf7" // SolvBTC

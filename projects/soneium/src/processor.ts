@@ -1,4 +1,4 @@
-import { EthContext, GenericProcessor, GlobalContext, GlobalProcessor } from '@sentio/sdk/eth'
+import { EthContext, GenericProcessor, getProvider, GlobalContext, GlobalProcessor } from '@sentio/sdk/eth'
 import { scaleDown } from '@sentio/sdk'
 // import { L2ERC20TokenBridgeContext, L2ERC20TokenBridgeProcessor } from './types/eth/l2erc20tokenbridge.js'
 import {
@@ -15,6 +15,8 @@ import { network, startBlock, getTokenInfo } from './utils.js'
 import './ccip.js'
 import './stargate.js'
 import { handleACS } from './acs.js'
+import { getDAppProject } from './dapp.js'
+import './tokens.js'
 
 const bridges = new Map([
   ['0x1f49a3fa2b5B5b61df8dE486aBb6F3b9df066d86'.toLowerCase(), 'Owlto Finance'],
@@ -29,21 +31,20 @@ const userCache = new LRUCache<string, boolean>({
 
 interface ContractInfo {
   is_contract: boolean
-  name: string
 }
 const contractCache = new LRUCache<string, ContractInfo>({
   max: 1000000
 })
 
+const provider = getProvider(network)
+
 async function getContractInfo(address: string) {
   let info = contractCache.get(address)
   if (!info) {
     try {
-      const res = await fetch(`https://soneium.blockscout.com/api/v2/addresses/${address}`)
-      const data = await res.json()
+      const code = await provider.getCode(address)
       info = {
-        is_contract: data.is_contract,
-        name: data.name
+        is_contract: code != '0x'
       }
       contractCache.set(address, info)
     } catch (e) {}
@@ -54,16 +55,18 @@ async function getContractInfo(address: string) {
 GlobalProcessor.bind({ network, startBlock }).onTransaction(
   async (tx, ctx) => {
     const user = tx.from
-    // const contractInfo = tx.to ? await getContractInfo(tx.to) : undefined
+    const contractInfo = tx.to ? await getContractInfo(tx.to) : undefined
     const gasUsed = ctx.transactionReceipt?.gasUsed
     const gasCost = getGasCost(ctx)
     ctx.eventLogger.emit('l2_tx', {
-      // ...contractInfo,
+      ...contractInfo,
       distinctId: user,
       to: tx.to,
       value: scaleDown(tx.value, 18),
       gasUsed,
-      gasCost
+      gasCost,
+      l1Fee: (ctx.transactionReceipt as any)?.l1Fee ? scaleDown((ctx.transactionReceipt as any).l1Fee, 18) : undefined,
+      ...getDAppProject(tx)
     })
 
     let existing = userCache.has(user)

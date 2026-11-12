@@ -6,7 +6,7 @@ import { getSeller, setSeller } from "./localdb.js";
 
 keepsake_marketplace.bind()
     .onEventListItemEvent(async (event, ctx) => {
-      await setSeller(event.data_decoded.item_id, ctx.transaction.transaction?.data.sender || "")
+      await setSeller(event.data_decoded.item_id, ctx.transaction.transaction?.sender || "")
     })
     .onEventDelistItemEvent(async (event, ctx) => {
       if (!event.data_decoded.sold) {
@@ -24,7 +24,7 @@ keepsake_marketplace.bind()
         nft_name,
         nft_type,
         nft_link,
-        buyer: ctx.transaction.transaction?.data.sender || "",
+        buyer: ctx.transaction.transaction?.sender || "",
         seller,
         price: event.data_decoded.sale_price.scaleDown(9)
       }

@@ -1,1275 +1,1421 @@
-{
-  "denylist_rule": {
-    "fileFormatVersion": 6,
+[
+  {
     "address": "0x325aef14e2ed83759a2969f9f9cbffca206430c2de658ec61a20866bb3f6fd51",
-    "name": "denylist_rule",
-    "friends": [],
-    "structs": {
-      "Denylist": {
-        "abilities": {
+    "module": {
+      "name": "denylist_rule",
+      "datatypes": [
+        {
+          "name": "Denylist",
+          "kind": 1,
           "abilities": [
-            "Drop"
-          ]
+            2
+          ],
+          "typeParameters": [],
+          "fields": [
+            {
+              "name": "dummy_field",
+              "position": 0,
+              "type": {
+                "type": 2,
+                "typeParameterInstantiation": []
+              }
+            }
+          ],
+          "variants": []
+        }
+      ],
+      "functions": [
+        {
+          "name": "add_records",
+          "visibility": 2,
+          "isEntry": false,
+          "typeParameters": [
+            {
+              "constraints": []
+            }
+          ],
+          "parameters": [
+            {
+              "reference": 2,
+              "body": {
+                "type": 10,
+                "typeName": "0x2::token::TokenPolicy",
+                "typeParameterInstantiation": [
+                  {
+                    "type": 11,
+                    "typeParameter": 0,
+                    "typeParameterInstantiation": []
+                  }
+                ]
+              }
+            },
+            {
+              "reference": 1,
+              "body": {
+                "type": 10,
+                "typeName": "0x2::token::TokenPolicyCap",
+                "typeParameterInstantiation": [
+                  {
+                    "type": 11,
+                    "typeParameter": 0,
+                    "typeParameterInstantiation": []
+                  }
+                ]
+              }
+            },
+            {
+              "body": {
+                "type": 9,
+                "typeParameterInstantiation": [
+                  {
+                    "type": 1,
+                    "typeParameterInstantiation": []
+                  }
+                ]
+              }
+            },
+            {
+              "reference": 2,
+              "body": {
+                "type": 10,
+                "typeName": "0x2::tx_context::TxContext",
+                "typeParameterInstantiation": []
+              }
+            }
+          ],
+          "returns": []
         },
-        "typeParameters": [],
-        "fields": [
-          {
-            "name": "dummy_field",
-            "type": "Bool"
-          }
-        ]
-      }
-    },
-    "exposedFunctions": {
-      "add_records": {
-        "visibility": "Public",
-        "isEntry": false,
-        "typeParameters": [
-          {
-            "abilities": []
-          }
-        ],
-        "parameters": [
-          {
-            "MutableReference": {
-              "Struct": {
-                "address": "0x2",
-                "module": "token",
-                "name": "TokenPolicy",
-                "typeArguments": [
+        {
+          "name": "remove_records",
+          "visibility": 2,
+          "isEntry": false,
+          "typeParameters": [
+            {
+              "constraints": []
+            }
+          ],
+          "parameters": [
+            {
+              "reference": 2,
+              "body": {
+                "type": 10,
+                "typeName": "0x2::token::TokenPolicy",
+                "typeParameterInstantiation": [
                   {
-                    "TypeParameter": 0
+                    "type": 11,
+                    "typeParameter": 0,
+                    "typeParameterInstantiation": []
                   }
                 ]
               }
-            }
-          },
-          {
-            "Reference": {
-              "Struct": {
-                "address": "0x2",
-                "module": "token",
-                "name": "TokenPolicyCap",
-                "typeArguments": [
+            },
+            {
+              "reference": 1,
+              "body": {
+                "type": 10,
+                "typeName": "0x2::token::TokenPolicyCap",
+                "typeParameterInstantiation": [
                   {
-                    "TypeParameter": 0
+                    "type": 11,
+                    "typeParameter": 0,
+                    "typeParameterInstantiation": []
                   }
                 ]
               }
-            }
-          },
-          {
-            "Vector": "Address"
-          },
-          {
-            "MutableReference": {
-              "Struct": {
-                "address": "0x2",
-                "module": "tx_context",
-                "name": "TxContext",
-                "typeArguments": []
-              }
-            }
-          }
-        ],
-        "return": []
-      },
-      "remove_records": {
-        "visibility": "Public",
-        "isEntry": false,
-        "typeParameters": [
-          {
-            "abilities": []
-          }
-        ],
-        "parameters": [
-          {
-            "MutableReference": {
-              "Struct": {
-                "address": "0x2",
-                "module": "token",
-                "name": "TokenPolicy",
-                "typeArguments": [
+            },
+            {
+              "body": {
+                "type": 9,
+                "typeParameterInstantiation": [
                   {
-                    "TypeParameter": 0
+                    "type": 1,
+                    "typeParameterInstantiation": []
                   }
                 ]
               }
+            },
+            {
+              "reference": 2,
+              "body": {
+                "type": 10,
+                "typeName": "0x2::tx_context::TxContext",
+                "typeParameterInstantiation": []
+              }
             }
-          },
-          {
-            "Reference": {
-              "Struct": {
-                "address": "0x2",
-                "module": "token",
-                "name": "TokenPolicyCap",
-                "typeArguments": [
+          ],
+          "returns": []
+        },
+        {
+          "name": "verify",
+          "visibility": 2,
+          "isEntry": false,
+          "typeParameters": [
+            {
+              "constraints": []
+            }
+          ],
+          "parameters": [
+            {
+              "reference": 1,
+              "body": {
+                "type": 10,
+                "typeName": "0x2::token::TokenPolicy",
+                "typeParameterInstantiation": [
                   {
-                    "TypeParameter": 0
+                    "type": 11,
+                    "typeParameter": 0,
+                    "typeParameterInstantiation": []
                   }
                 ]
               }
-            }
-          },
-          {
-            "Vector": "Address"
-          },
-          {
-            "MutableReference": {
-              "Struct": {
-                "address": "0x2",
-                "module": "tx_context",
-                "name": "TxContext",
-                "typeArguments": []
-              }
-            }
-          }
-        ],
-        "return": []
-      },
-      "verify": {
-        "visibility": "Public",
-        "isEntry": false,
-        "typeParameters": [
-          {
-            "abilities": []
-          }
-        ],
-        "parameters": [
-          {
-            "Reference": {
-              "Struct": {
-                "address": "0x2",
-                "module": "token",
-                "name": "TokenPolicy",
-                "typeArguments": [
+            },
+            {
+              "reference": 2,
+              "body": {
+                "type": 10,
+                "typeName": "0x2::token::ActionRequest",
+                "typeParameterInstantiation": [
                   {
-                    "TypeParameter": 0
+                    "type": 11,
+                    "typeParameter": 0,
+                    "typeParameterInstantiation": []
                   }
                 ]
               }
-            }
-          },
-          {
-            "MutableReference": {
-              "Struct": {
-                "address": "0x2",
-                "module": "token",
-                "name": "ActionRequest",
-                "typeArguments": [
-                  {
-                    "TypeParameter": 0
-                  }
-                ]
+            },
+            {
+              "reference": 2,
+              "body": {
+                "type": 10,
+                "typeName": "0x2::tx_context::TxContext",
+                "typeParameterInstantiation": []
               }
             }
-          },
-          {
-            "MutableReference": {
-              "Struct": {
-                "address": "0x2",
-                "module": "tx_context",
-                "name": "TxContext",
-                "typeArguments": []
-              }
-            }
-          }
-        ],
-        "return": []
-      }
+          ],
+          "returns": []
+        }
+      ]
     }
   },
-  "drawticket": {
-    "fileFormatVersion": 6,
+  {
     "address": "0x325aef14e2ed83759a2969f9f9cbffca206430c2de658ec61a20866bb3f6fd51",
-    "name": "drawticket",
-    "friends": [],
-    "structs": {
-      "DRAWTICKET": {
-        "abilities": {
+    "module": {
+      "name": "drawticket",
+      "datatypes": [
+        {
+          "name": "DRAWTICKET",
+          "kind": 1,
           "abilities": [
-            "Drop"
-          ]
+            2
+          ],
+          "typeParameters": [],
+          "fields": [
+            {
+              "name": "dummy_field",
+              "position": 0,
+              "type": {
+                "type": 2,
+                "typeParameterInstantiation": []
+              }
+            }
+          ],
+          "variants": []
+        }
+      ],
+      "functions": [
+        {
+          "name": "add_admin",
+          "visibility": 2,
+          "isEntry": false,
+          "typeParameters": [
+            {
+              "constraints": []
+            }
+          ],
+          "parameters": [
+            {
+              "reference": 2,
+              "body": {
+                "type": 10,
+                "typeName": "0x325aef14e2ed83759a2969f9f9cbffca206430c2de658ec61a20866bb3f6fd51::treasury::ControlledTreasury",
+                "typeParameterInstantiation": [
+                  {
+                    "type": 11,
+                    "typeParameter": 0,
+                    "typeParameterInstantiation": []
+                  }
+                ]
+              }
+            },
+            {
+              "body": {
+                "type": 1,
+                "typeParameterInstantiation": []
+              }
+            },
+            {
+              "reference": 2,
+              "body": {
+                "type": 10,
+                "typeName": "0x2::tx_context::TxContext",
+                "typeParameterInstantiation": []
+              }
+            }
+          ],
+          "returns": []
         },
-        "typeParameters": [],
-        "fields": [
-          {
-            "name": "dummy_field",
-            "type": "Bool"
-          }
-        ]
-      }
-    },
-    "exposedFunctions": {
-      "add_admin": {
-        "visibility": "Public",
-        "isEntry": false,
-        "typeParameters": [
-          {
-            "abilities": []
-          }
-        ],
-        "parameters": [
-          {
-            "MutableReference": {
-              "Struct": {
-                "address": "0x325aef14e2ed83759a2969f9f9cbffca206430c2de658ec61a20866bb3f6fd51",
-                "module": "treasury",
-                "name": "ControlledTreasury",
-                "typeArguments": [
+        {
+          "name": "add_burner",
+          "visibility": 2,
+          "isEntry": false,
+          "typeParameters": [
+            {
+              "constraints": []
+            }
+          ],
+          "parameters": [
+            {
+              "reference": 2,
+              "body": {
+                "type": 10,
+                "typeName": "0x325aef14e2ed83759a2969f9f9cbffca206430c2de658ec61a20866bb3f6fd51::treasury::ControlledTreasury",
+                "typeParameterInstantiation": [
                   {
-                    "TypeParameter": 0
+                    "type": 11,
+                    "typeParameter": 0,
+                    "typeParameterInstantiation": []
                   }
                 ]
               }
-            }
-          },
-          "Address",
-          {
-            "MutableReference": {
-              "Struct": {
-                "address": "0x2",
-                "module": "tx_context",
-                "name": "TxContext",
-                "typeArguments": []
+            },
+            {
+              "body": {
+                "type": 1,
+                "typeParameterInstantiation": []
+              }
+            },
+            {
+              "reference": 2,
+              "body": {
+                "type": 10,
+                "typeName": "0x2::tx_context::TxContext",
+                "typeParameterInstantiation": []
               }
             }
-          }
-        ],
-        "return": []
-      },
-      "add_burner": {
-        "visibility": "Public",
-        "isEntry": false,
-        "typeParameters": [
-          {
-            "abilities": []
-          }
-        ],
-        "parameters": [
-          {
-            "MutableReference": {
-              "Struct": {
-                "address": "0x325aef14e2ed83759a2969f9f9cbffca206430c2de658ec61a20866bb3f6fd51",
-                "module": "treasury",
-                "name": "ControlledTreasury",
-                "typeArguments": [
+          ],
+          "returns": []
+        },
+        {
+          "name": "add_minter",
+          "visibility": 2,
+          "isEntry": false,
+          "typeParameters": [
+            {
+              "constraints": []
+            }
+          ],
+          "parameters": [
+            {
+              "reference": 2,
+              "body": {
+                "type": 10,
+                "typeName": "0x325aef14e2ed83759a2969f9f9cbffca206430c2de658ec61a20866bb3f6fd51::treasury::ControlledTreasury",
+                "typeParameterInstantiation": [
                   {
-                    "TypeParameter": 0
+                    "type": 11,
+                    "typeParameter": 0,
+                    "typeParameterInstantiation": []
                   }
                 ]
               }
-            }
-          },
-          "Address",
-          {
-            "MutableReference": {
-              "Struct": {
-                "address": "0x2",
-                "module": "tx_context",
-                "name": "TxContext",
-                "typeArguments": []
+            },
+            {
+              "body": {
+                "type": 1,
+                "typeParameterInstantiation": []
+              }
+            },
+            {
+              "reference": 2,
+              "body": {
+                "type": 10,
+                "typeName": "0x2::tx_context::TxContext",
+                "typeParameterInstantiation": []
               }
             }
-          }
-        ],
-        "return": []
-      },
-      "add_minter": {
-        "visibility": "Public",
-        "isEntry": false,
-        "typeParameters": [
-          {
-            "abilities": []
-          }
-        ],
-        "parameters": [
-          {
-            "MutableReference": {
-              "Struct": {
-                "address": "0x325aef14e2ed83759a2969f9f9cbffca206430c2de658ec61a20866bb3f6fd51",
-                "module": "treasury",
-                "name": "ControlledTreasury",
-                "typeArguments": [
+          ],
+          "returns": []
+        },
+        {
+          "name": "burn",
+          "visibility": 2,
+          "isEntry": false,
+          "typeParameters": [
+            {
+              "constraints": []
+            }
+          ],
+          "parameters": [
+            {
+              "reference": 2,
+              "body": {
+                "type": 10,
+                "typeName": "0x325aef14e2ed83759a2969f9f9cbffca206430c2de658ec61a20866bb3f6fd51::treasury::ControlledTreasury",
+                "typeParameterInstantiation": [
                   {
-                    "TypeParameter": 0
+                    "type": 11,
+                    "typeParameter": 0,
+                    "typeParameterInstantiation": []
                   }
                 ]
               }
-            }
-          },
-          "Address",
-          {
-            "MutableReference": {
-              "Struct": {
-                "address": "0x2",
-                "module": "tx_context",
-                "name": "TxContext",
-                "typeArguments": []
-              }
-            }
-          }
-        ],
-        "return": []
-      },
-      "burn": {
-        "visibility": "Public",
-        "isEntry": false,
-        "typeParameters": [
-          {
-            "abilities": []
-          }
-        ],
-        "parameters": [
-          {
-            "MutableReference": {
-              "Struct": {
-                "address": "0x325aef14e2ed83759a2969f9f9cbffca206430c2de658ec61a20866bb3f6fd51",
-                "module": "treasury",
-                "name": "ControlledTreasury",
-                "typeArguments": [
+            },
+            {
+              "body": {
+                "type": 10,
+                "typeName": "0x2::token::Token",
+                "typeParameterInstantiation": [
                   {
-                    "TypeParameter": 0
+                    "type": 11,
+                    "typeParameter": 0,
+                    "typeParameterInstantiation": []
                   }
                 ]
               }
-            }
-          },
-          {
-            "Struct": {
-              "address": "0x2",
-              "module": "token",
-              "name": "Token",
-              "typeArguments": [
-                {
-                  "TypeParameter": 0
-                }
-              ]
-            }
-          },
-          {
-            "MutableReference": {
-              "Struct": {
-                "address": "0x2",
-                "module": "tx_context",
-                "name": "TxContext",
-                "typeArguments": []
+            },
+            {
+              "reference": 2,
+              "body": {
+                "type": 10,
+                "typeName": "0x2::tx_context::TxContext",
+                "typeParameterInstantiation": []
               }
             }
-          }
-        ],
-        "return": []
-      },
-      "mint": {
-        "visibility": "Public",
-        "isEntry": false,
-        "typeParameters": [
-          {
-            "abilities": []
-          }
-        ],
-        "parameters": [
-          {
-            "MutableReference": {
-              "Struct": {
-                "address": "0x325aef14e2ed83759a2969f9f9cbffca206430c2de658ec61a20866bb3f6fd51",
-                "module": "treasury",
-                "name": "ControlledTreasury",
-                "typeArguments": [
+          ],
+          "returns": []
+        },
+        {
+          "name": "mint",
+          "visibility": 2,
+          "isEntry": false,
+          "typeParameters": [
+            {
+              "constraints": []
+            }
+          ],
+          "parameters": [
+            {
+              "reference": 2,
+              "body": {
+                "type": 10,
+                "typeName": "0x325aef14e2ed83759a2969f9f9cbffca206430c2de658ec61a20866bb3f6fd51::treasury::ControlledTreasury",
+                "typeParameterInstantiation": [
                   {
-                    "TypeParameter": 0
+                    "type": 11,
+                    "typeParameter": 0,
+                    "typeParameterInstantiation": []
                   }
                 ]
               }
-            }
-          },
-          "Address",
-          {
-            "MutableReference": {
-              "Struct": {
-                "address": "0x2",
-                "module": "tx_context",
-                "name": "TxContext",
-                "typeArguments": []
+            },
+            {
+              "body": {
+                "type": 1,
+                "typeParameterInstantiation": []
+              }
+            },
+            {
+              "reference": 2,
+              "body": {
+                "type": 10,
+                "typeName": "0x2::tx_context::TxContext",
+                "typeParameterInstantiation": []
               }
             }
-          }
-        ],
-        "return": []
-      },
-      "remove_admin": {
-        "visibility": "Public",
-        "isEntry": false,
-        "typeParameters": [
-          {
-            "abilities": []
-          }
-        ],
-        "parameters": [
-          {
-            "MutableReference": {
-              "Struct": {
-                "address": "0x325aef14e2ed83759a2969f9f9cbffca206430c2de658ec61a20866bb3f6fd51",
-                "module": "treasury",
-                "name": "ControlledTreasury",
-                "typeArguments": [
+          ],
+          "returns": []
+        },
+        {
+          "name": "remove_admin",
+          "visibility": 2,
+          "isEntry": false,
+          "typeParameters": [
+            {
+              "constraints": []
+            }
+          ],
+          "parameters": [
+            {
+              "reference": 2,
+              "body": {
+                "type": 10,
+                "typeName": "0x325aef14e2ed83759a2969f9f9cbffca206430c2de658ec61a20866bb3f6fd51::treasury::ControlledTreasury",
+                "typeParameterInstantiation": [
                   {
-                    "TypeParameter": 0
+                    "type": 11,
+                    "typeParameter": 0,
+                    "typeParameterInstantiation": []
                   }
                 ]
               }
-            }
-          },
-          "Address",
-          {
-            "MutableReference": {
-              "Struct": {
-                "address": "0x2",
-                "module": "tx_context",
-                "name": "TxContext",
-                "typeArguments": []
+            },
+            {
+              "body": {
+                "type": 1,
+                "typeParameterInstantiation": []
+              }
+            },
+            {
+              "reference": 2,
+              "body": {
+                "type": 10,
+                "typeName": "0x2::tx_context::TxContext",
+                "typeParameterInstantiation": []
               }
             }
-          }
-        ],
-        "return": []
-      },
-      "remove_burner": {
-        "visibility": "Public",
-        "isEntry": false,
-        "typeParameters": [
-          {
-            "abilities": []
-          }
-        ],
-        "parameters": [
-          {
-            "MutableReference": {
-              "Struct": {
-                "address": "0x325aef14e2ed83759a2969f9f9cbffca206430c2de658ec61a20866bb3f6fd51",
-                "module": "treasury",
-                "name": "ControlledTreasury",
-                "typeArguments": [
+          ],
+          "returns": []
+        },
+        {
+          "name": "remove_burner",
+          "visibility": 2,
+          "isEntry": false,
+          "typeParameters": [
+            {
+              "constraints": []
+            }
+          ],
+          "parameters": [
+            {
+              "reference": 2,
+              "body": {
+                "type": 10,
+                "typeName": "0x325aef14e2ed83759a2969f9f9cbffca206430c2de658ec61a20866bb3f6fd51::treasury::ControlledTreasury",
+                "typeParameterInstantiation": [
                   {
-                    "TypeParameter": 0
+                    "type": 11,
+                    "typeParameter": 0,
+                    "typeParameterInstantiation": []
                   }
                 ]
               }
-            }
-          },
-          "Address",
-          {
-            "MutableReference": {
-              "Struct": {
-                "address": "0x2",
-                "module": "tx_context",
-                "name": "TxContext",
-                "typeArguments": []
+            },
+            {
+              "body": {
+                "type": 1,
+                "typeParameterInstantiation": []
+              }
+            },
+            {
+              "reference": 2,
+              "body": {
+                "type": 10,
+                "typeName": "0x2::tx_context::TxContext",
+                "typeParameterInstantiation": []
               }
             }
-          }
-        ],
-        "return": []
-      },
-      "remove_minter": {
-        "visibility": "Public",
-        "isEntry": false,
-        "typeParameters": [
-          {
-            "abilities": []
-          }
-        ],
-        "parameters": [
-          {
-            "MutableReference": {
-              "Struct": {
-                "address": "0x325aef14e2ed83759a2969f9f9cbffca206430c2de658ec61a20866bb3f6fd51",
-                "module": "treasury",
-                "name": "ControlledTreasury",
-                "typeArguments": [
+          ],
+          "returns": []
+        },
+        {
+          "name": "remove_minter",
+          "visibility": 2,
+          "isEntry": false,
+          "typeParameters": [
+            {
+              "constraints": []
+            }
+          ],
+          "parameters": [
+            {
+              "reference": 2,
+              "body": {
+                "type": 10,
+                "typeName": "0x325aef14e2ed83759a2969f9f9cbffca206430c2de658ec61a20866bb3f6fd51::treasury::ControlledTreasury",
+                "typeParameterInstantiation": [
                   {
-                    "TypeParameter": 0
+                    "type": 11,
+                    "typeParameter": 0,
+                    "typeParameterInstantiation": []
                   }
                 ]
               }
-            }
-          },
-          "Address",
-          {
-            "MutableReference": {
-              "Struct": {
-                "address": "0x2",
-                "module": "tx_context",
-                "name": "TxContext",
-                "typeArguments": []
+            },
+            {
+              "body": {
+                "type": 1,
+                "typeParameterInstantiation": []
+              }
+            },
+            {
+              "reference": 2,
+              "body": {
+                "type": 10,
+                "typeName": "0x2::tx_context::TxContext",
+                "typeParameterInstantiation": []
               }
             }
-          }
-        ],
-        "return": []
-      },
-      "set_rules": {
-        "visibility": "Friend",
-        "isEntry": false,
-        "typeParameters": [
-          {
-            "abilities": []
-          }
-        ],
-        "parameters": [
-          {
-            "MutableReference": {
-              "Struct": {
-                "address": "0x2",
-                "module": "token",
-                "name": "TokenPolicy",
-                "typeArguments": [
+          ],
+          "returns": []
+        },
+        {
+          "name": "set_rules",
+          "visibility": 3,
+          "isEntry": false,
+          "typeParameters": [
+            {
+              "constraints": []
+            }
+          ],
+          "parameters": [
+            {
+              "reference": 2,
+              "body": {
+                "type": 10,
+                "typeName": "0x2::token::TokenPolicy",
+                "typeParameterInstantiation": [
                   {
-                    "TypeParameter": 0
+                    "type": 11,
+                    "typeParameter": 0,
+                    "typeParameterInstantiation": []
                   }
                 ]
               }
-            }
-          },
-          {
-            "Reference": {
-              "Struct": {
-                "address": "0x2",
-                "module": "token",
-                "name": "TokenPolicyCap",
-                "typeArguments": [
+            },
+            {
+              "reference": 1,
+              "body": {
+                "type": 10,
+                "typeName": "0x2::token::TokenPolicyCap",
+                "typeParameterInstantiation": [
                   {
-                    "TypeParameter": 0
+                    "type": 11,
+                    "typeParameter": 0,
+                    "typeParameterInstantiation": []
                   }
                 ]
               }
-            }
-          },
-          {
-            "MutableReference": {
-              "Struct": {
-                "address": "0x2",
-                "module": "tx_context",
-                "name": "TxContext",
-                "typeArguments": []
+            },
+            {
+              "reference": 2,
+              "body": {
+                "type": 10,
+                "typeName": "0x2::tx_context::TxContext",
+                "typeParameterInstantiation": []
               }
             }
-          }
-        ],
-        "return": []
-      }
+          ],
+          "returns": []
+        }
+      ]
     }
   },
-  "treasury": {
-    "fileFormatVersion": 6,
+  {
     "address": "0x325aef14e2ed83759a2969f9f9cbffca206430c2de658ec61a20866bb3f6fd51",
-    "name": "treasury",
-    "friends": [],
-    "structs": {
-      "AdminCap": {
-        "abilities": {
+    "module": {
+      "name": "treasury",
+      "datatypes": [
+        {
+          "name": "AdminCap",
+          "kind": 1,
           "abilities": [
-            "Drop",
-            "Store"
-          ]
+            2,
+            3
+          ],
+          "typeParameters": [],
+          "fields": [
+            {
+              "name": "dummy_field",
+              "position": 0,
+              "type": {
+                "type": 2,
+                "typeParameterInstantiation": []
+              }
+            }
+          ],
+          "variants": []
         },
-        "typeParameters": [],
-        "fields": [
-          {
-            "name": "dummy_field",
-            "type": "Bool"
-          }
-        ]
-      },
-      "BurnCap": {
-        "abilities": {
+        {
+          "name": "BurnCap",
+          "kind": 1,
           "abilities": [
-            "Drop",
-            "Store"
-          ]
+            2,
+            3
+          ],
+          "typeParameters": [],
+          "fields": [
+            {
+              "name": "dummy_field",
+              "position": 0,
+              "type": {
+                "type": 2,
+                "typeParameterInstantiation": []
+              }
+            }
+          ],
+          "variants": []
         },
-        "typeParameters": [],
-        "fields": [
-          {
-            "name": "dummy_field",
-            "type": "Bool"
-          }
-        ]
-      },
-      "BurnEvent": {
-        "abilities": {
+        {
+          "name": "BurnEvent",
+          "kind": 1,
           "abilities": [
-            "Copy",
-            "Drop"
-          ]
-        },
-        "typeParameters": [
-          {
-            "constraints": {
-              "abilities": []
+            1,
+            2
+          ],
+          "typeParameters": [
+            {
+              "constraints": []
+            }
+          ],
+          "fields": [
+            {
+              "name": "amount",
+              "position": 0,
+              "type": {
+                "type": 6,
+                "typeParameterInstantiation": []
+              }
             },
-            "isPhantom": true
-          }
-        ],
-        "fields": [
-          {
-            "name": "amount",
-            "type": "U64"
-          },
-          {
-            "name": "from",
-            "type": "Address"
-          }
-        ]
-      },
-      "ControlledTreasury": {
-        "abilities": {
-          "abilities": [
-            "Key"
-          ]
+            {
+              "name": "from",
+              "position": 1,
+              "type": {
+                "type": 1,
+                "typeParameterInstantiation": []
+              }
+            }
+          ],
+          "variants": []
         },
-        "typeParameters": [
-          {
-            "constraints": {
-              "abilities": []
+        {
+          "name": "ControlledTreasury",
+          "kind": 1,
+          "abilities": [
+            4
+          ],
+          "typeParameters": [
+            {
+              "constraints": []
+            }
+          ],
+          "fields": [
+            {
+              "name": "id",
+              "position": 0,
+              "type": {
+                "type": 10,
+                "typeName": "0x2::object::UID",
+                "typeParameterInstantiation": []
+              }
             },
-            "isPhantom": true
-          }
-        ],
-        "fields": [
-          {
-            "name": "id",
-            "type": {
-              "Struct": {
-                "address": "0x2",
-                "module": "object",
-                "name": "UID",
-                "typeArguments": []
+            {
+              "name": "admin_count",
+              "position": 1,
+              "type": {
+                "type": 3,
+                "typeParameterInstantiation": []
               }
-            }
-          },
-          {
-            "name": "admin_count",
-            "type": "U8"
-          },
-          {
-            "name": "treasury_cap",
-            "type": {
-              "Struct": {
-                "address": "0x2",
-                "module": "coin",
-                "name": "TreasuryCap",
-                "typeArguments": [
-                  {
-                    "TypeParameter": 0
-                  }
-                ]
-              }
-            }
-          },
-          {
-            "name": "own_capabilities",
-            "type": {
-              "Struct": {
-                "address": "0x2",
-                "module": "bag",
-                "name": "Bag",
-                "typeArguments": []
-              }
-            }
-          }
-        ]
-      },
-      "MintCap": {
-        "abilities": {
-          "abilities": [
-            "Drop",
-            "Store"
-          ]
-        },
-        "typeParameters": [],
-        "fields": [
-          {
-            "name": "limit",
-            "type": "U64"
-          },
-          {
-            "name": "epoch",
-            "type": "U64"
-          },
-          {
-            "name": "left",
-            "type": "U64"
-          }
-        ]
-      },
-      "MintEvent": {
-        "abilities": {
-          "abilities": [
-            "Copy",
-            "Drop"
-          ]
-        },
-        "typeParameters": [
-          {
-            "constraints": {
-              "abilities": []
             },
-            "isPhantom": true
-          }
-        ],
-        "fields": [
-          {
-            "name": "amount",
-            "type": "U64"
-          },
-          {
-            "name": "to",
-            "type": "Address"
-          }
-        ]
-      },
-      "RoleKey": {
-        "abilities": {
-          "abilities": [
-            "Copy",
-            "Drop",
-            "Store"
-          ]
-        },
-        "typeParameters": [
-          {
-            "constraints": {
-              "abilities": []
+            {
+              "name": "treasury_cap",
+              "position": 2,
+              "type": {
+                "type": 10,
+                "typeName": "0x2::coin::TreasuryCap",
+                "typeParameterInstantiation": [
+                  {
+                    "type": 11,
+                    "typeParameter": 0,
+                    "typeParameterInstantiation": []
+                  }
+                ]
+              }
             },
-            "isPhantom": true
-          }
-        ],
-        "fields": [
-          {
-            "name": "owner",
-            "type": "Address"
-          }
-        ]
-      },
-      "WhitelistCap": {
-        "abilities": {
+            {
+              "name": "own_capabilities",
+              "position": 3,
+              "type": {
+                "type": 10,
+                "typeName": "0x2::bag::Bag",
+                "typeParameterInstantiation": []
+              }
+            }
+          ],
+          "variants": []
+        },
+        {
+          "name": "MintCap",
+          "kind": 1,
           "abilities": [
-            "Drop",
-            "Store"
+            2,
+            3
+          ],
+          "typeParameters": [],
+          "fields": [
+            {
+              "name": "limit",
+              "position": 0,
+              "type": {
+                "type": 6,
+                "typeParameterInstantiation": []
+              }
+            },
+            {
+              "name": "epoch",
+              "position": 1,
+              "type": {
+                "type": 6,
+                "typeParameterInstantiation": []
+              }
+            },
+            {
+              "name": "left",
+              "position": 2,
+              "type": {
+                "type": 6,
+                "typeParameterInstantiation": []
+              }
+            }
+          ],
+          "variants": []
+        },
+        {
+          "name": "MintEvent",
+          "kind": 1,
+          "abilities": [
+            1,
+            2
+          ],
+          "typeParameters": [
+            {
+              "constraints": []
+            }
+          ],
+          "fields": [
+            {
+              "name": "amount",
+              "position": 0,
+              "type": {
+                "type": 6,
+                "typeParameterInstantiation": []
+              }
+            },
+            {
+              "name": "to",
+              "position": 1,
+              "type": {
+                "type": 1,
+                "typeParameterInstantiation": []
+              }
+            }
+          ],
+          "variants": []
+        },
+        {
+          "name": "RoleKey",
+          "kind": 1,
+          "abilities": [
+            1,
+            2,
+            3
+          ],
+          "typeParameters": [
+            {
+              "constraints": []
+            }
+          ],
+          "fields": [
+            {
+              "name": "owner",
+              "position": 0,
+              "type": {
+                "type": 1,
+                "typeParameterInstantiation": []
+              }
+            }
+          ],
+          "variants": []
+        },
+        {
+          "name": "WhitelistCap",
+          "kind": 1,
+          "abilities": [
+            2,
+            3
+          ],
+          "typeParameters": [],
+          "fields": [
+            {
+              "name": "dummy_field",
+              "position": 0,
+              "type": {
+                "type": 2,
+                "typeParameterInstantiation": []
+              }
+            }
+          ],
+          "variants": []
+        },
+        {
+          "name": "WhitelistEntry",
+          "kind": 1,
+          "abilities": [
+            2,
+            3
+          ],
+          "typeParameters": [],
+          "fields": [
+            {
+              "name": "dummy_field",
+              "position": 0,
+              "type": {
+                "type": 2,
+                "typeParameterInstantiation": []
+              }
+            }
+          ],
+          "variants": []
+        }
+      ],
+      "functions": [
+        {
+          "name": "add_capability",
+          "visibility": 2,
+          "isEntry": false,
+          "typeParameters": [
+            {
+              "constraints": []
+            },
+            {
+              "constraints": [
+                2,
+                3
+              ]
+            }
+          ],
+          "parameters": [
+            {
+              "reference": 2,
+              "body": {
+                "type": 10,
+                "typeName": "0x325aef14e2ed83759a2969f9f9cbffca206430c2de658ec61a20866bb3f6fd51::treasury::ControlledTreasury",
+                "typeParameterInstantiation": [
+                  {
+                    "type": 11,
+                    "typeParameter": 0,
+                    "typeParameterInstantiation": []
+                  }
+                ]
+              }
+            },
+            {
+              "body": {
+                "type": 1,
+                "typeParameterInstantiation": []
+              }
+            },
+            {
+              "body": {
+                "type": 11,
+                "typeParameter": 1,
+                "typeParameterInstantiation": []
+              }
+            },
+            {
+              "reference": 2,
+              "body": {
+                "type": 10,
+                "typeName": "0x2::tx_context::TxContext",
+                "typeParameterInstantiation": []
+              }
+            }
+          ],
+          "returns": []
+        },
+        {
+          "name": "add_whitelist_entry",
+          "visibility": 2,
+          "isEntry": false,
+          "typeParameters": [
+            {
+              "constraints": []
+            }
+          ],
+          "parameters": [
+            {
+              "reference": 2,
+              "body": {
+                "type": 10,
+                "typeName": "0x325aef14e2ed83759a2969f9f9cbffca206430c2de658ec61a20866bb3f6fd51::treasury::ControlledTreasury",
+                "typeParameterInstantiation": [
+                  {
+                    "type": 11,
+                    "typeParameter": 0,
+                    "typeParameterInstantiation": []
+                  }
+                ]
+              }
+            },
+            {
+              "body": {
+                "type": 1,
+                "typeParameterInstantiation": []
+              }
+            },
+            {
+              "reference": 2,
+              "body": {
+                "type": 10,
+                "typeName": "0x2::tx_context::TxContext",
+                "typeParameterInstantiation": []
+              }
+            }
+          ],
+          "returns": []
+        },
+        {
+          "name": "burn",
+          "visibility": 2,
+          "isEntry": false,
+          "typeParameters": [
+            {
+              "constraints": []
+            }
+          ],
+          "parameters": [
+            {
+              "reference": 2,
+              "body": {
+                "type": 10,
+                "typeName": "0x325aef14e2ed83759a2969f9f9cbffca206430c2de658ec61a20866bb3f6fd51::treasury::ControlledTreasury",
+                "typeParameterInstantiation": [
+                  {
+                    "type": 11,
+                    "typeParameter": 0,
+                    "typeParameterInstantiation": []
+                  }
+                ]
+              }
+            },
+            {
+              "body": {
+                "type": 10,
+                "typeName": "0x2::token::Token",
+                "typeParameterInstantiation": [
+                  {
+                    "type": 11,
+                    "typeParameter": 0,
+                    "typeParameterInstantiation": []
+                  }
+                ]
+              }
+            },
+            {
+              "reference": 2,
+              "body": {
+                "type": 10,
+                "typeName": "0x2::tx_context::TxContext",
+                "typeParameterInstantiation": []
+              }
+            }
+          ],
+          "returns": []
+        },
+        {
+          "name": "deconstruct",
+          "visibility": 2,
+          "isEntry": false,
+          "typeParameters": [
+            {
+              "constraints": []
+            }
+          ],
+          "parameters": [
+            {
+              "body": {
+                "type": 10,
+                "typeName": "0x325aef14e2ed83759a2969f9f9cbffca206430c2de658ec61a20866bb3f6fd51::treasury::ControlledTreasury",
+                "typeParameterInstantiation": [
+                  {
+                    "type": 11,
+                    "typeParameter": 0,
+                    "typeParameterInstantiation": []
+                  }
+                ]
+              }
+            },
+            {
+              "reference": 2,
+              "body": {
+                "type": 10,
+                "typeName": "0x2::tx_context::TxContext",
+                "typeParameterInstantiation": []
+              }
+            }
+          ],
+          "returns": [
+            {
+              "body": {
+                "type": 10,
+                "typeName": "0x2::coin::TreasuryCap",
+                "typeParameterInstantiation": [
+                  {
+                    "type": 11,
+                    "typeParameter": 0,
+                    "typeParameterInstantiation": []
+                  }
+                ]
+              }
+            },
+            {
+              "body": {
+                "type": 10,
+                "typeName": "0x2::bag::Bag",
+                "typeParameterInstantiation": []
+              }
+            }
           ]
         },
-        "typeParameters": [],
-        "fields": [
-          {
-            "name": "dummy_field",
-            "type": "Bool"
-          }
-        ]
-      },
-      "WhitelistEntry": {
-        "abilities": {
-          "abilities": [
-            "Drop",
-            "Store"
+        {
+          "name": "has_cap",
+          "visibility": 2,
+          "isEntry": false,
+          "typeParameters": [
+            {
+              "constraints": []
+            },
+            {
+              "constraints": [
+                3
+              ]
+            }
+          ],
+          "parameters": [
+            {
+              "reference": 1,
+              "body": {
+                "type": 10,
+                "typeName": "0x325aef14e2ed83759a2969f9f9cbffca206430c2de658ec61a20866bb3f6fd51::treasury::ControlledTreasury",
+                "typeParameterInstantiation": [
+                  {
+                    "type": 11,
+                    "typeParameter": 0,
+                    "typeParameterInstantiation": []
+                  }
+                ]
+              }
+            },
+            {
+              "body": {
+                "type": 1,
+                "typeParameterInstantiation": []
+              }
+            }
+          ],
+          "returns": [
+            {
+              "body": {
+                "type": 2,
+                "typeParameterInstantiation": []
+              }
+            }
           ]
         },
-        "typeParameters": [],
-        "fields": [
-          {
-            "name": "dummy_field",
-            "type": "Bool"
-          }
-        ]
-      }
-    },
-    "exposedFunctions": {
-      "add_capability": {
-        "visibility": "Public",
-        "isEntry": false,
-        "typeParameters": [
-          {
-            "abilities": []
-          },
-          {
-            "abilities": [
-              "Drop",
-              "Store"
-            ]
-          }
-        ],
-        "parameters": [
-          {
-            "MutableReference": {
-              "Struct": {
-                "address": "0x325aef14e2ed83759a2969f9f9cbffca206430c2de658ec61a20866bb3f6fd51",
-                "module": "treasury",
-                "name": "ControlledTreasury",
-                "typeArguments": [
+        {
+          "name": "mint_and_transfer",
+          "visibility": 2,
+          "isEntry": false,
+          "typeParameters": [
+            {
+              "constraints": []
+            }
+          ],
+          "parameters": [
+            {
+              "reference": 2,
+              "body": {
+                "type": 10,
+                "typeName": "0x325aef14e2ed83759a2969f9f9cbffca206430c2de658ec61a20866bb3f6fd51::treasury::ControlledTreasury",
+                "typeParameterInstantiation": [
                   {
-                    "TypeParameter": 0
+                    "type": 11,
+                    "typeParameter": 0,
+                    "typeParameterInstantiation": []
+                  }
+                ]
+              }
+            },
+            {
+              "body": {
+                "type": 6,
+                "typeParameterInstantiation": []
+              }
+            },
+            {
+              "body": {
+                "type": 1,
+                "typeParameterInstantiation": []
+              }
+            },
+            {
+              "reference": 2,
+              "body": {
+                "type": 10,
+                "typeName": "0x2::tx_context::TxContext",
+                "typeParameterInstantiation": []
+              }
+            }
+          ],
+          "returns": []
+        },
+        {
+          "name": "new",
+          "visibility": 2,
+          "isEntry": false,
+          "typeParameters": [
+            {
+              "constraints": []
+            }
+          ],
+          "parameters": [
+            {
+              "body": {
+                "type": 10,
+                "typeName": "0x2::coin::TreasuryCap",
+                "typeParameterInstantiation": [
+                  {
+                    "type": 11,
+                    "typeParameter": 0,
+                    "typeParameterInstantiation": []
+                  }
+                ]
+              }
+            },
+            {
+              "body": {
+                "type": 1,
+                "typeParameterInstantiation": []
+              }
+            },
+            {
+              "reference": 2,
+              "body": {
+                "type": 10,
+                "typeName": "0x2::tx_context::TxContext",
+                "typeParameterInstantiation": []
+              }
+            }
+          ],
+          "returns": [
+            {
+              "body": {
+                "type": 10,
+                "typeName": "0x325aef14e2ed83759a2969f9f9cbffca206430c2de658ec61a20866bb3f6fd51::treasury::ControlledTreasury",
+                "typeParameterInstantiation": [
+                  {
+                    "type": 11,
+                    "typeParameter": 0,
+                    "typeParameterInstantiation": []
                   }
                 ]
               }
             }
-          },
-          "Address",
-          {
-            "TypeParameter": 1
-          },
-          {
-            "MutableReference": {
-              "Struct": {
-                "address": "0x2",
-                "module": "tx_context",
-                "name": "TxContext",
-                "typeArguments": []
+          ]
+        },
+        {
+          "name": "new_admin_cap",
+          "visibility": 2,
+          "isEntry": false,
+          "typeParameters": [],
+          "parameters": [],
+          "returns": [
+            {
+              "body": {
+                "type": 10,
+                "typeName": "0x325aef14e2ed83759a2969f9f9cbffca206430c2de658ec61a20866bb3f6fd51::treasury::AdminCap",
+                "typeParameterInstantiation": []
               }
             }
-          }
-        ],
-        "return": []
-      },
-      "add_whitelist_entry": {
-        "visibility": "Public",
-        "isEntry": false,
-        "typeParameters": [
-          {
-            "abilities": []
-          }
-        ],
-        "parameters": [
-          {
-            "MutableReference": {
-              "Struct": {
-                "address": "0x325aef14e2ed83759a2969f9f9cbffca206430c2de658ec61a20866bb3f6fd51",
-                "module": "treasury",
-                "name": "ControlledTreasury",
-                "typeArguments": [
-                  {
-                    "TypeParameter": 0
-                  }
-                ]
+          ]
+        },
+        {
+          "name": "new_burn_cap",
+          "visibility": 2,
+          "isEntry": false,
+          "typeParameters": [],
+          "parameters": [],
+          "returns": [
+            {
+              "body": {
+                "type": 10,
+                "typeName": "0x325aef14e2ed83759a2969f9f9cbffca206430c2de658ec61a20866bb3f6fd51::treasury::BurnCap",
+                "typeParameterInstantiation": []
               }
             }
-          },
-          "Address",
-          {
-            "MutableReference": {
-              "Struct": {
-                "address": "0x2",
-                "module": "tx_context",
-                "name": "TxContext",
-                "typeArguments": []
+          ]
+        },
+        {
+          "name": "new_mint_cap",
+          "visibility": 2,
+          "isEntry": false,
+          "typeParameters": [],
+          "parameters": [
+            {
+              "body": {
+                "type": 6,
+                "typeParameterInstantiation": []
+              }
+            },
+            {
+              "reference": 1,
+              "body": {
+                "type": 10,
+                "typeName": "0x2::tx_context::TxContext",
+                "typeParameterInstantiation": []
               }
             }
-          }
-        ],
-        "return": []
-      },
-      "burn": {
-        "visibility": "Public",
-        "isEntry": false,
-        "typeParameters": [
-          {
-            "abilities": []
-          }
-        ],
-        "parameters": [
-          {
-            "MutableReference": {
-              "Struct": {
-                "address": "0x325aef14e2ed83759a2969f9f9cbffca206430c2de658ec61a20866bb3f6fd51",
-                "module": "treasury",
-                "name": "ControlledTreasury",
-                "typeArguments": [
-                  {
-                    "TypeParameter": 0
-                  }
-                ]
+          ],
+          "returns": [
+            {
+              "body": {
+                "type": 10,
+                "typeName": "0x325aef14e2ed83759a2969f9f9cbffca206430c2de658ec61a20866bb3f6fd51::treasury::MintCap",
+                "typeParameterInstantiation": []
               }
             }
-          },
-          {
-            "Struct": {
-              "address": "0x2",
-              "module": "token",
-              "name": "Token",
-              "typeArguments": [
-                {
-                  "TypeParameter": 0
-                }
+          ]
+        },
+        {
+          "name": "new_whitelist_cap",
+          "visibility": 2,
+          "isEntry": false,
+          "typeParameters": [],
+          "parameters": [],
+          "returns": [
+            {
+              "body": {
+                "type": 10,
+                "typeName": "0x325aef14e2ed83759a2969f9f9cbffca206430c2de658ec61a20866bb3f6fd51::treasury::WhitelistCap",
+                "typeParameterInstantiation": []
+              }
+            }
+          ]
+        },
+        {
+          "name": "remove_capability",
+          "visibility": 2,
+          "isEntry": false,
+          "typeParameters": [
+            {
+              "constraints": []
+            },
+            {
+              "constraints": [
+                2,
+                3
               ]
             }
-          },
-          {
-            "MutableReference": {
-              "Struct": {
-                "address": "0x2",
-                "module": "tx_context",
-                "name": "TxContext",
-                "typeArguments": []
-              }
-            }
-          }
-        ],
-        "return": []
-      },
-      "deconstruct": {
-        "visibility": "Public",
-        "isEntry": false,
-        "typeParameters": [
-          {
-            "abilities": []
-          }
-        ],
-        "parameters": [
-          {
-            "Struct": {
-              "address": "0x325aef14e2ed83759a2969f9f9cbffca206430c2de658ec61a20866bb3f6fd51",
-              "module": "treasury",
-              "name": "ControlledTreasury",
-              "typeArguments": [
-                {
-                  "TypeParameter": 0
-                }
-              ]
-            }
-          },
-          {
-            "MutableReference": {
-              "Struct": {
-                "address": "0x2",
-                "module": "tx_context",
-                "name": "TxContext",
-                "typeArguments": []
-              }
-            }
-          }
-        ],
-        "return": [
-          {
-            "Struct": {
-              "address": "0x2",
-              "module": "coin",
-              "name": "TreasuryCap",
-              "typeArguments": [
-                {
-                  "TypeParameter": 0
-                }
-              ]
-            }
-          },
-          {
-            "Struct": {
-              "address": "0x2",
-              "module": "bag",
-              "name": "Bag",
-              "typeArguments": []
-            }
-          }
-        ]
-      },
-      "has_cap": {
-        "visibility": "Public",
-        "isEntry": false,
-        "typeParameters": [
-          {
-            "abilities": []
-          },
-          {
-            "abilities": [
-              "Store"
-            ]
-          }
-        ],
-        "parameters": [
-          {
-            "Reference": {
-              "Struct": {
-                "address": "0x325aef14e2ed83759a2969f9f9cbffca206430c2de658ec61a20866bb3f6fd51",
-                "module": "treasury",
-                "name": "ControlledTreasury",
-                "typeArguments": [
+          ],
+          "parameters": [
+            {
+              "reference": 2,
+              "body": {
+                "type": 10,
+                "typeName": "0x325aef14e2ed83759a2969f9f9cbffca206430c2de658ec61a20866bb3f6fd51::treasury::ControlledTreasury",
+                "typeParameterInstantiation": [
                   {
-                    "TypeParameter": 0
+                    "type": 11,
+                    "typeParameter": 0,
+                    "typeParameterInstantiation": []
+                  }
+                ]
+              }
+            },
+            {
+              "body": {
+                "type": 1,
+                "typeParameterInstantiation": []
+              }
+            },
+            {
+              "reference": 2,
+              "body": {
+                "type": 10,
+                "typeName": "0x2::tx_context::TxContext",
+                "typeParameterInstantiation": []
+              }
+            }
+          ],
+          "returns": []
+        },
+        {
+          "name": "remove_whitelist_entry",
+          "visibility": 2,
+          "isEntry": false,
+          "typeParameters": [
+            {
+              "constraints": []
+            }
+          ],
+          "parameters": [
+            {
+              "reference": 2,
+              "body": {
+                "type": 10,
+                "typeName": "0x325aef14e2ed83759a2969f9f9cbffca206430c2de658ec61a20866bb3f6fd51::treasury::ControlledTreasury",
+                "typeParameterInstantiation": [
+                  {
+                    "type": 11,
+                    "typeParameter": 0,
+                    "typeParameterInstantiation": []
+                  }
+                ]
+              }
+            },
+            {
+              "body": {
+                "type": 1,
+                "typeParameterInstantiation": []
+              }
+            },
+            {
+              "reference": 2,
+              "body": {
+                "type": 10,
+                "typeName": "0x2::tx_context::TxContext",
+                "typeParameterInstantiation": []
+              }
+            }
+          ],
+          "returns": []
+        },
+        {
+          "name": "share",
+          "visibility": 2,
+          "isEntry": false,
+          "typeParameters": [
+            {
+              "constraints": []
+            }
+          ],
+          "parameters": [
+            {
+              "body": {
+                "type": 10,
+                "typeName": "0x325aef14e2ed83759a2969f9f9cbffca206430c2de658ec61a20866bb3f6fd51::treasury::ControlledTreasury",
+                "typeParameterInstantiation": [
+                  {
+                    "type": 11,
+                    "typeParameter": 0,
+                    "typeParameterInstantiation": []
                   }
                 ]
               }
             }
-          },
-          "Address"
-        ],
-        "return": [
-          "Bool"
-        ]
-      },
-      "mint_and_transfer": {
-        "visibility": "Public",
-        "isEntry": false,
-        "typeParameters": [
-          {
-            "abilities": []
-          }
-        ],
-        "parameters": [
-          {
-            "MutableReference": {
-              "Struct": {
-                "address": "0x325aef14e2ed83759a2969f9f9cbffca206430c2de658ec61a20866bb3f6fd51",
-                "module": "treasury",
-                "name": "ControlledTreasury",
-                "typeArguments": [
-                  {
-                    "TypeParameter": 0
-                  }
-                ]
-              }
-            }
-          },
-          "U64",
-          "Address",
-          {
-            "MutableReference": {
-              "Struct": {
-                "address": "0x2",
-                "module": "tx_context",
-                "name": "TxContext",
-                "typeArguments": []
-              }
-            }
-          }
-        ],
-        "return": []
-      },
-      "new": {
-        "visibility": "Public",
-        "isEntry": false,
-        "typeParameters": [
-          {
-            "abilities": []
-          }
-        ],
-        "parameters": [
-          {
-            "Struct": {
-              "address": "0x2",
-              "module": "coin",
-              "name": "TreasuryCap",
-              "typeArguments": [
-                {
-                  "TypeParameter": 0
-                }
-              ]
-            }
-          },
-          "Address",
-          {
-            "MutableReference": {
-              "Struct": {
-                "address": "0x2",
-                "module": "tx_context",
-                "name": "TxContext",
-                "typeArguments": []
-              }
-            }
-          }
-        ],
-        "return": [
-          {
-            "Struct": {
-              "address": "0x325aef14e2ed83759a2969f9f9cbffca206430c2de658ec61a20866bb3f6fd51",
-              "module": "treasury",
-              "name": "ControlledTreasury",
-              "typeArguments": [
-                {
-                  "TypeParameter": 0
-                }
-              ]
-            }
-          }
-        ]
-      },
-      "new_admin_cap": {
-        "visibility": "Public",
-        "isEntry": false,
-        "typeParameters": [],
-        "parameters": [],
-        "return": [
-          {
-            "Struct": {
-              "address": "0x325aef14e2ed83759a2969f9f9cbffca206430c2de658ec61a20866bb3f6fd51",
-              "module": "treasury",
-              "name": "AdminCap",
-              "typeArguments": []
-            }
-          }
-        ]
-      },
-      "new_burn_cap": {
-        "visibility": "Public",
-        "isEntry": false,
-        "typeParameters": [],
-        "parameters": [],
-        "return": [
-          {
-            "Struct": {
-              "address": "0x325aef14e2ed83759a2969f9f9cbffca206430c2de658ec61a20866bb3f6fd51",
-              "module": "treasury",
-              "name": "BurnCap",
-              "typeArguments": []
-            }
-          }
-        ]
-      },
-      "new_mint_cap": {
-        "visibility": "Public",
-        "isEntry": false,
-        "typeParameters": [],
-        "parameters": [
-          "U64",
-          {
-            "Reference": {
-              "Struct": {
-                "address": "0x2",
-                "module": "tx_context",
-                "name": "TxContext",
-                "typeArguments": []
-              }
-            }
-          }
-        ],
-        "return": [
-          {
-            "Struct": {
-              "address": "0x325aef14e2ed83759a2969f9f9cbffca206430c2de658ec61a20866bb3f6fd51",
-              "module": "treasury",
-              "name": "MintCap",
-              "typeArguments": []
-            }
-          }
-        ]
-      },
-      "new_whitelist_cap": {
-        "visibility": "Public",
-        "isEntry": false,
-        "typeParameters": [],
-        "parameters": [],
-        "return": [
-          {
-            "Struct": {
-              "address": "0x325aef14e2ed83759a2969f9f9cbffca206430c2de658ec61a20866bb3f6fd51",
-              "module": "treasury",
-              "name": "WhitelistCap",
-              "typeArguments": []
-            }
-          }
-        ]
-      },
-      "remove_capability": {
-        "visibility": "Public",
-        "isEntry": false,
-        "typeParameters": [
-          {
-            "abilities": []
-          },
-          {
-            "abilities": [
-              "Drop",
-              "Store"
-            ]
-          }
-        ],
-        "parameters": [
-          {
-            "MutableReference": {
-              "Struct": {
-                "address": "0x325aef14e2ed83759a2969f9f9cbffca206430c2de658ec61a20866bb3f6fd51",
-                "module": "treasury",
-                "name": "ControlledTreasury",
-                "typeArguments": [
-                  {
-                    "TypeParameter": 0
-                  }
-                ]
-              }
-            }
-          },
-          "Address",
-          {
-            "MutableReference": {
-              "Struct": {
-                "address": "0x2",
-                "module": "tx_context",
-                "name": "TxContext",
-                "typeArguments": []
-              }
-            }
-          }
-        ],
-        "return": []
-      },
-      "remove_whitelist_entry": {
-        "visibility": "Public",
-        "isEntry": false,
-        "typeParameters": [
-          {
-            "abilities": []
-          }
-        ],
-        "parameters": [
-          {
-            "MutableReference": {
-              "Struct": {
-                "address": "0x325aef14e2ed83759a2969f9f9cbffca206430c2de658ec61a20866bb3f6fd51",
-                "module": "treasury",
-                "name": "ControlledTreasury",
-                "typeArguments": [
-                  {
-                    "TypeParameter": 0
-                  }
-                ]
-              }
-            }
-          },
-          "Address",
-          {
-            "MutableReference": {
-              "Struct": {
-                "address": "0x2",
-                "module": "tx_context",
-                "name": "TxContext",
-                "typeArguments": []
-              }
-            }
-          }
-        ],
-        "return": []
-      },
-      "share": {
-        "visibility": "Public",
-        "isEntry": false,
-        "typeParameters": [
-          {
-            "abilities": []
-          }
-        ],
-        "parameters": [
-          {
-            "Struct": {
-              "address": "0x325aef14e2ed83759a2969f9f9cbffca206430c2de658ec61a20866bb3f6fd51",
-              "module": "treasury",
-              "name": "ControlledTreasury",
-              "typeArguments": [
-                {
-                  "TypeParameter": 0
-                }
-              ]
-            }
-          }
-        ],
-        "return": []
-      }
+          ],
+          "returns": []
+        }
+      ]
     }
   }
-}
+]

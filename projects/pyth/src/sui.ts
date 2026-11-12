@@ -105,6 +105,6 @@ export function getPrice(p: price.Price) {
   return base.multipliedBy(BigDecimal(10).exponentiatedBy(expo))
 }
 
-function decodeBytesArray(bytes: number[]): string {
+export function decodeBytesArray(bytes: number[]): string {
   return "0x" + Buffer.from(bytes).toString("hex")
 }

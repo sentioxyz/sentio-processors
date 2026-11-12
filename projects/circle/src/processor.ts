@@ -1,2 +1,2 @@
-import "./ethereum"
-import "./aptos"
+import "./ethereum.js"
+import "./aptos.js"

@@ -12,7 +12,7 @@ SuiGlobalProcessor.bind({
         const amount = balanceChanges[i].amount
         const coinType = balanceChanges[i].coinType
         /** Owner of the balance change */
-        const owner = balanceChanges[i].owner
+        const owner = balanceChanges[i].address
 
         if (coinType == "0xa99b8952d4f7d947ea77fe0ecdcc9e5fc0bcab2841d6e2a5aa00c3044e5544b5::navx::NAVX") {
           console.log("match")

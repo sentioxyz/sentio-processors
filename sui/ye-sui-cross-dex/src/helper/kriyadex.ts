@@ -1,4 +1,3 @@
-// @ts-nocheck
 import { SuiObjectProcessor, SuiContext, SuiObjectContext } from "@sentio/sdk/sui"
 import { getPriceByType, token } from "@sentio/sdk/utils"
 import { SuiNetwork } from "@sentio/sdk/sui"
@@ -51,10 +50,12 @@ let coinInfoMap = new Map<string, Promise<token.TokenInfo>>()
 export async function buildCoinInfo(ctx: SuiContext | SuiObjectContext, coinAddress: string): Promise<token.TokenInfo> {
     let [symbol, name, decimal] = ["unk", "unk", 0]
     try {
-        const metadata = await ctx.client.getCoinMetadata({ coinType: coinAddress })
-        symbol = metadata.symbol
-        decimal = metadata.decimals
-        name = metadata.name + " (" + coinAddress.slice(2, 4) + ")"
+        const metadata = (await ctx.client.getCoinMetadata({ coinType: coinAddress })).coinMetadata
+        if (metadata) {
+            symbol = metadata.symbol
+            decimal = metadata.decimals
+            name = metadata.name + " (" + coinAddress.slice(2, 4) + ")"
+        }
         console.log(`build coin metadata ${symbol} ${decimal} ${name}`)
     }
     catch (e) {
@@ -89,11 +90,11 @@ export const getOrCreateCoin = async function (ctx: SuiContext | SuiObjectContex
 export async function buildPoolInfo(ctx: SuiContext | SuiObjectContext, pool: string): Promise<poolInfo> {
     let [symbol_a, symbol_b, decimal_a, decimal_b, pairName, type, fee_label, pairFullName] = ["", "", 0, 0, "", "", "", "NaN", ""]
     try {
-        const obj = await ctx.client.getObject({ id: pool, options: { showType: true, showContent: true } })
-        type = obj.data.type
-        // console.log(`building pool ${pool} type ${type} lp ${obj.data.content.fields.lp_fee_percentage} p ${obj.data.content.fields.protocol_fee_percentage} or ${obj.data.content.fields.lp_fee_percentage || obj.data.content.fields.protocol_fee_percentage} json ${JSON.stringify(obj)}`)
-        if (obj.data.content.fields.lp_fee_percent || obj.data.content.fields.protocol_fee_percent) {
-            fee_label = ((Number(obj.data.content.fields.lp_fee_percent) + Number(obj.data.content.fields.protocol_fee_percent)) / 10000).toFixed(2) + "%"
+        const obj = (await ctx.client.getObject({ objectId: pool, include: { json: true } })).object
+        type = obj.type
+        const f = obj.json as any
+        if (f?.lp_fee_percent || f?.protocol_fee_percent) {
+            fee_label = ((Number(f.lp_fee_percent) + Number(f.protocol_fee_percent)) / 10000).toFixed(2) + "%"
         }
         else {
             console.log(`no fee label ${pool}`)
@@ -149,10 +150,11 @@ export const getOrCreatePool = async function (ctx: SuiContext | SuiObjectContex
 
 
 export async function getPoolPrice(ctx: SuiContext | SuiObjectContext, pool: string) {
-    const obj = await ctx.client.getObject({ id: pool, options: { showType: true, showContent: true } })
+    const obj = (await ctx.client.getObject({ objectId: pool, include: { json: true } })).object
     const poolInfo = await getOrCreatePool(ctx, pool)
-    const reserve_x = Number(obj.data.content.fields.token_x) / 10 ** poolInfo.decimal_a
-    const reserve_y = Number(obj.data.content.fields.token_y) / 10 ** poolInfo.decimal_b
+    const f = obj.json as any
+    const reserve_x = Number(f?.token_x) / 10 ** poolInfo.decimal_a
+    const reserve_y = Number(f?.token_y) / 10 ** poolInfo.decimal_b
     if (!reserve_y) {
         console.log(`get pool price error at ${ctx.timestamp} ${pool}`)
         return 1

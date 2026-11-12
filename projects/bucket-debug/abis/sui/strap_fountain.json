@@ -1,1157 +1,1563 @@
-{
-  "jsonrpc": "2.0",
-  "result": {
-    "fountain": {
-      "fileFormatVersion": 6,
-      "address": "0x5d019c033bb8051fe9631cf910d0f4d077364d64ed4bb1940e98e6dc419a8d59",
+[
+  {
+    "address": "0x5d019c033bb8051fe9631cf910d0f4d077364d64ed4bb1940e98e6dc419a8d59",
+    "module": {
       "name": "fountain",
-      "friends": [],
-      "structs": {
-        "AdminCap": {
-          "abilities": { "abilities": ["Store", "Key"] },
+      "datatypes": [
+        {
+          "name": "AdminCap",
+          "kind": 1,
+          "abilities": [
+            3,
+            4
+          ],
           "typeParameters": [],
           "fields": [
             {
               "name": "id",
+              "position": 0,
               "type": {
-                "Struct": {
-                  "address": "0x2",
-                  "module": "object",
-                  "name": "UID",
-                  "typeArguments": []
-                }
+                "type": 10,
+                "typeName": "0x2::object::UID",
+                "typeParameterInstantiation": []
               }
             },
             {
               "name": "fountain_id",
+              "position": 1,
               "type": {
-                "Struct": {
-                  "address": "0x2",
-                  "module": "object",
-                  "name": "ID",
-                  "typeArguments": []
-                }
+                "type": 10,
+                "typeName": "0x2::object::ID",
+                "typeParameterInstantiation": []
               }
             }
-          ]
-        },
-        "ClaimEvent": {
-          "abilities": { "abilities": ["Copy", "Drop"] },
-          "typeParameters": [
-            { "constraints": { "abilities": [] }, "isPhantom": true },
-            { "constraints": { "abilities": [] }, "isPhantom": true }
           ],
-          "fields": [
-            {
-              "name": "fountain_id",
-              "type": {
-                "Struct": {
-                  "address": "0x2",
-                  "module": "object",
-                  "name": "ID",
-                  "typeArguments": []
-                }
-              }
-            },
-            { "name": "strap_address", "type": "Address" },
-            { "name": "reward_amount", "type": "U64" }
-          ]
+          "variants": []
         },
-        "Fountain": {
-          "abilities": { "abilities": ["Key"] },
+        {
+          "name": "Fountain",
+          "kind": 1,
+          "abilities": [
+            4
+          ],
           "typeParameters": [
-            { "constraints": { "abilities": [] }, "isPhantom": true },
-            { "constraints": { "abilities": [] }, "isPhantom": true }
+            {
+              "constraints": []
+            },
+            {
+              "constraints": []
+            }
           ],
           "fields": [
             {
               "name": "id",
+              "position": 0,
               "type": {
-                "Struct": {
-                  "address": "0x2",
-                  "module": "object",
-                  "name": "UID",
-                  "typeArguments": []
-                }
+                "type": 10,
+                "typeName": "0x2::object::UID",
+                "typeParameterInstantiation": []
               }
             },
             {
               "name": "source",
+              "position": 1,
               "type": {
-                "Struct": {
-                  "address": "0x2",
-                  "module": "balance",
-                  "name": "Balance",
-                  "typeArguments": [{ "TypeParameter": 1 }]
-                }
+                "type": 10,
+                "typeName": "0x2::balance::Balance",
+                "typeParameterInstantiation": [
+                  {
+                    "type": 11,
+                    "typeParameter": 1,
+                    "typeParameterInstantiation": []
+                  }
+                ]
               }
             },
-            { "name": "flow_amount", "type": "U64" },
-            { "name": "flow_interval", "type": "U64" },
+            {
+              "name": "flow_amount",
+              "position": 2,
+              "type": {
+                "type": 6,
+                "typeParameterInstantiation": []
+              }
+            },
+            {
+              "name": "flow_interval",
+              "position": 3,
+              "type": {
+                "type": 6,
+                "typeParameterInstantiation": []
+              }
+            },
             {
               "name": "pool",
+              "position": 4,
               "type": {
-                "Struct": {
-                  "address": "0x2",
-                  "module": "balance",
-                  "name": "Balance",
-                  "typeArguments": [{ "TypeParameter": 1 }]
-                }
+                "type": 10,
+                "typeName": "0x2::balance::Balance",
+                "typeParameterInstantiation": [
+                  {
+                    "type": 11,
+                    "typeParameter": 1,
+                    "typeParameterInstantiation": []
+                  }
+                ]
               }
             },
-            { "name": "total_debt_amount", "type": "U64" },
+            {
+              "name": "total_debt_amount",
+              "position": 5,
+              "type": {
+                "type": 6,
+                "typeParameterInstantiation": []
+              }
+            },
             {
               "name": "strap_table",
+              "position": 6,
               "type": {
-                "Struct": {
-                  "address": "0x2",
-                  "module": "table",
-                  "name": "Table",
-                  "typeArguments": [
-                    "Address",
-                    {
-                      "Struct": {
-                        "address": "0x5d019c033bb8051fe9631cf910d0f4d077364d64ed4bb1940e98e6dc419a8d59",
-                        "module": "fountain",
-                        "name": "StrapData",
-                        "typeArguments": [{ "TypeParameter": 0 }]
+                "type": 10,
+                "typeName": "0x2::table::Table",
+                "typeParameterInstantiation": [
+                  {
+                    "type": 1,
+                    "typeParameterInstantiation": []
+                  },
+                  {
+                    "type": 10,
+                    "typeName": "0x5d019c033bb8051fe9631cf910d0f4d077364d64ed4bb1940e98e6dc419a8d59::fountain::StrapData",
+                    "typeParameterInstantiation": [
+                      {
+                        "type": 11,
+                        "typeParameter": 0,
+                        "typeParameterInstantiation": []
                       }
-                    }
-                  ]
-                }
+                    ]
+                  }
+                ]
               }
             },
             {
               "name": "surplus_table",
+              "position": 7,
               "type": {
-                "Struct": {
-                  "address": "0x2",
-                  "module": "table",
-                  "name": "Table",
-                  "typeArguments": [
-                    {
-                      "Struct": {
-                        "address": "0x2",
-                        "module": "object",
-                        "name": "ID",
-                        "typeArguments": []
+                "type": 10,
+                "typeName": "0x2::table::Table",
+                "typeParameterInstantiation": [
+                  {
+                    "type": 10,
+                    "typeName": "0x2::object::ID",
+                    "typeParameterInstantiation": []
+                  },
+                  {
+                    "type": 10,
+                    "typeName": "0x5d019c033bb8051fe9631cf910d0f4d077364d64ed4bb1940e98e6dc419a8d59::fountain::SurplusData",
+                    "typeParameterInstantiation": [
+                      {
+                        "type": 11,
+                        "typeParameter": 0,
+                        "typeParameterInstantiation": []
+                      },
+                      {
+                        "type": 11,
+                        "typeParameter": 1,
+                        "typeParameterInstantiation": []
                       }
-                    },
-                    {
-                      "Struct": {
-                        "address": "0x5d019c033bb8051fe9631cf910d0f4d077364d64ed4bb1940e98e6dc419a8d59",
-                        "module": "fountain",
-                        "name": "SurplusData",
-                        "typeArguments": [
-                          { "TypeParameter": 0 },
-                          { "TypeParameter": 1 }
-                        ]
-                      }
-                    }
-                  ]
-                }
+                    ]
+                  }
+                ]
               }
             },
-            { "name": "cumulative_unit", "type": "U128" },
-            { "name": "latest_release_time", "type": "U64" }
-          ]
-        },
-        "LiquidateEvent": {
-          "abilities": { "abilities": ["Copy", "Drop"] },
-          "typeParameters": [
-            { "constraints": { "abilities": [] }, "isPhantom": true },
-            { "constraints": { "abilities": [] }, "isPhantom": true }
-          ],
-          "fields": [
             {
-              "name": "fountain_id",
+              "name": "cumulative_unit",
+              "position": 8,
               "type": {
-                "Struct": {
-                  "address": "0x2",
-                  "module": "object",
-                  "name": "ID",
-                  "typeArguments": []
-                }
+                "type": 7,
+                "typeParameterInstantiation": []
               }
             },
-            { "name": "strap_address", "type": "Address" },
-            { "name": "debt_amount", "type": "U64" }
-          ]
-        },
-        "StakeEvent": {
-          "abilities": { "abilities": ["Copy", "Drop"] },
-          "typeParameters": [
-            { "constraints": { "abilities": [] }, "isPhantom": true },
-            { "constraints": { "abilities": [] }, "isPhantom": true }
-          ],
-          "fields": [
             {
-              "name": "fountain_id",
+              "name": "latest_release_time",
+              "position": 9,
               "type": {
-                "Struct": {
-                  "address": "0x2",
-                  "module": "object",
-                  "name": "ID",
-                  "typeArguments": []
-                }
+                "type": 6,
+                "typeParameterInstantiation": []
               }
-            },
-            { "name": "strap_address", "type": "Address" },
-            { "name": "debt_amount", "type": "U64" }
-          ]
+            }
+          ],
+          "variants": []
         },
-        "StakeProof": {
-          "abilities": { "abilities": ["Store", "Key"] },
+        {
+          "name": "StakeProof",
+          "kind": 1,
+          "abilities": [
+            3,
+            4
+          ],
           "typeParameters": [
-            { "constraints": { "abilities": [] }, "isPhantom": true },
-            { "constraints": { "abilities": [] }, "isPhantom": true }
+            {
+              "constraints": []
+            },
+            {
+              "constraints": []
+            }
           ],
           "fields": [
             {
               "name": "id",
+              "position": 0,
               "type": {
-                "Struct": {
-                  "address": "0x2",
-                  "module": "object",
-                  "name": "UID",
-                  "typeArguments": []
-                }
+                "type": 10,
+                "typeName": "0x2::object::UID",
+                "typeParameterInstantiation": []
               }
             },
             {
               "name": "fountain_id",
+              "position": 1,
               "type": {
-                "Struct": {
-                  "address": "0x2",
-                  "module": "object",
-                  "name": "ID",
-                  "typeArguments": []
-                }
+                "type": 10,
+                "typeName": "0x2::object::ID",
+                "typeParameterInstantiation": []
               }
             },
-            { "name": "strap_address", "type": "Address" }
-          ]
+            {
+              "name": "strap_address",
+              "position": 2,
+              "type": {
+                "type": 1,
+                "typeParameterInstantiation": []
+              }
+            }
+          ],
+          "variants": []
         },
-        "StrapData": {
-          "abilities": { "abilities": ["Store"] },
+        {
+          "name": "StrapData",
+          "kind": 1,
+          "abilities": [
+            3
+          ],
           "typeParameters": [
-            { "constraints": { "abilities": [] }, "isPhantom": true }
+            {
+              "constraints": []
+            }
           ],
           "fields": [
             {
               "name": "strap",
+              "position": 0,
               "type": {
-                "Struct": {
-                  "address": "0xce7ff77a83ea0cb6fd39bd8748e2ec89a3f41e8efdc3f4eb123e0ca37b184db2",
-                  "module": "strap",
-                  "name": "BottleStrap",
-                  "typeArguments": [{ "TypeParameter": 0 }]
-                }
+                "type": 10,
+                "typeName": "0xce7ff77a83ea0cb6fd39bd8748e2ec89a3f41e8efdc3f4eb123e0ca37b184db2::strap::BottleStrap",
+                "typeParameterInstantiation": [
+                  {
+                    "type": 11,
+                    "typeParameter": 0,
+                    "typeParameterInstantiation": []
+                  }
+                ]
               }
             },
-            { "name": "start_unit", "type": "U128" },
+            {
+              "name": "start_unit",
+              "position": 1,
+              "type": {
+                "type": 7,
+                "typeParameterInstantiation": []
+              }
+            },
             {
               "name": "proof_id",
+              "position": 2,
               "type": {
-                "Struct": {
-                  "address": "0x2",
-                  "module": "object",
-                  "name": "ID",
-                  "typeArguments": []
-                }
+                "type": 10,
+                "typeName": "0x2::object::ID",
+                "typeParameterInstantiation": []
               }
             },
-            { "name": "debt_amount", "type": "U64" }
-          ]
-        },
-        "SupplyEvent": {
-          "abilities": { "abilities": ["Copy", "Drop"] },
-          "typeParameters": [
-            { "constraints": { "abilities": [] }, "isPhantom": true },
-            { "constraints": { "abilities": [] }, "isPhantom": true }
-          ],
-          "fields": [
             {
-              "name": "fountain_id",
+              "name": "debt_amount",
+              "position": 3,
               "type": {
-                "Struct": {
-                  "address": "0x2",
-                  "module": "object",
-                  "name": "ID",
-                  "typeArguments": []
-                }
+                "type": 6,
+                "typeParameterInstantiation": []
               }
-            },
-            { "name": "amount", "type": "U64" }
-          ]
+            }
+          ],
+          "variants": []
         },
-        "SurplusData": {
-          "abilities": { "abilities": ["Store"] },
+        {
+          "name": "SurplusData",
+          "kind": 1,
+          "abilities": [
+            3
+          ],
           "typeParameters": [
-            { "constraints": { "abilities": [] }, "isPhantom": true },
-            { "constraints": { "abilities": [] }, "isPhantom": true }
+            {
+              "constraints": []
+            },
+            {
+              "constraints": []
+            }
           ],
           "fields": [
             {
               "name": "strap",
+              "position": 0,
               "type": {
-                "Struct": {
-                  "address": "0xce7ff77a83ea0cb6fd39bd8748e2ec89a3f41e8efdc3f4eb123e0ca37b184db2",
-                  "module": "strap",
-                  "name": "BottleStrap",
-                  "typeArguments": [{ "TypeParameter": 0 }]
-                }
+                "type": 10,
+                "typeName": "0xce7ff77a83ea0cb6fd39bd8748e2ec89a3f41e8efdc3f4eb123e0ca37b184db2::strap::BottleStrap",
+                "typeParameterInstantiation": [
+                  {
+                    "type": 11,
+                    "typeParameter": 0,
+                    "typeParameterInstantiation": []
+                  }
+                ]
               }
             },
             {
               "name": "surplus",
+              "position": 1,
               "type": {
-                "Struct": {
-                  "address": "0x2",
-                  "module": "balance",
-                  "name": "Balance",
-                  "typeArguments": [{ "TypeParameter": 1 }]
-                }
+                "type": 10,
+                "typeName": "0x2::balance::Balance",
+                "typeParameterInstantiation": [
+                  {
+                    "type": 11,
+                    "typeParameter": 1,
+                    "typeParameterInstantiation": []
+                  }
+                ]
               }
             }
-          ]
-        },
-        "UnstakeEvent": {
-          "abilities": { "abilities": ["Copy", "Drop"] },
-          "typeParameters": [
-            { "constraints": { "abilities": [] }, "isPhantom": true },
-            { "constraints": { "abilities": [] }, "isPhantom": true }
           ],
-          "fields": [
-            {
-              "name": "fountain_id",
-              "type": {
-                "Struct": {
-                  "address": "0x2",
-                  "module": "object",
-                  "name": "ID",
-                  "typeArguments": []
-                }
-              }
-            },
-            { "name": "strap_address", "type": "Address" },
-            { "name": "debt_amount", "type": "U64" }
-          ]
-        },
-        "UpdateFlowRateEvent": {
-          "abilities": { "abilities": ["Copy", "Drop"] },
-          "typeParameters": [
-            { "constraints": { "abilities": [] }, "isPhantom": true },
-            { "constraints": { "abilities": [] }, "isPhantom": true }
-          ],
-          "fields": [
-            {
-              "name": "fountain_id",
-              "type": {
-                "Struct": {
-                  "address": "0x2",
-                  "module": "object",
-                  "name": "ID",
-                  "typeArguments": []
-                }
-              }
-            },
-            { "name": "flow_amount", "type": "U64" },
-            { "name": "flow_interval", "type": "U64" }
-          ]
+          "variants": []
         }
-      },
-      "exposedFunctions": {
-        "bottle_exists": {
-          "visibility": "Public",
+      ],
+      "functions": [
+        {
+          "name": "bottle_exists",
+          "visibility": 2,
           "isEntry": false,
-          "typeParameters": [{ "abilities": [] }],
-          "parameters": [
+          "typeParameters": [
             {
-              "Reference": {
-                "Struct": {
-                  "address": "0xce7ff77a83ea0cb6fd39bd8748e2ec89a3f41e8efdc3f4eb123e0ca37b184db2",
-                  "module": "buck",
-                  "name": "BucketProtocol",
-                  "typeArguments": []
-                }
-              }
-            },
-            "Address"
+              "constraints": []
+            }
           ],
-          "return": ["Bool"]
-        },
-        "claim": {
-          "visibility": "Public",
-          "isEntry": false,
-          "typeParameters": [{ "abilities": [] }, { "abilities": [] }],
           "parameters": [
             {
-              "MutableReference": {
-                "Struct": {
-                  "address": "0x5d019c033bb8051fe9631cf910d0f4d077364d64ed4bb1940e98e6dc419a8d59",
-                  "module": "fountain",
-                  "name": "Fountain",
-                  "typeArguments": [
-                    { "TypeParameter": 0 },
-                    { "TypeParameter": 1 }
-                  ]
-                }
+              "reference": 1,
+              "body": {
+                "type": 10,
+                "typeName": "0xce7ff77a83ea0cb6fd39bd8748e2ec89a3f41e8efdc3f4eb123e0ca37b184db2::buck::BucketProtocol",
+                "typeParameterInstantiation": []
               }
             },
             {
-              "Reference": {
-                "Struct": {
-                  "address": "0x2",
-                  "module": "clock",
-                  "name": "Clock",
-                  "typeArguments": []
-                }
-              }
-            },
-            {
-              "MutableReference": {
-                "Struct": {
-                  "address": "0x5d019c033bb8051fe9631cf910d0f4d077364d64ed4bb1940e98e6dc419a8d59",
-                  "module": "fountain",
-                  "name": "StakeProof",
-                  "typeArguments": [
-                    { "TypeParameter": 0 },
-                    { "TypeParameter": 1 }
-                  ]
-                }
-              }
-            },
-            {
-              "MutableReference": {
-                "Struct": {
-                  "address": "0x2",
-                  "module": "tx_context",
-                  "name": "TxContext",
-                  "typeArguments": []
-                }
+              "body": {
+                "type": 1,
+                "typeParameterInstantiation": []
               }
             }
           ],
-          "return": [
+          "returns": [
             {
-              "Struct": {
-                "address": "0x2",
-                "module": "coin",
-                "name": "Coin",
-                "typeArguments": [{ "TypeParameter": 1 }]
+              "body": {
+                "type": 2,
+                "typeParameterInstantiation": []
               }
             }
           ]
         },
-        "create": {
-          "visibility": "Public",
+        {
+          "name": "claim",
+          "visibility": 2,
           "isEntry": false,
-          "typeParameters": [{ "abilities": [] }, { "abilities": [] }],
-          "parameters": [
-            "U64",
-            "U64",
-            "U64",
+          "typeParameters": [
             {
-              "MutableReference": {
-                "Struct": {
-                  "address": "0x2",
-                  "module": "tx_context",
-                  "name": "TxContext",
-                  "typeArguments": []
-                }
+              "constraints": []
+            },
+            {
+              "constraints": []
+            }
+          ],
+          "parameters": [
+            {
+              "reference": 2,
+              "body": {
+                "type": 10,
+                "typeName": "0x5d019c033bb8051fe9631cf910d0f4d077364d64ed4bb1940e98e6dc419a8d59::fountain::Fountain",
+                "typeParameterInstantiation": [
+                  {
+                    "type": 11,
+                    "typeParameter": 0,
+                    "typeParameterInstantiation": []
+                  },
+                  {
+                    "type": 11,
+                    "typeParameter": 1,
+                    "typeParameterInstantiation": []
+                  }
+                ]
+              }
+            },
+            {
+              "reference": 1,
+              "body": {
+                "type": 10,
+                "typeName": "0x2::clock::Clock",
+                "typeParameterInstantiation": []
+              }
+            },
+            {
+              "reference": 2,
+              "body": {
+                "type": 10,
+                "typeName": "0x5d019c033bb8051fe9631cf910d0f4d077364d64ed4bb1940e98e6dc419a8d59::fountain::StakeProof",
+                "typeParameterInstantiation": [
+                  {
+                    "type": 11,
+                    "typeParameter": 0,
+                    "typeParameterInstantiation": []
+                  },
+                  {
+                    "type": 11,
+                    "typeParameter": 1,
+                    "typeParameterInstantiation": []
+                  }
+                ]
+              }
+            },
+            {
+              "reference": 2,
+              "body": {
+                "type": 10,
+                "typeName": "0x2::tx_context::TxContext",
+                "typeParameterInstantiation": []
               }
             }
           ],
-          "return": [
+          "returns": [
             {
-              "Struct": {
-                "address": "0x5d019c033bb8051fe9631cf910d0f4d077364d64ed4bb1940e98e6dc419a8d59",
-                "module": "fountain",
-                "name": "AdminCap",
-                "typeArguments": []
+              "body": {
+                "type": 10,
+                "typeName": "0x2::coin::Coin",
+                "typeParameterInstantiation": [
+                  {
+                    "type": 11,
+                    "typeParameter": 1,
+                    "typeParameterInstantiation": []
+                  }
+                ]
               }
             }
           ]
         },
-        "create_": {
-          "visibility": "Private",
+        {
+          "name": "create",
+          "visibility": 2,
+          "isEntry": false,
+          "typeParameters": [
+            {
+              "constraints": []
+            },
+            {
+              "constraints": []
+            }
+          ],
+          "parameters": [
+            {
+              "body": {
+                "type": 6,
+                "typeParameterInstantiation": []
+              }
+            },
+            {
+              "body": {
+                "type": 6,
+                "typeParameterInstantiation": []
+              }
+            },
+            {
+              "body": {
+                "type": 6,
+                "typeParameterInstantiation": []
+              }
+            },
+            {
+              "reference": 2,
+              "body": {
+                "type": 10,
+                "typeName": "0x2::tx_context::TxContext",
+                "typeParameterInstantiation": []
+              }
+            }
+          ],
+          "returns": [
+            {
+              "body": {
+                "type": 10,
+                "typeName": "0x5d019c033bb8051fe9631cf910d0f4d077364d64ed4bb1940e98e6dc419a8d59::fountain::AdminCap",
+                "typeParameterInstantiation": []
+              }
+            }
+          ]
+        },
+        {
+          "name": "create_",
+          "visibility": 1,
           "isEntry": true,
-          "typeParameters": [{ "abilities": [] }, { "abilities": [] }],
-          "parameters": [
-            "U64",
-            "U64",
-            "U64",
+          "typeParameters": [
             {
-              "MutableReference": {
-                "Struct": {
-                  "address": "0x2",
-                  "module": "tx_context",
-                  "name": "TxContext",
-                  "typeArguments": []
-                }
+              "constraints": []
+            },
+            {
+              "constraints": []
+            }
+          ],
+          "parameters": [
+            {
+              "body": {
+                "type": 6,
+                "typeParameterInstantiation": []
+              }
+            },
+            {
+              "body": {
+                "type": 6,
+                "typeParameterInstantiation": []
+              }
+            },
+            {
+              "body": {
+                "type": 6,
+                "typeParameterInstantiation": []
+              }
+            },
+            {
+              "reference": 2,
+              "body": {
+                "type": 10,
+                "typeName": "0x2::tx_context::TxContext",
+                "typeParameterInstantiation": []
               }
             }
           ],
-          "return": []
+          "returns": []
         },
-        "cumulative_unit": {
-          "visibility": "Public",
+        {
+          "name": "cumulative_unit",
+          "visibility": 2,
           "isEntry": false,
-          "typeParameters": [{ "abilities": [] }, { "abilities": [] }],
+          "typeParameters": [
+            {
+              "constraints": []
+            },
+            {
+              "constraints": []
+            }
+          ],
           "parameters": [
             {
-              "Reference": {
-                "Struct": {
-                  "address": "0x5d019c033bb8051fe9631cf910d0f4d077364d64ed4bb1940e98e6dc419a8d59",
-                  "module": "fountain",
-                  "name": "Fountain",
-                  "typeArguments": [
-                    { "TypeParameter": 0 },
-                    { "TypeParameter": 1 }
-                  ]
-                }
+              "reference": 1,
+              "body": {
+                "type": 10,
+                "typeName": "0x5d019c033bb8051fe9631cf910d0f4d077364d64ed4bb1940e98e6dc419a8d59::fountain::Fountain",
+                "typeParameterInstantiation": [
+                  {
+                    "type": 11,
+                    "typeParameter": 0,
+                    "typeParameterInstantiation": []
+                  },
+                  {
+                    "type": 11,
+                    "typeParameter": 1,
+                    "typeParameterInstantiation": []
+                  }
+                ]
               }
             }
           ],
-          "return": ["U128"]
+          "returns": [
+            {
+              "body": {
+                "type": 7,
+                "typeParameterInstantiation": []
+              }
+            }
+          ]
         },
-        "distribution_precision": {
-          "visibility": "Public",
+        {
+          "name": "distribution_precision",
+          "visibility": 2,
           "isEntry": false,
           "typeParameters": [],
           "parameters": [],
-          "return": ["U128"]
-        },
-        "flow_rate": {
-          "visibility": "Public",
-          "isEntry": false,
-          "typeParameters": [{ "abilities": [] }, { "abilities": [] }],
-          "parameters": [
+          "returns": [
             {
-              "Reference": {
-                "Struct": {
-                  "address": "0x5d019c033bb8051fe9631cf910d0f4d077364d64ed4bb1940e98e6dc419a8d59",
-                  "module": "fountain",
-                  "name": "Fountain",
-                  "typeArguments": [
-                    { "TypeParameter": 0 },
-                    { "TypeParameter": 1 }
-                  ]
-                }
-              }
-            }
-          ],
-          "return": ["U64", "U64"]
-        },
-        "fountain_id": {
-          "visibility": "Public",
-          "isEntry": false,
-          "typeParameters": [{ "abilities": [] }, { "abilities": [] }],
-          "parameters": [
-            {
-              "Reference": {
-                "Struct": {
-                  "address": "0x5d019c033bb8051fe9631cf910d0f4d077364d64ed4bb1940e98e6dc419a8d59",
-                  "module": "fountain",
-                  "name": "StakeProof",
-                  "typeArguments": [
-                    { "TypeParameter": 0 },
-                    { "TypeParameter": 1 }
-                  ]
-                }
-              }
-            }
-          ],
-          "return": [
-            {
-              "Struct": {
-                "address": "0x2",
-                "module": "object",
-                "name": "ID",
-                "typeArguments": []
+              "body": {
+                "type": 7,
+                "typeParameterInstantiation": []
               }
             }
           ]
         },
-        "get_raw_debt": {
-          "visibility": "Public",
+        {
+          "name": "flow_rate",
+          "visibility": 2,
           "isEntry": false,
-          "typeParameters": [{ "abilities": [] }],
-          "parameters": [
+          "typeParameters": [
             {
-              "Reference": {
-                "Struct": {
-                  "address": "0xce7ff77a83ea0cb6fd39bd8748e2ec89a3f41e8efdc3f4eb123e0ca37b184db2",
-                  "module": "buck",
-                  "name": "BucketProtocol",
-                  "typeArguments": []
-                }
-              }
+              "constraints": []
             },
-            "Address"
+            {
+              "constraints": []
+            }
           ],
-          "return": ["U64"]
-        },
-        "get_reward_amount": {
-          "visibility": "Public",
-          "isEntry": false,
-          "typeParameters": [{ "abilities": [] }, { "abilities": [] }],
           "parameters": [
             {
-              "Reference": {
-                "Struct": {
-                  "address": "0x5d019c033bb8051fe9631cf910d0f4d077364d64ed4bb1940e98e6dc419a8d59",
-                  "module": "fountain",
-                  "name": "Fountain",
-                  "typeArguments": [
-                    { "TypeParameter": 0 },
-                    { "TypeParameter": 1 }
-                  ]
-                }
-              }
-            },
-            "Address",
-            "U64"
-          ],
-          "return": ["U64"]
-        },
-        "get_virtual_released_amount": {
-          "visibility": "Public",
-          "isEntry": false,
-          "typeParameters": [{ "abilities": [] }, { "abilities": [] }],
-          "parameters": [
-            {
-              "Reference": {
-                "Struct": {
-                  "address": "0x5d019c033bb8051fe9631cf910d0f4d077364d64ed4bb1940e98e6dc419a8d59",
-                  "module": "fountain",
-                  "name": "Fountain",
-                  "typeArguments": [
-                    { "TypeParameter": 0 },
-                    { "TypeParameter": 1 }
-                  ]
-                }
-              }
-            },
-            "U64"
-          ],
-          "return": ["U64"]
-        },
-        "latest_release_time": {
-          "visibility": "Public",
-          "isEntry": false,
-          "typeParameters": [{ "abilities": [] }, { "abilities": [] }],
-          "parameters": [
-            {
-              "Reference": {
-                "Struct": {
-                  "address": "0x5d019c033bb8051fe9631cf910d0f4d077364d64ed4bb1940e98e6dc419a8d59",
-                  "module": "fountain",
-                  "name": "Fountain",
-                  "typeArguments": [
-                    { "TypeParameter": 0 },
-                    { "TypeParameter": 1 }
-                  ]
-                }
+              "reference": 1,
+              "body": {
+                "type": 10,
+                "typeName": "0x5d019c033bb8051fe9631cf910d0f4d077364d64ed4bb1940e98e6dc419a8d59::fountain::Fountain",
+                "typeParameterInstantiation": [
+                  {
+                    "type": 11,
+                    "typeParameter": 0,
+                    "typeParameterInstantiation": []
+                  },
+                  {
+                    "type": 11,
+                    "typeParameter": 1,
+                    "typeParameterInstantiation": []
+                  }
+                ]
               }
             }
           ],
-          "return": ["U64"]
+          "returns": [
+            {
+              "body": {
+                "type": 6,
+                "typeParameterInstantiation": []
+              }
+            },
+            {
+              "body": {
+                "type": 6,
+                "typeParameterInstantiation": []
+              }
+            }
+          ]
         },
-        "liquidate": {
-          "visibility": "Public",
+        {
+          "name": "fountain_id",
+          "visibility": 2,
           "isEntry": false,
-          "typeParameters": [{ "abilities": [] }, { "abilities": [] }],
+          "typeParameters": [
+            {
+              "constraints": []
+            },
+            {
+              "constraints": []
+            }
+          ],
           "parameters": [
             {
-              "MutableReference": {
-                "Struct": {
-                  "address": "0x5d019c033bb8051fe9631cf910d0f4d077364d64ed4bb1940e98e6dc419a8d59",
-                  "module": "fountain",
-                  "name": "Fountain",
-                  "typeArguments": [
-                    { "TypeParameter": 0 },
-                    { "TypeParameter": 1 }
-                  ]
-                }
-              }
-            },
-            {
-              "Reference": {
-                "Struct": {
-                  "address": "0xce7ff77a83ea0cb6fd39bd8748e2ec89a3f41e8efdc3f4eb123e0ca37b184db2",
-                  "module": "buck",
-                  "name": "BucketProtocol",
-                  "typeArguments": []
-                }
-              }
-            },
-            {
-              "Reference": {
-                "Struct": {
-                  "address": "0x2",
-                  "module": "clock",
-                  "name": "Clock",
-                  "typeArguments": []
-                }
-              }
-            },
-            "Address",
-            {
-              "MutableReference": {
-                "Struct": {
-                  "address": "0x2",
-                  "module": "tx_context",
-                  "name": "TxContext",
-                  "typeArguments": []
-                }
+              "reference": 1,
+              "body": {
+                "type": 10,
+                "typeName": "0x5d019c033bb8051fe9631cf910d0f4d077364d64ed4bb1940e98e6dc419a8d59::fountain::StakeProof",
+                "typeParameterInstantiation": [
+                  {
+                    "type": 11,
+                    "typeParameter": 0,
+                    "typeParameterInstantiation": []
+                  },
+                  {
+                    "type": 11,
+                    "typeParameter": 1,
+                    "typeParameterInstantiation": []
+                  }
+                ]
               }
             }
           ],
-          "return": []
+          "returns": [
+            {
+              "body": {
+                "type": 10,
+                "typeName": "0x2::object::ID",
+                "typeParameterInstantiation": []
+              }
+            }
+          ]
         },
-        "pool_balance": {
-          "visibility": "Public",
+        {
+          "name": "get_raw_debt",
+          "visibility": 2,
           "isEntry": false,
-          "typeParameters": [{ "abilities": [] }, { "abilities": [] }],
+          "typeParameters": [
+            {
+              "constraints": []
+            }
+          ],
           "parameters": [
             {
-              "Reference": {
-                "Struct": {
-                  "address": "0x5d019c033bb8051fe9631cf910d0f4d077364d64ed4bb1940e98e6dc419a8d59",
-                  "module": "fountain",
-                  "name": "Fountain",
-                  "typeArguments": [
-                    { "TypeParameter": 0 },
-                    { "TypeParameter": 1 }
-                  ]
-                }
+              "reference": 1,
+              "body": {
+                "type": 10,
+                "typeName": "0xce7ff77a83ea0cb6fd39bd8748e2ec89a3f41e8efdc3f4eb123e0ca37b184db2::buck::BucketProtocol",
+                "typeParameterInstantiation": []
+              }
+            },
+            {
+              "body": {
+                "type": 1,
+                "typeParameterInstantiation": []
               }
             }
           ],
-          "return": ["U64"]
+          "returns": [
+            {
+              "body": {
+                "type": 6,
+                "typeParameterInstantiation": []
+              }
+            }
+          ]
         },
-        "source_balance": {
-          "visibility": "Public",
+        {
+          "name": "get_reward_amount",
+          "visibility": 2,
           "isEntry": false,
-          "typeParameters": [{ "abilities": [] }, { "abilities": [] }],
+          "typeParameters": [
+            {
+              "constraints": []
+            },
+            {
+              "constraints": []
+            }
+          ],
           "parameters": [
             {
-              "Reference": {
-                "Struct": {
-                  "address": "0x5d019c033bb8051fe9631cf910d0f4d077364d64ed4bb1940e98e6dc419a8d59",
-                  "module": "fountain",
-                  "name": "Fountain",
-                  "typeArguments": [
-                    { "TypeParameter": 0 },
-                    { "TypeParameter": 1 }
-                  ]
-                }
+              "reference": 1,
+              "body": {
+                "type": 10,
+                "typeName": "0x5d019c033bb8051fe9631cf910d0f4d077364d64ed4bb1940e98e6dc419a8d59::fountain::Fountain",
+                "typeParameterInstantiation": [
+                  {
+                    "type": 11,
+                    "typeParameter": 0,
+                    "typeParameterInstantiation": []
+                  },
+                  {
+                    "type": 11,
+                    "typeParameter": 1,
+                    "typeParameterInstantiation": []
+                  }
+                ]
+              }
+            },
+            {
+              "body": {
+                "type": 1,
+                "typeParameterInstantiation": []
+              }
+            },
+            {
+              "body": {
+                "type": 6,
+                "typeParameterInstantiation": []
               }
             }
           ],
-          "return": ["U64"]
+          "returns": [
+            {
+              "body": {
+                "type": 6,
+                "typeParameterInstantiation": []
+              }
+            }
+          ]
         },
-        "stake": {
-          "visibility": "Public",
+        {
+          "name": "get_virtual_released_amount",
+          "visibility": 2,
           "isEntry": false,
-          "typeParameters": [{ "abilities": [] }, { "abilities": [] }],
+          "typeParameters": [
+            {
+              "constraints": []
+            },
+            {
+              "constraints": []
+            }
+          ],
           "parameters": [
             {
-              "MutableReference": {
-                "Struct": {
-                  "address": "0x5d019c033bb8051fe9631cf910d0f4d077364d64ed4bb1940e98e6dc419a8d59",
-                  "module": "fountain",
-                  "name": "Fountain",
-                  "typeArguments": [
-                    { "TypeParameter": 0 },
-                    { "TypeParameter": 1 }
-                  ]
-                }
+              "reference": 1,
+              "body": {
+                "type": 10,
+                "typeName": "0x5d019c033bb8051fe9631cf910d0f4d077364d64ed4bb1940e98e6dc419a8d59::fountain::Fountain",
+                "typeParameterInstantiation": [
+                  {
+                    "type": 11,
+                    "typeParameter": 0,
+                    "typeParameterInstantiation": []
+                  },
+                  {
+                    "type": 11,
+                    "typeParameter": 1,
+                    "typeParameterInstantiation": []
+                  }
+                ]
               }
             },
             {
-              "Reference": {
-                "Struct": {
-                  "address": "0xce7ff77a83ea0cb6fd39bd8748e2ec89a3f41e8efdc3f4eb123e0ca37b184db2",
-                  "module": "buck",
-                  "name": "BucketProtocol",
-                  "typeArguments": []
-                }
-              }
-            },
-            {
-              "Reference": {
-                "Struct": {
-                  "address": "0x2",
-                  "module": "clock",
-                  "name": "Clock",
-                  "typeArguments": []
-                }
-              }
-            },
-            {
-              "Struct": {
-                "address": "0xce7ff77a83ea0cb6fd39bd8748e2ec89a3f41e8efdc3f4eb123e0ca37b184db2",
-                "module": "strap",
-                "name": "BottleStrap",
-                "typeArguments": [{ "TypeParameter": 0 }]
-              }
-            },
-            {
-              "MutableReference": {
-                "Struct": {
-                  "address": "0x2",
-                  "module": "tx_context",
-                  "name": "TxContext",
-                  "typeArguments": []
-                }
+              "body": {
+                "type": 6,
+                "typeParameterInstantiation": []
               }
             }
           ],
-          "return": [
+          "returns": [
             {
-              "Struct": {
-                "address": "0x5d019c033bb8051fe9631cf910d0f4d077364d64ed4bb1940e98e6dc419a8d59",
-                "module": "fountain",
-                "name": "StakeProof",
-                "typeArguments": [
-                  { "TypeParameter": 0 },
-                  { "TypeParameter": 1 }
+              "body": {
+                "type": 6,
+                "typeParameterInstantiation": []
+              }
+            }
+          ]
+        },
+        {
+          "name": "latest_release_time",
+          "visibility": 2,
+          "isEntry": false,
+          "typeParameters": [
+            {
+              "constraints": []
+            },
+            {
+              "constraints": []
+            }
+          ],
+          "parameters": [
+            {
+              "reference": 1,
+              "body": {
+                "type": 10,
+                "typeName": "0x5d019c033bb8051fe9631cf910d0f4d077364d64ed4bb1940e98e6dc419a8d59::fountain::Fountain",
+                "typeParameterInstantiation": [
+                  {
+                    "type": 11,
+                    "typeParameter": 0,
+                    "typeParameterInstantiation": []
+                  },
+                  {
+                    "type": 11,
+                    "typeParameter": 1,
+                    "typeParameterInstantiation": []
+                  }
+                ]
+              }
+            }
+          ],
+          "returns": [
+            {
+              "body": {
+                "type": 6,
+                "typeParameterInstantiation": []
+              }
+            }
+          ]
+        },
+        {
+          "name": "liquidate",
+          "visibility": 2,
+          "isEntry": false,
+          "typeParameters": [
+            {
+              "constraints": []
+            },
+            {
+              "constraints": []
+            }
+          ],
+          "parameters": [
+            {
+              "reference": 2,
+              "body": {
+                "type": 10,
+                "typeName": "0x5d019c033bb8051fe9631cf910d0f4d077364d64ed4bb1940e98e6dc419a8d59::fountain::Fountain",
+                "typeParameterInstantiation": [
+                  {
+                    "type": 11,
+                    "typeParameter": 0,
+                    "typeParameterInstantiation": []
+                  },
+                  {
+                    "type": 11,
+                    "typeParameter": 1,
+                    "typeParameterInstantiation": []
+                  }
+                ]
+              }
+            },
+            {
+              "reference": 1,
+              "body": {
+                "type": 10,
+                "typeName": "0xce7ff77a83ea0cb6fd39bd8748e2ec89a3f41e8efdc3f4eb123e0ca37b184db2::buck::BucketProtocol",
+                "typeParameterInstantiation": []
+              }
+            },
+            {
+              "reference": 1,
+              "body": {
+                "type": 10,
+                "typeName": "0x2::clock::Clock",
+                "typeParameterInstantiation": []
+              }
+            },
+            {
+              "body": {
+                "type": 1,
+                "typeParameterInstantiation": []
+              }
+            },
+            {
+              "reference": 2,
+              "body": {
+                "type": 10,
+                "typeName": "0x2::tx_context::TxContext",
+                "typeParameterInstantiation": []
+              }
+            }
+          ],
+          "returns": []
+        },
+        {
+          "name": "pool_balance",
+          "visibility": 2,
+          "isEntry": false,
+          "typeParameters": [
+            {
+              "constraints": []
+            },
+            {
+              "constraints": []
+            }
+          ],
+          "parameters": [
+            {
+              "reference": 1,
+              "body": {
+                "type": 10,
+                "typeName": "0x5d019c033bb8051fe9631cf910d0f4d077364d64ed4bb1940e98e6dc419a8d59::fountain::Fountain",
+                "typeParameterInstantiation": [
+                  {
+                    "type": 11,
+                    "typeParameter": 0,
+                    "typeParameterInstantiation": []
+                  },
+                  {
+                    "type": 11,
+                    "typeParameter": 1,
+                    "typeParameterInstantiation": []
+                  }
+                ]
+              }
+            }
+          ],
+          "returns": [
+            {
+              "body": {
+                "type": 6,
+                "typeParameterInstantiation": []
+              }
+            }
+          ]
+        },
+        {
+          "name": "source_balance",
+          "visibility": 2,
+          "isEntry": false,
+          "typeParameters": [
+            {
+              "constraints": []
+            },
+            {
+              "constraints": []
+            }
+          ],
+          "parameters": [
+            {
+              "reference": 1,
+              "body": {
+                "type": 10,
+                "typeName": "0x5d019c033bb8051fe9631cf910d0f4d077364d64ed4bb1940e98e6dc419a8d59::fountain::Fountain",
+                "typeParameterInstantiation": [
+                  {
+                    "type": 11,
+                    "typeParameter": 0,
+                    "typeParameterInstantiation": []
+                  },
+                  {
+                    "type": 11,
+                    "typeParameter": 1,
+                    "typeParameterInstantiation": []
+                  }
+                ]
+              }
+            }
+          ],
+          "returns": [
+            {
+              "body": {
+                "type": 6,
+                "typeParameterInstantiation": []
+              }
+            }
+          ]
+        },
+        {
+          "name": "stake",
+          "visibility": 2,
+          "isEntry": false,
+          "typeParameters": [
+            {
+              "constraints": []
+            },
+            {
+              "constraints": []
+            }
+          ],
+          "parameters": [
+            {
+              "reference": 2,
+              "body": {
+                "type": 10,
+                "typeName": "0x5d019c033bb8051fe9631cf910d0f4d077364d64ed4bb1940e98e6dc419a8d59::fountain::Fountain",
+                "typeParameterInstantiation": [
+                  {
+                    "type": 11,
+                    "typeParameter": 0,
+                    "typeParameterInstantiation": []
+                  },
+                  {
+                    "type": 11,
+                    "typeParameter": 1,
+                    "typeParameterInstantiation": []
+                  }
+                ]
+              }
+            },
+            {
+              "reference": 1,
+              "body": {
+                "type": 10,
+                "typeName": "0xce7ff77a83ea0cb6fd39bd8748e2ec89a3f41e8efdc3f4eb123e0ca37b184db2::buck::BucketProtocol",
+                "typeParameterInstantiation": []
+              }
+            },
+            {
+              "reference": 1,
+              "body": {
+                "type": 10,
+                "typeName": "0x2::clock::Clock",
+                "typeParameterInstantiation": []
+              }
+            },
+            {
+              "body": {
+                "type": 10,
+                "typeName": "0xce7ff77a83ea0cb6fd39bd8748e2ec89a3f41e8efdc3f4eb123e0ca37b184db2::strap::BottleStrap",
+                "typeParameterInstantiation": [
+                  {
+                    "type": 11,
+                    "typeParameter": 0,
+                    "typeParameterInstantiation": []
+                  }
+                ]
+              }
+            },
+            {
+              "reference": 2,
+              "body": {
+                "type": 10,
+                "typeName": "0x2::tx_context::TxContext",
+                "typeParameterInstantiation": []
+              }
+            }
+          ],
+          "returns": [
+            {
+              "body": {
+                "type": 10,
+                "typeName": "0x5d019c033bb8051fe9631cf910d0f4d077364d64ed4bb1940e98e6dc419a8d59::fountain::StakeProof",
+                "typeParameterInstantiation": [
+                  {
+                    "type": 11,
+                    "typeParameter": 0,
+                    "typeParameterInstantiation": []
+                  },
+                  {
+                    "type": 11,
+                    "typeParameter": 1,
+                    "typeParameterInstantiation": []
+                  }
                 ]
               }
             }
           ]
         },
-        "start_unit": {
-          "visibility": "Public",
+        {
+          "name": "start_unit",
+          "visibility": 2,
           "isEntry": false,
-          "typeParameters": [{ "abilities": [] }],
-          "parameters": [
+          "typeParameters": [
             {
-              "Reference": {
-                "Struct": {
-                  "address": "0x5d019c033bb8051fe9631cf910d0f4d077364d64ed4bb1940e98e6dc419a8d59",
-                  "module": "fountain",
-                  "name": "StrapData",
-                  "typeArguments": [{ "TypeParameter": 0 }]
-                }
-              }
+              "constraints": []
             }
           ],
-          "return": ["U128"]
-        },
-        "strap_address": {
-          "visibility": "Public",
-          "isEntry": false,
-          "typeParameters": [{ "abilities": [] }, { "abilities": [] }],
           "parameters": [
             {
-              "Reference": {
-                "Struct": {
-                  "address": "0x5d019c033bb8051fe9631cf910d0f4d077364d64ed4bb1940e98e6dc419a8d59",
-                  "module": "fountain",
-                  "name": "StakeProof",
-                  "typeArguments": [
-                    { "TypeParameter": 0 },
-                    { "TypeParameter": 1 }
-                  ]
-                }
-              }
-            }
-          ],
-          "return": ["Address"]
-        },
-        "strap_data_exists": {
-          "visibility": "Public",
-          "isEntry": false,
-          "typeParameters": [{ "abilities": [] }, { "abilities": [] }],
-          "parameters": [
-            {
-              "Reference": {
-                "Struct": {
-                  "address": "0x5d019c033bb8051fe9631cf910d0f4d077364d64ed4bb1940e98e6dc419a8d59",
-                  "module": "fountain",
-                  "name": "Fountain",
-                  "typeArguments": [
-                    { "TypeParameter": 0 },
-                    { "TypeParameter": 1 }
-                  ]
-                }
-              }
-            },
-            "Address"
-          ],
-          "return": ["Bool"]
-        },
-        "supply": {
-          "visibility": "Public",
-          "isEntry": false,
-          "typeParameters": [{ "abilities": [] }, { "abilities": [] }],
-          "parameters": [
-            {
-              "MutableReference": {
-                "Struct": {
-                  "address": "0x5d019c033bb8051fe9631cf910d0f4d077364d64ed4bb1940e98e6dc419a8d59",
-                  "module": "fountain",
-                  "name": "Fountain",
-                  "typeArguments": [
-                    { "TypeParameter": 0 },
-                    { "TypeParameter": 1 }
-                  ]
-                }
-              }
-            },
-            {
-              "Reference": {
-                "Struct": {
-                  "address": "0x2",
-                  "module": "clock",
-                  "name": "Clock",
-                  "typeArguments": []
-                }
-              }
-            },
-            {
-              "Struct": {
-                "address": "0x2",
-                "module": "coin",
-                "name": "Coin",
-                "typeArguments": [{ "TypeParameter": 1 }]
-              }
-            }
-          ],
-          "return": []
-        },
-        "supply_and_update_flow_rate_": {
-          "visibility": "Private",
-          "isEntry": true,
-          "typeParameters": [{ "abilities": [] }, { "abilities": [] }],
-          "parameters": [
-            {
-              "Reference": {
-                "Struct": {
-                  "address": "0x5d019c033bb8051fe9631cf910d0f4d077364d64ed4bb1940e98e6dc419a8d59",
-                  "module": "fountain",
-                  "name": "AdminCap",
-                  "typeArguments": []
-                }
-              }
-            },
-            {
-              "Reference": {
-                "Struct": {
-                  "address": "0x2",
-                  "module": "clock",
-                  "name": "Clock",
-                  "typeArguments": []
-                }
-              }
-            },
-            {
-              "MutableReference": {
-                "Struct": {
-                  "address": "0x5d019c033bb8051fe9631cf910d0f4d077364d64ed4bb1940e98e6dc419a8d59",
-                  "module": "fountain",
-                  "name": "Fountain",
-                  "typeArguments": [
-                    { "TypeParameter": 0 },
-                    { "TypeParameter": 1 }
-                  ]
-                }
-              }
-            },
-            "U64",
-            {
-              "Struct": {
-                "address": "0x2",
-                "module": "coin",
-                "name": "Coin",
-                "typeArguments": [{ "TypeParameter": 1 }]
-              }
-            }
-          ],
-          "return": []
-        },
-        "total_debt_amount": {
-          "visibility": "Public",
-          "isEntry": false,
-          "typeParameters": [{ "abilities": [] }, { "abilities": [] }],
-          "parameters": [
-            {
-              "Reference": {
-                "Struct": {
-                  "address": "0x5d019c033bb8051fe9631cf910d0f4d077364d64ed4bb1940e98e6dc419a8d59",
-                  "module": "fountain",
-                  "name": "Fountain",
-                  "typeArguments": [
-                    { "TypeParameter": 0 },
-                    { "TypeParameter": 1 }
-                  ]
-                }
-              }
-            }
-          ],
-          "return": ["U64"]
-        },
-        "unstake": {
-          "visibility": "Public",
-          "isEntry": false,
-          "typeParameters": [{ "abilities": [] }, { "abilities": [] }],
-          "parameters": [
-            {
-              "MutableReference": {
-                "Struct": {
-                  "address": "0x5d019c033bb8051fe9631cf910d0f4d077364d64ed4bb1940e98e6dc419a8d59",
-                  "module": "fountain",
-                  "name": "Fountain",
-                  "typeArguments": [
-                    { "TypeParameter": 0 },
-                    { "TypeParameter": 1 }
-                  ]
-                }
-              }
-            },
-            {
-              "Reference": {
-                "Struct": {
-                  "address": "0x2",
-                  "module": "clock",
-                  "name": "Clock",
-                  "typeArguments": []
-                }
-              }
-            },
-            {
-              "Struct": {
-                "address": "0x5d019c033bb8051fe9631cf910d0f4d077364d64ed4bb1940e98e6dc419a8d59",
-                "module": "fountain",
-                "name": "StakeProof",
-                "typeArguments": [
-                  { "TypeParameter": 0 },
-                  { "TypeParameter": 1 }
+              "reference": 1,
+              "body": {
+                "type": 10,
+                "typeName": "0x5d019c033bb8051fe9631cf910d0f4d077364d64ed4bb1940e98e6dc419a8d59::fountain::StrapData",
+                "typeParameterInstantiation": [
+                  {
+                    "type": 11,
+                    "typeParameter": 0,
+                    "typeParameterInstantiation": []
+                  }
                 ]
               }
-            },
-            {
-              "MutableReference": {
-                "Struct": {
-                  "address": "0x2",
-                  "module": "tx_context",
-                  "name": "TxContext",
-                  "typeArguments": []
-                }
-              }
             }
           ],
-          "return": [
+          "returns": [
             {
-              "Struct": {
-                "address": "0xce7ff77a83ea0cb6fd39bd8748e2ec89a3f41e8efdc3f4eb123e0ca37b184db2",
-                "module": "strap",
-                "name": "BottleStrap",
-                "typeArguments": [{ "TypeParameter": 0 }]
-              }
-            },
-            {
-              "Struct": {
-                "address": "0x2",
-                "module": "coin",
-                "name": "Coin",
-                "typeArguments": [{ "TypeParameter": 1 }]
+              "body": {
+                "type": 7,
+                "typeParameterInstantiation": []
               }
             }
           ]
         },
-        "update_flow_rate": {
-          "visibility": "Public",
+        {
+          "name": "strap_address",
+          "visibility": 2,
           "isEntry": false,
-          "typeParameters": [{ "abilities": [] }, { "abilities": [] }],
-          "parameters": [
+          "typeParameters": [
             {
-              "Reference": {
-                "Struct": {
-                  "address": "0x5d019c033bb8051fe9631cf910d0f4d077364d64ed4bb1940e98e6dc419a8d59",
-                  "module": "fountain",
-                  "name": "AdminCap",
-                  "typeArguments": []
-                }
-              }
+              "constraints": []
             },
             {
-              "Reference": {
-                "Struct": {
-                  "address": "0x2",
-                  "module": "clock",
-                  "name": "Clock",
-                  "typeArguments": []
-                }
-              }
-            },
-            {
-              "MutableReference": {
-                "Struct": {
-                  "address": "0x5d019c033bb8051fe9631cf910d0f4d077364d64ed4bb1940e98e6dc419a8d59",
-                  "module": "fountain",
-                  "name": "Fountain",
-                  "typeArguments": [
-                    { "TypeParameter": 0 },
-                    { "TypeParameter": 1 }
-                  ]
-                }
-              }
-            },
-            "U64",
-            "U64"
+              "constraints": []
+            }
           ],
-          "return": []
-        },
-        "withdraw_from_source_to": {
-          "visibility": "Public",
-          "isEntry": false,
-          "typeParameters": [{ "abilities": [] }, { "abilities": [] }],
           "parameters": [
             {
-              "Reference": {
-                "Struct": {
-                  "address": "0x5d019c033bb8051fe9631cf910d0f4d077364d64ed4bb1940e98e6dc419a8d59",
-                  "module": "fountain",
-                  "name": "AdminCap",
-                  "typeArguments": []
-                }
-              }
-            },
-            {
-              "MutableReference": {
-                "Struct": {
-                  "address": "0x5d019c033bb8051fe9631cf910d0f4d077364d64ed4bb1940e98e6dc419a8d59",
-                  "module": "fountain",
-                  "name": "Fountain",
-                  "typeArguments": [
-                    { "TypeParameter": 0 },
-                    { "TypeParameter": 1 }
-                  ]
-                }
-              }
-            },
-            "U64",
-            "Address",
-            {
-              "MutableReference": {
-                "Struct": {
-                  "address": "0x2",
-                  "module": "tx_context",
-                  "name": "TxContext",
-                  "typeArguments": []
-                }
+              "reference": 1,
+              "body": {
+                "type": 10,
+                "typeName": "0x5d019c033bb8051fe9631cf910d0f4d077364d64ed4bb1940e98e6dc419a8d59::fountain::StakeProof",
+                "typeParameterInstantiation": [
+                  {
+                    "type": 11,
+                    "typeParameter": 0,
+                    "typeParameterInstantiation": []
+                  },
+                  {
+                    "type": 11,
+                    "typeParameter": 1,
+                    "typeParameterInstantiation": []
+                  }
+                ]
               }
             }
           ],
-          "return": []
+          "returns": [
+            {
+              "body": {
+                "type": 1,
+                "typeParameterInstantiation": []
+              }
+            }
+          ]
+        },
+        {
+          "name": "strap_data_exists",
+          "visibility": 2,
+          "isEntry": false,
+          "typeParameters": [
+            {
+              "constraints": []
+            },
+            {
+              "constraints": []
+            }
+          ],
+          "parameters": [
+            {
+              "reference": 1,
+              "body": {
+                "type": 10,
+                "typeName": "0x5d019c033bb8051fe9631cf910d0f4d077364d64ed4bb1940e98e6dc419a8d59::fountain::Fountain",
+                "typeParameterInstantiation": [
+                  {
+                    "type": 11,
+                    "typeParameter": 0,
+                    "typeParameterInstantiation": []
+                  },
+                  {
+                    "type": 11,
+                    "typeParameter": 1,
+                    "typeParameterInstantiation": []
+                  }
+                ]
+              }
+            },
+            {
+              "body": {
+                "type": 1,
+                "typeParameterInstantiation": []
+              }
+            }
+          ],
+          "returns": [
+            {
+              "body": {
+                "type": 2,
+                "typeParameterInstantiation": []
+              }
+            }
+          ]
+        },
+        {
+          "name": "supply",
+          "visibility": 2,
+          "isEntry": false,
+          "typeParameters": [
+            {
+              "constraints": []
+            },
+            {
+              "constraints": []
+            }
+          ],
+          "parameters": [
+            {
+              "reference": 2,
+              "body": {
+                "type": 10,
+                "typeName": "0x5d019c033bb8051fe9631cf910d0f4d077364d64ed4bb1940e98e6dc419a8d59::fountain::Fountain",
+                "typeParameterInstantiation": [
+                  {
+                    "type": 11,
+                    "typeParameter": 0,
+                    "typeParameterInstantiation": []
+                  },
+                  {
+                    "type": 11,
+                    "typeParameter": 1,
+                    "typeParameterInstantiation": []
+                  }
+                ]
+              }
+            },
+            {
+              "reference": 1,
+              "body": {
+                "type": 10,
+                "typeName": "0x2::clock::Clock",
+                "typeParameterInstantiation": []
+              }
+            },
+            {
+              "body": {
+                "type": 10,
+                "typeName": "0x2::coin::Coin",
+                "typeParameterInstantiation": [
+                  {
+                    "type": 11,
+                    "typeParameter": 1,
+                    "typeParameterInstantiation": []
+                  }
+                ]
+              }
+            }
+          ],
+          "returns": []
+        },
+        {
+          "name": "total_debt_amount",
+          "visibility": 2,
+          "isEntry": false,
+          "typeParameters": [
+            {
+              "constraints": []
+            },
+            {
+              "constraints": []
+            }
+          ],
+          "parameters": [
+            {
+              "reference": 1,
+              "body": {
+                "type": 10,
+                "typeName": "0x5d019c033bb8051fe9631cf910d0f4d077364d64ed4bb1940e98e6dc419a8d59::fountain::Fountain",
+                "typeParameterInstantiation": [
+                  {
+                    "type": 11,
+                    "typeParameter": 0,
+                    "typeParameterInstantiation": []
+                  },
+                  {
+                    "type": 11,
+                    "typeParameter": 1,
+                    "typeParameterInstantiation": []
+                  }
+                ]
+              }
+            }
+          ],
+          "returns": [
+            {
+              "body": {
+                "type": 6,
+                "typeParameterInstantiation": []
+              }
+            }
+          ]
+        },
+        {
+          "name": "unstake",
+          "visibility": 2,
+          "isEntry": false,
+          "typeParameters": [
+            {
+              "constraints": []
+            },
+            {
+              "constraints": []
+            }
+          ],
+          "parameters": [
+            {
+              "reference": 2,
+              "body": {
+                "type": 10,
+                "typeName": "0x5d019c033bb8051fe9631cf910d0f4d077364d64ed4bb1940e98e6dc419a8d59::fountain::Fountain",
+                "typeParameterInstantiation": [
+                  {
+                    "type": 11,
+                    "typeParameter": 0,
+                    "typeParameterInstantiation": []
+                  },
+                  {
+                    "type": 11,
+                    "typeParameter": 1,
+                    "typeParameterInstantiation": []
+                  }
+                ]
+              }
+            },
+            {
+              "reference": 1,
+              "body": {
+                "type": 10,
+                "typeName": "0x2::clock::Clock",
+                "typeParameterInstantiation": []
+              }
+            },
+            {
+              "body": {
+                "type": 10,
+                "typeName": "0x5d019c033bb8051fe9631cf910d0f4d077364d64ed4bb1940e98e6dc419a8d59::fountain::StakeProof",
+                "typeParameterInstantiation": [
+                  {
+                    "type": 11,
+                    "typeParameter": 0,
+                    "typeParameterInstantiation": []
+                  },
+                  {
+                    "type": 11,
+                    "typeParameter": 1,
+                    "typeParameterInstantiation": []
+                  }
+                ]
+              }
+            },
+            {
+              "reference": 2,
+              "body": {
+                "type": 10,
+                "typeName": "0x2::tx_context::TxContext",
+                "typeParameterInstantiation": []
+              }
+            }
+          ],
+          "returns": [
+            {
+              "body": {
+                "type": 10,
+                "typeName": "0xce7ff77a83ea0cb6fd39bd8748e2ec89a3f41e8efdc3f4eb123e0ca37b184db2::strap::BottleStrap",
+                "typeParameterInstantiation": [
+                  {
+                    "type": 11,
+                    "typeParameter": 0,
+                    "typeParameterInstantiation": []
+                  }
+                ]
+              }
+            },
+            {
+              "body": {
+                "type": 10,
+                "typeName": "0x2::coin::Coin",
+                "typeParameterInstantiation": [
+                  {
+                    "type": 11,
+                    "typeParameter": 1,
+                    "typeParameterInstantiation": []
+                  }
+                ]
+              }
+            }
+          ]
+        },
+        {
+          "name": "update_flow_rate",
+          "visibility": 2,
+          "isEntry": false,
+          "typeParameters": [
+            {
+              "constraints": []
+            },
+            {
+              "constraints": []
+            }
+          ],
+          "parameters": [
+            {
+              "reference": 1,
+              "body": {
+                "type": 10,
+                "typeName": "0x5d019c033bb8051fe9631cf910d0f4d077364d64ed4bb1940e98e6dc419a8d59::fountain::AdminCap",
+                "typeParameterInstantiation": []
+              }
+            },
+            {
+              "reference": 1,
+              "body": {
+                "type": 10,
+                "typeName": "0x2::clock::Clock",
+                "typeParameterInstantiation": []
+              }
+            },
+            {
+              "reference": 2,
+              "body": {
+                "type": 10,
+                "typeName": "0x5d019c033bb8051fe9631cf910d0f4d077364d64ed4bb1940e98e6dc419a8d59::fountain::Fountain",
+                "typeParameterInstantiation": [
+                  {
+                    "type": 11,
+                    "typeParameter": 0,
+                    "typeParameterInstantiation": []
+                  },
+                  {
+                    "type": 11,
+                    "typeParameter": 1,
+                    "typeParameterInstantiation": []
+                  }
+                ]
+              }
+            },
+            {
+              "body": {
+                "type": 6,
+                "typeParameterInstantiation": []
+              }
+            },
+            {
+              "body": {
+                "type": 6,
+                "typeParameterInstantiation": []
+              }
+            }
+          ],
+          "returns": []
+        },
+        {
+          "name": "withdraw_from_source_to",
+          "visibility": 2,
+          "isEntry": false,
+          "typeParameters": [
+            {
+              "constraints": []
+            },
+            {
+              "constraints": []
+            }
+          ],
+          "parameters": [
+            {
+              "reference": 1,
+              "body": {
+                "type": 10,
+                "typeName": "0x5d019c033bb8051fe9631cf910d0f4d077364d64ed4bb1940e98e6dc419a8d59::fountain::AdminCap",
+                "typeParameterInstantiation": []
+              }
+            },
+            {
+              "reference": 2,
+              "body": {
+                "type": 10,
+                "typeName": "0x5d019c033bb8051fe9631cf910d0f4d077364d64ed4bb1940e98e6dc419a8d59::fountain::Fountain",
+                "typeParameterInstantiation": [
+                  {
+                    "type": 11,
+                    "typeParameter": 0,
+                    "typeParameterInstantiation": []
+                  },
+                  {
+                    "type": 11,
+                    "typeParameter": 1,
+                    "typeParameterInstantiation": []
+                  }
+                ]
+              }
+            },
+            {
+              "body": {
+                "type": 6,
+                "typeParameterInstantiation": []
+              }
+            },
+            {
+              "body": {
+                "type": 1,
+                "typeParameterInstantiation": []
+              }
+            },
+            {
+              "reference": 2,
+              "body": {
+                "type": 10,
+                "typeName": "0x2::tx_context::TxContext",
+                "typeParameterInstantiation": []
+              }
+            }
+          ],
+          "returns": []
         }
-      }
+      ]
     }
-  },
-  "id": 1
-}
+  }
+]

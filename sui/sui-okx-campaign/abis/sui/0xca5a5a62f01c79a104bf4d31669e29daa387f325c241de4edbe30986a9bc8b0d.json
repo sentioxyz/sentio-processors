@@ -1,202 +1,243 @@
 [
 	{
-		"fileFormatVersion": 6,
 		"address": "0xca5a5a62f01c79a104bf4d31669e29daa387f325c241de4edbe30986a9bc8b0d",
-		"name": "coin_decimals_registry",
-		"friends": [],
-		"structs": {
-			"COIN_DECIMALS_REGISTRY": {
-				"abilities": {
+		"module": {
+			"datatypes": [
+				{
 					"abilities": [
-						"Drop"
-					]
-				},
-				"typeParameters": [],
-				"fields": [
-					{
-						"name": "dummy_field",
-						"type": "Bool"
-					}
-				]
-			},
-			"CoinDecimalsRegistered": {
-				"abilities": {
-					"abilities": [
-						"Copy",
-						"Drop"
-					]
-				},
-				"typeParameters": [],
-				"fields": [
-					{
-						"name": "registry",
-						"type": "Address"
-					},
-					{
-						"name": "coin_type",
-						"type": {
-							"Struct": {
-								"address": "0x1",
-								"module": "ascii",
-								"name": "String",
-								"typeArguments": []
+						2
+					],
+					"typeParameters": [],
+					"fields": [
+						{
+							"name": "dummy_field",
+							"position": 0,
+							"type": {
+								"typeParameterInstantiation": [],
+								"type": 2
 							}
 						}
-					},
-					{
-						"name": "decimals",
-						"type": "U8"
-					}
-				]
-			},
-			"CoinDecimalsRegistry": {
-				"abilities": {
-					"abilities": [
-						"Store",
-						"Key"
-					]
+					],
+					"variants": [],
+					"typeName": "0xca5a5a62f01c79a104bf4d31669e29daa387f325c241de4edbe30986a9bc8b0d::coin_decimals_registry::COIN_DECIMALS_REGISTRY",
+					"definingId": "0xca5a5a62f01c79a104bf4d31669e29daa387f325c241de4edbe30986a9bc8b0d",
+					"module": "coin_decimals_registry",
+					"name": "COIN_DECIMALS_REGISTRY",
+					"kind": 1
 				},
-				"typeParameters": [],
-				"fields": [
-					{
-						"name": "id",
-						"type": {
-							"Struct": {
-								"address": "0x2",
-								"module": "object",
-								"name": "UID",
-								"typeArguments": []
+				{
+					"abilities": [
+						1,
+						2
+					],
+					"typeParameters": [],
+					"fields": [
+						{
+							"name": "registry",
+							"position": 0,
+							"type": {
+								"typeParameterInstantiation": [],
+								"type": 1
+							}
+						},
+						{
+							"name": "coin_type",
+							"position": 1,
+							"type": {
+								"typeParameterInstantiation": [],
+								"type": 10,
+								"typeName": "0x0000000000000000000000000000000000000000000000000000000000000001::ascii::String"
+							}
+						},
+						{
+							"name": "decimals",
+							"position": 2,
+							"type": {
+								"typeParameterInstantiation": [],
+								"type": 3
 							}
 						}
-					},
-					{
-						"name": "table",
-						"type": {
-							"Struct": {
-								"address": "0x2",
-								"module": "table",
-								"name": "Table",
-								"typeArguments": [
+					],
+					"variants": [],
+					"typeName": "0xca5a5a62f01c79a104bf4d31669e29daa387f325c241de4edbe30986a9bc8b0d::coin_decimals_registry::CoinDecimalsRegistered",
+					"definingId": "0xca5a5a62f01c79a104bf4d31669e29daa387f325c241de4edbe30986a9bc8b0d",
+					"module": "coin_decimals_registry",
+					"name": "CoinDecimalsRegistered",
+					"kind": 1
+				},
+				{
+					"abilities": [
+						3,
+						4
+					],
+					"typeParameters": [],
+					"fields": [
+						{
+							"name": "id",
+							"position": 0,
+							"type": {
+								"typeParameterInstantiation": [],
+								"type": 10,
+								"typeName": "0x0000000000000000000000000000000000000000000000000000000000000002::object::UID"
+							}
+						},
+						{
+							"name": "table",
+							"position": 1,
+							"type": {
+								"typeParameterInstantiation": [
 									{
-										"Struct": {
-											"address": "0x1",
-											"module": "type_name",
-											"name": "TypeName",
-											"typeArguments": []
-										}
+										"typeParameterInstantiation": [],
+										"type": 10,
+										"typeName": "0x0000000000000000000000000000000000000000000000000000000000000001::type_name::TypeName"
 									},
-									"U8"
-								]
-							}
-						}
-					}
-				]
-			}
-		},
-		"exposedFunctions": {
-			"decimals": {
-				"visibility": "Public",
-				"isEntry": false,
-				"typeParameters": [],
-				"parameters": [
-					{
-						"Reference": {
-							"Struct": {
-								"address": "0xca5a5a62f01c79a104bf4d31669e29daa387f325c241de4edbe30986a9bc8b0d",
-								"module": "coin_decimals_registry",
-								"name": "CoinDecimalsRegistry",
-								"typeArguments": []
-							}
-						}
-					},
-					{
-						"Struct": {
-							"address": "0x1",
-							"module": "type_name",
-							"name": "TypeName",
-							"typeArguments": []
-						}
-					}
-				],
-				"return": [
-					"U8"
-				]
-			},
-			"register_decimals": {
-				"visibility": "Public",
-				"isEntry": true,
-				"typeParameters": [
-					{
-						"abilities": []
-					}
-				],
-				"parameters": [
-					{
-						"MutableReference": {
-							"Struct": {
-								"address": "0xca5a5a62f01c79a104bf4d31669e29daa387f325c241de4edbe30986a9bc8b0d",
-								"module": "coin_decimals_registry",
-								"name": "CoinDecimalsRegistry",
-								"typeArguments": []
-							}
-						}
-					},
-					{
-						"Reference": {
-							"Struct": {
-								"address": "0x2",
-								"module": "coin",
-								"name": "CoinMetadata",
-								"typeArguments": [
 									{
-										"TypeParameter": 0
+										"typeParameterInstantiation": [],
+										"type": 3
 									}
-								]
+								],
+								"type": 10,
+								"typeName": "0x0000000000000000000000000000000000000000000000000000000000000002::table::Table"
 							}
 						}
-					}
-				],
-				"return": []
-			},
-			"registry_table": {
-				"visibility": "Public",
-				"isEntry": false,
-				"typeParameters": [],
-				"parameters": [
-					{
-						"Reference": {
-							"Struct": {
-								"address": "0xca5a5a62f01c79a104bf4d31669e29daa387f325c241de4edbe30986a9bc8b0d",
-								"module": "coin_decimals_registry",
-								"name": "CoinDecimalsRegistry",
-								"typeArguments": []
+					],
+					"variants": [],
+					"typeName": "0xca5a5a62f01c79a104bf4d31669e29daa387f325c241de4edbe30986a9bc8b0d::coin_decimals_registry::CoinDecimalsRegistry",
+					"definingId": "0xca5a5a62f01c79a104bf4d31669e29daa387f325c241de4edbe30986a9bc8b0d",
+					"module": "coin_decimals_registry",
+					"name": "CoinDecimalsRegistry",
+					"kind": 1
+				}
+			],
+			"functions": [
+				{
+					"typeParameters": [],
+					"parameters": [
+						{
+							"reference": 1,
+							"body": {
+								"typeParameterInstantiation": [],
+								"type": 10,
+								"typeName": "0xca5a5a62f01c79a104bf4d31669e29daa387f325c241de4edbe30986a9bc8b0d::coin_decimals_registry::CoinDecimalsRegistry"
+							}
+						},
+						{
+							"body": {
+								"typeParameterInstantiation": [],
+								"type": 10,
+								"typeName": "0x0000000000000000000000000000000000000000000000000000000000000001::type_name::TypeName"
 							}
 						}
-					}
-				],
-				"return": [
-					{
-						"Reference": {
-							"Struct": {
-								"address": "0x2",
-								"module": "table",
-								"name": "Table",
-								"typeArguments": [
+					],
+					"returns": [
+						{
+							"body": {
+								"typeParameterInstantiation": [],
+								"type": 3
+							}
+						}
+					],
+					"name": "decimals",
+					"visibility": 2,
+					"isEntry": false
+				},
+				{
+					"typeParameters": [],
+					"parameters": [
+						{
+							"body": {
+								"typeParameterInstantiation": [],
+								"type": 10,
+								"typeName": "0xca5a5a62f01c79a104bf4d31669e29daa387f325c241de4edbe30986a9bc8b0d::coin_decimals_registry::COIN_DECIMALS_REGISTRY"
+							}
+						},
+						{
+							"reference": 2,
+							"body": {
+								"typeParameterInstantiation": [],
+								"type": 10,
+								"typeName": "0x0000000000000000000000000000000000000000000000000000000000000002::tx_context::TxContext"
+							}
+						}
+					],
+					"returns": [],
+					"name": "init",
+					"visibility": 1,
+					"isEntry": false
+				},
+				{
+					"typeParameters": [
+						{
+							"constraints": []
+						}
+					],
+					"parameters": [
+						{
+							"reference": 2,
+							"body": {
+								"typeParameterInstantiation": [],
+								"type": 10,
+								"typeName": "0xca5a5a62f01c79a104bf4d31669e29daa387f325c241de4edbe30986a9bc8b0d::coin_decimals_registry::CoinDecimalsRegistry"
+							}
+						},
+						{
+							"reference": 1,
+							"body": {
+								"typeParameterInstantiation": [
 									{
-										"Struct": {
-											"address": "0x1",
-											"module": "type_name",
-											"name": "TypeName",
-											"typeArguments": []
-										}
-									},
-									"U8"
-								]
+										"typeParameterInstantiation": [],
+										"type": 11,
+										"typeParameter": 0
+									}
+								],
+								"type": 10,
+								"typeName": "0x0000000000000000000000000000000000000000000000000000000000000002::coin::CoinMetadata"
 							}
 						}
-					}
-				]
-			}
+					],
+					"returns": [],
+					"name": "register_decimals",
+					"visibility": 2,
+					"isEntry": true
+				},
+				{
+					"typeParameters": [],
+					"parameters": [
+						{
+							"reference": 1,
+							"body": {
+								"typeParameterInstantiation": [],
+								"type": 10,
+								"typeName": "0xca5a5a62f01c79a104bf4d31669e29daa387f325c241de4edbe30986a9bc8b0d::coin_decimals_registry::CoinDecimalsRegistry"
+							}
+						}
+					],
+					"returns": [
+						{
+							"reference": 1,
+							"body": {
+								"typeParameterInstantiation": [
+									{
+										"typeParameterInstantiation": [],
+										"type": 10,
+										"typeName": "0x0000000000000000000000000000000000000000000000000000000000000001::type_name::TypeName"
+									},
+									{
+										"typeParameterInstantiation": [],
+										"type": 3
+									}
+								],
+								"type": 10,
+								"typeName": "0x0000000000000000000000000000000000000000000000000000000000000002::table::Table"
+							}
+						}
+					],
+					"name": "registry_table",
+					"visibility": 2,
+					"isEntry": false
+				}
+			],
+			"name": "coin_decimals_registry"
 		}
 	}
 ]

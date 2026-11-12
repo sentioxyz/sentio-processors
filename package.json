@@ -1,11 +1,11 @@
 {
   "private": true,
   "workspaces": [
-    "common",
     "projects/*",
     "fuel/*",
     "points/*/*",
     "sui/*",
+    "iota/*",
     "aptos/*",
     "evm/*",
     "mixed/*",
@@ -13,16 +13,20 @@
   ],
   "type": "module",
   "dependencies": {
-    "@sentio/sdk": "^2.57.13-rc.4",
-    "@sentio/action": "^2.57.2"
+    "@sentio/action": "^4.2.1",
+    "@sentio/sdk": "^4.2.1"
   },
   "devDependencies": {
+    "@sentio/cli": "^4.0.0",
     "@types/chai": "^4.3.16",
-    "@sentio/cli": "^2.25.5",
-    "typescript": "^5.4.5",
-    "chai": "^4.4.1"
+    "@types/node-fetch": "^2.6.13",
+    "chai": "^4.4.1",
+    "typescript": "^6.0.3"
   },
   "scripts": {
     "new": "yarn sentio create -p -d projects"
+  },
+  "engines": {
+    "node": ">=26"
   }
 }

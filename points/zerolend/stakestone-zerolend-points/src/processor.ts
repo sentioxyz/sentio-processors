@@ -119,8 +119,8 @@ async function updateAccounts(ctx: EthContext, events: TempEvent[]) {
         .then((v) => [`totalSupply_${bn}`, v]),
       debtTokenContract
         ? debtTokenContract
-            .totalSupply(overrides)
-            .then((v) => [`totalBorrows_${bn}`, v])
+          .totalSupply(overrides)
+          .then((v) => [`totalBorrows_${bn}`, v])
         : Promise.resolve([`totalBorrows_${bn}`, 0n])
     );
     for (const account of eventAccounts) {
@@ -130,13 +130,13 @@ async function updateAccounts(ctx: EthContext, events: TempEvent[]) {
           .then((v) => [`balanceOf_${account}_${bn}`, v]),
         rz0StoneContract && bn >= conf.rz0StoneStartBlock!
           ? rz0StoneContract
-              .balanceOf(account, overrides)
-              .then((v) => [`rz0Stone_balanceOf_${account}_${bn}`, v])
+            .balanceOf(account, overrides)
+            .then((v) => [`rz0Stone_balanceOf_${account}_${bn}`, v])
           : Promise.resolve([`rz0Stone_balanceOf_${account}_${bn}`, 0n]),
         debtTokenContract
           ? debtTokenContract
-              .balanceOf(account, overrides)
-              .then((v) => [`borrowBalanceOf_${account}_${bn}`, v])
+            .balanceOf(account, overrides)
+            .then((v) => [`borrowBalanceOf_${account}_${bn}`, v])
           : Promise.resolve([`borrowBalanceOf_${account}_${bn}`, 0n])
       );
     }
@@ -159,6 +159,12 @@ async function updateAccounts(ctx: EthContext, events: TempEvent[]) {
   const eventsWithSentry = [
     ...events,
     new TempEvent({
+      id: "end",
+      network: ctx.chainId.toString(),
+      args: "",
+      blockNumber: 0,
+      txIdx: 0,
+      eventIdx: 0,
       eventName: "end",
       timestampMilli: BigInt(ctx.timestamp.getTime()),
     }),
@@ -216,7 +222,14 @@ async function updateAccounts(ctx: EthContext, events: TempEvent[]) {
       }
       const snapshot =
         snapshots[account] ??
-        new AccountSnapshot({ id: account, netBalance: 0n });
+        new AccountSnapshot({
+          id: account,
+          network: ctx.chainId.toString(),
+          timestampMilli: 0n,
+          balance: 0n,
+          borrowBalance: 0n,
+          netBalance: 0n,
+        });
       if (snapshot.netBalance > 0n) {
         state.totalPositiveNetBalance -= snapshot.netBalance;
       }
@@ -231,6 +244,7 @@ async function updateAccounts(ctx: EthContext, events: TempEvent[]) {
       }
       snapshots[account] = new AccountSnapshot({
         id: account,
+        network: ctx.chainId.toString(),
         timestampMilli: BigInt(nowMilli),
         balance: stoneBalance,
         borrowBalance: borrowBalance,
@@ -310,6 +324,7 @@ function calcPoints(
 function baseEvent(ctx: EthContext, event: TypedEvent) {
   return {
     id: event.blockNumber + "," + event.transactionIndex + "," + event.index,
+    network: ctx.chainId.toString(),
     blockNumber: ctx.blockNumber,
     txIdx: event.transactionIndex,
     eventIdx: event.index,
@@ -322,8 +337,8 @@ function isProtocolAddress(address: string) {
   return (
     isNullAddress(address) ||
     address.toLowerCase() ==
-      "0x53EC122D2644aEa125031f2055b862535Fe5e08a".toLowerCase() ||
+    "0x53EC122D2644aEa125031f2055b862535Fe5e08a".toLowerCase() ||
     address.toLowerCase() ==
-      "0x8d8b70a576113feedd7e3810ce61f5e243b01264".toLowerCase()
+    "0x8d8b70a576113feedd7e3810ce61f5e243b01264".toLowerCase()
   );
 }

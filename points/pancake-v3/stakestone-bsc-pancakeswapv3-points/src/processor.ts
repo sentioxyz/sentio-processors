@@ -16,7 +16,7 @@ import { PositionSnapshot } from "./schema/store.js";
 import { getPoolArgs, updatePoolArgs } from "./pool_args.js";
 import { getEigenRatio } from "./eigen_ratio.js";
 
-const NETWORK = EthChainId.BINANCE;
+const NETWORK = EthChainId.BSC;
 const NONFUNGIBLE_POSITION_MANAGER_CONTRACT_ADDRESS =
   "0x46a15b0b27311cedf172ab29e4f4766fbe7f4364";
 const POOL_ADDRESS = "0xb66cb4092277ee946d4fba1d34f425329fedd37e";

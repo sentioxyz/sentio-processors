@@ -94,15 +94,19 @@ tails_staking
         });
     });
 
-tds_authorized_entry.bind({ network: SuiNetwork.MAIN_NET, startCheckpoint: BigInt(1651870) }).onEventUpdateStrikeEvent((event, ctx) => {
-    ctx.eventLogger.emit("UpdateStrike", {
-        distinctId: event.data_decoded.signer,
-        index: event.data_decoded.index,
-        oracle_price: event.data_decoded.oracle_price,
-        oracle_price_decimal: event.data_decoded.oracle_price_decimal,
-        strikes: event.data_decoded.vault_config.payoff_configs.map((config) => config.strike?.toString()).join("   "),
-    });
-});
+// SDK 4 migration: `UpdateStrikeEvent` no longer exists in the current on-chain
+// `tds_authorized_entry` package ABI (it was removed/renamed in a package upgrade),
+// so SDK 4 codegen cannot emit `onEventUpdateStrikeEvent`. Disabled to unblock the
+// build. TODO(owner): drop permanently or repoint to a current event if still needed.
+// tds_authorized_entry.bind({ network: SuiNetwork.MAIN_NET, startCheckpoint: BigInt(1651870) }).onEventUpdateStrikeEvent((event, ctx) => {
+//     ctx.eventLogger.emit("UpdateStrike", {
+//         distinctId: event.data_decoded.signer,
+//         index: event.data_decoded.index,
+//         oracle_price: event.data_decoded.oracle_price,
+//         oracle_price_decimal: event.data_decoded.oracle_price_decimal,
+//         strikes: event.data_decoded.vault_config.payoff_configs.map((config) => config.strike?.toString()).join("   "),
+//     });
+// });
 
 typus_dov_single
     .bind({ network: SuiNetwork.MAIN_NET, startCheckpoint: BigInt(1651870) })
@@ -407,14 +411,14 @@ SuiWrappedObjectProcessor.bind({
         const ids = objects.map((object) => object.fields.value);
 
         if (ids.length > 0) {
-            const res = await ctx.client.multiGetObjects({
-                ids,
-                options: { showType: true, showContent: true },
+            const res = await ctx.client.getObjects({
+                objectIds: ids,
+                include: { json: true },
             });
 
-            for (const object of res) {
+            for (const object of res.objects) {
                 // @ts-ignore
-                const fields = object.data?.content?.fields;
+                const fields = object.json;
                 const index = fields.index.toString();
                 const deposit_token = parse_token("0x" + fields.deposit_token.fields.name);
                 const bid_token = parse_token("0x" + fields.bid_token.fields.name);
